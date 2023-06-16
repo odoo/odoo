@@ -97,12 +97,19 @@
 
 
 <template id="slide_fullscreen_sidebar_category" name="Slides category template for fullscreen view side bar">
+    <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section py-2 px-3">
-        <a t-if="category" class="text-uppercase text-500 py-1 small d-block" t-attf-id="category-collapse-#{category.id if category else 0}" data-bs-toggle="collapse" role="button" aria-expanded="true" t-att-href="('#collapse-%s') % (category.id if category else 0)" t-attf-aria-controls="collapse-#{category.id if category else 0}">
+        <a t-if="category" class="text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
             <b t-field="category.name"/>
+            <div class="flex-grow-1"/>
+            <i class="fa fa-fw fa-caret-left" role="img"/>
+            <i class="fa fa-fw fa-caret-down" role="img"/>
         </a>
-        <ul class="o_wslides_fs_sidebar_section_slides collapse show position-relative px-0 pb-1 my-0 mx-n3" t-att-id="('collapse-%s') % (category.id if category else 0)">
+        <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
+            t-attf-id="collapse-#{category.id if category else 0}">
             <t t-set="is_member" t-value="current_slide.channel_id.is_member"/>
             <t t-set="can_access_channel" t-value="is_member or current_slide.channel_id.can_publish"/>
             <t t-foreach="slides" t-as="slide">

@@ -21,6 +21,18 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     },
 
     /**
+     * Collapse the next category when the current one has just been completed
+     */
+    collapseNextCategory: function (nextCategoryId) {
+        const $categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
+        const $categorySlides = document.querySelector(`ul[id=collapse-${nextCategoryId}]`);
+        if ($categorySection.getAttribute('aria-expanded') === 'false' && !$categorySlides.classList.contains('show')) {
+            $categorySection.setAttribute('aria-expanded', true);
+            $categorySlides.classList.add('show')
+        }
+    },
+
+    /**
      * Greens up the bullet when the slide is completed
      *
      * @public
@@ -96,6 +108,9 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         this.toggleCompletionButton(slide, completed);
         this.updateProgressbar(data.channel_completion);
+        if (data.next_category_id) {
+            this.collapseNextCategory(data.next_category_id);
+        }
     },
     /**
      * Retrieve the slide data corresponding to the slide id given in argument.

@@ -130,10 +130,12 @@
 </template>
 
 <template id="slide_aside_training_category" name="Category item for the slide detailed view list">
+    <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
-        <a t-att-href="('#collapse-%s') % (category.id if category else 0)" data-bs-toggle="collapse" role="button" aria-expanded="true"
-            class="o_wslides_lesson_aside_list_link ps-2 text-600 text-uppercase text-decoration-none p-1 small d-block"
+        <a t-attf-href="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            class="o_wslides_lesson_aside_list_link ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
             t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
             <t t-if="category">
                 <b t-field="category.name"/>
@@ -141,8 +143,11 @@
             <t t-else="">
                 <b>Uncategorized</b>
             </t>
+            <div class="flex-grow-1"/>
+            <i class="fa fa-fw fa-caret-left" role="img"/>
+            <i class="fa fa-fw fa-caret-down" role="img"/>
         </a>
-        <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
+        <ul t-attf-class="collapse #{'show' if category_collapsed else ''} p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-set="is_member" t-value="slide.channel_id.is_member"/>
             <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
             <t t-foreach="category_slide_ids" t-as="aside_slide">

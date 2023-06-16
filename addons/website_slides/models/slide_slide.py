@@ -141,6 +141,7 @@ class Slide(models.Model):
     # current user membership
     user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
     user_has_completed = fields.Boolean('Is Member', compute='_compute_user_membership_id', compute_sudo=False)
+    user_has_completed_category = fields.Boolean('Is Category Completed', compute='_compute_category_completed')
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions", copy=True)
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
@@ -383,6 +384,14 @@ class Slide(models.Model):
 
         for record in self:
             record.update(result.get(record._origin.id, default_vals))
+
+    @api.depends('category_id', 'category_id.slide_ids', 'category_id.slide_ids.user_has_completed')
+    def _compute_category_completed(self):
+        for slide in self:
+            if not slide.category_id:
+                slide.user_has_completed_category = False
+            else:
+                slide.user_has_completed_category = all(slide.category_id.slide_ids.mapped('user_has_completed'))
 
     @api.depends('slide_ids.sequence', 'slide_ids.active', 'slide_ids.completion_time', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_category_completion_time(self):
@@ -1299,6 +1308,19 @@ class Slide(models.Model):
 
         return False
 
+    def _get_next_category(self):
+        channel_category_ids = self.channel_id.slide_category_ids.ids
+        if not channel_category_ids:
+            return self.env['slide.slide']
+        # If current slide is uncategorized and all the channel uncategorized slides are completed, return the first category
+        if not self.category_id and all(self.channel_id.slide_ids.filtered(
+            lambda s: not s.is_category and not s.category_id).mapped('user_has_completed')):
+            return channel_category_ids[0]
+        # If current category is completed and current category is not the last one, get next category
+        elif self.user_has_completed_category and self.category_id.id in channel_category_ids and self.category_id.id != channel_category_ids[-1]:
+            index_current_category = channel_category_ids.index(self.category_id.id)
+            return self.env['slide.slide'].browse(channel_category_ids[index_current_category+1])
+        return self.env['slide.slide']
 
     def get_backend_menu_id(self):
         return self.env.ref('website_slides.website_slides_menu_root').id

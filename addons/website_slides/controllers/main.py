@@ -246,6 +246,25 @@ class WebsiteSlides(WebsiteProfile):
             session_slide_answer_quiz.pop(str(slide_id), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
+    def _prepare_collapsed_categories(self, categories_values, slide, next_category_to_open):
+        """ Collapse the category if:
+            - there is no category (the slides are uncategorized)
+            - the category contains the current slide
+            - the category is ongoing (has at least one slide completed but not all of its slides)
+            - the category is the next one to be opened because the current one has just been completed
+        """
+        if request.env.user._is_public() or not slide.channel_id.is_member:
+            return categories_values
+        for category_dict in categories_values:
+            category = category_dict.get('category')
+            if not category or slide in category.slide_ids or category == next_category_to_open:
+                category_dict['is_collapsed'] = True
+            else:
+                # collapse if category is ongoing
+                slides_completion = category.slide_ids.mapped('user_has_completed')
+                category_dict['is_collapsed'] = any(slides_completion) and not all(slides_completion)
+        return categories_values
+
     # TAG UTILITIES
     # --------------------------------------------------
 
@@ -935,8 +954,10 @@ class WebsiteSlides(WebsiteProfile):
         if slide.can_self_mark_completed and not slide.user_has_completed \
            and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
             self._slide_mark_completed(slide)
+            next_category_to_open = slide._get_next_category()
         else:
             self._set_viewed_slide(slide)
+            next_category_to_open = False
 
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information
@@ -944,6 +965,8 @@ class WebsiteSlides(WebsiteProfile):
             values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
         values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
+        # sidebar: auto-collapsed the categories depending on conditions
+        values['category_data'] = self._prepare_collapsed_categories(values['category_data'], slide, next_category_to_open)
 
         # Allows to have breadcrumb for the previously used filter
         values.update({
@@ -1033,8 +1056,10 @@ class WebsiteSlides(WebsiteProfile):
         if fetch_res.get('error'):
             return fetch_res
         self._slide_mark_completed(fetch_res['slide'])
+        next_category = fetch_res['slide']._get_next_category()
         return {
-            'channel_completion': fetch_res['slide'].channel_id.completion
+            'channel_completion': fetch_res['slide'].channel_id.completion,
+            'next_category_id': next_category.id if next_category else False,
         }
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_uncompleted', website=True, type='http', auth='user')
@@ -1052,6 +1077,7 @@ class WebsiteSlides(WebsiteProfile):
         self._slide_mark_uncompleted(fetch_res['slide'])
         return {
             'channel_completion': fetch_res['slide'].channel_id.completion,
+            'next_category_id': False,
         }
 
     @http.route('/slides/slide/like', type='json', auth="public", website=True)
