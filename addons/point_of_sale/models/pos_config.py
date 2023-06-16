@@ -395,6 +395,7 @@ class PosConfig(models.Model):
         pos_configs = super().create(vals_list)
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
+        pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
@@ -406,16 +407,25 @@ class PosConfig(models.Model):
             else:
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
+    def _update_preparation_printers_menuitem_visibility(self):
+        prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
+        if prepa_printers_menuitem:
+            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
+
     def write(self, vals):
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
+
+        bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
 
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
+                    if bypass_categories_forbidden_change and key in ('limit_categories', 'iface_available_categ_ids'):
+                        continue
                     if key == 'use_pricelist' and vals[key]:
                         continue
                     if key == 'available_pricelist_ids':
@@ -434,6 +444,8 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
+        if 'is_order_printer' in vals:
+            self._update_preparation_printers_menuitem_visibility()
         return result
 
     def _get_forbidden_change_fields(self):

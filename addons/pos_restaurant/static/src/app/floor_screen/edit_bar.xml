@@ -6,7 +6,7 @@
             <span class="edit-button first-button" t-if="!ui.isSmall"></span>
             <span class="edit-button" t-on-click.stop="props.createTable">
                 <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
-                <span class="text-button">ADD</span>
+                <span class="text-button">TABLE</span>
             </span>
             <span class="edit-button" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeSeatsNum">
                 <i class="fa fa-user icon-button" role="img" aria-label="Seats" title="Seats"></i>
@@ -63,7 +63,7 @@
             <span class="color"  style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setTableColor('#ACADAD')" />
             <span class="color"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setTableColor('#4ED2BE')" />
         </div>
-        <div t-if="props.isColorPicker and props.selectedTables.length == 0" class="color-picker">    
+        <div t-if="props.isColorPicker and props.selectedTables.length == 0" class="color-picker">
             <span class="color"  style="background-color:rgb(255, 255, 255)" role="img" aria-label="White" title="White" t-on-click.stop="() => props.setFloorColor('rgb(255, 255, 255)')" />
             <span class="color"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setFloorColor('rgb(244, 149, 149)')" />
             <span class="color"  style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setFloorColor('rgb(130, 233, 171)')" />

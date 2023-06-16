@@ -3,10 +3,10 @@
 
     <t t-name="pos_restaurant.FloorScreen" owl="1">
         <div class="floor-screen screen">
-            <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors" 
+            <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors"
                         floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
                         createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
-                        changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare" 
+                        changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare"
                         setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
                         toggleEditMode.bind="toggleEditMode"
             />
@@ -31,7 +31,7 @@
             >
                 <t t-if="pos.floors.length > 0">
                     <div t-if="isFloorEmpty" class="empty-floor" t-ref="map">
-                        <span>No tables available,<br/>ADD your first table</span>
+                        <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                     </div>
                     <div t-else="" t-ref="map">
                         <t t-foreach="activeTables" t-as="table" t-key="table.id">
@@ -42,7 +42,7 @@
                 </t>
                 <t t-else="">
                     <div class="empty-floor" t-ref="map">
-                        <span>No floors available,<br/>ADD a floor to start</span>
+                        <span>Oops! No floors available.<br/>Add a new floor to get started.</span>
                     </div>
                 </t>
             </div>

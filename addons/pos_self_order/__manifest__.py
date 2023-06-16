@@ -19,6 +19,7 @@
         "data/restaurant_table_data.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
+        "data/pos_restaurant_data.xml",
     ],
     "assets": {
         "pos_self_order.assets_self_order": [

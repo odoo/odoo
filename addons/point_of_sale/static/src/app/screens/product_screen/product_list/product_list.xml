@@ -13,26 +13,30 @@
                 hasNoCategories="hasNoCategories"
                 loadProductFromServer.bind="onPressEnterKey" />
             <div class="product-list-container">
-                <div t-if="productsToDisplay.length != 0" class="product-list">
+                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" class="product-list">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductItem
                             product="product" />
                     </t>
                 </div>
                 <div t-else="" class="product-list-empty no-results-message">
-                    <p t-if="searchWord">
-                        No product found for <b>"<t t-esc="searchWord"/>"</b> in this category.
-                    </p>
-                    <p t-else="">
-                        There are no products in this category.
-                    </p>
-                    <div t-if="!hasProducts">
-                        <button class="button-no-demo" t-on-click="loadDemoDataProducts">Generate demo data</button>
-                        <button class="button-no-demo" t-on-click="createNewProducts">Create new products</button>
-                        <div t-if="state.showReloadMessage" class="info-load-product-message">
-                            Please reload this page once products have been created
-                        </div>
-                    </div>
+                    <t t-if="searchWord">
+                        <p>No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                    </t>
+                    <t t-else="">
+                        <t t-if="posHasValidProduct">
+                            <p>There are no products in this category.</p>
+                        </t>
+                        <t t-else="">
+                            <div>
+                                <p>No products here, but don't worry, we've got your back.</p>
+                                <p>Play with <a role="button" class="button-no-demo" t-on-click="loadDemoDataProducts">our demo products</a> or <a role="button" class="button-no-demo" t-on-click="createNewProducts">create your own products</a></p>
+                                <div t-if="state.showReloadMessage" class="info-load-product-message">
+                                    Please reload this page once products have been created
+                                </div>
+                            </div>
+                        </t>
+                    </t>
                 </div>
                 <div t-if="searchWord" class="search-more-button">
                     <div class="button" t-on-click="onPressEnterKey">Search more</div>
