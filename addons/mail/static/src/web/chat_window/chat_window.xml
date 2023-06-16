@@ -17,12 +17,9 @@
             <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
                 <i class="oi oi-arrow-left"/>
             </div>
-            <div t-if="thread and thread.model === 'discuss.channel'" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !store.isSmall, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
+            <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !store.isSmall, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
                 <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
             </div>
-            <t t-else="">
-                <ThreadIcon t-if="thread" thread="thread" className="'ms-3 me-1 my-0'"/>
-            </t>
             <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread" className="'me-1'"/>
             <span class="o-mail-ChatWindow-name text-truncate fw-bold" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
                     'ms-3 me-1 my-0': !thread,
