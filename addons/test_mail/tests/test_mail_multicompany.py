@@ -399,7 +399,6 @@ class TestMultiCompanySetup(TestMailMCCommon):
         self.assertEqual(
             test_activity,
             {
-                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
                 "icon": "/base/static/description/icon.png",
                 "id": self.env["ir.model"]._get_id("mail.test.multi.company.with.activity"),
                 "model": "mail.test.multi.company.with.activity",
@@ -407,6 +406,7 @@ class TestMultiCompanySetup(TestMailMCCommon):
                 "overdue_count": 0,
                 "planned_count": 0,
                 "today_count": 2,
+                "done_count": 0,
                 "total_count": 2,
                 "type": "activity",
             }
@@ -419,13 +419,13 @@ class TestMultiCompanySetup(TestMailMCCommon):
         self.assertEqual(
             test_activity,
             {
-                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
                 "icon": "/base/static/description/icon.png",
                 "id": self.env["ir.model"]._get_id("mail.test.multi.company.with.activity"),
                 "model": "mail.test.multi.company.with.activity",
                 "name": "Test Multi Company Mail With Activity",
                 "overdue_count": 0,
                 "planned_count": 0,
+                "done_count": 0,
                 "today_count": 1,
                 "total_count": 1,
                 "type": "activity",
