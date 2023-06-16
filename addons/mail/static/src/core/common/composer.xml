@@ -104,8 +104,8 @@
 </t>
 
 <t t-name="mail.Composer.sendButton" owl="1">
-    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn btn-link o-last border-start-0"
-        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
+    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last border-start-0"
+        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
