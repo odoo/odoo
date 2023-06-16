@@ -239,6 +239,28 @@
             </field>
         </record>
 
+        <record id="hr_employee_view_graph" model="ir.ui.view">
+            <field name="name">hr.employee.view.graph</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <graph string="New Employees Over Time" type="line" sample="1">
+                    <field name="create_date" interval="month"/>
+                    <field name="id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_employee_view_pivot" model="ir.ui.view">
+            <field name="name">hr.employee.view.pivot</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <pivot string="New Employees Over Time" sample="1">
+                    <field name="create_date" interval="month" type="row"/>
+                    <field name="id"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_employee_tree" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
@@ -382,7 +404,7 @@
         <record id="open_view_employee_list_my" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="view_mode">kanban,tree,form,activity,graph,pivot</field>
             <field name="domain">[]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
