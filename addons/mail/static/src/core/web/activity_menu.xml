@@ -14,26 +14,25 @@
                 </div>
                 <div class="d-flex flex-column list-group-flush" name="activityGroups">
                     <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
-                        <button class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2" t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
+                        <div class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer"
+                             t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
                             <img alt="Activity" t-att-src="group.icon"/>
                             <div class="flex-grow-1 overflow-hidden">
-                                <div class="d-flex px-2" name="activityTitle">
-                                    <span class="flex-grow-1"><t t-esc="group.name"/></span>
-                                    <t t-foreach="group.actions or []" t-as="action" t-key="action_index">
-                                        <button class="btn btn-link text-action fa p-0" type="button" t-att-title="action.name" t-att-class="action.icon" t-on-click.stop="() => this.onClickAction(action, group)"/>
-                                    </t>
-                                </div>
+                                <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
                                 <div t-if="group.type === 'activity'" class="d-flex">
-                                    <button t-if="group.overdue_count" type="button" class="btn btn-link text-action py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'overdue')"><t t-esc="group.overdue_count"/> Late</button>
-                                    <em t-else="" class="text-muted py-0 px-2">0 Late</em>
-                                    <button t-if="group.today_count" type="button" class="btn btn-link text-action py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'today')"><t t-esc="group.today_count"/> Today</button>
-                                    <em t-else="" class="text-muted py-0 px-2">0 Today</em>
+                                    <span t-attf-class="#{group.overdue_count ? '' : 'text-muted'} py-0 px-2">
+                                        <t t-out="group.overdue_count"/> Late
+                                    </span>
+                                    <span t-attf-class="#{group.today_count ? '' : 'text-muted'} py-0 px-2">
+                                        <t t-out="group.today_count"/> Today
+                                    </span>
                                     <span class="flex-grow-1"/>
-                                    <button t-if="group.planned_count" type="button" class="btn btn-link text-action py-0 px-2" t-on-click.stop="() => this.openActivityGroup(group, 'upcoming_all')"><t t-esc="group.planned_count"/> Future</button>
-                                    <em t-else="" class="text-muted py-0 px-2">0 Future</em>
+                                    <span t-attf-class="#{group.planned_count ? '' : 'text-muted'} py-0 px-2">
+                                        <t t-out="group.planned_count"/> Future
+                                    </span>
                                 </div>
                             </div>
-                        </button>
+                        </div>
                     </t>
                 </div>
             </div>

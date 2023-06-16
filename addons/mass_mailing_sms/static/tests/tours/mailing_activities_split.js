@@ -14,9 +14,9 @@ registry.category("web_tour.tours").add('mailing_activities_split', {
             trigger: '.o-mail-ActivityGroup:contains("Email Marketing")',
         }, {
             content: 'Open Email Marketing record in the kanban view',
-            trigger: '.o_kanban_record:contains("New Email!")',
+            trigger: '.o_list_renderer .o_data_cell:contains("New Email!")',
             run: () => {
-                if ($(".o_kanban_record:contains(New SMS!)").length !== 0) {
+                if ($('.o_list_renderer .o_data_cell:contains("New SMS!")').length !== 0) {
                     console.error('SMS Marketing record should not appear in this view');
                 }
             },
@@ -28,9 +28,9 @@ registry.category("web_tour.tours").add('mailing_activities_split', {
             trigger: '.o-mail-ActivityGroup:contains("SMS Marketing")',
         }, {
             content: 'Open SMS Marketing record in the kanban view',
-            trigger: '.o_kanban_record:contains("New SMS!")',
+            trigger: '.o_list_renderer .o_data_cell:contains("New SMS!")',
             run: () => {
-                if ($(".o_kanban_record:contains(New Email!)").length !== 0) {
+                if ($('.o_list_renderer .o_data_cell:contains("New Email!")').length !== 0) {
                     console.error('Email Marketing record should not appear in this view');
                 }
             },

@@ -5,7 +5,6 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { date_to_str } from "@web/legacy/js/core/time";
-import { session } from "@web/session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
@@ -46,6 +45,11 @@ QUnit.test("do not show empty text when at least some future activities", async 
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
+    function selectContaining(domElement, selector, containings) {
+        return Array.from(domElement.querySelectorAll(selector)).filter(
+            (sel) => containings.every((containing) => sel.textContent.includes(containing)));
+    }
+
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const yesterday = new Date();
@@ -76,104 +80,37 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await contains(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter");
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
-    let context = {};
+    let actionChecks = {
+        context: { force_search_count: 1 },
+        domain: [["activity_ids.user_id", "=", session.uid]],
+    }
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.deepEqual(action.context, context);
+            Object.entries(actionChecks).forEach(([key, value]) => {
+                assert.deepEqual(action[key], value);
+            });
+            assert.step("do_action:" + action.name);
         },
     });
-    context = {
-        force_search_count: 1,
-        search_default_activities_overdue: 1,
-    };
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");
     await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", { count: 2 });
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "1 Late" });
+    assert.ok(selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Late"]));
+    assert.ok(selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "1 Today"]));
+    assert.ok(selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup", ["res.partner", "0 Future"]));
+    assert.ok(selectContaining(document, ".o-mail-ActivityMenu .o-mail-ActivityGroup",
+        ["mail.test.activity", "1 Late"]));
+    assert.ok(selectContaining(document, '.o-mail-ActivityMenu .o-mail-ActivityGroup',
+        ["mail.test.activity", "1 Today"]));
+    assert.ok(selectContaining(document, '.o-mail-ActivityMenu .o-mail-ActivityGroup',
+        ["mail.test.activity", "2 Future"]));
+    actionChecks.res_model = 'res.partner';
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "res.partner" });
     await contains(".o-mail-ActivityMenu", { count: 0 });
-    context = {
-        force_search_count: 1,
-        search_default_activities_today: 1,
-    };
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await click(":nth-child(1 of .o-mail-ActivityGroup) button", { text: "1 Today" });
-    await contains(".o-mail-ActivityMenu", { count: 0 });
-    context = {
-        force_search_count: 1,
-        search_default_activities_upcoming_all: 1,
-    };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "2 Future" });
-    await contains(".o-mail-ActivityMenu", { count: 0 });
-    context = {
-        force_search_count: 1,
-        search_default_activities_overdue: 1,
-        search_default_activities_today: 1,
-    };
-    await click(".o_menu_systray i[aria-label='Activities']");
+    actionChecks.res_model = 'mail.test.activity';
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "mail.test.activity" });
-    await contains(".o-mail-ActivityMenu", { count: 0 });
-});
-
-QUnit.test("activity menu widget: activity view icon", async (assert) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const activityIds = pyEnv["mail.test.activity"].create([{}, {}, {}, {}]);
-    pyEnv["mail.activity"].create([
-        { res_id: partnerId, res_model: "res.partner" },
-        { res_id: activityIds[0], res_model: "mail.test.activity" },
-        {
-            date_deadline: date_to_str(tomorrow),
-            res_id: activityIds[1],
-            res_model: "mail.test.activity",
-        },
-        {
-            date_deadline: date_to_str(tomorrow),
-            res_id: activityIds[2],
-            res_model: "mail.test.activity",
-        },
-        {
-            date_deadline: date_to_str(yesterday),
-            res_id: activityIds[3],
-            res_model: "mail.test.activity",
-        },
-    ]);
-    const { env } = await start();
-    await click(".o_menu_systray i[aria-label='Activities']");
-    await contains("button[title='Summary']", { count: 2 });
-    await contains(".o-mail-ActivityGroup", {
-        text: "res.partner",
-        contains: ["button[title='Summary'].fa-clock-o"],
-    });
-    await contains(".o-mail-ActivityGroup", {
-        text: "mail.test.activity",
-        contains: ["button[title='Summary'].fa-clock-o"],
-    });
-    await contains(".show .dropdown-menu");
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            if (action.name) {
-                assert.ok(action.domain);
-                assert.deepEqual(action.domain, [["activity_ids.user_id", "=", session.uid]]);
-                assert.step("do_action:" + action.name);
-            } else {
-                assert.step("do_action:" + action);
-            }
-        },
-    });
-    await click("button[title='Summary']", {
-        parent: [".o-mail-ActivityGroup", { text: "mail.test.activity" }],
-    });
-    await contains(".dropdown-menu", { count: 0 });
-    await click(".o_menu_systray i[aria-label='Activities']");
-    await click("button[title='Summary']", {
-        parent: [".o-mail-ActivityGroup", { text: "res.partner" }],
-    });
-    assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
+    assert.verifySteps(["do_action:res.partner", "do_action:mail.test.activity"]);
 });
 
 QUnit.test("activity menu widget: close on messaging menu click", async () => {

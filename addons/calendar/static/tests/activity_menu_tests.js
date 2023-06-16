@@ -34,7 +34,7 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
             assert.step("action");
         },
     });
-    await contains(".o-mail-ActivityGroup", { text: "Today's Meetings" });
+    await contains(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Today's Meetings" });
     await contains(".o-mail-ActivityGroup .o-calendar-meeting", { count: 2 });
     await contains(".o-calendar-meeting span.fw-bold", { text: "meeting1" });
     await contains(".o-calendar-meeting span:not(.fw-bold)", { text: "meeting2" });
