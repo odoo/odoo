@@ -316,12 +316,15 @@ export class ThreadService {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
-            thread.messages = messages.reverse().map((message) =>
-                this.messageService.insert({
+            thread.messages = messages.reverse().map((message) => {
+                if (message.parentMessage?.body) {
+                    message.parentMessage.body = markup(message.parentMessage.body);
+                }
+                return this.messageService.insert({
                     ...message,
                     body: message.body ? markup(message.body) : message.body,
-                })
-            );
+                });
+            });
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
