@@ -31,10 +31,7 @@ class MailTemplate(models.Model):
                 new_attachments = []
 
                 include_qr_report = 'l10n_ch.l10n_ch_qr_report' not in self.env.context.get('l10n_ch_mail_skip_report', [])
-                if include_qr_report and \
-                        record.move_type == 'out_invoice' and \
-                        record.partner_bank_id._eligible_for_qr_code('ch_qr', record.partner_id, record.currency_id) and \
-                        record.display_qr_code:
+                if include_qr_report and record.move_type == 'out_invoice' and record.partner_bank_id._eligible_for_qr_code('ch_qr', record.partner_id, record.currency_id):
                     # We add an attachment containing the QR-bill
                     qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
                     qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf(record.ids)[0]
