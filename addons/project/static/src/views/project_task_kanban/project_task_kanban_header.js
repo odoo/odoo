@@ -15,7 +15,7 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     }
 
     async onWillStart() {
-        if (!this.props.list.isGroupedByPersonalStages) { // no need to check it if the group by is personal stages
+        if (this.props.list.isGroupedByStage) { // no need to check it if not grouped by stage
             this.isProjectManager = await this.userService.hasGroup('project.group_project_manager');
         }
     }

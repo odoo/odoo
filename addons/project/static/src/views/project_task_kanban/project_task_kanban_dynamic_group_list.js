@@ -8,8 +8,4 @@ export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get isGroupedByStage() {
         return !!this.groupByField && this.groupByField.name === 'stage_id';
     }
-
-    get isGroupedByPersonalStages() {
-        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_id';
-    }
 }

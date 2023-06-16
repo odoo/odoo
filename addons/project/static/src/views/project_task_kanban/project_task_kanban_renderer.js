@@ -13,11 +13,11 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     }
 
     canCreateGroup() {
-        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage) || this.props.list.isGroupedByPersonalStages;
+        return super.canCreateGroup() && (this.isProjectTasksContext() == this.props.list.isGroupedByStage);// || this.props.list.isGroupedByPersonalStages;--> why is it needed ???
     }
 
     isProjectTasksContext() {
-        return this.props.list.context.active_model === "project.project" && this.props.list.context.default_project_id;
+        return this.props.list.context.active_model === "project.project" && !!this.props.list.context.default_project_id;
     }
 }
 
