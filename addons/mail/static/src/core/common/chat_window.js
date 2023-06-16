@@ -106,12 +106,10 @@ export class ChatWindow extends Component {
         } else {
             this.chatWindowService.toggleFold(this.props.chatWindow);
         }
-        this.chatWindowService.notifyState(this.props.chatWindow);
     }
 
     close(options) {
         this.chatWindowService.close(this.props.chatWindow, options);
-        this.chatWindowService.notifyState(this.props.chatWindow);
     }
 
     get moreMenuText() {

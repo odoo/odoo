@@ -171,17 +171,7 @@ patch(ThreadService.prototype, "mail/core/web", {
     },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive || this.ui.isSmall) {
-            const chatWindow = this.chatWindowService.insert({
-                folded: false,
-                thread,
-                replaceNewMessageChatWindow,
-            });
-            chatWindow.autofocus++;
-            if (thread) {
-                thread.state = "open";
-            }
-            this.chatWindowService.notifyState(chatWindow);
-            return;
+            this.chatWindowService.open(thread, replaceNewMessageChatWindow);
         }
         this._super(thread, replaceNewMessageChatWindow);
     },
