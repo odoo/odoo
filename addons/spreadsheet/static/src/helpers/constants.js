@@ -6,7 +6,7 @@ export const DEFAULT_LINES_NUMBER = 20;
 
 export const FORMATS = {
     day: { out: "MM/DD/YYYY", display: "DD MMM YYYY", interval: "d" },
-    week: { out: "WW/YYYY", display: "[W]W YYYY", interval: "w" },
+    week: { out: "ww/YYYY", display: "[W]w YYYY", interval: "w" },
     month: { out: "MM/YYYY", display: "MMMM YYYY", interval: "M" },
     quarter: { out: "Q/YYYY", display: "[Q]Q YYYY", interval: "Q" },
     year: { out: "YYYY", display: "YYYY", interval: "y" },
