@@ -25,7 +25,7 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         const { Model, archInfo } = this.props;
-        this.model = useModel(Model, this.modelParams);
+        this.model = useModel(Model, this.modelParams, this.modelOptions);
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
@@ -115,6 +115,10 @@ export class KanbanController extends Component {
             onRecordSaved: this.onRecordSaved.bind(this),
             rootState,
         };
+    }
+
+    get modelOptions(){
+        return {};
     }
 
     get progressBarAggregateFields() {
