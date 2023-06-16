@@ -902,7 +902,7 @@
                                 <div t-attf-id="o_products_attributes_{{a.id}}" class="">
                                     <t t-if="a.display_type == 'select'">
                                         <select class="form-select css_attribute_select mb-2" name="attrib">
-                                            <option value="" selected="true">-</option>
+                                            <option value="" selected="true">All <t t-out="a.name"/></option>
                                             <t t-foreach="a.value_ids" t-as="v">
                                                 <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
                                             </t>
