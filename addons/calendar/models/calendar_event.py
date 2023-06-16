@@ -69,6 +69,7 @@ class Meeting(models.Model):
     _description = "Calendar Event"
     _order = "start desc"
     _inherit = ["mail.thread"]
+    _systray_view = 'calendar'
 
     DISCUSS_ROUTE = 'calendar/join_videocall'
 
