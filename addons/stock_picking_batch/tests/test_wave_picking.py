@@ -375,9 +375,11 @@ class TestBatchPicking(TransactionCase):
         ])
         self.assertFalse(picking.batch_id)
         self.assertEqual(ml1.picking_id.batch_id.id, wave.id)
+        self.assertEqual(ml1.picking_id.move_ids.quantity_done, 5)
         self.assertEqual(ml1.picking_id.move_ids.product_uom_qty, 5)
         self.assertEqual(ml2.picking_id.id, picking.id)
-        self.assertEqual(ml2.picking_id.move_ids.product_uom_qty, 10)
+        self.assertEqual(ml2.picking_id.move_ids.quantity_done, 10)
+        self.assertEqual(ml2.picking_id.move_ids.product_uom_qty, 0)
 
     def test_wave_trigger_errors(self):
         with self.assertRaises(UserError):

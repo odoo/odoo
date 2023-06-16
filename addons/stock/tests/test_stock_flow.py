@@ -1927,10 +1927,10 @@ class TestStockFlow(TestStockCommon):
         f.picking_type_id = warehouse_company_1.out_type_id
         with f.move_ids_without_package.new() as move:
             move.product_id = product_from_company_2
-            move.quantity_done = 5
+            move.product_uom_qty = 5
         with f.move_ids_without_package.new() as move:
             move.product_id = product_from_company_3
-            move.quantity_done = 5
+            move.product_uom_qty = 5
         picking = f.save()
         picking.action_reset_draft()
 
@@ -2024,11 +2024,12 @@ class TestStockFlow(TestStockCommon):
 
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with picking_form.move_ids_without_package.new() as move:
-            self.assertFalse(move._get_modifier('quantity_done', 'column_invisible'))
+            self.assertTrue(move._get_modifier('quantity_done', 'column_invisible'))
+            self.assertFalse(move._get_modifier('product_uom_qty', 'column_invisible'))
             self.assertTrue(move._get_modifier('forecast_availability', 'column_invisible'))
             self.assertTrue(move._get_modifier('reserved_availability', 'column_invisible'))
             move.product_id = self.productA
-            move.quantity_done = 1
+            move.product_uom_qty = 1
         picking = picking_form.save()
 
         self.assertEqual(picking.state, 'assigned')
@@ -2067,7 +2068,7 @@ class TestStockFlow(TestStockCommon):
         picking_form.picking_type_id = picking_type
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_lot
-            move.quantity_done = 8
+            move.product_uom_qty = 8
         receipt_1 = picking_form.save()
         receipt_1.action_reset_draft()
         receipt_1.action_confirm()
@@ -2088,7 +2089,7 @@ class TestStockFlow(TestStockCommon):
         picking_form.picking_type_id = picking_type
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_lot
-            move.quantity_done = 8
+            move.product_uom_qty = 8
         receipt_2 = picking_form.save()
         receipt_2.action_reset_draft()
         receipt_2.action_confirm()

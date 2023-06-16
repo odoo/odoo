@@ -37,10 +37,8 @@ class StockMove(TransactionCase):
             move.product_uom_qty = 1.0
         picking = picking.save()
 
-        action = picking.move_ids[0].action_show_details()
-        self.assertEqual(action['context']['show_quant'], True)
-        action = picking.move_ids[1].action_show_details()
-        self.assertEqual(action['context']['show_quant'], False)
+        self.assertEqual(picking.move_ids[0].show_quant, True)
+        self.assertEqual(picking.move_ids[1].show_quant, False)
 
     def test_create_move_line_reserved(self):
         """ Create a delivery immediate transfer with a storable product.

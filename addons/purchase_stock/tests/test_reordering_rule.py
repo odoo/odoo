@@ -66,7 +66,7 @@ class TestReorderingRule(TransactionCase):
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_01
-            move.quantity_done = 10.0
+            move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
         # Run scheduler
         self.env['procurement.group'].run_scheduler()
@@ -141,10 +141,10 @@ class TestReorderingRule(TransactionCase):
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_01
-            move.quantity_done = 10.0
+            move.product_uom_qty = 10.0
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_01
-            move.quantity_done = 10.0
+            move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
         customer_picking.move_ids[0].location_id = subloc_1.id
         customer_picking.move_ids[1].location_id = subloc_2.id

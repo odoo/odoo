@@ -305,7 +305,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         receipt_form.partner_id = self.subcontractor_partner1
         with receipt_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
-            move.quantity_done = 10
+            move.product_uom_qty = 10
         receipt = receipt_form.save()
         receipt.action_reset_draft()
         # add an extra cost
