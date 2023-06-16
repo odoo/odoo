@@ -86,5 +86,11 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
     </record>
+
+    <record id="ir_rule_hr_contract_type_multi_company" model="ir.rule">
+        <field name="name">HR Contract Type: Multi Company</field>
+        <field name="model_id" ref="model_hr_contract_type"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
 </data>
 </odoo>
