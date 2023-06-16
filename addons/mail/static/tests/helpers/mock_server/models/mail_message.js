@@ -135,20 +135,16 @@ patch(MockServer.prototype, "mail/models/mail_message", {
      */
     _mockMailMessage_MessageFetch(domain, before, after, around, limit = 30) {
         if (around) {
-            const messagesBefore = this._mockMailMessage_MessageFetch(
-                domain.concat([["id", "<=", around]]),
-                before,
-                after,
-                false,
-                limit / 2
-            );
-            const messagesAfter = this._mockMailMessage_MessageFetch(
-                domain.concat([["id", ">", around]]),
-                before,
-                after,
-                false,
-                limit / 2
-            );
+            const messagesBefore = this.getRecords(
+                "mail.message",
+                domain.concat([["id", "<=", around]])
+            ).sort((m1, m2) => m2.id - m1.id);
+            messagesBefore.length = Math.min(messagesBefore.length, limit / 2);
+            const messagesAfter = this.getRecords(
+                "mail.message",
+                domain.concat([["id", ">", around]])
+            ).sort((m1, m2) => m1.id - m2.id);
+            messagesAfter.length = Math.min(messagesAfter.length, limit / 2);
             return messagesAfter.concat(messagesBefore.reverse());
         }
         if (before) {
