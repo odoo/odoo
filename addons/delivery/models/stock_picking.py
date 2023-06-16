@@ -269,14 +269,12 @@ class StockPicking(models.Model):
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
             if not delivery_lines:
-                sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
-            else:
-                delivery_line = delivery_lines[0]
-                delivery_line[0].write({
-                    'price_unit': self.carrier_price,
-                    # remove the estimated price from the description
-                    'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
-                })
+                delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+            delivery_lines[0].write({
+                'price_unit': self.carrier_price,
+                # remove the estimated price from the description
+                'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
+            })
 
     def open_website_url(self):
         self.ensure_one()
