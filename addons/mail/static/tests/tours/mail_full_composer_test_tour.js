@@ -41,8 +41,20 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
+            content: "Check composer keeps open after pushing Escape",
+            trigger: ".o_mail_composer_form_view",
+            run: () => {
+                window.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                        bubbles: true,
+                        key: "Escape",
+                    })
+                );
+            },
+        },
+        {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o-mail-AttachmentCard[title="text.txt"]',
+            trigger: '.o_attachment[title="text.txt"]',
             run() {},
         },
         {
