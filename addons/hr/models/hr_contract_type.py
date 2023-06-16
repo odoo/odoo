@@ -11,3 +11,4 @@ class ContractType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer()
+    country_id = fields.Many2one('res.country')
