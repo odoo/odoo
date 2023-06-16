@@ -302,17 +302,7 @@ export class ListController extends Component {
                 icon: "oi oi-archive",
                 description: this.env._t("Archive"),
                 callback: () => {
-                    const dialogProps = {
-                        body: this.env._t(
-                            "Are you sure that you want to archive all the selected records?"
-                        ),
-                        confirmLabel: this.env._t("Archive"),
-                        confirm: () => {
-                            this.toggleArchiveState(true);
-                        },
-                        cancel: () => {},
-                    };
-                    this.dialogService.add(ConfirmationDialog, dialogProps);
+                    this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
                 },
             },
             unarchive: {
@@ -329,6 +319,17 @@ export class ListController extends Component {
                 description: this.env._t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
             },
+        };
+    }
+
+    get archiveDialogProps() {
+        return {
+            body: this.env._t("Are you sure that you want to archive all the selected records?"),
+            confirmLabel: this.env._t("Archive"),
+            confirm: () => {
+                this.toggleArchiveState(true);
+            },
+            cancel: () => {},
         };
     }
 
