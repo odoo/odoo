@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -79,6 +79,46 @@ class ProjectTaskType(models.Model):
             default['name'] = _("%s (copy)") % (self.name)
         return super().copy(default)
 
+    def unlink(self): # TODO: write test for deleting stages in batch (+ for multiple user in sudo)
+        # 1. All non-personal stages are processed
+        stages_to_unlink = self.filtered(lambda stage: not stage.user_id)
+
+        # 2. Personal stages are processed if the user still has at least one personal stage after unlink
+        raise_personal_stage_error = False
+        remaining_personal_stages = self.env['project.task.type'].search([('user_id', 'in', self.user_id.ids), ('id', 'not in', self.ids)], order='sequence DESC')
+        for user in self.user_id:
+            user_stages_to_unlink = self.filtered(lambda stage: stage.user_id == user)
+            user_remaining_stages = remaining_personal_stages.filtered(lambda stage: stage.user_id == user)
+            if len(user_remaining_stages):
+                stages_to_unlink |= user_stages_to_unlink
+                self._prepare_personal_stages_deletion(user_stages_to_unlink, user_remaining_stages)
+            else:
+                raise_personal_stage_error = True
+
+        result =  super(ProjectTaskType, stages_to_unlink).unlink()
+        if raise_personal_stage_error:
+            raise ValidationError(_("Each user should at least have one personal stage. Create a new stage to which the tasks can be transferred after the selected one(s) is deleted."))
+        return result
+
+    def _prepare_personal_stages_deletion(self, stages_to_delete, remaining_stages):
+        """
+        _prepare_personal_stages_deletion prepare the deletion of personal stages of a single user.
+        Tasks using that stage will be moved to the first stage with a lower priority if it exists
+        higher if not. remaining_stages recordset can not be empty.
+        """
+        remaining_stages_dict = [{'id': stage.id, 'seq': stage.sequence, 'to_delete': False} for stage in remaining_stages]
+        stage_mapping = {}
+        stages_to_delete_dict = sorted([{'id': stage.id, 'seq': stage.sequence, 'to_delete': False} for stage in stages_to_delete],
+                                       key=lambda stage: stage['seq'])
+        replacement_stage_id = remaining_stages_dict.pop()['id']
+        next_replacement_stage = remaining_stages_dict.pop() if len(remaining_stages_dict) else False
+
+        for stage in stages_to_delete_dict:
+            while next_replacement_stage and next_replacement_stage['seq'] < stage['seq']:
+                replacement_stage_id = next_replacement_stage['id']
+                next_replacement_stage = remaining_stages_dict.pop() if len(remaining_stages_dict) else False
+            self.env['project.task.stage.personal'].search([('stage_id', '=', stage['id'])]).stage_id = replacement_stage_id
+
     def toggle_active(self):
         res = super().toggle_active()
         stage_active = self.filtered('active')
@@ -121,34 +161,3 @@ class ProjectTaskType(models.Model):
     def _check_personal_stage_not_linked_to_projects(self):
         if any(stage.user_id and stage.project_ids for stage in self):
             raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
-
-    def remove_personal_stage(self):
-        """
-        Remove a personal stage, tasks using that stage will move to the first
-        stage with a lower priority if it exists higher if not.
-        This method will not allow to delete the last personal stage.
-        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
-        """
-        self.ensure_one()
-        assert self.user_id == self.env.user or self.env.su
-
-        users_personal_stages = self.env['project.task.type']\
-            .search([('user_id', '=', self.user_id.id)], order='sequence DESC')
-        if len(users_personal_stages) == 1:
-            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
-
-        # Find the most suitable stage, they are already sorted by sequence
-        new_stage = self.env['project.task.type']
-        for stage in users_personal_stages:
-            if stage == self:
-                continue
-            if stage.sequence > self.sequence:
-                new_stage = stage
-            elif stage.sequence <= self.sequence:
-                new_stage = stage
-                break
-
-        self.env['project.task.stage.personal'].search([('stage_id', '=', self.id)]).write({
-            'stage_id': new_stage.id,
-        })
-        self.unlink()
