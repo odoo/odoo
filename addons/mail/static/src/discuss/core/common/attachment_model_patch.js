@@ -5,6 +5,12 @@ import { Attachment } from "@mail/core/common/attachment_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Attachment.prototype, "discuss/core/common", {
+    get isDeletable() {
+        if (this.message && this.originThread?.model === "discuss.channel") {
+            return this.message.editable;
+        }
+        return this._super();
+    },
     get urlRoute() {
         if (!this.accessToken && this.originThread?.model === "discuss.channel") {
             return this.isImage
