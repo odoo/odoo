@@ -14,7 +14,7 @@ import {
 } from "../helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useRef, xml } from "@odoo/owl";
 let container;
 
 /**
@@ -357,6 +357,68 @@ QUnit.test("is positioned relative to its containing block", async (assert) => {
     // best positions are the same relative to the viewport
     assert.equal(popBox1.top, popBox2.top);
     assert.equal(popBox1.left, popBox2.left);
+});
+
+QUnit.test("popper as child of another", async (assert) => {
+    class Child extends Component {
+        setup() {
+            const ref = useRef("ref");
+            usePosition(() => ref.el, { popper: "popper", container, position: "left" });
+        }
+    }
+    Child.template = /* xml */ xml`
+        <div id="child">
+            <div class="ref" t-ref="ref" />
+            <div class="popper" t-ref="popper" />
+        </div>
+    `;
+    const reference = container.querySelector("#reference");
+    class Parent extends Component {
+        setup() {
+            usePosition(reference, { container });
+        }
+    }
+    Parent.components = { Child };
+    Parent.template = /* xml */ xml`
+        <div id="popper">
+            <Child/>
+        </div>
+    `;
+
+    const sheet = document.createElement("style");
+    sheet.textContent = `
+        #child .ref {
+            background-color: salmon;
+            height: 100px;
+            width: 10px;
+        }
+        #child .popper {
+            background-color: olive;
+            height: 100px;
+            width: 100px;
+        }
+    `;
+    document.head.appendChild(sheet);
+    registerCleanup(() => sheet.remove());
+
+    await mount(Parent, container);
+    const parentPopBox1 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox1 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await triggerEvent(document, null, "scroll");
+
+    const parentPopBox2 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox2 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    assert.strictEqual(parentPopBox1.top, parentPopBox2.top);
+    assert.strictEqual(childPopBox1.top, childPopBox2.top);
+    assert.strictEqual(parentPopBox2.left, parentPopBox1.left + spacer.offsetWidth * 0.5);
+    assert.strictEqual(childPopBox2.left, childPopBox1.left + spacer.offsetWidth * 0.5);
 });
 
 function getPositionTest(position, positionToCheck) {
