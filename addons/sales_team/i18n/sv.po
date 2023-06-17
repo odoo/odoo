@@ -16,6 +16,7 @@
 # Robin Calvin, 2022
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
+"Last-Translator: Lasse Larsson, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,6 +85,8 @@ msgstr "Aktivitetstyp"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Lägg till medlemmar för att automatiskt tilldela deras dokument till detta "
+"säljteam."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -92,6 +95,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Att lägga till %(user_name)s i detta team skulle ta bort honom/henne från "
+"dess nuvarande team %(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -100,6 +105,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Att lägga till %(user_name)s i detta team skulle ta bort honom/henne från "
+"dess nuvarande team %(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -108,6 +115,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Att lägga till %(user_names)s i detta team skulle ta bort dem från deras "
+"nuvarande team (%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -143,13 +152,13 @@ msgstr "Stor gullig knapp :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM-tagg"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Kan inte ta bort standardteam \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -186,12 +195,12 @@ msgstr "Kontakt"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Skapa CRM-taggar"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Skapa ett säljteam"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -201,7 +210,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Skapa en aktivitetstyp"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -236,7 +245,7 @@ msgstr "Anslagstavla datagraf"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Definiera ett nytt säljteam"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -317,6 +326,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Om True kan användare tillhöra flera säljteam. I annat fall är medlemskapet "
+"begränsat till ett enda säljteam."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -349,6 +360,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Om det aktiva fältet är inställt på false kan du dölja säljteamet utan att "
+"ta bort det."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -358,7 +371,7 @@ msgstr "Bild"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Bild (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -411,16 +424,18 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Huvudsaklig användare säljteam. Används särskilt för pipeline, eller för att"
+" ställa in säljteam i fakturering eller prenumeration."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Medlemsföretag"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Varning för medlemmar"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -430,7 +445,7 @@ msgstr "Medlemmar"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Varning för problem med medlemskap"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -453,7 +468,7 @@ msgstr "Mobil"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Flera medlemskap tillåtna"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -508,7 +523,7 @@ msgstr "Kassa"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Före försäljning"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -524,7 +539,7 @@ msgstr "Försäljning"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "Försäljare"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -546,18 +561,18 @@ msgstr "Försäljningsteam"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Medlem i säljteam"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Medlemmar i säljteam"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Medlemmar i säljteam (inkl. inaktiva)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -585,7 +600,7 @@ msgstr "Sök säljteam"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Sample data"
-msgstr ""
+msgstr "Provuppgifter"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -627,7 +642,7 @@ msgstr "Etiketter"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Teaminformation"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -661,6 +676,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Dessa representerar de olika kategorierna av saker du måste göra (t.ex. "
+"\"Ringa\" eller \"Förbereda möte\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -669,6 +686,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"För att lägga till en säljare i flera team, aktivera alternativet Flera team"
+" i inställningarna."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -680,19 +699,21 @@ msgstr "Utbildning"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Ge användarna möjlighet att inte lägga till det valda teamet för att "
+"undvika dubbletter"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Begränsa till teamföretag eller alla om inget företag"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Odefinierad grafmodell för säljteam: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -711,6 +732,8 @@ msgstr "Räknare olästa meddelanden"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Använd säljteamen för att organisera dina försäljningsavdelningar och ta "
+"fram rapporter."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -719,6 +742,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Använd säljteam för att organisera dina säljavdelningar.\n"
+"                Varje team kommer att arbeta med en separat pipeline."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -726,21 +751,23 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Använd taggar för att hantera och spåra dina möjligheter (produktstruktur, "
+"försäljningstyp, ...)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Användarföretag"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Användare i team"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "Försäljningsteam för användare"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -760,7 +787,7 @@ msgstr "Användare"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Användare som tilldelats detta team."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -774,21 +801,23 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Du försöker skapa dubbla medlemskap. Vi fann att %(duplicates)s redan "
+"existerar."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "t.ex. Nordamerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "t.ex. Tjänster"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads

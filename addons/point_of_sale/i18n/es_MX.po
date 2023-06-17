@@ -7,8 +7,8 @@
 # Cécile Collart <cco@odoo.com>, 2021
 # Martin Trigaux, 2023
 # Fernanda Alvarez, 2023
-# Aimée Mendoza Sánchez, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -858,6 +858,8 @@ msgstr "No puede cambiar al cliente"
 #, python-format
 msgid "Can't mix order with refund products with new products."
 msgstr ""
+"No se pueden mezclar pedidos que contengan productos devueltos con nuevos "
+"productos."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3935,7 +3937,7 @@ msgstr "Sesión de PdV"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "POS error"
-msgstr ""
+msgstr "Error en el Punto de venta"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4119,7 +4121,7 @@ msgstr "Pagos:"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Pending Electronic Payments"
-msgstr ""
+msgstr "Pagos electrónicos pendientes"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
@@ -5548,6 +5550,8 @@ msgstr ""
 msgid ""
 "Show customers checkout in a pop-up window. Can be moved to a second screen."
 msgstr ""
+"Mostrar el proceso de pago a los clientes en una ventana emergente. Puede "
+"moverlo a una segunda pantalla."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
@@ -5555,6 +5559,8 @@ msgid ""
 "Show customers checkout in a pop-up window. Recommend to be moved to a "
 "second screen visible to the client."
 msgstr ""
+"Mostrar el proceso de pago a los clientes en una ventana emergente. Se "
+"recomienda moverlo a una segunda pantalla visible para el cliente. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -6295,6 +6301,8 @@ msgid ""
 "There is at least one pending electronic payment.\n"
 "Please finish the payment with the terminal or cancel it then remove the payment line."
 msgstr ""
+"Hay al menos un pago electrónico pendiente.\n"
+"Por favor, finalice el pago con el terminal o cáncelalo y luego elimine la línea de pago."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

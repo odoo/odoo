@@ -7,11 +7,11 @@
 # InfernalLV <karlisdreizis@gmail.com>, 2022
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
-# ievaputnina <ievai.putninai@gmail.com>, 2022
 # JanisJanis <jbojars@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Anzelika Adejanova, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
 msgstr ""
 
 #. module: website
@@ -2102,7 +2108,7 @@ msgstr "Bāze"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "Bāzes skatījuma arhitektūra"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__primary
@@ -2127,7 +2133,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__before
 msgid "Before"
-msgstr ""
+msgstr "Pirms"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3557,7 +3563,7 @@ msgstr "Direction"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "Direktīva"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_disable_unused_snippets_assets_ir_actions_server
@@ -3617,7 +3623,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover more"
-msgstr ""
+msgstr "Uzziniet vairāk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -4425,7 +4431,7 @@ msgstr "Fixed"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flag"
-msgstr ""
+msgstr "Karogs"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4881,7 +4887,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP maršrutēšana"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5345,7 +5351,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__include
 msgid "Include"
-msgstr ""
+msgstr "Iekļaut"
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
@@ -6022,7 +6028,7 @@ msgstr "Izkārtojums"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background"
-msgstr ""
+msgstr "Izdrukas dokumentu fons"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -6083,7 +6089,7 @@ msgstr "Let your customers log in to see their documents"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Let's do it"
-msgstr ""
+msgstr "Darīsim to"
 
 #. module: website
 #. openerp-web
@@ -7973,7 +7979,7 @@ msgstr "Rename Page To:"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__replace
 msgid "Replace"
-msgstr ""
+msgstr "Aizstāt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code
@@ -8010,7 +8016,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "Atjaunot iepriekšējo versiju (soft reset)."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_id
@@ -9468,6 +9474,16 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"

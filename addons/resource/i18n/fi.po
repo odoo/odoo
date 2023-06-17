@@ -61,6 +61,8 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
+"Oletko varma, että haluat vaihtaa tämän kalenterin 1 viikon kalenteriin? "
+"Kaikki merkinnät menetetään"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -68,29 +70,33 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
+"Oletko varma, että haluat vaihtaa tämän kalenterin 2 viikon kalenteriin? "
+"Kaikki merkinnät menetetään"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Osallistujat eivät voi olla päällekkäisiä."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Keksimäärin tuntia päivässä"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Keskimääräiset työtunnit päivässä, jotka resurssin on tarkoitus työskennellä"
+" tässä kalenterissa."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Kalenteri 2 viikon tilassa"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -134,7 +140,7 @@ msgstr "Luotu"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr ""
+msgstr "Päiväjakso"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -191,7 +197,7 @@ msgstr "Päättymispäivä"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "Selitys"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -202,7 +208,7 @@ msgstr "Ensimmäinen"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Ensimmäinen viikko"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -213,7 +219,7 @@ msgstr "Perjantai"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Perjantai-iltapäivä"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -224,7 +230,7 @@ msgstr "Perjantaiaamu"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
+msgstr "Antaa tämän rivin järjestyksen resurssikalenteria näytettäessä."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -263,6 +269,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Jos tyhjä, tämä on yritykselle yleinen vapaa-aika. Jos resurssi on "
+"määritetty, vapaa-aika koskee vain tätä resurssia"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -279,12 +287,15 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Jos aktiivisen kentän arvoksi asetetaan false, voit piilottaa työajan "
+"poistamatta sitä."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Impossible to switch calendar type for the default company schedule."
 msgstr ""
+"Kalenterityypin vaihtaminen yrityksen oletusaikatauluun on mahdotonta."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -292,6 +303,7 @@ msgstr ""
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
+"Kalenterissa, jossa on 2 viikon tila, kaikkien jaksojen on oltava jaksoissa."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
@@ -323,7 +335,7 @@ msgstr "Viimeksi päivitetty"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
-msgstr ""
+msgstr "Lähtöpäivä"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -346,7 +358,7 @@ msgstr "Maanantai"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Maanantai-iltapäivä"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -404,14 +416,14 @@ msgstr "Resurssi"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Resurssien yhdistelmä"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr ""
+msgstr "Resurssien vapaa-aika"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -441,7 +453,7 @@ msgstr "Resurssit"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Resurssit Vapaa-aika"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -468,7 +480,7 @@ msgstr "Hae resurssia"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Haku Työajan vapaa-aikaa"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -484,7 +496,7 @@ msgstr "Sekunti"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Toinen viikko"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -513,6 +525,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Työskentelyn alkamis- ja päättymisaika.\n"
+"Erityisarvo 24:00 tulkitaan arvoksi 23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -522,7 +536,7 @@ msgstr "Aloituspäivä"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Loman alkamispäivä"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -532,12 +546,12 @@ msgstr "Sunnuntai"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr ""
+msgstr "Vaihda 1 viikon kalenteriin"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 2 weeks calendar"
-msgstr ""
+msgstr "Vaihda 2 viikon kalenteriin"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
@@ -553,13 +567,13 @@ msgstr ""
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr ""
+msgstr "Nykyinen viikko (%s-%s) vastaa %s-viikkoa."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "Vapaan alkamispäivän on oltava aikaisempi kuin päättymispäivän."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -596,7 +610,7 @@ msgstr "Torstai"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Torstai-iltapäivä"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -614,12 +628,12 @@ msgstr "Vapaa"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "Aikatyyppi"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Aikatehokkuuden on oltava ehdottoman positiivinen"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -643,7 +657,7 @@ msgstr "Tiistai"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Tiistai-iltapäivä"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -677,7 +691,7 @@ msgstr "Keskiviikko"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Keskiviikkoiltapäivä"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -688,14 +702,14 @@ msgstr "Keskiviikkoaamu"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "Viikon numero"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
-msgstr ""
+msgstr "Lasketaanko tämä vapaa-ajaksi vai työajaksi (esim. muodostaminen)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -754,7 +768,7 @@ msgstr "Työajat"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr ""
+msgstr "Et voi poistaa osiota viikkojen välillä."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -766,7 +780,7 @@ msgstr "ensimmäinen"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "muu viikko"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

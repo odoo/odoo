@@ -6,7 +6,8 @@
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2022
+# Lucia Pacheco, 2022
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4411,7 +4412,7 @@ msgstr "Ulmaceae"
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"No se puede publicar el mensaje, por favor modifique la dirección de correo "
+"No se puede publicar el mensaje, configure la dirección de correo "
 "electrónico del remitente."
 
 #. module: survey
@@ -4800,6 +4801,16 @@ msgid ""
 msgstr ""
 "Solo se pueden crear certificaciones para encuestas que tengan un mecanismo "
 "de evaluación."
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+"No puede eliminar preguntas de las encuestas \"%(survey_names)s\" mientras "
+"las sesiones en vivo están en progreso."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

@@ -46,6 +46,7 @@ msgstr ""
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
+"%(user)spotwierdza, że ten wydatek nie jest duplikatem podobnego wydatku."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -53,6 +54,8 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Wydatki - %s - %s ' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -147,7 +150,7 @@ msgstr "<strong>Pracownik:</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>Płatność do:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -260,25 +263,25 @@ msgstr "Należność"
 #: code:addons/hr_expense/static/src/js/upload_mixin.js:0
 #, python-format
 msgid "An error occurred during the upload"
-msgstr ""
+msgstr "Wystąpił błąd podczas przesyłania"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
 msgid "An expense account is expected"
-msgstr ""
+msgstr "Oczekiwane jest konto wydatków"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "An expense of same category, amount and date already exists."
-msgstr ""
+msgstr "Wydatek o tej samej kategorii, kwocie i dacie już istnieje."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr ""
+msgstr "Raport wydatków musi zawierać tylko wiersze z tej samej firmy."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
@@ -311,7 +314,7 @@ msgstr "Aprobuj"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Approve Report"
-msgstr ""
+msgstr "Zatwierdź raport"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
@@ -328,7 +331,7 @@ msgstr "Zaaprobowane"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_by
 msgid "Approved By"
-msgstr ""
+msgstr "Zatwierdzony przez"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -338,7 +341,7 @@ msgstr "Aprobowane wydatki"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_on
 msgid "Approved On"
-msgstr ""
+msgstr "Zatwierdzono dnia"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -348,7 +351,7 @@ msgstr "Zarchiwizowane"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr ""
+msgstr "Załącz pokwitowanie"
 
 #. module: hr_expense
 #. openerp-web
@@ -381,7 +384,7 @@ msgstr "Może zatwierdzić"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
 msgid "Can Reset"
-msgstr ""
+msgstr "Można zresetować"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
@@ -412,12 +415,12 @@ msgstr "Kategoria:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr ""
+msgstr "Kategoria: nie znaleziono"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "Poświadczona uczciwość i zgodność, <br/>(data i podpis)<br/><br/>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_id
@@ -463,23 +466,23 @@ msgstr "Utwórz"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr ""
+msgstr "Utwórz raport"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr ""
+msgstr "Utwórz nowy raport wydatków"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "Tworzenie wydatków na podstawie przychodzących wiadomości e-mail"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "Utwórz nowe wydatki, aby uzyskać statystyki."
 
 #. module: hr_expense
 #. openerp-web
@@ -536,7 +539,7 @@ msgstr "Szanowny"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr ""
+msgstr "Domyślna nazwa aliasu dla wydatków"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -554,12 +557,12 @@ msgstr "Opis"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Did you try the mobile app?"
-msgstr ""
+msgstr "Czy wypróbowałeś aplikację mobilną?"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
-msgstr ""
+msgstr "Digitalizacja paragonów za pomocą OCR i sztucznej inteligencji"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
@@ -576,6 +579,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"Nie trzymaj już swoich paragonów w kieszeni. Wystarczy zrobić zdjęcie "
+"paragonu i pozwolić Odoo zdigitalizować go za Ciebie. OCR i sztuczna "
+"inteligencja automatycznie uzupełnią dane."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -597,7 +603,7 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 #, python-format
 msgid "Duplicate Expense"
-msgstr ""
+msgstr "Duplikat wydatków"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -617,12 +623,12 @@ msgstr "Pracownik (zwrot kosztów)"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Wydatki pracownicze"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
 msgid "Employee Home Address"
-msgstr ""
+msgstr "Adres domowy pracownika"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
@@ -639,17 +645,17 @@ msgstr "Wydatek"
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr ""
+msgstr "Zatwierdzanie wydatków"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
 msgid "Expense Approve Duplicate"
-msgstr ""
+msgstr "Wydatek zatwierdź duplikat"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Expense Approver"
-msgstr ""
+msgstr "Zatwierdzający wydatki"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -660,12 +666,12 @@ msgstr "Data Wydatku"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Digitalization (OCR)"
-msgstr ""
+msgstr "Digitalizacja wydatków (OCR)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "Dziennik wydatków"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
@@ -675,12 +681,12 @@ msgstr "Pozycja wydatków"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "Linie wydatków mogą być edytowane przez bieżącego użytkownika"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
+msgstr "Menedżer wydatków"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -692,7 +698,7 @@ msgstr "Produkty Wydatkowe"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr ""
+msgstr "Kreator powodów odrzucenia wydatków"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
@@ -710,7 +716,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr ""
+msgstr "Podsumowanie raportu wydatków"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -723,7 +729,7 @@ msgstr "Raporty Wydatków"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr ""
+msgstr "Analiza raportów wydatków"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -739,12 +745,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr ""
+msgstr "Raporty wydatków do zatwierdzenia"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 msgid "Expense Validate Duplicate"
-msgstr ""
+msgstr "Duplikat zatwierdzenia wydatku"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -759,23 +765,25 @@ msgstr "powody odrzucenia wydatków"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr ""
+msgstr "Zatwierdzono raport wydatków"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr ""
+msgstr "Zapłacony raport wydatków"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr ""
+msgstr "Raport wydatków odrzucony"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
+"Raporty wydatków grupują wszystkie wydatki poniesione podczas określonego "
+"wydarzenia."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -809,17 +817,17 @@ msgstr "Analiza wydatków"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr ""
+msgstr "Raport wydatków"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr ""
+msgstr "Raporty wydatków do zatwierdzenia"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses by Date"
-msgstr ""
+msgstr "Wydatki według daty"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -831,7 +839,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "Wydatki członka zespołu"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -841,12 +849,12 @@ msgstr "Wydatki do zafakturowania"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
 msgid "Expenses to Process"
-msgstr ""
+msgstr "Wydatki do przetworzenia"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitly Refused by manager or accountant"
-msgstr ""
+msgstr "Wyraźna odmowa kierownika lub księgowego"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.trans_expense_product
@@ -882,7 +890,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Former Employees"
-msgstr ""
+msgstr "Byli pracownicy"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -916,7 +924,7 @@ msgstr "Grupuj wg."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
 msgid "Handle lines with different currencies"
-msgstr ""
+msgstr "Obsługa linii z różnymi walutami"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -927,12 +935,12 @@ msgstr "Ma wiadomość"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "Wydatki HR"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "Arkusz wydatków HR"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1001,7 +1009,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
 msgid "Is Editable By Current User"
-msgstr ""
+msgstr "Jest edytowalny przez bieżącego użytkownika"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1012,12 +1020,12 @@ msgstr "Jest obserwatorem"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr "Czy currency_id różni się od company_currency_id?"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "Czy wybrano produkt o koszcie niezerowym?"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1040,7 +1048,7 @@ msgstr "Pozycja zapisu"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
 msgid "Label Convert Rate"
-msgstr ""
+msgstr "Współczynnik konwersji etykiet"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_total_amount_company
@@ -1080,7 +1088,7 @@ msgstr "Czynności zaległe"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__use_mailgateway
 msgid "Let your employees record expenses by email"
-msgstr ""
+msgstr "Pozwól swoim pracownikom rejestrować wydatki przez e-mail"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1116,7 +1124,7 @@ msgstr "Wiadomości"
 #: model:product.product,name:hr_expense.mileage_expense_product
 #: model:product.template,name:hr_expense.mileage_expense_product_product_template
 msgid "Mileage"
-msgstr ""
+msgstr "Przebieg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1158,7 +1166,7 @@ msgstr "Nazwa"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
-msgstr ""
+msgstr "Nowy raport wydatków"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1190,7 +1198,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr ""
+msgstr "Nie znaleziono adresu domowego dla pracownika %s, skonfiguruj go."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1212,7 +1220,7 @@ msgstr "Nie znaleziono żadnego produktu związanego z wydatkami. Stwórzmy go!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono raportu wydatków. Stwórzmy jedną!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
@@ -1224,7 +1232,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono raportów wydatków. Stwórzmy jedną!"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__not_paid
@@ -1286,6 +1294,8 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
+"Po utworzeniu wydatku prześlij go do swojego przełożonego, który go "
+"zatwierdzi."
 
 #. module: hr_expense
 #. openerp-web
@@ -1301,13 +1311,15 @@ msgstr ""
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
+"Wersję roboczą mogą zresetować tylko pracownicy działu kadr lub "
+"zainteresowany pracownik."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
-msgstr ""
+msgstr "Tylko kierownicy i pracownicy działu kadr mogą zatwierdzać wydatki."
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.other_expense_product
@@ -1361,7 +1373,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Post Entries"
-msgstr ""
+msgstr "Wpisy"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1448,7 +1460,7 @@ msgstr "Powód:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Powód odmowy wydatków"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1463,7 +1475,7 @@ msgstr "Odn."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "Odniesienie może być edytowane przez bieżącego użytkownika"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1475,7 +1487,7 @@ msgstr "Odmów"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "Odmów wydatków"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
@@ -1489,7 +1501,7 @@ msgstr "Odmówiono"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr ""
+msgstr "Odrzucone wydatki"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1503,17 +1515,17 @@ msgstr "Rejestruj płatność"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr ""
+msgstr "Zwrot wydatków na odcinku wypłaty"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr ""
+msgstr "Zwrot wydatków na odcinkach wypłaty"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr ""
+msgstr "Zwrot na odcinku wypłaty"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -1530,7 +1542,7 @@ msgstr "Raport"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr ""
+msgstr "Raport Waluta firmy"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1601,7 +1613,7 @@ msgstr "Skan"
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "Zeskanuj ten kod QR, aby pobrać aplikację Odoo:"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1610,6 +1622,8 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"Wybierz użytkownika odpowiedzialnego za zatwierdzanie \"Wydatków\" tego pracownika.\n"
+"Jeśli pole jest puste, zatwierdzenie zostanie wykonane przez Administratora lub Zatwierdzającego (określone w ustawieniach/użytkownicy)."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1618,6 +1632,8 @@ msgid ""
 "Selected Unit of Measure for expense %(expense)s does not belong to the same"
 " category as the Unit of Measure of product %(product)s."
 msgstr ""
+"Wybrana jednostka miary wydatku %(expense)s nie należy do tej samej "
+"kategorii co jednostka miary produktu %(product)s."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1628,11 +1644,16 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Wyślij wiadomość e-mail na ten alias e-mail z paragonem w załączniku, aby "
+"utworzyć wydatek jednym kliknięciem. Jeśli pierwsze słowo tematu wiadomości "
+"zawiera wewnętrzne odniesienie do kategorii lub nazwę kategorii, odpowiednia"
+" kategoria zostanie ustawiona automatycznie. Wpisz kwotę wydatku w temacie "
+"wiadomości e-mail, aby ustawić ją również w wydatku."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
-msgstr ""
+msgstr "Wysyłanie rachunków do OCR w celu wygenerowania wydatków"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1643,7 +1664,7 @@ msgstr "Ustawienia"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
-msgstr ""
+msgstr "Konfiguracja aliasu domeny"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__sheet_ids
@@ -1665,18 +1686,20 @@ msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
 msgstr ""
+"Rób zdjęcia swoich paragonów i pozwól Odoo  <br>automatycznie tworzyć dla "
+"Ciebie wydatki."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "Określ dziennik wydatków, aby wygenerować zapisy księgowe."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
-msgstr ""
+msgstr "Określa, czy produkt można wybrać w wydatku."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1730,7 +1753,7 @@ msgstr "Podatki"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr ""
+msgstr "Zatwierdzający zespołu"
 
 #. module: hr_expense
 #. openerp-web
@@ -1745,12 +1768,13 @@ msgstr ""
 #, python-format
 msgid "The current user has no related employee. Please, create one."
 msgstr ""
+"Bieżący użytkownik nie ma powiązanego pracownika. Proszę, utwórz jednego."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The expense reports were successfully approved."
-msgstr ""
+msgstr "Raporty wydatków zostały zatwierdzone."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1758,6 +1782,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"Pierwsze słowo tematu wiadomości e-mail nie odpowiadało żadnemu kodowi "
+"kategorii. Konieczne będzie ręczne ustawienie kategorii w wydatkach."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1766,11 +1792,14 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Poniższe zatwierdzone wydatki mają podobnego pracownika, kwotę i kategorię "
+"jak niektóre wydatki w tym raporcie. Sprawdź, czy raport nie zawiera "
+"duplikatów."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "Dziennik musi być ustawiony na zaksięgowany wydatek"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1780,7 +1809,7 @@ msgstr "Dziennik stosowany kiedy wydatek jest zatwierdzany."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Metoda płatności używana, gdy wydatek jest opłacany przez firmę."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -1791,13 +1820,13 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
-msgstr ""
+msgstr "Nie ma żadnych raportów wydatków do zatwierdzenia."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "Wskazówka: Rób zdjęcia paragonów za pomocą aplikacji zdalnej"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1817,7 +1846,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "Do raportu"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1851,7 +1880,7 @@ msgstr "Łączna kwota"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Company Currency"
-msgstr ""
+msgstr "Łącznie waluta spółki"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
@@ -1921,7 +1950,7 @@ msgstr "Użytkownicy"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
 msgid "Validate Duplicate Expenses"
-msgstr ""
+msgstr "Sprawdzanie poprawności zduplikowanych wydatków"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1931,7 +1960,7 @@ msgstr "Zobacz załączniki"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "Wyświetl wydatki"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1973,89 +2002,93 @@ msgstr ""
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
 msgstr ""
+"Użytkownik nie jest upoważniony do edytowania odniesienia do tego raportu "
+"wydatków."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "Nie masz uprawnień do edycji tego raportu wydatków."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr ""
+msgstr "Nie można utworzyć raportu bez kategorii."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
 msgstr ""
+"Możesz teraz przesłać go do menedżera, korzystając z poniższego łącza."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr ""
+msgstr "Możesz zatwierdzać tylko wydatki swojego działu"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr ""
+msgstr "Można wygenerować zapis księgowy tylko dla zatwierdzonych wydatków."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can only refuse your department expenses"
-msgstr ""
+msgstr "Odmówić można tylko w przypadku wydatków działu"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can't mix sample expenses and regular ones"
-msgstr ""
+msgstr "Nie można mieszać wydatków próbnych z normalnymi"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot add expenses of another employee."
-msgstr ""
+msgstr "Nie można dodawać wydatków innego pracownika."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr ""
+msgstr "Nie możesz zatwierdzać własnych wydatków"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr ""
+msgstr "Nie można usunąć zaksięgowanego lub zatwierdzonego wydatku."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Nie można usunąć zaksięgowanego lub opłaconego wydatku."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr ""
+msgstr "Nie możesz odmówić pokrycia własnych wydatków"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
+"Nie można zgłaszać wydatków dla różnych pracowników w tym samym raporcie."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "Nie można zgłosić dwa razy tego samego wiersza!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2064,16 +2097,18 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"Aby kontynuować, musisz mieć co najmniej jedną kategorię, która może być "
+"kosztem w bazie danych!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Twój wydatek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "Wydatek został pomyślnie zarejestrowany."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2083,7 +2118,7 @@ msgstr "np. Lunch"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "e.g. Lunch with Customer"
-msgstr ""
+msgstr "np. Obiad z klientem"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -2093,7 +2128,7 @@ msgstr "np. Wyjazd do NY"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "został odrzucony"
 
 #. module: hr_expense
 #: model:product.product,uom_name:hr_expense.mileage_expense_product
@@ -2122,4 +2157,4 @@ msgstr "w trakcie weryfikacji"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
+msgstr "używać OCR do wypełniania danych ze zdjęcia rachunku"
