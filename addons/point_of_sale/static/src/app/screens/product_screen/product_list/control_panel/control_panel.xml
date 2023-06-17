@@ -30,7 +30,7 @@
                                     <i class="breadcrumb-arrow fa fa-caret-right" aria-hidden="true"/>
                                     <span class="breadcrumb-button"
                                         t-on-click="() => this.props.switchCategory(category.id)">
-                                        <t t-esc="category.name"></t>
+                                        <t t-out="category.name"></t>
                                     </span>
                                 </span>
                             </t>
@@ -40,7 +40,7 @@
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
                                 <span class="category-simple-button"
                                     t-on-click="() => this.props.switchCategory(category.id)">
-                                    <t t-esc="category.name" />
+                                    <t t-out="category.name" />
                                 </span>
                             </t>
                         </div>

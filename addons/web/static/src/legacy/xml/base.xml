@@ -16,12 +16,12 @@
                         title="Previous menu"
                         >
                         <a href="#">
-                            <t t-if="bc.title" t-esc="bc.title"/>
+                            <t t-if="bc.title" t-out="bc.title"/>
                             <em t-else="" class="text-warning">Unnamed</em>
                         </a>
                     </li>
                     <li class="breadcrumb-item active">
-                        <span t-attf-class="{{props.breadcrumbs.length ? 'text-muted' : 'text-900' }}" t-if="props.title" t-esc="props.title"/>
+                        <span t-attf-class="{{props.breadcrumbs.length ? 'text-muted' : 'text-900' }}" t-if="props.title" t-out="props.title"/>
                         <em t-else="" class="text-warning">Unnamed</em>
                     </li>
                 </ol>
@@ -80,7 +80,7 @@
 <t t-name="web.DialogButton.tooltip" owl="1">
     <div class="oe_tooltip_string" role="tooltip">
         <div class="tooltip-inner">
-            <t>Hit ENTER to <t t-esc="title"/></t>
+            <t>Hit ENTER to <t t-out="title"/></t>
         </div>
     </div>
 </t>
@@ -98,7 +98,7 @@
             t-att-data-hotkey="props.hotkey"
             >
             <i t-if="icon" t-att-class="icon + ' small me-1'"/>
-            <span class="o_dropdown_title" t-esc="title"/>
+            <span class="o_dropdown_title" t-out="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-fw fa-caret-{{ state.open ? 'down' : 'right' }}"/>
             <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-fw ms-auto fa-chevron-{{ state.open ? 'down' : 'right' }}"/>
         </button>
@@ -127,7 +127,7 @@
                 t-ref="fallback-focus"
                 t-on-click.prevent="() => { state.open = !state.open }"
                 >
-                <t t-esc="props.description"/>
+                <t t-out="props.description"/>
                 <i t-attf-class="o_icon_right fa fa-fw mr-n4 fa-caret-{{ state.open ? 'down' : 'right' }}"/>
             </a>
             <ul t-if="state.open" class="o_menu_item_options pb-2 list-unstyled">
@@ -143,7 +143,7 @@
                             t-att-aria-checked="option.isActive ? 'true' : 'false'"
                             role="menuitemcheckbox"
                             t-att-href="option.url or '#'"
-                            t-esc="option.description"
+                            t-out="option.description"
                             t-on-click.prevent="() => this.trigger('item-selected', { item: props, option: option })"
                         />
                     </li>
@@ -164,7 +164,7 @@
             t-att-href="props.url or '#'"
             t-on-click.prevent="() => this.trigger('item-selected', { item: props })"
             >
-            <t t-esc="props.description"/>
+            <t t-out="props.description"/>
             <i t-if="props.removable"
                 class="o_icon_right fa fa-trash btn btn-link text-danger p-0 mr-n3"
                 title="Delete item"
@@ -189,8 +189,8 @@
                     <div class="modal-content" t-att-class="props.contentClass">
                         <header t-if="props.renderHeader" class="modal-header">
                             <h4 class="modal-title">
-                                <t t-esc="props.title"/>
-                                <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
+                                <t t-out="props.title"/>
+                                <span t-if="props.subtitle" class="o_subtitle text-muted small" t-out="props.subtitle"/>
                             </h4>
                             <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="_close"></button>
                         </header>
@@ -217,7 +217,7 @@
         <t t-portal="'body'" t-if="state.displayed">
             <div role="tooltip" class="o_popover" t-att-class="props.popoverClass" t-ref="popover">
                 <div class="arrow"/>
-                <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
+                <h3 t-if="props.title" class="o_popover_header"><t t-out="props.title"/></h3>
                 <div class="popover-body" t-on-o-popover-close="_onPopoverClose">
                     <t t-slot="opened"/>
                 </div>
@@ -240,11 +240,11 @@
             />
             <span t-else=""
                 class="o_pager_value d-inline-block border-bottom border-white"
-                t-esc="value"
+                t-out="value"
                 t-on-click="_onEdit"
             />
             <span> / </span>
-            <span class="o_pager_limit" t-esc="props.size"/>
+            <span class="o_pager_limit" t-out="props.size"/>
         </span>
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
@@ -313,7 +313,7 @@
     <div class="oe_tooltip_string" role="tooltip">
         <div class="tooltip-inner">
             Hit ENTER to
-            <t t-esc="title"></t>
+            <t t-out="title"></t>
         </div>
     </div>
 </t>
@@ -384,7 +384,7 @@
                 <option t-foreach="widget.operators" t-as="key" t-key="key_index"
                         t-att-value="key"
                         t-att-selected="widget.displayOperator === key ? 'selected' : None">
-                    <t t-esc="key_value"/>
+                    <t t-out="key_value"/>
                 </option>
             </select>
         </div>
@@ -394,7 +394,7 @@
                     <option t-foreach="widget.selectionChoices" t-as="val" t-key="val_index"
                             t-att-value="val[0]"
                             t-att-selected="val.includes(widget.displayValue) ? 'selected' : None">
-                        <t t-esc="val[1]"/>
+                        <t t-out="val[1]"/>
                     </option>
                 </select>
             </t>
@@ -402,7 +402,7 @@
                 <t t-if="['in', 'not in'].includes(widget.operator)">
                     <div class="o_domain_leaf_value_input">
                         <span class="badge rounded-pill" t-foreach="widget.displayValue" t-as="val" t-key="val_index">
-                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
+                            <t t-out="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
@@ -419,19 +419,19 @@
     <div t-else="" class="o_domain_leaf_info">
         <!-- field selector will be instantiated here -->
         <t t-if="typeof(widget.value) === 'string'">
-            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
-            <span class="o_domain_leaf_value text-primary">"<t t-esc="widget.value"/>"</span>
+            <span class="o_domain_leaf_operator"><t t-out="widget.operator_mapping[widget.operator]"/></span>
+            <span class="o_domain_leaf_value text-primary">"<t t-out="widget.value"/>"</span>
         </t>
         <t t-if="Array.isArray(widget.value)">
-            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+            <span class="o_domain_leaf_operator"><t t-out="widget.operator_mapping[widget.operator]"/></span>
             <t t-foreach="widget.value" t-as="v" t-key="v_index">
-                <span class="o_domain_leaf_value text-primary">"<t t-esc="v"/>"</span>
+                <span class="o_domain_leaf_value text-primary">"<t t-out="v"/>"</span>
                 <t t-if="!v_last"> or </t>
             </t>
         </t>
         <t t-if="typeof(widget.value) === 'number'">
-            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
-            <span class="o_domain_leaf_value text-primary"><t t-esc="widget.value"></t></span>
+            <span class="o_domain_leaf_operator"><t t-out="widget.operator_mapping[widget.operator]"/></span>
+            <span class="o_domain_leaf_value text-primary"><t t-out="widget.value"></t></span>
         </t>
         <t t-if="typeof(widget.value) === 'boolean'">
             is
@@ -472,22 +472,22 @@
         </t>
         <span class="o_field_selector_chain_part">
             <t t-if="fieldName === '1'">
-                <t t-esc="fieldName"/>
+                <t t-out="fieldName"/>
             </t>
             <t t-elif="fieldName === '0'">
-                <t t-esc="fieldName"/>
+                <t t-out="fieldName"/>
             </t>
             <t t-else="">
                 <t t-set="fieldInfo" t-value="findByName(pages[fieldName_index], fieldName)"/>
-                <t t-esc="fieldInfo &amp;&amp; fieldInfo.string || '?'"/>
+                <t t-out="fieldInfo &amp;&amp; fieldInfo.string || '?'"/>
             </t>
         </span>
     </t>
 </t>
 <ul t-name="ModelFieldSelector.defaultValue" class="o_field_selector_page o_field_selector_default_value">
     <li t-attf-class="o_field_selector_item active o_field_selector_select_button">
-        <t t-esc="line.string"/>
-        <div class="text-muted o_field_selector_item_title"><t t-esc="line.description"/></div>
+        <t t-out="line.string"/>
+        <div class="text-muted o_field_selector_item_title"><t t-out="line.description"/></div>
     </li>
 </ul>
 <ul t-name="ModelFieldSelector.page" class="o_field_selector_page">
@@ -495,8 +495,8 @@
         <t t-set="relationToFollow" t-value="followRelations(line) &amp;&amp; line.relation"/>
         <li t-attf-class="o_field_selector_item #{relationToFollow and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
             t-att-data-name="line.name">
-            <t t-esc="line.string"/>
-            <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
+            <t t-out="line.string"/>
+            <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-out="line.name"/> (<t t-out="line.type"/>)</div>
             <i t-if="relationToFollow" class="oi oi-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
         </li>
     </t>
@@ -529,7 +529,7 @@
     <div class="form-check o_radio_item" aria-atomic="true">
         <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
             t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
-        <label class="form-check-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
+        <label class="form-check-label o_form_label" t-att-for="id"><t t-out="value[1]"/></label>
     </div>
 </t>
 
@@ -559,7 +559,7 @@
     <div class="o_m2o_avatar">
         <img t-if="widget.value" t-att-src="url" t-att-alt="value"/>
         <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
-        <span t-if="widget.mode === 'readonly'" t-esc="value"/>
+        <span t-if="widget.mode === 'readonly'" t-out="value"/>
     </div>
 </t>
 
@@ -569,7 +569,7 @@
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
         <div t-attf-class="badge rounded-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
             <t t-set="_badge_text">
-                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
+                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-out="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" aria-expanded="false">
@@ -596,7 +596,7 @@
     <t t-if="elements.length > widget.visibleAvatarCount">
         <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
             <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
-            <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
+            <span t-else="">+<t t-out="elements.length - widget.visibleAvatarCount + 1"/></span>
         </span>
     </t>
 </t>
@@ -608,7 +608,7 @@
         <t t-if="elements.length === 1">
             <div>
                 <img t-attf-src="/web/image/#{avatarModel}/#{elements[0].id}/#{avatarField}" t-att-data-id="elements[0].id" class="rounded-circle o_m2m_avatar"/>
-                <span t-esc="elements[0].display_name"/>
+                <span t-out="elements[0].display_name"/>
             </div>
         </t>
         <t t-else="">
@@ -619,7 +619,7 @@
             <t t-if="elements.length > widget.visibleAvatarCount">
                 <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
                     <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
-                    <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
+                    <span t-else="">+<t t-out="elements.length - widget.visibleAvatarCount + 1"/></span>
                 </span>
             </t>
         </t>
@@ -627,7 +627,7 @@
 </t>
 <t t-name="Many2ManyTagAvatarPopover">
     <t t-foreach="elements" t-as="el" t-key="el_index">
-        <div><t t-esc="el.display_name"/></div>
+        <div><t t-out="el.display_name"/></div>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -707,7 +707,7 @@
 </t>
 <t t-name="M2ODialog">
     <div>
-        Create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
+        Create <strong t-out="widget.value"/> as a new <t t-out="widget.name"/>?
     </div>
 </t>
 <t t-name="toggle_button">

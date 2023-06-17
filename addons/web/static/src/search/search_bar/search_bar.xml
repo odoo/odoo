@@ -20,13 +20,13 @@
                     }"
                     >
                     <i t-if="facet.icon" class="px-1 small" t-att-class="facet.icon" role="image"/>
-                    <small t-else="" class="px-2" t-esc="facet.title"/>
+                    <small t-else="" class="px-2" t-out="facet.title"/>
                 </div>
 
                 <div class="o_facet_values d-flex align-items-center ps-2 bg-200 rounded-end-2">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value" t-esc="facetValue"/>
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
+                        <small class="o_facet_value" t-out="facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 opacity-50 opacity-100-hover text-900"
                         role="button"
@@ -70,9 +70,9 @@
                     </t>
                     <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
                         <t t-if="item.isChild">
-                            <t t-esc="item.label"/>
+                            <t t-out="item.label"/>
                         </t>
-                        <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+                        <t t-elif="!item.isFieldProperty" > Search </t> <b t-out="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-out="item.preposition"/>: <b class="fst-italic text-primary" t-out="item.label"/> </t>
                     </a>
                 </li>
             </t>

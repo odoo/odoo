@@ -8,13 +8,13 @@
                 <main class="body">
                     <div class="section-product-info-title">
                         <div class="column flex-start">
-                            <span t-esc="props.product.display_name" class="global-info-title product-name"/>
-                            <span><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
+                            <span t-out="props.product.display_name" class="global-info-title product-name"/>
+                            <span><t t-if="props.product.default_code" t-out="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-out="props.product.barcode"/></span>
                         </div>
                         <div class="column flex-end">
-                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title" />
+                            <span t-out="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title" />
                             <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                                <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
+                                <div><t t-out="tax.name"/>: <t t-out="env.utils.formatCurrency(tax.amount)"/></div>
                             </t>
                         </div>
                     </div>
@@ -27,22 +27,22 @@
                             <table>
                                 <tr>
                                     <td>Price excl. VAT:</td>
-                                    <td><t t-esc="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
+                                    <td><t t-out="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Cost:</td>
-                                    <td><t t-esc="costCurrency"/></td>
+                                    <td><t t-out="costCurrency"/></td>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Margin:</td>
-                                    <td><t t-esc="marginCurrency"/> (<t t-esc="marginPercent"/>%) </td>
+                                    <td><t t-out="marginCurrency"/> (<t t-out="marginPercent"/>%) </td>
                                 </tr>
                             </table>
                             <table>
                                 <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
                                     <tr>
-                                        <td t-esc="pricelist.name"/>
-                                        <td t-esc="env.utils.formatCurrency(pricelist.price)"/>
+                                        <td t-out="pricelist.name"/>
+                                        <td t-out="env.utils.formatCurrency(pricelist.price)"/>
                                     </tr>
                                 </t>
                             </table>
@@ -57,9 +57,9 @@
                             <table class="mobile-table">
                                 <t t-foreach="productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
                                     <tr>
-                                        <td><span t-esc="warehouse.name" class="table-name"/>:</td>
-                                        <td><t t-esc="warehouse.available_quantity"/> <t t-esc="warehouse.uom"/> available,</td>
-                                        <td><t t-esc="warehouse.forecasted_quantity"/> forecasted</td>
+                                        <td><span t-out="warehouse.name" class="table-name"/>:</td>
+                                        <td><t t-out="warehouse.available_quantity"/> <t t-out="warehouse.uom"/> available,</td>
+                                        <td><t t-out="warehouse.forecasted_quantity"/> forecasted</td>
                                     </tr>
                                 </t>
                             </table>
@@ -74,10 +74,10 @@
                             <table class="mobile-table">
                                 <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.name">
                                     <tr>
-                                        <td><span t-esc="supplier.name" class="table-name"/>:</td>
+                                        <td><span t-out="supplier.name" class="table-name"/>:</td>
                                         <div class="mobile-line">
-                                            <td><t t-esc="supplier.delay"/> Days</td>
-                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-esc="env.utils.formatCurrency(supplier.price)"/></td>
+                                            <td><t t-out="supplier.delay"/> Days</td>
+                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-out="env.utils.formatCurrency(supplier.price)"/></td>
                                         </div>
                                     </tr>
                                 </t>
@@ -94,10 +94,10 @@
                                 <table class="mobile-table">
                                     <t t-foreach="productInfo.variants" t-as="variant" t-key="variant.name">
                                         <tr>
-                                            <td><span t-esc="variant.name" class="table-name"/>:</td>
+                                            <td><span t-out="variant.name" class="table-name"/>:</td>
                                             <td class="table-value">
                                                 <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                    <span class="searchable" t-on-click="() => this.searchProduct(attribute_value.search)"><t t-esc="attribute_value.name"/></span> <t t-if="attribute_value_index lt variant.values.length - 1">, </t>
+                                                    <span class="searchable" t-on-click="() => this.searchProduct(attribute_value.search)"><t t-out="attribute_value.name"/></span> <t t-if="attribute_value_index lt variant.values.length - 1">, </t>
                                                 </t>
                                             </td>
                                         </tr>
@@ -115,15 +115,15 @@
                             <table>
                                 <tr>
                                     <td>Total Price excl. VAT:</td>
-                                    <td t-esc="orderPriceWithoutTaxCurrency" class="table-value"/>
+                                    <td t-out="orderPriceWithoutTaxCurrency" class="table-value"/>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Total Cost:</td>
-                                    <td t-esc="orderCostCurrency" class="table-value"/>
+                                    <td t-out="orderCostCurrency" class="table-value"/>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Total Margin:</td>
-                                    <td class="table-value"><t t-esc="orderMarginCurrency"/> (<t t-esc="orderMarginPercent"/>%)</td>
+                                    <td class="table-value"><t t-out="orderMarginCurrency"/> (<t t-out="orderMarginPercent"/>%)</td>
                                 </tr>
                             </table>
                         </div>

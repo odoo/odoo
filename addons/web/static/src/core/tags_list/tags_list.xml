@@ -18,19 +18,19 @@
 
                 <img t-if="tag.img" t-att-src="tag.img" class="o_avatar o_m2m_avatar rounded" t-att-class="tag.imageClass"/>
                 <i t-if="tag.icon" t-attf-class="p-1 fa {{ tag.icon }}" t-att-class="tag.className"/>
-                <div t-if="props.displayText" class="o_tag_badge_text" t-att-class="{'ms-1' : tag.img}" t-esc="tag.text" />
+                <div t-if="props.displayText" class="o_tag_badge_text" t-att-class="{'ms-1' : tag.img}" t-out="tag.text" />
                 <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="o_delete oi oi-close ps-1" title="Delete" aria-label="Delete"/>
             </span>
         </t>
         <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
-            <span t-if="otherTags.length > 9" t-esc="'9+'" />
-            <span t-else="" t-esc="'+' + otherTags.length" />
+            <span t-if="otherTags.length > 9" t-out="'9+'" />
+            <span t-else="" t-out="'+' + otherTags.length" />
         </span>
     </t>
 
     <t t-name="web.TagsList.Tooltip" owl="1">
         <t t-foreach="tags" t-as="tag" t-key="tag.id">
-            <div t-esc="tag.text"/>
+            <div t-out="tag.text"/>
         </t>
     </t>
 

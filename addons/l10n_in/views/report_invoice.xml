@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//t[@t-set='address']" position="inside">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.l10n_in_state_id" class="mt16">
-                Place of supply: <span t-esc="o.l10n_in_state_id.name"/>
+                Place of supply: <span t-out="o.l10n_in_state_id.name"/>
             </t>
         </xpath>
 

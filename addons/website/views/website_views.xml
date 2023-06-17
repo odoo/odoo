@@ -258,10 +258,10 @@
                             </div>
                             <div class="o_theme_preview_bottom clearfix">
                                 <h5 t-if="record.summary.value" class="text-uppercase float-start">
-                                    <b><t t-esc="record.summary.value.split(',')[0]"/></b>
+                                    <b><t t-out="record.summary.value.split(',')[0]"/></b>
                                 </h5>
                                 <h6 t-if="record.display_name.value" class="text-muted float-end">
-                                    <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
+                                    <b><t t-out="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
                                 </h6>
                             </div>
                         </div>

@@ -7,11 +7,11 @@
                 <span>Unknown Barcode</span>
                 <br />
                 <span class="barcode">
-                    <t t-esc="props.code" />
+                    <t t-out="props.code" />
                 </span>
             </header>
             <main class="body">
-                <t t-esc="translatedMessage" />
+                <t t-out="translatedMessage" />
             </main>
             <footer class="footer">
                 <div class="button cancel" t-on-click="confirm">

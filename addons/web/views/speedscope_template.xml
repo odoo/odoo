@@ -6,7 +6,7 @@
             <head>
                 <meta charset="UTF-8"/>
                 <title>Speedscope for odoo</title>
-                <script t-if="profile">window.location.hash="#profileURL=<t t-esc="url_root"/>web/content/ir.profile/<t t-esc="profile.id"/>/speedscope"</script>
+                <script t-if="profile">window.location.hash="#profileURL=<t t-out="url_root"/>web/content/ir.profile/<t t-out="profile.id"/>/speedscope"</script>
                 <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"/>
                 <link rel="stylesheet"
                     t-attf-href="{{cdn}}reset.8c46b7a1.css"

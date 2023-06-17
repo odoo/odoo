@@ -405,13 +405,13 @@
                         <td><span t-field="opp.email_from"/></td>
                         <td><span t-field="opp.phone"/></td>
                         <td>
-                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
-                            <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
+                            <span t-if="opp.company_currency" class="text-nowrap" t-out="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-out="opp.expected_revenue"/>
                             <span> at </span>
                             <span t-field="opp.probability" />%
                         </td>
                         <td>
-                            <span class="badge text-bg-info rounded-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
+                            <span class="badge text-bg-info rounded-pill" title="Current stage of the opportunity" t-out="opp.stage_id.name" />
                         </td>
                     </tr>
                 </tbody>
@@ -488,7 +488,7 @@
                                 <label class="col-4">Tags</label>
                                 <span class="col-8">
                                     <t t-foreach="lead.tag_ids" t-as="tag">
-                                        <span class="badge text-bg-info" t-esc="tag.name" />
+                                        <span class="badge text-bg-info" t-out="tag.name" />
                                     </t>
                                 </span>
                             </div>
@@ -617,8 +617,8 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
-                                    <span t-else="" class="text-nowrap" t-esc="opportunity.expected_revenue"/>
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-out="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-out="opportunity.expected_revenue"/>
                                     <span> at </span>
                                     <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
@@ -718,7 +718,7 @@
                                                 <div class="row align-items-center">
                                                     <div class="col-auto flex-grow-1">
                                                         <div class="input-group">
-                                                            <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
+                                                            <div class="input-group-text"><span class="text-nowrap" t-out="opportunity.company_currency.symbol"/></div>
                                                             <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
                                                         </div>
                                                     </div>
@@ -760,7 +760,7 @@
                                                     <div class="col-md-7">
                                                         <label>Expected Closing:</label>
                                                         <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
-                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-out="opportunity.date_deadline"/></t>
                                                             <input type="text" name="date_deadline" data-target="#exp_closing_div" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
                                                             <span class="input-group-text" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
@@ -778,14 +778,14 @@
                                                                 <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id"
                                                                     t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count"
                                                                     t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary">
-                                                                <t t-esc="activity_type.name"/></option>
+                                                                <t t-out="activity_type.name"/></option>
                                                             </t>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-7">
                                                         <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                         <div class="input-group date" id="next_activity_div" data-target-input="nearest">
-                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-out="user_activity.date_deadline"/></t>
                                                             <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
                                                             <span class="input-group-text" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                                 <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
@@ -796,7 +796,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="col-form-label" for="activity_summary">Details Next Activity</label>
-                                                <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
+                                                <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-out="user_activity.summary"/></textarea>
                                             </div>
                                         </main>
                                         <footer class="modal-footer">
@@ -858,7 +858,7 @@
                                                             <option>States...</option>
                                                             <t t-foreach="states or []" t-as="state">
                                                                 <option class="state" t-att-value="state.id" t-att-country="state.country_id.id" t-att-selected="state.id == opportunity.state_id.id">
-                                                                    <t t-esc="state.name"/>
+                                                                    <t t-out="state.name"/>
                                                                 </option>
                                                             </t>
                                                         </select>
@@ -873,7 +873,7 @@
                                                     <option>Countries...</option>
                                                     <t t-foreach="countries or []" t-as="country">
                                                         <option t-att-value="country.id" t-att-selected="country.id == opportunity.country_id.id">
-                                                            <t t-esc="country.name"/>
+                                                            <t t-out="country.name"/>
                                                         </option>
                                                     </t>
                                                 </select>

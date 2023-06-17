@@ -7,7 +7,7 @@
                 t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
                 t-on-click.stop.prevent="onClickAvatar"
             />
-            <span class="text-truncate w-0 flex-grow-1" t-esc="props.displayName"/>
+            <span class="text-truncate w-0 flex-grow-1" t-out="props.displayName"/>
         </div>
     </t>
 

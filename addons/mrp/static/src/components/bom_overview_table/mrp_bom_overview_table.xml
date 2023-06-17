@@ -6,21 +6,21 @@
             <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
                 <div class="d-flex mb-5">
                     <div class="me-auto">
-                        <h2><a href="#" t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
+                        <h2><a href="#" t-on-click.prevent="goToProduct" t-out="data.name"/></h2>
                         <hr t-if="data.bom_code"/>
-                        <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
+                        <h6 t-if="data.bom_code">Reference: <t t-out="data.bom_code"/></h6>
                     </div>
                     <div class="text-center">
-                        <h3><t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
+                        <h3><t t-out="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> <t t-if="showUom" t-out="props.uomName"/></h3>
                         <span>Free to Use</span>
                     </div>
                     <div t-if="data.hasOwnProperty('earliest_capacity')" class="ps-5 text-center">
-                        <h3><t t-esc="formatFloat(data.earliest_capacity)"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
-                        <span t-esc="data.earliest_date"/>
+                        <h3><t t-out="formatFloat(data.earliest_capacity)"/> <t t-if="showUom" t-out="props.uomName"/></h3>
+                        <span t-out="data.earliest_date"/>
                     </div>
                     <div t-if="data.hasOwnProperty('leftover_capacity')" class="ps-5 text-center">
-                        <h3><t t-esc="formatFloat(data.leftover_capacity)"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
-                        <span t-esc="data.leftover_date"/>
+                        <h3><t t-out="formatFloat(data.leftover_capacity)"/> <t t-if="showUom" t-out="props.uomName"/></h3>
+                        <span t-out="data.leftover_date"/>
                     </div>
                 </div>
                 <table class="o_mrp_bom_expandable table">
@@ -56,7 +56,7 @@
                     <tfoot t-if="showCosts">
                         <tr>
                             <td name="td_mrp_bom_f" class="text-end">
-                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-esc="data.name"/>
+                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-out="data.name"/>
                             </td>
                             <td class="text-end"><strong>Unit Cost</strong></td>
                             <td t-if="showUom"/>
@@ -65,13 +65,13 @@
                             <td t-if="showAvailabilities"/>
                             <td t-if="showLeadTimes"/>
                             <td t-if="showLeadTimes"/>
-                            <td class="text-end" t-esc="formatMonetary(data.bom_cost / data.quantity)"/>
-                            <td class="text-end" t-esc="formatMonetary(data.prod_cost / data.quantity)"/>
+                            <td class="text-end" t-out="formatMonetary(data.bom_cost / data.quantity)"/>
+                            <td class="text-end" t-out="formatMonetary(data.prod_cost / data.quantity)"/>
                             <td t-if="showAttachments"/>
                         </tr>
                         <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
                             <tr>
-                                <td name="td_mrp_bom_b" class="text-end" t-esc="byproduct.name"/>
+                                <td name="td_mrp_bom_b" class="text-end" t-out="byproduct.name"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
                                 <td t-if="showUom"/>
                                 <td t-if="showAvailabilities"/>
@@ -79,8 +79,8 @@
                                 <td t-if="showAvailabilities"/>
                                 <td t-if="showLeadTimes"/>
                                 <td t-if="showLeadTimes"/>
-                                <td class="text-end" t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/>
-                                <td class="text-end" t-esc="formatMonetary(byproduct.prod_cost / byproduct.quantity)"/>
+                                <td class="text-end" t-out="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/>
+                                <td class="text-end" t-out="formatMonetary(byproduct.prod_cost / byproduct.quantity)"/>
                                 <td t-if="showAttachments"/>
                             </tr>
                         </t>

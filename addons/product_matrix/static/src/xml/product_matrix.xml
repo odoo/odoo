@@ -8,7 +8,7 @@
                             t-attf-class="{{column_header_first?'o_matrix_ps':''}} {{column_header_last?'o_matrix_pe':''}}">
                             <div class="d-flex flex-column justify-content-start h-100"
                                  t-attf-class="{{column_header_first?'align-items-start':'align-items-end'}}">
-                                <span t-esc="column_header.name"/>
+                                <span t-out="column_header.name"/>
                                 <t t-call="product_matrix.extra_price">
                                     <t t-set="cell" t-value="column_header"/>
                                 </t>
@@ -24,7 +24,7 @@
                             class="border-0"
                             t-attf-class="{{cell_first?'o_matrix_ps o_matrix_pe':''}} {{cell_last?'o_matrix_pe':''}}">
                             <div class="d-flex align-items-center justify-content-between">
-                                <strong t-esc="cell.name" class="pe-2"/>
+                                <strong t-out="cell.name" class="pe-2"/>
                                 <t t-call="product_matrix.extra_price"/>
                             </div>
                         </th>

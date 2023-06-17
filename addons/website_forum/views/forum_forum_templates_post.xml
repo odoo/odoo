@@ -20,13 +20,13 @@
             <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
                 t-attf-title="Read: #{question.name}"
                 class="text-reset"
-                t-esc="question.name"/>
+                t-out="question.name"/>
         </div>
         <span t-if="not question.active" class="text-muted">
             <t t-if="question.state!='offensive'"> [Deleted]</t>
             <t t-if="question.state=='offensive'"> [Offensive]</t>
             <t t-if="question.state=='offensive' and question.closed_reason_id">
-                [<t t-esc="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>]
+                [<t t-out="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>]
             </t>
         </span>
         <span t-if="question.state == 'close'" class="text-muted"> [Closed]</span>
@@ -57,7 +57,7 @@
         <div>
             <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
             <a t-if="question.child_count" class="fw-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
-                <t t-esc="question.child_count"/>
+                <t t-out="question.child_count"/>
                 <t t-if="question.child_count == 1">Answer</t>
                 <t t-else="">Answers</t>
             </a>
@@ -70,7 +70,7 @@
                 <span t-if="question.favourite_count &gt; 0">
                     <span class="mx-1">|</span>
                     <i class="fa fa-star"/>
-                    <t t-esc="question.favourite_count"/>
+                    <t t-out="question.favourite_count"/>
                 </span></span>
             <span t-if="question.state == 'flagged'" class="text-black"> | Flagged</span>
         </div>
@@ -173,13 +173,13 @@
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                             t-attf-class="o_wforum_favourite_toggle no-decoration small me-1 fa #{question.user_favourite and 'fa-star o_wforum_gold' or 'fa-star-o text-muted'}"/>
 
-                        <h1 class="d-inline mb-0 h2" t-esc="question.name"/>
+                        <h1 class="d-inline mb-0 h2" t-out="question.name"/>
 
                         <span t-if="not question.active" class="border rounded-pill h6 text-muted my-0 ms-2 px-2">
                             <t t-if="question.state!='offensive'">Deleted</t>
                             <t t-if="question.state=='offensive'">Offensive</t>
                             <t t-if="question.state=='offensive' and question.closed_reason_id">
-                                <t t-esc="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>
+                                <t t-out="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>
                             </t>
                         </span>
                         <small t-if="question.state == 'close'">
@@ -215,7 +215,7 @@
 
                 <div class="alert alert-info text-center" t-if="question.state == 'close'" role="status">
                     <p class="mt-3">
-                        <b>The question has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
+                        <b>The question has been closed<t t-if="question.closed_reason_id"> for reason: <i t-out="question.closed_reason_id.name"/></t></b>
                     </p>
                     <t t-if="question.closed_uid">
                         <b> by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
@@ -268,7 +268,7 @@
 
                 <section t-if="question.child_count" t-attf-class="#{question.website_message_ids and 'mt-5' or 'mt-4'}">
                     <h5>
-                        <t t-esc="question.child_count"/>
+                        <t t-out="question.child_count"/>
                         <t t-if="question.child_count == 1">Answer</t>
                         <t t-else="">Answers</t>
                     </h5>
@@ -503,7 +503,7 @@
     <div class="o_wforum_post_comments_container ms-2 ms-md-5">
         <div t-if="len(object.website_message_ids)" class="o_wforum_comments_count_header mb-2">
             <div class="text-muted fw-bold small">
-                <span class="o_wforum_comments_count" t-esc="len(object.website_message_ids)"/>
+                <span class="o_wforum_comments_count" t-out="len(object.website_message_ids)"/>
                 <t t-if="len(object.website_message_ids) == 1">Comment</t>
                 <t t-else="">Comments</t>
             </div>

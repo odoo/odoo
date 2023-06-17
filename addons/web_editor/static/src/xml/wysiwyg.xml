@@ -46,8 +46,8 @@
             <script type="text/javascript">
                 odoo.define('web_editor.wysiwyg.iniframe', [], function (require) {
                     'use strict';
-                    if (window.top.<t t-esc="updateIframeId"/>) {
-                        window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
+                    if (window.top.<t t-out="updateIframeId"/>) {
+                        window.top.<t t-out="updateIframeId"/>(<t t-out="avoidDoubleLoad"/>);
                     }
                 });
             </script>
@@ -109,7 +109,7 @@
                             <t t-foreach="widget.colorsData" t-as="colorData">
                                 <label role="button" class="m-0 me-2" t-if="colorData.type !== 'custom'">
                                     <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
-                                    <span t-esc="colorData.label"
+                                    <span t-out="colorData.label"
                                             t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
                                 </label>
                             </t>
@@ -169,7 +169,7 @@
         <span class="me-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
         <div class="w-100">
             <div class="d-flex">
-                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-out="widget.href" title="Open in a new tab"/>
                 <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
@@ -180,7 +180,7 @@
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>
-            <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
+            <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-out="widget.href" title="Open in a new tab"/>
         </div>
     </div>
     <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
@@ -218,7 +218,7 @@
                     <we-selection-items class="dropdown-menu" name="link_style_color">
                         <t t-foreach="widget.colorsData" t-as="colorData">
                             <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
-                                <t t-esc="colorData.label"/>
+                                <t t-out="colorData.label"/>
                             </we-button>
                         </t>
                     </we-selection-items>
@@ -344,7 +344,7 @@
                     <t t-foreach="widget.aspectRatios" t-as="ratio">
                         <t t-set="is_active" t-value="ratio === widget.aspectRatio"/>
                         <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
-                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                            <input type="radio" /><t t-out="ratio_value.label"/>
                         </label>
                     </t>
                 </div>

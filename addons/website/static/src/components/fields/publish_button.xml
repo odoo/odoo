@@ -5,10 +5,10 @@
     <div class="o_stat_info">
         <span class="o_stat_text o_hover"
               t-att-class="props.record.data[props.name] ? 'text-danger' : 'text-success'"
-              t-esc="props.record.data[props.name] ? env._t('Unpublish') : env._t('Publish')"/>
+              t-out="props.record.data[props.name] ? env._t('Unpublish') : env._t('Publish')"/>
         <span class="o_stat_text o_not_hover"
               t-att-class="props.record.data[props.name] ? 'text-success' : 'text-danger'"
-              t-esc="props.record.data[props.name] ? env._t('Published') : env._t('Unpublished')"/>
+              t-out="props.record.data[props.name] ? env._t('Published') : env._t('Unpublished')"/>
     </div>
 </t>
 

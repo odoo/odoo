@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.SyncNotification" owl="1">
         <div class="oe_status" t-on-click="onClick">
             <span t-if="sync.pending" class="js_msg">
-                <t t-esc="sync.pending" />
+                <t t-out="sync.pending" />
                 <span> </span>
             </span>
             <div t-if="sync.status === 'connected'" class="js_connected oe_icon oe_green">

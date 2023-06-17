@@ -21,10 +21,10 @@
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message.id, props.composer.thread)">
-                    Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
+                    Replying to <b t-out="props.messageToReplyTo.message.author.name"/>
                 </span>
                 <span t-if="props.messageToReplyTo.message.originThread !== thread">
-                    on: <b><t t-esc="props.messageToReplyTo.message.originThread.displayName"/></b>
+                    on: <b><t t-out="props.messageToReplyTo.message.originThread.displayName"/></b>
                 </span>
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
@@ -120,32 +120,32 @@
         <t t-set="partner" t-value="option.partner"/>
         <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="partner.name"/>
+            <t t-out="partner.name"/>
         </strong>
-        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
+        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-out="partner.email"/>)</em>
     </t>
 
     <t t-name="mail.Composer.suggestionThread" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            #<t t-esc="option.label"/>
+            #<t t-out="option.label"/>
         </strong>
     </t>
 
     <t t-name="mail.Composer.suggestionChannelCommand" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.label"/>
+            <t t-out="option.label"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.help"/>
+            <t t-out="option.help"/>
         </em>
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse" owl="1">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.name"/>
+            <t t-out="option.name"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.label"/>
+            <t t-out="option.label"/>
         </em>
     </t>
 </templates>

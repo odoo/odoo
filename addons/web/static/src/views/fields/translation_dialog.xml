@@ -11,11 +11,11 @@
                             t-att-class="{ o_language_current: term.lang === user.lang }"
                             t-attf-class="col-lg-{{ props.showSource ? 2 : 3 }}"
                         >
-                            <t t-esc="term.langName" />
+                            <t t-out="term.langName" />
                         </div>
                         <t t-if="props.showSource">
                             <div class="col-12 col-lg-3 source">
-                                <t t-esc="term.source" />
+                                <t t-out="term.source" />
                             </div>
                         </t>
                         <div class="col-12 translation" t-attf-class="col-lg-{{ props.showSource ? 7 : 9 }}">

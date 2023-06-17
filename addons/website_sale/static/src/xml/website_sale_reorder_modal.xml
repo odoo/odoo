@@ -22,7 +22,7 @@
                                 <img class="product_detail_img" t-att-alt="product.name" t-attf-src="/web/image/product.product/{{product.product_id}}/image_128"/>
                             </td>
                             <td t-att-colspan="product.has_image ? '1' : '2'">
-                                <h5><t t-esc="product.name"/></h5>
+                                <h5><t t-out="product.name"/></h5>
                                 <span class="text-muted d-none d-md-inline-block" t-if="product.description_sale" t-out="product.description_sale"/>
                             </td>
                             <t t-if="product.add_to_cart_allowed">
@@ -39,18 +39,18 @@
                                     </div>
                                     <div t-if="product.qty_warning and product.qty_warning !== ''" class="text-warning fw-bold">
                                         <i class="fa fa-exclamation-triangle"/>
-                                        <span t-esc="product.qty_warning"/>
+                                        <span t-out="product.qty_warning"/>
                                     </div>
                                 </td>
                                 <td class="text-end td-price">
-                                    <span t-esc="formatMonetary(product.combinationInfo.price, content.currency)"/>
+                                    <span t-out="formatMonetary(product.combinationInfo.price, content.currency)"/>
                                 </td>
                             </t>
                             <t t-else="">
                                 <td class="text-center" colspan="2">
                                     <div class="text-warning fw-bold">
                                         <i class="fa fa-exclamation-triangle"/>
-                                        <span t-esc="getWarningForProduct(product)"/>
+                                        <span t-out="getWarningForProduct(product)"/>
                                     </div>
                                 </td>
                             </t>

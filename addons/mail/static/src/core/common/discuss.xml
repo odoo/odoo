@@ -42,13 +42,13 @@
                 <div class="o-mail-Discuss-header flex-shrink-0 d-flex align-items-center ms-1">
                     <t t-foreach="threadActions.actions" t-as="action" t-key="action.id">
                         <button class="btn px-2" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
-                            <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
+                            <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-out="action.text"/>
                         </button>
                     </t>
                     <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                         <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(store.self, thread)"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
-                            <t t-if="store.user" t-esc="store.user.name"/>
+                            <t t-if="store.user" t-out="store.user.name"/>
                             <t t-else="">
                                 <AutoresizeInput
                                     className="'py-1'"
@@ -92,7 +92,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
-        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
+        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-out="mailbox.name"
     />
 </t>
 

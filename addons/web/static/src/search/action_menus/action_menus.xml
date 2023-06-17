@@ -10,7 +10,7 @@
                 </t>
                 <t t-foreach="printItems" t-as="item" t-key="item.key">
                     <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
-                        <t t-esc="item.description"/>
+                        <t t-out="item.description"/>
                     </DropdownItem>
                 </t>
             </Dropdown>
@@ -24,7 +24,7 @@
                     <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
                     <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
                         <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
-                        <t t-esc="item.description"/>
+                        <t t-out="item.description"/>
                     </DropdownItem>
                 </t>
             </Dropdown>

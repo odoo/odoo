@@ -9,7 +9,7 @@
                 Sale Orders
             </div>
             <ul>
-                <li t-foreach="lead.order_ids" t-as="order" t-esc="order.name"/>
+                <li t-foreach="lead.order_ids" t-as="order" t-out="order.name"/>
             </ul>
         </div>
     </xpath>

@@ -7,7 +7,7 @@
                     t-att-class="{'selected': props.selected, 'open': state.open}"
                     t-attf-class="{{ props.class }}"
                     t-att-aria-expanded="state.open ? 'true' : 'false'"
-                    t-esc="props.description"
+                    t-out="props.description"
                     t-on-click="() => state.open = !state.open"
             />
             <t t-if="state.open">

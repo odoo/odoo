@@ -206,7 +206,7 @@
             <div class="row">
                 <div class="col-lg">
                     <p>
-                        © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
+                        © <t t-out="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
                 </div>
             </div>
@@ -220,7 +220,7 @@
             <div class="row">
                 <div class="col-lg o_mail_footer_description">
                     <p t-if="res_company">
-                        <strong><t t-esc="res_company.partner_id.name"/></strong>
+                        <strong><t t-out="res_company.partner_id.name"/></strong>
                     </p>
                     <div class="o_mail_footer_links">
                         <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
@@ -228,7 +228,7 @@
                 </div>
                 <div class="col-lg" align="right">
                     <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
-                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                    <p class="o_mail_footer_copy">© <t t-out="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
                                     <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
-                                              t-esc="column.label"/>
+                                              t-out="column.label"/>
                                         <i t-att-class="getSortableIconClass(column)"/>
                                     </div>
                                     <span t-if="!isEmpty"
@@ -54,7 +54,7 @@
                                 <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
                                     <div t-if="!group_first" role="separator" class="dropdown-divider"/>
                                     <DropdownItem t-if="group.displayName" parentClosingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
-                                        <div class="fw-bold" t-esc="group.displayName"/>
+                                        <div class="fw-bold" t-out="group.displayName"/>
                                     </DropdownItem>
                                     <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
                                         <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
@@ -63,7 +63,7 @@
                                                 value="field.value"
                                                 name="field.name"
                                             >
-                                                <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
+                                                <span class="d-flex align-items-center"><span class="text-truncate" t-out="field.label"/><span class="ps-1" t-if="env.debug" t-out="' (' + field.name + ')'" /></span>
                                             </CheckBox>
                                         </DropdownItem>
                                     </t>
@@ -83,7 +83,7 @@
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
                             <td t-if="aggregate" class="o_list_number text-end" >
-                                <span t-esc="aggregate.value" t-att-data-tooltip="aggregate.help"/>
+                                <span t-out="aggregate.value" t-att-data-tooltip="aggregate.help"/>
                             </td>
                             <td t-else=""/>
                         </t>
@@ -114,7 +114,7 @@
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
-                            <t t-esc="create.string"/>
+                            <t t-out="create.string"/>
                         </a>
                         <ViewButton
                             t-if="create.type === 'button'"
@@ -173,7 +173,7 @@
                 <div class="d-flex">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
-                    <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
+                    <t t-out="getGroupDisplayName(group)"/> (<t t-out="group.count"/>)
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalModifier(button.modifiers.invisible, group.record)">
@@ -202,7 +202,7 @@
                 </div>
             </th>
             <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
-                <t t-if="column.type === 'field'" t-esc="formatAggregateValue(group, column)"/>
+                <t t-if="column.type === 'field'" t-out="formatAggregateValue(group, column)"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
             <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>

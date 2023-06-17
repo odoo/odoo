@@ -6,7 +6,7 @@
                 <div class="alert alert-danger mb-0">
                     <p>
                         Import preview failed due to: "
-                        <t t-esc="props.previewError" />
+                        <t t-out="props.previewError" />
                         ".
                     </p>
                     <p>For CSV files, you may need to select the correct separator.</p>
@@ -25,7 +25,7 @@
                 <t t-foreach="props.importMessages" t-as="message" t-key="`${message.lines[0]}-${message_index}`">
                     <p t-att-class="getErrorMessageClass(props.importMessages, message.type, message_index)">
                         <t t-foreach="message.lines" t-as="line" t-key="`${line}-${line_index}`">
-                            <b t-esc="line" /><br/>
+                            <b t-out="line" /><br/>
                         </t>
                     </p>
                 </t>
@@ -44,7 +44,7 @@
                             <td>
                                 <div class="o_import_file_column_cell d-flex flex-column user-select-none">
                                     <span class="fw-bold text-truncate">
-                                        <span class="text-truncate" t-if="column.name" t-esc="column.name" />
+                                        <span class="text-truncate" t-if="column.name" t-out="column.name" />
                                         <span t-else="">Untitled</span>
                                     </span>
                                     <span
@@ -54,7 +54,7 @@
                                         t-att-data-tooltip-info="getTooltip(column)"
                                         data-tooltip-position="right"
                                     >
-                                        <t t-esc="column.preview" />
+                                        <t t-out="column.preview" />
                                     </span>
                                 </div>
                             </td>
@@ -74,14 +74,14 @@
                                             t-att-data-tooltip-info="getTooltipDetails(column.fieldInfo)"
                                         ></i>
                                         <span class="ps-5">
-                                            <t t-esc="column.fieldInfo.label" />
+                                            <t t-out="column.fieldInfo.label" />
                                         </span>
                                     </t>
                                     <span t-else="" class="text-warning">To import, select a field...</span>
 
                                     <t t-set-slot="choice" t-slot-scope="choice">
                                         <div t-att-class="`${choice.data.value and choice.data.value.required ? 'fw-bolder text-decoration-underline' : ''}`">
-                                            <t t-esc="choice.data.label" />
+                                            <t t-out="choice.data.label" />
                                         </div>
                                     </t>
                                 </SelectMenu>

@@ -12,7 +12,7 @@
                         <t t-if="config_names">
                             <strong>Config names</strong>
                             <t t-foreach="config_names" t-as="name">
-                                <t t-esc="name" />, 
+                                <t t-out="name" />,
                             </t>
                         </t>
                     </t>
@@ -22,12 +22,12 @@
                             <t t-else="">X</t>
                         </h2>
                         <t t-if="session_name">
-                            Session ID: <t t-esc="session_name" />
+                            Session ID: <t t-out="session_name" />
                         </t>
                     </t>
                     <br/>
                     <t t-if="date_start and date_stop">
-                        <strong><t t-esc="date_start" t-options="{'widget': 'datetime'}"/> - <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/></strong>
+                        <strong><t t-out="date_start" t-options="{'widget': 'datetime'}"/> - <t t-out="date_stop" t-options="{'widget': 'datetime'}"/></strong>
                     </t>
                 </div>
 
@@ -46,39 +46,39 @@
                         </tr></thead>
                         <tbody>
                             <tr t-foreach="products" t-as="category">
-                                <td style="background-color: #dadada;"><t t-esc="category['name']" /></td>
+                                <td style="background-color: #dadada;"><t t-out="category['name']" /></td>
                                 <td style="background-color: #dadada;"/>
                                 <td style="background-color: #dadada;">
-                                    <t t-esc="category['qty']"/>
+                                    <t t-out="category['qty']"/>
                                 </td>
                                 <td style="background-color: #dadada;">
                                     <t t-if="currency['position']">
-                                        <t t-esc="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                        <t t-out="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                     </t>
                                     <t t-else="" >
-                                        <t t-esc='currency["symbol"]' /><t t-esc="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                        <t t-out='currency["symbol"]' /><t t-out="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                     </t>
                                 </td>
                                 <tr t-foreach="category['products']" t-as="line">
                                     <td/>
                                     <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
-                                    <td><t t-esc="internal_reference" /><t t-esc="line['product_name']" /></td>
+                                    <td><t t-out="internal_reference" /><t t-out="line['product_name']" /></td>
                                     <td>
-                                        <t t-esc="line['quantity']" />
+                                        <t t-out="line['quantity']" />
                                         <t t-if='line["uom"] != "Units"'>
-                                            <t t-esc='line["uom"]' /> 
+                                            <t t-out='line["uom"]' />
                                         </t>
                                     </td>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
 
                                         <t t-if='line["discount"] != 0'>
-                                            Disc: <t t-esc='line["discount"]' />%
+                                            Disc: <t t-out='line["discount"]' />%
                                         </t>
                                     </td>
                                 </tr>
@@ -87,14 +87,14 @@
                                 <td style="background-color: #b1b1b1;"><strong>Total</strong></td>
                                 <td style="background-color: #b1b1b1;"/>
                                 <td style="background-color: #b1b1b1;">
-                                    <strong><t t-esc="products_info['qty']"/></strong>
+                                    <strong><t t-out="products_info['qty']"/></strong>
                                 </td>
                                 <td style="background-color: #b1b1b1;">
                                     <t t-if="currency['position']">
-                                        <strong><t t-esc='products_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                        <strong><t t-out='products_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                     </t>
                                     <t t-else="" >
-                                        <strong><t t-esc='currency["symbol"]' /><t t-esc='products_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                        <strong><t t-out='currency["symbol"]' /><t t-out='products_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                     </t>   
                                 </td>
                             </tr>
@@ -112,22 +112,22 @@
                         </tr></thead>
                         <tbody>
                         <tr t-foreach='taxes' t-as='tax'>
-                            <td><t t-esc="tax['name']" /></td>
+                            <td><t t-out="tax['name']" /></td>
                             <td>
                                 <t t-if="currency['position']">
-                                    <t t-esc="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                    <t t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                 </t>
                                 <t t-else="" >
-                                    <t t-esc='currency["symbol"]' /><t t-esc="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                    <t t-out='currency["symbol"]' /><t t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                 </t>
 
                             </td>
                             <td>
                                 <t t-if="currency['position']">
-                                    <t t-esc="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                    <t t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                 </t>
                                 <t t-else="" >
-                                    <t t-esc='currency["symbol"]' /><t t-esc="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                    <t t-out='currency["symbol"]' /><t t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                 </t>
                             </td>
                         </tr>
@@ -135,18 +135,18 @@
                             <td style="background-color: #b1b1b1;"><strong>Total</strong></td>
                             <td style="background-color: #b1b1b1;">
                                 <t t-if="currency['position']">
-                                    <strong><t t-esc='taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                    <strong><t t-out='taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                 </t>
                                 <t t-else="" >
-                                    <strong><t t-esc='currency["symbol"]' /><t t-esc='taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                    <strong><t t-out='currency["symbol"]' /><t t-out='taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                 </t>
                             </td>
                             <td style="background-color: #b1b1b1;">
                                 <t t-if="currency['position']">
-                                    <strong><t t-esc='taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                    <strong><t t-out='taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                 </t>
                                 <t t-else="" >
-                                    <strong><t t-esc='currency["symbol"]' /><t t-esc='taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                    <strong><t t-out='currency["symbol"]' /><t t-out='taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                 </t>
                             </td>
                         </tr>
@@ -167,39 +167,39 @@
                         </tr></thead>
                         <tbody>
                             <tr t-foreach="refund_products" t-as="category">
-                                <td style="background-color: #dadada;"><t t-esc="category['name']" /></td>
+                                <td style="background-color: #dadada;"><t t-out="category['name']" /></td>
                                 <td style="background-color: #dadada;"/>
                                 <td style="background-color: #dadada;">
-                                    <t t-esc="category['qty']"/>
+                                    <t t-out="category['qty']"/>
                                 </td>
                                 <td style="background-color: #dadada;">
                                     <t t-if="currency['position']">
-                                        <t t-esc="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                        <t t-out="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                     </t>
                                     <t t-else="" >
-                                        <t t-esc='currency["symbol"]' /><t t-esc="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                        <t t-out='currency["symbol"]' /><t t-out="category['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                     </t>
                                 </td>
                                 <tr t-foreach="category['products']" t-as="line">
                                     <td/>
                                     <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
-                                    <td><t t-esc="internal_reference" /><t t-esc="line['product_name']" /></td>
+                                    <td><t t-out="internal_reference" /><t t-out="line['product_name']" /></td>
                                     <td>
-                                        <t t-esc="line['quantity']" />
+                                        <t t-out="line['quantity']" />
                                         <t t-if='line["uom"] != "Units"'>
-                                            <t t-esc='line["uom"]' /> 
+                                            <t t-out='line["uom"]' />
                                         </t>
                                     </td>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
 
                                         <t t-if='line["discount"] != 0'>
-                                            Disc: <t t-esc='line["discount"]' />%
+                                            Disc: <t t-out='line["discount"]' />%
                                         </t>
                                     </td>
                                 </tr>
@@ -208,14 +208,14 @@
                                 <td style="background-color: #b1b1b1;"><strong>Total</strong></td>
                                 <td style="background-color: #b1b1b1;"/>
                                 <td style="background-color: #b1b1b1;">
-                                    <strong><t t-esc="refund_info['qty']"/></strong>
+                                    <strong><t t-out="refund_info['qty']"/></strong>
                                 </td>
                                 <td style="background-color: #b1b1b1;">
                                     <t t-if="currency['position']">
-                                        <strong><t t-esc='refund_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                        <strong><t t-out='refund_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                     </t>
                                     <t t-else="" >
-                                        <strong><t t-esc='currency["symbol"]' /><t t-esc='refund_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                        <strong><t t-out='currency["symbol"]' /><t t-out='refund_info["total"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                     </t>   
                                 </td>
                             </tr>
@@ -234,22 +234,22 @@
                         </tr></thead>
                         <tbody>
                         <tr t-foreach='refund_taxes' t-as='tax'>
-                            <td><t t-esc="tax['name']" /></td>
+                            <td><t t-out="tax['name']" /></td>
                             <td>
                                 <t t-if="currency['position']">
-                                    <t t-esc="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                    <t t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                 </t>
                                 <t t-else="" >
-                                    <t t-esc='currency["symbol"]' /><t t-esc="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                    <t t-out='currency["symbol"]' /><t t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                 </t>
 
                             </td>
                             <td>
                                 <t t-if="currency['position']">
-                                    <t t-esc="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                    <t t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                 </t>
                                 <t t-else="" >
-                                    <t t-esc='currency["symbol"]' /><t t-esc="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                    <t t-out='currency["symbol"]' /><t t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                 </t>
                             </td>
                         </tr>
@@ -257,18 +257,18 @@
                             <td style="background-color: #b1b1b1;"><strong>Total</strong></td>
                             <td style="background-color: #b1b1b1;">
                                 <t t-if="currency['position']">
-                                    <strong><t t-esc='refund_taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                    <strong><t t-out='refund_taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                 </t>
                                 <t t-else="" >
-                                    <strong><t t-esc='currency["symbol"]' /><t t-esc='refund_taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                    <strong><t t-out='currency["symbol"]' /><t t-out='refund_taxes_info["tax_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                 </t>
                             </td>
                             <td style="background-color: #b1b1b1;">
                                 <t t-if="currency['position']">
-                                    <strong><t t-esc='refund_taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' /></strong>
+                                    <strong><t t-out='refund_taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' /></strong>
                                 </t>
                                 <t t-else="" >
-                                    <strong><t t-esc='currency["symbol"]' /><t t-esc='refund_taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
+                                    <strong><t t-out='currency["symbol"]' /><t t-out='refund_taxes_info["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/></strong>
                                 </t>
                             </td>
                         </tr>
@@ -288,13 +288,13 @@
                             </tr></thead>
                             <tbody>
                             <tr t-foreach='payments' t-as='payment'>
-                                <td><t t-esc="payment['name']" /></td>
+                                <td><t t-out="payment['name']" /></td>
                                 <td>
                                     <t t-if="currency['position']">
-                                        <t t-esc="payment['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                        <t t-out="payment['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                     </t>
                                     <t t-else="" >
-                                        <t t-esc='currency["symbol"]' /><t t-esc="payment['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                        <t t-out='currency["symbol"]' /><t t-out="payment['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                     </t>
                                 </td>
                             </tr>
@@ -310,13 +310,13 @@
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of discounts</strong>:
-                            <t t-esc="discount_number"/>
+                            <t t-out="discount_number"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <strong>Amount of discounts</strong>:
-                            <t t-esc="discount_amount"/>
+                            <t t-out="discount_amount"/>
                         </div>
                     </div>
                     <br/>
@@ -337,14 +337,14 @@
                     <t t-foreach="invoiceList" t-as="invoiceSession">
                         <t t-if="invoiceSession['invoices']">
                             <tr t-foreach='invoiceSession["invoices"]' t-as='invoice'>
-                                <td><t t-esc="invoice['name']" /></td>
-                                <td><t t-esc="invoice['order_ref']" /></td>
+                                <td><t t-out="invoice['name']" /></td>
+                                <td><t t-out="invoice['order_ref']" /></td>
                                 <td>
                                     <t t-if="currency['position']">
-                                        <t t-esc="invoice['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                        <t t-out="invoice['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                     </t>
                                     <t t-else="" >
-                                        <t t-esc='currency["symbol"]' /><t t-esc="invoice['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                        <t t-out='currency["symbol"]' /><t t-out="invoice['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                     </t>
                                 </td>
                             </tr>
@@ -355,10 +355,10 @@
                         <td style="background-color: #b1b1b1;"/>
                         <td style="background-color: #b1b1b1;"><strong>
                             <t t-if="currency['position']">
-                                <t t-esc="invoiceTotal" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                <t t-out="invoiceTotal" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                             </t>
                             <t t-else="" >
-                                <t t-esc='currency["symbol"]' /><t t-esc="invoiceTotal" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                <t t-out='currency["symbol"]' /><t t-out="invoiceTotal" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                             </t>
                         </strong></td>
                     </tr>
@@ -371,14 +371,14 @@
                 <br/>
                 <strong>Total: 
                     <t t-if="currency['position']">
-                        <t t-esc='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                        <t t-out='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                     </t>
                     <t t-else="" >
-                        <t t-esc='currency["symbol"]' /><t t-esc='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                        <t t-out='currency["symbol"]' /><t t-out='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                     </t>    
                 </strong>
                 <br/>
-                <strong>Number of transactions: <t t-esc="nbr_orders" /></strong>
+                <strong>Number of transactions: <t t-out="nbr_orders" /></strong>
                 <br/>
                 <br/>
                 <table  class="table table-sm">
@@ -393,42 +393,42 @@
                         <t t-foreach="payments" t-as="method">
                             <t t-if="method['count']">
                                 <tr>
-                                    <td><strong><t t-esc="method['name']"/></strong></td>
+                                    <td><strong><t t-out="method['name']"/></strong></td>
                                     <td/>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc="method['final_count']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out="method['final_count']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc="method['final_count']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out="method['final_count']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
                                     </td>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
                                     </td>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc="method['money_difference']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out="method['money_difference']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc="method['money_difference']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out="method['money_difference']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
                                     </td>
                                 </tr>
                                 <tr t-foreach="method['cash_moves']" t-as="move">
                                     <td/>
-                                    <td><t t-esc="move['name']"/></td>
+                                    <td><t t-out="move['name']"/></td>
                                     <td>
                                         <t t-if="currency['position']">
-                                            <t t-esc="move['amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
+                                            <t t-out="move['amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-out='currency["symbol"]' />
                                         </t>
                                         <t t-else="" >
-                                            <t t-esc='currency["symbol"]' /><t t-esc="move['amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                            <t t-out='currency["symbol"]' /><t t-out="move['amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                         </t>
                                     </td>
                                     <td></td>
@@ -443,12 +443,12 @@
                     <br/>
                     <t t-if="opening_note" id="opening_note">
                         <strong>Opening of session note:</strong>
-                        <t t-esc="opening_note" />
+                        <t t-out="opening_note" />
                     </t>
                     <br/>
                     <t t-if="closing_note" id="closing_note">
                         <strong>End of session note:</strong>
-                        <t t-esc="closing_note" />
+                        <t t-out="closing_note" />
                     </t>
                 </t>
             </t>

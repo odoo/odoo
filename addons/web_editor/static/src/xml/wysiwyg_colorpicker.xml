@@ -8,7 +8,7 @@
 
     <div t-name="wysiwyg.plugin.font.colorPalette" class="note-palette">
         <button type="button" class="note-color-reset btn btn-light note-color-btn bg-undefined">
-            <t t-esc="lang.color.resetToDefault" /></button>
+            <t t-out="lang.color.resetToDefault" /></button>
         <div class="note-holder">
             <div class="note-color-palette">
                 <h6 class="mt-2">Theme colors</h6>
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <h6 class="note-custom-color mt8">
-                <t t-esc="lang.color.customColor" />
+                <t t-out="lang.color.customColor" />
             </h6>
             <button class="note-custom-color-btn note-color-btn" style="display: none;"></button>
         </div>

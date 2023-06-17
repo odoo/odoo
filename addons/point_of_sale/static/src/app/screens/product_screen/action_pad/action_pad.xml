@@ -10,7 +10,7 @@
                     t-on-click="() => this.pos.selectPartner()">
                 <t t-if="!ui.isSmall"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
                 <t t-if="props.partner">
-                    <t t-esc="props.partner.name" />
+                    <t t-out="props.partner.name" />
                 </t>
                 <t t-else="">
                     Customer
@@ -20,7 +20,7 @@
                 <div class="pay-circle" t-att-class="{ 'highlight': this.highlightPay }">
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 </div>
-                <t t-esc="props.actionName" />
+                <t t-out="props.actionName" />
             </button>
         </div>
     </t>

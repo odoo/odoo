@@ -26,7 +26,7 @@
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="col-lg-12">
-                        <h1 class="o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
+                        <h1 class="o_default_snippet_text text-center"><t t-out="forum.name"></t></h1>
                     </div>
                 </div>
                 <div t-if="editable or (is_public_user and not forum_welcome_message)" t-att-class="'css_non_editable_mode_hidden' if editable else 'forum_intro'">
@@ -52,7 +52,7 @@
                             <nav t-if="header.get('is_guidelines') or queue_type or new_question or is_edit or tags or reasons" aria-label="breadcrumb">
                                 <ol class="breadcrumb p-0 bg-white">
                                     <li class="breadcrumb-item">
-                                        <a t-attf-href="/forum/#{ slug(forum) }" t-esc="forum.name"/>
+                                        <a t-attf-href="/forum/#{ slug(forum) }" t-out="forum.name"/>
                                     </li>
                                     <t t-if="header.get('is_guidelines')">
                                         <li class="breadcrumb-item">
@@ -74,7 +74,7 @@
                                         <t t-set="target" t-value="post.parent_id if is_answer else post"/>
                                         <li class="breadcrumb-item text-truncate" style="max-width:150px">
                                             <a t-attf-href="/forum/#{ slug(forum) }/#{ slug(target)}" title="Back to Question">
-                                                <t t-esc="target.name"/>
+                                                <t t-out="target.name"/>
                                             </a>
                                         </li>
                                         <li t-if="not is_answer" class="breadcrumb-item">Edit Question</li>
@@ -174,13 +174,13 @@
                     <li t-if="forum.count_posts_waiting_validation" class="nav-item">
                         <a class="nav-link" t-attf-href="/forum/#{slug(forum)}/validation_queue">
                             <i class="fa fa-check-square-o fa-fw text-warning"/>
-                            <b t-esc="forum.count_posts_waiting_validation" class="text-800"/>
+                            <b t-out="forum.count_posts_waiting_validation" class="text-800"/>
                         </a>
                     </li>
                     <li t-if="forum.count_flagged_posts" class="nav-item ms-2">
                         <a class="nav-link" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
                             <i class="fa fa-flag fa-fw text-danger"/>
-                            <b t-esc="forum.count_flagged_posts" class="text-800"/>
+                            <b t-out="forum.count_flagged_posts" class="text-800"/>
                         </a>
                     </li>
                 </t>
@@ -214,8 +214,8 @@
             title="My profile">
             <img class="o_forum_avatar rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '30x30')" alt="Avatar"/>
             <div>
-                <h6 class="my-0" t-esc="user_id.name"/>
-                <small class="text-muted fw-bold"><t t-esc="user_id.karma"/>xp</small>
+                <h6 class="my-0" t-out="user_id.name"/>
+                <small class="text-muted fw-bold"><t t-out="user_id.karma"/>xp</small>
             </div>
         </a>
 
@@ -269,7 +269,7 @@
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/validation_queue">
                 <i class="fa fa-check-square-o fa-fw"/> To Validate
-                <span t-attf-class="badge pull-right #{forum.count_posts_waiting_validation > 0 and 'text-bg-warning' or 'text-bg-light'}" t-esc="forum.count_posts_waiting_validation"/>
+                <span t-attf-class="badge pull-right #{forum.count_posts_waiting_validation > 0 and 'text-bg-warning' or 'text-bg-light'}" t-out="forum.count_posts_waiting_validation"/>
             </a>
             <span t-if="queue_type == 'offensive' or queue_type == 'flagged'" class="nav-link rounded-pill mb-2 active fw-bold">
                 <i class="fa fa-flag fa-fw"/> Flagged
@@ -277,7 +277,7 @@
             </span>
             <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
                 <i class="fa fa-flag fa-fw"/> Flagged
-                <span id="count_flagged_posts" t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'text-bg-danger' or 'text-bg-light'}" t-esc="forum.count_flagged_posts"/>
+                <span id="count_flagged_posts" t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'text-bg-danger' or 'text-bg-light'}" t-out="forum.count_flagged_posts"/>
             </a>
         </t>
     </nav>

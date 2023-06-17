@@ -38,12 +38,12 @@
                                 <div class="entry total">
                                     <span class="badge">Total: </span>
                                     <span class="value">
-                                        <t t-esc="total" />
+                                        <t t-out="total" />
                                     </span>
                                     <div t-if="tax" class="subentry">
                                         Taxes:
                                         <span class="value">
-                                            <t t-esc="tax" />
+                                            <t t-out="tax" />
                                         </span>
                                     </div>
                                 </div>

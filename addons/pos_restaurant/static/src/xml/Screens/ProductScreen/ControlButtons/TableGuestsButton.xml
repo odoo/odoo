@@ -4,7 +4,7 @@
     <t t-name="pos_restaurant.TableGuestsButton" owl="1">
         <div class="control-button" t-on-click="() => this.click()">
             <span class="control-button-number">
-                <t t-esc="nGuests" />
+                <t t-out="nGuests" />
             </span>
             <span> </span>
             <span>Guests</span>

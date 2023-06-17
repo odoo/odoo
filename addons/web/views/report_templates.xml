@@ -13,7 +13,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-out="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'">
@@ -37,7 +37,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-out="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <style>
                     <t t-out="preview_css"/>
@@ -290,7 +290,7 @@
                     </div>
                 </t>
                 <div name="address" t-att-class="colclass">
-                    <t t-esc="address"/>
+                    <t t-out="address"/>
                 </div>
             </div>
         </t>
@@ -305,11 +305,11 @@
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
             <div class="float-start company_address">
                 <ul class="list-unstyled">
-                    <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
-                    <li t-else=""><t t-esc="company.company_details"/></li>
+                    <li t-if="company.is_company_details_empty"><t t-out="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                    <li t-else=""><t t-out="company.company_details"/></li>
                     <li t-if="forced_vat">
-                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
-                        <span t-esc="forced_vat"/>
+                        <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-out="forced_vat"/>
                     </li>
                 </ul>
             </div>
@@ -351,11 +351,11 @@
                     <div class="mt0 h4" t-field="company.report_header"/>
                     <div name="company_address" class="float-end mb4">
                         <ul class="list-unstyled">
-                            <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
-                            <li t-else=""><t t-esc="company.company_details"/></li>
+                            <li t-if="company.is_company_details_empty"><t t-out="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                            <li t-else=""><t t-out="company.company_details"/></li>
                             <li t-if="forced_vat">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
-                                <span t-esc="forced_vat"/>
+                                <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-out="forced_vat"/>
                             </li>
                         </ul>
                     </div>
@@ -394,11 +394,11 @@
                     </div>
                     <div class="col-5 offset-1" name="company_address">
                         <ul class="list-unstyled">
-                            <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
-                            <li t-else=""><t t-esc="company.company_details"/></li>
+                            <li t-if="company.is_company_details_empty"><t t-out="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                            <li t-else=""><t t-out="company.company_details"/></li>
                             <li t-if="forced_vat">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
-                                <span t-esc="forced_vat"/>
+                                <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-out="forced_vat"/>
                             </li>
                         </ul>
                     </div>
@@ -448,11 +448,11 @@
             <div class="row">
                 <div class="col-6" name="company_address">
                     <ul class="list-unstyled">
-                        <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
-                        <li t-else=""><t t-esc="company.company_details"/></li>
+                        <li t-if="company.is_company_details_empty"><t t-out="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                        <li t-else=""><t t-out="company.company_details"/></li>
                         <li t-if="forced_vat">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
-                            <span t-esc="forced_vat"/>
+                            <t t-out="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-out="forced_vat"/>
                         </li>
                     </ul>
                 </div>
@@ -525,10 +525,10 @@
         <div class="header">
             <div class="row">
                 <div class="col-3">
-                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                    <span t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
                 </div>
                 <div class="col-2 offset-2 text-center">
-                    <span t-esc="company.name"/>
+                    <span t-out="company.name"/>
                 </div>
                 <div class="col-2 offset-3 text-end">
                     <ul class="list-inline">
@@ -593,18 +593,18 @@
             <t t-set="primary" t-value="company.primary_color or 'black'" />
             <t t-set="secondary" t-value="company.secondary_color or 'black'" />
             <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
-                .o_company_<t t-esc='company.id'/>_layout {
-                font-family: <t t-esc="font" />;
+                .o_company_<t t-out='company.id'/>_layout {
+                font-family: <t t-out="font" />;
             <t t-if="layout == 'web.external_layout_striped'">
                 &amp;.o_report_layout_striped {
                    strong {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                     h2 {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     thead tr th {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                 }
                 .row > div > table,
@@ -614,7 +614,7 @@
                     &amp;.o_subtotal,
                     &amp;.o_total {
                         strong {
-                            color: <t t-esc='primary'/>;
+                            color: <t t-out='primary'/>;
                         }
                     }
                 }
@@ -622,30 +622,30 @@
             <t t-elif="layout == 'web.external_layout_boxed'">
                 &amp;.o_report_layout_boxed {
                     #total strong {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     .totals_taxes_company_currency strong{
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     #informations strong {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                     h2 span {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     table {
                         thead {
                             tr th {
-                                color: <t t-esc='secondary'/>;
+                                color: <t t-out='secondary'/>;
                             }
                         }
                         tbody tr td {
                             &amp;.o_line_section td {
-                                    background-color: rgba(<t t-esc='primary'/>, 0.7);
+                                    background-color: rgba(<t t-out='primary'/>, 0.7);
                                 }
                             &amp;.is-subtotal,
                                 td.o_price_total {
-                                    background-color: rgba(<t t-esc='secondary'/>, 0.1);
+                                    background-color: rgba(<t t-out='secondary'/>, 0.1);
                                 }
                         }
                     }
@@ -654,45 +654,45 @@
                 div#total table, .totals_taxes_company_currency table {
                     tr {
                         &amp;.o_total td {
-                            background-color: rgba(<t t-esc='primary'/>, 0.9);
+                            background-color: rgba(<t t-out='primary'/>, 0.9);
                         }
                     }
                 }
             </t>
             <t t-elif="layout == 'web.external_layout_bold'" >
                 &amp;.o_clean_footer {
-                    border-top: 3px solid <t t-esc='secondary'/>;
+                    border-top: 3px solid <t t-out='secondary'/>;
                     h4 {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                     .pagenumber {
-                        border: 3px solid <t t-esc='primary'/>;
-                        background-color: <t t-esc='secondary'/>;
+                        border: 3px solid <t t-out='primary'/>;
+                        background-color: <t t-out='secondary'/>;
                     }
                 }
                 &amp;.o_report_layout_bold {
                     h1, h2, h3 {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     strong {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                     table {
                        thead {
-                           color: <t t-esc='secondary'/>;
+                           color: <t t-out='secondary'/>;
                            tr th {
-                                border-top: 3px solid <t t-esc='secondary'/> !important;
+                                border-top: 3px solid <t t-out='secondary'/> !important;
                             }
                         }
                         tbody {
                             tr:last-child td {
-                                border-bottom: 3px solid <t t-esc='secondary'/>;
+                                border-bottom: 3px solid <t t-out='secondary'/>;
                             }
                         }
                     }
                     #total, .totals_taxes_company_currency {
                         strong {
-                            color: <t t-esc='secondary'/>;
+                            color: <t t-out='secondary'/>;
                         }
                     }
                 }
@@ -700,20 +700,20 @@
             <t t-elif="layout == 'web.external_layout_standard'">
                 &amp;.o_report_layout_standard {
                     h2 {
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     #informations strong {
-                        color: <t t-esc='secondary'/>;
+                        color: <t t-out='secondary'/>;
                     }
                     #total strong{
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     .totals_taxes_company_currency strong{
-                        color: <t t-esc='primary'/>;
+                        color: <t t-out='primary'/>;
                     }
                     table {
                         thead {
-                            color: <t t-esc='secondary'/>;
+                            color: <t t-out='secondary'/>;
                         }
                     }
                 }

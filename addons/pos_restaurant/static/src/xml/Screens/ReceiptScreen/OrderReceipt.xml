@@ -12,10 +12,10 @@
         </xpath>
         <xpath expr="//div[hasclass('cashier')]" position="after">
             <t t-if="receipt.table">
-                at table <t t-esc="receipt.table" />
+                at table <t t-out="receipt.table" />
             </t>
             <t t-if="receipt.table and receipt.customer_count">
-                <div>Guests: <t t-esc="receipt.customer_count" /></div>
+                <div>Guests: <t t-out="receipt.customer_count" /></div>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
@@ -26,19 +26,19 @@
                         <div class="option">
                             <div>15%</div>
                             <div class="amount">
-                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.15)"></t>
+                                <t t-out="env.utils.formatCurrency(receipt.total_with_tax * 0.15)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>20%</div>
                             <div class="amount">
-                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.20)"></t>
+                                <t t-out="env.utils.formatCurrency(receipt.total_with_tax * 0.20)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>25%</div>
                             <div class="amount">
-                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.25)"></t>
+                                <t t-out="env.utils.formatCurrency(receipt.total_with_tax * 0.25)"></t>
                             </div>
                         </div>
                     </div>

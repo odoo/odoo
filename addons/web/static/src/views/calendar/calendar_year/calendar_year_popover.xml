@@ -31,7 +31,7 @@
 
     <t t-name="web.CalendarYearPopover.body" owl="1">
         <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
-            <div class="fw-bold mt-2" t-esc="recordGroup.title" />
+            <div class="fw-bold mt-2" t-out="recordGroup.title" />
             <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
                 <t t-call="{{ constructor.subTemplates.record }}" />
             </t>
@@ -61,8 +61,8 @@
             t-att-data-id="record.id"
             t-att-data-title="record.title"
         >
-            <t t-if="record.startHour"><t t-esc="record.startHour" /> </t>
-            <t t-esc="record.title"/>
+            <t t-if="record.startHour"><t t-out="record.startHour" /> </t>
+            <t t-out="record.title"/>
         </a>
     </t>
 

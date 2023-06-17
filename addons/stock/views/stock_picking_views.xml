@@ -32,7 +32,7 @@
                                 <div class="o_kanban_record_top mb8">
                                     <field name="priority" widget="priority"/>
                                     <div class="o_kanban_record_headings ms-1">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                        <strong class="o_kanban_record_title"><span><t t-out="record.name.value"/></span></strong>
                                     </div>
                                     <strong>
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
@@ -40,12 +40,12 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <t t-esc="record.partner_id.value"/>
+                                        <t t-out="record.partner_id.value"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                         <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <t t-esc="record.scheduled_date.value and record.scheduled_date.value.split(' ')[0] or False"/>
+                                        <t t-out="record.scheduled_date.value and record.scheduled_date.value.split(' ')[0] or False"/>
                                         <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
                                     </div>
                                 </div>

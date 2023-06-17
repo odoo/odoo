@@ -56,7 +56,7 @@
         <t t-elif="props.record.resId and props.record.data[props.name]">
             <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
                 <span class="fa fa-download me-2" />
-                <t t-if="state.fileName" t-esc="state.fileName" />
+                <t t-if="state.fileName" t-out="state.fileName" />
             </a>
         </t>
     </t>

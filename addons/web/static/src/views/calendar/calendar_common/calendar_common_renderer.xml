@@ -8,10 +8,10 @@
     <t t-name="web.CalendarCommonRenderer.event" owl="1">
         <div class="fc-content">
             <t t-if="!isTimeHidden">
-                <span class="fc-time" t-esc="startTime" />
+                <span class="fc-time" t-out="startTime" />
                 <t> </t>
             </t>
-            <div class="o_event_title" t-esc="title"/>
+            <div class="o_event_title" t-out="title"/>
         </div>
     </t>
 

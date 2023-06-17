@@ -12,15 +12,15 @@
                 <div class="o_kanban_details">
                     <div class="o_kanban_details_wrapper">
                         <div t-att-title="props.fileUpload.title" t-att-aria-label="props.fileUpload.title" class="o_kanban_record_title">
-                            <span t-esc="props.fileUpload.title"/>
+                            <span t-out="props.fileUpload.title"/>
                         </div>
                         <div class="o_kanban_record_body"/>
                         <div class="o_kanban_record_bottom">
                             <div class="oe_kanban_bottom_left">
-                                <div class="o_file_upload_progress_text_left" t-esc="progressTexts.left"/>
+                                <div class="o_file_upload_progress_text_left" t-out="progressTexts.left"/>
                             </div>
                             <div class="oe_kanban_bottom_right">
-                                <span class="o_file_upload_progress_text_right" t-esc="progressTexts.right"/>
+                                <span class="o_file_upload_progress_text_right" t-out="progressTexts.right"/>
                             </div>
                         </div>
                     </div>
@@ -33,9 +33,9 @@
     <t t-name="web.FileUploadProgressDataRow" owl="1">
         <t t-set="progressTexts" t-value="getProgressTexts()"/>
         <div class="o_data_row o_list_progress_card position-relative align-middle p-0">
-            <span class="o_file_upload_upload_title" t-esc="props.fileUpload.title"/>
-            <span class="o_file_upload_progress_text_left" t-esc="progressTexts.left"/>
-            <span class="o_file_upload_progress_text_right" t-esc="progressTexts.right"/>
+            <span class="o_file_upload_upload_title" t-out="props.fileUpload.title"/>
+            <span class="o_file_upload_progress_text_left" t-out="progressTexts.left"/>
+            <span class="o_file_upload_progress_text_right" t-out="progressTexts.right"/>
             <FileUploadProgressBar fileUpload="props.fileUpload"/>
         </div>
     </t>

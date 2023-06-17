@@ -11,7 +11,7 @@
 	    </t>
             <th t-if="display_sol">Sales Order Item</th>
         </xpath>
-        <xpath expr="//tr/td[t[@t-esc='timesheet.name']]" position="after">
+        <xpath expr="//tr/td[t[@t-out='timesheet.name']]" position="after">
             <td  t-if="display_sol">
 	        <t t-if="timesheet.so_line.order_id.access_url and so_accessible"><a t-att-href="'%s' % timesheet.so_line.order_id.access_url"><t t-out="timesheet.so_line.display_name"/></a></t>
 		<t t-else=""><t t-out="timesheet.so_line.display_name"/></t>

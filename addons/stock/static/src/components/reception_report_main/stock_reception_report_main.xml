@@ -18,12 +18,12 @@
                 <h1>
                     <t t-if="data.docs">
                         <div t-foreach="data.docs" t-as="doc" t-key="doc.id">
-                            <a href="#" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-esc="doc.name"/>
-                            <span t-esc="doc.display_state" t-attf-class="ms-1 align-text-top badge rounded-pill bg-opacity-50 {{ doc.state == 'done' ? 'bg-success' : 'bg-info' }}"/>
+                            <a href="#" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-out="doc.name"/>
+                            <span t-out="doc.display_state" t-attf-class="ms-1 align-text-top badge rounded-pill bg-opacity-50 {{ doc.state == 'done' ? 'bg-success' : 'bg-info' }}"/>
                         </div>
                     </t>
                     <t t-else="">
-                        <span t-esc="data.reason"/>
+                        <span t-out="data.reason"/>
                     </t>
                 </h1>
             </div>

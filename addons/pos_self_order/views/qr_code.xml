@@ -61,7 +61,7 @@
                 style="margin-top: 20px"
                 t-if="table['id']"
                 >
-                Table: <t t-esc="table['name']"/>
+                Table: <t t-out="table['name']"/>
             </h4>
             <div class="p-3">
                 <div class="mt-1 mb-4 position-relative top-0 start-0">
@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="text-center">
-                 (<t t-esc="table['access_token']"/>)
+                 (<t t-out="table['access_token']"/>)
             </div>
         </div>
     </template>

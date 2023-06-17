@@ -3,23 +3,23 @@
 
     <t t-name="mrp_subcontracting.BomOverviewSpecialLine" t-inherit="mrp.BomOverviewSpecialLine" t-inherit-mode="extension" owl="1">
         <xpath expr="//td[@name='td_mrp_bom']" position="inside">
-            <t t-if="props.type == 'subcontracting'">Subcontracting: <a href="#" t-on-click.prevent="goToSubcontractor" t-esc="subcontracting.name"/></t>
+            <t t-if="props.type == 'subcontracting'">Subcontracting: <a href="#" t-on-click.prevent="goToSubcontractor" t-out="subcontracting.name"/></t>
         </xpath>
 
         <xpath expr="//td[@name='quantity']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="formatFloat(subcontracting.quantity, {'digits': [false, precision]})"/>
+            <span t-if="props.type == 'subcontracting'" t-out="formatFloat(subcontracting.quantity, {'digits': [false, precision]})"/>
         </xpath>
 
         <xpath expr="//td[@name='uom']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="subcontracting.uom"/>
+            <span t-if="props.type == 'subcontracting'" t-out="subcontracting.uom"/>
         </xpath>
 
         <xpath expr="//td[@name='bom_cost']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="formatMonetary(subcontracting.bom_cost)"/>
+            <span t-if="props.type == 'subcontracting'" t-out="formatMonetary(subcontracting.bom_cost)"/>
         </xpath>
 
         <xpath expr="//td[@name='prod_cost']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="formatMonetary(subcontracting.prod_cost)"/>
+            <span t-if="props.type == 'subcontracting'" t-out="formatMonetary(subcontracting.prod_cost)"/>
         </xpath>
     </t>
 

@@ -12,7 +12,7 @@
                             <select name="inputDevice" class="form-select" t-on-change="onChangeSelectAudioInput">
                                 <option value="">Browser default</option>
                                 <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
-                                    <option t-if="device.kind === 'audioinput'" t-att-selected="userSettings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId"><t t-esc="device.label || 'audio device ' + device_index"/></option>
+                                    <option t-if="device.kind === 'audioinput'" t-att-selected="userSettings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId"><t t-out="device.label || 'audio device ' + device_index"/></option>
                                 </t>
                             </select>
                         </div>
@@ -29,7 +29,7 @@
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
                             <span class="me-2 text-truncate">Push-to-talk key</span>
                             <span class="d-flex">
-                                <span t-if="userSettings.pushToTalkKey" class="ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ userSettings.isRegisteringKey ? 'border-danger' : 'border-primary' }}" t-esc="pushToTalkKeyText"/>
+                                <span t-if="userSettings.pushToTalkKey" class="ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ userSettings.isRegisteringKey ? 'border-danger' : 'border-primary' }}" t-out="pushToTalkKeyText"/>
                                 <button class="btn btn-link px-2 py-0 text-black" t-on-click="onClickRegisterKeyButton">
                                     <i t-if="userSettings.isRegisteringKey" title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                     <i t-else="" title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
@@ -73,7 +73,7 @@
                 <t t-if="userSettings.useBlur">
                     <div class="mb-3 d-flex align-items-center flex-wrap">
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
-                            <span class="me-2 text-truncate">Background blur intensity <t t-esc="userSettings.backgroundBlurAmount"/></span>
+                            <span class="me-2 text-truncate">Background blur intensity <t t-out="userSettings.backgroundBlurAmount"/></span>
                             <div class="d-flex w-100">
                                 <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="userSettings.backgroundBlurAmount" t-on-change="onChangeBackgroundBlurAmount"/>
                             </div>

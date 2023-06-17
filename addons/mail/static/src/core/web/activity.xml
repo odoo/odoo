@@ -20,21 +20,21 @@
         <div class="flex-grow px-3">
             <div class="o-mail-Activity-info lh-1">
                 <span class="fw-bolder text-success" t-if="state.delay === 1">Tomorrow:</span>
-                <span class="fw-bolder text-success" t-elif="state.delay gt 0">Due in <t t-esc="state.delay"/> days:</span>
+                <span class="fw-bolder text-success" t-elif="state.delay gt 0">Due in <t t-out="state.delay"/> days:</span>
                 <span class="fw-bolder text-danger" t-elif="state.delay === -1">Yesterday:</span>
-                <span class="fw-bolder text-danger" t-elif="state.delay lt 0"><t t-esc="-state.delay"/> days overdue:</span>
+                <span class="fw-bolder text-danger" t-elif="state.delay lt 0"><t t-out="-state.delay"/> days overdue:</span>
                 <span class="fw-bolder text-warning" t-else="">Today:</span>
-                <span class="fw-bolder px-2"><t t-esc="displayName"/></span>
-                <span class="o-mail-Activity-user px-1">for <t t-esc="activity.user_id[1]"/></span>
+                <span class="fw-bolder px-2"><t t-out="displayName"/></span>
+                <span class="o-mail-Activity-user px-1">for <t t-out="activity.user_id[1]"/></span>
                 <i class="fa fa-info-circle btn-link btn-primary cursor-pointer ms-1" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"></i>
             </div>
             <div t-if="state.showDetails">
                 <table class="o-mail-Activity-details table table-sm mt-2">
                     <tbody>
-                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="activity.activity_type_id[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="activity.create_date"/> by <t t-esc="activity.create_uid[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="activity.user_id[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="activity.date_deadline"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-out="activity.activity_type_id[1]"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Created</td><td><t t-out="activity.create_date"/> by <t t-out="activity.create_uid[1]"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-out="activity.user_id[1]"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-out="activity.date_deadline"/></td></tr>
                     </tbody>
                 </table>
             </div>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="account.SystrayItem" owl="1">
         <div t-if="isQuickEditModeEnabled">
-            <a class="d-none d-md-block" t-esc="currentCompany.name"/>
+            <a class="d-none d-md-block" t-out="currentCompany.name"/>
         </div>
     </t>
 </templates>

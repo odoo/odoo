@@ -79,7 +79,7 @@
                                     </t>
                                 </div>
                                 <div class="col-lg-8 p-4">
-                                    <h3 t-esc="event.name" />
+                                    <h3 t-out="event.name" />
                                     <a class="btn btn-primary mb-2" t-attf-href="/event/#{ slug(event) }">Go to Event</a>
                                 </div>
                             </div>

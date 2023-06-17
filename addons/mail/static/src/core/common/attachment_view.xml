@@ -4,7 +4,7 @@
     <t t-name="mail.AttachmentView" owl="1">
         <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
             <t t-if="state.thread.mainAttachment">
-                <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="state.thread.mainAttachment.filename"/></h3>
+                <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-out="state.thread.mainAttachment.filename"/></h3>
                 <div t-if="state.thread.mainAttachment.isImage" class="o-mail-Attachment-imgContainer">
                     <img id="attachment_img" class="img img-fluid d-block" t-att-src="state.thread.mainAttachment.defaultSource"/>
                 </div>

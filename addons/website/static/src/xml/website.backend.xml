@@ -66,7 +66,7 @@
             <t t-foreach="widget.websites" t-as="website">
                 <button t-attf-class="btn btn-secondary js_website #{website.selected ? 'active' : ''}"
                         t-att-data-website-id="website.id">
-                    <t t-esc="website.name"/>
+                    <t t-out="website.name"/>
                 </button>
             </t>
         </div>

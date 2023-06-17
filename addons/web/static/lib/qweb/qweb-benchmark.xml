@@ -18,7 +18,7 @@
     </t>
     <t t-foreach="iter" t-as="i">
         <t t-call="benchmark_call">
-            + <t t-esc="i"/>
+            + <t t-out="i"/>
         </t>
     </t>
     <t t-set="enplus">1</t>
@@ -29,14 +29,14 @@
         <t t-set="style">height: 200px; border: 1px solid red;</t>
         <div t-att="{ 'style' : style, 'disabled' : 'false', 'readonly' : novar or undefined }"/>
         <t t-foreach="{'my': 'first', 'my2': 'second' }" t-as="v">
-            * <t t-esc="v"/> : <t t-esc="v_value"/>
+            * <t t-out="v"/> : <t t-out="v_value"/>
         </t>
-        Ok this is good <t t-esc="name"/>!
+        Ok this is good <t t-out="name"/>!
         <t t-set="myvar">Hi there!</t>
         [<t t-raw="myvar"/>]
         <t t-set="myvar2" t-value="'a,b,c,d,e'.split(',')"/>
         <t t-foreach="myvar2" t-as="i">
-            (<t t-esc="i"/>)
+            (<t t-out="i"/>)
         </t>
     </div>
     <div id="oe_notification" class="oe_notification">
@@ -51,7 +51,7 @@
     <div id="oe_notification_alert" class="ui-state-error">
         <a class="ui-notify-cross ui-notify-close" href="#">x</a>
         <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
-        <h1>Here's your value : (<t t-esc="0"/>) !!</h1>
+        <h1>Here's your value : (<t t-out="0"/>) !!</h1>
     </div>
 </t>
 </templates>

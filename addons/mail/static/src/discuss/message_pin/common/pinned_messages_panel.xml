@@ -19,7 +19,7 @@
                         <Message hasActions="false" message="message" thread="props.thread"/>
                     </div>
                 </div>
-                <p t-if="!messagePinService.hasPinnedMessages(props.thread)" t-esc="emptyMessage" class="text-center fst-italic text-500 fs-6"/>
+                <p t-if="!messagePinService.hasPinnedMessages(props.thread)" t-out="emptyMessage" class="text-center fst-italic text-500 fs-6"/>
             </div>
         </div>
     </t>

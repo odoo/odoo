@@ -20,7 +20,7 @@
                             class="'o_menu_item'"
                             onSelected="() => this.onItemSelected(item)"
                             >
-                            <t t-esc="item.description"/>
+                            <t t-out="item.description"/>
                         </DropdownItem>
                     </Dropdown>
 
@@ -38,7 +38,7 @@
 
                     <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
                         <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
-                        <t t-esc="item.description"/>
+                        <t t-out="item.description"/>
                     </DropdownItem>
 
                     <t t-set="currentGroup" t-value="item.groupNumber"/>

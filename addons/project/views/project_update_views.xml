@@ -77,7 +77,7 @@
                                     <b><field name="name_cropped"/></b>
                                     <div class="d-flex gap-1">
                                         <field name="user_id" widget="many2one_avatar_user"/>
-                                        <t t-esc="record.user_id.value"/>
+                                        <t t-out="record.user_id.value"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-2 text-sm-start col-6 align-end">

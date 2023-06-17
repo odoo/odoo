@@ -28,7 +28,7 @@
             <button class="input-button numpad-minus" t-att-class="{ 'disabled-mode': props.disableSign }" t-on-click="() => this.sendInput('-')">+/-</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('0')">0</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput(decimalSeparator)">
-                <t t-esc="decimalSeparator" />
+                <t t-out="decimalSeparator" />
             </button>
             <button class="input-button numpad-backspace" t-on-click="() => this.sendInput('Backspace')">
                 <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png"

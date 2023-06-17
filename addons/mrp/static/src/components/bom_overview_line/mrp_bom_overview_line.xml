@@ -10,7 +10,7 @@
                     </button>
                 </t>
                 <div t-attf-class="d-inline-block">
-                    <a href="#" t-on-click.prevent="() => this.goToAction(data.link_id, data.link_model)" t-esc="data.name"/>
+                    <a href="#" t-on-click.prevent="() => this.goToAction(data.link_id, data.link_model)" t-out="data.name"/>
                 </div>
                 <t t-if="data.phantom_bom">
                     <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
@@ -18,37 +18,37 @@
             </div>
         </td>
         <td class="text-end">
-            <t t-if="data.type == 'operation'" t-esc="formatFloatTime(data.quantity)"/>
-            <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
+            <t t-if="data.type == 'operation'" t-out="formatFloatTime(data.quantity)"/>
+            <t t-else="" t-out="formatFloat(data.quantity, {'digits': [false, precision]})"/>
         </td>
-        <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
+        <td t-if="showUom" class="text-start" t-out="data.uom_name"/>
         <td t-if="showAvailabilities" class="text-end">
-            <t t-if="data.hasOwnProperty('producible_qty')" t-esc="data.producible_qty"/>
+            <t t-if="data.hasOwnProperty('producible_qty')" t-out="data.producible_qty"/>
         </td>
         <td t-if="showAvailabilities" class="text-end">
             <t t-if="hasQuantity">
-                <t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
-                <t t-esc="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
+                <t t-out="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
+                <t t-out="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
             </t>
         </td>
         <td t-if="showAvailabilities" class="text-center">
             <t t-if="data.hasOwnProperty('availability_state')">
-                <span t-attf-class="{{availabilityColorClass}}" t-esc="data.availability_display"/>
+                <span t-attf-class="{{availabilityColorClass}}" t-out="data.availability_display"/>
                 <a href="#" role="button" t-on-click.prevent="goToForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart o_mrp_bom_forecast ms-1 {{availabilityColorClass}}"/>
             </t>
         </td>
         <td t-if="showLeadTimes" class="text-end">
-            <span t-if="hasLeadTime"><t t-esc="data.lead_time"/> Days</span>
+            <span t-if="hasLeadTime"><t t-out="data.lead_time"/> Days</span>
         </td>
         <td t-if="showLeadTimes">
             <div t-if="data.route_name">
-                <span><t t-esc="data.route_name"/>: </span>
-                <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-esc="data.route_detail"/>
+                <span><t t-out="data.route_name"/>: </span>
+                <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-out="data.route_detail"/>
             </div>
         </td>
-        <td t-if="showCosts" t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-esc="formatMonetary(data.bom_cost)"/>
+        <td t-if="showCosts" t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-out="formatMonetary(data.bom_cost)"/>
         <td t-if="showCosts" class="text-end">
-            <span t-if="data.hasOwnProperty('prod_cost')" t-esc="formatMonetary(data.prod_cost)"/>
+            <span t-if="data.hasOwnProperty('prod_cost')" t-out="formatMonetary(data.prod_cost)"/>
         </td>
         <td t-if="showAttachments" class="text-center">
             <span t-if="!!data.attachment_ids &amp;&amp; data.attachment_ids.length > 0">

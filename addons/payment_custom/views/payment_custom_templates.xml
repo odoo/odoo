@@ -11,7 +11,7 @@
         <xpath expr="//div[@id='o_payment_status_alert']" position="inside">
             <t t-if="tx.provider_id.sudo().code == 'custom'">
                 <div t-if="tx.reference">
-                    <strong>Communication: </strong><span t-esc="tx.reference"/>
+                    <strong>Communication: </strong><span t-out="tx.reference"/>
                 </div>
                 <div t-if="tx.provider_id.sudo().qr_code">
                     <t t-set="qr_code" t-value="tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>

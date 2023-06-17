@@ -60,17 +60,17 @@
                     <div class="oe_kanban_global_click d-flex flex-column">
                         <div class="row mb-auto">
                             <strong class="col-8">
-                                <span class="o_text_overflow" t-esc="record.name.value"/>
+                                <span class="o_text_overflow" t-out="record.name.value"/>
                                 <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
                                     <i class="fa fa-globe me-1" title="Website"/>
                                     <field name="website_id"/>
                                 </div>
                             </strong>
                             <strong class="col-4 text-end">
-                                <span t-esc="record.blog_id.value"/>
+                                <span t-out="record.blog_id.value"/>
                             </strong>
                             <div class="col-8">
-                                <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
+                                <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><span t-out="record.post_date.value"/>
                             </div>
                             <div class="col-4 text-end">
                                 <img t-if="record.author_id.raw_value"

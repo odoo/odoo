@@ -26,9 +26,9 @@
         </button>
 
         <div t-if="employeeId" class="flex-grow-1">
-            <h1 class="mt-5 mb8" t-esc="employeeName"/>
+            <h1 class="mt-5 mb8" t-out="employeeName"/>
             <h3 class="mt8 mb24"><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to check out?</t></h3>
-            <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-esc="employeeHoursToday"/></h4>
+            <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-out="employeeHoursToday"/></h4>
 
             <CheckInOut t-if="!use_pin" checkedIn="checkedIn" employeeId="employeeId" nextAction="nextAction"/>
 
@@ -45,7 +45,7 @@
                             <t t-foreach="padButtons" t-as="btn" t-key="btn[0]">
                                 <div class="col-4 p-1">
                                     <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary border'}} btn-block btn-lg d-flex align-items-center justify-content-center">
-                                        <t t-esc="btn[0]"/>
+                                        <t t-out="btn[0]"/>
                                     </a>
                                 </div>
                             </t>

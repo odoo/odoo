@@ -3,7 +3,7 @@
 
     <t t-name="web.AttachDocument" owl="1">
         <button t-attf-class="btn o_attachment_button #{props.highlight ? 'btn-primary' : 'btn-secondary'}" t-on-click="() => this.triggerUpload()">
-            <span class="o_attach_document" t-esc="props.string"/>
+            <span class="o_attach_document" t-out="props.string"/>
         </button>
     </t>
 

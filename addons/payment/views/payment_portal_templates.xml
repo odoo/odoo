@@ -25,7 +25,7 @@
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment'"/>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -55,10 +55,10 @@
                                 </div>
                                 <t t-if="reference_prefix">
                                     <b>Reference:</b>
-                                    <t t-esc="reference_prefix"/><br/>
+                                    <t t-out="reference_prefix"/><br/>
                                 </t>
                                 <b>Amount:</b>
-                                <t t-esc="amount"
+                                <t t-out="amount"
                                    t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                 <t t-call="payment.checkout"/>
                             </t>
@@ -73,7 +73,7 @@
     <template id="payment_methods" name="Payment Methods">
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Methods'"/>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -97,7 +97,7 @@
     <template id="payment_status" name="Payment Status">
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Status'"/>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -121,7 +121,7 @@
         -->
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Confirmation'"/>
-            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -137,7 +137,7 @@
                                     </label>
                                     <span name="form_partner_name"
                                           class="col-md-9 col-form-label"
-                                          t-esc="tx.partner_name"/>
+                                          t-out="tx.partner_name"/>
                                 </div>
                                 <hr/>
                                 <div class="mb-3 row">
@@ -146,7 +146,7 @@
                                     </label>
                                     <span name="form_reference"
                                           class="col-md-9 col-form-label"
-                                          t-esc="tx.reference"/>
+                                          t-out="tx.reference"/>
                                 </div>
                                 <hr/>
                                 <div class="mb-3 row">
@@ -155,13 +155,13 @@
                                     </label>
                                     <span name="form_amount"
                                           class="col-md-9 col-form-label"
-                                          t-esc="tx.amount"
+                                          t-out="tx.amount"
                                           t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </div>
                                 <hr/>
                                 <div class="row">
                                     <div class="col-md-5 text-muted">
-                                        Processed by <t t-esc="tx.provider_id.sudo().name"/>
+                                        Processed by <t t-out="tx.provider_id.sudo().name"/>
                                     </div>
                                     <div class="col-md-4 offset-md-3 mt-2 ps-0">
                                         <a role="button"
@@ -195,7 +195,7 @@
                                aria-label="Home"/>
                         </a>
                     </li>
-                    <li class="breadcrumb-item"><t t-esc="page_title"/></li>
+                    <li class="breadcrumb-item"><t t-out="page_title"/></li>
                 </ol>
             </div>
         </div>

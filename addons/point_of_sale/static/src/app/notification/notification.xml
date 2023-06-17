@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.Notification" owl="1">
         <div class="o_notification" t-att-class="props.className" t-on-click="props.close">
-            <span t-esc="props.message"/>
+            <span t-out="props.message"/>
         </div>
     </t>
 

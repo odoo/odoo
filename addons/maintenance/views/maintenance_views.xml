@@ -133,8 +133,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
-                          <li t-if="record.category_id.raw_value"><b>Category:</b> <t t-esc="record.category_id.value"/></li>
-                          <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-esc="record.user_id.value"/></li>
+                          <li t-if="record.category_id.raw_value"><b>Category:</b> <t t-out="record.category_id.value"/></li>
+                          <li t-if="record.user_id.raw_value"><b>Request to:</b> <t t-out="record.user_id.value"/></li>
                        </ul>
                     </t>
                     <t t-name="kanban-menu">
@@ -427,8 +427,8 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li t-if="record.serial_no.raw_value"><b>Serial Number:</b> <t t-esc="record.serial_no.value"/></li>
-                            <li t-if="record.model.raw_value"><b>Model Number:</b> <t t-esc="record.model.value"/></li>
+                            <li t-if="record.serial_no.raw_value"><b>Serial Number:</b> <t t-out="record.serial_no.value"/></li>
+                            <li t-if="record.model.raw_value"><b>Model Number:</b> <t t-out="record.model.value"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-menu">
@@ -453,7 +453,7 @@
                                             <t t-out="record.maintenance_open_count.raw_value"/> Request
                                         </div>
                                         <div class="badge text-bg-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
-                                            <t t-esc="luxon.DateTime.fromISO(record.next_action_date.raw_value).toFormat('d MMMM')"/>
+                                            <t t-out="luxon.DateTime.fromISO(record.next_action_date.raw_value).toFormat('d MMMM')"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -876,31 +876,31 @@
                                 <div class="row">
                                     <div class="col-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
-                                            <t t-esc="record.todo_request_count.value"/> To Do
+                                            <t t-out="record.todo_request_count.value"/> To Do
                                         </button>
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
                                         <div t-if="record.todo_request_count_date.raw_value > 0">
                                             <a name="%(hr_equipment_request_action_cal)d" type="action">
-                                                <t t-esc="record.todo_request_count_date.value"/>
+                                                <t t-out="record.todo_request_count_date.value"/>
                                                 Scheduled
                                             </a>
                                         </div>
                                         <div t-if="record.todo_request_count_high_priority.raw_value > 0">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_high_priority': 1}">
-                                                <t t-esc="record.todo_request_count_high_priority.value"/>
+                                                <t t-out="record.todo_request_count_high_priority.value"/>
                                                 Top Priorities
                                             </a>
                                         </div>
                                         <div t-if="record.todo_request_count_block.raw_value > 0">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
-                                                <t t-esc="record.todo_request_count_block.value"/>
+                                                <t t-out="record.todo_request_count_block.value"/>
                                                 Blocked
                                             </a>
                                         </div>
                                         <div t-if="record.todo_request_count_unscheduled.raw_value > 0">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
-                                                <t t-esc="record.todo_request_count_unscheduled.value"/>
+                                                <t t-out="record.todo_request_count_unscheduled.value"/>
                                                 Unscheduled
                                             </a>
                                         </div>

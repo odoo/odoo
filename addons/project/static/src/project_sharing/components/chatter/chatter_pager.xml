@@ -8,7 +8,7 @@
                 </li>
                 <t t-foreach="state.pages" t-as="page" t-key="page_index">
                     <li t-att-data-page="page" t-attf-class="page-item #{page == props.page ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
-                        <a t-on-click="() => this.onPageChanged(page)" t-att-disabled="page == props.page" class="page-link"><t t-esc="page"/></a>
+                        <a t-on-click="() => this.onPageChanged(page)" t-att-disabled="page == props.page" class="page-link"><t t-out="page"/></a>
                     </li>
                 </t>
                 <li t-if="props.page != state.pageNext" t-att-data-page="state.pageNext" class="page-item o_portal_chatter_pager_btn">

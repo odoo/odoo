@@ -10,7 +10,7 @@
             <div class="o_setting_right_pane" t-att-data-tooltip="props.title" data-tooltip-delay="800">
                 <FormLabel t-if="props.fieldName and props.addLabel" notMuttedLabel="notMuttedLabel" fieldName="props.fieldName" id="props.fieldId" string="labelString" record="props.record" fieldInfo="props.fieldInfo"/>
                 <t t-if="labelString and !props.fieldName and props.addLabel">
-                    <span class="o_form_label"><t t-esc="labelString"/></span>
+                    <span class="o_form_label"><t t-out="labelString"/></span>
                 </t>
                 <t t-if="labelString and props.documentation">
                     <DocumentationLink path="props.documentation"/>
@@ -19,7 +19,7 @@
                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                 </t>
                 <t t-if="labelString and props.help">
-                    <div class="text-muted"><t t-esc="props.help"/></div>
+                    <div class="text-muted"><t t-out="props.help"/></div>
                 </t>
                 <div class="mt16">
                     <t t-if="props.fieldName and fieldType!=='boolean'">

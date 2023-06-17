@@ -57,8 +57,8 @@
                     <!-- o_image from mimetype.scss -->
                     <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
                     <div class="overflow-auto d-flex justify-content-center flex-column px-1">
-                        <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
-                        <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
+                        <div t-if="attachment.name" class="text-truncate" t-out="attachment.name"/>
+                        <small t-if="attachment.extension" class="text-uppercase" t-out="attachment.extension"/>
                     </div>
                     <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachment.isDeletable and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">

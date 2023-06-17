@@ -21,7 +21,7 @@
                     <t t-else="">
                         <t t-if="state.isValid">
                             <button class="btn btn-sm btn-link o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
-                                <t t-esc="state.recordCount" /> record(s)
+                                <t t-out="state.recordCount" /> record(s)
                             </button>
                         </t>
                         <t t-else="">

@@ -11,15 +11,15 @@
                     <span
                         class="d-flex align-items-center me-1 text-primary fw-bolder"
                         t-if="quantityInCart and selfOrder.table"
-                        t-esc="`${quantityInCart}x`"
+                        t-out="`${quantityInCart}x`"
                         />
-                    <h3 class="mb-0" t-esc="props.product.name" />
+                    <h3 class="mb-0" t-out="props.product.name" />
                 </div>
-                <span class="card-text small" t-esc="getTotalPriceString()" />
+                <span class="card-text small" t-out="getTotalPriceString()" />
                 <p
                     t-if="props.product.description_sale"
                     class="o_self_order_item_card_description m-0 text-muted small break-line"
-                    t-esc="props.product.description_sale"
+                    t-out="props.product.description_sale"
                     />
             </div>
             <img

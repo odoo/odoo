@@ -14,7 +14,7 @@
                                 t-att-class="create.class"
                                 t-on-click.stop.prevent="() => this.onAdd({ context: create.context })"
                             >
-                                <t t-esc="create.string"/>
+                                <t t-out="create.string"/>
                             </button>
                             <ViewButton
                                 t-if="create.type === 'button'"

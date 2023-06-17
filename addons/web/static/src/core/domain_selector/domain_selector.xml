@@ -89,14 +89,14 @@
     <t t-name="web._DomainSelector.branch.connector" owl="1">
         <t t-if="props.readonly">
             <strong>
-                <t t-esc="node.title"/>
+                <t t-out="node.title"/>
             </strong>
         </t>
         <t t-else="">
             <div class="d-inline-flex o_domain_tree_connector_selector" aria-atomic="true">
                 <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1 o_domain_tree_connector_caret'">
                     <t t-set-slot="toggler">
-                        <t t-esc="node.title"/>
+                        <t t-out="node.title"/>
                     </t>
                     <DropdownItem onSelected="() => this.updateBranchConnector(node, 'AND')">all</DropdownItem>
                     <DropdownItem onSelected="() => this.updateBranchConnector(node, 'OR')">any</DropdownItem>
@@ -136,17 +136,17 @@
         <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="true" />
         <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operatorInfo.key) : ['is', 'equal'].includes(node.operatorInfo.key)"> not</t> set</t>
         <t t-else="">
-            <span class="o_domain_leaf_operator"> <t t-esc="node.operatorInfo.label" /></span>
+            <span class="o_domain_leaf_operator"> <t t-out="node.operatorInfo.label" /></span>
             <t t-set="values" t-value="Array.isArray(node.value) ? node.value : [node.value]" />
             <t t-set="operator" t-value="node.operatorInfo.key" />
             <t t-set="connector" t-value="node.operatorInfo.key === 'between' ? 'and' : 'or'" />
             <t t-foreach="values" t-as="value" t-key="value_index">
                 <span class="o_domain_leaf_value text-primary">
-                    <t t-if="typeof value === 'string'"> "<t t-esc="value"/>"</t>
-                    <t t-elif="isExprValue(value)"> <t t-esc="node.value.expr"/></t>
-                    <t t-else=""> <t t-esc="value"/></t>
+                    <t t-if="typeof value === 'string'"> "<t t-out="value"/>"</t>
+                    <t t-elif="isExprValue(value)"> <t t-out="node.value.expr"/></t>
+                    <t t-else=""> <t t-out="value"/></t>
                 </span>
-                <t t-if="!value_last"> <t t-esc="connector" /> </t>
+                <t t-if="!value_last"> <t t-out="connector" /> </t>
             </t>
         </t>
     </t>
@@ -156,7 +156,7 @@
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
                 <t t-foreach="getOperatorsInfo(node)" t-as="operator" t-key="operator.key">
-                    <option t-att-value="operator.key" t-att-selected="node.operatorInfo.key === operator.key" t-esc="operator_value.label" />
+                    <option t-att-value="operator.key" t-att-selected="node.operatorInfo.key === operator.key" t-out="operator_value.label" />
                 </t>
             </select>
         </div>

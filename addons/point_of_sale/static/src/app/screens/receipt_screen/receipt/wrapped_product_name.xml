@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.WrappedProductNameLines" owl="1">
         <span>
             <t t-foreach="props.line.product_name_wrapped.slice(1)" t-as="wrapped_line" t-key="wrapped_line_index">
-                <t t-esc="wrapped_line"/>
+                <t t-out="wrapped_line"/>
             </t>
         </span>
     </t>

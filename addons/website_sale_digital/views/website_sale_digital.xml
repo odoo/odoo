@@ -10,7 +10,7 @@
                     </button>
                     <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                         <t t-foreach="attachments" t-as="a">
-                            <a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']" class="dropdown-item"><t t-esc="a['name']"/></a>
+                            <a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']" class="dropdown-item"><t t-out="a['name']"/></a>
                         </t>
                     </div>
                 </span>

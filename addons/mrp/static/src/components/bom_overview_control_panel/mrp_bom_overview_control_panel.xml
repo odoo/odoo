@@ -22,7 +22,7 @@
                         <div class="input-group col-xl-4">
                             <div class="input-group-text">Quantity</div>
                             <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" class="o_input form-control text-end"/>
-                            <div t-if="props.showOptions.uom" t-esc="props.uomName" class="input-group-text">Quantity</div>
+                            <div t-if="props.showOptions.uom" t-out="props.uomName" class="input-group-text">Quantity</div>
                         </div>
                     <t t-if="props.showVariants" >
                         <div class="input-group-text">Variant:</div>
@@ -43,10 +43,10 @@
                         <t t-if="props.warehouses.length > 1">
                             <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
                                 <t t-set-slot="toggler">
-                                    <span class="fa fa-home"/> Warehouse: <span t-esc="props.currentWarehouse.name"/>
+                                    <span class="fa fa-home"/> Warehouse: <span t-out="props.currentWarehouse.name"/>
                                 </t>
                                 <t t-foreach="props.warehouses" t-as="wh" t-key="wh.id">
-                                    <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name"/>
+                                    <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-out="wh.name"/>
                                 </t>
                             </Dropdown>
                         </t>

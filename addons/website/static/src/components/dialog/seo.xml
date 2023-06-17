@@ -25,9 +25,9 @@
                         <div class="card-header">Social Preview</div>
                         <img class="card-img-top o_meta_active_img" t-att-src="activeMetaImage"/>
                         <div class="card-body px-3 py-2">
-                            <h6 class="text-primary card-title mb0"><t t-esc="title"/></h6>
-                            <small class="card-subtitle text-muted"><t t-esc="props.url"/></small>
-                            <p t-esc="description"/>
+                            <h6 class="text-primary card-title mb0"><t t-out="title"/></h6>
+                            <small class="card-subtitle text-muted"><t t-out="props.url"/></small>
+                            <p t-out="description"/>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
 
 <t t-name="website.Keyword" owl="1">
     <tr>
-        <td t-esc="props.keyword"/>
+        <td t-out="props.keyword"/>
         <td class="text-center"><i t-if="usedInH1" class="fa fa-check" t-att-title="props.keyword + ' is used in page first level heading'"/></td>
         <td class="text-center"><i t-if="usedInH2" class="fa fa-check" t-att-title="props.keyword + ' is used in page second level heading'"/></td>
         <td class="text-center"><i t-if="usedInTitle" class="fa fa-check" t-att-title="props.keyword + ' is used in page title'"/></td>
@@ -49,7 +49,7 @@
                 <span t-if="!state.suggestions.length">Loading...</span>
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
                     <li class="list-inline-item" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge text-bg-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
+                        <span class="o_seo_suggestion badge text-bg-info" t-att-title="'Add ' + suggestion" t-out="suggestion"/>
                     </li>
                 </t>
             </ul>
@@ -69,7 +69,7 @@
                 <select title="The language of the keyword and related keywords."
                         t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                     <t t-foreach="languages" t-as="lang" t-key="lang[0]">
-                        <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                        <option t-att-value="lang[0]"><t t-out="lang[2]"/></option>
                     </t>
                 </select>
                 <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
@@ -101,10 +101,10 @@
     <div class="oe_seo_preview_g">
         <div class="rc">
             <t t-if="props.isIndexed">
-                <div class="r"><t t-esc="props.title"/></div>
+                <div class="r"><t t-out="props.title"/></div>
                 <div class="s">
-                    <div class="kv mb-1 text-muted"><t t-esc="props.url"/></div>
-                    <div class="st text-black"><t t-esc="description"/></div>
+                    <div class="kv mb-1 text-muted"><t t-out="props.url"/></div>
+                    <div class="st text-black"><t t-out="description"/></div>
                 </div>
             </t>
             <t t-else="">
@@ -132,7 +132,7 @@
                     </label>
                     <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
                     <div t-if="descriptionWarning.length" class="alert alert-warning mt16 mb0 small">
-                        <span t-esc="descriptionWarning"/>
+                        <span t-out="descriptionWarning"/>
                     </div>
                 </div>
                 <div class="mb-3" t-if='props.canEditUrl'>
@@ -141,12 +141,12 @@
                     </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
+                            <span class="input-group-text seo_name_pre" t-out="seoNamePre"/>
                         </div>
                         <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
                                t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
                         <div class="input-group-append" title="Unalterable unique identifier">
-                            <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
+                            <span class="input-group-text seo_name_post" t-out="seoNamePost"/>
                         </div>
                     </div>
                 </div>

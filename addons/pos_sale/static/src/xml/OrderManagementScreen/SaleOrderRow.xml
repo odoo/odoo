@@ -7,34 +7,34 @@
         t-on-click="() => this.props.onClickSaleOrder(props.order)">
             <div class="col name">
                 <div t-if="ui.isSmall">Order</div>
-                <div><t t-esc="name"/></div>
+                <div><t t-out="name"/></div>
             </div>
             <div class="col date">
                 <div t-if="ui.isSmall">Date</div>
-                <div><t t-esc="date"/></div>
+                <div><t t-out="date"/></div>
             </div>
             <div class="col partner">
                 <div t-if="ui.isSmall">Customer</div>
-                <div><t t-esc="partner"/></div>
+                <div><t t-out="partner"/></div>
             </div>
             <div class="col salesman">
                 <div t-if="ui.isSmall">Salesman</div>
-                <div><t t-esc="salesman"/></div>
+                <div><t t-out="salesman"/></div>
             </div>
             <div class="col end total">
                 <div t-if="ui.isSmall">Total</div>
                 <div class="flex-container">
                     <div class="self-end">
-                        <t t-esc="total"/>
+                        <t t-out="total"/>
                     </div>
                     <div t-if="showAmountUnpaid" class="self-end text-gray">
-                        (left: <t t-esc="amountUnpaidRepr"/>)
+                        (left: <t t-out="amountUnpaidRepr"/>)
                     </div>
                 </div>
             </div>
             <div class="col state">
                 <div t-if="ui.isSmall">State</div>
-                <div><t t-esc="state"/></div>
+                <div><t t-out="state"/></div>
             </div>
         </div>
     </t>

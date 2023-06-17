@@ -31,10 +31,10 @@
             <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
                 <div class="o_resume_line" t-att-data-id="id">
                     <small class="o_resume_line_dates fw-bold">
-                        <t t-esc="formatDate(data.date_start)"/> - <t t-if="data.date_end" t-esc="formatDate(data.date_end)"/><t t-else="">Current</t>
+                        <t t-out="formatDate(data.date_start)"/> - <t t-if="data.date_end" t-out="formatDate(data.date_end)"/><t t-else="">Current</t>
                     </small>
-                    <h4 class="o_resume_line_title mt-2" t-esc="data.name"/>
-                    <p t-if="data.description" class="o_resume_line_desc" t-esc="data.description"/>
+                    <h4 class="o_resume_line_title mt-2" t-out="data.name"/>
+                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description"/>
                 </div>
             </td>
         </xpath>

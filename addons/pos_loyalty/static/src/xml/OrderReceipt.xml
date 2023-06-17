@@ -10,20 +10,20 @@
                         <span class="pos-receipt-center-align">
                             <div>--------------------------------</div>
                             <br/>
-                            <div t-esc='_loyaltyStat.program.name' class="pos-receipt-title" />
-                            <div t-esc='receipt.partner.name' />
+                            <div t-out='_loyaltyStat.program.name' class="pos-receipt-title" />
+                            <div t-out='receipt.partner.name' />
                             <br />
                         </span>
                         <t t-if='_loyaltyStat.points.won'>
-                            <div><t t-esc="_loyaltyStat.points.name"/> Won: <span t-esc='_loyaltyStat.points.won' class="pos-receipt-right-align"/></div>
+                            <div><t t-out="_loyaltyStat.points.name"/> Won: <span t-out='_loyaltyStat.points.won' class="pos-receipt-right-align"/></div>
                         </t>
                         <t t-if='_loyaltyStat.points.spent'>
-                            <div><t t-esc="_loyaltyStat.points.name"/> Spent: <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
+                            <div><t t-out="_loyaltyStat.points.name"/> Spent: <span t-out='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
                         </t>
                         <!-- Don't use points.total, it's wrong in this context (after the order synced). -->
                         <!-- Show balance as it's updated during _postPushOrderResolve. -->
                         <t t-if='_loyaltyStat.points.balance'>
-                            <div>Balance <t t-esc="_loyaltyStat.points.name"/>: <span t-esc='_loyaltyStat.points.balance' class="pos-receipt-right-align"/></div>
+                            <div>Balance <t t-out="_loyaltyStat.points.name"/>: <span t-out='_loyaltyStat.points.balance' class="pos-receipt-right-align"/></div>
                         </t>
                         <br />
                     </div>
@@ -39,12 +39,12 @@
                     <t t-foreach="receipt.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div style="font-size: 110%;">
-                                <t t-esc="coupon_info['program_name']"/>
+                                <t t-out="coupon_info['program_name']"/>
                             </div>
                             <div>
                                 <span>Valid until: </span> 
                                 <t t-if="coupon_info['expiration_date']">
-                                    <t t-esc="coupon_info['expiration_date']"/>
+                                    <t t-out="coupon_info['expiration_date']"/>
                                 </t>
                                 <t t-else="">
                                     no expiration
@@ -54,7 +54,7 @@
                                 <img t-att-src="'/report/barcode/Code128/'+coupon_info['code']" style="width:200px;height:50px" alt="Barcode"/>
                             </div>
                             <div>
-                                <t t-esc="coupon_info['code']"/>
+                                <t t-out="coupon_info['code']"/>
                             </div>
                         </div>
                     </t>

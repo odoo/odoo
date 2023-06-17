@@ -12,7 +12,7 @@
         <t t-else="">Purchase Orders</t>
       </li>
       <li t-if="order" class="breadcrumb-item active">
-        <t t-esc="order.name"/>
+        <t t-out="order.name"/>
       </li>
     </xpath>
   </template>
@@ -55,7 +55,7 @@
               </thead>
               <t t-foreach="rfqs" t-as="rfq">
                   <tr>
-                      <td><a t-att-href="rfq.get_portal_url()"><t t-esc="rfq.name"/></a></td>
+                      <td><a t-att-href="rfq.get_portal_url()"><t t-out="rfq.name"/></a></td>
                       <td class="text-end">
                           <span t-field="rfq.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="rfq.date_order" t-options="{'time_only': True}"/>
@@ -96,7 +96,7 @@
               </thead>
               <t t-foreach="orders" t-as="order">
                   <tr>
-                      <td><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
+                      <td><a t-att-href="order.get_portal_url()"><t t-out="order.name"/></a></td>
                       <td class="text-end">
                           <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
@@ -200,7 +200,7 @@
           <t t-else="1">
             Purchase Order
           </t>
-          <em t-esc="order.name"/>
+          <em t-out="order.name"/>
         </h2>
       </div>
 
@@ -239,7 +239,7 @@
                               <div class="d-flex flex-wrap align-items-center justify-content-between">
                                   <div>
                                       <a t-att-href="report_url">
-                                          <span t-esc="i.name"/>
+                                          <span t-out="i.name"/>
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
@@ -296,7 +296,7 @@
                                             <span t-field="line.product_uom" groups="uom.group_uom"/>
                                         </div>
                                     </td>
-                                    <td t-if="update_dates" class="text-end"><span t-esc="line.date_planned.date()"/></td>
+                                    <td t-if="update_dates" class="text-end"><span t-out="line.date_planned.date()"/></td>
                                     <td t-if="update_dates" class="text-end">
                                       <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -317,7 +317,7 @@
                                         />
                                     </td>
                                     <td t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
+                                        <span t-out="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
                                     </td>
                                     <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
@@ -345,7 +345,7 @@
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
                                         <span
-                                            t-esc="current_subtotal"
+                                            t-out="current_subtotal"
                                             t-options='{"widget": "monetary", "display_currency": order.currency_id}'
                                         />
                                     </td>

@@ -6,7 +6,7 @@
             <t t-set="_loyaltyCards" t-value="pos.globalState.getLoyaltyCards(props.partner)" />
             <t t-foreach="_loyaltyCards" t-as="_loyaltyCard" t-key="_loyaltyCard.id">
                 <div class="pos-right-align">
-                    <t t-esc="_getLoyaltyPointsRepr(_loyaltyCard)"/>
+                    <t t-out="_getLoyaltyPointsRepr(_loyaltyCard)"/>
                 </div>
             </t>
         </xpath>

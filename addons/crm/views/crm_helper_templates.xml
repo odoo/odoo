@@ -5,7 +5,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Create an opportunity to start playing with your pipeline.
             </p><p>Use the top left <i>Create</i> button, or send an email to
-            <a t-attf-href="mailto:#{team.alias_id.display_name}"><t t-esc="team.alias_id.display_name"/></a>
+            <a t-attf-href="mailto:#{team.alias_id.display_name}"><t t-out="team.alias_id.display_name"/></a>
             to test the email gateway.</p>
         </t>
         <t t-else="">

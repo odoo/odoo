@@ -20,7 +20,7 @@
         <div class="input-group">
             <button t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item ps-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
                 <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'me-1'}"/>
-                <t t-esc="label"/>
+                <t t-out="label"/>
             </button>
             <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
         </div>
@@ -110,7 +110,7 @@
             t-att-data-can-upvote="can_upvote"
             aria-label="Positive vote" title="Positive vote"/>
         <b t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger' or 'text-muted')}"
-           t-esc="post.vote_count"/>
+           t-out="post.vote_count"/>
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
             t-attf-class="btn btn-link vote_down fa fa-caret-down #{vertical and 'px-md-0' or 'px-2'} #{own_vote == -1 and 'text-danger' or 'text-muted'} #{not can_downvote and 'karma_required'}"
             t-att-disabled="own_vote == -1 and 'disabled'"
@@ -151,12 +151,12 @@
 
         <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{compact and 'align-items-baseline ms-1' or 'flex-column justify-content-around ms-2'}">
             <a t-att-href="user_profile_url" class="h6 my-0 text-reset" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
-            <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-esc="object.create_uid.karma"/>xp</small>
+            <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-out="object.create_uid.karma"/>xp</small>
 
             <div t-attf-class="text-muted small fw-bold #{compact and 'd-flex align-items-baseline'}">
                 <span t-if="compact" class="mx-1"> - </span>
                 <time t-if="show_date" class="d-block text-muted fw-bold" t-field="object.create_date" t-options='{"format": "d MMMM y"}'/>
-                <span t-if="show_karma and not show_date" class="text-muted fw-bold"><t t-esc="object.create_uid.karma"/>xp</span>
+                <span t-if="show_karma and not show_date" class="text-muted fw-bold"><t t-out="object.create_uid.karma"/>xp</span>
             </div>
         </div>
     </div>

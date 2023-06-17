@@ -43,7 +43,7 @@
 
     <t t-name="loyalty.LoyaltyX2ManyField" owl="1" t-inherit-mode="primary" t-inherit="web.X2ManyField">
         <t t-if="displayControlPanelButtons" position="replace">
-            <h4 t-esc="field.string or ''"/>
+            <h4 t-out="field.string or ''"/>
             <t t-if="displayControlPanelButtons">
                 <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                     <div>
@@ -61,7 +61,7 @@
             <t t-set="supportedProgramTypes" t-value="['coupons', 'gift_card', 'ewallet']"/>
             <button t-if="supportedProgramTypes.includes(props.context.program_type)" type="button" class="btn btn-primary o_loyalty_card_list_button_generate" t-attf-data-tooltip="Generate {{props.context.program_item_name}}"
                 t-on-click.stop.prevent="() => this.actionService.doAction('loyalty.loyalty_generate_wizard_action', { additionalContext: this.props.context, onClose: () => {this.model.load()} })">
-                Generate <t t-esc="props.context.program_item_name"/>
+                Generate <t t-out="props.context.program_item_name"/>
             </button>
         </xpath>
     </t>

@@ -9,7 +9,7 @@
         <div class="row mr16">
             <div class="alert alert-warning col-lg-12 ms-3 me-3" role="alert">
                 <p>
-                    Please switch to company <t t-esc="expected_company.name"/> to make this
+                    Please switch to company <t t-out="expected_company.name"/> to make this
                     payment.
                 </p>
             </div>
@@ -72,13 +72,13 @@
                                        t-att-data-provider="token.provider_code"
                                        data-payment-option-type="token"/>
                                 <!-- === Token name === -->
-                                <span class="payment_option_name" t-esc="token.display_name"/>
+                                <span class="payment_option_name" t-out="token.display_name"/>
                                 <!-- === "V" check mark === -->
                                 <t t-call="payment.verified_token_checkmark"/>
                                 <!-- === "Fees" badge === -->
                                 <span t-if="fees_by_provider.get(provider)"
                                       class="badge rounded-pill text-bg-secondary ms-1">
-                                        + <t t-esc="fees_by_provider.get(provider)"
+                                        + <t t-out="fees_by_provider.get(provider)"
                                              t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                         Fees
                                 </span>
@@ -90,9 +90,9 @@
                                 </span>
                                 <div class="ms-4 fst-italic small text-muted">
                                     Managed by
-                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
+                                    <span t-out="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
                                     — created on 
-                                    <span t-esc="token.create_date.date()"/>
+                                    <span t-out="token.create_date.date()"/>
                                 </div>
                             </label>
                         </div>
@@ -130,7 +130,7 @@
                                    data-payment-option-type="provider"/>
                             <!-- === Provider name === -->
                             <span class="payment_option_name">
-                                <b t-esc="provider.display_as or provider.name"/>
+                                <b t-out="provider.display_as or provider.name"/>
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="provider.state == 'test'"
@@ -145,7 +145,7 @@
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_provider.get(provider)">
                                 <span class="badge rounded-pill text-bg-secondary ms-1">
-                                    + <t t-esc="fees_by_provider.get(provider)"
+                                    + <t t-out="fees_by_provider.get(provider)"
                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     Fees
                                 </span>
@@ -242,7 +242,7 @@
                                        t-att-data-provider="token.provider_code"
                                        data-payment-option-type="token"/>
                                 <!-- === Token name === -->
-                                <span class="payment_option_name" t-esc="token.display_name"/>
+                                <span class="payment_option_name" t-out="token.display_name"/>
                                 <!-- === "V" check mark === -->
                                 <t t-call="payment.verified_token_checkmark"/>
                                 <!-- === "Test token" badge === -->
@@ -260,9 +260,9 @@
                             </button>
                             <div class="fst-italic small text-muted">
                                     Managed by
-                                    <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
+                                    <span t-out="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
                                     – created on 
-                                    <span t-esc="token.create_date.date()"/>
+                                    <span t-out="token.create_date.date()"/>
                             </div>                      
                         </div>
                         <!-- === Token inline form === -->
@@ -299,7 +299,7 @@
                                    data-payment-option-type="provider"/>
                             <!-- === Provider name === -->
                             <span class="payment_option_name">
-                                <b t-esc="provider.display_as or provider.name"/>
+                                <b t-out="provider.display_as or provider.name"/>
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="provider.state == 'test'"
@@ -402,7 +402,7 @@
             <!-- Only shown if in the first 3 icons -->
             <t t-foreach="provider.payment_method_ids.filtered(lambda r: r.image_payment_form)" t-as="payment_method">
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS_DISPLAYED) else ' d-none'}}">
-                    <span t-esc="payment_method.image_payment_form"
+                    <span t-out="payment_method.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
                           data-bs-toggle="tooltip"
                           t-att-title="payment_method.name"/>
@@ -463,7 +463,7 @@
                     class="btn btn-primary btn-lg mb8 mt8"
                     disabled="true"
                     t-att-data-icon-class="icon_class">
-                <i t-attf-class="fa {{icon_class}}"/> <t t-esc="label"/>
+                <i t-attf-class="fa {{icon_class}}"/> <t t-out="label"/>
             </button>
         </div>
     </template>

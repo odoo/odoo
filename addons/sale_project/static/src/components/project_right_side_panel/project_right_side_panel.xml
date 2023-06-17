@@ -25,13 +25,13 @@
                             <td>
                                 <t t-set="sol_name" t-value="sale_item.display_name"/>
                                 <a t-if="sale_item.action" class="o_rightpanel_button" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
-                                    <t t-esc="sol_name"/>
+                                    <t t-out="sol_name"/>
                                 </a>
-                                <t t-else="" t-esc="sol_name"/>
+                                <t t-else="" t-out="sol_name"/>
                             </td>
-                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
-                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
-                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-out="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-out="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-out="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-out="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-out="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-out="uom_name"/></td>
                         </tr>
                     </tbody>
                     <tfoot>

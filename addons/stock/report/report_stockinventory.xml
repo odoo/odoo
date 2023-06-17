@@ -23,7 +23,7 @@
                             <tbody>
                                 <t t-foreach="locations" t-as="location">
                                     <tr groups="stock.group_stock_multi_locations">
-                                        <td colspan="2"><strong t-esc="location.display_name"/></td>
+                                        <td colspan="2"><strong t-out="location.display_name"/></td>
                                         <td groups="stock.group_production_lot"></td>
                                         <td groups="stock.group_tracking_lot"></td>
                                         <td></td>

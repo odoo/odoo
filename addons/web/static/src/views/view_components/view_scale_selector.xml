@@ -4,7 +4,7 @@
     <t t-name="web.ViewScaleSelector" owl="1">
         <Dropdown t-if="Object.keys(props.scales).length > 1" class="'btn-group o_view_scale_selector'" togglerClass="'btn btn-secondary scale_button_selection'" hotkey="'v'" showCaret="true">
             <t t-set-slot="toggler">
-                <t t-esc="props.scales[props.currentScale].description" />
+                <t t-out="props.scales[props.currentScale].description" />
             </t>
             <t t-foreach="scales" t-as="scale" t-key="scale.key">
                 <DropdownItem
@@ -12,7 +12,7 @@
                     hotkey="scale.hotkey or scale.key[0]"
                     onSelected="() => this.props.setScale(scale.key)"
                 >
-                    <t t-esc="scale.description" />
+                    <t t-out="scale.description" />
                 </DropdownItem>
             </t>
         </Dropdown>

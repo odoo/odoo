@@ -6,10 +6,10 @@
             <t t-set="type" t-value="props.type"/>
             <t t-foreach="dateOptions(type)" t-as="periodOption" t-key="periodOption.id">
                 <option t-if="isSelected(periodOption.id)" selected="1" t-att-value="periodOption.id">
-                    <t t-esc="periodOption.description"/>
+                    <t t-out="periodOption.description"/>
                 </option>
                 <option t-else="" t-att-value="periodOption.id">
-                    <t t-esc="periodOption.description"/>
+                    <t t-out="periodOption.description"/>
                 </option>
             </t>
         </select>

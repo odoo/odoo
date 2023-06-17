@@ -33,7 +33,7 @@
             <SearchDropdownItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
                 checked="state.activeWebsite.id === website.id"
                 parentClosingMode="'none'"
-                t-esc="website.name"
+                t-out="website.name"
                 onSelected="() => this.onSelectWebsite(website)"
             />
             <div t-if="!website.id" class="dropdown-divider"/>

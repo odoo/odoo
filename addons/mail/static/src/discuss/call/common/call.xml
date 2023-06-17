@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': state.isFullscreen, 'ps-2 pb-2': !state.isFullscreen }">
-                    <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="callNotifications" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
+                    <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="callNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
                 </div>
             </div>
             <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">

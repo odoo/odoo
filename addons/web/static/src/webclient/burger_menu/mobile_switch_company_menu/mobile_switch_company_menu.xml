@@ -17,7 +17,7 @@
                     </span>
                 </div>
                 <div class="flex-grow-1 p-2 ms-1 log_into text-muted" t-att-class="{'alert-primary': isCompanyCurrent}" t-on-click="() => this.logIntoCompany(id)">
-                    <span t-esc="displayName" class="company_label" t-att-class="isCompanyCurrent ? 'text-900 fw-bold' : ''"/>
+                    <span t-out="displayName" class="company_label" t-att-class="isCompanyCurrent ? 'text-900 fw-bold' : ''"/>
                     <small t-if="isCompanyCurrent" class="ms-1">(current)</small>
                 </div>
             </div>

@@ -3,11 +3,11 @@
 
     <t t-name="point_of_sale.OrderChangeReceipt" owl="1">
         <div class="pos-receipt">
-            <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
+            <div class="pos-receipt-order-data"><t t-out="changes.name" /></div>
             <t t-if="changes.floor_name || changes.table_name">
                 <br />
                 <div class="pos-receipt-title">
-                    <t t-esc="changes.floor_name" /> / <t t-esc="changes.table_name"/>
+                    <t t-out="changes.floor_name" /> / <t t-out="changes.table_name"/>
                 </div>
             </t>
             <br />
@@ -16,21 +16,21 @@
                 <div class="pos-order-receipt-cancel">
                     <div class="pos-receipt-title">
                         CANCELLED
-                        <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
+                        <t t-out='changes.time.hours'/>:<t t-out='changes.time.minutes'/>
                     </div>
                     <br />
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change" t-key="change_index">
                         <div class="multiprint-flex">
-                            <span class="product-quantity" t-esc="change.quantity"/>
-                            <span class="product-name" t-esc="change.name"/>
+                            <span class="product-quantity" t-out="change.quantity"/>
+                            <span class="product-name" t-out="change.name"/>
                         </div>
                         <t t-if="change.note">
                             <div>
                                 NOTE
                                 <span class="pos-receipt-right-align">...</span>
                             </div>
-                            <div><span class="pos-receipt-left-padding">--- <t t-esc="change.note" /></span></div>
+                            <div><span class="pos-receipt-left-padding">--- <t t-out="change.note" /></span></div>
                             <br/>
                         </t>
                     </t>
@@ -41,21 +41,21 @@
             <t t-if="changes.new.length > 0">
                 <div class="pos-receipt-title">
                     NEW
-                    <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
+                    <t t-out='changes.time.hours'/>:<t t-out='changes.time.minutes'/>
                 </div>
                 <br />
                 <br />
                 <t t-foreach="changes.new" t-as="change" t-key="change_index">
                     <div class="multiprint-flex">
-                        <span class="product-quantity" t-esc="change.quantity"/>
-                        <span class="product-name" t-esc="change.name"/>
+                        <span class="product-quantity" t-out="change.quantity"/>
+                        <span class="product-name" t-out="change.name"/>
                     </div>
                     <t t-if="change.note">
                         <div>
                             NOTE
                             <span class="pos-receipt-right-align">...</span>
                         </div>
-                        <div><span class="pos-receipt-left-padding">--- <t t-esc="change.note" /></span></div>
+                        <div><span class="pos-receipt-left-padding">--- <t t-out="change.note" /></span></div>
                         <br/>
                     </t>
                 </t>

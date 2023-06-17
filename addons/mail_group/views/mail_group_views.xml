@@ -32,9 +32,9 @@
                             <img t-att-src="kanban_image('mail.group', 'image_128', record.id.raw_value)" class="oe_module_icon" alt="Group"/>
                             <div class="oe_module_desc">
                                 <h4 class="o_kanban_record_title">#<field name="name"/></h4>
-                                <p class="o_mg_description text-truncate text-nowrap" t-esc="record.description.raw_value or ''"/>
+                                <p class="o_mg_description text-truncate text-nowrap" t-out="record.description.raw_value or ''"/>
                                 <span>
-                                    <t t-esc="record.member_count.raw_value"/>
+                                    <t t-out="record.member_count.raw_value"/>
                                     <t t-if="record.member_count.raw_value > 1">Members</t>
                                     <t t-else="">Member</t>
                                 </span>

@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//ul[hasclass('info-list')]" position="after">
             <ul t-else="" class="info-list">
-                Current Balance: <span t-esc="_getGiftCardOrEWalletBalance()"/>
+                Current Balance: <span t-out="_getGiftCardOrEWalletBalance()"/>
             </ul>
         </xpath>
     </t>

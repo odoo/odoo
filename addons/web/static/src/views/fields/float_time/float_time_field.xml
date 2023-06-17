@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatTimeField" owl="1">
-        <span t-if="props.readonly" t-esc="formattedValue" />
+        <span t-if="props.readonly" t-out="formattedValue" />
         <input t-else="" t-att-id="props.id" t-att-type="props.inputType" t-ref="numpadDecimal" t-att-placeholder="props.placeholder" class="o_input" />
     </t>
 

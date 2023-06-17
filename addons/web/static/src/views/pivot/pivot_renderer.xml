@@ -39,11 +39,11 @@
                                              'o_positive text-success': cell.value &gt; 0,
                                              'o_negative text-danger': cell.value &lt; 0,
                                              o_null: cell.value === 0,
-                                        }" t-esc="getFormattedVariation(cell)"/>
+                                        }" t-out="getFormattedVariation(cell)"/>
                                     <div t-elif="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
                                         <CheckBox disabled="true" value="cell.value" />
                                     </div>
-                                    <div t-else="1" class="o_value" t-esc="getFormattedValue(cell)"/>
+                                    <div t-else="1" class="o_value" t-out="getFormattedValue(cell)"/>
                                 </t>
                             </td>
                         </t>
@@ -84,9 +84,9 @@
                     onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
                 />
             </t>
-            <span t-if="l10n.direction === 'rtl'" t-esc="cell.title"/>
+            <span t-if="l10n.direction === 'rtl'" t-out="cell.title"/>
             <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
-            <span t-if="l10n.direction === 'ltr'" t-esc="cell.title"/>
+            <span t-if="l10n.direction === 'ltr'" t-out="cell.title"/>
         </th>
     </t>
 
@@ -97,7 +97,7 @@
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
-            <t t-esc="cell.title"/>
+            <t t-out="cell.title"/>
             <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="fa fa-caret-{{ cell.order === 'asc' ? 'up' : 'down' }} ms-1"/>
         </th>
     </t>

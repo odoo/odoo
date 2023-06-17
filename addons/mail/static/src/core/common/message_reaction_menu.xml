@@ -7,8 +7,8 @@
                 <div class="d-flex overflow-auto flex-column bg-100 p-2 h-100 border-end">
                     <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
                         <button class="btn p-1 rounded-2 mx-2 py-0 d-flex align-items-center" t-att-class="{ 'bg-200 border-primary': reaction === state.reaction }" t-att-title="getEmojiShortcode(reaction)" t-att-data-reaction="reaction" t-on-click="() => state.reaction = reaction">
-                            <span class="mx-1 fs-2" t-esc="reaction.content"/>
-                            <span class="mx-1 pe-2" t-att-class="{ 'text-primary': reaction === state.reaction }" t-esc="reaction.count"/>
+                            <span class="mx-1 fs-2" t-out="reaction.content"/>
+                            <span class="mx-1 pe-2" t-att-class="{ 'text-primary': reaction === state.reaction }" t-out="reaction.count"/>
                         </button>
                     </t>
                 </div>
@@ -16,7 +16,7 @@
                     <div t-foreach="state.reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{ 'o-isDeviceSmall': ui.isSmall }">
                         <img class="rounded-circle o_object_fit_cover o-mail-MessageReactionMenu-avatar" t-att-src="threadService.avatarUrl(persona, props.message.originThread)"/>
                         <span class="d-flex flex-grow-1 align-items-center">
-                            <span class="mx-2 text-truncate fs-6" t-esc="persona.name"/>
+                            <span class="mx-2 text-truncate fs-6" t-out="persona.name"/>
                             <div class="flex-grow-1"/>
                             <button t-if="store.self === persona" class="btn btn-light fa fa-trash rounded-pill o-bg-inherit border-0" title="Remove" t-on-click.stop="() => this.messageService.removeReaction(state.reaction)"/>
                         </span>

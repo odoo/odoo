@@ -8,20 +8,20 @@
                     <t t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent">
                         <div class='loyalty-points'>
                             <div class='loyalty-points-title'>
-                                <t t-esc="_loyaltyStat.points.name"/>
+                                <t t-out="_loyaltyStat.points.name"/>
                             </div>
                             <t t-if='_loyaltyStat.points.won'>
                                 <div class="loyalty-points-won">
-                                    <span class='value'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                                    <span class='value'>+<t t-out='_loyaltyStat.points.won'/></span>
                                 </div>
                             </t>
                             <t t-if='_loyaltyStat.points.spent'>
                                 <div class="loyalty-points-spent">
-                                    <span class='value'>-<t t-esc='_loyaltyStat.points.spent'/></span>
+                                    <span class='value'>-<t t-out='_loyaltyStat.points.spent'/></span>
                                 </div>
                             </t>
                             <div class='loyalty-points-total'>
-                                <span class='value'><t t-esc='_loyaltyStat.points.total'/></span>
+                                <span class='value'><t t-out='_loyaltyStat.points.total'/></span>
                             </div>
                         </div>
                     </t>

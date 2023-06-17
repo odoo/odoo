@@ -374,7 +374,7 @@
                                 <t t-set="size_status" t-value="'text-bg-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_1920.value" t-att-title="message"/>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" t-out="record.image_1920.value" t-att-title="message"/>
                         </div>
                     </t>
                 </templates>

@@ -5,7 +5,7 @@
         <div class="control-button o_fiscal_position_button" t-on-click="() => this.click()">
             <i class="fa fa-book" role="img" aria-label="Set fiscal position"
                title="Set fiscal position" />
-            <t t-esc='currentFiscalPositionName' />
+            <t t-out='currentFiscalPositionName' />
         </div>
     </t>
 

@@ -251,7 +251,7 @@
                                         <field name="user_id" widget="many2one_avatar_user"
                                             options="{'display_avatar_name': True}"/>
                                             <span class="mx-1">-</span>
-                                        <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('MMM yyyy')"/>
+                                        <t t-out="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('MMM yyyy')"/>
                                     </span>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@
                                             </div>
                                             <div class="col-4 p-0 border-start" t-if="record.scoring_type.raw_value != 'no_scoring'" >
                                                 <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
-                                                    <span class="fw-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                    <span class="fw-bold"> <t t-out="Math.round(record.success_ratio.raw_value)"></t> %</span>
                                                     <span class="text-muted" >Success</span>
                                                 </a>
                                             </div>

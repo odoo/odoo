@@ -21,7 +21,7 @@
                 </div>
                 <div t-else="" class="product-list-empty no-results-message">
                     <p t-if="searchWord">
-                        No product found for <b>"<t t-esc="searchWord"/>"</b> in this category.
+                        No product found for <b>"<t t-out="searchWord"/>"</b> in this category.
                     </p>
                     <p t-else="">
                         There are no products in this category.

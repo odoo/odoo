@@ -579,7 +579,7 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <span class="o_text_overflow" t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
+                                        <span class="o_text_overflow" t-if="record.partner_id.value" t-out="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

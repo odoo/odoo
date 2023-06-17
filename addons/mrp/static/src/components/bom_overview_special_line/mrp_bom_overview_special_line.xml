@@ -11,8 +11,8 @@
             </button>
         </td>
         <td name="quantity" class="text-end">
-            <span t-if="props.type == 'operations'" t-esc="formatFloatTime(data.operations_time)"/>
-            <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total, {'digits': [false, precision]})"/>
+            <span t-if="props.type == 'operations'" t-out="formatFloatTime(data.operations_time)"/>
+            <span t-elif="props.type == 'byproducts'" t-out="formatFloat(data.byproducts_total, {'digits': [false, precision]})"/>
         </td>
         <td name="uom" t-if="showUom" class="text-start">
             <span t-if="props.type == 'operations'">Minutes</span>
@@ -23,8 +23,8 @@
         <td t-if="showLeadTimes"/>
         <td t-if="showLeadTimes"/>
         <td name="bom_cost" t-if="showCosts" class="text-end">
-            <span t-if="props.type == 'operations'" t-esc="formatMonetary(data.operations_cost)"/>
-            <span t-elif="props.type == 'byproducts'" t-esc="formatMonetary(data.byproducts_cost)"/>
+            <span t-if="props.type == 'operations'" t-out="formatMonetary(data.operations_cost)"/>
+            <span t-elif="props.type == 'byproducts'" t-out="formatMonetary(data.byproducts_cost)"/>
         </td>
         <td name="prod_cost" t-if="showCosts" class="text-end"/>
         <td t-if="showAttachments"/>

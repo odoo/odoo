@@ -63,18 +63,18 @@
 
 <t t-name="mail.EmojiPicker.tab" owl="1">
     <span class="o-mail-Emoji text-center p-1 cursor-pointer" t-att-class="{'bg-200': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
-        <t t-esc="category.title"/>
+        <t t-out="category.title"/>
     </span>
 </t>
 
 <t t-name="mail.EmojiPicker.section" owl="1">
-    <span class="w-100 fs-7 p-2 position-sticky top-0 bg-view" t-att-data-category="category.sortId"><span class="o-mail-EmojiPicker-sectionIcon" t-esc="category.title"/><span class="ms-2" t-esc="category.displayName"/></span>
+    <span class="w-100 fs-7 p-2 position-sticky top-0 bg-view" t-att-data-category="category.sortId"><span class="o-mail-EmojiPicker-sectionIcon" t-out="category.title"/><span class="ms-2" t-out="category.displayName"/></span>
     <span class="o-mail-EmojiPicker-category opacity-100 fs-7 py-2" t-att-data-category="category.sortId"/>
 </t>
 
 <t t-name="mail.EmojiPicker.emoji" owl="1">
     <span class="o-mail-Emoji cursor-pointer d-flex justify-content-center fs-2" t-att-class="{ 'bg-200': state.activeEmojiIndex === itemIndex }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="recentCategory.sortId" t-on-click="selectEmoji">
-        <span t-esc="emoji.codepoints"/>
+        <span t-out="emoji.codepoints"/>
     </span>
 </t>
 

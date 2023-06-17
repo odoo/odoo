@@ -28,9 +28,9 @@
                     <td>
                         <span>
                             <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
-                            <span class="fw-bold" t-esc="up_votes"/>
+                            <span class="fw-bold" t-out="up_votes"/>
                             <i class="fa fa-thumbs-down text-danger ms-3" role="img" aria-label="Negative votes" title="Negative votes"/>
-                            <span class="fw-bold" t-esc="down_votes"/>
+                            <span class="fw-bold" t-out="down_votes"/>
                         </span>
                     </td>
                 </tr>
@@ -39,10 +39,10 @@
         <xpath expr="//ul[@id='profile_extra_info_tablist']" position="inside">
             <t t-if="forum">
                 <li class="nav-item">
-                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-out="count_questions"/> Questions</a>
                 </li>
                 <li class="nav-item">
-                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-out="count_answers"/> Answers</a>
                 </li>
                 <li t-if="uid == user.id" class="nav-item">
                     <a role="tab" aria-controls="activity" href="#activity" class="nav-link o_wprofile_navlink" data-bs-toggle="tab">Activity</a>
@@ -128,7 +128,7 @@
         <t t-if="forum_filtered">
             <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-1 ms-4">
                 <i class="fa fa-filter me-2 text-muted"/>
-                <t t-esc="forum_filtered"/>
+                <t t-out="forum_filtered"/>
                 <a t-attf-href="/profile/user/#{uid}" class="btn border-0 py-1">&#215;</a>
             </span>
         </t>
@@ -138,17 +138,17 @@
         <t t-if="activities">
             <div t-foreach="activities" t-as="activity" class="card mb-2">
                 <div class="card-body">
-                    <span t-esc="activity.subtype_id.name" class="badge text-bg-info me-2 mt-1"/>
+                    <span t-out="activity.subtype_id.name" class="badge text-bg-info me-2 mt-1"/>
                     <span t-field="activity.date" t-options='{"format": "short"}' class="me-2"/>
                     <t t-set="post" t-value="posts[activity.res_id]"/>
                     <span t-if="post[1]">
                         <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
-                            <span t-esc="post[0].name"/>
+                            <span t-out="post[0].name"/>
                         </a>
                     </span>
                     <span t-if="not post[1]">
                         <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }">
-                            <span t-esc="post[0].name"/>
+                            <span t-out="post[0].name"/>
                         </a>
                     </span>
                 </div>
@@ -165,10 +165,10 @@
             <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
             <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
             <t t-if="vote.post_id.parent_id">
-                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-out="vote.post_id.parent_id.name" style="margin-left:10px"/>
             </t>
             <t t-if="not vote.post_id.parent_id">
-                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-out="vote.post_id.name"/>
             </t>
         </div>
         <div class="mb16" t-if="not vote_post">

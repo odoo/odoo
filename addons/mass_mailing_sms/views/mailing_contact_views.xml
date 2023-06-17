@@ -71,8 +71,8 @@
                 <field name="mobile" widget="phone"/>
                 <field name="phone_sanitized" invisible="1"/>
             </xpath>
-            <xpath expr="//t[@t-esc='record.email.value']" position="after">
-                <t t-esc="record.mobile.value"/>
+            <xpath expr="//t[@t-out='record.email.value']" position="after">
+                <t t-out="record.mobile.value"/>
             </xpath>
         </field>
     </record>

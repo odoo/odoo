@@ -330,13 +330,13 @@
                                                      <div class="row">
                                                          <div class="col-8">
                                                              <strong>
-                                                                 <span t-esc="record.product_id.value"/>
+                                                                 <span t-out="record.product_id.value"/>
                                                              </strong>
                                                          </div>
                                                          <div class="col-4">
                                                              <strong>
                                                                  <span>
-                                                                     Tax excl.: <t t-esc="record.price_subtotal.value" class="float-end text-end"/>
+                                                                     Tax excl.: <t t-out="record.price_subtotal.value" class="float-end text-end"/>
                                                                  </span>
                                                              </strong>
                                                          </div>
@@ -345,14 +345,14 @@
                                                          <div class="col-8 text-muted">
                                                              <span>
                                                                  Quantity:
-                                                                 <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
+                                                                 <t t-out="record.product_qty.value"/>
+                                                                 <t t-out="record.product_uom.value" groups="uom.group_uom"/>
                                                              </span>
                                                          </div>
                                                          <div class="col-4" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
                                                              <strong>
                                                                 <span>
-                                                                    Tax incl.: <t t-esc="record.price_total.value"/>
+                                                                    Tax incl.: <t t-out="record.price_total.value"/>
                                                                 </span>
                                                              </strong>
                                                          </div>
@@ -361,7 +361,7 @@
                                                          <div class="col-12 text-muted">
                                                              <span>
                                                                  Unit Price:
-                                                                 <t t-esc="record.price_unit.value"/>
+                                                                 <t t-out="record.price_unit.value"/>
                                                              </span>
                                                          </div>
                                                      </div>
@@ -370,7 +370,7 @@
                                                      t-elif="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'"
                                                      class="row">
                                                      <div class="col-12">
-                                                         <span t-esc="record.name.value"/>
+                                                         <span t-out="record.name.value"/>
                                                      </div>
                                                  </div>
                                              </div>
@@ -515,13 +515,13 @@
                                 <div class="o_kanban_record_top mb16">
                                     <field name="priority" widget="priority"/>
                                     <div class="o_kanban_record_headings ms-1">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
+                                        <strong class="o_kanban_record_title"><span><t t-out="record.partner_id.value"/></span></strong>
                                     </div>
                                     <strong><field name="amount_total" widget="monetary"/></strong>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
+                                        <span><t t-out="record.name.value"/> <t t-out="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">

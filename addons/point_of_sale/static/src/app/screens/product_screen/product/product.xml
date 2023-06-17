@@ -13,10 +13,10 @@
                 </t>
                 <div class="product-content">
                     <div t-attf-class="#{props.product.image_128 ? 'product-name' : 'product-name no-image' }" t-attf-id="article_product_{{props.product.id}}">
-                        <t t-esc="props.product.display_name" />
+                        <t t-out="props.product.display_name" />
                     </div>
                     <span class="price-tag">
-                        <t t-esc="price" />
+                        <t t-out="price" />
                     </span>
                 </div>
         </article>

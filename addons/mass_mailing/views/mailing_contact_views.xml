@@ -80,11 +80,11 @@
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title">
-                                        <t t-esc="record.name.value"/>
+                                        <t t-out="record.name.value"/>
                                     </strong>
                                 </div>
                                 <span class="badge rounded-pill" title="Number of bounced email.">
-                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
+                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-out="record.message_bounce.value" title=""/>
                                 </span>
                             </div>
                             <div class="o_kanban_record_body">
@@ -93,11 +93,11 @@
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
                                     <strong>
-                                        <t t-esc="record.email.value"/>
+                                        <t t-out="record.email.value"/>
                                     </strong>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <t t-esc="record.company_name.value"/>
+                                    <t t-out="record.company_name.value"/>
                                 </div>
                             </div>
                         </div>

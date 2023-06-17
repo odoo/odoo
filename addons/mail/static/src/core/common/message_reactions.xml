@@ -16,8 +16,8 @@
                 'ms-1': env.inChatWindow and env.alignedRight,
                 'me-1': !(env.inChatWindow and env.alignedRight),
          }" t-att-title="getReactionSummary(reaction)">
-            <span class="mx-1" t-esc="reaction.content"/>
-            <span class="mx-1" t-esc="reaction.count"/>
+            <span class="mx-1" t-out="reaction.content"/>
+            <span class="mx-1" t-out="reaction.count"/>
         </button>
     </div>
 </t>

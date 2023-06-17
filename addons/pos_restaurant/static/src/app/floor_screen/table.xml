@@ -5,13 +5,13 @@
         <div class="table" t-on-click.stop="(ev) => props.onClick(props.table, ev)" t-att-style="style">
             <span class="table-cover" t-att-class="{ full: fill >= 1 }" t-att-style="`height: ${Math.ceil(fill * 100)}%`"></span>
             <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">
-                <t t-esc="orderCount" />
+                <t t-out="orderCount" />
             </span>
             <span class="label">
-                <t t-esc="props.table.name" />
+                <t t-out="props.table.name" />
             </span>
             <span class="table-seats">
-                <t t-esc="customerCountDisplay" />
+                <t t-out="customerCountDisplay" />
             </span>
         </div>
     </t>

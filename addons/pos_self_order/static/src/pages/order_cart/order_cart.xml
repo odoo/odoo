@@ -14,7 +14,7 @@
             <t t-set="order" t-value="selfOrder.currentOrder"/>
             <PriceDetails tax="order.amount_tax" total="order.amount_total"/>
             <button t-on-click="processOrder" t-attf-class="{{ !order.isChange() ? 'disabled' : '' }} o_self_order_main_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
-                <t t-esc="buttonToShow" />
+                <t t-out="buttonToShow" />
                 <t t-if="!order.isChange()">
                     already sent
                 </t>

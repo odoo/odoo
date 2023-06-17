@@ -10,13 +10,13 @@
             <t t-if="props.type === 'key'">
                 <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
                     It looks like your file is being called by
-                    <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>.
+                    <a href="#" t-on-click="showDependencies"><t t-out="depText" /></a>.
                     Changing its name will break these calls.
                 </div>
             </t>
             <t t-else="">
                 <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
-                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>)
+                    (could be used in <a href="#" t-on-click="showDependencies"><t t-out="depText" /></a>)
                 </div>
             </t>
         </t>
@@ -28,8 +28,8 @@
                 t-attf-href="#collapseDependencies{{ dependency_index }}"
                 aria-expanded="false">
                     <i class="fa fa-caret-right me-1"/>
-                    <t t-esc="dependency"/>:
-                    <span class="text-muted"> <t t-esc="dependency_value.length"/> found(s)</span>
+                    <t t-out="dependency"/>:
+                    <span class="text-muted"> <t t-out="dependency_value.length"/> found(s)</span>
                 </a>
                 <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
                     <ul>
@@ -48,7 +48,7 @@
 
 <t t-name="website.PageDependencies.Tooltip">
     <t t-foreach="dependencies" t-as="dependency" t-key="dependency">
-        <b><t t-esc="dependency"/></b>
+        <b><t t-out="dependency"/></b>
         <ul>
             <li t-foreach="dependency_value" t-as="item" t-key="item_index">
                 <a t-att-href="item.link" t-att-title="item.record_name" class="o_text_overflow" target="_blank">

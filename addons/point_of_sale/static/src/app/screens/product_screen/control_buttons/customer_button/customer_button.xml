@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.CustomerButton" owl="1">
         <div class="control-button customer-button set-partner" t-on-click="() => this.pos.selectPartner()">
             <i class="fa fa-user" role="img" aria-label="Customer" title="Customer" />
-            <t t-esc="this.partner.name" t-if="this.partner" />
+            <t t-out="this.partner.name" t-if="this.partner" />
             <t t-else="">
                 Customer
             </t>

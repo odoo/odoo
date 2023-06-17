@@ -8,7 +8,7 @@
                     <li t-foreach="navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap cursor-pointer" t-if="navItem[1].isVisible" t-attf-class="{{ navItem[1].isDisabled ? 'disabled' : '' }}">
                         <a class="nav-link" t-attf-class="{{ navItem[0] === state.currentPage ? 'active' : '' }} {{ props.orientation === 'vertical' ? 'p-3 rounded-0' : '' }} {{ navItem[1].className || '' }}" t-att-name="navItem[1].name" t-on-click.prevent="() => this.activatePage(navItem[0])" href="#" role="tab" tabindex="0">
                             <i t-if="props.icons and props.icons[navItem[0]]" t-attf-class="fa {{ props.icons[navItem[0]] }} me-2" />
-                            <t t-esc="navItem[1].title" />
+                            <t t-out="navItem[1].title" />
                         </a>
                     </li>
                 </ul>

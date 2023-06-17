@@ -8,12 +8,12 @@
                     <div class="attribute-name-cell">
                         <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
                                 t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
-                        <span t-esc="value.name"/>
+                        <span t-out="value.name"/>
                         <label t-att-name="value.name" t-attf-for="{{ attribute.id }}_{{ value.id }}"/>
                     </div>
                     <div t-if="value.price_extra" class="price-extra-cell">
                         <span class="price_extra">
-                            + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
+                            + <t t-out="env.utils.formatCurrency(value.price_extra)"/>
                         </span>
                     </div>
                     <div t-if="value.id == state.selected_value &amp;&amp; value.is_custom" class="custom-value-cell">
@@ -31,9 +31,9 @@
             <select class="configurator_select" t-model="state.selected_value">
                 <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
-                    <t t-esc="value.name"/>
+                    <t t-out="value.name"/>
                     <t t-if="value.price_extra">
-                        + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
+                        + <t t-out="env.utils.formatCurrency(value.price_extra)"/>
                     </t>
                 </option>
             </select>
@@ -64,12 +64,12 @@
         <t t-if="!ui.isSmall">
             <div class="popup popup-text popup-med product-configurator-popup">
                 <header class="title">
-                    <t t-esc="props.product.display_name" />
+                    <t t-out="props.product.display_name" />
                 </header>
     
                 <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
                     <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
-                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <div class="attribute_name" t-out="attribute.name"/>
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
@@ -92,13 +92,13 @@
                     <div class="product-img">
                         <img t-att-src="imageUrl" t-att-alt="props.product.display_name" />
                         <div class="product-info">
-                            <span><t t-esc="props.product.display_name" ></t></span>
-                            <span><t t-esc="unitPrice" ></t></span>
+                            <span><t t-out="props.product.display_name" ></t></span>
+                            <span><t t-out="unitPrice" ></t></span>
                         </div>
                         
                     </div>
                     <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
-                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <div class="attribute_name" t-out="attribute.name"/>
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
@@ -110,7 +110,7 @@
                         <button t-on-click="addOneQuantity">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
-                        <span class="quantity"><t t-esc="state.quantity"></t></span>
+                        <span class="quantity"><t t-out="state.quantity"></t></span>
                         <button t-on-click="removeOneQuantity">
                             <i class="fa fa-minus" aria-hidden="true"></i>
                         </button>

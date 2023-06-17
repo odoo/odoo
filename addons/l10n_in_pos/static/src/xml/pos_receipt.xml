@@ -4,11 +4,11 @@
         <xpath expr="//div[hasclass('orderlines')]" position="before">
             <t t-if="receipt.partner and pos.globalState.company.country and pos.globalState.company.country.code == 'IN'">
                 <div class="pos-receipt-center-align">
-                    <div><t t-esc="receipt.partner.name" /></div>
+                    <div><t t-out="receipt.partner.name" /></div>
                     <t t-if="receipt.partner.phone">
                         <div>
                             <span>Phone: </span>
-                            <t t-esc="receipt.partner.phone" />
+                            <t t-out="receipt.partner.phone" />
                         </div>
                     </t>
                     <br />
@@ -22,7 +22,7 @@
             <t t-if="line.l10n_in_hsn_code and pos.globalState.company.country and pos.globalState.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
-                    <t t-esc="line.l10n_in_hsn_code"/>
+                    <t t-out="line.l10n_in_hsn_code"/>
                 </div>
             </t>
         </xpath>

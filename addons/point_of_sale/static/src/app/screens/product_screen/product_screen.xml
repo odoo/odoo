@@ -30,17 +30,17 @@
                     <ProductsWidget />
                     <t t-if="ui.isSmall">
                         <div class="product-reminder" t-if="showProductReminder" t-key="animationKey" t-ref="reminder">
-                            <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/></span>
-                            <span><t t-esc="selectedOrderlineTotal"/></span>
+                            <span><t t-out="selectedOrderlineQuantity"/> <t t-out="selectedOrderlineDisplayName"/></span>
+                            <span><t t-out="selectedOrderlineTotal"/></span>
                         </div>
                         <div class="switchpane">
                             <button class="btn-switchpane pay-button" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
                                 <h1>Pay</h1>
-                                <span><t t-esc="total" /></span>
+                                <span><t t-out="total" /></span>
                             </button>
                             <button class="btn-switchpane" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
                                 <h1>Review</h1>
-                                <span><t t-esc="items_number"/> items</span>
+                                <span><t t-out="items_number"/> items</span>
                             </button>
                         </div>
                     </t>

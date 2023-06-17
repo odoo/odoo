@@ -7,7 +7,7 @@
                 <div t-if="state.isLoading" class="o-mail-NavigableList-item">
                     <a href="#" class="d-flex align-items-center w-100 py-2 px-4">
                         <i class="fa fa-spin fa-circle-o-notch"/>
-                        <t t-esc="props.placeholder"/>
+                        <t t-out="props.placeholder"/>
                     </a>
                 </div>
                 <t t-else="">
@@ -20,7 +20,7 @@
                     >
                         <a href="#" class="d-flex align-items-center w-100 py-2 px-4" t-att-class="{ 'o-mail-NavigableList-active bg-300': isActiveOption(option) }">
                             <t t-if="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
-                            <t t-else="" t-esc="option.label"/>
+                            <t t-else="" t-out="option.label"/>
                         </a>
                     </div>
                 </t>

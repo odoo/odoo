@@ -6,8 +6,8 @@
                 <h4>Imported file</h4>
                 <div class="mb-2 d-flex align-items-center">
                     <i class="fa fa-file white me-2"></i>
-                    <div class="fst-italic truncate"><t t-esc="fileName"/></div>
-                    <span class="fst-italic"><t t-esc="fileExtension"/></span>
+                    <div class="fst-italic truncate"><t t-out="fileName"/></div>
+                    <span class="fst-italic"><t t-out="fileExtension"/></span>
                 </div>
 
                 <div t-if="props.options.sheets.length > 0" class="flex-row my-2">
@@ -19,7 +19,7 @@
                         t-att-value="props.options.sheet"
                     >
                         <option t-foreach="props.options.sheets" t-as="sheet" t-key="sheet" t-att-value="sheet" t-att-selected="sheet === props.options.sheet">
-                            <t t-esc="sheet" />
+                            <t t-out="sheet" />
                         </option>
                     </select>
                 </div>
@@ -31,8 +31,8 @@
                 <h4>Formatting</h4>
                 <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
                     <label t-att-for="`${option[0]}-${option_index}`">
-                        <t t-esc="option[1].label" />
-                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-esc="'?'" />
+                        <t t-out="option[1].label" />
+                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-out="'?'" />
                     </label>
                     <input
                         t-if="option[1].type === 'input'"
@@ -44,7 +44,7 @@
                     />
                     <datalist t-if="option[1].type === 'input' and option[1].options" t-att-id="`list-${ option_index }`">
                         <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
-                            <t t-esc="opt.label ? opt.label : opt" />
+                            <t t-out="opt.label ? opt.label : opt" />
                         </option>
                     </datalist>
                     <select
@@ -54,7 +54,7 @@
                         t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
                     >
                         <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
-                            <t t-esc="opt.label ? opt.label : opt" />
+                            <t t-out="opt.label ? opt.label : opt" />
                         </option>
                     </select>
                 </div>
@@ -80,7 +80,7 @@
                 <h4>Help</h4>
                 <t t-foreach="props.importTemplates" t-as="template" t-key="template">
                     <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
-                        <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        <i class="fa fa-download"/> <span><t t-out="template.label"/></span>
                     </a>
                 </t>
                 <a href="https://www.odoo.com/documentation/16.0/applications/general/export_import_data.html" target="new">

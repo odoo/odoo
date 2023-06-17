@@ -10,19 +10,19 @@
                         Back
                     </span>
                     <h1 class="product-name">
-                        <t t-esc="productName" />
+                        <t t-out="productName" />
                     </h1>
                 </div>
                 <div class="centered-content">
                     <div class="weight js-weight">
-                        <t t-esc="productWeightString" />
+                        <t t-out="productWeightString" />
                     </div>
                     <div class="product-price">
                         <t
-                           t-esc="env.utils.formatCurrency(productPrice) + '/' + productUom" />
+                           t-out="env.utils.formatCurrency(productPrice) + '/' + productUom" />
                     </div>
                     <div class="computed-price">
-                        <t t-esc="computedPriceString" />
+                        <t t-out="computedPriceString" />
                     </div>
                     <div class="buy-product" t-on-click="confirm">
                         Order

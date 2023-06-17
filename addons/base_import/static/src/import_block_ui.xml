@@ -7,7 +7,7 @@
                 <img src="/web/static/img/spin.svg" alt="Loading..."/>
             </div>
             <div t-if="props.message or props.blockComponent">
-                <div class="o_message text-center px-4" t-esc="props.message" />
+                <div class="o_message text-center px-4" t-out="props.message" />
                 <t t-if="props.blockComponent" t-component="props.blockComponent.class" t-props="props.blockComponent.props"/>
             </div>
         </div>

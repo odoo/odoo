@@ -33,7 +33,7 @@
                                     'd-block': !props.dropdown
                                 }">
                                 <a href="#" class="dropdown-item ui-menu-item-wrapper">
-                                    <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
+                                    <i class="fa fa-spin fa-circle-o-notch" /> <t t-out="source.placeholder" />
                                 </a>
                             </li>
                         </t>
@@ -55,7 +55,7 @@
                                             <t t-call="{{ source.optionTemplate }}" />
                                         </t>
                                         <t t-else="">
-                                            <t t-esc="option.label" />
+                                            <t t-out="option.label" />
                                         </t>
                                     </a>
                                 </li>

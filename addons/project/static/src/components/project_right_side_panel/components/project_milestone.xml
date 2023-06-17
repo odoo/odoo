@@ -9,10 +9,10 @@
                 </span>
                 <div class="o_milestone_detail d-flex justify-content-between ps-4 w-100" t-on-click="onOpenMilestone">
                     <div class="d-flex flex-column">
-                        <t t-esc="milestone.name"/>
+                        <t t-out="milestone.name"/>
                     </div>
                     <span class="d-flex justify-content-center align-items-center">
-                        <t t-esc="deadline"/>
+                        <t t-out="deadline"/>
                     </span>
                 </div>
                 <span class="d-flex align-items-center ms-3">

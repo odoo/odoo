@@ -6,10 +6,10 @@
                 t-on-click="() => this.numberBuffer.sendKey(props.value)">
             <t t-slot="default">
                 <t t-if="props.text">
-                    <t t-esc="props.text" />
+                    <t t-out="props.text" />
                 </t>
                 <t t-else="">
-                    <t t-esc="props.value" />
+                    <t t-out="props.value" />
                 </t>
             </t>
         </button>

@@ -9,7 +9,7 @@
             <div t-attf-class="d-flex justify-content-end flex-md-grow-1 #{(search or tag or my) and 'col-12 flex-column-reverse flex-md-row mb-3' or 'col-md-auto order-md-3'}">
                 <div t-if="search or tag or my" class="d-flex flex-wrap align-items-center flex-grow-1">
                     <span t-if="search" class="w-100 w-md-auto mb-2 mb-md-0 border rounded ps-2 d-inline-flex align-items-center justify-content-between">
-                        <em class="bg-light px-2" t-esc="search"/>
+                        <em class="bg-light px-2" t-out="search"/>
                         <a t-att-href="url_for('') + '?' + keep_query( 'filters', 'sorting', 'my')" class="btn py-1">&#215;</a>
                     </span>
                     <span t-if="my" t-attf-class="w-100 w-md-auto mb-2 mb-md-0 border rounded ps-2 d-inline-flex align-items-center justify-content-between #{search and 'ms-md-2'}">
@@ -25,7 +25,7 @@
                     <span t-if="tag" t-attf-class="w-100 w-md-auto mb-2 mb-md-0 border rounded ps-2 d-inline-flex align-items-center justify-content-between #{(search or my) and 'ms-md-2'}">
                         <div>
                             <span class="fa fa-tag text-muted me-1"/>
-                            <span t-esc="tag.name"/>
+                            <span t-out="tag.name"/>
                         </div>
                         <a t-att-href="url_for('/forum/') + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my')" class="btn py-1">&#215;</a>
                     </span>
@@ -142,14 +142,14 @@
                         <t t-if="my == 'followed'">in your followed list</t>
                         <t t-if="my == 'mine'">in your posts</t>
                     </t>
-                    <t t-set="_search_str"><t t-if="search">matching "<em class="fw-bold" t-esc="original_search or search"/>"</t></t>
+                    <t t-set="_search_str"><t t-if="search">matching "<em class="fw-bold" t-out="original_search or search"/>"</t></t>
                     <t t-set="_search_and_tag_str"><t t-if="search and tag">&amp;nbsp;and&amp;nbsp;</t></t>
-                    <t t-set="_tag_str"><t t-if="tag">using the <span class="badge text-bg-light" t-esc="tag.name"/> tag</t></t>
+                    <t t-set="_tag_str"><t t-if="tag">using the <span class="badge text-bg-light" t-out="tag.name"/> tag</t></t>
                     <t t-set="result_msg">
                         Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s.
                     </t>
                     <span t-out="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"/>
-                    <span t-if="original_search">Showing results for <em class="fw-bold" t-esc="search"/> instead.</span>
+                    <span t-if="original_search">Showing results for <em class="fw-bold" t-out="search"/> instead.</span>
                 </div>
 
                 <t t-elif="not tag and not search and no_filters">
@@ -220,7 +220,7 @@
                 <label class="form-label" for="content">Description</label>
                 <div class="small form-text text-muted d-inline">, consider <b>adding an example</b>. </div>
                 <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
-                    <t t-esc="question_content"/>
+                    <t t-out="question_content"/>
                 </textarea>
             </div>
             <div class="mb-3">
@@ -242,9 +242,9 @@
 <!-- Edition: edit a post -->
 <template id="edit_post" name="Edit Post">
     <t t-call="website_forum.header">
-        <div t-if="is_answer" class="fw-bold mb-1">Question by <t t-esc="post.parent_id.create_uid.sudo().name"/></div>
+        <div t-if="is_answer" class="fw-bold mb-1">Question by <t t-out="post.parent_id.create_uid.sudo().name"/></div>
         <article t-if="is_answer" class="alert border pb-0 o_wforum_readable">
-            <h5 class="mb-1 text-muted" t-esc="post.parent_id.name"/>
+            <h5 class="mb-1 text-muted" t-out="post.parent_id.name"/>
             <div t-field="post.parent_id.content" class="o_wforum_post_content text-muted oe_no_empty"/>
         </article>
         <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
@@ -274,7 +274,7 @@
                 <label t-else="" class="form-label">Your Answer</label>
                 <div t-if="not is_answer" class="small form-text text-muted d-inline">, consider <b>adding an example</b>. </div>
                 <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
-                    <t t-esc="post.content"/>
+                    <t t-out="post.content"/>
                 </textarea>
             </div>
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -306,7 +306,7 @@
                 <ul class="pagination mt0 mb0">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <t t-if="tuple_char_index &lt; 11">
-                            <li t-attf-class="page-item #{active_char_tag == tuple_char[1] and 'active'}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" class="page-link"><t t-esc="tuple_char[0]"/></a></li>
+                            <li t-attf-class="page-item #{active_char_tag == tuple_char[1] and 'active'}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" class="page-link"><t t-out="tuple_char[0]"/></a></li>
                         </t>
                     </t>
                 </ul>
@@ -315,8 +315,8 @@
                 <label for="filter" class="me-2">Show Tags Starting By</label>
                 <select name="filter" class="form-select w-auto" onchange="location = this.value;">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                        <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-esc="tuple_char[0]"/>
-                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" t-esc="tuple_char[0]"/>
+                        <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-out="tuple_char[0]"/>
+                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" t-out="tuple_char[0]"/>
                     </t>
                 </select>
             </div>
@@ -326,14 +326,14 @@
             <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span t-attf-class="badge border px-2 #{tag.message_is_follower and 'border-success text-success' or 'text-bg-light text-600'}">
                     <i class="fa fa-tag small"/>
-                    <t t-esc="tag.name"/>
-                    <b class="small align-top">(<t t-esc="tag.posts_count"/>)</b>
+                    <t t-out="tag.name"/>
+                    <b class="small align-top">(<t t-out="tag.posts_count"/>)</b>
                 </span>
                 <div class="o_forum_tag_follow_box text-center">
                     <div class="card shadow mt-2">
                         <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
                             class="btn btn-light">
-                            See <t t-esc="tag.posts_count"/> post<t t-if="tag.posts_count > 1">s</t>
+                            See <t t-out="tag.posts_count"/> post<t t-if="tag.posts_count > 1">s</t>
                         </a>
                         <em class="d-block mb-2">or</em>
                         <div class="input-group">

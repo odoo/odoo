@@ -10,9 +10,9 @@
             </t>
 
             <div class="flex-grow-1">
-                <h1 class="mt-5" t-esc="employee.name"/>
+                <h1 class="mt-5" t-out="employee.name"/>
                 <h3><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to check out?</t></h3>
-                <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-esc="hoursToday"/></h4>
+                <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-out="hoursToday"/></h4>
             </div>
 
             <CheckInOut checkedIn="checkedIn" employeeId="employee.id" nextAction="nextAction"/>

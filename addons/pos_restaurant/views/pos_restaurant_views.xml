@@ -60,8 +60,8 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
-                                <div><strong>Point of Sales: </strong><t t-esc="record.pos_config_ids.value"/></div>
+                                <div><strong>Floor Name: </strong><t t-out="record.name.value"/></div>
+                                <div><strong>Point of Sales: </strong><t t-out="record.pos_config_ids.value"/></div>
                             </div>
                         </t>
                     </templates>

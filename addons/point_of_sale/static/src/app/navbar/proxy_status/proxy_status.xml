@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.ProxyStatus" owl="1">
         <div class="oe_status js_proxy" t-on-click="() => this.pos.connectToProxy()">
             <span t-if="this.message and !ui.isSmall" class="js_msg">
-                <t t-esc="this.message" />
+                <t t-out="this.message" />
             </span>
             <span t-if="connectionInfo.status === 'connected' and !this.message" class="js_connected oe_green">
                 <i class="fa fa-fw fa-sitemap" role="img" aria-label="Proxy Connected"

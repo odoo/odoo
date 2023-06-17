@@ -4,15 +4,15 @@
         <div class="fc-content">
             <div t-attf-class="#{attendeeStatus != 'accepted' ? 'fw-normal' : ''} o_event_title me-2">
                 <span t-if="isAlone" class="fa fa-exclamation-circle"/>
-                <t t-esc="title"/>
+                <t t-out="title"/>
                 <t t-if="!isAllDay">
                     <t t-if="24 > duration and duration > 0.5">
-                        <br/><t t-esc="startTime"/> - <t t-esc="endTime"/>
+                        <br/><t t-out="startTime"/> - <t t-out="endTime"/>
                     </t>
-                    <t t-else="">, <t t-esc="startTime"/></t>
+                    <t t-else="">, <t t-out="startTime"/></t>
                 </t>
             </div>
-            <span t-if="!isTimeHidden" class="fc-time" t-esc="startTime" />
+            <span t-if="!isTimeHidden" class="fc-time" t-out="startTime" />
         </div>
     </t>
 </templates>

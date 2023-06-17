@@ -4,8 +4,8 @@
     <t t-name="point_of_sale.EditListPopup" owl="1">
         <div class="popup popup-text edit-list-popup" t-ref="root">
             <header class="title">
-                <t t-esc="props.title" />
-                <span class="sub-title" t-esc="props.name"/>
+                <t t-out="props.title" />
+                <span class="sub-title" t-out="props.name"/>
             </header>
             <main>
                 <div class="list-lines">

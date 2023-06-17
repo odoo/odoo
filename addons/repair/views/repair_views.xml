@@ -260,7 +260,7 @@
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="row mb4">
                                 <div class="col-6">
-                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    <strong><span><t t-out="record.name.value"/></span></strong>
                                 </div>
                                 <div class="col-6 text-end">
                                     <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
@@ -268,7 +268,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-6 text-muted">
-                                    <span><t t-esc="record.product_id.value"/></span>
+                                    <span><t t-out="record.product_id.value"/></span>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="col-6">

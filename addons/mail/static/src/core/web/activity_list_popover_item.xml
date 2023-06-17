@@ -5,10 +5,10 @@
             <div class="overflow-auto d-flex align-items-baseline ms-3 me-1">
                 <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
                 <t t-if="props.activity.summary">
-                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-out="props.activity.summary"/>
                 </t>
                 <t t-if="!props.activity.summary and props.activity.activity_type_id">
-                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="props.activity.activity_type_id[1]"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1" t-out="props.activity.activity_type_id[1]"/>
                 </t>
                 <button t-if="hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" t-on-click="onClickEditActivityButton">
                     <i class="fa fa-pencil"/>
@@ -30,10 +30,10 @@
                 <img t-if="props.activity.user_id[0]" class="me-2 rounded-circle" t-att-src="activityAssigneeAvatar" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div class="mt-1">
                     <t t-if="props.activity.user_id[0]">
-                        <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
+                        <small class="text-truncate" t-out="props.activity.user_id[1]"/>
                         <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
                     </t>
-                    <small t-if="props.activity.state !== 'today'" class="fw-bold" t-att-title="props.activity.dateDeadline" t-esc="delayLabel"/>
+                    <small t-if="props.activity.state !== 'today'" class="fw-bold" t-att-title="props.activity.dateDeadline" t-out="delayLabel"/>
                 </div>
             </div>
             <ActivityMarkAsDone t-if="state.hasMarkDoneView" activity="props.activity" close="closeMarkAsDone" onClickDoneAndScheduleNext="props.onClickDoneAndScheduleNext" reload="props.onActivityChanged"/>

@@ -3,7 +3,7 @@
 
 <t t-name="hr_attendance.KioskMode" owl="1">
     <CardLayout kioskModeClasses="'o_barcode_main pt-5'">
-        <h2 class="mb-2"><small>Welcome to</small> <t t-esc="companyName"/></h2>
+        <h2 class="mb-2"><small>Welcome to</small> <t t-out="companyName"/></h2>
         <img t-att-src="companyImageUrl" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center img img-fluid mb-3" width="200"/>
         <div class="o_hr_attendance_kiosk_welcome_row d-flex flex-column pb-5">
             <div class="col-md-5 mt-5 mb-5 mb-md-0 align-self-center" t-if="kioskMode != 'manual'">

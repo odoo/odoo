@@ -110,10 +110,10 @@
                         <div class="d-flex flex-column justify-content-between oe_kanban_global_click container">
                             <div class="row g-0">
                                 <div class="o_leave_kanban_info col-12">
-                                    <span class="badge rounded-pill float-end mt4 mr16"><t t-esc="record.number_of_days.value"/> days</span>
-                                    <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/> <field name="employee_id" widget="many2one_avatar_user"/></strong>
+                                    <span class="badge rounded-pill float-end mt4 mr16"><t t-out="record.number_of_days.value"/> days</span>
+                                    <strong class="o_kanban_record_title"><t t-out="record.employee_id.value"/> <field name="employee_id" widget="many2one_avatar_user"/></strong>
                                     <div class="text-muted o_kanban_record_subtitle">
-                                        <t t-esc="record.holiday_status_id.value"/>
+                                        <t t-out="record.holiday_status_id.value"/>
                                     </div>
                                     <div>
                                         <span class="text-muted">from </span>
@@ -131,7 +131,7 @@
                                     <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted me-1" aria-label="validated"/>
                                     <span t-else="" class="fa fa-ban text-muted me-1" aria-label="refused"/>
                                     <t t-set="classname" t-value="{'validate': 'text-bg-success', 'refuse': 'text-bg-danger'}[record.state.raw_value] || 'text-bg-light'"/>
-                                    <span t-attf-class="badge rounded-pill {{ classname }}"><t t-esc="record.state.value"/></span>
+                                    <span t-attf-class="badge rounded-pill {{ classname }}"><t t-out="record.state.value"/></span>
                                 </div>
                                 <div class="me-2 align-items-center" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0">

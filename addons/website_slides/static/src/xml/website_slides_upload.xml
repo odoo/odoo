@@ -20,7 +20,7 @@
                 <a href="#" t-att-data-slide-category="slide_category"
                     class="content-type d-flex flex-column align-items-center mb-4 o_wslides_select_category btn rounded border text-600 p-3">
                     <i t-attf-class="fa #{category_data['icon']} mb-2 fa-3x"/>
-                    <t t-esc="category_data['label']"/>
+                    <t t-out="category_data['label']"/>
                 </a>
             </div>
         </div>

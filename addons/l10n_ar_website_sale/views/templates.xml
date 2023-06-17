@@ -11,13 +11,13 @@
                     <option value="">AFIP Responsibility...</option>
                     <t t-foreach="responsibility_types or []" t-as="resp_type">
                         <option t-att-value="resp_type.id" t-att-selected="resp_type.id == int(responsibility) if responsibility else resp_type.id == partner.l10n_ar_afip_responsibility_type_id.id">
-                            <t t-esc="resp_type.name"/>
+                            <t t-out="resp_type.name"/>
                         </option>
                     </t>
                 </select>
             </t>
             <t t-else="">
-                <p class="form-control" t-esc="partner.l10n_ar_afip_responsibility_type_id.name" readonly="1" title="Changing AFIP Responsibility type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                <p class="form-control" t-out="partner.l10n_ar_afip_responsibility_type_id.name" readonly="1" title="Changing AFIP Responsibility type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
                 <input name="l10n_ar_afip_responsibility_type_id" class="form-control" t-att-value="partner.l10n_ar_afip_responsibility_type_id.id" type='hidden'/>
             </t>
         </div>
@@ -30,13 +30,13 @@
                     <option value="">Identification Type...</option>
                     <t t-foreach="identification_types or []" t-as="id_type">
                         <option t-att-value="id_type.id" t-att-selected="id_type.id == int(identification) if identification else id_type.id == partner.l10n_latam_identification_type_id.id">
-                            <t t-esc="id_type.name"/>
+                            <t t-out="id_type.name"/>
                         </option>
                     </t>
                 </select>
             </t>
             <t t-else="">
-                <p class="form-control" t-esc="partner.l10n_latam_identification_type_id.name" readonly="1" title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                <p class="form-control" t-out="partner.l10n_latam_identification_type_id.name" readonly="1" title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
                 <input name="l10n_latam_identification_type_id" class="form-control" t-att-value="partner.l10n_latam_identification_type_id.id" type='hidden'/>
             </t>
         </div>

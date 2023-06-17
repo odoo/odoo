@@ -6,7 +6,7 @@
                 <select class="o_input" t-model="state.fieldName">
                     <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
-                    t-esc="field.string"
+                    t-out="field.string"
                     />
                 </select>
             </div>

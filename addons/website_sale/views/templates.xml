@@ -13,7 +13,7 @@
                 <a href="/shop/cart" t-attf-class="#{_link_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart"/>
                     <span t-if="_text">My Cart</span>
-                    <sup class="my_cart_quantity badge text-bg-primary" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup class="my_cart_quantity badge text-bg-primary" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                 </a>
             </li>
         </t>
@@ -193,13 +193,13 @@
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <t t-if="'base_price' in template_price_vals and template_price_vals['base_price'] &gt; template_price_vals['price_reduce']">
                             <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
-                                <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                <em class="small" t-out="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
                         </t>
-                        <span class="h6 mb-0" t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale" t-out="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                         <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
-                        <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
-                        <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+                        <span itemprop="price" style="display:none;" t-out="template_price_vals['price_reduce']" />
+                        <span itemprop="priceCurrency" style="display:none;" t-out="website.currency_id.name" />
                     </div>
                 </div>
             </div>
@@ -232,12 +232,12 @@
             <t t-set="curr_pl" t-value="website.pricelist_id" />
 
             <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
-                <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                <t t-out="curr_pl and curr_pl.name or ' - '" />
             </a>
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="website_sale_pricelists" t-as="pl">
                     <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id" class="dropdown-item">
-                        <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-esc="pl.name" />
+                        <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-out="pl.name" />
                     </a>
                 </t>
             </div>
@@ -347,11 +347,11 @@
                             <t t-if="opt_wsale_categories_top" t-call="website_sale.filmstrip_categories"/>
 
                             <div t-if="original_search and products" class="alert alert-warning mt8">
-                                No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                                No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
                             </div>
 
                             <t t-if="category">
-                                <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
+                                <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-out='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
 
@@ -387,11 +387,11 @@
                             <div t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
                                     <h3 class="mt8">No product defined</h3>
-                                    <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
+                                    <p t-if="category">No product defined in category "<strong t-out="category.display_name"/>".</p>
                                 </t>
                                 <t t-else="">
                                     <h3 class="mt8">No results</h3>
-                                    <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                    <p>No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.</p>
                                 </t>
                                 <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                             </div>
@@ -818,7 +818,7 @@
                                     <select class="form-select css_attribute_select mb-2" name="attrib">
                                         <option value="" selected="true">-</option>
                                         <t t-foreach="a.value_ids" t-as="v">
-                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-out="v.name" t-att-selected="v.id in attrib_set" />
                                         </t>
                                     </select>
                                 </t>
@@ -872,7 +872,7 @@
 
     <!-- /shop/product page -->
     <template id="base_unit_price" name="Product Base unit price">
-        (<span class="o_base_unit_price" t-esc="combination_info['base_unit_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+        (<span class="o_base_unit_price" t-out="combination_info['base_unit_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
          / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
     </template>
 
@@ -932,8 +932,8 @@
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
                             <t t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
-                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
+                            <span itemprop="url" style="display:none;" t-out="base_url + product.website_url"/>
+                            <span itemprop="image" style="display:none;" t-out="base_url + website.image_url(product, 'image_1920')" />
                             <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
@@ -1154,19 +1154,19 @@
     <template id="product_price">
         <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
             <h3 class="css_editable_mode_hidden">
-                <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
+                <span class="oe_price" style="white-space: nowrap;" t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span itemprop="price" style="display:none;" t-out="combination_info['price']"/>
+                <span itemprop="priceCurrency" style="display:none;" t-out="website.currency_id.name"/>
                 <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
-                      t-esc="combination_info['list_price']"
+                      t-out="combination_info['list_price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     itemprop="listPrice"
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
                     <bdi dir="inherit">
-                    <span t-esc="combination_info['compare_list_price']"
+                    <span t-out="combination_info['compare_list_price']"
                           groups="website_sale.group_product_price_comparison"
                           t-options='{
                            "widget": "monetary",
@@ -1225,11 +1225,11 @@
                             <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
                             <input type="radio" name="product_id" class="form-check-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                             <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
-                                <span t-esc="combination_info['display_name']"/>
+                                <span t-out="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
                                 <span t-attf-class="badge rounded-pill text-bg-{{navClass}} border" t-if="diff_price != 0">
-                                    <span class="sign_badge_price_extra" t-esc="diff_price > 0 and '+' or '-'"/>
-                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted fst-italic" />
+                                    <span class="sign_badge_price_extra" t-out="diff_price > 0 and '+' or '-'"/>
+                                    <span t-out="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted fst-italic" />
                                 </span>
                             </label>
                         </div>
@@ -1367,7 +1367,7 @@
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" t-attf-class="text-muted {{div_class}} small">
             <t t-foreach="description_lines" t-as="name_line">
-                <span t-esc="name_line"/>
+                <span t-out="name_line"/>
                 <br t-if="not name_line_last"/>
             </t>
         </div>
@@ -1380,7 +1380,7 @@
         </div>
         <t t-if='website_sale_order'>
             <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning" role="alert">
-                <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                <strong>Warning!</strong> <t t-out='website_sale_order._get_shop_warning()'/>
             </div>
         </t>
         <table t-if="website_sale_order and website_sale_order.website_order_line" class="mb16 table table-striped table-sm js_cart_lines" id="cart_products">
@@ -1447,7 +1447,7 @@
                                     </t>
                                 </t>
                                 <t t-else="">
-                                    <span class="text-muted w-100" t-esc="int(line.product_uom_qty)"/>
+                                    <span class="text-muted w-100" t-out="int(line.product_uom_qty)"/>
                                     <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="line.product_uom_qty" />
                                 </t>
                             </div>
@@ -1463,7 +1463,7 @@
                                   t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
                                   t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             <t t-if="line.discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-out="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                             </t>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                 class="cart_product_base_unit_price d-block text-muted"
@@ -1577,10 +1577,10 @@
                     <div class="col-9">
                         <div>
                             <t t-call="website_sale.cart_line_product_link">
-                                <span class="h6" t-esc="line.name_short" />
+                                <span class="h6" t-out="line.name_short" />
                             </t>
                         </div>
-                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                        Qty: <t t-out="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                     </div>
                 </div>
             </t>
@@ -1591,7 +1591,7 @@
                     </t>
                 </span>
                 <a role="button" class="btn btn-primary" href="/shop/cart">
-                    View Cart (<span class="o_wsale_cart_quantity" t-esc="website_sale_order.cart_quantity" /> item(s))
+                    View Cart (<span class="o_wsale_cart_quantity" t-out="website_sale_order.cart_quantity" /> item(s))
                 </a>
             </div>
         </t>
@@ -1612,14 +1612,14 @@
                         <td class='td-product_name'>
                             <div>
                                 <a t-att-href="product.website_url">
-                                    <strong t-esc="combination_info['display_name']" />
+                                    <strong t-out="combination_info['display_name']" />
                                 </a>
                             </div>
                             <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
+                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-out="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-out="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
                         </td>
                         <td class="w-25 text-center">
                             <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
@@ -1742,7 +1742,7 @@
             <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
                     <a t-if="allow_edit" href="#" class="btn btn-link float-end p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
-                    <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
+                    <t t-out="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
@@ -1803,7 +1803,7 @@
                                     </div>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
-                                    <h5 class="text-danger" t-esc="err" />
+                                    <h5 class="text-danger" t-out="err" />
                                 </t>
                                 <form t-if="account_on_checkout != 'mandatory' or not is_public_user" action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="row">
@@ -1873,7 +1873,7 @@
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
-                                                        <t t-esc="c.name" />
+                                                        <t t-out="c.name" />
                                                     </option>
                                                 </t>
                                             </select>
@@ -1884,7 +1884,7 @@
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
-                                                        <t t-esc="s.name" />
+                                                        <t t-out="s.name" />
                                                     </option>
                                                 </t>
                                             </select>
@@ -1937,11 +1937,11 @@
                 <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                 <div>
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
-                    <span t-esc="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span t-out="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
                 <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address">
                     <b>Shipping: </b>
-                    <span t-esc="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span t-out="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
             </div>
         </div>
@@ -1964,9 +1964,9 @@
                             <t t-foreach="errors" t-as="error">
                                 <div class="alert alert-danger" t-if="error" role="alert">
                                     <h4>
-                                        <t t-esc="error[0]" />
+                                        <t t-out="error[0]" />
                                     </h4>
-                                    <t t-esc="error[1]" />
+                                    <t t-out="error[1]" />
                                 </div>
                             </t>
                         </div>
@@ -2031,7 +2031,7 @@
                     class="btn btn-primary"
                     disabled="true"
                     data-icon-class="oi-chevron-right">
-                <t t-esc="submit_button_label"/> <i class="oi oi-chevron-right"/>
+                <t t-out="submit_button_label"/> <i class="oi oi-chevron-right"/>
             </button>
         </div>
     </template>
@@ -2117,7 +2117,7 @@
                                     </td>
                                 </t>
                                 <td class='text-center td-qty'>
-                                    <div t-esc="int(line.product_uom_qty)"/>
+                                    <div t-out="int(line.product_uom_qty)"/>
                                     <t t-if='line._get_shop_warning(clear=False)'>
                                         <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
                                     </t>
@@ -2136,7 +2136,7 @@
                     <t t-if='website_sale_order'>
                         <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
                         <div t-if='warning' class="alert alert-warning" role="alert">
-                            <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                            <strong>Warning!</strong> <t t-out='website_sale_order._get_shop_warning()'/>
                         </div>
                     </t>
                     <t t-call="website_sale.total">
@@ -2180,7 +2180,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="tx_sudo.provider_id.display_as or tx_sudo.provider_id.name" />
+                                                <t t-out="tx_sudo.provider_id.display_as or tx_sudo.provider_id.name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>
@@ -2195,8 +2195,8 @@
                                 <div class="card mt-3">
                                   <div class="card-body">
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
-                                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
+                                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-out='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
+                                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-out='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
                                   </div>
                                 </div>
                                 <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
@@ -2297,12 +2297,12 @@
                         <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="tx_sudo.state == 'error'">
-                        <span t-esc="tx_sudo.state_message"/>
+                        <span t-out="tx_sudo.state_message"/>
                     </t>
                 </div>
                 <t t-if="tx_sudo.provider_code == 'custom'">
                     <div t-if="order.reference" class="card-body">
-                        <b>Communication: </b><span t-esc='order.reference'/>
+                        <b>Communication: </b><span t-out='order.reference'/>
                     </div>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
                         <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
@@ -2436,9 +2436,9 @@
                 <hr/>
                 <p class="text-muted">
                     <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
-                        <b><t t-esc='field.label'/>: </b>
+                        <b><t t-out='field.label'/>: </b>
                         <t t-if='field.field_id.ttype != "binary"'>
-                            <span t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                            <span t-out='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
                         </t>
                         <t t-else=''>
                             <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>

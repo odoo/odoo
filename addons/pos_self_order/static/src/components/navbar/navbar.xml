@@ -8,11 +8,11 @@
             </button>
             <div class="mx-auto overflow-hidden">
                 <h3 class="my-3 text-primary text-truncate"
-                    t-esc="props.customText or selfOrder.company_name"
+                    t-out="props.customText or selfOrder.company_name"
                     t-on-click="() => this.router.back('default')"
                     />
             </div>
-            <span class="px-3 text-center" t-esc="selfOrder?.table?.name"/>
+            <span class="px-3 text-center" t-out="selfOrder?.table?.name"/>
         </nav>
     </t>
 </templates>

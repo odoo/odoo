@@ -6,7 +6,7 @@
                 <div class="o_auth_oauth_providers list-group mt-1 mb-1 text-start">
                     <a t-foreach="providers" t-as="p" class="list-group-item list-group-item-action py-2" t-att-href="p['auth_link']">
                         <i t-att-class="p['css_class']"/>
-                        <t t-esc="p['body']"/>
+                        <t t-out="p['body']"/>
                     </a>
                 </div>
             </t>

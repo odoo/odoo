@@ -11,7 +11,7 @@
             <xpath expr="//div[hasclass('o_mass_mailing_kanban_contact_links')]" position="inside">
               <a name="action_view_contacts_sms" type="object">
                   <span >Valid SMS Recipients</span>
-                  <span t-esc="record.contact_count_sms.value" class="ms-3"/>
+                  <span t-out="record.contact_count_sms.value" class="ms-3"/>
               </a>
             </xpath>
             <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">

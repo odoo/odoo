@@ -6,7 +6,7 @@
             <t t-if="props.line.getNote()">
                 <li class="info orderline-note">
                     <i class="fa fa-tag" role="img" aria-label="Note" title="Note"/>
-                    <t t-esc="props.line.getNote()" />
+                    <t t-out="props.line.getNote()" />
                 </li>
             </t>
         </xpath>

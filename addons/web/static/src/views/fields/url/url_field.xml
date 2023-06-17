@@ -3,7 +3,7 @@
 
     <t t-name="web.UrlField" owl="1">
         <t t-if="props.readonly">
-            <a class="o_field_widget o_form_uri" t-on-click.stop="" t-att-href="formattedHref" t-esc="props.text || props.record.data[props.name] || ''" target="_blank"/>
+            <a class="o_field_widget o_form_uri" t-on-click.stop="" t-att-href="formattedHref" t-out="props.text || props.record.data[props.name] || ''" target="_blank"/>
         </t>
         <t t-else="">
             <div class="d-inline-flex w-100">

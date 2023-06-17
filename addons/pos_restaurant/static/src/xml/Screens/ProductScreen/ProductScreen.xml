@@ -10,12 +10,12 @@
                 t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}">
                 <!-- add a showOrderButton here (using the computeOrderChange method) -->
                 <h1>Order</h1>
-                <span><t t-esc="total"/></span>
+                <span><t t-out="total"/></span>
             </button>
             <t t-else="">
                 <button class="btn-switchpane" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
                     <h1>Pay</h1>
-                    <span><t t-esc="total" /></span>
+                    <span><t t-out="total" /></span>
                 </button>
             </t>
             

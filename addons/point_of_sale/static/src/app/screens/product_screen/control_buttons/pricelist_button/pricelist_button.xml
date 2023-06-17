@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.SetPricelistButton" owl="1">
         <div class="control-button o_pricelist_button" t-on-click="() => this.click()">
             <i class="fa fa-th-list" role="img" aria-label="Price list" title="Price list" />
-            <t t-esc="currentPricelistName" />
+            <t t-out="currentPricelistName" />
         </div>
     </t>
 

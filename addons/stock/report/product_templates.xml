@@ -9,28 +9,28 @@
                     <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
                         <t t-translation="off">
 ^XA
-^FT100,80^A0N,40,30^FD<t t-esc="product.display_name"/>^FS
+^FT100,80^A0N,40,30^FD<t t-out="product.display_name"/>^FS
 <t t-if="product.default_code and len(product.default_code) &gt; 15">
-^FT100,115^A0N,30,24^FD<t t-esc="product.default_code[:15]"/>^FS
-^FT100,150^A0N,30,24^FD<t t-esc="product.default_code[15:30]"/>^FS
+^FT100,115^A0N,30,24^FD<t t-out="product.default_code[:15]"/>^FS
+^FT100,150^A0N,30,24^FD<t t-out="product.default_code[15:30]"/>^FS
 </t>
 <t t-else="">
-^FT100,150^A0N,30,24^FD<t t-esc="product.default_code"/>^FS
+^FT100,150^A0N,30,24^FD<t t-out="product.default_code"/>^FS
 </t>
 <t t-if="price_included">
 ^FO600,100,1
 ^CI28
 <t t-if="product.currency_id.position == 'after'">
-^A0N,66,48^FH^FD<t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
+^A0N,66,48^FH^FD<t t-out="product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-out="product.currency_id.symbol"/>^FS
 </t>
 <t t-if="product.currency_id.position == 'before'">
-^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
+^A0N,66,48^FH^FD<t t-out="product.currency_id.symbol"/><t t-out="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
 </t>
 </t>
 <t t-if="barcode">
 ^FO100,160^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="barcode"/>^FS
+^FD<t t-out="barcode"/>^FS
 </t>
 ^XZ
                         </t>

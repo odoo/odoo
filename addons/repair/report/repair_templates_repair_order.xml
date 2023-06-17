@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-3 bm-2">
                             <strong>Printing Date:</strong>
-                            <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}" class="m-0"/>
+                            <p t-out="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}" class="m-0"/>
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@
                                             <span t-field="line.price_unit"/>
                                         </td>
                                         <td class="text-center">
-                                            <span t-esc="','.join(map( lambda x: x.description or x.name, line.tax_id))"/>
+                                            <span t-out="','.join(map( lambda x: x.description or x.name, line.tax_id))"/>
                                         </td>
                                         <td class="text-end o_price_total">
                                             <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -104,7 +104,7 @@
                                             <span t-field="fees.price_unit"/>
                                         </td>
                                         <td class="text-center">
-                                            <span t-esc="','.join(map( lambda x: x.description or x.name, fees.tax_id))"/>
+                                            <span t-out="','.join(map( lambda x: x.description or x.name, fees.tax_id))"/>
                                         </td>
                                         <td class="text-end o_price_total">
                                             <span t-field="fees.price_subtotal"

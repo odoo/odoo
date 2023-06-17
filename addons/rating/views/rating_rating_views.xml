@@ -153,7 +153,7 @@
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="d-flex flex-row">
                                     <div class="o_rating_kanban_left me-3">
-                                        <h1 class="o_rating_value text-center text-primary" t-esc="val_stars"/>
+                                        <h1 class="o_rating_value text-center text-primary" t-out="val_stars"/>
                                         <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
                                            class="fa fa-star"
                                            aria-label="A star"
@@ -182,7 +182,7 @@
                                             </span>
                                             <span><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="create_date" /></span>
                                             <div class="d-flex mt-2">
-                                                <span t-esc="record.feedback.raw_value"/>
+                                                <span t-out="record.feedback.raw_value"/>
                                             </div>
                                         </div>
                                     </div>

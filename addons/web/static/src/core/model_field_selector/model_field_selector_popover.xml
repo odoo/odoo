@@ -13,7 +13,7 @@
                     />
                 </t>
                 <div class="o_model_field_selector_popover_title">
-                    <t t-esc="state.page.title"/>
+                    <t t-out="state.page.title"/>
                 </div>
                 <i class="fa fa-times o_model_field_selector_popover_option o_model_field_selector_popover_close"
                    title="Close"
@@ -37,9 +37,9 @@
                         <t t-set="fieldDef" t-value="state.page.fieldDefs[fieldName]" />
                         <li class="o_model_field_selector_popover_item d-flex" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
                             <button class="o_model_field_selector_popover_item_name btn flex-fill text-start" t-on-click="() => this.selectField(fieldDef)">
-                                <t t-esc="fieldDef.string" />
-                                <t t-if="fieldDef.record_name"> (<t t-esc="fieldDef.record_name" />)</t>
-                                <div t-if="props.isDebugMode" class="text-muted o_model_field_selector_popover_item_title"><t t-esc="fieldName"/> (<t t-esc="fieldDef.type"/>)</div>
+                                <t t-out="fieldDef.string" />
+                                <t t-if="fieldDef.record_name"> (<t t-out="fieldDef.record_name" />)</t>
+                                <div t-if="props.isDebugMode" class="text-muted o_model_field_selector_popover_item_title"><t t-out="fieldName"/> (<t t-out="fieldDef.type"/>)</div>
                             </button>
                             <t t-if="(!fieldDef.is_property and fieldDef.relation and props.followRelations) or fieldDef.type === 'properties'">
                                 <button class="o_model_field_selector_popover_item_relation btn btn-link" t-on-click.stop="() => this.followRelation(fieldDef)">

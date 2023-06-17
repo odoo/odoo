@@ -162,7 +162,7 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li><t t-esc="record.definition_description.value" /></li>
+                            <li><t t-out="record.definition_description.value" /></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -185,19 +185,19 @@
                                         </t>
                                         <t t-if="record.definition_condition.raw_value != 'higher'">
                                             <div t-attf-class="o_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'text-warning' : record.current.raw_value &gt; record.target_goal.raw_value ? 'text-danger' : 'text-success'}">
-                                                <t t-esc="record.current.raw_value" />
+                                                <t t-out="record.current.raw_value" />
                                             </div>
-                                            <em>Target: less than <t t-esc="record.target_goal.raw_value" /></em>
+                                            <em>Target: less than <t t-out="record.target_goal.raw_value" /></em>
                                         </t>
                                     </t>
 
                                 </div>
                                 <p>
                                     <t t-if="record.start_date.value">
-                                        From <t t-esc="record.start_date.value" />
+                                        From <t t-out="record.start_date.value" />
                                     </t>
                                     <t t-if="record.end_date.value">
-                                        To <t t-esc="record.end_date.value" />
+                                        To <t t-out="record.end_date.value" />
                                     </t>
                                 </p>
                             </div>

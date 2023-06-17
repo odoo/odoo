@@ -15,17 +15,17 @@
 <template id="moderation_display_post_answer">
     <div class="clearfix">
         <div class="question-name">
-            <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(answer.forum_id) }/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
+            <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(answer.forum_id) }/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-out="answer.parent_id.name"/>
             <b>[Answer]</b>
             <span t-if="not answer.active and answer.state=='offensive'"><b> [Offensive]</b></span>
-            <span t-if="not answer.active and answer.state=='offensive' and answer.closed_reason_id"><b> [<t t-esc="answer.closed_reason_id.name[0].upper() + answer.closed_reason_id.name[1:]"/>]</b></span>
+            <span t-if="not answer.active and answer.state=='offensive' and answer.closed_reason_id"><b> [<t t-out="answer.closed_reason_id.name[0].upper() + answer.closed_reason_id.name[1:]"/>]</b></span>
             <t t-if="answer.state == 'flagged'">
                 <small class="text-muted">
                     Flagged
                 </small>
             </t>
             <t t-if="len(answer.website_message_ids)&gt;0">
-                (<t t-esc="len(answer.website_message_ids)"/>
+                (<t t-out="len(answer.website_message_ids)"/>
                 <t t-if="len(answer.website_message_ids)&gt;1"> Comments</t>
                 <t t-if="len(answer.website_message_ids)&lt;=1"> Comment</t>)
             </t>
@@ -58,7 +58,7 @@
                 <label class="form-label" for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
                 <select class="form-select form-select form-select-lg" name="reason_id">
                     <t t-foreach="reasons or []" t-as="reason">
-                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-out="reason.name"/></option>
                     </t>
                 </select>
             </div>
@@ -121,7 +121,7 @@
                                                     <input type="checkbox" t-att-value="create_user.id" class="form-check-input" t-attf-id="user_#{create_user.id}"/>
                                                     <label class="form-check-label" t-attf-for="user_#{create_user.id}">
                                                         <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(create_user, 'avatar_128', '40x40')" alt="Avatar"/>
-                                                        <span t-esc="create_user.name" class="d-inline"/>
+                                                        <span t-out="create_user.name" class="d-inline"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -138,7 +138,7 @@
                                                     <input type="checkbox" class="form-check-input" t-attf-id="country_#{country.id}" t-att-value="country.id"/>
                                                     <label class="form-check-label" t-attf-for="country_#{country.id}">
                                                         <span t-field="country.image_url" t-options='{"widget": "image_url", "class": "country_flag"}' class="me-2"/>
-                                                        <span t-esc="country.name"/>
+                                                        <span t-out="country.name"/>
                                                     </label>
                                                 </div>
                                             </div>

@@ -48,7 +48,7 @@
                         <t t-foreach="docs" t-as="doc">
                             <div class="p-2">
                                 <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
-                                    <t t-esc="doc.display_name"/>
+                                    <t t-out="doc.display_name"/>
                                 </a>
                                 <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}"/>
                                 <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}"/>
@@ -56,7 +56,7 @@
                         </t>
                     </t>
                     <t t-else="">
-                        <span t-esc="reason"/>
+                        <span t-out="reason"/>
                     </t>
                 </h3>
             </div>
@@ -79,7 +79,7 @@
                                         t-out="source[0].partner_id.name"/>
                                 </span>
                             </th>
-                            <th>Expected Delivery: <t t-esc="sources_to_formatted_scheduled_date[source]"/></th>
+                            <th>Expected Delivery: <t t-out="sources_to_formatted_scheduled_date[source]"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,11 +88,11 @@
                             <!-- don't print non-assigned lines when printing pdf -->
                             <tr t-if="line['is_assigned']">
                                 <td>
-                                    <t t-esc="line['product']['display_name']"/>
+                                    <t t-out="line['product']['display_name']"/>
                                 </td>
                                 <td>
-                                    <t t-esc="line['quantity']"/>
-                                    <t groups="uom.group_uom" t-esc="line['uom']"/>
+                                    <t t-out="line['quantity']"/>
+                                    <t groups="uom.group_uom" t-out="line['uom']"/>
                                 </td>
                             </tr>
                         </t>

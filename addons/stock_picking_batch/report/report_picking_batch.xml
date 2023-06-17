@@ -79,9 +79,9 @@
                                             <tr>
                                                 <td style="background-color:lightgrey" colspan="6" >
                                                     <p style="margin:0px"><strong>FROM</strong>
-                                                    <span t-esc="move_lines.location_id.display_name"/></p>
+                                                    <span t-out="move_lines.location_id.display_name"/></p>
                                                     <p style="margin:0px"><strong>TO</strong>
-                                                    <span t-esc="move_lines.location_dest_id.display_name"/></p>
+                                                    <span t-out="move_lines.location_dest_id.display_name"/></p>
                                                 </td>
                                             </tr>
                                             <tr t-foreach="move_lines" t-as="move_operation">
@@ -90,12 +90,12 @@
                                                 </td>
                                                 <td>
                                                     <span t-if="has_package or move_operation.state == 'done'"
-                                                          t-esc="sum(move_operation.mapped('qty_done'))"/>
-                                                    <span t-else="" t-esc="sum(move_operation.mapped('reserved_uom_qty'))"/>
+                                                          t-out="sum(move_operation.mapped('qty_done'))"/>
+                                                    <span t-else="" t-out="sum(move_operation.mapped('reserved_uom_qty'))"/>
                                                     <span t-field="move_operation.uom_id" groups="move_operation.group_uom"/>
                                                 </td>
                                                 <td>
-                                                    <span t-esc="move_operation.picking_id.display_name"/>
+                                                    <span t-out="move_operation.picking_id.display_name"/>
                                                 </td>
                                                 <td t-if="has_serial_number" class="text-center h6" width="15%">
                                                     <div t-if="move_operation.lot_id or move_operation.lot_name" t-field="move_operation.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>

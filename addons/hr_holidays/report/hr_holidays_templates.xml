@@ -8,7 +8,7 @@
                 <h3 class="mb32">Time Off Summary</h3>
                 <t t-set="info" t-value="get_header_info"/>
                 <h3 class="text-center mb32">
-                    Analyze from <u><t t-esc="info['start_date']"/></u> to <u><t t-esc="info['end_date']"/></u> of the <u><t t-esc="info['holiday_type']"/></u> Time Off.
+                    Analyze from <u><t t-out="info['start_date']"/></u> to <u><t t-out="info['end_date']"/></u> of the <u><t t-out="info['holiday_type']"/></u> Time Off.
                 </h3>
 
                 <table class="table table-bordered mb32" style="table-layout:auto">
@@ -16,7 +16,7 @@
                         <tr>
                             <th>Month</th>
                             <t t-foreach="get_months" t-as="month">
-                                &lt;th class="text-center" colspan=<t t-esc="month['days']"/>&gt;<t t-esc="month['month_name']"/>&lt;/th&gt;
+                                &lt;th class="text-center" colspan=<t t-out="month['days']"/>&gt;<t t-out="month['month_name']"/>&lt;/th&gt;
                             </t>
                             <th/>
                         </tr>
@@ -25,13 +25,13 @@
                                 <strong>Departments and Employees</strong>
                             </td>
                             <t t-foreach="get_day" t-as="day">
-                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 8px; min-width: 18px"&gt; <t t-esc="day['day_str']"/>&lt;/td&gt;
+                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-out="day['color']"/>!important; font-size: 8px; min-width: 18px"&gt; <t t-out="day['day_str']"/>&lt;/td&gt;
                             </t>
                             <td/>
                         </tr>
                         <tr>
                             <t t-foreach="get_day" t-as="day">
-                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
+                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-out="day['color']"/>!important; font-size: 10px" &gt; <t t-out="day['day']"/>&lt;/td&gt;
                             </t>
                             <td class="text-center">Sum</td>
                         </tr>
@@ -40,19 +40,19 @@
                         <t t-foreach="get_data_from_report" t-as="obj">
                             <tr t-if="'dept' in obj">
                                 <td style="background-color:#ababab">
-                                    <strong><t t-esc="obj['dept']"/></strong>
+                                    <strong><t t-out="obj['dept']"/></strong>
                                 </td>
                                 <t t-foreach="obj['color']" t-as="c">
-                                    &lt;td style=background-color:<t t-esc="c['color']"/> !important/&gt;
+                                    &lt;td style=background-color:<t t-out="c['color']"/> !important/&gt;
                                 </t>
                                 <td/>
                             </tr>
                             <tr t-foreach="obj['data']" t-as="emp">
-                                <td><t t-esc="emp['emp']"/></td>
+                                <td><t t-out="emp['emp']"/></td>
                                 <t t-foreach="emp['display']" t-as="details">
-                                    &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                    &lt;td style=background-color:<t t-out="details['color']"/> !important /&gt;
                                 </t>
-                                <td class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
+                                <td class="text-center"><strong><t t-out="emp['sum']"/></strong></td>
                             </tr>
                         </t>
                     </tbody>
@@ -69,8 +69,8 @@
                         <tbody>
                             <tr t-foreach="get_holidays_status" t-as="status">
                                 <span t-if="status['color']">
-                                    &lt;td style=background-color:<t t-esc="status['color']"/>!important &gt;&lt;/td&gt;
-                                    <td><t t-esc="status['name']"/></td>
+                                    &lt;td style=background-color:<t t-out="status['color']"/>!important &gt;&lt;/td&gt;
+                                    <td><t t-out="status['name']"/></td>
                                 </span>
                             </tr>
                         </tbody>

@@ -10,10 +10,10 @@
             <td class="o_data_cell pt-0 w-100">
                 <div class="o_resume_line" t-att-data-id="id">
                     <small class="o_resume_line_dates">
-                        <b t-esc="data.date_start"/> - <b t-esc="data.date_end"/>
+                        <b t-out="data.date_start"/> - <b t-out="data.date_end"/>
                     </small>
-                    <h4 class="o_resume_line_title mt-2" t-esc="data.name"/>
-                    <p t-if="data.description" class="o_resume_line_desc" t-esc="data.description"/>
+                    <h4 class="o_resume_line_title mt-2" t-out="data.name"/>
+                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description"/>
                 </div>
             </td>
         </t>
@@ -30,7 +30,7 @@
 
 <t t-name="hr_resume_group_row">
     <tr class="o_resume_group_header">
-        <td class="o_group_name" colspan="100%"><span class="o_horizontal_separator my-0" t-esc="display_name"/></td>
+        <td class="o_group_name" colspan="100%"><span class="o_horizontal_separator my-0" t-out="display_name"/></td>
     </tr>
 </t>
 

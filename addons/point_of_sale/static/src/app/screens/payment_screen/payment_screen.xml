@@ -30,7 +30,7 @@
                                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                                         <div class="payment-method-display">
                                             <div><img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)"/></div>
-                                            <span class="payment-name"><t t-esc="paymentMethod.name" /></span>
+                                            <span class="payment-name"><t t-out="paymentMethod.name" /></span>
                                         </div>
                                     </div>
                                 </t>
@@ -72,7 +72,7 @@
                                     <t t-set="partner" t-value="currentOrder.get_partner()" />
                                     <span>
                                         <t t-if="partner">
-                                            <t t-esc="partner.name" />
+                                            <t t-out="partner.name" />
                                         </t>
                                         <t t-if="!partner">
                                             Customer
@@ -89,7 +89,7 @@
                                 <div t-if="pos.globalState.config.iface_tipproduct and pos.globalState.config.tip_product_id" class="button js_tip"
                                     t-att-class="{ highlight: currentOrder.get_tip() }"
                                     t-on-click="addTip">
-                                    <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.utils.formatCurrency(currentOrder.get_tip())"/>)</t>
+                                    <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-out="env.utils.formatCurrency(currentOrder.get_tip())"/>)</t>
                                 </div>
                                 <div t-if="pos.globalState.config.iface_cashdrawer" class="button js_cashdrawer"
                                     t-on-click="openCashbox">
@@ -100,7 +100,7 @@
                                         t-on-click="toggleShippingDatePicker">
                                     <i class="fa fa-clock-o" /> Ship Later
                                     <span t-if="currentOrder.getShippingDate()">
-                                        (<t t-esc="currentOrder.getShippingDate()"/>)
+                                        (<t t-out="currentOrder.getShippingDate()"/>)
                                     </span>
                                 </div>
                             </div>

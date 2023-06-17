@@ -19,13 +19,13 @@
                         </t>
                         <t t-if="website_sale_order.get_promo_code_error(delete=False)">
                             <div class="alert alert-danger text-start mt16" role="alert">
-                                <t t-esc="website_sale_order.get_promo_code_error()"/>
+                                <t t-out="website_sale_order.get_promo_code_error()"/>
                             </div>
                         </t>
                         <t t-if="website_sale_order">
                             <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
                                 <div class="alert alert-success text-start mt16" role="alert">
-                                    You have successfully applied the following code: <strong t-esc="website_sale_order.get_promo_code_success_message()"/>
+                                    You have successfully applied the following code: <strong t-out="website_sale_order.get_promo_code_success_message()"/>
                                 </div>
                             </t>
                             <t t-foreach="website_sale_order._get_claimable_and_showable_rewards().items()" t-as="coupon_reward">
@@ -44,30 +44,30 @@
                                                     <t t-set="points" t-value="website_sale_order._get_real_points_for_coupon(coupon)"/>
                                                     <t t-if="program.program_type != 'ewallet' and (program.trigger == 'with_code' or (program.trigger == 'auto' and program.applies_on == 'future'))">
                                                         <t t-if="program.program_type == 'gift_card'">
-                                                            <strong t-esc="reward.description"/>
+                                                            <strong t-out="reward.description"/>
                                                             <strong> - </strong>
-                                                            <strong t-esc="points"/>
-                                                            <strong t-esc="reward.point_name"/>
+                                                            <strong t-out="points"/>
+                                                            <strong t-out="reward.point_name"/>
                                                         </t>
                                                         <t t-elif="program.program_type == 'coupons'">
-                                                            <strong>Coupons - </strong><strong t-esc="reward.description"/>
+                                                            <strong>Coupons - </strong><strong t-out="reward.description"/>
                                                         </t>
                                                         <div class="text-muted d-md-block small">
                                                             <span t-if="coupon and not coupon.program_id.is_nominative">
                                                                 Code:
-                                                                <t t-esc="coupon.code[-4:].rjust(14, '&#8902;')"/>
+                                                                <t t-out="coupon.code[-4:].rjust(14, '&#8902;')"/>
                                                             </span>
                                                             <t t-if="coupon.expiration_date">
                                                                 <br/>
                                                                 <span>
                                                                     Expired Date:
-                                                                    <t t-esc="coupon.expiration_date"/>
+                                                                    <t t-out="coupon.expiration_date"/>
                                                                 </span>
                                                             </t>
                                                         </div>
                                                     </t>
                                                     <t t-else="">
-                                                        <strong t-esc="reward.description"/>
+                                                        <strong t-out="reward.description"/>
                                                         <div t-if="program.portal_visible">
                                                             <t t-if="not program.is_nominative">
                                                                 <span t-out="points"/> <span t-out="reward.point_name"/>

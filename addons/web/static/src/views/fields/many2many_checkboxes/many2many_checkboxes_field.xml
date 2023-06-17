@@ -10,7 +10,7 @@
                         disabled="props.readonly"
                         onChange="(ev) => this.onChange(item[0], ev)"
                     >
-                        <t t-esc="item[1]" />
+                        <t t-out="item[1]" />
                     </CheckBox>
                 </div>
             </t>

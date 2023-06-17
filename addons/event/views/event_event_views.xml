@@ -180,14 +180,14 @@
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                 <div class="col-3 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                                    <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="o_event_fontsize_20"/>
+                                    <div t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="o_event_fontsize_20"/>
                                     <div>
-                                        <t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
+                                        <t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
                                     </div>
-                                    <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
+                                    <div><t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
                                         <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
                                             <i class="oi oi-arrow-right me-2 o_event_fontsize_09" title="End date"/>
-                                            <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
+                                            <t t-out="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>
                                 <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
@@ -197,19 +197,19 @@
                                         </div>
                                         <div t-if="record.address_id.value" class="d-flex">
                                             <i class="fa fa-map-marker mt-1 me-1" title="Location"/>
-                                            <span t-esc="record.address_id.value"/>
+                                            <span t-out="record.address_id.value"/>
                                         </div>
                                     </div>
                                     <h5 class="o_event_fontsize_11 p-0">
                                         <a name="%(event_registration_action_stats_from_event)d"
                                            type="action"
                                            context="{'search_default_expected': True}">
-                                            <t t-esc="record.seats_expected.raw_value"/> Expected attendees
+                                            <t t-out="record.seats_expected.raw_value"/> Expected attendees
                                         </a>
                                         <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
                                         <div  class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value"><br/>
                                             <a class="ps-2" name="%(event_registration_action_stats_from_event)d" type="action" context="{'search_default_confirmed': True}">
-                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="ps-2"><t t-esc="total_seats"/> Confirmed</span>
+                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="ps-2"><t t-out="total_seats"/> Confirmed</span>
                                             </a>
                                         </div>
                                     </h5>

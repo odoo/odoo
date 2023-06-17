@@ -186,7 +186,7 @@
                                      alt="provider"/>
                                 <div class="d-flex flex-column justify-content-between w-100">
                                     <div class="o_payment_kanban_info">
-                                        <h4 class="mb-0"><t t-esc="record.name.value"/></h4>
+                                        <h4 class="mb-0"><t t-out="record.name.value"/></h4>
                                         <t t-if="installed">
                                             <field name="state"
                                                    widget="label_selection"

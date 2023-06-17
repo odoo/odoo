@@ -12,7 +12,7 @@
                 >
                     <label class="flex-grow-1 align-items-center d-flex mb-0 p-2 cursor-pointer">
                         <input class="form-check-input me-2" type="checkbox" t-att-checked="subtype.followed ? 'checked': ''" t-on-change="(ev) => this.onChangeCheckbox(ev, subtype)"/>
-                        <t t-esc="subtype.name"/>
+                        <t t-out="subtype.name"/>
                     </label>
                 </div>
             </t>

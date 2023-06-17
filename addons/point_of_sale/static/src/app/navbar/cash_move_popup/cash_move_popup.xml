@@ -15,16 +15,16 @@
                         <div class="input-field">
                             <input type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
                             <t t-if="pos.globalState.currency.symbol.length > 1">
-                                <span class="left-currency" t-esc="pos.globalState.currency.symbol" />
+                                <span class="left-currency" t-out="pos.globalState.currency.symbol" />
                             </t>
                             <t t-else="">
-                                <span class="currency" t-esc="pos.globalState.currency.symbol" />
+                                <span class="currency" t-out="pos.globalState.currency.symbol" />
                             </t>
                         </div>
                     </div>
                     <textarea name="reason" t-model="state.reason" placeholder="Reason"></textarea>
                     <span t-if="state.errorMessage" class="error-message">
-                        <t t-esc="state.errorMessage" />
+                        <t t-out="state.errorMessage" />
                     </span>
                 </div>
             </main>

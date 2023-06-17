@@ -62,12 +62,12 @@
                         </t>
 
                         <span t-if="col and line.reference === col" t-att-class="!line.unfoldable ? 'o_stock_reports_nofoldable' : ''">
-                            <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-esc="col"/>
+                            <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-out="col"/>
                         </span>
                         <span t-elif="col and line.lot_name === col">
-                            <a class="o_stock_report_lot_action" t-on-click.prevent="() => this.onCLickOpenLot(line)" t-esc="col" />
+                            <a class="o_stock_report_lot_action" t-on-click.prevent="() => this.onCLickOpenLot(line)" t-out="col" />
                         </span>
-                        <t t-elif="col" t-esc="col"/>
+                        <t t-elif="col" t-out="col"/>
                     </td>
                 </t>
             </tr>

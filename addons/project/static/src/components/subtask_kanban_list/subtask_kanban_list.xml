@@ -17,7 +17,7 @@
                         <a t-attf-class="subtask_name_col {{['1_done', '1_canceled'].includes(data.record.data.state) ? 'text-muted opacity-50' : ''}}"
                            t-att-title="data.record.data.display_name"
                            style="color: inherit;"
-                           t-esc="data.record.data.display_name"
+                           t-out="data.record.data.display_name"
                            t-on-click.prevent="() => this.goToSubtask(data.record.resId)"/>
                         <Field
                             class="`subtask_user_widget_col justify-content-end align-items-center ${['1_done', '1_canceled'].includes(data.record.data.state) ? 'opacity-50' : ''}`"

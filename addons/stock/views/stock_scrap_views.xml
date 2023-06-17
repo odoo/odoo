@@ -97,16 +97,16 @@
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
                                     <strong class="col-6">
-                                        <span t-esc="record.name.value"/>
+                                        <span t-out="record.name.value"/>
                                     </strong>
                                     <strong t-if="record.date_done.value" class="col-6 text-end">
-                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><span t-esc="record.date_done.value"/>
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><span t-out="record.date_done.value"/>
                                     </strong>
                                     <div class="col-12">
-                                        <span t-esc="record.product_id.value"/>
+                                        <span t-out="record.product_id.value"/>
                                     </div>
                                     <div class="col-6">
-                                        <span t-esc="record.scrap_qty.value"/>
+                                        <span t-out="record.scrap_qty.value"/>
                                     </div>
                                     <div class="col-6">
                                         <span class="float-end badge text-bg-secondary">

@@ -18,16 +18,16 @@
                                     <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle bg-view mt-n1 ms-n1'"/>
                                 </div>
                             </div>
-                            <span class="flex-grow-1 mx-2 text-truncate text-start fs-6" t-esc="selectablePartner.name"/>
+                            <span class="flex-grow-1 mx-2 text-truncate text-start fs-6" t-out="selectablePartner.name"/>
                             <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="state.selectedPartners.includes(selectablePartner) ? 'checked' : undefined"/>
                         </div>
                     </t>
                     <div t-if="state.selectablePartners.length === 0" class="mx-3">No user found that is not already a member of this channel.</div>
                     <div t-if="state.searchResultCount > state.selectablePartners.length" class="mx-3">
                         Showing
-                        <t t-esc="state.selectablePartners.length"/>
+                        <t t-out="state.selectablePartners.length"/>
                         results out of
-                        <t t-esc="state.searchResultCount"/>
+                        <t t-out="state.searchResultCount"/>
                         . Narrow your search to see more choices.
                     </div>
                 </div>
@@ -36,14 +36,14 @@
                     <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap gap-1 overflow-auto">
                         <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
                             <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
-                                <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
+                                <t t-out="selectedPartner.name"/> <i class="fa fa-times"/>
                             </button>
                         </t>
                     </div>
                 </div>
                 <div class="mx-3 mt-2 mb-3">
                     <button class="btn btn-primary w-100" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
-                        <t t-esc="invitationButtonText"/>
+                        <t t-out="invitationButtonText"/>
                     </button>
                 </div>
             </t>
@@ -56,7 +56,7 @@
                             <i class="fa fa-copy"/>
                         </button>
                     </div>
-                    <div t-if="props.thread.accessRestrictedToGroupText" class="mt-2" t-esc="props.thread.accessRestrictedToGroupText"/>
+                    <div t-if="props.thread.accessRestrictedToGroupText" class="mt-2" t-out="props.thread.accessRestrictedToGroupText"/>
                 </div>
             </t>
         </div>

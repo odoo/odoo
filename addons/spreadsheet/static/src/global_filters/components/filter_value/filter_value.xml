@@ -36,7 +36,7 @@
                         t-key="range.type">
                         <option t-att-selected="range.type === filterValue"
                             t-att-value="range.type">
-                            <t t-esc="range.description"/>
+                            <t t-out="range.description"/>
                         </option>
                     </t>
                 </select>

@@ -38,11 +38,11 @@
                     <div class="text-center">
                         <h1 class="mb-4" t-field="survey.title" />
                         <h2 class="mb-5 fw-normal">
-                            <span class="text-break">To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
+                            <span class="text-break">To join: <span class="text-info o_survey_session_copy" t-out="survey.session_link"/></span>
                             <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                         </h2>
                         <h2 class="fw-normal"><span>Waiting for attendees...</span>
-                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
+                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-out="survey.session_answer_count" />
                         </h2>
                     </div>
                     <a role="button"
@@ -90,7 +90,7 @@
             t-att-data-is-session-closed="is_session_closed">
             <div t-if="not is_session_closed" class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
                 <h3>
-                    <span>To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
+                    <span>To join: <span class="text-info o_survey_session_copy" t-out="survey.session_link"/></span>
                     <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                 </h3>
                 <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
@@ -101,7 +101,7 @@
                         <div class="progress" title="Attendees are answering the question...">
                             <div class="progress-bar o_survey_session_progress_small fw-bold"
                                  style="overflow: visible" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
+                                <span class="px-2">0 / <t t-out="survey.session_answer_count" /></span>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                     class="fw-bold oi oi-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3" />
                 <div class="o_survey_session_results flex-column flex-grow-1 mx-5">
                     <div class="row">
-                        <div class="col-lg-12"><h1 t-esc="question.title"></h1></div>
+                        <div class="col-lg-12"><h1 t-out="question.title"></h1></div>
                     </div>
                     <div t-attf-class="d-flex flex-column flex-grow-1 #{'justify-content-center' if not show_text_answers else ''} #{'align-items-center' if show_bar_chart else ''}">
                         <!-- Has to stay in 'style' attribute for Chartjs -->
@@ -139,7 +139,7 @@
                                 <span>
                                     <span class="o_survey_session_answer_count">0</span>
                                      /
-                                    <span t-esc="survey.session_answer_count" />
+                                    <span t-out="survey.session_answer_count" />
                                 </span>
                             </h2>
                             <div class="progress">
@@ -187,7 +187,7 @@
                     t-att-data-max-question-score="round(score.get('max_question_score', 1))"
                     t-att-data-max-updated-score="round(max_updated_score)">
                     <div class="d-inline-block fw-bold align-top">
-                        <div class="d-inline-block me-2 o_survey_session_leaderboard_score" t-esc="'%.0f p' % score['scoring_total']" />
+                        <div class="d-inline-block me-2 o_survey_session_leaderboard_score" t-out="'%.0f p' % score['scoring_total']" />
                     </div>
                     <!-- We keep "18rem" of space to display the points / nickname.
                     Then, the length of the bar is a percentage of the attendee's score compared to the max_score. -->
@@ -205,7 +205,7 @@
                         <div class="o_survey_session_leaderboard_bar_question_score position-absolute"></div>
                     </div>
                     <div class="o_survey_session_leaderboard_name d-inline-block">
-                        <span t-if="score.get('nickname')" t-esc="score['nickname']" />
+                        <span t-if="score.get('nickname')" t-out="score['nickname']" />
                         <span t-else="">Anonymous</span>
                     </div>
                 </div>

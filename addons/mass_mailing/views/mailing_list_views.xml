@@ -126,13 +126,13 @@
                                 <div class="d-flex align-items-center">
                                     <div class="me-3">
                                         <button class="btn btn-primary" name="action_view_contacts" type="object">
-                                            <t t-esc="record.contact_count.value"/> <span>Contacts</span>
+                                            <t t-out="record.contact_count.value"/> <span>Contacts</span>
                                         </button>
                                     </div>
                                     <div class="flex-grow-1 d-flex flex-column align-items-end o_mass_mailing_kanban_contact_links">
                                         <a name="action_view_contacts_email" type="object">
                                             <span>Valid Email Recipients</span>
-                                            <span t-esc="record.contact_count_email.value" class="ms-3"/>
+                                            <span t-out="record.contact_count_email.value" class="ms-3"/>
                                         </a>
                                     </div>
                                 </div>

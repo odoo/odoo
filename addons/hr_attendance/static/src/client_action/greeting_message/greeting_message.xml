@@ -10,31 +10,31 @@
             </t>
 
             <div t-if="attendance.check_out" class="flex-grow-1">
-                <h1 class="mt-5">Goodbye <t t-esc="employee_name"/>!</h1>
-                <h2 class="o_hr_attendance_message_message mt4 mb24" t-esc="state.message"/>
+                <h1 class="mt-5">Goodbye <t t-out="employee_name"/>!</h1>
+                <h2 class="o_hr_attendance_message_message mt4 mb24" t-out="state.message"/>
                 <div class="alert alert-info fs-2 mx-3" role="status">
-                    Checked out at <b><t t-esc="attendance.check_out_time"/></b>
-                    <br/><b><t t-esc="hours_today"/></b>
+                    Checked out at <b><t t-out="attendance.check_out_time"/></b>
+                    <br/><b><t t-out="hours_today"/></b>
                 </div>
                 <div t-att-class="'alert ' + (today_overtime_float &gt;= 0 ? 'alert-success' : 'alert-danger') + ' h3 mx-3'" role="status">
                     Extra hours today:
-                    <span t-esc="today_overtime"/>
+                    <span t-out="today_overtime"/>
                 </div>
                 <t t-if="total_overtime_float &gt; 0">
-                    Total extra hours: <span t-esc="total_overtime"/>
+                    Total extra hours: <span t-out="total_overtime"/>
                 </t>
-                <h3 class="o_hr_attendance_random_message fst-italic mb24" t-esc="state.randomMessage"/>
+                <h3 class="o_hr_attendance_random_message fst-italic mb24" t-out="state.randomMessage"/>
                 <div t-if="showWarningMessage" class="o_hr_attendance_warning_message mt24 alert alert-warning" role="alert">
                     <b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't right, please contact Human Resource staff
                 </div>
             </div>
             <div t-else="" class="flex-grow-1">
-                <h1 class="mt-5 mb0">Welcome <t t-esc="employee_name"/>!</h1>
-                <h2 class="o_hr_attendance_message_message mt4 mb24" t-esc="state.message"/>
+                <h1 class="mt-5 mb0">Welcome <t t-out="employee_name"/>!</h1>
+                <h2 class="o_hr_attendance_message_message mt4 mb24" t-out="state.message"/>
                 <div class="alert alert-info fs-2 mx-3" role="status">
-                    Checked in at <b><t t-esc="attendance.check_in_time"/></b>
+                    Checked in at <b><t t-out="attendance.check_in_time"/></b>
                 </div>
-                <h3 class="o_hr_attendance_random_message mb24" t-esc="state.randomMessage"/>
+                <h3 class="o_hr_attendance_random_message mb24" t-out="state.randomMessage"/>
                 <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
             </div>
             <div class="flex-grow-1">

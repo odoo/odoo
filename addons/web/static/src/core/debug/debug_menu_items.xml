@@ -15,7 +15,7 @@
                         <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
                             <option value=""/>
                             <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
-                                <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
+                                <t t-out="field.string"/> = <t t-out="field.displayed"/>
                             </option>
                         </select>
                     </td>
@@ -31,7 +31,7 @@
                         <select id="formview_default_conditions" class="o_input" t-model="state.condition">
                             <option value=""/>
                             <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
-                                <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
+                                <t t-out="cond.string"/>=<t t-out="cond.displayed"/>
                             </option>
                         </select>
                     </td>
@@ -66,7 +66,7 @@
             <table class="table table-sm table-striped">
                 <tr>
                     <th>ID:</th>
-                    <td><t t-esc="state.id"/></td>
+                    <td><t t-out="state.id"/></td>
                 </tr>
                 <tr>
                     <th>XML ID:</th>
@@ -75,10 +75,10 @@
                             <t t-foreach="state.xmlids" t-as="imd" t-key="imd['xmlid']">
                                 <div
                                     t-att-class='"p-0 " + (imd["xmlid"] === state.xmlid ? "fw-bolder " : "") + (imd["noupdate"] === true ? "fst-italic " : "")'
-                                    t-esc="imd['xmlid']" />
+                                    t-out="imd['xmlid']" />
                             </t>
                         </t>
-                        <t t-elif="state.xmlid" t-esc="state.xmlid"/>
+                        <t t-elif="state.xmlid" t-out="state.xmlid"/>
                         <t t-else="">
                             / <a t-on-click="onClickCreateXmlid"> (create)</a>
                         </t>
@@ -87,7 +87,7 @@
                 <tr>
                     <th>No Update:</th>
                     <td>
-                        <t t-esc="state.noupdate"/>
+                        <t t-out="state.noupdate"/>
                         <t t-if="state.xmlid">
                             <a t-on-click="toggleNoupdate"> (change)</a>
                         </t>
@@ -95,19 +95,19 @@
                 </tr>
                 <tr>
                     <th>Creation User:</th>
-                    <td><t t-esc="state.creator"/></td>
+                    <td><t t-out="state.creator"/></td>
                 </tr>
                 <tr>
                     <th>Creation Date:</th>
-                    <td><t t-esc="state.createDate"/></td>
+                    <td><t t-out="state.createDate"/></td>
                 </tr>
                 <tr>
                     <th>Latest Modification by:</th>
-                    <td><t t-esc="state.lastModifiedBy"/></td>
+                    <td><t t-out="state.lastModifiedBy"/></td>
                 </tr>
                 <tr>
                     <th>Latest Modification Date:</th>
-                    <td><t t-esc="state.writeDate"/></td>
+                    <td><t t-out="state.writeDate"/></td>
                 </tr>
             </table>
         </Dialog>

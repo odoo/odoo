@@ -10,7 +10,7 @@
                 >
                     <option />
                     <t t-foreach="selection" t-as="option" t-key="option[0]">
-                        <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-esc="option[1]" />
+                        <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-out="option[1]" />
                     </t>
                 </select>
             </t>

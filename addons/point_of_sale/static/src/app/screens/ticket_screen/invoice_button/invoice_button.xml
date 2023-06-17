@@ -5,7 +5,7 @@
         <div class="control-button" t-on-click="() => this.click()" t-ref="invoice-button">
             <i class="fa fa-file-pdf-o"></i>
             <span> </span>
-            <span><t t-esc="commandName"></t></span>
+            <span><t t-out="commandName"></t></span>
         </div>
     </t>
 

@@ -30,7 +30,7 @@
             <t t-if="rtcSession">
                 <!-- overlay -->
                 <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-index-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
-                    <span t-if="!props.minimized" class="p-1 rounded-1 text-truncate" t-esc="name"/>
+                    <span t-if="!props.minimized" class="p-1 rounded-1 text-truncate" t-out="name"/>
                     <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                         LIVE
                     </small>

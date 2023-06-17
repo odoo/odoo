@@ -347,9 +347,9 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="date_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="date_finished.toFormat('F')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                    <li><strong>Start Date: </strong> <t t-out="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-out="date_finished.toFormat('F')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -388,9 +388,9 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong><t t-esc="date_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong><t t-esc="date_finished.toFormat('F')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                    <li><strong>Start Date: </strong><t t-out="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong><t t-out="date_finished.toFormat('F')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -431,7 +431,7 @@
                                     </h4>
                                 </div>
                                 <div class="o_kanban_workorder_date">
-                                    <h5><span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/></h5>
+                                    <h5><span class="d-flex" t-out="record.date_start.value or record.production_date.value"/></h5>
                                 </div>
                                 <div>
                                     <h2 class="ml8">

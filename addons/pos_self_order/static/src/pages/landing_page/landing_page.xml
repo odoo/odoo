@@ -12,7 +12,7 @@
                     <a type="button"
                         t-on-click="(event) => this.router.customLink(link)"
                         t-attf-class="btn btn-{{link.style}} py-3 my-1 rounded">
-                        <t t-esc="link.name"/>
+                        <t t-out="link.name"/>
                     </a>
                 </t>
                 <t t-if="selfOrder.table and selfOrder.self_order_mode === 'each'">

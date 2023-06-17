@@ -4,7 +4,7 @@
     <t t-name="web.DomainSelector.Editor" owl="1">
         <t t-if="isExprValue">
             <div class="o_ds_expr_value o_input d-flex align-items-center p-0" data-tooltip="Expressions can not be edited">
-                <span class="ms-2" t-esc="props.value.expr" />
+                <span class="ms-2" t-out="props.value.expr" />
                 <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Expression" />
                 <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.onExprRemove()">
                     <i class="fa fa-times" />
@@ -23,7 +23,7 @@
     <t t-name="web.DomainSelector.Select" owl="1">
         <select class="o_input o_domain_leaf_value_input" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
             <t t-foreach="props.options" t-as="option" t-key="option[0]">
-                <option t-att-value="serialize(option[0])" t-att-selected="option[0] === props.value" t-esc="option[1]" />
+                <option t-att-value="serialize(option[0])" t-att-selected="option[0] === props.value" t-out="option[1]" />
             </t>
         </select>
     </t>
@@ -32,7 +32,7 @@
         <div class="o_domain_leaf_value_input">
             <t t-foreach="props.value" t-as="tag" t-key="tag_index">
                 <span class="badge rounded-pill">
-                    <t t-esc="getTagValue(tag)" />
+                    <t t-out="getTagValue(tag)" />
                     <i class="o_domain_leaf_value_remove_tag_button fa fa-times" role="img" aria-label="Remove tag" title="Remove tag" t-on-click="() => this.removeTag(tag_index)" />
                 </span>
             </t>

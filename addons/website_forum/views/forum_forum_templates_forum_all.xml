@@ -65,10 +65,10 @@
 <template id="forum_post_options">
     <div class="row">
         <div t-attf-class="#{last_post_class}">
-            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"><t t-esc="forum.last_post_id.name"/></a></div>
+            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"><t t-out="forum.last_post_id.name"/></a></div>
         </div>
         <div t-attf-class="#{nb_post_class}">
-            <div t-if="is_view_active('website_forum.opt_post_count')">Posts: <strong><t t-esc="forum.total_posts"/></strong></div>
+            <div t-if="is_view_active('website_forum.opt_post_count')">Posts: <strong><t t-out="forum.total_posts"/></strong></div>
         </div>
     </div>
 </template>

@@ -37,12 +37,12 @@
 
     <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
         <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex flex-column" t-att-data-employee-id="employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)">
-            <b class="o_media_heading m-0 fs-6" t-esc="employee.name"/>
-            <small class="text-muted fw-bold" t-esc="employee.job_title"/>
+            <b class="o_media_heading m-0 fs-6" t-out="employee.name"/>
+            <small class="text-muted fw-bold" t-out="employee.job_title"/>
         </a>
         <div t-if="is_self" class="d-flex flex-column">
-            <h5 class="o_media_heading m-0" t-esc="employee.name"/>
-            <small class="text-muted fw-bold" t-esc="employee.job_title"/>
+            <h5 class="o_media_heading m-0" t-out="employee.name"/>
+            <small class="text-muted fw-bold" t-out="employee.job_title"/>
         </div>
         <button t-if="employee.indirect_sub_count &gt; 0"
                 class="btn p-0 fs-3"
@@ -56,7 +56,7 @@
                 t-on-click="(event) => this._onOpenPopover(event, employee)">
             <a href="#"
                 t-attf-class="badge rounded-pill bg-white border {{employee.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }}"
-                t-esc="employee.indirect_sub_count"
+                t-out="employee.indirect_sub_count"
                 />
         </button>
 
@@ -131,7 +131,7 @@
         <h3 class="popover-header">
             <div class="d-flex align-items-center">
                 <span class="flex-shrink-0" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/\")"'/>
-                <b class="flew-grow-1"><t t-esc="props.employee.name"/></b>
+                <b class="flew-grow-1"><t t-out="props.employee.name"/></b>
                 <a href="#" class="ms-auto o_employee_redirect" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
             </div>
         </h3>
@@ -139,7 +139,7 @@
             <table class="table table-sm table-borderless mb-0">
                 <tbody>
                     <tr>
-                        <td class="text-end"><b t-esc="props.employee.direct_sub_count"/></td>
+                        <td class="text-end"><b t-out="props.employee.direct_sub_count"/></td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='direct'
                                     t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
@@ -149,7 +149,7 @@
                     </tr>
                     <tr>
                         <td class="text-end">
-                            <b t-esc="props.employee.indirect_sub_count - props.employee.direct_sub_count"/>
+                            <b t-out="props.employee.indirect_sub_count - props.employee.direct_sub_count"/>
                         </td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='indirect'
@@ -159,7 +159,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-end"><b t-esc="props.employee.indirect_sub_count"/></td>
+                        <td class="text-end"><b t-out="props.employee.indirect_sub_count"/></td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='total'
                                     t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"

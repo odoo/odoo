@@ -4,7 +4,7 @@
     <t t-name="web.Many2OneField.CreateConfirmationDialog" owl="1">
         <Dialog title="title" size="'md'">
             <div>
-                Create <strong t-esc="props.value"/> as a new <t t-esc="props.name"/>?
+                Create <strong t-out="props.value"/> as a new <t t-out="props.name"/>?
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onCreate">Create</button>
@@ -17,10 +17,10 @@
         <t t-if="props.readonly">
             <t t-if="!props.canOpen">
                 <span>
-                    <span t-esc="displayName" />
+                    <span t-out="displayName" />
                     <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
                         <br />
-                        <span t-esc="extraLine" />
+                        <span t-out="extraLine" />
                     </t>
                 </span>
             </t>
@@ -31,10 +31,10 @@
                     t-att-href="value ? `#id=${value[0]}&amp;model=${relation}` : '#'"
                     t-on-click.prevent="onClick"
                 >
-                    <span t-esc="displayName" />
+                    <span t-out="displayName" />
                     <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
                         <br />
-                        <span t-esc="extraLine" />
+                        <span t-out="extraLine" />
                     </t>
                 </a>
             </t>
@@ -69,7 +69,7 @@
             <div class="o_field_many2one_extra">
                 <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
                     <br t-if="!extraLine_first" />
-                    <span t-esc="extraLine" />
+                    <span t-out="extraLine" />
                 </t>
             </div>
         </t>

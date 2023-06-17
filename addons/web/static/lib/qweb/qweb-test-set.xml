@@ -1,7 +1,7 @@
 <templates>
     <t t-name="set-from-attribute-literal">
         <t t-set="value" t-value="'ok'"/>
-        <t t-esc="value"/>
+        <t t-out="value"/>
     </t>
     <result id="set-from-attribute-literal">
         ok
@@ -9,7 +9,7 @@
 
     <t t-name="set-from-body-literal">
         <t t-set="value">ok</t>
-        <t t-esc="value"/>
+        <t t-out="value"/>
     </t>
     <result id="set-from-body-literal">
         ok
@@ -17,7 +17,7 @@
 
     <t t-name="set-from-attribute-lookup">
         <t t-set="stuff" t-value="value"/>
-        <t t-esc="stuff"/>
+        <t t-out="stuff"/>
     </t>
     <params id="set-from-attribute-lookup">
         {"value": "ok"}
@@ -28,9 +28,9 @@
 
     <t t-name="set-from-body-lookup">
         <t t-set="stuff">
-            <t t-esc="value"/>
+            <t t-out="value"/>
         </t>
-        <t t-esc="stuff"/>
+        <t t-out="stuff"/>
     </t>
     <params id="set-from-body-lookup">
         {"value": "ok"}
@@ -40,7 +40,7 @@
     </result>
 
     <t t-name="set-from-body-arch-lookup">
-        <t t-set="stuff"><div><span t-esc="value"/></div></t>
+        <t t-set="stuff"><div><span t-out="value"/></div></t>
         <t t-raw="stuff"/>
     </t>
     <params id="set-from-body-arch-lookup">
@@ -50,13 +50,13 @@
 
     <t t-name="set-empty-body">
         <t t-set="stuff"/>
-        <t t-esc="stuff"/>
+        <t t-out="stuff"/>
     </t>
     <result id="set-empty-body"/>
 
     <t t-name="t-value-priority">
         <t t-set="value" t-value="1">2</t>
-        <t t-esc="value"/>
+        <t t-out="value"/>
     </t>
     <result id="t-value-priority">1</result>
 </templates>

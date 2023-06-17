@@ -6,19 +6,19 @@
             <t t-if="props.thread.onlineMembers.length > 0">
                 <h6 class="m-2">
                     Online -
-                    <t t-esc="props.thread.onlineMembers.length"/>
+                    <t t-out="props.thread.onlineMembers.length"/>
                 </h6>
                 <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
             <t t-if="props.thread.offlineMembers.length > 0">
                 <h6 class="m-2">
                     Offline -
-                    <t t-esc="props.thread.offlineMembers.length"/>
+                    <t t-out="props.thread.offlineMembers.length"/>
                 </h6>
                 <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
+            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="props.thread.unknownMembersCount"/> other members.</span>
             <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
                 <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
             </div>
@@ -32,7 +32,7 @@
                      t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
                 <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
-            <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
+            <span class="ms-2 text-truncate" t-out="member.persona.name"/>
             <span class="ms-auto">
                 <span t-if="props.thread.invitedMemberIds.has(member.id)" class="p-1 fa fa-user-plus"/>
                 <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash"/>

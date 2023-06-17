@@ -41,7 +41,7 @@
             <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="close" />
         </t>
         <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
-            <t t-esc="props.title"/>
+            <t t-out="props.title"/>
         </h4>
         <t t-if="!fullscreen">
             <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="close"></button>

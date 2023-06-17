@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectCalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary" owl="1">
-        <xpath expr="//span[@t-esc='filter.label']" position="before">
+        <xpath expr="//span[@t-out='filter.label']" position="before">
             <span t-if="props.model.isCheckProject and !filter.value" class="text-danger pe-1">
                 <i class="fa fa-lock">
             </t>

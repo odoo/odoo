@@ -6,10 +6,10 @@
         <div class="dropdown ms-2 border border-info rounded">
             <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
                 <t t-set-slot="toggler">
-                    <span t-esc="props.websites.selected"/>
+                    <span t-out="props.websites.selected"/>
                 </t>
                 <t t-foreach="websiteNames" t-as="websiteName" t-key="websiteName_index">
-                    <DropdownItem onSelected="() => props.selectWebsite(websiteName)" t-esc="websiteName"/>
+                    <DropdownItem onSelected="() => props.selectWebsite(websiteName)" t-out="websiteName"/>
                 </t>
             </Dropdown>
         </div>

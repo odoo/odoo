@@ -49,13 +49,13 @@
 
                         <table t-foreach="findobj(o)" t-as="obj" class="table table-sm mt16 mb32">
                             <tr>
-                                <th colspan="2"><span>Object:</span> <span t-esc="obj.model"/></th>
+                                <th colspan="2"><span>Object:</span> <span t-out="obj.model"/></th>
                             </tr>
                             <tr t-foreach="findfields(obj.model, o)" t-as="field">
-                                <td class="col-3"><t t-esc="field[0]"/></td>
+                                <td class="col-3"><t t-out="field[0]"/></td>
                                 <td>
-                                    <span t-esc="field[1].get('string','Unknown')"/><span>, </span><span t-esc="field[1].get('type')"/><span t-if="field[1].get('required')">, required</span><span t-if="field[1].get('readonly',False)">, readonly</span>
-                                    <div t-esc="field[1].get('help', '')"/>
+                                    <span t-out="field[1].get('string','Unknown')"/><span>, </span><span t-out="field[1].get('type')"/><span t-if="field[1].get('required')">, required</span><span t-if="field[1].get('readonly',False)">, readonly</span>
+                                    <div t-out="field[1].get('help', '')"/>
                                 </td>
                             </tr>
                         </table>

@@ -122,7 +122,7 @@
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div>
                                                     <field class="pe-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                                    <strong><span t-esc="record.name.value"/></strong>
+                                                    <strong><span t-out="record.name.value"/></strong>
                                                 </div>
                                                 <div class="text-odoo">
                                                     <div t-if="record.is_new.raw_value" class="o_lunch_new_product me-1 py-1 fs-6 badge rounded-pill text-bg-success">
@@ -132,7 +132,7 @@
                                                 </div>
                                             </div>
                                         </strong>
-                                        <span class="o_kanban_record_subtitle"><span t-esc="record.supplier_id.value"/></span>
+                                        <span class="o_kanban_record_subtitle"><span t-out="record.supplier_id.value"/></span>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
@@ -174,10 +174,10 @@
                                                 <div class="float-end">
                                                     <field name="price" widget="monetary"/>
                                                 </div>
-                                                <strong><span t-esc="record.name.value"/></strong>
+                                                <strong><span t-out="record.name.value"/></strong>
                                             </div>
                                         </strong>
-                                        <span class="o_kanban_record_subtitle"><span t-esc="record.supplier_id.value"/></span>
+                                        <span class="o_kanban_record_subtitle"><span t-out="record.supplier_id.value"/></span>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">

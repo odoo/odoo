@@ -9,12 +9,12 @@
                 <div class="entry total">
                     <span class="badge">Total: </span>
                     <span class="value">
-                        <t t-esc="_total" />
+                        <t t-out="_total" />
                     </span>
                     <div t-if="_tax.hasTax" class="subentry">
                         Taxes:
                         <span class="value">
-                            <t t-esc="_tax.displayAmount" />
+                            <t t-out="_tax.displayAmount" />
                         </span>
                     </div>
                 </div>

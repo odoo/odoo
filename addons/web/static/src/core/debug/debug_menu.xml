@@ -17,7 +17,7 @@
                     onSelected="element.callback"
                     href="element.href"
                 >
-                    <t t-esc="element.description"/>
+                    <t t-out="element.description"/>
                 </DropdownItem>
                 <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
                 <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>

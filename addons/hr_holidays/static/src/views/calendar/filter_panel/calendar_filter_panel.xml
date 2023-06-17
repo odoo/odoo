@@ -17,9 +17,9 @@
 
 
     <t t-name="hr_holidays.CalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary" owl="1">
-        <xpath expr="//span[@t-esc='filter.label']" position="replace">
+        <xpath expr="//span[@t-out='filter.label']" position="replace">
             <span class="o_cw_filter_title text-truncate flex-grow">
-                <t t-esc="filter.label"/>
+                <t t-out="filter.label"/>
 
                 <t t-if="env.isSmall">
                     <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>

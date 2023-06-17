@@ -288,8 +288,8 @@
                                                         <field t-if="record.state_id.raw_value" name="state_id"/><t t-if="record.country_id"> </t>
                                                         <field name="country_id"/>
                                                     </div>
-                                                    <div t-if="record.phone.raw_value">Phone: <t t-esc="record.phone.value"/></div>
-                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-esc="record.mobile.value"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <t t-out="record.phone.value"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <t t-out="record.mobile.value"/></div>
                                                 </div>
                                             </div>
                                         </t>

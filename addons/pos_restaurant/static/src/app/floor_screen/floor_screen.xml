@@ -13,7 +13,7 @@
             <div class="floor-selector">
                 <t t-foreach="pos.globalState.floors" t-as="floor" t-key="floor.id">
                     <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="() => this.selectFloor(floor)">
-                        <t t-esc="floor.name" />
+                        <t t-out="floor.name" />
                     </span>
                 </t>
                 <span class="button button-add" t-ref="add-floor-ref" t-on-click="addFloor">

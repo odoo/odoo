@@ -144,13 +144,13 @@
                 <t t-name="kanban-box">
                     <div class="d-flex flex-column">
                         <div class="o_text_overflow fw-bold">
-                            <span t-esc="record.name.value"/>
+                            <span t-out="record.name.value"/>
                             <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
                                 <i class="fa fa-globe me-1" title="Website"/>
                                 <field name="website_id"/>
                             </div>
                             <div class="text-muted">
-                                <i class="fa fa-comments-o me-1" title="Forum"/><t t-esc="record.forum_id.value"/>
+                                <i class="fa fa-comments-o me-1" title="Forum"/><t t-out="record.forum_id.value"/>
                                 <span t-if="!record.parent_id.raw_value" class="ms-3"><field name="child_count"/> Answers</span>
                             </div>
                         </div>

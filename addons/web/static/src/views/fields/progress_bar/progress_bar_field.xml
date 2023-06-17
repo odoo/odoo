@@ -3,7 +3,7 @@
 
     <t t-name="web.ProgressBarField" owl="1">
         <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
-            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-esc="props.title"/></div>
+            <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="props.title"/></div>
             <div class="o_progress align-middle overflow-hidden" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                 <div t-attf-class="{{ state.currentValue > state.maxValue ? props.overflowClass : 'bg-primary' }} h-100" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
             </div>
@@ -22,7 +22,7 @@
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-esc="formatCurrentValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="formatCurrentValue(true)"/>
                     <span>%</span>
                 </t>
                 <t t-else="">
@@ -38,7 +38,7 @@
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-esc="formatCurrentValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="formatCurrentValue(true)"/>
                     /
                     <input
                         t-if="isEditable and props.isMaxValueEditable"
@@ -52,7 +52,7 @@
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
                     />
-                    <span t-else="" class="mx-1" t-esc="formatMaxValue(true)"/>
+                    <span t-else="" class="mx-1" t-out="formatMaxValue(true)"/>
                 </t>
             </div>
         </div>

@@ -4,18 +4,18 @@
     <t t-name="point_of_sale.TextInputPopup" owl="1">
             <div class="popup popup-textinput">
                 <header class="title">
-                    <t t-esc="props.title" />
+                    <t t-out="props.title" />
                 </header>
                 <main>
-                    <p t-esc="props.body" />
+                    <p t-out="props.body" />
                     <input type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder"/>
                 </main>
                 <div class="footer footer-flex">
                     <div class="button confirm highlight" t-on-click="confirm">
-                        <t t-esc="props.confirmText" />
+                        <t t-out="props.confirmText" />
                     </div>
                     <div class="button cancel" t-on-click="cancel">
-                        <t t-esc="props.cancelText" />
+                        <t t-out="props.cancelText" />
                     </div>
                 </div>
             </div>

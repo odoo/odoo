@@ -4,7 +4,7 @@
         Inherited templates from portal to custom chatter with rating
     -->
     <t t-extend="portal.Composer">
-        <t t-jquery="textarea" t-operation="inner"><t t-esc="widget.options['default_message'] ? widget.options['default_message'].trim() : ''"/></t><!-- need to be one line to avoid \t in textarea -->
+        <t t-jquery="textarea" t-operation="inner"><t t-out="widget.options['default_message'] ? widget.options['default_message'].trim() : ''"/></t><!-- need to be one line to avoid \t in textarea -->
         <t t-jquery="button.o_portal_chatter_composer_btn" t-operation="attributes">
             <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/chatter_post'}</attribute>
         </t>
@@ -76,7 +76,7 @@
             <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
                     <div class="d-inline-block">
-                        <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
+                        <h5 class="mb-1"><t t-out="rating.publisher_name"/></h5>
                     </div>
                     <div t-if="is_publisher" class="dropdown d-inline-block">
                         <button class="btn py-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -91,7 +91,7 @@
                             </button>
                         </div>
                     </div>
-                    <p>Published on <t t-esc="rating.publisher_datetime"/></p>
+                    <p>Published on <t t-out="rating.publisher_datetime"/></p>
                 </div>
                 <t t-out="rating.publisher_comment"/>
             </div>
@@ -102,9 +102,9 @@
             <img class="o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
             <div class="flex-grow-1">
                 <div class="o_portal_chatter_message_title">
-                    <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
+                    <h5 class='mb-1'><t t-out="rating.publisher_name"/></h5>
                 </div>
-                <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-esc="rating.publisher_comment"/></textarea>
+                <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-out="rating.publisher_comment"/></textarea>
                 <div>
                     <button class="btn btn-primary mt-2 o_wrating_js_publisher_comment_submit" t-att-data-mes_index="rating.mes_index">
                         <t t-if="rating.publisher_comment === ''">

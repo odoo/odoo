@@ -3,7 +3,7 @@
 
     <t t-name="web.SignatureWidget" owl="1">
         <button t-attf-class="btn o_sign_button #{props.highlight ? 'btn-primary' : 'btn-secondary'}" t-on-click="onClickSignature">
-            <span class="o_sign_label" t-esc="props.string" />
+            <span class="o_sign_label" t-out="props.string" />
         </button>
     </t>
 

@@ -4,7 +4,7 @@
     <Dropdown class="'o_menu_systray_item o_website_switcher_container'" hotkey="'w'">
         <t t-set-slot="toggler">
             <div class="d-none d-md-block">
-                <span t-esc="websiteService.currentWebsite.name" class="me-2"/>
+                <span t-out="websiteService.currentWebsite.name" class="me-2"/>
                 <i class="fa fa-caret-down"/>
             </div>
             <div class="d-md-none">
@@ -13,7 +13,7 @@
         </t>
         <t t-foreach="getElements()" t-as="element" t-key="element_index">
             <DropdownItem
-                t-esc="element.name"
+                t-out="element.name"
                 onSelected="element.callback"
                 class="element.class"
             />

@@ -35,7 +35,7 @@
                     <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column p-0'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
                         <t t-set-slot="toggler">
                             <i class="fa fa-user-o" role="img"/>
-                            <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.length"/>
+                            <span class="o-mail-Followers-counter ps-1" t-out="state.thread.followers.length"/>
                         </t>
                         <t t-set-slot="default">
                             <t t-if="this.props.threadModel !== 'discuss.channel' and state.thread.hasWriteAccess">
@@ -48,7 +48,7 @@
                                 <div t-foreach="state.thread.followers" t-as="follower" t-key="follower.id" class="dropdown-item o-mail-Follower d-flex justify-content-between p-0">
                                     <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 text-700 o-min-width-0" t-att-class="{ 'o-inactive fst-italic opacity-25': !follower.isActive }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev, follower)">
                                         <img class="o-mail-Follower-avatar me-2 rounded" t-att-src="threadService.avatarUrl(follower.partner, state.thread)" alt=""/>
-                                        <span class="flex-shrink text-truncate" t-esc="follower.partner.name"/>
+                                        <span class="flex-shrink text-truncate" t-out="follower.partner.name"/>
                                     </a>
                                     <t t-if="follower.isEditable">
                                         <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev, follower)">
@@ -142,7 +142,7 @@
             <div class="d-flex align-items-center px-3">
                 <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
-                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
+                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-out="activities.length"/></span>
             </div>
             <hr class="flex-grow-1"/>
         </div>
@@ -157,7 +157,7 @@
 <t t-name="mail.Chatter.attachFiles" owl="1">
     <button class="btn btn-link text-action px-1 d-flex" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
         <i class="fa fa-paperclip fa-lg me-1"/>
-        <span t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <span t-if="attachments.length > 0" t-out="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>

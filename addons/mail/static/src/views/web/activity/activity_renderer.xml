@@ -8,7 +8,7 @@
                 class="o_activity_type_cell p-3" t-attf-class="{{ activeFilter.activityTypeId === type[0] ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
                 t-attf-width="{{100/activeColumns.length}}%">
                 <div>
-                    <span t-esc="type[1]"/>
+                    <span t-out="type[1]"/>
                     <span t-if="type[2].length > 0" class="dropdown float-end">
                         <i class="fa fa-ellipsis-v fa-fw" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
@@ -16,7 +16,7 @@
                                 <div data-tooltip="This action will send an email."
                                      class="o_template_element o_send_mail_template cursor-pointer"
                                      t-on-click="() => props.onSendMailTemplate(template.id, type[0])">
-                                    <i class="fa fa-envelope fa-fw"/> <t t-esc="template.name"/>
+                                    <i class="fa fa-envelope fa-fw"/> <t t-out="template.name"/>
                                 </div>
                             </t>
                         </div>
@@ -44,7 +44,7 @@
                                 value="storageActiveColumns[type[0]]"
                                 name="type[1]"
                             >
-                                <t t-esc="type[1]"/>
+                                <t t-out="type[1]"/>
                             </CheckBox>
                         </DropdownItem>
                     </t>

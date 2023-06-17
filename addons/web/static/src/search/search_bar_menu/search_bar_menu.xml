@@ -29,7 +29,7 @@
                                         <div class="dropdown-divider" role="separator"/>
                                     </t>
                                     <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
-                                                        t-esc="option.description"
+                                                        t-out="option.description"
                                                         checked="option.isActive"
                                                         parentClosingMode="'none'"
                                                         onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
@@ -42,7 +42,7 @@
                             <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
-                                                t-esc="item.description"
+                                                t-out="item.description"
                                                 onSelected="() => this.onFilterSelected({ itemId: item.id })"
                             />
                         </t>
@@ -76,7 +76,7 @@
                                     <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
                                                         checked="option.isActive ? true : false"
                                                         parentClosingMode="'none'"
-                                                        t-esc="option.description"
+                                                        t-out="option.description"
                                                         onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                                     />
                                     <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -87,7 +87,7 @@
                             <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
-                                                t-esc="item.description"
+                                                t-out="item.description"
                                                 onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                             />
                         </t>
@@ -110,7 +110,7 @@
                         <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                                             checked="item.isActive"
                                             parentClosingMode="'none'"
-                                            t-esc="item.description"
+                                            t-out="item.description"
                                             onSelected="() => this.onComparisonSelected(item.id)"
                         />
                     </t>
@@ -135,7 +135,7 @@
                                                 onSelected="() => this.onFavoriteSelected(item.id)"
                             >
                                 <span class="d-flex p-0 align-items-center justify-content-between">
-                                    <t t-esc="item.description"/>
+                                    <t t-out="item.description"/>
                                     <i class="ms-1 o_icon_right fa fa-trash-o"
                                        title="Delete item"
                                        t-on-click.stop="() => this.openConfirmationDialog(item.id)"

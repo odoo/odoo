@@ -4,7 +4,7 @@
     <t t-name="web.WarningDialog" owl="1">
       <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
         <div role="alert">
-          <p t-esc="message" style="white-space: pre-wrap;"/>
+          <p t-out="message" style="white-space: pre-wrap;"/>
         </div>
         <t t-set-slot="footer">
           <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
@@ -15,10 +15,10 @@
     <t t-name="web.RedirectWarningDialog" owl="1">
       <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
         <div role="alert">
-          <p t-esc="message" style="white-space: pre-wrap;"/>
+          <p t-out="message" style="white-space: pre-wrap;"/>
         </div>
         <t t-set-slot="footer">
-          <button class="btn btn-primary" t-on-click="onClick" t-esc="buttonText"/>
+          <button class="btn btn-primary" t-on-click="onClick" t-out="buttonText"/>
           <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
         </t>
       </Dialog>
@@ -60,11 +60,11 @@
 
           <button class="btn btn-link" t-on-click="() => { state.showTraceback = !state.showTraceback }">See details</button>
           <div t-if="state.showTraceback and (props.name or props.message)" class="alert alert-info bg-100 clearfix" role="alert">
-            <code t-if="props.name" t-esc="props.name"></code>
-            <p t-if="props.message" t-esc="props.message"></p>
+            <code t-if="props.name" t-out="props.name"></code>
+            <p t-if="props.message" t-out="props.message"></p>
           </div>
           <div t-if="state.showTraceback" class="alert alert-danger o_error_detail" role="alert">
-              <pre t-esc="traceback or props.traceback"/>
+              <pre t-out="traceback or props.traceback"/>
           </div>
         </div>
         <t t-set-slot="footer">
@@ -82,7 +82,7 @@
           <p>
             The style compilation failed, see the error below. This is an administrator or developer error that must be fixed for the entire database before continuing working.
           </p>
-          <pre t-esc="props.message"/>
+          <pre t-out="props.message"/>
         </div>
         <t t-set-slot="footer">
           <button class="btn btn-primary o-default-button" t-on-click="onClick">Close</button>

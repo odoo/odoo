@@ -6,7 +6,7 @@
                 <tr>
                     <th t-foreach="weekdaysShort" t-as="day" t-key="day" class="text-center border fw-bold">
                         <div class="o_recurrent_weekday_label" t-att-title="props.record.fields[day].string">
-                            <t t-esc="props.record.fields[day].string"/>
+                            <t t-out="props.record.fields[day].string"/>
                         </div>
                     </th>
                 </tr>

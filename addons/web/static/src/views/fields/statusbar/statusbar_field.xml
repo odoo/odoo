@@ -10,12 +10,12 @@
                     <Dropdown toggler="'parent'">
                         <t t-foreach="items.folded" t-as="item" t-key="item.id">
                             <DropdownItem class="getDropdownItemClassNames(item)" onSelected="() => this.selectItem(item)">
-                                <t t-esc="item.name" />
+                                <t t-out="item.name" />
                             </DropdownItem>
                         </t>
                     </Dropdown>
                     <t t-if="env.isSmall">
-                        <t t-esc="currentName" />
+                        <t t-out="currentName" />
                     </t>
                     <t t-else="">More</t>
                 </button>
@@ -33,7 +33,7 @@
                         aria-current="step"
                         t-att-disabled="props.isDisabled"
                         t-att-data-value="item.id"
-                        t-esc="item.name"
+                        t-out="item.name"
                     />
                 </t>
                 <t t-elif="props.isDisabled">
@@ -46,7 +46,7 @@
                         aria-checked="false"
                         t-att-disabled="props.isDisabled"
                         t-att-data-value="item.id"
-                        t-esc="item.name"
+                        t-out="item.name"
                     />
                 </t>
                 <t t-else="">
@@ -57,7 +57,7 @@
                         aria-label="Not active state, click to change it"
                         aria-checked="false"
                         t-att-data-value="item.id"
-                        t-esc="item.name"
+                        t-out="item.name"
                         t-on-click="() => this.selectItem(item)"
                     />
                 </t>

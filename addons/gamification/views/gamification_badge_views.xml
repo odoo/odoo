@@ -134,16 +134,16 @@
                                 <strong class="o_kanban_record_title"><field name="name"/></strong>
                                 <span class="oe_grey">
                                     <t t-if="record.remaining_sending.value != -1">
-                                        <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
+                                        <t t-out="record.stat_my_monthly_sending.value"/>/<t t-out="record.rule_max_number.value"/>
                                     </t>
                                     <t t-if="record.remaining_sending.value == -1">
-                                        <t t-esc="record.stat_my_monthly_sending.value"/>/∞
+                                        <t t-out="record.stat_my_monthly_sending.value"/>/∞
                                     </t>
                                 </span>
                                 <div t-if="record.remaining_sending.value == 0" class="oe_grey">Can not grant</div>
                                 <div>
-                                    <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
-                                    <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
+                                    <strong><t t-out="record.granted_count.raw_value"/></strong> granted,
+                                    <strong><t t-out="record.stat_this_month.raw_value"/></strong> this month
                                 </div>
                                 <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description pb-3">
                                     <em t-out="record.description.value"/>

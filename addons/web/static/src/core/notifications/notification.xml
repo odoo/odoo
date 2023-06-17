@@ -19,7 +19,7 @@
                         t-attf-class="fa fa-fw o_button_icon {{button.icon}}"/>
                         <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                     </t>
-                    <span t-esc="button.name"/>
+                    <span t-out="button.name"/>
                 </button>
                 </div>
             </div>

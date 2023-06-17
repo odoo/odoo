@@ -9,36 +9,36 @@
                             <div class="o_offer col-lg-12">
                                 <h4 t-if="o._get_mail_partner().name">
                                     Congratulations
-                                    <t t-esc="o._get_mail_partner().name"/>,
+                                    <t t-out="o._get_mail_partner().name"/>,
                                 </h4>
                                 <t t-set="text">on your next order</t>
-                                <h4>Here is your reward from <t t-esc="o.program_id.company_id.name"/>.</h4>
+                                <h4>Here is your reward from <t t-out="o.program_id.company_id.name"/>.</h4>
                                 <t t-foreach="range(len(o.program_id.reward_ids))" t-as="reward_idx">
                                     <t t-set="reward" t-value="o.program_id.reward_ids[reward_idx]"/>
-                                    <strong><t t-esc="reward.description"/></strong>
+                                    <strong><t t-out="reward.description"/></strong>
                                     <br/>
                                     <t t-if="reward_idx &lt; (len(o.program_id.reward_ids) - 1)">
                                         <span class="text-center">OR</span>
                                         <br/>
                                     </t>
                                 </t>
-                                <h1 class="fw-bold" style="font-size: 34px" t-esc="text"/>
+                                <h1 class="fw-bold" style="font-size: 34px" t-out="text"/>
                                 <br/>
                                 <h4 t-if="o.expiration_date">
                                     Use this promo code before
                                     <span t-field="o.expiration_date" t-options='{"format": "yyyy-MM-d"}'/>
                                 </h4>
                                 <h2 class="mt-4">
-                                    <strong class="bg-light" t-esc="o.code"></strong>
+                                    <strong class="bg-light" t-out="o.code"></strong>
                                 </h2>
                                 <t t-set="rule" t-value="o.program_id.rule_ids[:1]"/>
                                 <h4 t-if="rule.minimum_qty > 1">
                                     <span>Minimum purchase of</span>
-                                    <strong t-esc="rule.minimum_qty"/> <span>products</span>
+                                    <strong t-out="rule.minimum_qty"/> <span>products</span>
                                 </h4>
                                 <h4 t-if="rule.minimum_amount">
                                     <span>Valid for purchase above</span>
-                                    <strong t-esc="rule.minimum_amount" t-options="{'widget': 'monetary', 'display_currency': rule.currency_id}"/>
+                                    <strong t-out="rule.minimum_amount" t-options="{'widget': 'monetary', 'display_currency': rule.currency_id}"/>
                                 </h4>
                                 <br/>
                                 <div t-field="o.code" t-options="{'widget': 'barcode', 'width': 600, 'height': 100}"/>
@@ -84,7 +84,7 @@
                 </div>
                 <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;">
                     <h3 style="margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center">
-                        <strong><span t-esc="o.points" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></strong>
+                        <strong><span t-out="o.points" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></strong>
                     </h3>
                 </div>
                 <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;">

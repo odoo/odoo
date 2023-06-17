@@ -18,7 +18,7 @@
                 <t t-if="item.options">
                     <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
                         <t t-set-slot="toggler">
-                            <t t-esc="item.description"/>
+                            <t t-out="item.description"/>
                         </t>
                         <t t-set="subGroup" t-value="null"/>
                         <t t-foreach="item.options" t-as="option" t-key="option.id">
@@ -28,7 +28,7 @@
                             <SearchDropdownItem class="{ o_item_option: true, selected: option.isActive }"
                                 checked="option.isActive ? true : false"
                                 parentClosingMode="'none'"
-                                t-esc="option.description"
+                                t-out="option.description"
                                 onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -39,7 +39,7 @@
                     <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                         checked="item.isActive"
                         parentClosingMode="'none'"
-                        t-esc="item.description"
+                        t-out="item.description"
                         onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                     />
                 </t>

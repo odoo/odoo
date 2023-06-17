@@ -6,9 +6,9 @@
             <t t-set-slot="toggler">
                 <img class="o_avatar o_user_avatar rounded" t-att-src="source" alt="User"/>
                 <small class="oe_topbar_name d-none ms-2 text-start smaller lh-1 text-truncate"  t-att-class="{'d-lg-inline-block' : env.debug}" style="max-width: 200px">
-                    <t t-esc="user.name"/>
+                    <t t-out="user.name"/>
                     <mark class="d-block font-monospace text-truncate">
-                        <i class="fa fa-database oi-small me-1"/><t t-esc="user.db.name"/>
+                        <i class="fa fa-database oi-small me-1"/><t t-out="user.db.name"/>
                     </mark>
                 </small>
             </t>

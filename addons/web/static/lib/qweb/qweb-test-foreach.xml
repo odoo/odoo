@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="iter-items">
         <t t-foreach="[3, 2, 1]" t-as="item">
-[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+[<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
     </t>
     <result id="iter-items">
 [0: 3 3]
@@ -11,7 +11,7 @@
 
     <t t-name="iter-position">
         <t t-foreach="5" t-as="item">
--<t t-if="item_first"> first</t><t t-if="item_last"> last</t> (<t t-esc="item_parity"/>)</t>
+-<t t-if="item_first"> first</t><t t-if="item_last"> last</t> (<t t-out="item_parity"/>)</t>
     </t>
     <result id="iter-position">
 - first (even)
@@ -24,7 +24,7 @@
     <!-- test integer param -->
     <t t-name="iter-int">
         <t t-foreach="3" t-as="item">
-[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+[<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/>]</t>
     </t>
     <result id="iter-int">
 [0: 0 0]
@@ -35,7 +35,7 @@
     <!-- test dict param -->
     <t t-name="iter-dict">
         <t t-foreach="value" t-as="item">
-[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/> - <t t-esc="item_parity"/>]</t>
+[<t t-out="item_index"/>: <t t-out="item"/> <t t-out="item_value"/> - <t t-out="item_parity"/>]</t>
     </t>
     <params id="iter-dict">{"value": {"a": 1, "b": 2, "c": 3}}</params>
     <result id="iter-dict">

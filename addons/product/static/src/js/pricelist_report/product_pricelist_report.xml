@@ -53,7 +53,7 @@
                                 <span class="o_badges_list">
                                     <t t-foreach="quantities" t-as="qty" t-key="qty">
                                         <span class="o_field_badge o_remove_qty badge rounded-pill me-2 py-1 border " t-att-value="qty">
-                                            <t class="me-2" t-esc="qty"/>
+                                            <t class="me-2" t-out="qty"/>
                                             <i class="oi oi-close ms-1 opacity-50 opacity-100-hover text-900 cursor-pointer"
                                             title="Remove quantity"
                                             t-on-click="onClickRemoveQty"/>

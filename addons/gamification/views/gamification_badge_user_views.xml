@@ -20,12 +20,12 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <h4 class="mt0 mb0">
-                                        <a class="o_kanban_record_title" type="open"><t t-esc="record.badge_name.raw_value" /></a>
+                                        <a class="o_kanban_record_title" type="open"><t t-out="record.badge_name.raw_value" /></a>
                                     </h4>
                                     <t t-if="record.comment.raw_value">
                                         <p class="o_kanban_record_subtitle"><em><field name="comment"/></em></p>
                                     </t>
-                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-out="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
                                 </div>
                             </div>
                         </div>

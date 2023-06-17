@@ -51,7 +51,7 @@
                                             <td class="text-end" t-attf-colspan="6">
                                                 <strong>
                                                     <span style="margin-right: 15px;">Total</span>
-                                                    <t t-esc="sum(docs.mapped('amount'))"/>
+                                                    <t t-out="sum(docs.mapped('amount'))"/>
                                                 </strong>
                                             </td>
                                         </tr>

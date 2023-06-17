@@ -6,7 +6,7 @@
         <div class="o_kanban_examples d-flex p-2">
             <t t-foreach="columns" t-as="column" t-key="column.title">
                 <div class="o_kanban_examples_group flex-grow-1 m-3">
-                    <h6><b t-esc="column.title"/></h6>
+                    <h6><b t-out="column.title"/></h6>
                     <div t-foreach="column.records" t-as="record" t-key="record.id" class="o_kanban_examples_ghost p-2 border bg-white" t-att-class="{ 'o_collapse': record_index > 0 }">
                         <div class="o_ghost_content pb-3 bg-300"/>
                         <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
@@ -22,7 +22,7 @@
         <Dialog contentClass="'o_kanban_examples_dialog'" title="this.constructor.title">
             <Notebook orientation="'vertical'" pages="pages" onPageUpdate.bind="onPageUpdate" />
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="applyExamples" t-esc="props.applyExamplesText"/>
+                <button class="btn btn-primary" t-on-click="applyExamples" t-out="props.applyExamplesText"/>
                 <button class="btn btn-secondary" t-on-click="props.close">Close</button>
             </t>
         </Dialog>

@@ -74,16 +74,16 @@
                         <div class="oe_kanban_global_click">
                             <div class="row mb4">
                                 <strong class="col-6">
-                                    <span t-esc="record.partner_id.value"/>
+                                    <span t-out="record.partner_id.value"/>
                                 </strong>
                                 <strong class="col-6 text-end">
                                     <strong><field name="price" widget="monetary"/></strong>
                                 </strong>
                                 <div class="col-6">
-                                    <span t-esc="record.min_qty.value"/>
+                                    <span t-out="record.min_qty.value"/>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <span t-esc="record.delay.value"/> days
+                                    <span t-out="record.delay.value"/> days
                                 </div>
                             </div>
                         </div>

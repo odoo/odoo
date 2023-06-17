@@ -5,7 +5,7 @@
     <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
         <t t-set-slot="toggler">
             <i class="fa fa-building d-lg-none"/>
-            <span class="oe_topbar_name d-none d-lg-block" t-esc="currentCompany.name"/>
+            <span class="oe_topbar_name d-none d-lg-block" t-out="currentCompany.name"/>
         </t>
         <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company" t-key="company.id">
             <t t-call="web.SwitchCompanyItem">
@@ -49,7 +49,7 @@
                 <span
                     class='company_label pe-3'
                     t-att-class="isCurrent ? 'text-900 fw-bold' : 'ms-1'">
-                    <t t-esc="company.name"/>
+                    <t t-out="company.name"/>
                 </span>
             </div>
         </div>

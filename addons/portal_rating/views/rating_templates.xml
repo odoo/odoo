@@ -20,7 +20,7 @@
                     <i class="fa fa-star" role="img"></i>
                 </t>
                 <small class="text-muted ms-1">
-                    <t t-esc="rating_avg"/>
+                    <t t-out="rating_avg"/>
                 </small>
             </t>
             <t t-else="">
@@ -34,7 +34,7 @@
                     <i class="fa fa-star-o" role="img"></i>
                 </t>
                 <small class="text-muted ms-1">
-                    (<t t-esc="rating_count"/>)
+                    (<t t-out="rating_count"/>)
                 </small>
             </t>
         </div>

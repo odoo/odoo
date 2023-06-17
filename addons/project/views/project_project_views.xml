@@ -439,9 +439,9 @@
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
-                                                <span class="o_text_overflow" t-att-title="record.display_name.value"><t t-esc="record.display_name.value"/></span>
+                                                <span class="o_text_overflow" t-att-title="record.display_name.value"><t t-out="record.display_name.value"/></span>
                                                 <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
-                                                    <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
+                                                    <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><t t-out="record.partner_id.value"/>
                                                 </span>
                                                 <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted o_row">
                                                     <span class="fa fa-clock-o me-2" title="Dates"></span><field name="date_start"/>
@@ -449,7 +449,7 @@
                                                     <field name="date"/>
                                                 </div>
                                                 <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted text-truncate" t-att-title="record.alias_id.value">
-                                                    <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
+                                                    <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-out="record.alias_id.value"/>
                                                 </div>
                                                 <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="text-muted" groups="project.group_project_rating">
                                                     <b class="me-1">
@@ -472,8 +472,8 @@
                                         <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
-                                                    <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                                    <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
+                                                    <span class="o_value"><t t-out="record.task_count.value"/></span>
+                                                    <span class="o_label ms-1"><t t-out="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>
                                             <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"

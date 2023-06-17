@@ -12,7 +12,7 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Livechat Conversation</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        <t t-esc="company.name"/>
+                        <t t-out="company.name"/>
                     </span>
                 </td><td valign="middle" align="right" t-if="not company.uses_default_logo">
                     <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
@@ -32,7 +32,7 @@
         <td style="padding: 0 50px;">
             <div style="font-size: 13px; padding: 10px 0;">
                 <span>Hello,</span><br />Here's a copy of your conversation with
-                <span t-esc="channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.name"/>, on the
+                <span t-out="channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.name"/>, on the
                 <span t-field="channel.livechat_channel_id.create_date"/>
             </div>
             <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse: collapse;">
@@ -48,7 +48,7 @@
                             </t>
                         </td>
                         <td t-att-style="'padding-left: 5px; margin: 0px;' + top">
-                            <strong t-esc="author_name"/>
+                            <strong t-out="author_name"/>
                         </td>
                         <td  t-att-style="'font-size: 13px; padding: 5px;' + top + right" align="right"><span t-field="message.date"/></td>
                     </tr>
@@ -69,15 +69,15 @@
     <tr>
         <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-            <b t-esc="company.name"/><br/>
+            <b t-out="company.name"/><br/>
             <div style="color: #999999;">
-                <t t-esc="company.phone"/>
+                <t t-out="company.phone"/>
                 <t t-if="company.email"> |
-                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
+                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-out="company.email"/></a>
                 </t>
                 <t t-if="company.website"> |
                     <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
-                        <t t-esc="company.website"/>
+                        <t t-out="company.website"/>
                     </a>
                 </t>
             </div>

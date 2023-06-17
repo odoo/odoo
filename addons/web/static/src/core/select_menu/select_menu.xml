@@ -19,7 +19,7 @@
                 </t>
                 <t t-else="">
                     <span class="o_select_menu_toggler_slot text-start text-truncate">
-                        <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
+                        <t t-if="!props.slots or !props.slots.default" t-out="displayValue" />
                         <t t-else="" t-slot="default" />
                     </span>
                     <span t-if="canDeselect" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
@@ -47,7 +47,7 @@
             </t>
             <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
                 <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
-                    <span t-esc="choice.label" />
+                    <span t-out="choice.label" />
                     <hr class="bg-primary mt-2 mb-1" />
                 </div>
                 <DropdownItem
@@ -57,7 +57,7 @@
                 >
                     <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
                     <t t-else="">
-                        <div class="o_select_menu_item_label text-wrap" t-esc="choice.label || choice.value" />
+                        <div class="o_select_menu_item_label text-wrap" t-out="choice.label || choice.value" />
                     </t>
                 </DropdownItem>
             </t>

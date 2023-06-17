@@ -35,7 +35,7 @@
                         <div class="w-100 px-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <a class="d-flex align-items-center">
                                 <i class="text-primary" t-if="state.selectedType">
-                                    <t t-esc="state.getSelectedType(state.selectedType).label"/>
+                                    <t t-out="state.getSelectedType(state.selectedType).label"/>
                                 </i>
                                 <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
                             </a>
@@ -43,7 +43,7 @@
                         <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
                             <t t-foreach="state.getWebsiteTypes()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-on-click="() => this.selectWebsiteType(type.id)" class="dropdown-item o_change_website_type">
-                                    <t t-esc="type.label"/>
+                                    <t t-out="type.label"/>
                                 </a>
                             </t>
                         </div>
@@ -63,7 +63,7 @@
                         <div class="w-100 px-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <a class="d-flex align-items-center">
                                 <t t-if="state.selectedPurpose">
-                                    <t t-esc="state.getSelectedPurpose(state.selectedPurpose).label"/>
+                                    <t t-out="state.getSelectedPurpose(state.selectedPurpose).label"/>
                                 </t>
                                 <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
                             </a>
@@ -71,7 +71,7 @@
                         <div class="dropdown-menu border-0 shadow-lg" role="menu">
                             <t t-foreach="state.getWebsitePurpose()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-on-click="() => this.selectWebsitePurpose(type.id)" class="dropdown-item o_change_website_purpose">
-                                    <t t-esc="type.label"/>
+                                    <t t-out="type.label"/>
                                 </a>
                             </t>
                         </div>
@@ -166,10 +166,10 @@
                                         <div t-attf-class="h2 mb-2 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
                                             <i t-attf-class="me-2 fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
                                             <h3 class="m-1">
-                                                <t t-esc="feature.name"/>
+                                                <t t-out="feature.name"/>
                                             </h3>
                                         </div>
-                                        <p class="h4 card-text text-muted" t-esc="feature.description"/>
+                                        <p class="h4 card-text text-muted" t-out="feature.description"/>
                                     </div>
                                 </div>
                             </div>

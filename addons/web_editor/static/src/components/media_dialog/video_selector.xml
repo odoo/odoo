@@ -10,8 +10,8 @@
     <div class="mb-1">
         <label class="o_switch" t-on-change="props.onChangeOption">
             <input type="checkbox" t-att-checked="props.value"/><span/>
-            <span t-esc="props.label"/>
-            <span t-if="props.description" class="small text-muted ms-auto" t-esc="props.description"/>
+            <span t-out="props.label"/>
+            <span t-if="props.description" class="small text-muted ms-auto" t-out="props.description"/>
         </label>
     </div>
 </t>
@@ -52,7 +52,7 @@
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
                     <iframe t-if="this.state.src and !this.state.errorMessage" height="720" width="1280" class="o_video_dialog_iframe mw-100 mh-100 overflow-hidden shadow" allowfullscreen="allowfullscreen" frameborder="0" t-att-src="this.state.src"/>
-                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-esc="this.state.errorMessage"/>
+                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-out="this.state.errorMessage"/>
                 </div>
             </div>
         </div>

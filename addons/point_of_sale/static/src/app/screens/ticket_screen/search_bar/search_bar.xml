@@ -13,11 +13,11 @@
                             <li t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"
                                 t-on-click="() => this._onClickSearchField(fieldName)">
                                 <span class="field">
-                                    <t t-esc="props.config.searchFields.get(fieldName)"></t>
+                                    <t t-out="props.config.searchFields.get(fieldName)"></t>
                                 </span>
                                 <span>: </span>
                                 <span class="term">
-                                    <t t-esc="state.searchInput"></t>
+                                    <t t-out="state.searchInput"></t>
                                 </span>
                             </li>
                         </t>
@@ -30,13 +30,13 @@
                     <i class="oi oi-chevron-down" aria-hidden="true"></i>
                 </span>
                 <span>
-                    <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
+                    <t t-out="props.config.filter.options.get(state.selectedFilter).text" />
                 </span>
                 <ul t-if="state.showFilterOptions" class="options">
                     <t t-foreach="filterOptionsList" t-as="key" t-key="key">
                         <t t-set="_option" t-value="props.config.filter.options.get(key)" />
                         <li t-on-click="() => this._onSelectFilter(key)" t-att-class="{ indented: _option.indented }">
-                            <t t-esc="_option.text"></t>
+                            <t t-out="_option.text"></t>
                         </li>
                     </t>
                 </ul>

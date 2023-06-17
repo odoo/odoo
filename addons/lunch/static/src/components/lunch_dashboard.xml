@@ -2,9 +2,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.LunchCurrency" owl="1">
         <span>
-            <t t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
-            <t t-esc="amount"/>
-            <t t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
+            <t t-if="props.currency.position == 'before'" t-out="props.currency.symbol"/>
+            <t t-out="amount"/>
+            <t t-if="props.currency.position == 'after'" t-out="props.currency.symbol"/>
         </span>
     </t>
 
@@ -12,25 +12,25 @@
         <div class="d-flex align-items-center pe-3">
             <div class="btn-group">
                 <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(-1)"/>
-                <span t-esc="line.quantity" class="px-2 py-1"/>
+                <span t-out="line.quantity" class="px-2 py-1"/>
                 <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(1)"/>
             </div>
             <span class="flex-grow-1 ps-2 text-700">
                 <a t-on-click="() => props.openOrderLine(line.product[0], line.id)" t-if="canEdit" role="button" title="Edit order">
-                    <t t-esc="line.product[1]"/>
+                    <t t-out="line.product[1]"/>
                 </a>
-                <t t-else="" t-esc="line.product[1]"/>
-                <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
+                <t t-else="" t-out="line.product[1]"/>
+                <span t-out="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
             </span>
             <LunchCurrency currency="props.currency" amount="line.product[2]"/>
         </div>
         <ul t-if="hasToppings" class="list-unstyled ps-4">
             <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex pe-3">
-                <span class="flex-grow-1 lunch_topping" t-esc="topping[0]"/>
+                <span class="flex-grow-1 lunch_topping" t-out="topping[0]"/>
                 <LunchCurrency currency="props.currency" amount="topping[1]"/>
             </li>
         </ul>
-        <div t-if="line.note" t-esc="line.note" class="text-muted ps-4"/>
+        <div t-if="line.note" t-out="line.note" class="text-muted ps-4"/>
     </t>
 
     <t t-name="lunch.LunchAlerts" owl="1">
@@ -43,7 +43,7 @@
 
     <t t-name="lunch.LunchUser" owl="1">
         <div class="lunch_user pb-1">
-            <span t-if="!props.isManager" t-esc="props.username"/>
+            <span t-if="!props.isManager" t-out="props.username"/>
             <Many2XAutocomplete
                 t-else=""
                 value="props.username"

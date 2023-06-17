@@ -104,10 +104,10 @@
                             <div class="o_kanban_card_header flex-grow-inf">
                                 <div class="o_kanban_card_header_title mb16">
                                     <div class="o_primary o_kanban_card_header_title_name">
-                                        <t t-esc="record.name.value"/>
+                                        <t t-out="record.name.value"/>
                                     </div>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
-                                        <div class="badge text-bg-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
+                                        <div class="badge text-bg-info o_kanban_inline_block">Opened by <t t-out="record.pos_session_username.value"/></div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opening_control'">
                                         <div class="badge text-bg-info o_kanban_inline_block">Opening Control</div>
@@ -142,7 +142,7 @@
                                                 <span>Last Closing Date</span>
                                             </div>
                                             <div class="col-6">
-                                                <span><t t-esc="record.last_session_closing_date.value"/></span>
+                                                <span><t t-out="record.last_session_closing_date.value"/></span>
                                             </div>
                                         </div>
 
@@ -157,7 +157,7 @@
 
                                         <div>
                                             <a t-if="record.number_of_rescue_session.value &gt; 0" class="oe_kanban_action oe_kanban_action_a col-12" name="open_opened_rescue_session_form" type="object">
-                                                <t t-esc="record.number_of_rescue_session.value" /> outstanding rescue session
+                                                <t t-out="record.number_of_rescue_session.value" /> outstanding rescue session
                                             </a>
                                         </div>
                                     </div>

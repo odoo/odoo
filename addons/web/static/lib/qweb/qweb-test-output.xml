@@ -1,23 +1,23 @@
 <templates>
-    <!-- esc, evaluates and returns @t-esc after having xml-escaped it -->
+    <!-- esc, evaluates and returns @t-out after having xml-escaped it -->
     <t t-name="esc-literal">
-        <t t-esc="'ok'"/>
+        <t t-out="'ok'"/>
     </t>
     <result id="esc-literal">ok</result>
 
     <t t-name="esc-variable">
-        <t t-esc="var"/>
+        <t t-out="var"/>
     </t>
     <params id="esc-variable">{"var": "ok"}</params>
     <result id="esc-variable">ok</result>
 
     <t t-name="esc-toescape">
-        <t t-esc="var"/>
+        <t t-out="var"/>
     </t>
     <params id="esc-toescape"><![CDATA[{"var": "<ok>"}]]></params>
     <result id="esc-toescape"><![CDATA[&lt;ok&gt;]]></result>
     <t t-name="esc-node">
-        <span t-esc="'ok'"/>
+        <span t-out="'ok'"/>
     </t>
     <result id="esc-node"><![CDATA[<span>ok</span>]]></result>
 

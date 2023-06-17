@@ -106,7 +106,7 @@
                                 <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                                 <div t-if="record.product_variant_count.value &gt; 1" groups="product.group_product_variant">
                                     <strong>
-                                        <t t-esc="record.product_variant_count.value"/> Variants
+                                        <t t-out="record.product_variant_count.value"/> Variants
                                     </strong>
                                 </div>
                                 <div name="product_lst_price" class="mt-1">

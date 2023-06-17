@@ -5,7 +5,7 @@
         <div class="o_message_counter">
             <t t-if="count">
                 <span class="fa fa-comments" />
-                <span class="o_message_count"> <t t-esc="count"/></span>
+                <span class="o_message_count"> <t t-out="count"/></span>
                 <t t-if="count == 1">comment</t>
                 <t t-else="">comments</t>
             </t>
@@ -65,7 +65,7 @@
                     </button>
                     <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                         <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
-                        <div class='o_portal_chatter_attachment_name'><t t-esc='attachment.name'/></div>
+                        <div class='o_portal_chatter_attachment_name'><t t-out='attachment.name'/></div>
                     </a>
                 </div>
             </div>
@@ -85,8 +85,8 @@
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 
                         <div class="o_portal_chatter_message_title">
-                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
-                            <p class="o_portal_chatter_puslished_date">Published on <t t-esc="message.published_date_str"/></p>
+                            <h5 class='mb-1'><t t-out="message.author_id[1]"/></h5>
+                            <p class="o_portal_chatter_puslished_date">Published on <t t-out="message.published_date_str"/></p>
                         </div>
                         <t t-out="message.body"/>
 
@@ -125,7 +125,7 @@
                     </li>
                     <t t-foreach="widget.get('pager')['pages']" t-as="page">
                         <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
-                            <a href="#" class="page-link"><t t-esc="page"/></a>
+                            <a href="#" class="page-link"><t t-out="page"/></a>
                         </li>
                     </t>
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="page-item o_portal_chatter_pager_btn">

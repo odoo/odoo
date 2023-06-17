@@ -18,7 +18,7 @@
     <div class="table-responsive">
         <table class="table table-sm table-striped">
             <caption style="caption-side: top; font-size: 14px">
-                <t t-esc="caption"/>
+                <t t-out="caption"/>
             </caption>
             <thead>
                 <tr>
@@ -31,9 +31,9 @@
             </thead>
             <tbody>
                 <tr t-foreach="tours" t-as="tour" t-key="tour.name">
-                    <td><t t-esc="tour.sequence"/></td>
-                    <td><t t-esc="tour.name"/></td>
-                    <td><t t-esc="tour.url"/></td>
+                    <td><t t-out="tour.sequence"/></td>
+                    <td><t t-out="tour.name"/></td>
+                    <td><t t-out="tour.url"/></td>
                     <td>
                         <button type="button"
                             class="btn btn-primary fa fa-play o_start_tour"

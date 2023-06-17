@@ -9,7 +9,7 @@
         <span class="control-button" t-att-class="_shouldBeHighlighted(_orderTotal, _eWalletPrograms, _eWalletRewards) ? 'highlight' : ''" t-on-click="_onClickWalletButton">
             <i class="fa fa-credit-card"></i>
             <span> </span>
-            <span><t t-esc="_getText(_orderTotal, _eWalletPrograms, _eWalletRewards)" /></span>
+            <span><t t-out="_getText(_orderTotal, _eWalletPrograms, _eWalletRewards)" /></span>
         </span>
     </t>
 

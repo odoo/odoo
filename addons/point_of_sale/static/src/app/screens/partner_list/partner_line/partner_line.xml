@@ -6,10 +6,10 @@
             t-on-click="() => this.props.onClickPartner(props.partner)">
             <td>
                 <div>
-                    <t t-esc="props.partner.name or ''" />
+                    <t t-out="props.partner.name or ''" />
                 </div>
                 <div class="company-field">
-                    <t t-esc="props.partner.parent_name or ''" />
+                    <t t-out="props.partner.parent_name or ''" />
                 </div>
                 <div t-if="_isPartnerSelected" class="unselect-tag">
                     <i class="fa fa-times"></i>
@@ -18,18 +18,18 @@
             </td>
             <td>
                 <div class="partner-line-adress" t-if="props.partner.address">
-                    <t t-esc="props.partner.address" />
+                    <t t-out="props.partner.address" />
                 </div>
             </td>
             <td class="partner-line-email" >
                 <div t-if="props.partner.phone">
-                    <i class="fa fa-fw fa-phone"/><t t-esc="props.partner.phone"/>
+                    <i class="fa fa-fw fa-phone"/><t t-out="props.partner.phone"/>
                 </div>
                 <div t-if="props.partner.mobile">
-                    <i class="fa fa-fw fa-mobile fa-lg"/><t t-esc="props.partner.mobile"/>
+                    <i class="fa fa-fw fa-mobile fa-lg"/><t t-out="props.partner.mobile"/>
                 </div>
                 <div t-if="props.partner.email" class="email-field">
-                    <i class="fa fa-fw fa-paper-plane-o"/><t t-esc="props.partner.email" />
+                    <i class="fa fa-fw fa-paper-plane-o"/><t t-out="props.partner.email" />
                 </div>
             </td>
             <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>

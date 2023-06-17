@@ -4,7 +4,7 @@
     <t t-name="web.TranslationButton" owl="1">
         <t t-if="isMultiLang">
             <span class="o_field_translate btn btn-link" t-on-click.prevent="onClick">
-                <t t-esc="lang" />
+                <t t-out="lang" />
             </span>
         </t>
     </t>

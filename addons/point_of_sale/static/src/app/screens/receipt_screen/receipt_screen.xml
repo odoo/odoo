@@ -7,7 +7,7 @@
                 <div class="top-content" t-if="!ui.isSmall">
                     <div class="top-content-center">
                         <h1>
-                            <t t-esc="orderAmountPlusTip" />
+                            <t t-out="orderAmountPlusTip" />
                         </h1>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         </form>
                         <div class="notice">
                             <div t-if="orderUiState.emailSuccessful !== null" t-attf-class="{{ orderUiState.emailSuccessful ? 'successful' : 'failed' }}">
-                                <t t-esc="orderUiState.emailNotice"></t>
+                                <t t-out="orderUiState.emailNotice"></t>
                             </div>
                         </div>
                     </div>

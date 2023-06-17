@@ -25,17 +25,17 @@
                 </div>
                 <div class="tip-options">
                     <div class="total-amount">
-                        <t t-esc="overallAmountStr" />
+                        <t t-out="overallAmountStr" />
                     </div>
                     <div class="tip-amount-options">
                         <div class="percentage-amounts">
                             <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
                                 <div class="button" t-on-click="() => { state.inputTipAmount = tip.amount.toFixed(2); }">
                                     <div class="percentage">
-                                        <t t-esc="tip.percentage"></t>
+                                        <t t-out="tip.percentage"></t>
                                     </div>
                                     <div class="amount">
-                                        <t t-esc="env.utils.formatCurrency(tip.amount)" />
+                                        <t t-out="env.utils.formatCurrency(tip.amount)" />
                                     </div>
                                 </div>
                             </t>
@@ -48,7 +48,7 @@
                             <div class="item input">
                                 <input type="text" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount" />
                                 <div class="currency">
-                                    <t t-esc="pos.globalState.getCurrencySymbol()" />
+                                    <t t-out="pos.globalState.getCurrencySymbol()" />
                                 </div>
                             </div>
                         </div>

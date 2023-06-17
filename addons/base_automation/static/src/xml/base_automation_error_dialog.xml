@@ -5,8 +5,8 @@
         <xpath expr="//div[@role='alert']" position="inside">
             <p>
                 The error occurred during the execution of the automated action
-                "<t t-esc="actionName"/>"
-                (ID: <t t-esc="actionId"/>).
+                "<t t-out="actionName"/>"
+                (ID: <t t-out="actionId"/>).
                 <br/>
             </p>
             <p t-if="isUserAdmin">

@@ -17,7 +17,7 @@
             <div t-if="displayAttendeeAnswerChoice" class="d-inline-block">
                 <Dropdown togglerClass="'btn btn-secondary'">
                     <t t-set-slot="toggler">
-                        <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
+                        <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-out="selectedStatusInfo.text"></span>
                     </t>
                     <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
                         <i class="fa fa-circle text-success"/> Accept

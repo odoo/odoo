@@ -30,14 +30,14 @@
                             <div>
                                 <field name="employee_id" widget="many2one_avatar_user"/>
                                 <span class="o_kanban_record_title">
-                                    <strong><t t-esc="record.employee_id.value"/></strong>
+                                    <strong><t t-out="record.employee_id.value"/></strong>
                                 </span>
                             </div>
                             <hr class="mt4 mb8"/>
                             <div class="o_kanban_record_subtitle">
                                 <i class="fa fa-calendar" aria-label="Period" role="img" title="Period"></i>
-                                <t t-esc="record.check_in.value"/>
-                                - <t t-esc="record.check_out.value"/>
+                                <t t-out="record.check_in.value"/>
+                                - <t t-out="record.check_out.value"/>
                             </div>
                         </div>
                     </t>

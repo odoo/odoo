@@ -16,12 +16,12 @@
                         <div class="o_so_order_header p-3 bg-white" t-on-click="() => this.editOrder(order)">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h6 class="m-0"
-                                    t-esc="order.pos_reference"/>
+                                    t-out="order.pos_reference"/>
                                 <span class="badge p-2 text-bg-primary"
-                                    t-esc="order.state"/>
+                                    t-out="order.state"/>
                             </div>
                             <p class="small m-0 fst-italic text-muted"
-                                t-esc="order.date"/>
+                                t-out="order.date"/>
                         </div>
                         <div class="o_so_order_body p-3 bg-300">
                             <Lines t-if="order.lines" order="order" />

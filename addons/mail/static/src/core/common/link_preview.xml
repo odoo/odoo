@@ -56,7 +56,7 @@
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !props.linkPreview.og_description }">
                     <div class="p-3 bg-view">
                         <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ props.linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription overflow-hidden' }}">
-                            <a t-att-href="props.linkPreview.source_url" target="_blank" t-esc="props.linkPreview.og_title"/>
+                            <a t-att-href="props.linkPreview.source_url" target="_blank" t-out="props.linkPreview.og_title"/>
                         </h6>
                         <p t-if="props.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription card-text mb-0 mt-2 text-muted small overflow-hidden" t-out="props.linkPreview.og_description"></p>
                     </div>

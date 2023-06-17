@@ -11,16 +11,16 @@
                         t-attf-src="/menu/get-image/{{ props.product.id }}/1920"
                         alt="Product image"/>
                     <div class="pt-3">
-                        <h3 t-esc="props.product.name"
+                        <h3 t-out="props.product.name"
                             class="o_self_order_product_main_view_name"
                             />
                         <h4 class="text-primary"
-                            t-esc="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
+                            t-out="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
                     </div>
                 </div>
                 <div t-if="props.product.description_sale"
                     class="o_self_order_main_desc px-3 pb-3 text-muted"
-                    t-esc="props.product.description_sale"
+                    t-out="props.product.description_sale"
                     />
                 <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100">
                     <t t-if="props.product.attributes"
@@ -28,7 +28,7 @@
                         t-as="attribute"
                         t-key="attribute.id">
                         <div class="mb-3">
-                            <div class="attribute_name py-1 fs-5 fw-bold" t-esc="attribute.name"/>
+                            <div class="attribute_name py-1 fs-5 fw-bold" t-out="attribute.name"/>
                             <t t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'">
                                 <t t-foreach="attribute.values" t-as="value" t-key="value.id">
                                     <div class="d-flex align-items-center justify-content-between py-2">
@@ -41,9 +41,9 @@
                                             t-model="state.selectedVariants[attribute.name]"
                                             />
                                         <span class="flex-grow-1">
-                                            <t t-esc="value.name"/>
+                                            <t t-out="value.name"/>
                                             <t t-if="value.price_extra.list_price">
-                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                                + <t t-out="selfOrder.formatMonetary(value.price_extra.list_price)" />
                                             </t>
                                         </span>
                                     </div>
@@ -52,9 +52,9 @@
                             <select t-elif="attribute.display_type === 'select'" class="configurator_select form-select"
                                 t-model="state.selectedVariants[attribute.name]">
                                 <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
-                                    <t t-esc="value.name"/>
+                                    <t t-out="value.name"/>
                                     <t t-if="value.price_extra.list_price">
-                                        + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                        + <t t-out="selfOrder.formatMonetary(value.price_extra.list_price)" />
                                     </t>
                                 </option>
                             </select>
@@ -74,9 +74,9 @@
                                                 />
                                         </label>
                                         <span class="flex-grow-1">
-                                            <t t-esc="value.name"/>
+                                            <t t-out="value.name"/>
                                             <t t-if="value.price_extra.list_price">
-                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                                + <t t-out="selfOrder.formatMonetary(value.price_extra.list_price)" />
                                             </t>
                                         </span>
                                     </li>
@@ -95,7 +95,7 @@
                     <button type="button"
                         t-on-click = "() => this.changeQuantity(false)"
                         class="btn btn-light rounded-circle"> - </button>
-                    <div class="d-flex align-items-center px-4 fw-bold" t-esc="state.qty + state.cartQty"/>
+                    <div class="d-flex align-items-center px-4 fw-bold" t-out="state.qty + state.cartQty"/>
                     <button type="button"
                         t-on-click = "() => this.changeQuantity(true)"
                         class="btn btn-light rounded-circle"> + </button>

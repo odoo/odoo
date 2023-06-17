@@ -19,7 +19,7 @@
                 <h3>
                     Traceability Report
                     <span t-if="reference" style="margin-left:28%">
-                        Reference: <t t-esc="reference"/>
+                        Reference: <t t-out="reference"/>
                     </span>
                 </h3>
             </span>
@@ -55,7 +55,7 @@
                                             <span t-att-style="space_td"></span>
                                         </t>
                                         <span>
-                                            <t t-esc="c" />
+                                            <t t-out="c" />
                                         </span>
                                     </td>
                                 </t>

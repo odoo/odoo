@@ -40,7 +40,7 @@
                                     type="button"
                                     t-on-click.stop.prevent="() => this.toggleSection(section, ev)"
                                 >
-                                    <span class="o_cw_filter_label" t-esc="section.label" />
+                                    <span class="o_cw_filter_label" t-out="section.label" />
                                     <i
                                         class="o_cw_filter_collapse_icon fa"
                                         t-attf-class="fa-chevron-{{ isSectionCollapsed(section) ? 'left' : 'down' }}"
@@ -48,7 +48,7 @@
                                 </div>
                             </t>
                             <t t-else="">
-                                <h5 class="o_cw_filter_label" t-esc="section.label" />
+                                <h5 class="o_cw_filter_label" t-out="section.label" />
                             </t>
                         </div>
                     </t>
@@ -109,7 +109,7 @@
                 </t>
                 <span
                     class="o_cw_filter_title text-truncate flex-grow"
-                    t-esc="filter.label"
+                    t-out="filter.label"
                 />
             </label>
             <t t-if="filter.canRemove">

@@ -17,7 +17,7 @@
               t-on-click.stop='_toggleUserMenu'>
               <small class="o-no-caret dropdown-toggle d-flex align-items-center justify-content-between" t-att-class="{'active bg-view text-body border-end': isUserMenuUnfolded }">
                   <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
-                  <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+                  <span class="o_burger_menu_username px-2"><t t-out="user.name"/></span>
                   <i t-if="isUserMenuTogglable" class="fa" t-att-class="state.isUserMenuOpened ? 'fa-caret-down' : 'fa-caret-left'"/>
               </small>
               <button class="o_burger_menu_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
@@ -54,7 +54,7 @@
                 'border-top': !isNested &amp;&amp; subMenu_index != 0,
                 'py-2': isNested,
             }"
-            t-att-data-menu-xmlid="section.xmlid" t-esc="section.name"/>
+            t-att-data-menu-xmlid="section.xmlid" t-out="section.name"/>
         <ul class="ps-0">
             <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
                 <t t-call="web.BurgerSection">
@@ -70,7 +70,7 @@
             'border-top': !isNested &amp;&amp; subMenu_index != 0,
             'py-2': isNested,
         }">
-        <t t-esc="section.name"/>
+        <t t-out="section.name"/>
     </li>
 </t>
 

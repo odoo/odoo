@@ -10,7 +10,7 @@
             t-on-click.stop="onClick"
         >
             <span class="fa fa-clipboard mx-1"/>
-            <span t-esc="props.copyText"/>
+            <span t-out="props.copyText"/>
         </button>
     </t>
 

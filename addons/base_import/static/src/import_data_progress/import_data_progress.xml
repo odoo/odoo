@@ -3,14 +3,14 @@
     <t t-name="ImportDataProgress" owl="1">
         <div t-if="props.importProgress.step > 1" class="o_import_data_progress d-flex align-items-center flex-column">
             <div class="o_import_progress_dialog_batch text-center">
-                Batch <span class="o_import_progress_dialog_batch_count"><t t-esc="props.importProgress.step"/></span> out of <span t-esc="props.totalSteps"/>...
+                Batch <span class="o_import_progress_dialog_batch_count"><t t-out="props.importProgress.step"/></span> out of <span t-out="props.totalSteps"/>...
                 <div t-if="props.importProgress.value and state.timeLeft and !state.isInterrupted" class="o_import_progress_dialog_time_left">
                     <span>Estimated time left:</span>
                     <t t-if="state.timeLeft >= 1">
-                        <span class="o_import_progress_dialog_time_left_text mx-1" t-esc="minutesLeft"/><span>minutes</span>
+                        <span class="o_import_progress_dialog_time_left_text mx-1" t-out="minutesLeft"/><span>minutes</span>
                     </t>
                     <t t-else="">
-                        <span class="o_import_progress_dialog_time_left_text mx-1" t-esc="secondsLeft"/><span>seconds</span>
+                        <span class="o_import_progress_dialog_time_left_text mx-1" t-out="secondsLeft"/><span>seconds</span>
                     </t>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="progress-bar progress-bar-striped" role="progressbar"
                          aria-valuenow="props.importProgress" aria-valuemin="0" aria-valuemax="100"
                          t-att-style="'width: ' + props.importProgress.value + '%'">
-                        <span class="fs-4"><t t-esc="props.importProgress.value" />%</span>
+                        <span class="fs-4"><t t-out="props.importProgress.value" />%</span>
                     </div>
                 </div>
                 <a class="o_progress_stop_import ms-2" role="button" t-on-click="interrupt"><i class="fa fa-close fs-2 text-danger" aria-label="Stop Import" title="Stop Import"/></a>

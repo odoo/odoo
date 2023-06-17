@@ -12,7 +12,7 @@
                             class="o_day_of_week_cell o_text_sm o_cell_md fw-bolder bg-100 border-bottom border-2 d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
-                            <div class="text-nowrap overflow-hidden" t-esc="dayOfWeek[0]" />
+                            <div class="text-nowrap overflow-hidden" t-out="dayOfWeek[0]" />
                         </div>
                     </t>
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
@@ -20,7 +20,7 @@
                             <div
                                 class="o_week_number_cell o_center o_cell_md o_text_sm bg-100 fw-bolder"
                                 t-att-class="{ 'border-bottom': !week_last }"
-                                t-esc="week.number"
+                                t-out="week.number"
                             />
                         </t>
                         <t t-foreach="week.days" t-as="itemInfo" t-key="itemInfo.id">
@@ -42,7 +42,7 @@
                                 t-att-disabled="itemInfo.isInvalid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
-                                t-esc="itemInfo.label"
+                                t-out="itemInfo.label"
                             />
                         </t>
                     </t>
@@ -97,7 +97,7 @@
                     }"
                     t-att-disabled="itemInfo.isInvalid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
-                    t-esc="itemInfo.label"
+                    t-out="itemInfo.label"
                 />
             </t>
         </div>
@@ -114,7 +114,7 @@
                 <option
                     class="text-center"
                     t-att-value="unit[0]"
-                    t-esc="unit[1]"
+                    t-out="unit[1]"
                     t-att-selected="timeValue[unitIndex] === unit[0]"
                 />
             </t>
@@ -137,7 +137,7 @@
                     t-on-click="zoomOut"
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
-                        <h5 class="o_header_part fw-bold m-0" t-esc="title" />
+                        <h5 class="o_header_part fw-bold m-0" t-out="title" />
                     </t>
                 </button>
                 <button class="o_next btn btn-secondary flex-grow-0" t-on-click="next">

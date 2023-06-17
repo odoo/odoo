@@ -221,7 +221,7 @@
                 <t t-set="description" t-value="move_line.move_id.description_picking"/>
             </t>
             <p t-if="description !='' and description != move_line.product_id.name">
-                <span t-esc="description"/>
+                <span t-out="description"/>
             </p>
         </td>
         <t t-if="has_serial_number" name="move_line_lot">
@@ -235,21 +235,21 @@
     <template id="stock_report_delivery_aggregated_move_lines">
         <tr t-foreach="aggregated_lines" t-as="line">
             <td>
-                <span t-esc="aggregated_lines[line]['name']"/>
+                <span t-out="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-out="aggregated_lines[line]['description']"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">
-                <span t-esc="aggregated_lines[line]['qty_ordered']"
+                <span t-out="aggregated_lines[line]['qty_ordered']"
                     t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                <span t-out="aggregated_lines[line]['product_uom'].name"/>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_done">
                 <t t-if="aggregated_lines[line]['qty_done']">
-                    <span t-esc="aggregated_lines[line]['qty_done']"
+                    <span t-out="aggregated_lines[line]['qty_done']"
                         t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                    <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                    <span t-out="aggregated_lines[line]['product_uom'].name"/>
                 </t>
             </td>
         </tr>

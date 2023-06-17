@@ -20,7 +20,7 @@
                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
             </div>
             <div class="col-12 mb-4" style="font-weight: bold;">
-              <t t-esc="o.company_id.partner_id.name"/>
+              <t t-out="o.company_id.partner_id.name"/>
             </div>
             <div class="col-12" t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
         </div>
@@ -62,7 +62,7 @@
                         <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
                             <i class="fa fa-solid fa-briefcase"/>
                         </span>
-                        <t t-esc="line_type"/>
+                        <t t-out="line_type"/>
                     </h2>
                     <t t-foreach="resume_lines[o][line_type]" t-as="resume_line">
                         <div class="o_main_panel_resume_title ps-5">
@@ -72,7 +72,7 @@
                             <div class="o_main_panel_resume_title_dates">
                                 <t t-set="present">Present</t>
                                 <div class="o_main_panel_resume_year">
-                                    <t t-esc="resume_line.date_start.year"/> - <t t-esc="resume_line.date_end.year if resume_line.date_end else present"/>
+                                    <t t-out="resume_line.date_start.year"/> - <t t-out="resume_line.date_end.year if resume_line.date_end else present"/>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                     <t t-if="skill_line.skill_type_id == skill_type_language">
                         <div class="o_main_panel_resume_title ps-5 pb-2">
                             <div class="o_main_panel_resume_title_job">
-                                <h3 class="o_main_panel_resume_job"><t t-esc="skill_line.skill_id.name"/> - <t t-esc="skill_line.skill_level_id.name"/></h3>
+                                <h3 class="o_main_panel_resume_job"><t t-out="skill_line.skill_id.name"/> - <t t-out="skill_line.skill_level_id.name"/></h3>
                             </div>
                         </div>
                     </t>

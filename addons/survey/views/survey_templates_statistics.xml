@@ -82,19 +82,19 @@
                 </t>
                 <!-- Scoring info -->
                 <t t-if="question.question_type in ['numerical_box', 'date', 'datetime']">
-                    <span class="badge text-bg-success ms-0 ms-sm-1 me-1 me-sm-0"><span t-esc="question_data['right_inputs_count']" class="me-1"/>Correct</span>
+                    <span class="badge text-bg-success ms-0 ms-sm-1 me-1 me-sm-0"><span t-out="question_data['right_inputs_count']" class="me-1"/>Correct</span>
                     <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
                         <span class="badge text-bg-warning ms-0 ms-sm-1 me-1 me-sm-0" t-if="question.question_type == 'multiple_choice'">
-                            <span t-esc="question_data['partial_inputs_count']" class="me-1"/>Partial
+                            <span t-out="question_data['partial_inputs_count']" class="me-1"/>Partial
                         </span>
                     </t>
                 </t>
                 <!-- Inputs info -->
                 <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0">
-                    <span t-esc="len(question_data['answer_input_done_ids'])" class="me-1"/>Responded
+                    <span t-out="len(question_data['answer_input_done_ids'])" class="me-1"/>Responded
                 </span>
                 <span class="badge text-bg-info ms-0 ms-sm-1 me-1 me-sm-0">
-                    <span t-esc="len(question_data['answer_input_skipped_ids'])" class="me-1"/>Skipped
+                    <span t-out="len(question_data['answer_input_skipped_ids'])" class="me-1"/>Skipped
                 </span>
             </div>
         </div>
@@ -141,11 +141,11 @@
                             <div class="dropdown-menu">
                                 <a t-attf-class="#{dropdown_item_classes} filter-finished-or-not #{'active' if not search_finished else ''}">
                                     <span>All surveys</span>
-                                    <span t-if="not search_finished" t-esc="survey_data['count_all']" class="badge rounded-pill text-bg-primary ms-3"/>
+                                    <span t-if="not search_finished" t-out="survey_data['count_all']" class="badge rounded-pill text-bg-primary ms-3"/>
                                 </a>
                                 <a t-attf-class="#{dropdown_item_classes} filter-finished #{'active' if search_finished else ''}">
                                     <span>Completed surveys</span>
-                                    <span t-if="not search_finished" t-esc="survey_data['count_finished']" class="badge rounded-pill text-bg-primary ms-3"/>
+                                    <span t-if="not search_finished" t-out="survey_data['count_finished']" class="badge rounded-pill text-bg-primary ms-3"/>
                                 </a>
                             </div>
                         </li>
@@ -159,15 +159,15 @@
                             <div class="dropdown-menu">
                                 <a t-attf-class="#{dropdown_item_classes} filter-passed-and-failed #{'active' if not search_passed_or_failed else ''}">
                                     <span>Passed and Failed</span>
-                                    <span t-if="not search_passed_or_failed" t-esc="survey_data['count_all']" class="badge rounded-pill text-bg-primary ms-3"/>
+                                    <span t-if="not search_passed_or_failed" t-out="survey_data['count_all']" class="badge rounded-pill text-bg-primary ms-3"/>
                                 </a>
                                 <a t-attf-class="#{dropdown_item_classes} filter-passed #{'active' if search_passed else ''}">
                                     <span>Passed only</span>
-                                    <span t-if="not search_passed_or_failed" t-esc="survey_data['count_passed']" class="badge rounded-pill text-bg-primary ms-3"/>
+                                    <span t-if="not search_passed_or_failed" t-out="survey_data['count_passed']" class="badge rounded-pill text-bg-primary ms-3"/>
                                 </a>
                                 <a t-attf-class="#{dropdown_item_classes} filter-failed #{'active' if search_failed else ''}">
                                     <span>Failed only</span>
-                                    <span t-if="not search_passed_or_failed" t-esc="survey_data['count_failed']" class="badge rounded-pill text-bg-primary ms-3"/>
+                                    <span t-if="not search_passed_or_failed" t-out="survey_data['count_failed']" class="badge rounded-pill text-bg-primary ms-3"/>
                                 </a>
                             </div>
                         </li>
@@ -176,7 +176,7 @@
                         <t t-if="search_filters">
                             <li t-foreach="search_filters" t-as="filter_data" class="nav-item me-2 my-1">
                                 <span t-attf-class="btn btn-light filter-remove-answer cursor-default">
-                                    <span t-esc="filter_data['question']"/> | <span t-esc="filter_data['answer']"></span>
+                                    <span t-out="filter_data['question']"/> | <span t-out="filter_data['answer']"></span>
                                     <i class="fa fa-times filter-remove-answer text-primary"
                                         t-att-data-model-short-key="filter_data['model_short_key']"
                                         t-att-data-row-id="filter_data['row_id']"
@@ -212,23 +212,23 @@
                     <t t-foreach="non_skipped_records" t-as="input_line">
                         <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
                             <td>
-                                <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                                <t t-if="no_print_url"><t t-out="input_line_index + 1"></t></t>
                                 <t t-else="">
                                     <a t-att-href="input_line.user_input_id.get_print_url()">
-                                        <t t-esc="input_line_index + 1"></t>
+                                        <t t-out="input_line_index + 1"></t>
                                     </a>
                                 </t>
                             </td>
                             <td>
                                 <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
                                 <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
-                                    <t t-esc="input_line._get_answer_value()"/>
+                                    <t t-out="input_line._get_answer_value()"/>
                                 </t>
                                 <t t-else="">
                                     <a class="text-primary filter-add-answer"
                                         data-model-short-key="L" t-att-data-record-id="input_line.id"
                                         role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
-                                        <t t-esc="input_line._get_answer_value()"/>
+                                        <t t-out="input_line._get_answer_value()"/>
                                         <i class="fa fa-filter"/>
                                     </a>
                                 </t>
@@ -246,15 +246,15 @@
             <span class="float-end mt8">
                 <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Maximum">
                     <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Maximum </span>
-                    <span class="badge text-bg-success only_right_radius px-2 pt-1" t-esc="question_data['numerical_max']"></span>
+                    <span class="badge text-bg-success only_right_radius px-2 pt-1" t-out="question_data['numerical_max']"></span>
                 </div>
                 <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Minimum">
                     <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Minimum </span>
-                    <span class="badge text-bg-danger only_right_radius px-2 pt-1" t-esc="question_data['numerical_min']"></span>
+                    <span class="badge text-bg-danger only_right_radius px-2 pt-1" t-out="question_data['numerical_min']"></span>
                 </div>
                 <div class="btn-group o_survey_results_question_pill" role="group" aria-label="Average">
                     <span class="badge text-bg-secondary only_left_radius px-2 pt-1">Average </span>
-                    <span class="badge text-bg-warning only_right_radius px-2 pt-1" t-esc="question_data['numerical_average']"></span>
+                    <span class="badge text-bg-warning only_right_radius px-2 pt-1" t-out="question_data['numerical_average']"></span>
                 </div>
             </span>
         </t>
@@ -295,16 +295,16 @@
                                 </t>
                                 <t t-elif="question.question_type == 'date'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_date"/>
-                                    <span t-esc="common_line[0]" t-options='{"widget": "date"}'/>
+                                    <span t-out="common_line[0]" t-options='{"widget": "date"}'/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'datetime'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_datetime"/>
-                                    <span t-esc="common_line[0]" t-options='{"widget": "datetime"}'/>
+                                    <span t-out="common_line[0]" t-options='{"widget": "datetime"}'/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                             </td>
-                            <td><span t-esc="common_line[1]"></span></td>
+                            <td><span t-out="common_line[1]"></span></td>
                             <td t-if="question.is_scored_question">
                                 <span t-if="right_answer" t-call="survey.survey_remove_unnecessary_decimals">
                                     <t t-set="value_to_format" t-value="question.answer_score"/>
@@ -330,23 +330,23 @@
                             <t t-foreach="non_skipped_records" t-as="input_line">
                                 <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
                                     <td>
-                                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                                        <t t-if="no_print_url"><t t-out="input_line_index + 1"></t></t>
                                         <t t-else="">
                                             <a t-att-href="input_line.user_input_id.get_print_url()">
-                                                <t t-esc="input_line_index + 1"></t>
+                                                <t t-out="input_line_index + 1"></t>
                                             </a>
                                         </t>
                                     </td>
                                     <td>
                                         <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
                                         <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
-                                            <t t-esc="input_line._get_answer_value()"/>
+                                            <t t-out="input_line._get_answer_value()"/>
                                         </t>
                                         <t t-else="">
                                             <a class="text-primary filter-add-answer"
                                                 data-model-short-key="L" t-att-data-record-id="input_line.id"
                                                 role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
-                                                <t t-esc="input_line._get_answer_value()"/>
+                                                <t t-out="input_line._get_answer_value()"/>
                                                 <i class="fa fa-filter"/>
                                             </a>
                                         </t>
@@ -409,7 +409,7 @@
                                     <span t-if="question.question_type == 'numerical_box'" t-call="survey.survey_remove_unnecessary_decimals">
                                         <t t-set="value_to_format" t-value="choice_data['value']"/>
                                     </span>
-                                    <span t-else="" t-esc="choice_data['value']"/>
+                                    <span t-else="" t-out="choice_data['value']"/>
                                     <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="fa fa-check"/>
                                 </p>
                             </td>
@@ -419,8 +419,8 @@
                                     t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_max o_survey_answer_image", "alt-field": "name", "itemprop": "image"}'/>
                             </td>
                             <td class="o_survey_answer">
-                                <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
-                                <span t-esc="'%s Votes' % choice_data['count']" class="badge text-bg-primary"/>
+                                <span t-out="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
+                                <span t-out="'%s Votes' % choice_data['count']" class="badge text-bg-primary"/>
                                 <i t-if="choice_data['suggested_answer'].id and choice_data['count']"
                                     class="fa fa-filter text-primary filter-add-answer"
                                     data-model-short-key="A" t-att-data-record-id="choice_data['suggested_answer'].id"
@@ -471,18 +471,18 @@
                         <tr>
                             <th></th>
                             <th class="text-end" t-foreach="table_data[0]['columns']" t-as="column_data">
-                                <span t-esc="column_data['suggested_answer'].value"></span>
+                                <span t-out="column_data['suggested_answer'].value"></span>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr t-foreach="table_data" t-as="choice_data">
                             <td>
-                                <span t-esc="choice_data['row'].value"></span>
+                                <span t-out="choice_data['row'].value"></span>
                             </td>
                             <td class="o_survey_answer" t-foreach="choice_data['columns']" t-as="column_data">
-                                <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_input_done_ids']) or 1), 2)"></span> %
-                                <span class="badge text-bg-primary" t-esc="column_data['count']"></span>
+                                <span t-out="round(column_data['count'] * 100.0/ (len(question_data['answer_input_done_ids']) or 1), 2)"></span> %
+                                <span class="badge text-bg-primary" t-out="column_data['count']"></span>
                                 <i t-if="column_data['count']" class="fa fa-filter text-primary filter-add-answer"
                                    data-model-short-key="A"
                                    t-att-data-row-id="choice_data['row'].id"
@@ -509,10 +509,10 @@
             <tbody>
                 <tr t-foreach="comment_lines" t-as="input_line">
                     <td>
-                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                        <t t-if="no_print_url"><t t-out="input_line_index + 1"></t></t>
                         <t t-else="">
                             <a t-att-href="input_line.user_input_id.get_print_url()">
-                                <t t-esc="input_line_index + 1"></t>
+                                <t t-out="input_line_index + 1"></t>
                             </a>
                         </t>
                     </td>
@@ -532,14 +532,14 @@
                 <t t-set="total" t-value="ceil(non_skipped_answers_count / page_record_limit) + 1"/>
                 <li t-foreach="range(1, total)" t-as="num"
                     t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
-                    <a href="#" class="page-link" t-esc="num"></a>
+                    <a href="#" class="page-link" t-out="num"></a>
                 </li>
             </t>
         </ul>
     </template>
 
     <template id="survey_remove_unnecessary_decimals"  name="Survey: remove .0">
-        <t t-esc="value_to_format if value_to_format % 1 else int(value_to_format)"/>
+        <t t-out="value_to_format if value_to_format % 1 else int(value_to_format)"/>
     </template>
 
 </data>

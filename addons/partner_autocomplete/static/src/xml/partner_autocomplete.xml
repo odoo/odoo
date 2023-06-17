@@ -17,15 +17,15 @@
     <t t-name="partner_autocomplete.CharFieldDropdownOption" owl="1">
         <img t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
         <div class="o_partner_autocomplete_info">
-            <strong t-esc="option.label or '&#160;'"/>
-            <div t-esc="option.description"/>
+            <strong t-out="option.label or '&#160;'"/>
+            <div t-out="option.description"/>
         </div>
     </t>
 
     <t t-name="partner_autocomplete.Many2oneDropdownOption" owl="1">
         <i class="fa fa-magic text-muted pe-1"/>
-        <t t-esc="option.label or '&#160;'"/>,
-        <span class="text-muted" t-esc="option.description"/>
+        <t t-out="option.label or '&#160;'"/>,
+        <span class="text-muted" t-out="option.description"/>
         <img class="ms-1" t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
     </t>
 

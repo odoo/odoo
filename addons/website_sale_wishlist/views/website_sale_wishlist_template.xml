@@ -35,7 +35,7 @@
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <i t-if="_icon" class="fa fa-1x fa-heart"/>
                     <span t-if="_text">Wishlist</span>
-                    <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary"/>
+                    <sup t-out="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary"/>
                 </a>
             </li>
         </t>
@@ -184,7 +184,7 @@
                                             </a>
                                         </td>
                                         <td class='text-start align-middle'>
-                                            <strong><a t-att-href="wish.product_id.website_url"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong><a t-att-href="wish.product_id.website_url"><t t-out="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
@@ -192,7 +192,7 @@
                                             <span t-field="website.prevent_zero_price_sale_text"/>
                                         </td>
                                         <td class="align-middle o_wish_price" t-else="">
-                                            <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                            <t t-out="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                             <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
                                             </small>

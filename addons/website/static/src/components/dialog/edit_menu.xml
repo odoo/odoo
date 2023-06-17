@@ -28,7 +28,7 @@
                 <span class="input-group-text bg-view fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
             <span class="form-control d-flex align-items-center bg-view">
                 <span class="js_menu_label o_text_overflow flex-grow-1">
-                    <t t-esc="props.menu.fields['name']"/>
+                    <t t-out="props.menu.fields['name']"/>
                 </span>
                 <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary">Mega Menu</span>
                 <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>

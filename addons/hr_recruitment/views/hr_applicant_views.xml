@@ -366,7 +366,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_open_attachments" type="object">
                                             <span title='Documents'><i class='fa fa-paperclip' role="img" aria-label="Documents"/>
-                                                <t t-esc="record.attachment_number.raw_value"/>
+                                                <t t-out="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
                                         <div class="o_kanban_state_with_padding ms-1 me-2" >
