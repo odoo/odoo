@@ -1,7 +1,15 @@
 /** @odoo-module */
 
 import { useThrottleForAnimation } from "./utils/timing";
-import { useEffect, useExternalListener, useRef } from "@odoo/owl";
+import {
+    EventBus,
+    onWillDestroy,
+    useChildSubEnv,
+    useComponent,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -251,6 +259,8 @@ export function reposition(reference, popper, options) {
     }
 }
 
+const POSITION_BUS = Symbol("position-bus");
+
 /**
  * Makes sure that the `popper` element is always
  * placed at `position` from the `reference` element.
@@ -290,8 +300,15 @@ export function usePosition(reference, options) {
             reposition(ref, popperRef.el, options);
         }
     };
-    useEffect(update);
-    const throttledUpdate = useThrottleForAnimation(update);
-    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
-    useExternalListener(window, "resize", throttledUpdate);
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+    bus.on("update", component, update);
+    onWillDestroy(() => bus.off("update", component));
+    useEffect(() => bus.trigger("update"));
+    if (!(POSITION_BUS in component.env)) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+        const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+        useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+        useExternalListener(window, "resize", throttledUpdate);
+    }
 }
