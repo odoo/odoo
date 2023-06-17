@@ -530,9 +530,6 @@ class configmanager(object):
         self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
         self.options['translate_modules'].sort()
 
-        dev_split = [s.strip() for s in opt.dev_mode.split(',')] if opt.dev_mode else []
-        self.options['dev_mode'] = dev_split + (['reload', 'qweb', 'xml'] if 'all' in dev_split else [])
-
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
 
@@ -544,6 +541,11 @@ class configmanager(object):
         # normalize path options
         for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_city_db', 'geoip_country_db']:
             self.options[key] = self._normalize(self.options[key])
+
+        dev_split = [s.strip() for s in (self.options['dev_mode'] or '').split(',') if s]
+        dev_mode = dev_split + (['reload', 'qweb', 'xml'] if 'all' in dev_split else [])
+        conf.dev_mode = dev_mode
+        self.options['dev_mode'] = dev_mode
 
         conf.addons_paths = self.options['addons_path'].split(',')
 
