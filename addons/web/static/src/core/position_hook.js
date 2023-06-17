@@ -2,7 +2,16 @@
 
 import { throttleForAnimation } from "./utils/timing";
 
-import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import {
+    EventBus,
+    onWillDestroy,
+    onWillUnmount,
+    useChildSubEnv,
+    useComponent,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -232,6 +241,8 @@ export function reposition(reference, popper, options) {
     }
 }
 
+const POSITION_BUS = Symbol("position-bus");
+
 /**
  * Makes sure that the `popper` element is always
  * placed at `position` from the `reference` element.
@@ -265,21 +276,22 @@ export function usePosition(reference, options) {
 
     const popperRef = useRef(popper);
     const getReference = typeof reference === "function" ? reference : () => reference;
-    let ref;
     const update = () => {
+        const ref = getReference();
         if (popperRef.el && ref) {
             reposition(ref, popperRef.el, options);
         }
     };
-    const throttledUpdate = throttleForAnimation(update);
-    const referenceObserver = new IntersectionObserver(throttledUpdate);
-    useEffect(() => {
-        ref = getReference();
-        referenceObserver.observe(ref);
-        update();
-        return () => referenceObserver.disconnect();
-    });
-    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
-    useExternalListener(window, "resize", throttledUpdate);
-    onWillUnmount(throttledUpdate.cancel);
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+    bus.on("update", component, update);
+    onWillDestroy(() => bus.off("update", component));
+    useEffect(() => bus.trigger("update"));
+    if (!(POSITION_BUS in component.env)) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+        const throttledUpdate = throttleForAnimation(() => bus.trigger("update"));
+        useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+        useExternalListener(window, "resize", throttledUpdate);
+        onWillUnmount(throttledUpdate.cancel);
+    }
 }

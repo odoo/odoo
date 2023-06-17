@@ -49,6 +49,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) tai\n"
+"                'Korjaustilaus - %s' % (object.name)))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -71,13 +74,20 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Luonnos-tilaa käytetään, kun käyttäjä koodaa uutta ja vahvistamatonta korjaustilausta.\n"
+"* Tilaa \"Vahvistettu\" käytetään, kun käyttäjä vahvistaa korjaustilauksen.\n"
+"* Korjausvalmis-tilaa käytetään korjauksen aloittamiseen, ja käyttäjä voi aloittaa korjauksen vasta, kun korjaustilaus on vahvistettu.\n"
+"* Tilaa 'Korjauksessa' käytetään, kun korjaus on käynnissä.\n"
+"* Tilaa 'Laskutettava' käytetään laskun luomiseen ennen tai jälkeen korjauksen.\n"
+"* Valmis-tila asetetaan, kun korjaus on valmis.\n"
+"* Tilaa 'Peruutettu' käytetään, kun käyttäjä peruuttaa korjaustilauksen."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": Riittämätön määrä korjattavaksi"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -102,6 +112,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
+"        Tässä on korjaustilauksesi <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"       <t t-if=\"object.invoice_method != 'none'\"> \n"
+"            jonka arvo on <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\"> 100,00 dollaria</t></strong>.<br>\n"
+"       </t>\n"
+"       <t t-else=\"\"> \n"
+"            .<br>\n"
+"       </t>\n"
+"        Voit vastata tähän sähköpostiin, jos sinulla on kysyttävää.\n"
+"       <br><br>\n"
+"        Kiitos,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -114,41 +143,43 @@ msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">Laskut</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Korjaukset</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>Erä/sarjanumero:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong>Toiminta</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>Osat</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>Tulostuspäivä:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Korjattava tuote:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Toimitusosoite :</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -163,7 +194,7 @@ msgstr "<strong>Yhteensä</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>Takuu:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -203,12 +234,12 @@ msgstr "Lisää"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "Lisää sisäisiä muistiinpanoja."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "Lisää lainausmerkintöjä."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -218,7 +249,7 @@ msgstr "Korjauksen jälkeen"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "Sallittu poimintatyyppi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -259,6 +290,9 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Valitse kumppani, jolle tilaus laskutetaan ja toimitetaan. Voit löytää "
+"kumppanin nimen, TIN-tunnuksen, sähköpostin tai sisäisen viitteen "
+"perusteella."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -309,6 +343,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"En löytänyt tähän tuotteeseen ja määrään sopivaa hinnastoriviä.\n"
+"Sinun on vaihdettava joko tuotetta, määrää tai hinnastoa."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -319,20 +355,20 @@ msgstr "Luo lasku"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "Luo massalasku (korjaus)"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Luo korjaus"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "Luo korjaustilauksia palautuksista"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -381,7 +417,7 @@ msgstr "Asiakas"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Oletusosoite"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -413,7 +449,7 @@ msgstr "Näyttönimi"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "Vahvistatko, että haluat korjata"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -435,6 +471,8 @@ msgstr "Luonnos"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
+"Tätä tilausta koskevat laskuluonnokset peruutetaan. Vahvistatteko "
+"toimenpiteen?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -534,6 +572,7 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"Jos rasti on valittuna, voit luoda korjaustilauksia suoraan palautuksesta."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -542,6 +581,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"Korjaustilauksessa voit eritellä poistettavat osat yksityiskohtaisesti,\n"
+"                lisätä tai vaihtaa ja kirjata eri osiin käyttämäsi aika\n"
+"                toimintoihin."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -730,26 +772,26 @@ msgstr "Tuotteelle \"%s\" ei ole määritetty tiliä"
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Hinnastoa ei löytynyt."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "Maksuissa ei ole määritelty tuotetta."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "Korjaustilausta ei löytynyt. Luodaan sellainen!"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "Kelvollista hinnastoriviä ei löytynyt."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -762,7 +804,7 @@ msgstr "Normaali"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "Huomaa, että palautus- ja korjauspaikkojen varastot eivät täsmää!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -787,14 +829,14 @@ msgstr "Toimitusvirheellisten viestien määrä"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Tähän poimintaan liittyvien korjausten määrä"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "Vain luonnoskorjaukset voidaan vahvistaa."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -806,7 +848,7 @@ msgstr "Toiminnot"
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "Osat"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
@@ -826,12 +868,12 @@ msgstr "Hinnasto"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Valitun kumppanin hinnasto."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Tulosta tarjous"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -949,17 +991,17 @@ msgstr "Korjaus"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Korjauksen kuvaus"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
 msgid "Repair Fee"
-msgstr ""
+msgstr "Korjausmaksu"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Korjausmaksut"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -969,12 +1011,12 @@ msgstr "Korjausirivi"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "Korjausrivit (osat)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Korjausmerkinnät"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -986,7 +1028,7 @@ msgstr "Korjaustilaus"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "Korjaustilaus #:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
@@ -1011,12 +1053,12 @@ msgstr "Korjaustilaukset"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "Korjaustilaukset tunnisteet"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Korjaustarjous #:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1026,58 +1068,58 @@ msgstr "Korjauksen viite"
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "Korjauspalvelut"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "Korjauksen tunnisteet"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "Korjaus on peruutettava, jotta se voidaan palauttaa luonnokseen."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Korjaus on vahvistettava ennen korjauksen aloittamista."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "Korjaus on suoritettava, jotta tuotesiirtoja voi tehdä."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Korjauksen on oltava käynnissä, jotta korjaaminen voidaan lopettaa."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Korjaustilausten määrä"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Korjaustilaukset %s"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair: Quotation"
-msgstr ""
+msgstr "Korjaus: Tarjous"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1121,12 +1163,12 @@ msgstr "Palauta"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Palautustilaus, josta korjattava tuote on peräisin."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Palautus, jonka tyyppi on"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1147,7 +1189,7 @@ msgstr "Myyntitilaus"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Myyntitilaus, josta korjattava tuote on peräisin."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1157,7 +1199,7 @@ msgstr "Suunniteltu päivämäärä"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Etsi korjaustilauksia"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1166,16 +1208,21 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"Valitsemalla 'Ennen korjausta' tai 'Korjauksen jälkeen' voit luoda laskun "
+"ennen korjausta tai korjauksen jälkeen. 'Ei laskua' tarkoittaa, että et "
+"halua luoda laskua tästä korjaustilauksesta."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Lähetä tarjous"
 
 #. module: repair
 #: model:mail.template,description:repair.mail_template_repair_quotation
 msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
 msgstr ""
+"Lähetetään manuaalisesti, kun korjaustilauksessa klikataan \"Lähetä "
+"tarjous\""
 
 #. module: repair
 #. odoo-python
@@ -1183,6 +1230,7 @@ msgstr ""
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
 msgstr ""
+"Sarjanumeroa tarvitaan toiminneriveissä seuraavien tuotteiden kanssa: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1269,7 +1317,7 @@ msgstr "Verot"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "Korjaustilauksen nimen on oltava yksilöllinen!"
 
 #. module: repair
 #. odoo-python
@@ -1279,6 +1327,8 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
+"Valitsemallasi tuotteen mittayksiköllä on eri luokka kuin tuotteen "
+"mittayksiköllä."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1286,11 +1336,13 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Korjausrivin tila asetetaan automaattisesti linkitetyn korjaustilauksen "
+"tilaksi."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Tämä on paikka, jossa korjattava tuote sijaitsee."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
@@ -1330,6 +1382,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"TRUE, jos tämä korjaus on linkitetty palautustilaukseen ja tilaus on "
+"'Valmis'. Muuten FALSE."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1383,7 +1437,7 @@ msgstr "Kiireellinen"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Varoitus: Riittämätön korjausmäärä"
 
 #. module: repair
 #. odoo-python
@@ -1396,7 +1450,7 @@ msgstr "Varoitus"
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Takuun päättyminen"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
@@ -1416,6 +1470,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"Et voi poistaa korjaustilausta, kun se on vahvistettu. Sinun on ensin "
+"peruutettava se."
 
 #. module: repair
 #. odoo-python
@@ -1425,6 +1481,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"Et voi poistaa korjaustilausta, joka on liitetty laskuun, joka on lähetetty "
+"kerran."
 
 #. module: repair
 #. odoo-python
@@ -1438,14 +1496,14 @@ msgstr "Et voi syöttää negatiivisia määriä."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
-msgstr ""
+msgstr "Et voi peruuttaa tehtyä korjaustilausta."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "Valmista korjaustilausta ei voi poistaa."
 
 #. module: repair
 #. odoo-python
@@ -1455,13 +1513,15 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Sinun on valittava hinnasto korjauslomakkeessa!\n"
+" Aseta se ennen tuotteen valintaa."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "Sinun on valittava laskutusosoite korjauslomakkeessa."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -1478,3 +1538,4 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"

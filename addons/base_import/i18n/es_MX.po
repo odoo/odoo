@@ -162,7 +162,7 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"No se pudo recuperar el URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 
 #. module: base_import
@@ -542,10 +542,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
-"La importación expiró. Por favor, vuelva a intentarlo. Si el problema "
-"persiste, puede ser que el archivo sea demasiado grande para la "
-"configuración del sistema, intente dividirlo (importe menos registros por "
-"archivo)."
+"La importación expiró, vuelva a intentarlo. Si el problema persiste, puede "
+"ser que el archivo sea demasiado grande para la configuración del sistema, "
+"intente dividirlo (importe menos registros por archivo)."
 
 #. module: base_import
 #. openerp-web
@@ -1060,7 +1059,9 @@ msgstr ""
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Formato no admitido \"{}\", importar solo archivos CSV, OSD, XLS y XLSX"
+msgstr ""
+"Formato no admitido \"{}\", solo es posible importar archivos CSV, OSD, XLS "
+"y XLSX"
 
 #. module: base_import
 #. openerp-web
@@ -1164,7 +1165,7 @@ msgstr "Debe configurar al menos un campo por importar"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr "en múltiples filas"
+msgstr "en varias filas"
 
 #. module: base_import
 #. openerp-web

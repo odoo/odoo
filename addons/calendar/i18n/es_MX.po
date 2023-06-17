@@ -1146,7 +1146,7 @@ msgstr "Calendario: actualización de evento"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr "Calendario: invitación a junta"
+msgstr "Calendario: invitación a reunión"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
@@ -1541,7 +1541,7 @@ msgstr "Cuarto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Free"
-msgstr "Gratis"
+msgstr "Disponible"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
@@ -1642,8 +1642,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
-"Si el tiempo se muestra como \"ocupado\", este evento será visible para otras personas con la información         completa o como \"ocupado\", según su privacidad. Utilice esta opción para indicarle a las personas         que no está disponible durante ese periodo de tiempo. \n"
-" Si el evento se muestra como \"libre\", los demás usuarios pueden saber         que usted está disponible durante ese periodo de tiempo."
+"Si el tiempo se define como \"ocupado\", puede que otras personas puedan ver la información         completa del evento o solo se mostrará el texto \"ocupado\", esto dependerá de su privacidad. Utilice esta opción para indicarle a otros         que no está disponible durante ese periodo de tiempo. \n"
+" Si el evento se muestra como \"disponible\", los demás usuarios pueden saber         que está disponible durante ese periodo de tiempo."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1825,7 +1825,7 @@ msgstr "Tipos de reunión"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr "URL de la junta"
+msgstr "URL de la reunión"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -2189,7 +2189,7 @@ msgstr "Rrule"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr "Tipo de regla"
+msgstr "Tipo de rrule"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
@@ -2373,7 +2373,7 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed?"
 msgstr ""
-"La actividad está vinculada a una reunión. Al eliminarla también se "
+"La actividad está vinculada a una reunión. Si la elimina, también se "
 "eliminará la reunión. ¿Desea continuar?"
 
 #. module: calendar
@@ -2390,7 +2390,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "El día debe ser entre 1 y 31."
+msgstr "El día debe estar entre 1 y 31."
 
 #. module: calendar
 #. odoo-python
