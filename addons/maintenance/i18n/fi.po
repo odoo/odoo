@@ -68,7 +68,7 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-warning float-end\">Peruutettu</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -83,7 +83,7 @@ msgstr "<span>Raportointi</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Requests</span>"
-msgstr ""
+msgstr "<span>Pyynnöt</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -403,6 +403,8 @@ msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
 "from the Request Date. "
 msgstr ""
+"Päivämäärä, jolloin huoltoryhmä suunnittelee huollon.  Sen ei pitäisi "
+"poiketa paljon Pyyntöpäivästä. "
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__close_date
@@ -483,6 +485,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
+"Tämän laiteluokan sähköpostiosoite. Uudet sähköpostit luovat automaattisesti"
+" uuden laitteen tähän luokkaan."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -552,7 +556,7 @@ msgstr "Laskostettu huoltoputkessa"
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid ""
 "Follow the process of the request and communicate with the collaborator."
-msgstr ""
+msgstr "Seuraa pyynnön käsittelyä ja ole yhteydessä yhteistyökumppaniin."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
@@ -1186,7 +1190,7 @@ msgstr "Pyyntö valmis"
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
-msgstr ""
+msgstr "Suunniteltu pyyntö %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1272,6 +1276,8 @@ msgstr "Sarjanumero"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
+"Aseta archive arvoksi true, jos haluat piilottaa huoltopyynnön poistamatta "
+"sitä."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1421,6 +1427,8 @@ msgid ""
 "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
+"Seuraa laitteita ja yhdistä ne työntekijään tai osastoon.\n"
+"                Pystyt hallitsemaan laitteistojesi varauksia, kysymyksiä ja huoltoa."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1497,6 +1505,7 @@ msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
 " requests."
 msgstr ""
+"Et voi poistaa laiteluokkaa, joka sisältää laitteita tai huoltopyyntöjä."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1506,22 +1515,22 @@ msgstr "päivää"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. Internal Maintenance"
-msgstr ""
+msgstr "esim. sisäinen kunnossapito"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "e.g. LED Monitor"
-msgstr ""
+msgstr "esim. LED-monitori"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "e.g. Monitors"
-msgstr ""
+msgstr "esim. näytöt"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "e.g. Screen not working"
-msgstr ""
+msgstr "esim. Näyttö ei toimi"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

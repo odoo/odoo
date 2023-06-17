@@ -6,8 +6,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2023
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10956,6 +10956,13 @@ msgstr "Volledige naam"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Bereken"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "De berekeningsmethode kan niet afhangen van het 'id' veld"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -28984,6 +28991,12 @@ msgstr "Je kunt de gebruiker waarmee je bent aangemeld niet deactiveren."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Je kan een aan een parameterveld gekopppelde groep niet verwijderen."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

@@ -6,8 +6,8 @@
 # Linkup <link-up@naver.com>, 2022
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8501,7 +8501,7 @@ msgstr "모두 완료!"
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr ""
+msgstr "당사의 모든 계약 관계는 전적으로 미국법에 의거합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -10619,6 +10619,13 @@ msgstr "전체 이름"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "계산"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -16849,7 +16856,7 @@ msgstr "메일 전송 실패"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_group
 msgid "Mail Group"
-msgstr ""
+msgstr "메일 그룹"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_plugin
@@ -27696,6 +27703,12 @@ msgstr "현재 사용중인 사용자를 비활성화 할 수 없습니다."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -27841,6 +27854,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"점심 배송이 완료되었습니다.\n"
+"맛있게 드세요!"
 
 #. module: base
 #. odoo-python

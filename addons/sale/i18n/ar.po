@@ -7,8 +7,8 @@
 # Abdullah Mohamed, 2022
 # Mehjabin Farsana, 2022
 # Martin Trigaux, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Mohammed Alreshi <alreshim@hotmail.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -346,6 +346,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        عزيزنا <t t-out=\"object.partner_id.name or ''\">المستخدم</t>،\n"
+"        <br><br>\n"
+"        يرجى العلم بأن\n"
+"        <t t-out=\"doc_name or ''\">عرض السعر</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (مع المرجع: <t t-out=\"object.origin or ''\">S00052</t>)\n"
+"        </t>\n"
+"        قد تم إلغاؤه. وبالتالي، لن يُطلب منك الدفع لهذا الطلب بعد الآن.\n"
+"        إذا كانت هناك حاجة لاسترداد الأموال، سيتم تنفيذ ذلك بأفضل صورة ممكنة.\n"
+"        <br><br>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
