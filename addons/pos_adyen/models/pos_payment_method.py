@@ -74,15 +74,11 @@ class PosPaymentMethod(models.Model):
             }
         }
 
-    def get_latest_adyen_status(self, pos_config_name):
+    def get_latest_adyen_status(self):
         self.ensure_one()
-
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
-
-        return {
-            'latest_response': latest_response,
-        }
+        return latest_response
 
     def proxy_adyen_request(self, data, operation=False):
         ''' Necessary because Adyen's endpoints don't have CORS enabled '''

@@ -1286,6 +1286,22 @@ export class Payment extends PosModel {
     is_electronic() {
         return Boolean(this.get_payment_status());
     }
+
+    async pay() {
+        this.set_payment_status("waiting");
+        return this.handle_payment_response(
+            await this.payment_method.payment_terminal.send_payment_request(this.cid)
+        );
+    }
+    handle_payment_response(isPaymentSuccessful) {
+        if (isPaymentSuccessful) {
+            this.set_payment_status("done");
+            this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+        } else {
+            this.set_payment_status("retry");
+        }
+        return isPaymentSuccessful;
+    }
 }
 
 // An order more or less represents the content of a customer's shopping cart (the OrderLines)

@@ -14,19 +14,12 @@ patch(PaymentScreen.prototype, {
                     !paymentLine.is_done() &&
                     paymentLine.get_payment_status() !== "pending"
             );
-            if (pendingPaymentLine) {
-                const paymentTerminal = pendingPaymentLine.payment_method.payment_terminal;
-                paymentTerminal.set_most_recent_service_id(pendingPaymentLine.terminalServiceId);
-                pendingPaymentLine.set_payment_status("waiting");
-                paymentTerminal.start_get_status_polling().then((isPaymentSuccessful) => {
-                    if (isPaymentSuccessful) {
-                        pendingPaymentLine.set_payment_status("done");
-                        pendingPaymentLine.can_be_reversed = paymentTerminal.supports_reversals;
-                    } else {
-                        pendingPaymentLine.set_payment_status("retry");
-                    }
-                });
+            if (!pendingPaymentLine) {
+                return;
             }
+            pendingPaymentLine.payment_method.payment_terminal.set_most_recent_service_id(
+                pendingPaymentLine.terminalServiceId
+            );
         });
     },
 });
