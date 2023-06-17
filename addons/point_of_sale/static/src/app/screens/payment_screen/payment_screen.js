@@ -5,7 +5,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { floatIsZero } from "@web/core/utils/numbers";
 
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
@@ -19,6 +18,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState, useRef } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -537,25 +537,18 @@ export class PaymentScreen extends Component {
             line.can_be_reversed = false;
         });
 
-        const payment_terminal = line.payment_method.payment_terminal;
-        line.set_payment_status("waiting");
-
-        const isPaymentSuccessful = await payment_terminal.send_payment_request(line.cid);
-        if (isPaymentSuccessful) {
-            line.set_payment_status("done");
-            line.can_be_reversed = payment_terminal.supports_reversals;
-            // Automatically validate the order when after an electronic payment,
-            // the current order is fully paid and due is zero.
-            const { config, currency } = this.pos;
-            if (
-                this.currentOrder.is_paid() &&
-                floatIsZero(this.currentOrder.get_due(), currency.decimal_places) &&
-                config.auto_validate_terminal_payment
-            ) {
-                this.validateOrder(false);
-            }
-        } else {
-            line.set_payment_status("retry");
+        const isPaymentSuccessful = await line.pay();
+        // Automatically validate the order when after an electronic payment,
+        // the current order is fully paid and due is zero.
+        const { config, currency } = this.pos;
+        const currentOrder = this.pos.get_order();
+        if (
+            isPaymentSuccessful &&
+            currentOrder.is_paid() &&
+            floatIsZero(currentOrder.get_due(), currency.decimal_places) &&
+            config.auto_validate_terminal_payment
+        ) {
+            this.validateOrder(false);
         }
     }
     async sendPaymentCancel(line) {

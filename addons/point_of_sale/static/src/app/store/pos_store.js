@@ -1572,6 +1572,16 @@ export class PosStore extends Reactive {
     }
 
     /**
+     * @param {str} terminalName
+     */
+    getPendingPaymentLine(terminalName) {
+        return this.get_order().paymentlines.find(
+            (paymentLine) =>
+                paymentLine.payment_method.use_payment_terminal === terminalName &&
+                !paymentLine.is_done()
+        );
+    }
+    /**
      * TODO: We can probably remove this here and put it somewhere else.
      * And that somewhere else becomes the parent of the proxy.
      * Directly calls the requested service, instead of triggering a
