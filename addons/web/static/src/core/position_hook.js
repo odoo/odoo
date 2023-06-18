@@ -1,7 +1,14 @@
 /** @odoo-module */
 
 import { useThrottleForAnimation } from "./utils/timing";
-import { useEffect, useRef } from "@odoo/owl";
+import {
+    EventBus,
+    onWillDestroy,
+    useChildSubEnv,
+    useComponent,
+    useEffect,
+    useRef,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -281,6 +288,8 @@ export function reposition(target, popper, iframe, options) {
     }
 }
 
+const POSITION_BUS = Symbol("position-bus");
+
 /**
  * Makes sure that the `popper` element is always
  * placed at `position` from the `target` element.
@@ -296,10 +305,9 @@ export function reposition(target, popper, iframe, options) {
  * @param {Options} options
  */
 export function usePosition(target, options) {
-    const popperRef = useRef(options.popper || DEFAULTS.popper);
+    const popperRef = useRef(options?.popper || DEFAULTS.popper);
     const getTarget = typeof target === "function" ? target : () => target;
-    const throttledReposition = useThrottleForAnimation(reposition);
-    useEffect(() => {
+    const update = () => {
         const targetEl = getTarget();
         const popperEl = popperRef.el;
         if (!targetEl || !popperEl) {
@@ -307,20 +315,35 @@ export function usePosition(target, options) {
         }
 
         // Prepare
-        const targetDocument = targetEl.ownerDocument;
         const iframe = getIFrame(targetEl);
         const currentOptions = { ...DEFAULTS, ...options };
-
-        // Reposition
         reposition(targetEl, popperEl, iframe, currentOptions);
+    };
 
-        // Attach listeners to keep the positioning up to date
-        const listener = () => throttledReposition(targetEl, popperEl, iframe, currentOptions);
-        targetDocument.addEventListener("scroll", listener, { capture: true });
-        window.addEventListener("resize", listener);
-        return () => {
-            targetDocument.removeEventListener("scroll", listener, { capture: true });
-            window.removeEventListener("resize", listener);
-        };
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+    bus.addEventListener("update", update);
+    onWillDestroy(() => bus.removeEventListener("update", update));
+
+    const isTopmost = !(POSITION_BUS in component.env);
+    if (isTopmost) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+    }
+
+    const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+    useEffect(() => {
+        // Reposition
+        bus.trigger("update");
+
+        if (isTopmost) {
+            // Attach listeners to keep the positioning up to date
+            const targetDocument = getTarget()?.ownerDocument;
+            targetDocument?.addEventListener("scroll", throttledUpdate, { capture: true });
+            window.addEventListener("resize", throttledUpdate);
+            return () => {
+                targetDocument?.removeEventListener("scroll", throttledUpdate, { capture: true });
+                window.removeEventListener("resize", throttledUpdate);
+            };
+        }
     });
 }
