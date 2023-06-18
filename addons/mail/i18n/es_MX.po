@@ -6,6 +6,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Lucia Pacheco, 2022
 # Martin Trigaux, 2022
+# Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -1699,7 +1700,7 @@ msgstr "Confirmación"
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "Congratulations, you're done with your activities."
-msgstr "¡Felicidades! ha terminado sus actividades."
+msgstr "¡Felicidades! Ha terminado sus actividades."
 
 #. module: mail
 #. openerp-web
@@ -1981,7 +1982,7 @@ msgstr "Ensordecer"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "Estimada/o"
+msgstr "Apreciable"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -2942,7 +2943,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -4256,13 +4257,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Asistente de fusión de partners"
+msgstr "Asistente de fusión de contactos"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "Se ha fusionado con los siguientes partners:"
+msgstr "Se ha fusionado con los siguientes contactos:"
 
 #. module: mail
 #. openerp-web
@@ -4283,7 +4284,7 @@ msgstr "Mensaje"
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Message #%s..."
-msgstr "Mensaje #%s..."
+msgstr "Mensaje número %s..."
 
 #. module: mail
 #. openerp-web
@@ -4493,7 +4494,7 @@ msgstr "Actividad mínima para la detección de voz"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "Correo electrónico qfaltante"
+msgstr "Correo electrónico faltante"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
@@ -5360,29 +5361,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_id
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "Partner Profile"
-msgstr "Perfil del partner"
+msgstr "Perfil del contacto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 msgid "Partner Readonly"
-msgstr "Lectura solo para partners"
+msgstr "Lectura solo para contactos"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr "Partner con información adicional para el reenvío del correo"
+msgstr "Contacto con información adicional para el reenvío del correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Partners con acción requerida"
+msgstr "Usuarios con acción requerida"
 
 #. module: mail
 #. openerp-web
@@ -5570,7 +5571,7 @@ msgstr "Dirección de respuesta favorita"
 #, python-format
 msgid "Press a key to register it as the push-to-talk shortcut"
 msgstr ""
-"Presione una clave para registrarla como atajo para pulsar para hablar"
+"Presione una tecla para registrarla como atajo para pulsar para hablar"
 
 #. module: mail
 #. openerp-web
@@ -5710,7 +5711,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Re:"
-msgstr "Re:"
+msgstr "Asunto:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__guest_id
@@ -5720,7 +5721,7 @@ msgstr "Reacción del invitado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__partner_id
 msgid "Reacting Partner"
-msgstr "Reacción del partner"
+msgstr "Reacción del contacto"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_reaction_view_tree
@@ -6031,7 +6032,7 @@ msgstr "Nombre del reporte"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr "Partner solicitante"
+msgstr "Usuario solicitante"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
@@ -6926,8 +6927,8 @@ msgid ""
 "%(alias_model_name)s. Choose another alias or change it on the linked model."
 msgstr ""
 "El seudónimo %(matching_alias_name)s del correo electrónico ya está "
-"vinculado con %(alias_model_name)s. Escoja otro seudónimo o cámbielo en el "
-"modelo vinculado."
+"vinculado con %(alias_model_name)s, elija otro o cámbielo en el modelo "
+"vinculado."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6936,8 +6937,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already used as "
 "%(alias_duplicate)s alias. Please choose another alias."
 msgstr ""
-"%(alias_duplicate)s ya está usando el seudónimo %(matching_alias_name)s de "
-"correo electrónico. Escoja otro."
+"El seudónimo %(alias_duplicate)s ya está usando el seudónimo "
+"%(matching_alias_name)s del correo electrónico, elija otro."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6947,8 +6948,8 @@ msgid ""
 "%(document_name)s %(model_name)s. Choose another alias or change it on the "
 "other document."
 msgstr ""
-"El seudónimo %(matching_alias_name)s de correo electrónico ya lo está usando"
-" %(model_name)s%(document_name)s. Escoja otro o cambie el del otro "
+"El seudónimo %(matching_alias_name)s del correo electrónico ya lo está "
+"usando %(document_name)s %(model_name)s, elija otro o cambie el del otro "
 "documento."
 
 #. module: mail
@@ -7384,7 +7385,7 @@ msgstr "Imposible conectar con el servidor SMTP"
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
-"No se puede registrar el mensaje, modifique la dirección de correo "
+"No se puede registrar el mensaje, configure la dirección de correo "
 "electrónico del remitente."
 
 #. module: mail

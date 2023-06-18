@@ -6,8 +6,9 @@
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 09:19+0000\n"
 "PO-Revision-Date: 2022-06-17 09:48+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3230,8 +3231,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
-"El texto a continuación sirve como sugerencia y no compromete la "
-"responsabilidad de Odoo S.A. de C.V."
+"El texto a continuación sirve como sugerencia y no hace responsable a Odoo "
+"S.A."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
@@ -3857,7 +3858,7 @@ msgstr ""
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Selecciona esta opción si desea que el usuario concilie asientos en esta "
+"Seleccione esta opción si desea que el usuario concilie asientos en esta "
 "cuenta."
 
 #. module: account
@@ -4003,7 +4004,7 @@ msgstr "Empresas"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Empresas que se refieren al partner"
+msgstr "Empresas que se refieren al contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_id
@@ -4430,7 +4431,7 @@ msgstr "Crear un nuevo incoterm"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
 msgid "Create a new purchasable product"
-msgstr "Crear un nuevo producto comprable"
+msgstr "Crear un nuevo producto que se pueda comprar"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -4445,7 +4446,7 @@ msgstr "Crear un nuevo recibo de venta"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr "Crear un nuevo producto vendible"
+msgstr "Crear un nuevo producto que se pueda vender"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
@@ -4492,7 +4493,7 @@ msgstr "Crear primera factura"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
-msgstr "Crear factura/recibo"
+msgstr "Crear factura"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -5128,8 +5129,7 @@ msgstr "Cuenta de débito"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr ""
-"Registros de diario de débito que coinciden con este registro de diario."
+msgstr "Apuntes contables de débito que coinciden con este apunte contable."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -5383,7 +5383,7 @@ msgstr "Descripción"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
 msgid "Description on the Invoice"
-msgstr "Descripción de la factura"
+msgstr "Descripción en la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_destination_line_id
@@ -5477,7 +5477,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr "Desc.%"
+msgstr "% de descuento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -5639,8 +5639,8 @@ msgstr "Distribución cuando el impuesto se utiliza en una factura"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el resumen del correo "
-"electrónico del usuario"
+"No tiene acceso, omita esta información para el correo electrónico de "
+"resumen del usuario"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
@@ -5804,7 +5804,7 @@ msgstr "Duplicar"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr "Número de partners de cuenta bancaria duplicados"
+msgstr "Número de contactos de cuenta bancaria duplicados"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5951,7 +5951,7 @@ msgstr "Los asientos no son de la misma cuenta: %s != %s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Entries can only be created for a single company at a time."
-msgstr "Los asientos solo pueden ser creados para una sola empresa a la vez."
+msgstr "Solo se pueden crear los asientos para una sola empresa a la vez."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5965,9 +5965,9 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Los asientos en el futuro están configurados para que se publiquen "
-"automáticamente de forma predeterminada. Seleccione esta casilla para "
-"publicarlos ahora."
+"Los asientos en el futuro están configurados para que se publiquen en "
+"automático de forma predeterminada. Seleccione esta casilla para publicarlos"
+" ahora."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9366,8 +9366,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
-"Tenga en cuenta que la forma ms sencilla de crear una Nota de crdito de "
-"proveedor es crearlo directamente desde la factura del proveedor. "
+"Tenga en cuenta que la forma más sencilla de crear una nota de crdito de "
+"proveedor es crearla directamente desde la factura del proveedor. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -9450,7 +9450,7 @@ msgstr "Número de asientos relacionados con este modelo"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction_counter
