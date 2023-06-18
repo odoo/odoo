@@ -30,7 +30,7 @@
                         <a t-att-href="url_for('/forum') + '/' + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my')" class="btn py-1">&#215;</a>
                     </span>
                 </div>
-                <div t-if="uid and request.env.user.forum_waiting_posts_count"
+                <div t-if="uid and forum and forum.has_pending_post"
                     title="You already have a pending post"
                     data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Please wait for a moderator to validate your previous post before continuing.">
                     <a class="disabled btn btn-secondary btn-block mb-3 mb-md-0" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
@@ -188,7 +188,7 @@
 <!-- Edition: ask your question -->
 <template id="new_question" name="New Post">
     <t t-call="website_forum.header">
-        <div t-if="request.env.user.forum_waiting_posts_count" class="alert border" role="alert">
+        <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
             <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="oi oi-chevron-left me-2"/>Back to All Topics</a>
