@@ -3,17 +3,17 @@
 # 	* sale_expense
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr "Client à refacturer"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
-msgstr "Charge"
+msgstr "Note de frais"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
@@ -64,9 +64,10 @@ msgstr "Fractionnement des notes de frais"
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
-msgstr "Charges"
+msgstr "Notes de frais"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
@@ -75,6 +76,7 @@ msgstr ""
 "de commande."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
@@ -84,6 +86,7 @@ msgstr ""
 "fois qu'elles sont enregistrées."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
@@ -118,6 +121,7 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"

@@ -8,9 +8,9 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
-# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
+# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -2933,7 +2933,7 @@ msgstr "Ensordecer"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "Estimado/a"
+msgstr "Apreciable"
 
 #. module: mail
 #. odoo-python
@@ -6970,7 +6970,7 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
-"Una vez que se haya destacado un mensaje, puede volver a revisarlo aquí en "
+"Una vez que haya destacado un mensaje, puede volver a verlo aquí en "
 "cualquier momento."
 
 #. module: mail
@@ -7078,7 +7078,7 @@ msgstr "Abrir el propietario"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr "Abrir el documento padre"
+msgstr "Abrir el documento principal"
 
 #. module: mail
 #. odoo-javascript
@@ -7093,7 +7093,7 @@ msgstr "Abrir chat"
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
-msgstr "Conferencia abierta: %s"
+msgstr "Abrir conferencia: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -7139,7 +7139,7 @@ msgid ""
 msgstr ""
 "ID opcional de un hilo (registro) al que se adjuntarán todos los mensajes "
 "entrantes, incluso si no fueron respuestas del mismo. Si se establece, se "
-"deshabilitará completamente la creación de nuevos registros."
+"deshabilitará por completo la creación de nuevos registros."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -7287,24 +7287,24 @@ msgstr "Servidores POP/IMAP"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr "Padre"
+msgstr "Principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr "Mensaje padre"
+msgstr "Mensaje principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo padre"
+msgstr "Modelo principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID del hilo del registro padre"
+msgstr "ID del hilo del registro principal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7313,9 +7313,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo padre que posee el seudónimo. El modelo que contiene la referencia "
-"del seudónimo no es necesariamente el modelo dado por alias_model_id "
-"(example: project (parent_model) and task (model))"
+"Modelo principal que posee el seudónimo. El modelo que contiene la "
+"referencia del seudónimo no es necesariamente el modelo dado por "
+"alias_model_id (por ejemplo: proyecto (parent_model) y tarea (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7324,8 +7324,8 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"Subtipo padre, se utiliza para la suscripción automática. El nombre de este "
-"campo no es correcto. Por ejemplo, en un proyecto, el parent_id de los "
+"Subtipo principal, se utiliza para la suscripción automática. El nombre de "
+"este campo no es correcto. Por ejemplo, en un proyecto, el parent_id de los "
 "subtipos de proyecto se refiere a los subtipos relacionados con la tarea."
 
 #. module: mail
@@ -7334,36 +7334,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "Partner Profile"
-msgstr "Perfil del partner"
+msgstr "Perfil del contacto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
-msgstr "Lectura solo para partners"
+msgstr "Lectura solo para contactos"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additional information for mail resend"
-msgstr "Partner con información adicional para el reenvío del correo"
+msgstr "Contacto con información adicional para el reenvío del correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_partner_ids
 msgid "Partners"
-msgstr "Partners"
+msgstr "Contactos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Partners con acción requerida"
+msgstr "Contactos con acción requerida"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__password
@@ -7489,7 +7489,7 @@ msgid ""
 msgstr ""
 "Política sobre cómo publicar un mensaje en el documento utilizando el servidor de correo.\n"
 "- todos: todos pueden publicar\n"
-"- partners: solo los partners verificados\n"
+"- contactos: solo los contactos verificados\n"
 "- seguidores: solo los seguidores del documento relacionado o los miembros de los canales\n"
 
 #. module: mail
@@ -7574,7 +7574,7 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"La publicación de un mensaje debe recibir partners como una lista de IDs "
+"La publicación de un mensaje debe recibir contactos como una lista de IDs "
 "(recibió %(pids)s)"
 
 #. module: mail
@@ -8106,7 +8106,7 @@ msgstr "Reporte"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr "Partner solicitante"
+msgstr "Contacto solicitante"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
@@ -8241,7 +8241,7 @@ msgstr "PRONTO"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "SOON arrow"
-msgstr "Flecha con texto SOON"
+msgstr "Flecha con texto PRONTO"
 
 #. module: mail
 #. odoo-javascript
@@ -8972,7 +8972,7 @@ msgstr "Iniciar reunión"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 msgid "State"
-msgstr "Provincia"
+msgstr "Estado"
 
 #. module: mail
 #. odoo-javascript
@@ -9009,7 +9009,7 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Estado basado en actividades\n"
+"Estado según las actividades\n"
 "Vencida: ya pasó la fecha límite\n"
 "Hoy: hoy es la fecha de la actividad\n"
 "Planeada: actividades en un plazo a futuro."
@@ -9380,7 +9380,7 @@ msgid ""
 msgstr ""
 "El número de identificación fiscal. Los valores establecidos aquí se "
 "validarán según el formato del país. Puede utilizar \"/\" para indicar que "
-"el partner no está sujeto a impuestos."
+"el contacto no está sujeto a impuestos."
 
 #. module: mail
 #. odoo-javascript
@@ -9528,10 +9528,9 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "El propietario de los registros creados al recibir correos electrónicos en "
-"este seudónimo. Si el campo no está establecido, el sistema tratará de "
-"encontrar el propietario adecuado basado en la dirección del emisor (De), o "
-"usará la cuenta de administrador si no se encuentra un usuario para esa "
-"dirección."
+"este seudónimo. Si no establece el campo, el sistema tratará de encontrar al"
+" propietario adecuado según la dirección de correo del emisor (De), o usará "
+"la cuenta de administrador si no se encuentra un usuario para esa dirección."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -9644,7 +9643,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "This is their first connection. Wish them luck."
-msgstr "Esta es su primera conexión. Deséeles suerte."
+msgstr "Es la primera vez que se conecta. Dele la bienvenida"
 
 #. module: mail
 #. odoo-python
@@ -9662,9 +9661,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"Esta opción borra de forma permanente cualquier rastro del envío del correo,"
-" incluso del menú técnico en los ajustes, para preservar el espacio de "
-"almacenamiento de su base de datos Odoo."
+"Esta opción elimina de forma permanente cualquier rastro del envío del "
+"correo, incluso del menú técnico en los ajustes, para preservar el espacio "
+"de almacenamiento de su base de datos Odoo."
 
 #. module: mail
 #. odoo-javascript
@@ -9678,7 +9677,7 @@ msgstr "Este registro tiene una actividad de excepción."
 #: code:addons/mail/models/mail_channel_member.py:0
 #, python-format
 msgid "This user can not be added in this channel"
-msgstr "No se puede añadir al usuario en este canal"
+msgstr "No se puede agregar al usuario a este canal"
 
 #. module: mail
 #. odoo-python
@@ -9769,7 +9768,7 @@ msgstr "Para (correos electrónicos)"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
-msgstr "Para (Partners)"
+msgstr "Para (contactos)"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
@@ -10066,7 +10065,7 @@ msgstr ""
 #, python-format
 msgid "Unable to send message, please configure the sender's email address."
 msgstr ""
-"No se puede enviar el mensaje, modifique la dirección de correo electrónico "
+"No se puede enviar el mensaje, configure la dirección de correo electrónico "
 "del remitente."
 
 #. module: mail
@@ -10829,14 +10828,14 @@ msgstr "Canceló su suscripción a %s."
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a chat!"
-msgstr "¡Lo han invitado a un chat!"
+msgstr "¡Le han invitado a un chat!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a meeting!"
-msgstr "¡Lo han invitado a una reunión!"
+msgstr "¡Le han invitado a una reunión!"
 
 #. module: mail
 #. odoo-javascript
@@ -11665,7 +11664,7 @@ msgstr "símbolo de átomo"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "attachment(s) of this email."
-msgstr "archivo(s) adjunto(s) en este correo electrónico."
+msgstr "archivos adjuntos en este correo electrónico."
 
 #. module: mail
 #. odoo-javascript
