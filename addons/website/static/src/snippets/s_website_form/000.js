@@ -676,7 +676,9 @@ odoo.define('website.s_website_form', function (require) {
                 }
 
                 const formData = new FormData(this.el);
-                const currentValueOfDependency = formData.get(dependencyName);
+                const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
+                    ? formData.getAll(dependencyName).join()
+                    : formData.get(dependencyName);
                 return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
             };
         },
