@@ -10,7 +10,7 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 class TestSaEdiCommon(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_sa.sa_chart_template_standard', edi_format_ref='l10n_sa_edi.edi_sa_zatca'):
+    def setUpClass(cls, chart_template_ref='sa', edi_format_ref='l10n_sa_edi.edi_sa_zatca'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
         # Setup company
         cls.company = cls.company_data['company']
@@ -200,11 +200,11 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         vals = {
             'name': kwargs['name'],
             'move_type': 'out_invoice',
-            'company_id': self.company,
-            'partner_id': kwargs['partner_id'],
+            'company_id': self.company.id,
+            'partner_id': kwargs['partner_id'].id,
             'invoice_date': kwargs['date'],
             'invoice_date_due': kwargs['date_due'],
-            'currency_id': self.company.currency_id,
+            'currency_id': self.company.currency_id.id,
             'invoice_line_ids': [Command.create({
                 'product_id': kwargs['product_id'].id,
                 'price_unit': kwargs['price'],
