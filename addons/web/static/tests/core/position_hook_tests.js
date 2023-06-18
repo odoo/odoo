@@ -14,7 +14,7 @@ import {
     triggerEvent,
 } from "../helpers/utils";
 import { localization } from "@web/core/l10n/localization";
-import { Component, xml } from "@odoo/owl";
+import { Component, useRef, xml } from "@odoo/owl";
 
 const FLEXBOX_STYLE = {
     display: "flex",
@@ -541,6 +541,66 @@ QUnit.test("iframe: both popper and target inside", async (assert) => {
 
     assert.strictEqual(popperBox.left, expectedLeft);
     assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
+});
+
+QUnit.test("popper as child of another", async (assert) => {
+    class Child extends Component {
+        static template = /* xml */ xml`
+            <div id="child">
+                <div class="target" t-ref="ref" />
+                <div class="popper" t-ref="popper" />
+            </div>
+        `;
+        setup() {
+            const ref = useRef("ref");
+            usePosition(() => ref.el, { position: "left" });
+        }
+    }
+    const target = document.createElement("div");
+    target.id = "target";
+    Object.assign(target.style, TARGET_STYLE);
+    container.appendChild(target);
+    class Parent extends Component {
+        static components = { Child };
+        static template = /* xml */ xml`<div id="popper"><Child/></div>`;
+        setup() {
+            usePosition(target);
+        }
+    }
+
+    const sheet = document.createElement("style");
+    sheet.textContent = `
+        #child .target {
+            background-color: peachpuff;
+            height: 100px;
+            width: 10px;
+        }
+        #child .popper {
+            background-color: olive;
+            height: 100px;
+            width: 100px;
+        }
+    `;
+    document.head.appendChild(sheet);
+    registerCleanup(() => sheet.remove());
+
+    await mount(Parent, container);
+    const parentPopBox1 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox1 = container.querySelector("#child .popper").getBoundingClientRect();
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await triggerEvent(document, null, "scroll");
+
+    const parentPopBox2 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox2 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    assert.strictEqual(parentPopBox1.top, parentPopBox2.top);
+    assert.strictEqual(childPopBox1.top, childPopBox2.top);
+    assert.strictEqual(parentPopBox2.left, parentPopBox1.left + spacer.offsetWidth * 0.5);
+    assert.strictEqual(childPopBox2.left, childPopBox1.left + spacer.offsetWidth * 0.5);
 });
 
 function getPositionTest(position, positionToCheck) {
