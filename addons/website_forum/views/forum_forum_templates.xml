@@ -50,7 +50,7 @@
 <!-- Edition: ask your question -->
 <template id="new_question" name="New Post">
     <t t-call="website_forum.header">
-        <div t-if="request.env.user.forum_waiting_posts_count" class="alert border" role="alert">
+        <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
             <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="oi oi-chevron-left me-2"/>Back to All Topics</a>

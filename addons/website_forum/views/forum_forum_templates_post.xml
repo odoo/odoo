@@ -249,7 +249,7 @@
             <div t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate" class="alert alert-warning mb-0 text-center" role="status" >
                 This post is awaiting validation
             </div>
-            <div t-if="question.state == 'active' and question.can_answer and request.env.user.forum_waiting_posts_count" class="alert o_cc2 text-center">
+            <div t-if="question.state == 'active' and question.can_answer and forum.has_pending_post" class="alert o_cc2 text-center">
                 <h5 >You have a pending post</h5>
                 <span>Please wait for a moderator to validate your previous post to be allowed to reply to questions.</span>
             </div>
@@ -302,7 +302,7 @@
                     </t>
                 </section>
                 <t t-else="">
-                    <section t-if="uid and question.state == 'active' and not request.env.user.forum_waiting_posts_count" class="alert alert-info mt-3 mb-0">
+                    <section t-if="uid and question.state == 'active' and not forum.has_pending_post" class="alert alert-info mt-3 mb-0">
                         <t t-if="question.can_answer">
                             <h5>There are no answers yet</h5>
                             <span>Be the first to answer this question</span>
@@ -311,7 +311,7 @@
                 </t>
                 <!-- Write Answer -->
                 <div t-if="uid and not question.uid_has_answered and question.can_answer and question.state == 'active' and question.active != False" class="d-flex mt-3">
-                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{request.env.user.forum_waiting_posts_count and ' disabled'} text-decoration-none"
+                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{forum.has_pending_post and ' disabled'} text-decoration-none"
                         t-att-data-karma="question.forum_id.karma_answer"
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
@@ -428,7 +428,7 @@
                         <t t-if="post_id == question">
                             <t t-if="not question.uid_has_answered">
                                 <div t-if="uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto me-2">
-                                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{request.env.user.forum_waiting_posts_count and 'disabled'} text-decoration-none"
+                                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{forum.has_pending_post and 'disabled'} text-decoration-none"
                                         t-att-data-karma="question.forum_id.karma_answer"
                                         data-bs-toggle="collapse"
                                         data-bs-target=".answer_collapse"

@@ -184,7 +184,7 @@
                 <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
             </t>
             <t t-if="_page_name == 'list_questions'">
-                <div t-if="uid and request.env.user.forum_waiting_posts_count > 0"
+                <div t-if="uid and forum and forum.has_pending_post"
                      data-bs-title="You already have a pending post"
                      data-bs-toggle="popover"
                      data-bs-content="Please wait for a moderator to validate your previous post before continuing.">
