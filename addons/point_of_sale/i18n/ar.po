@@ -676,7 +676,7 @@ msgstr "في أقرب وقت ممكن "
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing (faster)"
-msgstr ""
+msgstr "عند إغلاق الجلسة (أسرع) "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -2634,7 +2634,7 @@ msgstr "ليتم حذف عملية بيع، يجب أن تكون جديدة أو
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time (accurate but slower)"
-msgstr ""
+msgstr "في الوقت الفعلي (دقيق ولكن أبطأ) "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3443,14 +3443,14 @@ msgstr "لا يوجد رابط لفاتورة لـ%s."
 #: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
 #, python-format
 msgid "No more customer found for \"%s\"."
-msgstr ""
+msgstr "لم يتم العثور على المزيد من العملاء لـ \"%s\". "
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "No more product found for \"%s\"."
-msgstr ""
+msgstr "لم يتم العثور على المزيد من المنتجات لـ \"%s\". "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5215,6 +5215,14 @@ msgstr "عكس قيد إقفال نقطة البيع %s للطلب %s من ال�
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "عكس: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "تم إرسال طلب العكس إلى جهاز الدفع "
@@ -5393,7 +5401,7 @@ msgstr "البحث في أمر البيع "
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Search more"
-msgstr ""
+msgstr "البحث عن المزيد "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -6207,6 +6215,13 @@ msgstr ""
 "الحد الأقصى للفرق المسموح به هو %s.\n"
 "\n"
 "                        يرجى التواصل مع مديرك لقبول فرق الإقفال. "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7207,13 +7222,6 @@ msgid ""
 msgstr ""
 "يمكنك إضافة بعضها من قائمة المنتجات، أو ربط الموجودة منها عن طريق وضع علامة \"متاح في نقطة البيع\".\n"
 "                    أو بإمكانك إضافة البيانات التوضيحية لأغراض الاختبار. يرجى العلم بأن هذا الإجراء لا يمكن التراجع عنه. "
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "يمكن أن تكون لديك طريقة دفع نقدية واحدة فقط. "
 
 #. module: point_of_sale
 #. odoo-python

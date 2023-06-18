@@ -5137,6 +5137,14 @@ msgstr "从会话%s反转订单%s的 POS 关闭条目%s"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "撤销：%s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "向终端发送撤销请求"
@@ -6104,6 +6112,13 @@ msgstr ""
 "请联系您的经理以接受结算差价。"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "销售会话名称必须唯一!"
@@ -7046,13 +7061,6 @@ msgid ""
 msgstr ""
 "您可以从“产品”菜单中添加一些，或者通过将其标记为“在 PoS 中可用”来链接任何现有产品。\n"
 "                    或者，您可以添加演示数据以进行测试。请注意，这是不可逆转的行为。"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "您只能使用一种现金付款方式。"
 
 #. module: point_of_sale
 #. odoo-python

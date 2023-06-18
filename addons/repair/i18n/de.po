@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 12:30+0000\n"
 "PO-Revision-Date: 2023-01-17 14:39+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -72,40 +72,40 @@ msgstr ": Unzureichende Menge für Reparatur"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
 "        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            .<br/>\n"
+"            .<br>\n"
 "        </t>\n"
 "        You can reply to this email if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
 "        hier ist Ihr Reparaturauftrag <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            über den Betrag von <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">100,00 $</t>.</strong><br/>\n"
+"            über den Betrag von <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">100,00 $</t>.</strong><br>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            .<br/>\n"
+"            .<br>\n"
 "        </t>\n"
 "        Falls Sie Fragen haben, können Sie gern auf diese E-Mail antworten.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Vielen Dank\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -478,12 +478,12 @@ msgstr "Gebühren"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
@@ -637,7 +637,7 @@ msgstr "Rechnungsadresse"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
@@ -1040,6 +1040,11 @@ msgid "Repair Reference"
 msgstr "Reparaturreferenz"
 
 #. module: repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr "Reparaturservice"
+
+#. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
@@ -1247,7 +1252,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Bestandsbewegung"
+msgstr "Lagerbuchung"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
@@ -1469,6 +1474,13 @@ msgstr "Sie können keine negativen Mengen eingeben."
 #, python-format
 msgid "You cannot cancel a completed repair order."
 msgstr "Sie können einen abgeschlossenen Reparaturauftrag nicht stornieren."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot delete a completed repair order."
+msgstr "Sie können einen abgeschlossenen Reparaturauftrag nicht löschen."
 
 #. module: repair
 #. odoo-python

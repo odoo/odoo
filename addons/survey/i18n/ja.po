@@ -3,19 +3,20 @@
 # 	* survey
 # 
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
 # Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -205,19 +206,6 @@ msgid "<br/>by"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q6
-msgid ""
-"<div class=\"text-center\">\n"
-"                <div class=\"media_iframe_video\" data-oe-expression=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" style=\"width: 50%;\">\n"
-"                    <div class=\"css_editable_mode_display\"/>\n"
-"                    <div class=\"media_iframe_video_size\" contenteditable=\"false\"/>\n"
-"                    <iframe src=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" frameborder=\"0\" contenteditable=\"false\"/>\n"
-"                </div><br/>\n"
-"            </div>\n"
-"        "
-msgstr ""
-
-#. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
@@ -225,7 +213,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -240,7 +228,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -253,7 +241,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -271,7 +259,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -378,121 +366,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<i class=\"fa fa-trash me-1\"/>Remove all filters"
 msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q3
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
-"            </p>\n"
-"        "
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q4
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/pinus_sylvestris.jpg\" style=\"width: 100%;\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4
-msgid ""
-"<p>\n"
-"                We like to say that the apple doesn't fall far from the tree, so here are trees.\n"
-"            </p>\n"
-"        "
-msgstr ""
-"<p>\n"
-"我々はので、ここで、Appleはこれまで木から落ちないことを言いたいの木です。\n"
-"</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3
-msgid "<p>An apple a day keeps the doctor away.</p>"
-msgstr "<p>りんごは医者いらずです。</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_demo_burger_quiz
-msgid ""
-"<p>Choose your favourite subject and show how good you are. Ready ?</p>"
-msgstr "<p>あなたの好きな科目を選択して、あなたはどれだけ良いか見てみましょう。準備はできましたか？</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1_q4
-msgid "<p>Just to categorize your answers, don't worry.</p>"
-msgstr "<p>あなたの答えを分類するだけです。気負わず臨んでください。</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1
-msgid ""
-"<p>Some general information about you. It will be used internally for "
-"statistics only.</p>"
-msgstr "<p>あなたに関するいくつかの一般的な質問をします。これは、統計情報だけのために内部的に使用されます。</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions about our company. Do you really know us?</p>"
-msgstr "<p>私たちの会社についていくつかの質問をします。あなたは本当に私たちを知っていますか？</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_3
-msgid "<p>Test your knowledge of our policies.</p>"
-msgstr "<p>私たちの方針のあなたの知識をテストします。</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_2
-msgid "<p>Test your knowledge of our prices.</p>"
-msgstr "<p>私達の価格のあなたの知識をテストします。</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_1
-msgid "<p>Test your knowledge of your products!</p>"
-msgstr "<p>あなたの製品のあなたの知識をテストします！</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.vendor_certification
-msgid "<p>Test your vendor skills!</p>"
-msgstr "<p>ベンダーのスキルをテストします！</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p1
-msgid ""
-"<p>This section is about general information about you. Answering them helps"
-" qualifying your answers.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p2
-msgid "<p>This section is about our eCommerce experience itself.</p>"
-msgstr "<p>このセクションは、eコマースの経験そのものについてです。</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_demo_quiz
-msgid ""
-"<p>This small quiz will test your knowledge about our Company. Be prepared "
-"!</p>"
-msgstr "<p>この小さなクイズは、私たちの会社についてのあなたの知識をテストします。準備すること！</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_feedback
-msgid ""
-"<p>This survey allows you to give a feedback about your experience with our products.\n"
-"    Filling it helps us improving your experience.</p>"
-msgstr ""
-"<p>この調査では、当社の製品と体験についてのフィードバックを提供することができます。\n"
-"埋めて頂くことで、私たちがあなたのユーザエクスペリエンスを向上させることができます。</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5
-msgid "<p>We may be interested by your input.</p>"
-msgstr "<p>私たちがあなたの入力に興味を持つ可能性があります。</p>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -606,7 +479,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Questions</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">質問</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -619,7 +492,7 @@ msgid "<span class=\"text-muted\">Success</span>"
 msgstr "<span class=\"text-muted\">成功</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr "<span>\"赤\"は分類ではありません。何をしたいかは分かっています;）</span>"
@@ -635,7 +508,7 @@ msgid "<span>All surveys</span>"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q6
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
 msgstr "<span>何かを行うための最善なタイミングは、それを行うのに最適なタイミングである。</span>"
 
@@ -671,7 +544,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
 msgid ""
 "<span>If you don't like us, please try to be as objective as "
 "possible.</span>"
@@ -697,12 +570,12 @@ msgid "<span>Number of attempts left</span>:"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader !</span>"
 msgstr "<span>有名なリーダー!</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q3
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it !</span>"
 msgstr "<span>当社の営業担当者は、優位ですが、あなたもできます！</span>"
 
@@ -959,6 +832,11 @@ msgstr "アクセストークンは一意である必要があります!"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_answer_score
 msgid "An answer score for a non-multiple choice question cannot be negative!"
 msgstr "非複数の選択肢の質問の回答スコアが負にすることはできません!"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3
+msgid "An apple a day keeps the doctor away."
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -1338,6 +1216,11 @@ msgstr "中国"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Choices"
 msgstr "選択肢"
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
+msgid "Choose your favourite subject and show how good you are. Ready ?"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -2550,6 +2433,11 @@ msgid "Join Session"
 msgstr ""
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
+msgid "Just to categorize your answers, don't worry."
+msgstr ""
+
+#. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
 msgid "Kim Jong-hyun"
 msgstr "キム・ジョン・ジヒョン"
@@ -3438,7 +3326,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Template..."
-msgstr ""
+msgstr "テンプレートを選択..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4024,6 +3912,18 @@ msgid "Some emails you just entered are incorrect: %s"
 msgstr "あなたの入力したいくつかの電子メールが正しくありません:%s"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1
+msgid ""
+"Some general information about you. It will be used internally for "
+"statistics only."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2
+msgid "Some questions about our company. Do you really know us?"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
 msgstr "申し訳ありませんが、誰もまだこのアンケートに答えていません。"
@@ -4303,6 +4203,26 @@ msgstr "インポートテスト"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Test Entry"
 msgstr "テスト項目"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_3
+msgid "Test your knowledge of our policies."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_2
+msgid "Test your knowledge of our prices."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_1
+msgid "Test your knowledge of your products!"
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.vendor_certification
+msgid "Test your vendor skills!"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4609,6 +4529,31 @@ msgid "This question was skipped"
 msgstr ""
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p1
+msgid ""
+"This section is about general information about you. Answering them helps "
+"qualifying your answers."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p2
+msgid "This section is about our eCommerce experience itself."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_demo_quiz
+msgid ""
+"This small quiz will test your knowledge about our Company. Be prepared !"
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_feedback
+msgid ""
+"This survey allows you to give a feedback about your experience with our products.\n"
+"    Filling it helps us improving your experience."
+msgstr ""
+
+#. module: survey
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
@@ -4899,6 +4844,18 @@ msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
 msgstr "答えを登録しました!次の質問に行くためにホストお待ちください。"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p4
+msgid ""
+"We like to say that the apple doesn't fall far from the tree, so here are "
+"trees."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5
+msgid "We may be interested by your input."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids

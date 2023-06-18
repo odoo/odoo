@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-05-25 12:30+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -23,12 +23,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Purchase Agreement - %s' % (object.name)"
-msgstr ""
+msgstr "'구매 계약 - %s' % (object.name)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Agreement Deadline:</strong><br/>"
-msgstr ""
+msgstr "<strong>계약 기한:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -131,17 +131,17 @@ msgstr "계약 유형"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
 msgid "Alternative POs"
-msgstr ""
+msgstr "대체 구매계약서"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
 msgid "Alternative Po Count"
-msgstr ""
+msgstr "대체 구매계약서 수"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternative Purchase Order"
-msgstr ""
+msgstr "대체 구매발주서"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -149,22 +149,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
 msgid "Alternative Warning"
-msgstr ""
+msgstr "대체 경고"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternatives"
-msgstr ""
+msgstr "대체"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr ""
+msgstr "구매 계약의 예시로는 일괄 주문이 있습니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "분석 분포"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "분석 분포 검색"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -197,7 +202,7 @@ msgstr "포괄 주문 계약"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Blanket Orders"
-msgstr ""
+msgstr "장기단가계약"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -209,7 +214,7 @@ msgstr "취소"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Cancel Alternatives"
-msgstr ""
+msgstr "대체 취소"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -237,7 +242,7 @@ msgstr "선택"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr ""
+msgstr "대체 구매발주 업체 선택"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -247,7 +252,7 @@ msgstr "제거"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear Selected"
-msgstr ""
+msgstr "선택 취소"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -271,12 +276,12 @@ msgstr "회사"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
-msgstr ""
+msgstr "주문 내역 비교"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Compare Product Lines"
-msgstr ""
+msgstr "품목 내역 비교"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -300,13 +305,13 @@ msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다.
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid "Copy Products"
-msgstr ""
+msgstr "품목 복사"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
 msgid "Create Alternative"
-msgstr ""
+msgstr "대체 생성"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -315,13 +320,16 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"다른 업체에 대체 견적 요청을 추가하여 입찰 항목을 생성하십시오.\n"
+"                           리드 타임과 OTD, 총 금액 면에서의 최적의 조합을 찾아 선택합니다.\n"
+"                            품목 내역을 비교하여 일부는 한 업체에서 주문하고 나머지는 다른 업체에서 주문하도록 결정할 수도 있습니다."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
-msgstr ""
+msgstr "대체 생성"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__create_uid
@@ -346,7 +354,7 @@ msgstr "작성일자"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid "Creation Blocked"
-msgstr ""
+msgstr "생성 차단됨"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -356,7 +364,7 @@ msgstr "통화"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "맞춤 설명"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -422,6 +430,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"장기 단가 계약의 경우, 특정 기간 (예: 1년)에 대해 계약을 맺고\n"
+"                   해당 계약 범위 내에서 품목을 주문하는 경우에 협상 가격으로\n"
+"                   주문하는 혜택을 누릴 수 있습니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -438,7 +449,7 @@ msgstr "그룹별"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_kpis_tree_inherit_purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_tree_inherit_purchase_requisition
 msgid "Has Alternatives"
-msgstr ""
+msgstr "대체 항목이 있습니다"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
@@ -484,12 +495,14 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"선택한 업체나 원래의 구매발주서 상의 품목에 금지 경고가 있는 경우에는 대체 구매계약서를 생성할 수 없도록 합니다. 양식 화면에서 이러한"
+" 필드는 경고 메시지와 함께 삭제되는 것이 일반적이지만, 이 경우에는 다시 생성할 수 없기 때문입니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
-msgstr ""
+msgstr "선택하면, 원본 구매발주서에서 품목 수량을 복사해옵니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -504,7 +517,7 @@ msgstr "팔로워임"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Keep Alternatives"
-msgstr ""
+msgstr "대체 유지"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__write_uid
@@ -539,7 +552,7 @@ msgstr "명세"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr ""
+msgstr "기존 견적요청서에 연결"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -606,7 +619,7 @@ msgstr "다음 업무 유형"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
-msgstr ""
+msgstr "삭제할 항목이 없습니다"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -658,17 +671,17 @@ msgstr "주문 날짜"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "Origin Po"
-msgstr ""
+msgstr "원본 구매발주서"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr ""
+msgstr "물품 구매를 위해 기타 가능한 구매발주서"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr ""
+msgstr "승인할 구매발주서"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -724,7 +737,7 @@ msgstr "구매 계약"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__purchase_group_id
 msgid "Purchase Group"
-msgstr ""
+msgstr "구매 그룹"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -852,7 +865,7 @@ msgstr "구매 계약 검색"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
+msgstr "여러 개의 견적요청서를 선택하십시오 (복수 선택 가능)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -866,6 +879,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"구매요청서를 하나만 선택 (단독): 구매발주서가 확정되면, 다른 발주서는 취소됩니다.\n"
+"\n"
+"                       구매요청서를 여러 개 선택 (복수): 여러 개의 구매발주서를 선택할 수 있습니다. 발주서를 확정해도 나머지 발주서는 취소되지 않습니다"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -877,7 +893,7 @@ msgstr "순서"
 msgid ""
 "Set active to false to hide the Purchase Agreement Types without removing "
 "it."
-msgstr ""
+msgstr "구매 계약 유형을 삭제하지 않고 숨기려면 활성화 선택을 False 로 설정합니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -894,7 +910,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
-msgstr ""
+msgstr "일부가 삭제되지 않았습니다"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -951,7 +967,7 @@ msgstr "공급업체 가격표"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "입찰용 구매발주서 그룹에 대한 기술 모델"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -967,7 +983,7 @@ msgstr "모든 제품을 수령할 수 있는 예상되는 배송 예정일"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
-msgstr ""
+msgstr "이 대체 구매발주서가 생성되는 원본 발주서입니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -978,6 +994,7 @@ msgid ""
 " from the original order has a blocking warning on it and cannot be selected"
 " to create an alternative."
 msgstr ""
+"선택한 공급업체 또는 원래의 발주서에서 복사해오려는 품목 중에 금지 경고가 있는 항목이 있으므로 대체용으로 선택할 수 없습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -994,6 +1011,7 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
+"이 업체에 미결 상태인 장기 단가 계약이 이미 있습니다. 신규로 발주서를 생성하는 것보다 기존의 미결 계약을 완료하는 것이 좋습니다. "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1001,7 +1019,7 @@ msgstr ""
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
-msgstr ""
+msgstr "금지 경고가 있습니다!\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1053,7 +1071,7 @@ msgstr "공급업체"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
 msgid "Warning Messages"
-msgstr ""
+msgstr "경고 메시지"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1063,6 +1081,8 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"%(partner)s에 대한 경고:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1072,6 +1092,8 @@ msgid ""
 "Warning for %(product)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"%(product)s에 대한 경고:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1095,24 +1117,24 @@ msgstr "웹사이트 대화 이력"
 msgid ""
 "Whether or not this purchase order is linked to another purchase order as an"
 " alternative."
-msgstr ""
+msgstr "이 구매발주서가 대체용 다른 발주서에 연결되어 있는지의 여부입니다."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
-msgstr ""
+msgstr "구매발주서에 대체 견적서가 적용될 수 있는 경우 사용하는 마법사"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
 msgid "Wizard to preset values for alternative PO"
-msgstr ""
+msgstr "구매발주서 대체값을 미리 설정하는 마법사"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft or cancelled requisitions."
-msgstr ""
+msgstr "미결 상태이거나 취소된 요청서만 삭제할 수 있습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1151,7 +1173,7 @@ msgstr "구매 요청을 닫기 전에 모든 견적 요청을 취소하거나 �
 msgid ""
 "alternative request for quotations are still open, do you want to cancel "
 "them?"
-msgstr ""
+msgstr "대체 견적요청서가 있습니다. 삭제하시겠습니까?"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

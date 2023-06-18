@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr "Error(es) de la facturación electrónica"
+msgstr "Errores en la facturación electrónica"
 
 #. module: account_edi
 #. odoo-python
@@ -43,7 +43,7 @@ msgstr "Información de la facturación electrónica"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr "Advertencia(s) de la facturación electrónica"
+msgstr "Advertencias en la facturación electrónica"
 
 #. module: account_edi
 #. odoo-python
@@ -78,8 +78,8 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
-"Bloquea la operación actual del documento dependiendo de la severidad del error:\n"
-"* Info: el documento no está bloqueado y todo trabaja como debería.\n"
+"Bloquea la operación actual del documento dependiendo de la gravedad del error:\n"
+"* Información: el documento no está bloqueado y todo funciona como debería.\n"
 "* Advertencia: hay un error que no impide el funcionamiento de la operación actual de facturación electrónica.\n"
 "* Error: hay un error que bloquea la operación actual de facturación electrónica."
 
@@ -234,7 +234,7 @@ msgstr "Servicios de web EDI para procesar"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
 msgid "Electronic Data Interchange"
-msgstr "Intercambio de Datos Electrónico (EDI, por su sigla en inglés)"
+msgstr "Intercambio electrónico de datos"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -301,7 +301,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"La configuración de la factura es inválida:\n"
+"Configuración de la factura no válida:\n"
 "\n"
 "%s"
 
@@ -335,7 +335,7 @@ msgstr "Última actualización el"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
 msgid "Move"
-msgstr "Asiento"
+msgstr "Movimiento"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
@@ -346,7 +346,7 @@ msgstr "Nombre"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr "Sólo un documento EDI por asiento y por formato"
+msgstr "Solo un documento EDI por movimiento y por formato"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_payment
@@ -431,8 +431,8 @@ msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
-"Este servicio de facturación electrónica procesará la factura "
-"asincrónicamente:"
+"Este servicio de facturación electrónica procesará la factura de forma "
+"asíncrona:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
@@ -440,7 +440,8 @@ msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
-"Este sistema de facturación electrónica procesará el pago asincrónicamente:"
+"Este sistema de facturación electrónica procesará el pago de forma "
+"asíncrona:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -491,8 +492,7 @@ msgid ""
 "instead."
 msgstr ""
 "No puede editar el siguiente asiento contable %s porque ya se envió un "
-"documento electrónico . En lugar de esto, use el botón de 'Solicitar "
-"Cancelación EDI’."
+"documento electrónico, use el botón de \"Solicitar cancelación EDI\"."
 
 #. module: account_edi
 #. odoo-python

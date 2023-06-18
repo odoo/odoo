@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
@@ -5250,6 +5250,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Omkering van: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Omkeerverzoek verstuurd naar terminal"
@@ -6255,6 +6263,13 @@ msgstr ""
 "Het maximaal toegestane verschil is %s.\n"
 "\n"
 "                        Neem contact op met je manager om het sluitingsverschil te accepteren."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "De naam van de Munten/Biljetten moet een nummer zijn."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7290,13 +7305,6 @@ msgid ""
 msgstr ""
 "Je kunt er een aantal toevoegen vanuit het menu Producten, of bestaande koppelen door ze te markeren als \"Beschikbaar in kassa\".\n"
 "                    Of je kunt demogegevens toevoegen voor testdoeleinden. Houd er rekening mee dat dit een onomkeerbare actie is."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Je kunt slechts één kasbetaalmethode hebben."
 
 #. module: point_of_sale
 #. odoo-python

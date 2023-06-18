@@ -13547,7 +13547,7 @@ msgstr "모두 완료!"
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr ""
+msgstr "당사의 모든 계약 관계는 전적으로 미국법에 의거합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -16181,6 +16181,13 @@ msgstr "전체 이름"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "계산"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -23499,7 +23506,7 @@ msgstr "메일 유료버전"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_group
 msgid "Mail Group"
-msgstr ""
+msgstr "메일 그룹"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_mobile
@@ -35931,6 +35938,12 @@ msgstr "현재 사용중인 사용자를 비활성화 할 수 없습니다."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

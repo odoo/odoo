@@ -81,13 +81,6 @@ msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
 msgstr " (<b>%(amount)s</b>预付款<b>%(date)s</b>)"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " %(lock_type)s 锁定日期设置为 %(lock_date)s。"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "#已对账账单"
@@ -15368,6 +15361,12 @@ msgid "Warning for %s"
 msgstr "警告%s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "发票上的警告"
@@ -16165,6 +16164,12 @@ msgstr "您同时选择了以下单据类型："
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

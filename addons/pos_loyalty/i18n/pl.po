@@ -11,15 +11,17 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Martin Trigaux, 2023
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +36,8 @@ msgid ""
 "        Technical field used to link multiple reward lines from the same reward together.\n"
 "    "
 msgstr ""
+"\n"
+"Pole techniczne używane do łączenia wielu linii nagród z tej samej nagrody."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -43,10 +47,27 @@ msgid "%s Points"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "A better global discount is already applied."
+msgstr "Lepsza globalna zniżka została już zastosowana."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
 msgstr ""
 
 #. module: pos_loyalty
@@ -54,27 +75,6 @@ msgstr ""
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
 msgstr ""
 
 #. module: pos_loyalty
@@ -135,6 +135,11 @@ msgid "Coupon Codes"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "Punkty kuponowe"
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
 #, python-format
@@ -165,7 +170,7 @@ msgstr ""
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "Upust i lojalność"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -197,6 +202,11 @@ msgid "Error validating rewards"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
 msgid "Generate PDF cards"
 msgstr ""
@@ -225,7 +235,7 @@ msgstr ""
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "Karty podarunkowe i e-portfel"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
@@ -268,15 +278,21 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr ""
+msgstr "Komunikacja lojalnościowa"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "Kupon lojalnościowy"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "Punkty lojalnościowe"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "Program lojalnościowy"
 
@@ -347,7 +363,7 @@ msgstr "Konfiguracja punktu sprzedaży"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Linie zamówień w punktach sprzedaży"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
@@ -374,7 +390,7 @@ msgstr "Punkty"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
 msgid "Points Cost"
-msgstr ""
+msgstr "Koszt punktowy"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
@@ -435,7 +451,7 @@ msgstr "Nagroda"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr ""
+msgstr "Kod identyfikatora nagrody"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
@@ -447,6 +463,11 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Select program"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
 msgstr ""
 
 #. module: pos_loyalty
@@ -503,6 +524,15 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
 msgstr ""
 
 #. module: pos_loyalty

@@ -23,7 +23,6 @@
 # zieloo <zieloo@gmail.com>, 2023
 # Natalia Gros <nag@odoo.com>, 2023
 # Paweł Michoń <michon.pawel@wp.pl>, 2023
-# Tomasz Leppich <t.leppich@gmail.com>, 2023
 # Maja Stawicka <mjstwck@wp.pl>, 2023
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2023
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
@@ -40,6 +39,7 @@
 # Martin Trigaux, 2023
 # Karol Rybak <karolrybak85@gmail.com>, 2023
 # Maksym <ms@myodoo.pl>, 2023
+# Tomasz Leppich <t.leppich@gmail.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -369,7 +369,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -902,6 +902,7 @@ msgstr "Czy na pewno chcesz zarchiwizować cały ten zapis?"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
@@ -5008,6 +5009,13 @@ msgstr "Współdziel z wszystkimi użytkownikami"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+#, python-format
+msgid "Shortcuts"
+msgstr "Skróty"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
@@ -6096,6 +6104,23 @@ msgstr "Może nie wierzysz,<br />ale aplikacja ciągle się ładuje..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_tags.js:0
+#, python-format
+msgid "You need to be able to edit parent first to add property tags"
+msgstr ""
+"Musisz mieć możliwość edycji rodzica, aby dodać znaczniki właściwości."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#, python-format
+msgid "You need to be able to edit parent first to configure property fields"
+msgstr ""
+"Musisz mieć możliwość edycji rodzica, aby skonfigurować pola właściwości."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/views/fields/translation_button.js:0
 #, python-format
@@ -6588,7 +6613,7 @@ msgstr "mniejsze lub równe"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "jak"
 
 #. module: web
 #. odoo-javascript

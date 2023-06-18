@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -53,6 +54,11 @@ msgid ""
 "                </span>\n"
 "            </span>"
 msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    Há pedidos de compra ativos vinculados a este pedido de venda que não são cancelados automaticamente! <br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -127,6 +133,7 @@ msgid ""
 "Please define the vendor from whom you would like to purchase this service "
 "automatically."
 msgstr ""
+"Defina o fornecedor do qual deseja comprar este serviço automaticamente."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -147,7 +154,7 @@ msgstr "Pedido de Compra"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
 msgid "Purchase Order Alert"
-msgstr ""
+msgstr "Alerta de pedido de compra"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -204,7 +211,7 @@ msgstr "Pedidos de Venda Fontes %s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
-msgstr ""
+msgstr "Subcontratar serviço"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order_line.py:0

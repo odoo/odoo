@@ -45,9 +45,9 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
-# przemekjaroc, 2023
 # danielkowalczyk007, 2023
 # Martin Trigaux, 2023
+# Lukasz Brzyski, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -111,13 +111,6 @@ msgstr ""
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
 msgstr "(<b>%(amount)s</b> w przypadku wpłaty przed <b>%(date)s</b>)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " Typ blokady %(lock_type)s jest ustawiony na dzień  %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -263,7 +256,7 @@ msgstr "%s.copy"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
-msgstr ""
+msgstr "Rabat"
 
 #. module: account
 #. odoo-python
@@ -929,12 +922,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>5.00</span>"
-msgstr ""
+msgstr "<span>5.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -15967,6 +15960,12 @@ msgid "Warning for %s"
 msgstr "Ostrzeżenie do %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "Ostrzeżenie na fakturze"
@@ -16875,6 +16874,12 @@ msgstr "Wybrano jednocześnie następujące typy dokumentów:"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

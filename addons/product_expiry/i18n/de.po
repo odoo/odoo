@@ -54,6 +54,11 @@ msgid "Alert Date Reached"
 msgstr "Warndatum Erreicht"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "B.b."
+msgstr "MHD"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Date"
@@ -138,6 +143,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Exp."
+msgstr "Ablauf"
+
+#. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
@@ -161,7 +171,7 @@ msgstr "Verfallsdaten werden auf dem Lieferschein ausgewiesen"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr "Abgelaufene Charge(n)"
+msgstr "Abgelaufene(s) Los(e)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
@@ -296,12 +306,12 @@ msgstr "Entfernungsdatum"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
-msgstr "Mengen anzeigen"
+msgstr "Lose anzeigen"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerbewegung"
+msgstr "Lagerbuchung"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
@@ -334,8 +344,8 @@ msgid ""
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
 "Dies ist das Datum, an dem die Waren mit dieser Seriennummer aus dem Bestand"
-" genommen werden sollten. Dieses Datum wird in der FEFO-"
-"Auslagerungsstrategie verwendet."
+" genommen werden sollten. Dieses Datum wird in der FEFO-Entnahmestrategie "
+"verwendet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date

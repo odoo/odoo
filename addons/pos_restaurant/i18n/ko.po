@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -302,6 +302,13 @@ msgid "Config Settings"
 msgstr "설정 구성"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "Couldn't synchronize the orders for the tables because you are offline"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -384,7 +391,7 @@ msgstr "POS에서 청구서 분할을 활성화합니다."
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
-msgstr ""
+msgstr "주문 변경 사항을 인쇄하지 못했습니다."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -563,7 +570,7 @@ msgstr "최근 갱신 일자"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "주문 관련 최근 인쇄 상태"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -784,7 +791,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "POS 주문 프린터"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
@@ -833,14 +840,14 @@ msgstr "프린트"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "인쇄 실패"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
-msgstr ""
+msgstr "일부 브라우저에서는 인쇄 기능이 지원되지 않습니다."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -851,6 +858,8 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
+"기본 인쇄 프로토콜을 사용할 수 없기 때문에 일부 브라우저에서는 인쇄 기능이 지원되지 않습니다. IoT 박스를 이용하시면 티켓을 인쇄하실"
+" 수 있습니다."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1116,6 +1125,13 @@ msgid "The default number of customer served at this table."
 msgstr "이 테이블에서 서비스를 제공한 기본 고객 수입니다."
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "The orders for the table could not be loaded because you are offline"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
@@ -1169,7 +1185,7 @@ msgstr "이 층에는 아직 테이블이 없습니다. 다음을 사용하세�
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr ""
+msgstr "이 주문은 아직 서버와 동기화되지 않았습니다. 동기화 여부를 확인 한 후 다시 시도하십시오."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1230,7 +1246,7 @@ msgstr "터키 옥"
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "동기화되지 않은 주문"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid

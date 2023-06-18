@@ -13803,7 +13803,7 @@ msgstr "アドレス帳を一元化する"
 #: model:ir.module.module,description:base.module_knowledge
 #: model:ir.module.module,summary:base.module_knowledge
 msgid "Centralize, manage, share and grow your knowledge library"
-msgstr ""
+msgstr "ナレッジライブラリの一元化、管理、共有、育成"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -14432,6 +14432,13 @@ msgstr "完全な名前"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "集計日"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -33416,6 +33423,12 @@ msgstr "現在ログインしているユーザを無効にすることはでき
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

@@ -5,9 +5,9 @@
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Aimée Mendoza Sánchez, 2023
-# Fernanda Alvarez, 2023
 # Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
 # Martin Trigaux, 2023
 # 
@@ -897,8 +897,8 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
-"tarjetas de regalo, fidelidad. Puede establecer condiciones específicas "
+"Aumente sus ventas con varios tipos de programas: cupones, promociones, "
+"tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
 "(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
 "pueden ser descuentos (% o un importe) o productos gratis."
 
@@ -5260,6 +5260,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Reversión de: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Solicitud de reversión enviada a la terminal"
@@ -6269,6 +6277,13 @@ msgstr ""
 "La diferencia maxima permitida es %s.\n"
 "\n"
 "                        Contacte a su gerente para aceptar la diferencia de cierre."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "El nombre de las monedas/cuentas debe ser un número. "
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7301,13 +7316,6 @@ msgid ""
 msgstr ""
 "Puede agregar algunos productos desde el menú de Productos, o vincular uno existente al marcarlo como \"Disponible en el PdV\".\n"
 "                    O puede agregar datos de demostración con propósitos de prueba. Tenga en cuenta que esta es una acción irreversible."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Solo puede tener un método de pago en efectivo."
 
 #. module: point_of_sale
 #. odoo-python

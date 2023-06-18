@@ -5,18 +5,19 @@
 # Translators:
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Noma Yuki, 2023
-# Andy Yiu, 2023
 # Martin Trigaux, 2023
+# Andy Yiu, 2023
+# Noma Yuki, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,11 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr "画像を追加"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "\" alert with a"
+msgstr "」警告が"
 
 #. module: website
 #. odoo-python
@@ -256,6 +262,7 @@ msgstr "...そして必要に応じてタイムラインの内容を切り替え
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -318,6 +325,11 @@ msgid "15 km"
 msgstr "15 km"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr "2 <span class=\"visually-hidden\">(現在)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 km"
@@ -353,6 +365,7 @@ msgid "24x7 toll-free support"
 msgstr "24時間365日無料サポート"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "25%"
@@ -485,6 +498,7 @@ msgstr "選択した画像を<b>追加</b>。 "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -960,9 +974,32 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-"
+"muted\">フォームフィールドのヘルプテキスト</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-"
+"muted\">あなたのメールを他人と共有することは決してありません。</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ 月</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "<small>TABS</small>"
+msgstr "<small>TABS</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
@@ -1214,8 +1251,12 @@ msgstr "<span class=\"s_website_form_label_content\">電話番号</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-msgid "<span class=\"s_website_form_label_content\">Question</span>"
-msgstr "<span class=\"s_website_form_label_content\">質問</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Question</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">お問合せ内容</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1398,6 +1439,7 @@ msgstr "アカウントは複数サイトに渡って使用できます"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Action"
 msgstr "アクション"
 
@@ -1406,6 +1448,7 @@ msgstr "アクション"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Active"
 msgstr "有効"
@@ -1590,6 +1633,7 @@ msgstr "変更後"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Alert"
@@ -1985,6 +2029,11 @@ msgid "Autoredirect Language"
 msgstr "自動リダイレクト言語"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Autosizing"
+msgstr "自動サイズ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
@@ -1997,6 +2046,11 @@ msgstr "サイトで使用可"
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "BTS Base Colors"
+msgstr "BTS基本色"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -2024,6 +2078,7 @@ msgstr "背景形状"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Badge"
@@ -2037,7 +2092,7 @@ msgstr "バッグ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Banner"
-msgstr ""
+msgstr "バナー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2239,6 +2294,12 @@ msgid "Boxes"
 msgstr "ボックス"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Breadcrumb"
+msgstr "パンくず"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -2270,6 +2331,7 @@ msgid "Bundle"
 msgstr "バンドル"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Button"
 msgstr "ボタン"
@@ -2366,10 +2428,26 @@ msgstr "Googleマップを読み込めません。"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Card"
 msgstr "カード"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card Body"
+msgstr "カード本文"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card Footer"
+msgstr "カードフッタ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card Header"
+msgstr "カードヘッダ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -2746,6 +2824,7 @@ msgid "Complete CRM for any size team"
 msgstr "どんなサイズのチームでも応じられる完全なCRM"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Components"
 msgstr "構成要素"
@@ -3225,6 +3304,8 @@ msgstr "破線"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #, python-format
 msgid "Data"
 msgstr "データ"
@@ -3494,6 +3575,12 @@ msgid "Disable unused snippets assets"
 msgstr "未使用のスニペットアセットを無効にする"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Disabled"
+msgstr "無効にします"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
 msgstr "消える"
@@ -3748,6 +3835,7 @@ msgid "Dresses"
 msgstr "ドレス"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dropdown"
 msgstr "ドロップダウン"
@@ -3952,6 +4040,11 @@ msgid "Email Marketing"
 msgstr "メールマーケティング"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Email address"
+msgstr "メールアドレス"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "メールサポート"
@@ -4014,6 +4107,11 @@ msgstr "サイトの全てのページに追加されるコードを入力"
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr "サイトの全てのページの<head>に追加されるコードを入力"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Enter email"
+msgstr "メールを入力"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -4432,6 +4530,7 @@ msgid "Footer Visible"
 msgstr "フッタ表示"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Form"
 msgstr "フォーム"
@@ -4770,6 +4869,16 @@ msgid "H2"
 msgstr "H2"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H4 Card title"
+msgstr "H4カードタイトル"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H5 Card subtitle"
+msgstr "H5カードサブタイトル"
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
 msgid "HTML / CSS Editor"
 msgstr "HTML / CSSエディター"
@@ -4817,6 +4926,11 @@ msgid "Has Social Default Image"
 msgstr "ソーシャルデフォルト画像あり"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Header"
+msgstr "ヘッダ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
@@ -4843,6 +4957,36 @@ msgstr "ヘッダ表示"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Headings"
 msgstr "見出し"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 1"
+msgstr "見出し 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 2"
+msgstr "見出し 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 3"
+msgstr "見出し 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 4"
+msgstr "見出し 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 5"
+msgstr "見出し 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 6"
+msgstr "見出し 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4934,6 +5078,7 @@ msgstr "ヒント：「/」を入力して既存のページを検索、又は�
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -4943,6 +5088,11 @@ msgstr "ヒント：「/」を入力して既存のページを検索、又は�
 #, python-format
 msgid "Home"
 msgstr "ホーム"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr "ホーム <span class=\"visually-hidden\">(現在)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -5620,6 +5770,16 @@ msgid "Item"
 msgstr "項目"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Item 1"
+msgstr "項目 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Item 2"
+msgstr "項目 2"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Items"
 msgstr "件"
@@ -5685,6 +5845,7 @@ msgid "Keywords"
 msgstr "キーワード"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Label"
@@ -5737,6 +5898,7 @@ msgid "Laptops"
 msgstr "ノートパソコン"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5942,6 +6104,12 @@ msgid "Let's go!"
 msgstr "いくよ!"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Library"
+msgstr "ライブラリー"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 msgid "Light"
 msgstr "ライト"
@@ -5968,6 +6136,12 @@ msgid "Line Color"
 msgstr "ラインの色"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Link"
+msgstr "リンク"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -5978,6 +6152,16 @@ msgstr "リンクアンカー"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "リンクスタイル"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Link button"
+msgstr "リンクボタン"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Link text"
+msgstr "リンクテキスト"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_linkedin
@@ -6266,6 +6450,11 @@ msgid "Menus"
 msgstr "メニュー"
 
 #. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "パートナーをマージするウィザード"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Messages"
 msgstr "メッセージ"
@@ -6330,11 +6519,6 @@ msgid "Mobile"
 msgstr "モバイル"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "Mobile Preview"
-msgstr "モバイルプレビュー"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -6342,7 +6526,12 @@ msgid "Mobile Alignment"
 msgstr ""
 
 #. module: website
-#. openerp-web
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Mobile Preview"
+msgstr "モバイルプレビュー"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile menu"
@@ -6581,6 +6770,11 @@ msgid "Narrow"
 msgstr "ナロー"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Navbar"
+msgstr "ナビーバー"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Need to pick up your order at one of our stores? Discover the nearest to "
@@ -6657,6 +6851,7 @@ msgstr "ニュースレターポップアップ"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -6755,6 +6950,7 @@ msgstr "通常"
 
 #. module: website
 #: model:website,prevent_zero_price_sale_text:website.default_website
+#: model:website,prevent_zero_price_sale_text:website.website2
 msgid "Not Available For Sale"
 msgstr "未発売"
 
@@ -7074,6 +7270,7 @@ msgid "Out"
 msgstr "アウト"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
 msgstr "アウトライン"
@@ -7208,9 +7405,37 @@ msgid "Pages"
 msgstr "ページ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Pagination"
+msgstr "ページネーション"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "ズボン"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
+msgstr ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"<strong>太字</strong>、<span class=\"text-"
+"muted\">ミュート</span>や<em>斜体</em>テキストで段落を分ける"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Paragraph."
+msgstr "段落。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -7290,6 +7515,11 @@ msgstr "画像"
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Pie"
 msgstr "円グラフ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Pill"
+msgstr "ピル"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7391,6 +7621,11 @@ msgid "Prepend"
 msgstr "Prepend"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Preset"
+msgstr "プリセット"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
@@ -7421,6 +7656,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
@@ -7684,6 +7920,13 @@ msgstr "レコード規則"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Redirect"
 msgstr "リダイレクト"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid "Redirecting..."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
@@ -8068,6 +8311,7 @@ msgstr "スクロールダウンして次のセクションへ"
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 #, python-format
@@ -8220,6 +8464,11 @@ msgstr "SEO名"
 #, python-format
 msgid "Separate email addresses with a comma."
 msgstr "コンマでメールアドレスを区切ります。"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Separated link"
+msgstr "区切られたリンク"
 
 #. module: website
 #. odoo-javascript
@@ -8535,6 +8784,7 @@ msgid "Slogan"
 msgstr "スローガン"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -8547,6 +8797,15 @@ msgstr "小"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "小ヘッダ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -8575,6 +8834,11 @@ msgstr "ソーシャルプレビュー"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
 msgid "Solid"
 msgstr "ソリッド"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Something else here"
+msgstr "ここにある他のもの"
 
 #. module: website
 #. odoo-javascript
@@ -8976,6 +9240,11 @@ msgid "Text Position"
 msgstr "テキスト位置"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
@@ -9147,6 +9416,7 @@ msgstr "テーマ添付"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #, python-format
 msgid "Theme Colors"
 msgstr "テーマ色"
@@ -9289,6 +9559,11 @@ msgstr "このフィールドは、書き込む前に現在の `arch_db`を保�
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
 msgstr "Googleサーバーがこのフォントをホストして提供します"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "This is a \""
+msgstr "リンク付の「"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -9452,6 +9727,12 @@ msgstr ""
 "B2Bモードで招待状を送信するには、連絡先を開くか、リストビューで複数の連絡先を選択して、ドロップダウンメニューの「アクション」で「ポータルアクセス管理」オプションをクリックします。"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Toggle"
+msgstr "切替"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
 msgid "Toggle navigation"
 msgstr "ナビゲーションを切り替える"
@@ -9529,6 +9810,13 @@ msgstr "遷移"
 #, python-format
 msgid "Translate Attribute"
 msgstr "翻訳属性"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate Selection Option"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9907,6 +10195,11 @@ msgstr "ユーザ"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Users"
 msgstr "ユーザ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Utilities &amp; Typography"
+msgstr "ユーティリティ及びタイポグラフィ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -10591,6 +10884,16 @@ msgstr "年"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid ""
+"You are about to be redirected to the domain configured for your website ( "
+"%s ). This is necessary to edit or view your website from the Website app. "
+"You might need to log back in."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "You are about to enter the translation mode."
@@ -10643,18 +10946,18 @@ msgid "You can't remove the submit button of the form"
 msgstr "フォームの提出ボタンを削除できません"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You cannot duplicate this field."
-msgstr ""
-
-#. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You cannot duplicate this field."
 msgstr ""
 
 #. module: website
@@ -10868,6 +11171,32 @@ msgstr "、そしてここにフロントページのアドレスをコピー及
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "big"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "breadcrumb"
+msgstr "パンくず"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-primary"
+msgstr "btn-outline-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-secondary"
+msgstr "btn-outline-secondary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-primary"
+msgstr "btn-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-secondary"
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
@@ -11113,6 +11442,11 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "link"
+msgstr "発生しました"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
 msgstr ""
@@ -11127,6 +11461,11 @@ msgstr ""
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "no value"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "o-color-"
 msgstr ""
 
 #. module: website
@@ -11154,6 +11493,11 @@ msgstr "完璧なサイトを作ることを。"
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
 msgid "phone"
+msgstr "電話"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "placeholder"
 msgstr ""
 
 #. module: website
@@ -11215,6 +11559,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "testimonials"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "text link"
 msgstr ""
 
 #. module: website

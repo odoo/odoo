@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -126,6 +126,13 @@ msgid "<u>Sales</u>"
 msgstr "<u>المبيعات</u> "
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "About us"
+msgstr "من نحن "
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
@@ -139,6 +146,12 @@ msgstr ""
 "  - تحليلياً من النفقات: تكون الكمية هي مجموع الكمية من النفقات المُرحلة\n"
 "  - الجداول الزمنية: تكون الكمية هي مجموع الساعات المستغرقة لإجراء المهام المرتبطة ببند المبيعات\n"
 "  - حركات المخزون: تأتي الكمية من عمليات الانتقاء المؤكدة\n"
+
+#. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
+#: model:project.project,name:sale_timesheet.project_support
+msgid "After-Sales Services"
+msgstr "خدمات ما بعد المبيعات "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -169,6 +182,19 @@ msgstr "البند التحليلي"
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
 msgstr "البنود التحليلية"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"As a leading professional services firm,\n"
+"                                we know that success is all about the\n"
+"                                commitment we put on strong services."
+msgstr ""
+"كمؤسسة محترفة ورائدة في تقديم الخدمات،\n"
+"                                ندرك أن مفتاح النجاح هو الالتزام الذي\n"
+"                                نحذو حذوه عند تقديمنا لخدماتنا القوية. "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -377,6 +403,11 @@ msgid "Customer"
 msgstr "العميل"
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr "خدمة العملاء (الساعات المدفوعة مسبقاً) "
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "Customer Ratings"
 msgstr "تقييمات العميل"
@@ -446,6 +477,28 @@ msgid "Fixed price services"
 msgstr "الخدمات ثابتة السعر "
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Furniture Delivery (Manual)"
+msgstr "توصيل الأثاث (يدوي) "
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Great quotation templates will significantly\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
+"                                your references, your methodology or\n"
+"                                guarantees, your team, SLA, terms and conditions, etc."
+msgstr ""
+"سوف يعينك استخدام قوالب مميزة لعروض الأسعار على\n"
+"                                <strong>تعزيز معدل نجاحك</strong>.\n"
+"                                عادةً ما يحتوي القسم الأول على تعريف بشركتك،\n"
+"                                ومراجعك، ومنهجية عملك وضماناتك، وفريقك،\n"
+"                                واتفاقية مستوى الخدمة والشروط والأحكام التي تعمل بناءً عليها، إلخ. "
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
 msgstr "يحتوي على عرض تحذير الارتقاء بالصفقة "
@@ -467,6 +520,21 @@ msgstr "التكلفة بالساعة"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
 msgid "ID"
 msgstr "المُعرف"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"If you edit a quotation from the 'Preview' of a quotation, you will\n"
+"                        update that quotation only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
+"                        use this modified template."
+msgstr ""
+"إذا قمت بتحرير عرض سعر من شاشة المعاينة، ستُطبق تحديثاتك\n"
+"                        على عرض السعر هذا فقط. أما إذا حررت قالب عرض السعر\n"
+"                        (من قائمة الإعدادات)، سيتم استخدام القالب المُعدل في كافة\n"
+"                        عروض الأسعار المستقبلية."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -587,6 +655,16 @@ msgstr "قيد اليومية"
 #: model:ir.model,name:sale_timesheet.model_account_move_line
 msgid "Journal Item"
 msgstr "عنصر اليومية"
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "مهندس معماري مبتدئ (الفوترة على الجداول الزمنية) "
+
+#. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr "تركيب المطبخ (مؤشرات التقدم) "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
@@ -752,6 +830,27 @@ msgid "Ordered,"
 msgstr "تم طلبه "
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Offer"
+msgstr "عرضنا"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Quality"
+msgstr "جودتنا"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Our Service"
+msgstr "خدمتنا"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_upsell_threshold
 msgid ""
@@ -760,6 +859,13 @@ msgid ""
 msgstr ""
 "نسبة الوقت المقضي مقارنة بالكمية المدفوعة مسبقاً التي يجب الوصول إليها حتى "
 "يتم تشغيل نشاط فرصة الارتقاء بالصفقة. "
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid "Price"
+msgstr "السعر"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -785,6 +891,19 @@ msgid ""
 msgstr ""
 "منتج عنصر أمر المبيعات. يجب أن يكون خدمة مفوترة حسب الجداول الزمنية المسجلة "
 "في المهام. "
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"Product quality is the foundation we\n"
+"                                stand on; we build it with a relentless\n"
+"                                focus on fabric, performance and craftsmanship."
+msgstr ""
+"جودة المنتج هي الأساس الذي نستند عليه؛\n"
+"                                نحن نبني منتجاتنا بتركيز شديد\n"
+"                                على بنيته، وأداءه، وإتقان صنعته."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_project
@@ -906,6 +1025,7 @@ msgstr "فاتورة الدفعة المقدمة للمبيعات"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__order_id
+#: model:project.project,name:sale_timesheet.so_template_project
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
@@ -1000,6 +1120,11 @@ msgid "Sell services and invoice time spent"
 msgstr "قم ببيع الخدمات وفوترة الوقت المقضي "
 
 #. module: sale_timesheet
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "مهندس معماري كبير (الفوترة على الجداول الزمنية) "
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
 msgstr "الخدمة"
@@ -1034,6 +1159,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
+#: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
 msgstr "الخدمات"
 
@@ -1061,6 +1187,11 @@ msgstr "تكرار المهمة "
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
 msgstr "سعر المهمة "
+
+#. module: sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.so_template_project
+msgid "Tasks"
+msgstr "المهام"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
@@ -1154,6 +1285,21 @@ msgid ""
 msgstr ""
 "تتخطى هذه التكلفة تكلفة الأجر بالساعة الافتراضية للموظف في إعدادات الموارد "
 "البشرية للموظف "
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"This is a <strong>sample quotation template</strong>. You should\n"
+"                                customize it to fit your own needs from the <i>Sales</i>\n"
+"                                application, using the menu: Configuration /\n"
+"                                Quotation Templates."
+msgstr ""
+"هذا <strong>نموذج قالب عرض سعر</strong>. عليك تخصيصه\n"
+"                                من تطبيق <i>المبيعات</i> ليناسب احتياجاتك، \n"
+"                                باستخدام القائمة: تهيئة /\n"
+"                                قوالب عروض الأسعار. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1412,9 +1558,39 @@ msgid "Warning Employee Rate"
 msgstr "تحذير سعر الموظف "
 
 #. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"We always ensure that our products are\n"
+"                                set at a fair price so that you will be\n"
+"                                happy to buy them."
+msgstr ""
+"نحرص دائمًا على عرض منتجاتنا\n"
+"                                بأسعار معقولة\n"
+"                                حتى تسعد بشرائها. "
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
 msgid "Wizard"
 msgstr "المعالج"
+
+#. module: sale_timesheet
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_2
+#: model_terms:sale.order,website_description:sale_timesheet.sale_order_3
+msgid ""
+"You can <strong>set a description per product</strong>. Odoo will\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
+"                        used in your description (heading 1, heading 2, ...)"
+msgstr ""
+"يمكنك تعيين <strong>وصف لكل منتج</strong>. سوف يقوم أودو\n"
+"                        تلقائيًا بإنشاء عرض أسعار باستخدام الأوصاف المتوفرة\n"
+"                        للمنتجات في العرض المقدّم. يتم إنشاء جدول المحتويات\n"
+"                        الموجود على اليسار تلقائيًا باستخدام الأنماط التي استخدمتها\n"
+"                        في وصفك (العنوان 1، العنوان 2، ...)"
 
 #. module: sale_timesheet
 #. odoo-python

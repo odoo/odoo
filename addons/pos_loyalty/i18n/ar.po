@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -40,11 +40,28 @@ msgid "%s Points"
 msgstr "%s نقاط "
 
 #. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "خصم 15% على طلبك القادم "
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr "15% على طلبك "
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "A better global discount is already applied."
 msgstr "تم تطبيق خصم شامل أفضل بالفعل. "
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr "تعذر تحميل المكافأة "
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -54,27 +71,6 @@ msgid ""
 msgstr ""
 "حقل تقني يستخدم كبديل للكود الترويجي. يتم إنشاؤه تلقائياً عندما يتغير الكود "
 "الترويجي. "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr "الكوبونات النشطة "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr "البرامج النشطة "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
-msgstr "المكافآت النشطة "
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -134,6 +130,11 @@ msgstr "كوبون"
 #, python-format
 msgid "Coupon Codes"
 msgstr "رموز الكوبونات "
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "نقاط الكوبونات "
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -196,6 +197,11 @@ msgstr "خطأ"
 #, python-format
 msgid "Error validating rewards"
 msgstr "خطأ في التحقق من صحة المكافآت"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr "منتج مجاني - قلم بسيط "
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
@@ -279,7 +285,13 @@ msgid "Loyalty Coupon"
 msgstr "كوبون الولاء "
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "نقاط الولاء"
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "برنامج الولاء"
 
@@ -455,6 +467,11 @@ msgid "Select program"
 msgstr "تحديد البرنامج "
 
 #. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr "قلم بسيط "
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
@@ -515,6 +532,17 @@ msgid ""
 msgstr ""
 "إجراء التقرير ليتم تنفيذه عند إنشاء كوبون/بطاقة هدايا/بطاقة ولاء في نقطة "
 "البيع. "
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"المكافأة \"%s\" تحتوي على خطأ في نطاقها. يجب أن يكون نطاقك متوافقاً مع عميل "
+"نقطة البيع. "
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id

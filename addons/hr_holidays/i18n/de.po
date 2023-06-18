@@ -3,10 +3,10 @@
 # 	* hr_holidays
 # 
 # Translators:
+# Martin Trigaux, 2023
 # Niklas Korz, 2023
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
 # Alexander Bigga, 2023
 # Larissa Manderfeld, 2023
 # 
@@ -718,7 +718,7 @@ msgstr "<span class=\"text-muted\">von </span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">nach </span>"
+msgstr "<span class=\"text-muted\">bis </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -945,7 +945,7 @@ msgstr "Eine Begründung hinzufügen ..."
 msgid "Add some description for the people that will validate it"
 msgstr ""
 "Fügen Sie eine Beschreibung für die Personen hinzu, die diesen Antrag "
-"akzeptieren werden."
+"validieren werden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
@@ -1055,7 +1055,7 @@ msgstr "Anzeige der verbleibenden Urlaubsansprüche"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #, python-format
 msgid "Allocation Request"
-msgstr "Urlaubsanspruch anfragen"
+msgstr "Antrag auf Urlaubsanspruch"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1063,12 +1063,12 @@ msgstr "Urlaubsanspruch anfragen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
-msgstr "Anfrage Urlaubsanspruch"
+msgstr "Anträge auf Urlaubsanspruch"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approve"
-msgstr "Zuteilung Zweitgenehmigt"
+msgstr "Zweitgenehmigung für Urlaubsanspruch"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -1090,14 +1090,15 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
 msgid "Allocation on"
-msgstr "Zugewiesen am"
+msgstr "Anspruch am"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
-msgstr "Anspruchanfrage muss bestätigt werden um dies zu genehmigen."
+msgstr ""
+"Antrag auf Urlaubsanspruch muss bestätigt werden, um ihn zu genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1106,7 +1107,8 @@ msgstr "Anspruchanfrage muss bestätigt werden um dies zu genehmigen."
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Anspruchanfrage muss für eine Ablehnung bestätigt oder validiert werden."
+"Antrag auf Urlaubsanspruch muss bestätigt oder validiert werden, um ihn "
+"abzulehnen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1116,8 +1118,8 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
-"Anspruchanfrage muss im Status Entwurf sein („Einzureichen“), um diese "
-"bestätigen zu können."
+"Antrag auf Urlaubsanspruch muss im Status Entwurf sein („Einzureichen“), um "
+"ihn zu bestätigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1127,8 +1129,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
-"Anspruchsanfrage muss im Status \"Abgelehnt\" oder „Zu genehmigen“ sein, um "
-"zurück auf den Status „Entwurf“ zu gelangen."
+"Antrag auf Urlaubsanspruch muss im Status „Abgelehnt“ oder „Zu genehmigen“ "
+"sein, um zurück auf den Status „Entwurf“ zu setzen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1157,7 +1159,7 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
-"Anforderungen in Stapeln erstellen lassen:\n"
+"Anträge in Stapeln erstellen lassen:\n"
 "- Nach Mitarbeiter: für einen bestimmten Mitarbeiter\n"
 "- Nach Unternehmen: alle Mitarbeiter des angegebenen Unternehmens\n"
 "- Nach Abteilung: alle Mitarbeiter der angegebenen Abteilung\n"
@@ -1166,7 +1168,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Analyze from"
-msgstr "Analysieren durch"
+msgstr "Analysieren von"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
@@ -1218,7 +1220,7 @@ msgstr "Genehmigt"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Approved Requests"
-msgstr "Genehmigte Anfragen"
+msgstr "Genehmigte Anträge"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
@@ -1355,12 +1357,12 @@ msgstr "Nach Mitarbeiter-Stichwort"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Approver"
-msgstr "Durch den Genehmiger des Mitarbeiters"
+msgstr "Durch Genehmiger des Mitarbeiters"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Durch den Genehmiger des Mitarbeiters und den Abwesenheitsmanager"
+msgstr "Durch Genehmiger des Mitarbeiters und Abwesenheitsmanager"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1368,8 +1370,8 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
-"Nach Mitarbeiter: Anspruch/Anfrage für einzelne Mitarbeiter, nach "
-"Mitarbeiter-Stichwort: Anspruch/Anfrage für Gruppe von Mitarbeitern nach "
+"Nach Mitarbeiter: Anspruch/Antrag für einzelne Mitarbeiter, nach "
+"Mitarbeiter-Stichwort: Anspruch/Antrag für Gruppe von Mitarbeitern nach "
 "Kategorien"
 
 #. module: hr_holidays
@@ -1398,7 +1400,7 @@ msgstr "Kann zurücksetzen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
 msgid "Cancel"
-msgstr "Stornieren"
+msgstr "Abbrechen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
@@ -1426,7 +1428,7 @@ msgstr "Alle Abwesenheiten nach diesem Datum stornieren."
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Canceled"
-msgstr "Storniert"
+msgstr "Abgebrochen"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1466,7 +1468,7 @@ msgid ""
 "Time Off request"
 msgstr ""
 "Wählen Sie den Abwesenheitsbeauftragten, der benachrichtigt wird, um den "
-"Anspruch oder den Antrag auf Freizeit zu genehmigen."
+"Antrag auf Urlaubsanspruch oder den Abwesenheitsantrag zu genehmigen."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1555,7 +1557,7 @@ msgid ""
 "approbation) with a validity period starting this year."
 msgstr ""
 "Anzahl der Urlaubsansprüche für diese Abwesenheitsart (genehmigt oder zur "
-"Genehmigung anstehend) mit einem Gültigkeitszeitraum ab diesem Jahr."
+"Genehmigung ausstehend) mit einem Gültigkeitszeitraum ab diesem Jahr."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1569,7 +1571,7 @@ msgid ""
 "approbation) with a start date in the current year."
 msgstr ""
 "Anzahl der Abwesenheitsanträge für diese Abwesenheitsart (genehmigt oder zur"
-" Genehmigung anstehend) mit einem Startdatum im laufenden Jahr."
+" Genehmigung ausstehend) mit einem Startdatum im laufenden Jahr."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
@@ -1579,7 +1581,7 @@ msgstr "Titelbild"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Erstelle eine neue Abwesenheitszuweisung"
+msgstr "Einen neune Urlaubsanspruch erstellen"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -1670,7 +1672,7 @@ msgstr "Datum der nächsten Urlaubsrückstellung"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Dates"
-msgstr "Datumangaben"
+msgstr "Datumsangaben"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__day
@@ -1865,7 +1867,7 @@ msgstr "Mitarbeiter aktiv"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
 msgid "Employee Requests"
-msgstr "Mitarbeiteranfragen"
+msgstr "Mitarbeiteranträge"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
@@ -1904,7 +1906,7 @@ msgstr "Enddatum"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
 msgid "Extra Days Requests Allowed"
-msgstr "Anträge auf zusätzliche Tage sind zulässig"
+msgstr "Anträge auf zusätzliche Tage erlaubt"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__employee_requests
@@ -1913,9 +1915,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
-"Anfrage zusätzlicher Tage erlaubt: Benutzer kann einen Urlaubsanspruch  für sich selbst anfragen.\n"
+"Anträge auf zusätzliche Tage erlaubt: Benutzer kann einen Urlaubsanspruch für sich selbst beantragen.\n"
 "\n"
-"        Nicht erlaubt: Benutzer kann keinen Urlaubsanspruch anfragen."
+"        Nicht erlaubt: Benutzer kann keinen Urlaubsanspruch beantragen."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -1956,8 +1958,8 @@ msgid ""
 "Filters only on requests that belong to an time off type that is 'active' "
 "(active field is True)"
 msgstr ""
-"Filtert nur auf Anfragen, die zu einem aktiven Anfragetyp gehören (Feld "
-"'aktiv' ist True)"
+"Filtert nur auf Anträge, die zu einer aktiven Antragsart gehören (aktives "
+"Feld Wahr)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -2019,7 +2021,7 @@ msgstr "Der Inhalt fehlt; dieser Bericht kann nicht gedruckt werden."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
 msgid "Frequency"
-msgstr "Frequenz"
+msgstr "Häufigkeit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__fri
@@ -2068,7 +2070,7 @@ msgstr "Gruppieren nach"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
 msgid "Group Time Off"
-msgstr "Gruppen Abwesenheit"
+msgstr "Gruppenabwesenheit"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
@@ -2127,7 +2129,7 @@ msgstr "Urlaubsstatus"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr "Urlaubszusammenfassung"
+msgstr "Urlaubszusammenfassungsbericht"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
@@ -2143,7 +2145,7 @@ msgstr "Startzeit"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
 msgid "Hour to"
-msgstr "Stunde bis"
+msgstr "Endzeit"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2163,7 +2165,7 @@ msgstr "Stunden"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "HR Icon Display"
+msgstr "HR-Icon-Anzeige"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
@@ -2262,8 +2264,8 @@ msgstr "Wenn dieses Feld leer ist, ist das die erste Ebene."
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus „Periode“"
-" verwenden"
+"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus "
+"„Zeitraum“ verwenden"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
@@ -2302,7 +2304,7 @@ msgstr "Januar"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__job_id
 msgid "Job"
-msgstr "Arbeitsstelle"
+msgstr "Stelle"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2445,7 +2447,7 @@ msgstr "Begrenzen auf"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__linked_request_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__linked_request_ids
 msgid "Linked Requests"
-msgstr "Verbundene Anfragen"
+msgstr "Verbundene Anträge"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2508,7 +2510,7 @@ msgid ""
 "Approval"
 msgstr ""
 "Maximal erlaubte Abwesenheit - Bereits genommene Abwesenheit - Abwesenheit, "
-"die auf Genehmigung wartet"
+"die zur Genehmigung aussteht"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
@@ -2646,7 +2648,7 @@ msgstr "Neu"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "New %(leave_type)s Request created by %(user)s"
-msgstr "Neue %(leave_type)s-Anfrage erstellt von %(user)s"
+msgstr "Neue Antrag auf %(leave_type)s erstellt von %(user)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2663,8 +2665,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Neue Anspruchsanfrage erstellt von %(user)s: %(count)s Tage "
-"von%(allocation_type)s"
+"Neuer Antrag auf Urlaubsanspruch erstellt von %(user)s: %(count)s Tage von "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2783,8 +2785,8 @@ msgid ""
 "Number of days of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
-"Anzahl der Tage der beantragten Freistellung gemäß Ihrem Arbeitszeitplan. "
-"Verwendet für das Interface."
+"Anzahl der Tage der beantragten Abwesenheit gemäß Ihrem Arbeitszeitplan. "
+"Verwendet für Schnittstelle."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
@@ -2792,7 +2794,7 @@ msgid ""
 "Number of days of the time off request. Used in the calculation. To manually"
 " correct the duration, use this field."
 msgstr ""
-"Anzahl der Tage des beantragten Freizeitausgleichs. Wird für die Berechnung "
+"Anzahl der Tage der beantragten Abwesenheit. Wird für die Berechnung "
 "verwendet. Um die Dauer manuell zu korrigieren, verwenden Sie dieses Feld."
 
 #. module: hr_holidays
@@ -2807,8 +2809,8 @@ msgid ""
 "Number of hours of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
-"Anzahl der Stunden, für die ein Antrag auf Freistellung gemäß Ihrem "
-"Arbeitszeitplan gestellt wurde. Wird für Interface verwendet."
+"Anzahl der Stunden der beantragten Abwesenheit gemäß Ihrem Arbeitszeitplan. "
+"Verwendet für Schnittstelle"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2838,7 +2840,7 @@ msgstr "Abwesend bis"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Off Today"
-msgstr "Heute nicht im Büro"
+msgstr "Heute abwesend"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -2848,14 +2850,14 @@ msgstr "Sachbearbeiter: Alle Anträge verwalten"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "On Time Off"
-msgstr "Auf Abwesenheit"
+msgstr "In Abwesenheit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_absent
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_absent
 msgid "On leave"
-msgstr "Abwesend"
+msgstr "Im Urlaub"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2871,7 +2873,7 @@ msgstr "Online"
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
 msgstr ""
-"Nur Abwesenheitsmanager kann ihre eigenen Anträge genehmigen/ablehnen."
+"Nur ein Abwesenheitsmanager kann ihre eigenen Anträge genehmigen/ablehnen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2887,7 +2889,7 @@ msgstr ""
 #, python-format
 msgid "Only a Time Off Manager can reset a started leave."
 msgstr ""
-"Nur ein Abwesenheitsmanager kann eine begonnene Abwesenheit zurücksetzen."
+"Nur ein Abwesenheitsmanager kann einen begonnenen Urlaub zurücksetzen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2903,7 +2905,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
-msgstr "Nur Abwesenheitsmanager können eigene Anfragen genehmigen."
+msgstr "Nur Abwesenheitsmanager können eigene Anträge genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2921,7 +2923,7 @@ msgid ""
 "off requests."
 msgstr ""
 "Nur Abwesenheitsbeauftragte/-verantwortliche oder -manager können "
-"Abwesenheitsanfragen genehmigen oder ablehnen."
+"Abwesenheitsanträge genehmigen oder ablehnen."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
@@ -2941,7 +2943,7 @@ msgstr "Nicht im Büro"
 #: code:addons/hr_holidays/static/src/models/partner.js:0
 #, python-format
 msgid "Out of office until %s"
-msgstr "Abwesend bis %s"
+msgstr "Nicht im Büro bis %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -2968,7 +2970,7 @@ msgstr "Elternzeit"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Period"
-msgstr "Periode"
+msgstr "Zeitraum"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__planned
@@ -3019,7 +3021,7 @@ msgstr "Gesetzliche Feiertage"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
-msgstr "Quote"
+msgstr "Satz"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3118,27 +3120,27 @@ msgstr "Urlaubsanspruch anfragen"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
-msgstr "Anfrage Enddatum"
+msgstr "Enddatum des Antrags"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
-msgstr "Anfrage Startdatum"
+msgstr "Startdatum des Antrags"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "Abwesenheit anfragen"
+msgstr "Abwesenheit beantragen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
 msgid "Request Type"
-msgstr "Anfragetyp"
+msgstr "Antragsart"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr "Angefragte (Tage/Stunden)"
+msgstr "Beantragt (Tage/Stunden)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
@@ -3265,9 +3267,9 @@ msgid ""
 "        - No validation needed: The employee's request is automatically approved.\n"
 "        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer."
 msgstr ""
-"Wählen Sie aus, welche Genehmigungsebene bei Mitarbeiteranfragen erforderlich ist\n"
-"        - Keine Validierung notwendig: Die Mitarbeiteranfrage wird automatisch genehmigt.\n"
-"        - Vom Abwesenheitsbeauftragten genehmigt: Die Mitarbeiteranfrage muss vom Abwesenheitsbeauftragten manuell genehmigt werden."
+"Wählen Sie aus, welche Genehmigungsebene bei Mitarbeiteranträgen erforderlich ist\n"
+"        - Keine Validierung notwendig: Der Mitarbeiterantrag wird automatisch genehmigt.\n"
+"        - Vom Abwesenheitsbeauftragten genehmigt: Der Mitarbeiterantrag muss vom Abwesenheitsbeauftragten manuell genehmigt werden."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3443,7 +3445,7 @@ msgstr "Gestrichen"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Submit your request"
-msgstr "Antrag einreichen"
+msgstr "Reichen Sie Ihren Antrag ein"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3460,7 +3462,7 @@ msgstr "Summe"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Sum of validated and non validated time off requests."
-msgstr "Summe aller validierten und nicht validierten Urlaubsanträge."
+msgstr "Summe aller validierten und nichtvalidierten Abwesenheitsanträge."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sun
@@ -3484,7 +3486,7 @@ msgstr "Begleitdokument"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Supporting Documents"
-msgstr "Begleitende Dokumente"
+msgstr "Begleitdokumente"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -3563,9 +3565,9 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
-"Der Mitarbeiter, die Abteilung, das Unternehmen oder die Mitarbeitergruppe "
-"dieser Anfrage fehlt. Bitte stellen Sie sicher, dass Ihr Benutzer an einen "
-"Mitarbeiter gelinkt ist."
+"Der Mitarbeiter, die Abteilung, das Unternehmen oder die "
+"Mitarbeiterkategorie dieses Antrags fehlt. Bitte stellen Sie sicher, dass "
+"Ihr Benutzer mit einem Mitarbeiter verknüpft ist."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3617,10 +3619,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
-"Der Status wird auf „Einzureichen“ gesetzt, wenn ein Antrag auf Freizeitausgleich erstellt wird.\n"
-"Der Status ist „Zu genehmigen“, wenn der Freizeitantrag vom Benutzer bestätigt wird.\n"
-"Der Status lautet „Abgelehnt“, wenn der Antrag auf Freistellung vom Vorgesetzten abgelehnt wird.\n"
-"Der Status lautet „Genehmigt“, wenn der Manager den Antrag auf Freistellung genehmigt hat."
+"Der Status wird auf „Einzureichen“ gesetzt, wenn ein Abwesenheitsantrag erstellt wird.\n"
+"Der Status ist „Zu genehmigen“, wenn der Abwesenheitsantrag vom Benutzer bestätigt wird.\n"
+"Der Status lautet „Abgelehnt“, wenn der Abwesenheitsantrag vom Manager abgelehnt wird.\n"
+"Der Status lautet „Genehmigt“, wenn der Manager den Abwesenheitsantrag genehmigt hat."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3630,10 +3632,10 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
-"Der Status wird auf „Einzureichen“ gesetzt, wenn eine Zuweisungsanfrage erstellt wird.\n"
-"Der Status lautet \"Zu genehmigen\", wenn eine Zuweisungsanfrage vom Benutzer bestätigt wird.\n"
-"Der Status lautet \"Abgelehnt\", wenn eine Zuweisungsanfrage vom Manager abgelehnt wird.\n"
-"Der Status lautet \"Genehmigt\", wenn eine Zuweisungsanfrage vom Manager genehmigt wurde."
+"Der Status wird auf „Einzureichen“ gesetzt, wenn ein Antrag auf Urlaubsanspruch erstellt wird.\n"
+"Der Status ist „Zu genehmigen“, wenn der Antrag auf Urlaubsanspruch vom Benutzer bestätigt wird.\n"
+"Der Status lautet „Abgelehnt“, wenn der Antrag auf Urlaubsanspruch vom Manager abgelehnt wird.\n"
+"Der Status lautet „Genehmigt“, wenn der Manager den Antrag auf Urlaubsanspruch genehmigt hat."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3654,8 +3656,8 @@ msgstr "Die Abwesenheit wurde storniert: %s"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr ""
-"Der Typ mit der niedrigsten Sequenz ist der Standardwert für "
-"Abwesenheitsanfragen"
+"Die Art mit der niedrigsten Sequenznummer ist der Standardwert für "
+"Abwesenheitsanträge"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3666,10 +3668,10 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, cancel and create a new one."
 msgstr ""
-"Diese Zuteilung wurde bereits einmal durchgeführt, eine Änderung hat keinen "
+"Dieser Anpruch wurde bereits einmal durchgeführt, eine Änderung hat keinen "
 "Einfluss auf die dem Mitarbeiter zugeteilten Tage. Wenn Sie die "
-"Konfiguration der Zuteilung ändern müssen, brechen Sie diese ab und "
-"erstellen Sie eine neue Zuteilung."
+"Konfiguration des Urlaubsanspruchs ändern müssen, stornieren Sie ihn und "
+"erstellen Sie einen neuen Anspruch."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3728,7 +3730,7 @@ msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
 msgstr ""
-"Dieser Wert resultiert aus der Summe aller Abwesenheitsanfragen mit einem "
+"Dieser Wert resultiert aus der Summe aller Abwesenheitsanträge mit einem "
 "negativen Wert."
 
 #. module: hr_holidays
@@ -3737,7 +3739,7 @@ msgid ""
 "This value is given by the sum of all time off requests with a positive "
 "value."
 msgstr ""
-"Dieser Wert resultiert aus der Summe aller Abwesenheitsanfragen mit einem "
+"Dieser Wert resultiert aus der Summe aller Abwesenheitsanträge mit einem "
 "positiven Wert."
 
 #. module: hr_holidays
@@ -3858,7 +3860,7 @@ msgstr "Abwesenheit Verantwortliche(r)"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr "Zweitgenehmigung Abwesenheitsantrag"
+msgstr "Zweitgenehmigung für Abwesenheitsantrag"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -3895,7 +3897,7 @@ msgstr "Genommene Abwesenheit:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off Type"
-msgstr "Abwesenheitstyp"
+msgstr "Abwesenheitsart"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -3962,15 +3964,15 @@ msgstr "Abwesenheit Ihrer Mitarbeiter"
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
-"Abwesenheitsanfrage muss bestätigt werden (\"zur Genehmigung\") um genehmigt"
-" werden zu können."
+"Abwesenheitsantrag muss bestätigt werden („Zu genehmigen“), um ihn zu "
+"genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Time off request must be confirmed in order to approve it."
-msgstr "Abwesenheitsanfrage muss bestätigt werden für die Genehmigung."
+msgstr "Abwesenheitsantrag muss bestätigt werden, um ihn zu genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3978,8 +3980,7 @@ msgstr "Abwesenheitsanfrage muss bestätigt werden für die Genehmigung."
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Abwesenheitsanfrage muss bestätigt oder genehmigt werden, um ablehnen zu "
-"können."
+"Abwesenheitsantrag muss bestätigt oder validiert werden, um ihn abzulehnen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3989,8 +3990,8 @@ msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
 msgstr ""
-"Abwesenheitsanfrage muss im Entwurfsstatus („Einzureichen“) sein, um "
-"bestätigt werden zu können."
+"Abwesenheitsantrag muss im Entwurfsstatus („Einzureichen“) sein, um ihn zu "
+"bestätigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4000,8 +4001,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
-"Abwesenheitsanfrage muss „Abgelehnt“ oder „Zur Genehmigung“ sein, um diese "
-"zurück auf Entwurf setzen zu können."
+"Abwesenheitsantrag muss „Abgelehnt“ oder „Zu genehmigen“ sein, um ihn zurück"
+" auf Entwurf zu setzen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4053,7 +4054,7 @@ msgstr "Einzureichen"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "To:"
-msgstr "An"
+msgstr "Bis:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4085,15 +4086,15 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types"
 " without overriding limit."
 msgstr ""
-"Gesamtanzahl bezahlter Abwesenheitstage zugewiesen an diesen Mitarbeiter. "
-"Ändern Sie den Wert, um eine Zuweisungsanfrage oder Abwesenheitsanfrage zu "
-"stellen. Total basierend auf allzeit Abwesenheitstypen ohne "
-"Überschreibungslimit."
+"Gesamtanzahl bezahlter Abwesenheitstage, die diesem Mitarbeiter zugewiesen "
+"wurden. Ändern Sie den Wert, um einen Antrag auf Urlaubsanspruch oder "
+"Abwesenheitsantrag zu stellen. Gesamt basierend auf allen Abwesenheitsarten "
+"ohne Überschreitung der Begrenzung."
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
-msgstr "Trainingszeit aus"
+msgstr "Schulungsabwesenheit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
@@ -4139,12 +4140,12 @@ msgstr "Typ der Ausnahmeaktivität im Datensatz."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
 msgid "Tz"
-msgstr "Tz"
+msgstr "Zeitzone"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr "Tz Mismatch"
+msgstr "Zeitzonenabweichung"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid
@@ -4195,14 +4196,14 @@ msgstr "Benutzer ist nicht im Büro"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Validate"
-msgstr "Bestätigen"
+msgstr "Validieren"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #, python-format
 msgid "Validated"
-msgstr "Genehmigt"
+msgstr "Validiert"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
@@ -4248,7 +4249,7 @@ msgstr "Genehmigung ausstehend"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
 msgid "Waiting Second Approval"
-msgstr "Zweite Genehmigung"
+msgstr "Zweite Genehmigung ausstehend"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -4290,12 +4291,12 @@ msgstr "Jährlich"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day
 msgid "Yearly Day"
-msgstr "Tag jährlich"
+msgstr "Jährlicher Tag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day_display
 msgid "Yearly Day Display"
-msgstr "Jährlicher Tag Anzeige"
+msgstr "Anzeige des jährlichen Tags"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_month
@@ -4314,9 +4315,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
-"Ja: Abwesenheitsanfrage muss eine gültigen Anspruch haben.\n"
+"Ja: Abwesenheitsantrag muss eine gültigen Anspruch haben.\n"
 "\n"
-"              Kein Limit: Abwesenheitsanfrage kann ohne vorherigen Anspruch gestellt werden."
+"              Kein Limit: Abwesenheitsantrag kann ohne vorherigen Anspruch gestellt werden."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4324,7 +4325,7 @@ msgstr ""
 #, python-format
 msgid "You are not allowed to request a time off on a Stress Day."
 msgstr ""
-"Sie dürfen keinen Urlaubsantrag für Tage mit Anwesenheitspflicht nehmen."
+"Sie dürfen keine Abwesenheit für Tage mit Anwesenheitspflicht beantragen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4438,15 +4439,17 @@ msgstr ""
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
-"Sie können eine Anfrage, die bereits validierte Urlaube enthält, nicht "
-"löschen."
+"Sie können einen Antrag auf Urlaubsanspruch, der bereits validierte Urlaube "
+"enthält, nicht löschen."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "Sie können keine Anfrage im %s Status stornieren"
+msgstr ""
+"Sie können einen Antrag auf Urlaubsanspruch, der sich im Status %s befindet,"
+" nicht löschen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4466,8 +4469,8 @@ msgstr ""
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr ""
-"Sie sind nicht berechtigt, eine zweite Genehmigung für einen Urlaubsantrag "
-"zu erteilen."
+"Sie sind nicht berechtigt, eine zweite Genehmigung für einen "
+"Abwesenheitsantrag zu erteilen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4574,7 +4577,7 @@ msgstr "nach Mitarbeiter"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
 msgid "by Type"
-msgstr "nach Abwesenheitstyp"
+msgstr "nach Abwesenheitsart"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4655,7 +4658,7 @@ msgstr "letzter Tag"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "lost"
-msgstr "verloren"
+msgstr "verloren gehen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__month
@@ -4670,7 +4673,7 @@ msgstr "von"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "of the"
-msgstr "von den"
+msgstr "von"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4703,7 +4706,7 @@ msgstr "abgelehnt"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
 msgid "sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenznummer"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4727,7 +4730,7 @@ msgstr "gültig bis"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
-msgstr "bestätigen"
+msgstr "validieren"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban

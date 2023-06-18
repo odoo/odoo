@@ -169,8 +169,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_total_cost_computed','=', "
 "True)]}\">TBD</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('is_total_cost_computed','=', "
-"True)]}\">TBD</span>"
+"<span attrs=\"{'invisible': [('is_total_cost_computed','=', True)]}\">ZU "
+"BESTIMMEN</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -309,7 +309,8 @@ msgstr "BETRAG"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "Trinkgelder annehmen oder das Wechselgeld in Trinkgeld umwandeln"
+msgstr ""
+"Nehmen Sie Trinkgelder an oder wandeln Sie Wechselgeld in Trinkgeld um"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -359,8 +360,7 @@ msgstr "Kontobewegung"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
-msgstr ""
-"Kontozahlungen, die Sammelzahlungen und Bank-Split-Zahlungen darstellen."
+msgstr "Kontozahlungen, die Sammel- und Teilzahlungen darstellen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3978,7 +3978,7 @@ msgstr "PoS Produktkategorie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
 msgid "POS Sales"
-msgstr "POS-Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
@@ -4531,12 +4531,12 @@ msgstr "Auftragszeilen am Point of Sale"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr "Point Of Sale Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "Bericht über Point of Sale Aufträge"
+msgstr "Bericht über Kassenverkäufe"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
@@ -5269,6 +5269,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Rückbuchung von: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Stornoanforderung an das Terminal gesendet"
@@ -6278,6 +6286,13 @@ msgstr ""
 "Die erlaubte Maximaldifferenz beträgt %s.\n"
 "\n"
 "                        Bitte kontaktieren Sie Ihren Vorgesetzten, um die Abschlussdifferenz zu aktzeptieren."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "Der Name der Münzen/Scheine muss eine Zahl sein."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7316,13 +7331,6 @@ msgid ""
 msgstr ""
 "Sie können einige aus dem Produkte-Menü hinzufügen oder vorhandene verknüpfen, indem Sie sie als „Im Kassensystem verfügbar“ markieren.\n"
 "                    Oder Sie können zu Testzwecken Demodaten hinzufügen. Bitte beachten Sie, dass diese Aktion nicht rückgängig zu machen ist."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Sie können nur eine Barzahlungsmethode haben."
 
 #. module: point_of_sale
 #. odoo-python

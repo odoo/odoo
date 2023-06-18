@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr "Benutze einen an der IoT-Box angeschlossenen Drucker"
+msgstr " Einen an der IoT-Box angeschlossenen Drucker benutzen"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr "<strong/>"
+msgstr "<strong>Name der Etage: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -42,8 +42,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"Ein Restaurant Plan repräsentiert den Platz wo Kunden bedient werden, hier "
-"können Sie die Postion der Tische definieren."
+"Ein Restaurant-Plan repräsentiert den Platz, wo Kunden bedient werden, hier "
+"können Sie die Tische festlegen und positionieren."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
@@ -74,7 +74,7 @@ msgstr "Einen neuen Restaurant-Stock hinzufügen"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
-msgstr "Einen neuen Restaurant-Auftragsdrucker hinzufügen"
+msgstr "Einen neuen Restaurant-Bestelldrucker hinzufügen"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -225,7 +225,7 @@ msgstr "Rechnungsdruck"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 #, python-format
 msgid "Bill Splitting"
-msgstr "Rechnungssplit"
+msgstr "Rechnungsteilung"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -249,7 +249,7 @@ msgstr "Blau"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "CANCELLED"
-msgstr "ABBRECHEN"
+msgstr "ABGEBROCHEN"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -306,6 +306,15 @@ msgid "Config Settings"
 msgstr "Konfigurationseinstellungen"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "Couldn't synchronize the orders for the tables because you are offline"
+msgstr ""
+"Die Bestellungen für die Tische konnten nicht synchronisiert werden, weil "
+"Sie offline sind"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -360,9 +369,9 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
-"Jeder Auftragsdrucker hat eine IP-Adresse, die die IoT-Box/Hardware\n"
-"Proxy, wo der Drucker gefunden werden kann, und eine Liste von Produktkategorien.\n"
-"Ein Auftragsdrucker druckt nur Aktualisierungen für Produkte, die zu einer\n"
+"Jeder Bestelldrucker hat eine IP-Adresse, die den IoT-Box/Hardware-Proxy,\n"
+"wo der Drucker gefunden werden kann, und eine Liste von Produktkategorien.\n"
+"Ein Bestelldrucker druckt nur Aktualisierungen für Produkte, die zu einer\n"
 "seiner Kategorien gehören."
 
 #. module: pos_restaurant
@@ -381,7 +390,7 @@ msgstr "Bearbeiten"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr "Ermöglicht eine Rechnungsaufteilung im Point-of-Sale."
+msgstr "Ermöglicht eine Rechnungsaufteilung im Kassensystem."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -602,7 +611,7 @@ msgstr "Mittagessen Lachs 20 Stk."
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
 msgid "Lunch Temaki mix 3pc"
-msgstr "Mittagessen Temaki-Mix 3tlg."
+msgstr "Mittagessen Temaki-Mix 3 Stk."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
@@ -612,12 +621,12 @@ msgstr "Margherita"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
 msgid "Minute Maid"
-msgstr "Cappy"
+msgstr "Minute Maid"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
-msgstr "Mozzarella Sandwich"
+msgstr "Mozzarella-Sandwich"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
@@ -695,7 +704,7 @@ msgstr "Auftrag"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_order_printer
 msgid "Order Printer"
-msgstr "Auftragsdrucker"
+msgstr "Bestelldrucker"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
@@ -703,7 +712,7 @@ msgstr "Auftragsdrucker"
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_printer_ids
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 msgid "Order Printers"
-msgstr "Auftragsdrucker"
+msgstr "Bestelldrucker"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -711,8 +720,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
-"Bestelldrucker werden von Restaurants und Bars genutzt um \n"
-"Bestellungen in der Küche/Bar zu drucken wenn der Kellner \n"
+"Bestelldrucker werden von Restaurants und Bars genutzt, um \n"
+"Bestellungen in der Küche/Bar zu drucken, wenn der Kellner \n"
 "eine Bestellung aktualisiert "
 
 #. module: pos_restaurant
@@ -725,7 +734,7 @@ msgstr "POS Printer"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "PRO FORMA"
-msgstr "PROFORMA"
+msgstr "PRO FORMA"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
@@ -762,12 +771,12 @@ msgstr "Auftragszeilen am Point of Sale"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Point Of Sale Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Point of Sale-Zahlungen"
+msgstr "Kassensystem-Zahlungen"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -792,7 +801,7 @@ msgstr "Kassensystem Iface Rechnungsteilung"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr "Kassensystem Iface Bestellungsdrucker"
+msgstr "Kassensystem ist Bestelldrucker"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
@@ -931,7 +940,7 @@ msgstr "Restaurant Pläne"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr "Restaurant Bestellungsdrucker"
+msgstr "Restaurant-Bestelldrucker"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
@@ -1109,13 +1118,12 @@ msgstr "%s wird bereits in einer anderen Kassensystemkonfiguration verwendet."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr "IP-Adresse oder HOST des Proxy"
+msgstr "Die IP-Adresse oder der Hostname des Hardware-Proxys des Druckers"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
-"Die Anzahl der Gäste welche im Rahmen dieser Bestellung bedient wurden."
+msgstr "Die Anzahl der Gäste, die im Rahmen dieser Bestellung bedient wurden."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
@@ -1128,26 +1136,35 @@ msgid "The default number of customer served at this table."
 msgstr "Die Standardanzahl der bedienten Kunden an diesem Tisch"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "The orders for the table could not be loaded because you are offline"
+msgstr "Die Bestellungen konnte nicht geladen werden, weil Sie offline sind"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr "Die Restaurantebenen, die von diesem Point-of-Sale bedient werden."
+msgstr "Die Restaurantebenen, die von diesem Kassensystem bedient werden."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr "Der Tisch an dem die Bestellung serviert wurde."
+msgstr "Der Tisch, an dem die Bestellung serviert wurde."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
-msgstr "Die Tischfarbe als  \"background\" CSS-Wert"
+msgstr ""
+"Die Tischfarbe, ausgedrückt als gültiger Wert der CSS-Eigenschaft "
+"„Hintergrund“."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
 msgid "The table's height in pixels"
-msgstr "Tischhöhe in Pixel"
+msgstr "Die Tischhöhe in Pixel"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
@@ -1155,18 +1172,18 @@ msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
 msgstr ""
-"Horizontale Tischposition, von der linken Seite zur Tischmitte in Pixel."
+"Die horizontale Tischposition, von der linken Seite zur Tischmitte in Pixel."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr "Vertikale Tischposition, von oben zur Tischmitte, in Pixel"
+msgstr "Die vertikale Tischposition, von oben zur Tischmitte, in Pixel"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
 msgid "The table's width in pixels"
-msgstr "Tischbreite in pixeln"
+msgstr "Die Tischbreite in Pixel"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1322,8 +1339,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
-"Es kann kein Tisch, der in einer PoS Sitzung benutzt wird, gelöscht werden. "
-"Sitzung muss erst geschlossen werden"
+"Es kann kein Tisch, der in einer Kassensitzung benutzt wird, gelöscht "
+"werden. Sitzung muss erst geschlossen werden"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1359,7 +1376,8 @@ msgstr "am Tisch"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr "Button in der Toolbar zur Bearbeitung, um neue Tische zu erstellen"
+msgstr ""
+"Schaltfläche in der Toolbar zur Bearbeitung, um neue Tische zu erstellen"
 
 #. module: pos_restaurant
 #. odoo-javascript

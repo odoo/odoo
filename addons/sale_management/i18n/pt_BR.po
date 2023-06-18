@@ -4,20 +4,27 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Layna Nascimento, 2023
+# Kevilyn Rosa, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Kevilyn Rosa, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_management
+#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
+msgid "4 Person Desk"
+msgstr "Mesa para 4 pessoas"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -27,12 +34,12 @@ msgstr "<span>Opções</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span>Payment</span>"
-msgstr ""
+msgstr "<span>Pagamento</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>Assinatura</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -184,7 +191,7 @@ msgstr "Resumo"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Disc.%"
-msgstr "Desc.%"
+msgstr "% desc."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -210,13 +217,14 @@ msgstr "Tipo de Display"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Se não tem acesso, pule esses dados para o e-mail com o Resumo do Usuário "
-"(User´s Digest)"
+"Se não tem acesso, pule esses dados para o e-mail com o resumo do usuário"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Produto, quantidade e UdM proibidos na linha de cotação de venda não "
+"contabilizável"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -234,7 +242,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
@@ -303,6 +311,11 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "Número de dias para a validade desta cotação"
 
 #. module: sale_management
+#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
+msgid "Office Chair"
+msgstr "Cadeira de escritório"
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Pagamento Online"
@@ -315,14 +328,14 @@ msgstr "Assinatura Online"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "Confirmação online"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Optional Products"
-msgstr "Produtos Opcionais"
+msgstr "Produtos opcionais"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
@@ -652,4 +665,4 @@ msgstr "dias"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "ex.: Pacote de consultoria padrão"

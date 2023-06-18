@@ -184,8 +184,8 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
-"Produktkategorie oder den Ort definieren."
+" Sie müssen vor der Bearbeitung dieses Vorgangs, eins über die "
+"Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
 #. odoo-python
@@ -197,8 +197,8 @@ msgid ""
 "operation."
 msgstr ""
 "Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
-"Produktkategorie oder den Ort definieren."
+" Sie müssen vor der Bearbeitung dieses Vorgangs, eins über die "
+"Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
 #. odoo-python
@@ -265,7 +265,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Die Gegenbuchungen für alle eingehenden Bestandsbewegungen werden auf diesem Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
+"Die Gegenbuchungen für alle eingehenden Lagerbuchungen werden auf diesem Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
 "                für den Ursprungsstandort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie. Er kann auch direkt für jedes Produkt festgelegt werden."
 
 #. module: stock_account
@@ -343,7 +343,7 @@ msgstr "Anzeigename"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Chargen- & Seriennummern in Rechnungen anzeigen"
+msgstr "Los- & Seriennummern auf Rechnungen anzeigen"
 
 #. module: stock_account
 #. odoo-python
@@ -401,12 +401,12 @@ msgstr "Inventurlager"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
-msgstr "Inventur Bewertung"
+msgstr "Bestandsbewertung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
 msgid "Invoice Line"
-msgstr "Rechnungsposition"
+msgstr "Rechnungszeile"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
@@ -609,12 +609,12 @@ msgstr "Verbleibender Wert"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Rücklieferschein"
+msgstr "Rücksendung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Retourenkommissionierungslinie"
+msgstr "Rücksendungsposten"
 
 #. module: stock_account
 #. odoo-python
@@ -883,12 +883,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Bei der Echtzeit-Inventar-Bewertung genutzt.  Wenn bei einem virtuellen "
+"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn bei einem virtuellen "
 "Lager eingestellt (nicht intern), wird diesem Konto der Wert der Produkte "
-"zugeschrieben, die bei Lagerbewegungen von einem internen Lager an dieses "
-"Lager erfolgen, anstelle des beim jeweiligen Produkt eingetragenen "
-"allgemeinen Lagerabgangs-Konto, verwendet. Bei rein internen "
-"Lagerveränderungen hat diese Einstellung keine Auswirkung."
+"zugeschrieben, die bei Bewegungen von einem internen Lager an dieses Lager "
+"erfolgen, anstelle des beim jeweiligen Produkt eingetragenen allgemeinen "
+"Lagerausgangskonto, verwendet. Bei rein internen Lagerorten hat diese "
+"Einstellung keine Auswirkung."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -899,10 +899,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Wird bei der Echtzeit-Inventar-Bewertung genutzt. Wenn es bei einem "
-"virtuellen Lager eingestellt (nicht intern), wird dieses Bestandskonto für "
-"Lieferungen von diesem Lager in ein internes Lager, anstelle des beim "
-"Produkt eingetragenen, allgemeinen Warenabgang-Verrechnungskonto, verwendet."
+"Bei der Echtzeit-Bestandsbewertung verwendet. Wenn bei einem virtuellen "
+"Lager eingestellt (nicht intern), wird diesem Konto der Wert der Produkte "
+"zugeschrieben, die bei Bewegungen aus diesem Lagerort an einen internen "
+"Lagerort erfolgen, anstelle des beim jeweiligen Produkt eingetragenen "
+"allgemeinen Lagerausgangskonto, verwendet. Bei rein internen Lagerorten hat "
+"diese Einstellung keine Auswirkung."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -974,8 +976,8 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Bei der automatischen Bestandsbewertung werden die Gegenbuchungsposten für alle ausgehenden Lagerbewegungen auf diesem Konto gebucht,\n"
-"es sei denn, es ist ein spezielles Bewertungskonto für den Bestimmungsort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie.\n"
+"Bei der automatischen Bestandsbewertung werden die Gegenbuchungsposten für alle ausgehenden Lagerbuchungen auf diesem Konto gebucht,\n"
+"es sei denn, es ist ein spezielles Bewertungskonto für den Zielort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie.\n"
 "Er kann auch direkt für jedes Produkt eingestellt werden."
 
 #. module: stock_account
@@ -985,7 +987,7 @@ msgid ""
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
 "Bei der automatischen Bestandsbewertung ist dies das Buchungsjournal, in dem"
-" automatisch Buchungen vorgenommen werden, wenn Lagerbewegungen verarbeitet "
+" automatisch Buchungen vorgenommen werden, wenn Lagerbuchungen verarbeitet "
 "werden."
 
 #. module: stock_account

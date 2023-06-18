@@ -25,14 +25,14 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "품목 비용이 %(previous)s 에서 %(new_cost)s (으)로 업데이트 되었습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [회계 처리 %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -41,6 +41,8 @@ msgstr ""
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
+"%(user)s 사용자가 %(product)s 에 대해서 %(previous)s 에서  %(new_price)s으로 원가를 "
+"변경하였습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -51,6 +53,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s 사용자가 %(product)s 에 대해서 %(previous)s 에서 %(new_value)s 으로 재고 가치를 "
+"변경하였습니다."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -58,11 +62,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">재고 가치 감소를 기록하려면 값에 음수를 사용합니다.</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>다음의 특정 항목에 다른 입력/출력 계좌를 설정합니다 </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -114,7 +120,7 @@ msgstr "회계 정보"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "수기 가치 평가 추가"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -125,12 +131,12 @@ msgstr "제품 가격에 추가 비용(운송, 통관 등)을 추가하십시오
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "값 추가"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "값 추가"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -143,7 +149,7 @@ msgstr "입고 작업에서 부대비용에 영향을 주며 비용 가격을 �
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
 msgid "Analytic Account Line"
-msgstr ""
+msgstr "분석 계정 내역"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -198,7 +204,7 @@ msgstr "비용 방법 변경은 재고 평가에 영향을 미치는 중요한 �
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "가치 평가를 실시할 해당 날짜를 선택하십시오."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -246,6 +252,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"원래의 위치에 특정 평가 계정이 설정되어 있지 않는 한, 모든 재고 입고 이동 항목에 대한 상대 전표 항목이 이 계정에 전기됩니다.\n"
+"                이는 해당 카테고리에 속하는 전체 품목의 기본값이며, 각각의 품목에 직접 설정할 수도 있습니다. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -274,7 +282,7 @@ msgstr "통화"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "현재 수량"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -344,7 +352,7 @@ msgstr "그룹별..."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr ""
+msgstr "남은 수량이 있습니다"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -385,7 +393,7 @@ msgstr "청구서 내역"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "청구서 상의 통화로 청구서 가격 수정"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -428,7 +436,7 @@ msgstr "다음과 연결됨"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "로트 및 일련번호가 청구서에 표시됩니다"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -440,14 +448,14 @@ msgstr "수동"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "수기 재고 가치 평가: %s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "수기 재고 가치 평가: 사유 없음."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -470,17 +478,17 @@ msgstr "이동한 수량"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "새로운 값"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "수량별 신규 값"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Open Valuation Layer"
-msgstr ""
+msgstr "가치 평가 단계 열기"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -516,7 +524,7 @@ msgstr "품목 이동 (재고 이동 상세)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "품목 재평가"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
@@ -558,7 +566,7 @@ msgstr "사유"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "재평가 사유"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -568,7 +576,7 @@ msgstr "참조"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "관련 품목"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -595,12 +603,12 @@ msgstr "반품 선별 내역"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "%s 재평가"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "재평가"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -659,7 +667,7 @@ msgstr "재고 재보충 보고서"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "재고 실사 요청 재고"
 
 #. module: stock_account
 #. odoo-javascript
@@ -703,7 +711,7 @@ msgstr "재고 평가 레이어"
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
-msgstr ""
+msgstr "품목의 가치 평가 단계에서 총 가치에 해당하는 값을 회사에서 현재 사용하는 통화로 올바르게 표시하도록 하는 기술 필드"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -721,7 +729,7 @@ msgstr ""
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr ""
+msgstr "재고 입고 및/또는 출고 계정은 재고 가치 평가 계정과 동일하게 사용할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -731,14 +739,14 @@ msgstr ""
 msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
-msgstr ""
+msgstr "작업으로 인해 접근 권한이 없는 전표입력 항목이 생성되었습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "추가된 값은 재고 가치 평가에 아무런 영향을 미치지 않습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -774,17 +782,17 @@ msgstr "이동 명세가 일관된 상태가 아닙니다. 동일한 출발지 �
 msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
-msgstr ""
+msgstr "평가 단계가 없습니다. 재고 평가에 영향을 미칠 수 있는 품목 이동이 발생할 경우 평가 단계가 생성됩니다. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Quantity"
-msgstr ""
+msgstr "총 잔여 수량"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "총 잔여 가치"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -811,7 +819,7 @@ msgstr "관련 판매 주문/구매 주문에서 배송/납품 수량 감소를 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Unit Cost"
-msgstr ""
+msgstr "단가"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
@@ -866,18 +874,18 @@ msgstr "평가"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "평가 통화"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Valuation Report"
-msgstr ""
+msgstr "평가 보고서"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Valuation at Date"
-msgstr ""
+msgstr "평가일"
 
 #. module: stock_account
 #. odoo-python
@@ -894,7 +902,7 @@ msgstr "가치"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "Value On Hand:"
-msgstr ""
+msgstr "보유한 가치:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -936,21 +944,21 @@ msgstr "자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "품목 비축 재고 재평가용 마법사 모델"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "표준원가법으로 품목을 재평가할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "재고 내용이 없거나 음수인 품목은 재평가할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -960,7 +968,7 @@ msgid ""
 "You cannot update the cost of a product in automated valuation as it leads "
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
-msgstr ""
+msgstr "접근 권한이 없는 전표입력 항목이 생성되므로 자동 평가에서 품목 원가를 업데이트할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -978,7 +986,7 @@ msgstr "제품 범주에 정의된 입고 평가 계정이 없습니다. 이 작
 msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
-msgstr ""
+msgstr "품목 카테고리에 정의되어 있는 입고 재고 계정이 없습니다. 작업을 차리하기 전에 항목을 설정해야 합니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1006,7 +1014,7 @@ msgstr "제품 범주에 정의된 재고 평가 계정이 없습니다. 이 작
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "폼목 카테고리에 상대 계정을 설정해야 합니다."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -1021,4 +1029,4 @@ msgstr "for"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "위치"

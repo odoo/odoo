@@ -3,16 +3,17 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Claudecir Garcia Martins, 2023
 # Martin Trigaux, 2023
+# Layna Nascimento, 2023
+# Kevilyn Rosa, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Kevilyn Rosa, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
-msgstr ""
+msgstr "Adicionar uma nova impressora de pedidos de restaurante"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -301,6 +302,13 @@ msgid "Config Settings"
 msgstr "Configurações"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "Couldn't synchronize the orders for the tables because you are offline"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -379,7 +387,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
-msgstr ""
+msgstr "Falha ao imprimir as alterações no pedido"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -534,7 +542,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr ""
+msgstr "Notas da cozinha"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -558,7 +566,7 @@ msgstr "Última atualização em"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Último estado impresso do pedido"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -683,7 +691,7 @@ msgstr "Pedido"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_order_printer
 msgid "Order Printer"
-msgstr ""
+msgstr "Impressora de pedidos"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
@@ -732,7 +740,7 @@ msgstr "Pagamento"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
-msgstr "Ponto de venda"
+msgstr "Ponto de Venda"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -777,7 +785,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "É impressora de vendas do PDV?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
@@ -799,7 +807,7 @@ msgstr "Imprimir"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Print orders at the kitchen, at the bar, etc."
-msgstr ""
+msgstr "Imprimir pedidos na cozinha, no bar, etc."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
@@ -814,7 +822,7 @@ msgstr "Nome da Impressora"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "Tipo de impressora"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -826,7 +834,7 @@ msgstr "Impressoras"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "Falha na impressão"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1010,7 +1018,7 @@ msgstr "Assinatura"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr ""
+msgstr "Pular linha ao enviar as comandas para as impressoras da cozinha."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1112,6 +1120,13 @@ msgid "The default number of customer served at this table."
 msgstr "O número padrão de clientes servidos nesta mesa."
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "The orders for the table could not be loaded because you are offline"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
@@ -1166,6 +1181,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Esse pedido ainda não foi sincronizado com o servidor. Certifique-se de que "
+"ele esteja sincronizado e tente novamente."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1226,7 +1243,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "Pedido não sincronizado"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid

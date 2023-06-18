@@ -11,18 +11,18 @@
 # Jacek Michalski <michalski.jck@gmail.com>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Tomasz Leppich <t.leppich@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,13 @@ msgstr ""
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
 msgstr ""
 
 #. module: pos_sale
@@ -205,7 +212,7 @@ msgstr "Nowe"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr ""
+msgstr "Następna lista zamówień"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -266,7 +273,7 @@ msgstr "Konfiguracja punktu sprzedaży"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Linie zamówień w punktach sprzedaży"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -299,7 +306,7 @@ msgstr "Zaksięgowano"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr ""
+msgstr "Lista poprzednich zamówień"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -472,7 +479,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "Kurs waluty do waluty kursu obowiązującego w dniu zlecenia"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -540,3 +547,12 @@ msgstr "Co chcesz zrobić?"
 #, python-format
 msgid "Yes"
 msgstr "Tak"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""

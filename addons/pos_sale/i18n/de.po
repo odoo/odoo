@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
-msgstr "(links:"
+msgstr "(verbleibend:"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -39,6 +39,13 @@ msgstr "(Steuer inkl.)"
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
 msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
+msgstr "Ein neuer Auftrag wurde erstellt."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -112,7 +119,7 @@ msgstr "Geliefert aus"
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr ""
-"Möchten Sie die mit dem Verkaufsauftrag verbundenen Seriennummern/Chargen "
+"Möchten Sie die mit dem Verkaufsauftrag verbundenen Seriennummern/Lose "
 "laden?"
 
 #. module: pos_sale
@@ -168,7 +175,7 @@ msgstr ""
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr "Verknüpfte PoS-Aufträge"
+msgstr "Verknüpfte Kassenaufträge"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
@@ -220,7 +227,7 @@ msgstr "Kein Anzahlungsprodukt"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr "PoS-Sitzungen öffnen"
+msgstr "Kassensitzungen öffnen"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -261,12 +268,12 @@ msgstr "Kassensystem-Konfiguration"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Auftragszeilen am Point of Sale"
+msgstr "Auftragspositionen des Kassensystems"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Point Of Sale Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -281,7 +288,7 @@ msgstr "Kassensystem"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr "PoS-Auftragsanzahl"
+msgstr "Anzahl Kassenaufträge"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
@@ -322,14 +329,14 @@ msgstr "Angebot gesendet"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr "Angebot/Bestellung"
+msgstr "Angebot/Auftrag"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr "Seriennummern/Chargen werden geladen"
+msgstr "SN/Lose werden geladen"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -342,7 +349,7 @@ msgstr "Verkaufsauftrag"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr "Verkaufsauftragsanzahl"
+msgstr "Anzahl Verkaufsaufträge"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -384,7 +391,7 @@ msgstr "Verkaufsteam (Kassensystem)"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr "Die Umsätze werden an das folgende Vertriebsteam gemeldet"
+msgstr "Die Umsätze werden an das folgende Verkaufsteam gemeldet"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -408,7 +415,7 @@ msgstr "Sitzung läuft"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr "Anzahl der Sitzungsverkäufe"
+msgstr "Anzahl Sitzungsverkäufe"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -438,8 +445,8 @@ msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
 msgstr ""
-"Einige der Produkte in Ihrem Verkaufsauftrag sind nicht in POS verfügbar. "
-"Möchten Sie diese importieren?"
+"Einige der Produkte in Ihrem Verkaufsauftrag sind nicht im Kassensystem "
+"verfügbar. Möchten Sie diese importieren?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
@@ -484,8 +491,7 @@ msgstr "Es gab ein Problem beim Laden des Kunden %s."
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-"Die Verkäufe dieser Verkaufsstelle stehen in Beziehung zu diesem "
-"Verkaufsteam."
+"Die Verkäufe dieses Kassensystems sind mit diesem Verkaufsteam verknüpft."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -514,7 +520,7 @@ msgid ""
 "                                from Sale"
 msgstr ""
 "Übertragen<br/>\n"
-"                                aus Sale"
+"                                aus Verkauf"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -523,7 +529,7 @@ msgid ""
 "                                to POS"
 msgstr ""
 "Übertragen<br/>\n"
-"                               an PoS"
+"                               an Kassensystem"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
@@ -544,3 +550,14 @@ msgstr "Was möchten Sie tun?"
 #, python-format
 msgid "Yes"
 msgstr "Ja"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"Sie haben versucht, eine Anzahlung von %s zu berechnen, aber nur %s sind "
+"noch zu zahlen, %s wird auf die Auftragsposition angewendet."

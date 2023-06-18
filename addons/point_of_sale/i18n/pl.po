@@ -1818,7 +1818,7 @@ msgstr "Domyślna pozycja fiskalna"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Journals"
-msgstr ""
+msgstr "Domyślne dzienniki"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -5263,6 +5263,14 @@ msgstr "Odwrócenie wpisu zamknięcia POS %s dla zamówienia %s z sesji %s"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Odwrócenie: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Żądanie odwrócenia wysłane do terminala"
@@ -6263,6 +6271,13 @@ msgstr ""
 "Maksymalna dopuszczalna różnica wynosi %s.\n"
 "\n"
 "Prosimy o kontakt z menedżerem w celu zaakceptowania różnicy zamknięcia."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "Nazwa monet/banknotów musi być liczbą."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7280,13 +7295,6 @@ msgid ""
 msgstr ""
 "Możesz dodać niektóre z menu Produkty lub połączyć istniejące, oznaczając je jako \"Dostępne w PoS\".\n"
 "Możesz też dodać dane demonstracyjne do celów testowych. Należy pamiętać, że jest to działanie nieodwracalne."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

@@ -116,7 +116,7 @@ msgid ""
 "this template"
 msgstr ""
 "Hinzufügen einer kontextbezogenen Aktion auf dem zugehörigen Modell, um "
-"einen SMS-Composer mit dieser Vorlage zu öffnen"
+"einen SMS-Verfasser mit dieser Vorlage zu öffnen"
 
 #. module: sms
 #. odoo-javascript
@@ -188,7 +188,7 @@ msgstr "Darf stornieren"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
 msgid "Can Resend"
-msgstr "Kann erneut senden"
+msgstr "Darf erneut senden"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -224,8 +224,8 @@ msgid ""
 msgstr ""
 "Methode für SMS-Versand wählen:\n"
 "SMS: Massen-SMS\n"
-"Als Nachricht posten: in Dokument anmelden\n"
-"Als Notiz posten: Massen-SMS mit Archiven"
+"Als Nachricht hinterlassen: in Dokument protokollieren\n"
+"Als Notiz hinterlassen: Massen-SMS mit Archiven"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -305,7 +305,7 @@ msgstr "Anzeigename"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Followers"
-msgstr "Dokument Abonnenten"
+msgstr "Dokument Follower"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -315,12 +315,12 @@ msgstr "Dokument-ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
 msgid "Document IDs"
-msgstr "Dokumenten-IDs"
+msgstr "Dokument-IDs"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
 msgid "Document Model Description"
-msgstr "Dokumentmodellbeschreibung"
+msgstr "Beschreibung des Dokumentmodells"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -340,7 +340,7 @@ msgstr "Partner bearbeiten"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "E-Mail Thread"
+msgstr "E-Mail-Thread"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -368,7 +368,7 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Feld zum Speichern der bereinigten Rufnummer. Hilft, die Suche und den "
+"Feld zum Speichern der bereinigten Telefonnummer. Hilft, die Suche und den "
 "Vergleich zu beschleunigen."
 
 #. module: sms
@@ -382,12 +382,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: sms
 #. odoo-python
@@ -415,7 +415,7 @@ msgstr "Hat SMS-Fehler"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr "Hat nicht registrierten Account"
+msgstr "Hat nichtregistriertes Konto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__id
@@ -497,7 +497,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob eine bereinigte Telefonnummer auf der schwarzen Liste eine "
+"Zeigt an, ob eine bereinigte Rufnummer auf der schwarzen Liste eine "
 "Mobilfunknummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
 "schwarzen Liste steht, wenn es in einem Modell sowohl ein Handy- als auch "
 "ein Telefonfeld gibt."
@@ -509,10 +509,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob es sich bei einer auf der schwarzen Liste stehenden bereinigten"
-" Telefonnummer um eine Telefonnummer handelt. Hilft bei der Unterscheidung, "
-"welche Nummer auf der schwarzen Liste steht, wenn es in einem Modell sowohl "
-"ein Handy- als auch ein Telefonfeld gibt."
+"Zeigt an, ob eine bereinigte Rufnummer auf der schwarzen Liste eine "
+"Teleofnnummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
+"schwarzen Liste steht, wenn es in einem Modell sowohl ein Handy- als auch "
+"ein Telefonfeld gibt."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -536,7 +536,7 @@ msgstr "Ungültige Empfängernummer. Bitte aktualisieren Sie sie."
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -616,7 +616,7 @@ msgid ""
 "comment for other messages such as user replies"
 msgstr ""
 "Nachrichtentyp: E-Mail für E-Mail-Nachricht, Mitteilung für Systemnachricht,"
-" Kommentar für andere Mitteilungen wie Diskussionsbeiträge von Benutzern."
+" Kommentar für andere Mitteilungen wie Benutzerantworten"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -753,12 +753,12 @@ msgstr "Telefon/Mobil"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "Post as Message"
-msgstr "Als Nachricht posten"
+msgstr "Als Nachricht hinterlassen"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Post as Note"
-msgstr "Als Notiz posten"
+msgstr "Als Notiz hinterlassen"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -783,7 +783,7 @@ msgstr "Fortfahren"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Put in queue"
-msgstr "In Warteschlange"
+msgstr "In Warteschlange setzen"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -893,7 +893,7 @@ msgstr "SMS ("
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "SMS API"
-msgstr "SMS API"
+msgstr "SMS-API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -936,12 +936,12 @@ msgstr "SMS-Zustellungsfehler"
 #: code:addons/sms/static/src/models/notification_group.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr "Fehlgeschlagene SMS"
+msgstr "SMS-Fehler"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
-msgstr "SMS Nummer"
+msgstr "SMS-Nummer"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -954,7 +954,7 @@ msgstr "SMS-Vorschau"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS Pricing"
-msgstr "SMS Preisberechnung"
+msgstr "SMS-Preisgestaltung"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
@@ -977,7 +977,7 @@ msgstr "SMS-Vorlage"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr "SMS-Vorlage Vorschau"
+msgstr "Vorschau der SMS-Vorlage"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
@@ -1014,13 +1014,13 @@ msgstr "SMS: SMS-Warteschlangen-Manager"
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr "Desinfiziert Nummer"
+msgstr "Bereinigte Nummer"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr "SMS-Vorlagen durchsuchen"
+msgstr "SMS-Vorlagen suchen"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1032,7 +1032,7 @@ msgstr "Senden & Schließen"
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
-msgstr "Sofort senden"
+msgstr "Jetzt senden"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1134,7 +1134,7 @@ msgstr "Ein Konto einrichten"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
 msgid "Sidebar action"
-msgstr "Sidebar-Aktion"
+msgstr "Seitenleistenaktion"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
@@ -1153,7 +1153,7 @@ msgstr "Einzelmodus"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
-msgstr "SMS erneut Senden"
+msgstr "SMS erneut versenden"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
@@ -1273,7 +1273,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr "Nicht registrierter Account"
+msgstr "Nichtregistriertes Konto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1339,7 +1339,7 @@ msgstr "Sie haben kein zulässiges IAP-Konto."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr "Sie haben nicht genügend Guthaben in Ihrem IAP-Account."
+msgstr "Sie haben nicht genügend Guthaben in Ihrem IAP-Konto."
 
 #. module: sms
 #. odoo-javascript
@@ -1388,7 +1388,7 @@ msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
 msgstr ""
-"Empfänger haben eine ungültige Telefonnummer und werden diese SMS nicht "
+"Empfängern haben eine ungültige Telefonnummer und werden diese SMS nicht "
 "erhalten."
 
 #. module: sms

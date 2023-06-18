@@ -7,17 +7,17 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
 # Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -215,27 +215,6 @@ msgid "<br/>by"
 msgstr "<br/>por"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q6
-msgid ""
-"<div class=\"text-center\">\n"
-"                <div class=\"media_iframe_video\" data-oe-expression=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" style=\"width: 50%;\">\n"
-"                    <div class=\"css_editable_mode_display\"/>\n"
-"                    <div class=\"media_iframe_video_size\" contenteditable=\"false\"/>\n"
-"                    <iframe src=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" frameborder=\"0\" contenteditable=\"false\"/>\n"
-"                </div><br/>\n"
-"            </div>\n"
-"        "
-msgstr ""
-"<div class=\"text-center\">\n"
-"                <div class=\"media_iframe_video\" data-oe-expression=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" style=\"width: 50%;\">\n"
-"                    <div class=\"css_editable_mode_display\"/>\n"
-"                    <div class=\"media_iframe_video_size\" contenteditable=\"false\"/>\n"
-"                    <iframe src=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" frameborder=\"0\" contenteditable=\"false\"/>\n"
-"                </div><br/>\n"
-"            </div>\n"
-"        "
-
-#. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
@@ -243,7 +222,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -258,7 +237,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -269,8 +248,8 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- Usamos el logo de la empresa que creó la encuesta (en el caso de multiempresas) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <!-- Usamos el logo de la empresa que hizo la encuesta (para tratar casos de multiempresa) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</t>\n"
 "            </td></tr>\n"
@@ -279,13 +258,13 @@ msgstr ""
 "    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>Apreciable<span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>Apreciable <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
 "                <p>\n"
-"                    A continuación encontrará como archivo adjunto su certificación en\n"
-"                        <strong t-out=\"object.survey_id.display_name or ''\">Creación de muebles</strong>\n"
+"                    Aquí  encontrará adjunta su certificación de\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    \n"
 "                </p>\n"
-"                <p>¡Felicidades por aprobar el examen! Recibió un puntaje de <strong t-out=\"object.scoring_percentage\"/>%.</p>\n"
+"                <p>Felicidades por aprobar el cuestionario con un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -297,7 +276,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -315,7 +294,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -329,31 +308,31 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Apreciable <t t-out=\"object.partner_id.name or 'participant'\">participante</t><br/><br/>\n"
+"        Apreciable <t t-out=\"object.partner_id.name or 'participant'\">participante</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
-"            Se le invitó a tomar una nueva certificación.\n"
+"            Le invitamos a realizar un nueva certificación.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Estamos realizando una encuesta y sus respuesta serían muy apreciadas.\n"
+"            Estamos realizando una encuesta y le agradeceríamos su participación.\n"
 "        </t>\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
-"                    Empezar certificación\n"
+"                    Iniciar certificación\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    Empezar encuesta\n"
+"                    Iniciar encuesta\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Realice la encuesta antes del <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Por favor responda la encuesta antes del día <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
-"            ¡Buena suerte!\n"
+"            ¡Le deseamos buena suerte!\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Gracias por su participación.\n"
+"            Le agradecemos de antemano su participación.\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -455,135 +434,6 @@ msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>respuesta"
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<i class=\"fa fa-trash me-1\"/>Remove all filters"
 msgstr "<i class=\"fa fa-trash me-1\"/>Eliminar todos los filtros"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q3
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
-"            </p>\n"
-"        "
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q4
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/pinus_sylvestris.jpg\" style=\"width: 100%;\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/pinus_sylvestris.jpg\" style=\"width: 100%;\"/><br/>\n"
-"            </p>\n"
-"        "
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4
-msgid ""
-"<p>\n"
-"                We like to say that the apple doesn't fall far from the tree, so here are trees.\n"
-"            </p>\n"
-"        "
-msgstr ""
-"<p>\n"
-"                Nos gusta decir que la manzana no cae lejos del árbol, así que, aquí hay árboles.\n"
-"            </p>\n"
-"        "
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3
-msgid "<p>An apple a day keeps the doctor away.</p>"
-msgstr "<p>Una manzana al día es salud y alegría.</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_demo_burger_quiz
-msgid ""
-"<p>Choose your favourite subject and show how good you are. Ready ?</p>"
-msgstr "<p>Elija su tema favorito y demuestre lo bueno que es. ¿Listo?</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1_q4
-msgid "<p>Just to categorize your answers, don't worry.</p>"
-msgstr "<p>Solo es para clasificar sus respuestas, no se preocupe.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1
-msgid ""
-"<p>Some general information about you. It will be used internally for "
-"statistics only.</p>"
-msgstr ""
-"<p>Alguna información general sobre usted. Se utilizará de manera interna, "
-"solo para estadísticas.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions about our company. Do you really know us?</p>"
-msgstr ""
-"<p>Algunas preguntas sobre nuestra empresa. ¿De verdad nos conoce?</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_3
-msgid "<p>Test your knowledge of our policies.</p>"
-msgstr "<p>Ponga a prueba su conocimiento sobre nuestras políticas.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_2
-msgid "<p>Test your knowledge of our prices.</p>"
-msgstr "<p>Ponga a prueba su conocimiento sobre nuestros precios.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_1
-msgid "<p>Test your knowledge of your products!</p>"
-msgstr "<p>Ponga a prueba sus conocimientos sobre sus productos</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.vendor_certification
-msgid "<p>Test your vendor skills!</p>"
-msgstr "<p>Ponga a prueba sus habilidades como proveedor</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p1
-msgid ""
-"<p>This section is about general information about you. Answering them helps"
-" qualifying your answers.</p>"
-msgstr ""
-"<p>Esta sección recopila información general sobre usted. Responderlas ayuda"
-" a calificar sus respuestas.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p2
-msgid "<p>This section is about our eCommerce experience itself.</p>"
-msgstr ""
-"<p>Esta sección trata sobre nuestra propia experiencia con el comercio "
-"electrónico.</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_demo_quiz
-msgid ""
-"<p>This small quiz will test your knowledge about our Company. Be prepared "
-"!</p>"
-msgstr ""
-"<p>Este pequeño cuestionario pondrá a prueba sus conocimientos sobre nuestra"
-" empresa. ¡Prepárese!</p>"
-
-#. module: survey
-#: model:survey.survey,description:survey.survey_feedback
-msgid ""
-"<p>This survey allows you to give a feedback about your experience with our products.\n"
-"    Filling it helps us improving your experience.</p>"
-msgstr ""
-"<p>Esta encuesta le permite dar su opinión sobre su experiencia con nuestros productos.\n"
-"     Responderlo nos ayuda a mejorar su experiencia.</p>"
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5
-msgid "<p>We may be interested by your input.</p>"
-msgstr "<p>Su opinión nos puede ser de mucha ayuda.</p>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -734,7 +584,7 @@ msgid "<span class=\"text-muted\">Success</span>"
 msgstr "<span class=\"text-muted\">Aciertos</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr "<span>\"Rojo\" no es una categoría, sé lo que intenta hacer ;)</span>"
@@ -750,7 +600,7 @@ msgid "<span>All surveys</span>"
 msgstr "<span>Todas las encuestas</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q6
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
 msgstr ""
 "<span>El mejor momento para hacerlo, es el momento adecuado para "
@@ -793,7 +643,7 @@ msgstr ""
 "                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numérico\"/>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
 msgid ""
 "<span>If you don't like us, please try to be as objective as "
 "possible.</span>"
@@ -825,12 +675,12 @@ msgid "<span>Number of attempts left</span>:"
 msgstr "<span>Número de intentos restantes</span>:"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader !</span>"
 msgstr "<span>¡Nuestro famoso líder!</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q3
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it !</span>"
 msgstr ""
 "<span>Nuestro personal de ventas tiene ventaja, ¡pero usted también lo puede"
@@ -1106,6 +956,11 @@ msgid "An answer score for a non-multiple choice question cannot be negative!"
 msgstr ""
 "La puntuación de una pregunta que no sea de respuesta múltiple no puede ser "
 "negativa."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3
+msgid "An apple a day keeps the doctor away."
+msgstr "Una manzana al día es salud y alegría."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -1492,6 +1347,11 @@ msgstr "China"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Choices"
 msgstr "Opciones"
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
+msgid "Choose your favourite subject and show how good you are. Ready ?"
+msgstr "Elija su tema favorito y demuestre lo bueno que es. ¿Listo?"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -2109,7 +1969,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
@@ -2748,6 +2608,11 @@ msgstr "Japón"
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Join Session"
 msgstr "Unirse a la sesión"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
+msgid "Just to categorize your answers, don't worry."
+msgstr "Solo es para clasificar sus respuestas, no se preocupe."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -4247,6 +4112,20 @@ msgid "Some emails you just entered are incorrect: %s"
 msgstr "Algunos correos electrónicos que acaba de ingresar son incorrectos:%s"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1
+msgid ""
+"Some general information about you. It will be used internally for "
+"statistics only."
+msgstr ""
+"Alguna información general sobre usted. Se utilizará de manera interna con "
+"fines estadísticos."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2
+msgid "Some questions about our company. Do you really know us?"
+msgstr "Algunas preguntas acerca de nuestra empresa. ¿Realmente nos conoce? "
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
 msgstr "Lo sentimos, nadie ha respondido esta encuesta todavía."
@@ -4526,6 +4405,26 @@ msgstr "Prueba"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Test Entry"
 msgstr "Entrada de prueba"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_3
+msgid "Test your knowledge of our policies."
+msgstr "Ponga a prueba su conocimiento sobre nuestras políticas. "
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_2
+msgid "Test your knowledge of our prices."
+msgstr "Ponga a prueba su conocimiento acerca de nuestros precios. "
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_1
+msgid "Test your knowledge of your products!"
+msgstr "¡Ponga a prueba su conocimiento acerca de sus productos!"
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.vendor_certification
+msgid "Test your vendor skills!"
+msgstr "¡Ponga a prueba sus habilidades como vendedor! "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4854,6 +4753,39 @@ msgid "This question was skipped"
 msgstr "Saltaron esta pregunta"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p1
+msgid ""
+"This section is about general information about you. Answering them helps "
+"qualifying your answers."
+msgstr ""
+"Esta sección trata de su información general. Contestar ayuda a cualificar "
+"sus respuestas. "
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p2
+msgid "This section is about our eCommerce experience itself."
+msgstr ""
+"Esta sección trata sobre nuestra experiencia propia en el comercio "
+"electrónico. "
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_demo_quiz
+msgid ""
+"This small quiz will test your knowledge about our Company. Be prepared !"
+msgstr ""
+"Este pequeño cuestionario pondrá a prueba su conocimiento acerca de nuestra "
+"Empres. ¡Prepárese!"
+
+#. module: survey
+#: model_terms:survey.survey,description:survey.survey_feedback
+msgid ""
+"This survey allows you to give a feedback about your experience with our products.\n"
+"    Filling it helps us improving your experience."
+msgstr ""
+"Esta encuesta le permite dar su opinión sobre su experiencia con nuestros productos .\n"
+"    Responderlo nos ayuda a mejorar su experiencia. "
+
+#. module: survey
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
@@ -4986,7 +4918,7 @@ msgstr "Ulmaceae"
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"No se puede publicar el mensaje, por favor modifique la dirección de correo "
+"No se puede publicar el mensaje, configure la dirección de correo "
 "electrónico del remitente."
 
 #. module: survey
@@ -5155,6 +5087,20 @@ msgid ""
 msgstr ""
 "Hemos registrado su respuesta. Espere a que el anfitrión pase a la siguiente"
 " pregunta."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p4
+msgid ""
+"We like to say that the apple doesn't fall far from the tree, so here are "
+"trees."
+msgstr ""
+"Nos gusta decir que la manzana no cae lejos del árbol, así que aquí hay "
+"árboles. "
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5
+msgid "We may be interested by your input."
+msgstr "Nos interesa tu opinión. "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids

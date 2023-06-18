@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -27,7 +27,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr " Utilizar una impresora conectada a la IoT Box"
+msgstr " Utilizar una impresora conectada a la caja IoT"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -129,7 +129,8 @@ msgstr "Permitir dividir la cuenta"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom internal notes on Orderlines."
-msgstr "Permita notas internas personalizadas en Orderlines."
+msgstr ""
+"Permitir la personalización de las notas de cocina en Líneas de comandas"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -309,6 +310,14 @@ msgid "Config Settings"
 msgstr "Ajustes de configuración"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "Couldn't synchronize the orders for the tables because you are offline"
+msgstr ""
+"No pudo sincronizar las comandas para las mesas porque está sin conexión"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -384,7 +393,7 @@ msgstr "Editar"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr "Permite dividir la cuenta en el punto de venta."
+msgstr "Permite dividir la cuenta en el Punto de venta."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -596,7 +605,7 @@ msgstr "Logo"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
-msgstr "Almuerzo Maki 18 pzas."
+msgstr "Almuerzo maki 18 pzas."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
@@ -760,7 +769,7 @@ msgstr "Configuración del PdV"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Líneas de comanda del punto de venta"
+msgstr "Líneas de comanda del Punto de venta"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
@@ -780,7 +789,7 @@ msgstr "Sesión del punto de venta"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr "Notas de línea de comandas en la interfaz del TPV"
+msgstr "Notas de línea de comandas en la interfaz del PdV"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
@@ -844,7 +853,7 @@ msgstr "Impresoras"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr "La impresión falló."
+msgstr "La impresión falló"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1129,6 +1138,14 @@ msgstr "El color de fondo del piso en un formato compatible con html"
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
 msgstr "El número por defecto de clientes atendidos en esta mesa."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/error_handlers.js:0
+#, python-format
+msgid "The orders for the table could not be loaded because you are offline"
+msgstr ""
+"Las comandas para la mesa no se pudieron guardar porque está sin conexión"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids

@@ -5,16 +5,18 @@
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
+# Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +120,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "Invalid JSON Data"
+msgstr "Datos JSON no válidos "
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_uid
 msgid "Last Updated by"
@@ -205,3 +214,10 @@ msgstr "Miniatura"
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website
 msgid "Website"
 msgstr "Sitio web"
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
+#, python-format
+msgid "You cannot delete %s as it is used in another module."
+msgstr "No puede eliminar %s ya que se usa en otro módulo."

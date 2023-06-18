@@ -166,7 +166,7 @@ msgstr "크레딧 구매하기"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "크레딧을 구매하십시오."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
@@ -210,6 +210,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"SMS 전송 방법 선택:\n"
+"SMS: 대량 SMS\n"
+"메시지 게시: 문서에 로그인\n"
+"메모 게시: 보관 항목 포함된 대량 SMM"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -456,6 +460,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"블랙리스트에 있는 전화번호가 없는 번호인 경우, 어느 목록에서도 해당 연락처에 대해서는 더 이상 대량 발송 SMS를 보내지 않게 됩니다."
+" "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -474,6 +480,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"해당 핸드폰 번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는"
+" 번호를 구분하는데 사용합니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -482,6 +490,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"해당 전화번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는 "
+"번호를 구분하는데 사용합니다."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -1037,14 +1047,14 @@ msgstr "SMS 보내기"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "다음으로 보내기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "다음으로 보내기 (SMS)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1184,7 +1194,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgstr "이 전화번호는 SMS 마케팅에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하려면 클릭하세요."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1212,6 +1222,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"서버 작업 유형입니다. 다음과 같은 값을 사용할 수 있습니다:\n"
+"- 'Python 코드 실행': 실행할 Python 코드 블록입니다.\n"
+"- '새로운 레코드 생성': 새로운 값을 가진 새 레코드를 생성합니다,\n"
+"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
+"- '여러 작업 실행': 여러 가지의 다른 서버 작업을 동작시키는 작업을 정의합니다.\n"
+"- '이메일 전송': 메시지나 메모를 게시하거나 이메일을 전송합니다 (메일 및 채팅 앱).\n"
+"- '팔로워 추가': 레코드에 팔로워를 추가합니다 (메일 및 채팅 앱).\n"
+"- '다음 작업 생성': 작업을 생성합니다 (메일 및 채팅 앱).\n"
+"- 'SMS 문자 메시지 전송': SMS를 전송하고, 문서에 기록합니다 (SMS)."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
@@ -1321,7 +1340,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr ""
+msgstr "다음에서"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

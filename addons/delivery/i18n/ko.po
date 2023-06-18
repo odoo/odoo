@@ -82,18 +82,18 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - 중량 (예측치): </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - 중량: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>선적 중량: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -114,7 +114,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>선적 중량: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -122,6 +122,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>선적 중량:</strong>\n"
+"                    <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -129,6 +131,8 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>총 중량t:</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -138,7 +142,7 @@ msgstr "<strong>추적용 번호 :</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>중량: </strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
@@ -233,7 +237,7 @@ msgstr "취소"
 msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
-msgstr ""
+msgstr "배송을 취소할 경우 이를 취소할 수 없습니다. 계속하시겠습니까?"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -250,7 +254,7 @@ msgstr "운송업체"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "배송업체 코드"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -260,7 +264,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "배송업체 이름"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -370,7 +374,7 @@ msgstr "꾸러미 상품 배송 선택 마법사"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "배송 패키지 유형"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -709,7 +713,7 @@ msgstr "주문"
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "상품 원산지"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -844,6 +848,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
+"원산지 규정에 따라 상품의 원산지를 결정합니다. 즉, 선적된 곳이 아니라 생산 또는 제조된 곳을 기준으로 합니다. \n"
+"이와 같이 상품의 '원산지'는 상거래에서 거래되는 상품의 '경제적인 출신 국가'를 의미합니다."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -973,7 +979,7 @@ msgstr "재고 이동"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "재고 포장 유형"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -983,12 +989,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "중량의 소수점 자리수를 나타내는 기술 필드"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
+msgstr "중량 측정 단위로 킬로그램 (kg) 또는 다른 단위 (예: 파운드 lb) 사용 여부를 나타내는 기술 필드"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -1014,7 +1020,7 @@ msgstr "게시물"
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr ""
+msgstr "픽업 품목의 총 중량이 0.0 %s 이므로 패키지를 생성할 수 없습니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1094,11 +1100,13 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"패키지 및 패키지 외 품목의 총 중량입니다. 패키지에 선적 중량이 지정되지 않은 경우에는 품목의 총 중량이 기본값으로 설정됩니다. 해당 "
+"중량은 배송 비용을 계산하는데 사용합니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "패키지에 포함되어 있지 않은 품목의 총 중량"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -1210,7 +1218,7 @@ msgstr "무게 단위 꼬리표"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "중량:"
 
 #. module: delivery
 #. odoo-python
@@ -1251,22 +1259,22 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FD선적 중량:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FD중량:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310,200"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
