@@ -200,11 +200,11 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         vals = {
             'name': kwargs['name'],
             'move_type': 'out_invoice',
-            'company_id': self.company,
-            'partner_id': kwargs['partner_id'],
+            'company_id': self.company.id,
+            'partner_id': kwargs['partner_id'].id,
             'invoice_date': kwargs['date'],
             'invoice_date_due': kwargs['date_due'],
-            'currency_id': self.company.currency_id,
+            'currency_id': self.company.currency_id.id,
             'invoice_line_ids': [Command.create({
                 'product_id': kwargs['product_id'].id,
                 'price_unit': kwargs['price'],
