@@ -7,8 +7,8 @@
 # Nathan Grognet <ngr@odoo.com>, 2023
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
 # Cécile Collart <cco@odoo.com>, 2023
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,6 +185,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
+"Un booléen indiquant s'il faut utiliser la notation de style A1 (VRAI) ou la"
+" notation de style R1C1 (FAUX)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -372,6 +374,8 @@ msgstr "Un nombre spécifié, inchangé."
 msgid ""
 "A string indicating the name of the sheet into which the address points."
 msgstr ""
+"Une chaîne de caractères indiquant le nom de la feuille dans laquelle "
+"l'adresse pointe."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -394,6 +398,15 @@ msgid ""
 " number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
+"Abréviation textuelle de l'unité de temps. Les valeurs acceptées sont \"Y\" "
+"(le nombre d'années entières entre la start_date et la end_date), \"M\" (le "
+"nombre de mois entiers entre la start_date et la end_date), \"D\" (le nombre"
+" de jours entre la start_date et la end_date), \"MD\" (le nombre de jours "
+"entre la start_date et la end_date après avoir soustrait le nombre de mois "
+"entiers), \"YM\" (le nombre de mois entiers entre la start_date et la "
+"end_date après avoir soustrait le nombre d'années entières), \"YD\" (le "
+"nombre de jours entre la start_date et la end_date, prenant en considération"
+" que la start_date et la end_date ne sont pas séparées de plus d'un an)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -461,14 +474,14 @@ msgstr "Ajouter"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add any characters or symbol"
-msgstr ""
+msgstr "Ajouter n'importe quel caractère ou symbole"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add new columns to avoid overwriting cells"
-msgstr ""
+msgstr "Ajouter de nouvelles colonnes pour éviter d'écraser des cellules"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -820,6 +833,11 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
+"Indicateur indiquant si la référence est une ligne/colonne absolue. 1 est "
+"une ligne et une colonne absolue (par ex. $A$1), 2 est une ligne absolue et "
+"une colonne relative (par ex. A$1), 3 est une ligne relative et une colonne "
+"absolue (par ex. $A1), et 4 est une ligne relative et une colonne relative "
+"(par ex. A1)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1141,7 +1159,7 @@ msgstr "Gras"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Border color"
-msgstr ""
+msgstr "Couleur de la bordure"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1179,7 +1197,7 @@ msgstr "Calcul le taux d'intérêt effectif."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates the number of days, months, or years between two dates."
-msgstr ""
+msgstr "Calcule le nombre de jours, mois et années entre deux dates."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1238,7 +1256,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot split the selection for an unknown reason"
-msgstr ""
+msgstr "Ne peut pas fractionner la sélection pour une raison inconnue"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1788,7 +1806,7 @@ msgstr "Format de devise personnalisé"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom separator"
-msgstr ""
+msgstr "Séparateur personnalisé"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2066,7 +2084,7 @@ msgstr "Conception"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Detect automatically"
-msgstr ""
+msgstr "Détecter automatiquement"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2418,14 +2436,14 @@ msgstr "Vendredi"
 #. module: spreadsheet
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Frozen and copied on"
-msgstr ""
+msgstr "Figé et copié vers"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Frozen version - Anyone can view"
-msgstr ""
+msgstr "Version figée - Tout le monde peut voir"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2591,7 +2609,7 @@ msgstr "Jauge"
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Generating sharing link"
-msgstr ""
+msgstr "En train de générer un lien de partage"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3038,7 +3056,7 @@ msgstr "Insérer une ligne en-dessous"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert sheet"
-msgstr ""
+msgstr "Insérer une feuille"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3500,14 +3518,14 @@ msgstr "Ligne"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line Break"
-msgstr ""
+msgstr "Saut de ligne"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Line style"
-msgstr ""
+msgstr "Style de ligne"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3711,7 +3729,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Merge cells"
-msgstr ""
+msgstr "Fusionner des cellules"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4207,7 +4225,7 @@ msgstr "Un nombre divisé par un autre."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Only a selection from a single column can be split"
-msgstr ""
+msgstr "Seule une sélection d'une simple colonne peut être fractionnée"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4586,7 +4604,7 @@ msgstr "Renvoyer la valeur actuelle d'un filtre de feuille de calcul."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns a cell reference as a string. "
-msgstr ""
+msgstr "Renvoie une référence de cellule sous forme de chaîne de caractères."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5027,21 +5045,21 @@ msgstr "Espace"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text into columns"
-msgstr ""
+msgstr "Fractionner le texte en colonnes"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text to columns"
-msgstr ""
+msgstr "Fractionner le texte en colonnes"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Splitting will overwrite existing content"
-msgstr ""
+msgstr "Le fractionnement écrasera le contenu existant"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_data
@@ -5051,19 +5069,19 @@ msgstr "Données de la feuille de calcul"
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_binary_data
 msgid "Spreadsheet file"
-msgstr ""
+msgstr "Fichier de feuille de calcul"
 
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_spreadsheet_mixin
 msgid "Spreadsheet mixin"
-msgstr ""
+msgstr "Mixin de feuille de calcu"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Spreadsheet published"
-msgstr ""
+msgstr "Feuille de calcul publiée"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5534,6 +5552,8 @@ msgstr ""
 msgid ""
 "The column number (not name) of the cell reference. A is column number 1. "
 msgstr ""
+"Le numéro (et non le nom) de colonne de la référence de cellule. A est le "
+"numéro de colonne 1."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5882,6 +5902,9 @@ msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"La date de fin à prendre en compte dans le calcul. Doit être une référence à"
+" une cellule contenant une DATE, une fonction renvoyant un type de DATE ou "
+"un nombre."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6239,6 +6262,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value between %s and %s "
 "inclusive, but receives %s."
 msgstr ""
+"La fonction [[FUNCTION_NAME]] attend une valeur numérique entre %s et %s "
+"inclus, mais reçoit %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6248,6 +6273,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value to be greater than or "
 "equal to 1, but receives %s."
 msgstr ""
+"La fonction [[FUNCTION_NAME]] attend une valeur numérique supérieure ou "
+"égale à 1, mais reçoit %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6268,6 +6295,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be"
 " one of: %s."
 msgstr ""
+"La fonction [[FUNCTION_NAME]] a un argument dont la valeur est '%s'. Il doit"
+" s'agir de l'un des éléments suivants : %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7469,7 +7498,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The row number of the cell reference. "
-msgstr ""
+msgstr "Le numéro de ligne de la référence de la cellule."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7672,6 +7701,9 @@ msgid ""
 "The start date to consider in the calculation. Must be a reference to a cell"
 " containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"La date de début à prendre en compte dans le calcul. Doit être une référence"
+" à une cellule contenant une DATE, une fonction renvoyant un type de DATE ou"
+" un nombre."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8448,6 +8480,8 @@ msgstr "Il n'y a pas de liste avec l'id \"%s\""
 #, python-format
 msgid "There is no match for the selected separator in the selection"
 msgstr ""
+"Il n'y a aucune correspondance pour le séparateur sélectionné dans la "
+"sélection"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8548,6 +8582,8 @@ msgstr ""
 #, python-format
 msgid "This will overwrite data in the subsequent columns. Split anyway?"
 msgstr ""
+"Cette opération écrase des données dans les colonnes suivantes. Êtes-vous "
+"sûr de vouloir procéder au fractionnement ?"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8737,7 +8773,7 @@ msgstr "Jusqu'à la ligne actuelle"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Use row"
-msgstr ""
+msgstr "Utiliser la ligne"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9139,7 +9175,7 @@ msgstr "Année spécifiée par une date donnée."
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr ""
+msgstr "Cumul à ce jour"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9256,7 +9292,7 @@ msgstr "et valeur"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "as headers"
-msgstr ""
+msgstr "en tant qu'en-tête"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9314,4 +9350,4 @@ msgstr "searchMode doit être une valeur comprise entre [-1, 1, -2, 2]."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
-msgstr ""
+msgstr "la start_date (%s) doit être antérieure ou égale à la end_date (%s)."

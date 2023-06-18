@@ -6,8 +6,8 @@
 # Nathan Grognet <ngr@odoo.com>, 2023
 # Alexandra Jubert, 2023
 # Cécile Collart <cco@odoo.com>, 2023
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +70,7 @@ msgstr "# Tâches"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__done_task_count
 msgid "# of Done Tasks"
-msgstr ""
+msgstr "# de Tâches faites"
 
 #. module: project
 #. odoo-javascript
@@ -432,7 +432,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Retour au mode édition"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -487,7 +487,7 @@ msgstr "<span class=\"o_stat_text\">Dernière évaluation</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Recurring Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tâches récurrentes</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -498,12 +498,12 @@ msgstr "<span class=\"o_stat_text\">Sous-tâches</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Fait</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Tâches</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -721,7 +721,7 @@ msgstr "Ajouter des contacts pour partager le projet..."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "Ajouter des détails sur cette tâche..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -818,7 +818,7 @@ msgstr "Temps alloué"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Allocated Time:"
-msgstr ""
+msgstr "Temps alloué :"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
@@ -2164,6 +2164,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Accordez à vos employés accès à votre projet ou vos tâches en les ajoutant "
+"en tant qu'abonnés. Les employés ont immédiatement accès aux tâches "
+"auxquelles ils sont assignés."
 
 #. module: project
 #. odoo-python
@@ -2174,6 +2177,9 @@ msgid ""
 "followers. Customers automatically get access to their tasks in their "
 "portal."
 msgstr ""
+"Accordez aux utilisateurs du portail accès à votre projet ou vos tâches en "
+"les ajoutant en tant qu'abonnés. Les clients ont automatiquement accès à "
+"leurs tâches dans leur portail."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2463,12 +2469,13 @@ msgstr "Inviter des gens"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Utilisateurs internes invités (privé)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
 msgstr ""
+"Tous les utilisateurs internes et les utilisateurs portail invités (public)"
 
 #. module: project
 #. odoo-javascript
@@ -2893,7 +2900,7 @@ msgstr "Nom rogné"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr ""
+msgstr "Nom des tâches"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -4336,7 +4343,7 @@ msgstr "Étapes à supprimer"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "Tâches mises en favoris"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4841,6 +4848,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"Voici un aperçu de l'aspect du projet lorsqu'il sera partagé avec les "
+"clients et qu'ils pourront l'éditer."
 
 #. module: project
 #. odoo-javascript
@@ -5559,7 +5568,7 @@ msgstr "par ex. Envoyer des invitations"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "par ex. Tâches"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5619,7 +5628,7 @@ msgstr "prêt à être marqué comme atteint"
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "sous-tâches)"
 
 #. module: project
 #. odoo-python
@@ -5688,3 +5697,5 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ "
 "record.subtask_count.value }}"
 msgstr ""
+"{{ record.closed_subtask_count.value }} Sous-tâches clôturées sur {{ "
+"record.subtask_count.value }}"

@@ -5,9 +5,9 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2023
 # mahamadasif ansari, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:28+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -693,6 +693,9 @@ msgid ""
 "        Accounting reports for Dominican Republic\n"
 "    "
 msgstr ""
+"\n"
+"        Boekhoudrapportages voor de Dominicaanse Republiek\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -890,6 +893,9 @@ msgid ""
 "        Addon for the POS App that allows customers to view the menu on their smartphone.\n"
 "        "
 msgstr ""
+"\n"
+"        Uitbreiding voor de Kass-app dat klanten toelaat om het menu op hun smartphone te zien.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -942,6 +948,9 @@ msgid ""
 "        Automatic accounting for MRP\n"
 "    "
 msgstr ""
+"\n"
+"        Automatische boekhouding voor MRP\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -1024,6 +1033,9 @@ msgid ""
 "        Bridge module addings support for EMV Merchant-Presented QR-code generation for Payment System.\n"
 "    "
 msgstr ""
+"\n"
+"        Brugmodule dat ondersteuning toevoegt voor de generatie van aan EMV handelaren te presenteren QR-codes voor betaalsystemen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_quality
@@ -1274,6 +1286,28 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"E-Faktur Menu (Indonesië)\n"
+"Formaat: 010.000-16.00000001\n"
+"* 2 (dua) cijferige pertama adalah Kode Transaksi\n"
+"* 1 (satu) cijfer berikutnya adalah Kode Status\n"
+"* 3 (tiga) cijferige berikutnya adalah Kode Cabang\n"
+"* 2 (dua) cijferige pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) cijferige berikutnya adalah Nomor Urut\n"
+"\n"
+"Om klantfacturen als e-Faktur te kunnen exporteren,\n"
+"je moet de nummersreeksen invoeren die je hebt gekregen\n"
+"door de overheid in Boekhouding> Klanten> e-Faktur\n"
+"\n"
+"Wanneer je een factuur bevestigd, waarbij de relatie de ID PKP heeft\n"
+"aangevinkt, wordt er een fiscaal nummer aan die factuur toegewezen.\n"
+"Daarna kun je de nog te exporteren facturen filteren in het\n"
+"facturenlijst en klik op Actie> Download e-Faktur om te downloaden\n"
+"de csv en upload deze naar de site van de overheid.\n"
+"\n"
+"Je kunt een reeds verzonden factuur vervangen door een andere door aan te geven\n"
+"de vervangen factuur en de nieuwe en je kunt een factuur resetten\n"
+"je hebt nog niet naar de regering gestuurd om haar nummer te hergebruiken."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1343,6 +1377,12 @@ msgid ""
 "        For more information about the SEPA standards: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genereer betalingsopdrachten zoals aanbevolen door de SEPA-norm, dankzij pain.001 berichten. Ondersteunde pain-versies (landen) zijn pain.001.001.03 (generiek), pain.001.001.03.ch.02 (Zwitserland) en pain.001.001.03.de (Duitsland). Het gegenereerde XML-bestand kan vervolgens naar je bank worden geüpload.\n"
+"\n"
+"        Deze module volgt de implementatierichtlijnen van het European Payments Council.\n"
+"        Voor meer informatie over de SEPA-standaarden: http://www.iso20022.org/ en http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -1470,6 +1510,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        Module voor het importeren van FEC-standaardbestanden, handig voor het importeren van boekhoudgeschiedenis.\n"
+"\n"
+"        FEC-bestanden (fichier des écritures comptables) zijn de standaard boekhoudkundige rapportages die Franse bedrijven moeten indienen bij de belastingdienst.\n"
+"        Met deze module kunnen rekeningen, dagboeken, relaties en verhuizingen uit deze bestanden worden geïmporteerd.\n"
+"\n"
+"        Alleen het CSV-formaat van FEC is geïmplementeerd.\n"
+"        'utf-8', 'utf-8-sig' en 'iso8859_15' zijn de enige toegestane coderingen.\n"
+"        Er zijn meerdere scheidingstekens toegestaan: ';' of '|' of of '\t'.\n"
+"\n"
+"        Officiële technische specificatie (fr)\n"
+"        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"        FEC Testtool van de Belastingdienst\n"
+"        https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz
@@ -1813,6 +1870,9 @@ msgid ""
 "        This module is used to send/receive documents with PEPPOL\n"
 "        "
 msgstr ""
+"\n"
+"        Deze module wordt gebruikt om documenten te verzenden/ontvangen met PEPPOL\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -2002,6 +2062,19 @@ msgid ""
 "    - the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 "    "
 msgstr ""
+"\n"
+"    Voeg een extra stap toe in het afrekenproces van de Website/E-commerce met de Mexicaanse velden:\n"
+"\n"
+"    - l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"    - l10n_mx_edi_fiscal_regime (res.partner)\n"
+"    - l10n_mx_edi_usage (sale.order/account.move)\n"
+"    - l10n_mx_edi_no_tax_breakdown (res.partner)\n"
+"\n"
+"    De extra stap verschijnt alleen als:\n"
+"\n"
+"    - Het aan de website gekoppelde bedrijf Mexicaans is\n"
+"    - de optie 'automatic_invoice' ingeschakeld is in de instellinge van de website (\"Genereer de factuur automatisch wanneer de online betaling is bevestigd\")\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2308,6 +2381,18 @@ msgid ""
 "    the SII.\n"
 "    "
 msgstr ""
+"\n"
+"    De leveringsgids (guia de despacho) is nodig als bewijs\n"
+"    dat je goederen verzendt tussen A en B.\n"
+"    \n"
+"    Het is configureerbaar op de relatie als prijzen nodig zijn op de\n"
+"    leveringsgids en of ze uit de verkooporder moeten komen\n"
+"    of het product zelf.\n"
+"    \n"
+"    Pas wanneer een leveringsopdracht is gevalideerd, kun je de levering maken\n"
+"    gids. Vervolgens zal het dezelfde stroom volgen als voor de facturen en wordt het verzonden naar\n"
+"    de SII.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_facturae
@@ -2320,6 +2405,13 @@ msgid ""
 "    for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
 "    "
 msgstr ""
+"\n"
+"    Deze module maakt het bestand Facturae dat vereist is om factuurinformatie naar de General State Administrations tev verzenden.\n"
+"    Het laat toe om de Facturae bestanden te exporteren en te ondertekenen.\n"
+"    De huidige ondersteunde versie van Facturae is 3.2.1\n"
+"    \n"
+"    Voor meer informatie, zie https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -2438,6 +2530,10 @@ msgid ""
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 "    "
 msgstr ""
+"\n"
+"- Inschrijven als PEPPOL deelnemer\n"
+"- Documenten verzenden en ontvangen via het PEPPOL-netwerk in het Peppol BIS Billing 3.0 formaat\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -2451,6 +2547,14 @@ msgid ""
 "- the portal security settings page if the user is not internal.\n"
 "    "
 msgstr ""
+"\n"
+"2FA Uitnodigingsmail\n"
+"===============\n"
+"Sta de gebruikers toe een andere gebruiker uit te nodigen om twee-factorenauthenticatie te gebruiken\n"
+"door een e-mail te sturen naar de doelgebruiker. Deze e-mail stuurt ze door naar:\n"
+"- de gebruikersbeveiligingsinstellingen als de gebruiker intern is.\n"
+"- de pagina met beveiligingsinstellingen van de portal als de gebruiker niet intern is.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail_enforce
@@ -3010,6 +3114,10 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
+"\n"
+"Boekhoudrapportages voor Algerije\n"
+"================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3149,6 +3257,11 @@ msgid ""
 "This module has been built with the help of Caudigef.\n"
 "    "
 msgstr ""
+"\n"
+"Boekhoudrapportages voor Marokko.\n"
+"\n"
+"Deze module is gemaakt met de hulp van Caudigef.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -3297,6 +3410,45 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Voeg een nieuw model toe met de naam 'Identificatietype' dat de BTW-veldfunctionaliteit in de relatie uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (BTW), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd zie je nu in het partnerformulier twee velden:\n"
+"\n"
+"* Identificatie type\n"
+"* Identificatie Nummer\n"
+"\n"
+"Dit gedrag is een algemene vereiste voor sommige Latijns-Amerikaanse landen, zoals Argentinië en Chili. Als je lokalisatie deze vereisten heeft, moet je van deze module afhankelijk zijn en in je lokalisatiemodule de identificatietypen definiëren die in je land worden gebruikt. Over het algemeen worden dit soort identificaties gedefinieerd door de overheidsinstanties die de fiscale operaties reguleren. Bijvoorbeeld:\n"
+"\n"
+"* AFIP in Argentinië definieert DNI, CUIT (BTW voor rechtspersonen), CUIL (BTW voor natuurlijke persoon) en nog eens 80 geldige identificatietypen.\n"
+"\n"
+"Elke identificatie bevat deze informatie:\n"
+"\n"
+"* naam: korte naam van de identificatie\n"
+"* beschrijving: kan dezelfde korte naam of een lange naam zijn\n"
+"* country_id: het land waar deze identificatie thuishoort\n"
+"* is_vat: identificeer dit record als de overeenkomstige BTW voor het specifieke land.\n"
+"* volgorde: laten we de identificatietypen sorteren op basis van degene die het meest worden gebruikt.\n"
+"* actief: we kunnen identificaties activeren / deactiveren om het onze klanten gemakkelijker te maken\n"
+"\n"
+"Om deze module compatibel te maken voor omgevingen met meerdere bedrijven waar we bedrijven hebben die deze vereiste niet nodig / ondersteunen, hebben we generieke identificatietypen en generieke regels toegevoegd om de contactgegevens te beheren en deze transparant te maken voor de gebruiker wanneer alleen de BTW zoals we voorheen kenden.\n"
+"\n"
+"Generieke identificaties:\n"
+"\n"
+"* BTW: Het fiscale belastingnummer of BTW-nummer wordt standaard geselecteerd als identificatietype, zodat de gebruiker alleen het gerelateerde BTW-nummer hoeft toe te voegen.\n"
+"* Paspoort\n"
+"* Buitenlands identiteitsbewijs (buitenlands nationaal document)\n"
+"\n"
+"Regels bij het aanmaken van een nieuwe relatie: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
+"\n"
+"* Als de relatie geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de relatie (als de relatie geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
+"\n"
+"* Als de relatie een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de relatie.\n"
+"\n"
+"Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde relatie altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
+"\n"
+"Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Contacten / Configuratie / Identificatietype\".\n"
+"\n"
+"Deze module is compatibel met de base_vat-module om BTW-nummers te kunnen bevestigen voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -3625,6 +3777,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"Laat toe om bepaalde secties te berekenen in het kader van de winstgevendheid van het project\n"
+"==================================================================================================\n"
+"Deze module laat toe om de secties 'Leveranciersfacturen', 'Andere kosten' en 'Andere inkomsten' te bereken in het kader van de winstgevendheid van het project, in het projectupdateweergave.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -4030,6 +4186,43 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Automatische DIMONA-aangiften\n"
+"=============================\n"
+"\n"
+"Vereisten:\n"
+"--------------\n"
+"\n"
+"- Je hebt een digitaal certificaat conform de Belgische overheid nodig, afgeleverd door Global\n"
+"  Teken. Zie: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genereer certificaatbestanden van je SSL-certificaat (.pfx-bestand) die nodig zijn om te maken\n"
+"  een technische gebruiker (.cer-bestand) en om op afstand te authenticeren in het ONS-bestand (.pem). Op een UNIX\n"
+"  systeem, kun je de volgende opdrachten gebruiken:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Voordat je de REST-webservice van de sociale zekerheid kunt gebruiken, moet je een account aanmaken\n"
+"  voor uzelf of voor je klant en configureer de beveiliging. (De hele procedure is:\n"
+"  beschikbaar op https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Beheer van gebruikersaccounts: volg de procedure https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Maak een technische gebruiker aan: Je klant moet nu een technische gebruiker aanmaken in het Toegangsbeheer\n"
+"    online dienst. Volg deze procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activeer een webservicekanaal: zodra de technische gebruiker is aangemaakt, moet je klant\n"
+"    activeer het webservicekanaal in Toegangsbeheer. De volgende handleiding legt de\n"
+"    te volgen stappen om het kanaal te activeren: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Aan het einde van de procedure zou je een \"ONSS Expeditor-nummer\" moeten ontvangen, je mag\n"
+"    codeer in de loonadministratie-instellingen, met het .pem-bestand en het bijbehorende wachtwoord, indien van toepassing.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -4253,6 +4446,53 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "    "
 msgstr ""
+"\n"
+"Belgische loonregels.\n"
+"======================\n"
+"\n"
+"    * Werknemersgegevens\n"
+"    * Werknemerscontracten\n"
+"    * Op paspoort gebaseerd contract\n"
+"    * Toeslagen/inhoudingen\n"
+"    * Sta toe om Basis/Bruto/Netto Salaris te configureren\n"
+"    * Salarisstrook werknemer\n"
+"    * Maandelijkse loonadministratie\n"
+"    * Geïntegreerd met Verlofbeheer\n"
+"    * Salaris Maj, RSZ, Bronbelasting, Kinderbijslag, ...\n"
+"\n"
+"Automatische DmfA-handtekening\n"
+"========================\n"
+"\n"
+"Vereisten:\n"
+"--------------\n"
+"\n"
+"- Je hebt een digitaal certificaat conform de Belgische overheid nodig, afgeleverd door Global\n"
+"  Teken. Zie: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genereer certificaatbestanden van je SSL-certificaat (.pfx-bestand) die nodig zijn om te maken\n"
+"  een technische gebruiker (.cer-bestand) en om op afstand te authenticeren in het ONS-bestand (.pem). Op een UNIX\n"
+"  systeem, kun je de volgende opdrachten gebruiken:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> SLEUTEL: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- Voordat je de REST-webservice van de sociale zekerheid kunt gebruiken, moet je een account aanmaken\n"
+"  voor uzelf of voor je klant en configureer de beveiliging. (De hele procedure is:\n"
+"  beschikbaar op https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Maak een technische gebruiker + Activeer een SFTP-kanaal: Je klant moet nu een technische gebruiker aanmaken in het Toegangsbeheer\n"
+"    online dienst. Volg deze procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Configureer je SFTP-client: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Aan het einde van de procedure zou je een \"ONSS Expeditor-nummer\" moeten hebben ontvangen, je mag\n"
+"    coderen in de loonadministratie-instellingen, met het .pem-bestand en het bijbehorende wachtwoord, indien van toepassing.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -5022,6 +5262,24 @@ msgid ""
 "invoice line to export in the FatturaPA XML.\n"
 "    "
 msgstr ""
+"\n"
+"Documento di Trasporto (DDT)\n"
+"\n"
+"Telkens wanneer goederen worden overgedragen tussen A en B, dient de DDT\n"
+"als legitimatie bijv. wanneer de politie je zou stoppen.\n"
+"\n"
+"Wanneer je een uitgaande orderpicking in een Italiaans bedrijf wilt afdrukken,\n"
+"het zal je in plaats daarvan de DDT afdrukken. Het is als de levering\n"
+"slip, maar het bevat ook de waarde van het product,\n"
+"de transportreden, de vervoerder, ... waardoor het een DDT wordt.\n"
+"\n"
+"We gebruiken ook een aparte reeks voor de DDT, aangezien het nummer dat niet zou moeten doen\n"
+"lacunes hebben en alleen worden toegepast op het moment dat de goederen worden verzonden.\n"
+"\n"
+"Wanneer facturen zijn gerelateerd aan hun verkooporder en de verkooporder met de\n"
+"levering, berekent het systeem automatisch de gekoppelde DDT's voor elke\n"
+"factuurregel om te exporteren in de FatturaPA XML.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_hr_payroll
@@ -5390,6 +5648,11 @@ msgid ""
 "We should also consider that there may be users without the inventory application installed and keep a less\n"
 "complex logic.\n"
 msgstr ""
+"\n"
+"Zelfs wanneer de hoeveelheid pakketten kennelijk alleen inherent is aan de voorraadapplicatie, hebben we hiervoor een veld nodig \n"
+"in de factuur, omdat die informatie ook afhankelijk kan zijn van een DUS-aangifte.\n"
+"We moeten er ook rekening mee houden dat er gebruikers kunnen zijn zonder dat de voorraadapplicatie is geïnstalleerd en een minder complexe\n"
+"logica houden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -5858,6 +6121,34 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Deze module voegt boekhoudfuncties toe voor de Ecuadoraanse lokalisatie, die\n"
+"de minimumvereisten vertegenwoordigen om een bedrijf in Ecuador te runnen in overeenstemming\n"
+"met de lokale regelgevende instanties, zoals de Ecuadoraanse belastingdienst -SRI- en de \n"
+"Toezicht op bedrijven -Super Intendencia de Compañías-\n"
+"\n"
+"Volg de volgende configuratiestappen:\n"
+"1. Ga naar je bedrijf en configureer je land als Ecuador\n"
+"2. Installeer de facturatie- of boekhoudmodule, alles wordt automatisch afgehandeld\n"
+"\n"
+"Hoogtepunten:\n"
+"* Ecuadoraans grootboekschema wordt automatisch geïnstalleerd, gebaseerd op een voorbeeld van Super Intendencia de Compañías\n"
+"* Lijst met belastingen (inclusief inhoudingen) wordt ook geïnstalleerd, je kan de belastingen uitschakelen die je bedrijf niet gebruikt\n"
+"* Fiscale positie, documentsoorten, lijst van lokale banken, lijst van lokale staten, enz. worden ook geïnstalleerd\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"Basisgegevens:\n"
+"* Grootboekschema, gebaseerd op aanbevelingen van Super Cías\n"
+"* Ecuadoraanse belastingen, belastinglabels en belastinggroepen\n"
+"* Ecuadoraanse fiscale posities\n"
+"* Documentsoorten (er zijn ongeveer 41 soorten inkoopdocumenten in Ecuador)\n"
+"* Identificatietypes\n"
+"* Ecuadoraanse banken\n"
+"* Partners: Consumidor Final, SRI, IESS, en ook basis BTW-geldigheidsverklaring\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -8118,6 +8409,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Doel van de module:\n"
+"======================\n"
+"\n"
+"Als onderdeel van de SII-vereisten (wettelijke vereiste in Chili),\n"
+"vanaf maart 2021 moeten boletas-transacties naar de SII worden verzonden onder de\n"
+"elektronische workflow met een andere webservice dan die voor elektronische facturen.\n"
+"Voorheen was het niet nodig om de boleta's naar de SII te sturen, alleen een dagelijks rapport.\n"
+"\n"
+"De vereiste om een dagelijks verkoopboek te verzenden\n"
+"\"Libro de ventas diarias\" (voorheen \"reporte de consumo de folios\" of RCOF) is door de autoriteit geëlimineerd,\n"
+"met ingang van 1 augustus 2022. Om die reden is het verwijderd uit deze nieuwe versie van Odoo.\n"
+"\n"
+"Verschillen tussen elektronische boleta's versus elektronische factureringsworkflows:\n"
+"================================================== =======================\n"
+"\n"
+"Deze workflows hebben enkele belangrijke verschillen die ons ertoe brengen deze PR te doen met de specifieke wijzigingen.\n"
+"Dit zijn de verschillen:\n"
+"\n"
+"* Het mechanisme voor het verzenden van de elektronische boleta-informatie heeft speciale servers nodig, die verschillen van de servers die worden gebruikt bij de ontvangst van de elektronische factuur (\"Palena\" voor de productieomgeving - palena.sii.cl en \"Maullin\" voor de testomgeving - maullin.sii.cl ).\n"
+"* De authenticatiediensten, het opvragen van de status van een levering en de status van een document zullen anders zijn.\n"
+"* Het verkregen authenticatietoken\n"
+"* Het XML-schema voor het verzenden van de elektronische boleta's is bijgewerkt met de toevoeging van nieuwe labels\n"
+"* De validatiediagnose van elektronische boleta's wordt geleverd via een \"REST\" webservice die de track-id van de levering als invoer heeft. Elektronische facturen blijven hun diagnoses via e-mail ontvangen.\n"
+"* De track-id (\"identificador de envío\") die bij de elektronische boleta's hoort, zal 15 cijfers lang zijn. (Elektronica factuur is 10)\n"
+"\n"
+"Hoogtepunten uit deze SII-gids:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -8441,6 +8761,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Slowakije boekhoudschema en lokalisatie: grootboekschema 2020, basis BTW-tarieven +\n"
+"fiscale posities.\n"
+"\n"
+"Tento module definieert:\n"
+"• Slovenskú účtovú osnovu za rok 2020\n"
+"\n"
+"• Základné sadzby pre DPH z predaja a nákupu\n"
+"\n"
+"• Základné fiškálne pozície pre slovenskú wetgevend\n"
+"\n"
+" \n"
+"Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.\n"
+"    \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -8564,6 +8899,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Zwitserse lokalisatie\n"
+"==================\n"
+"Deze module definieert een grootboekschema voor Zwitserland (Zwitserse PME/KMU 2015), belastingen en maakt het genereren van ISR- en QR-facturen mogelijk wanneer ujeeen factuur afdrukt of per post verstuurt.\n"
+"\n"
+"Een ISR wordt gegenereerd als je de informatie opgeeft die het nodig heeft:\n"
+"    - De bankrekening waarop j verwacht te worden betaald, moet zijn ingesteld en moet een geldig postadres hebben.\n"
+"    - Aan je factuur moet een bankrekening zijn toegewezen om de betaling te ontvangen\n"
+"      (dit kan handmatig worden gedaan, maar er wordt automatisch een standaardwaarde ingesteld als je een bankrekening hebt gedefinieerd).\n"
+"    - Je moet de postreferenties van je bank hebben ingesteld.\n"
+"    - Jouw factuur moet in EUR of CHF zijn (aangezien ISR's geen andere valuta accepteren)\n"
+"\n"
+"Er wordt een QR-factuur gegenereerd als:\n"
+"    - De relatie op je factuur heeft een volledig adres (straat, plaats, postcode en land) in Zwitserland\n"
+"    - De optie om de Zwitserse QR-code te genereren is geselecteerd op de factuur (standaard gedaan)\n"
+"    - Een correct rekeningnummer/QR IBAN is ingesteld op je bankboek\n"
+"    - (bij gebruik van een QR-IBAN): het betalingskenmerk van de factuur is een QR-kenmerk\n"
+"\n"
+"Het genereren van de ISR en QR-factuur gaat automatisch als je aan de voorgaande criteria voldoet.\n"
+"\n"
+"Hier is hoe het werkt:\n"
+"    - Door de factuur af te drukken, worden drie bestanden gedownload: de factuur, de ISR en de QR-factuur\n"
+"    - Door op de knop 'Verzenden per post' te klikken, worden drie bestanden aan je conceptmail toegevoegd: de factuur, de ISR en de QR-factuur.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -8811,6 +9170,18 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Dit is de Odoo-module om de boekhouding in Finland te beheren.\n"
+"================================================== ==========\n"
+"\n"
+"Na het installeren van deze module heb je toegang tot:\n"
+"    * Fins grootboekschema\n"
+"    * Fiscale posities\n"
+"    * Factuur betalingsreferentietypes (Finse standaardreferentie & Finse crediteurreferentie (RF))\n"
+"    * Fins referentieformaat voor verkooporders\n"
+"\n"
+"Stel het betalingskenmerktype in vanuit het Verkoopdagboek.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -8903,6 +9274,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Basismodule voor het beheer van het Belgisch rekeningenstelsel in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Na het installeren van deze module wordt er een configuratie-wizard opgestart/\n"
+"    * Het voorbeeldsjabloon kun je helpen bij het genereren van het rekeningenstelsel.\n"
+"    * Tijdens de wizard wordt je gevraagd naar de naam van het bedrijf, het te volgen\n"
+"      rekeningenstelsel, het aantal cijfers om te genereren, de codes voor je rekening\n"
+"      en bankrekening, en de valuta voor je dagboeken.\n"
+"\n"
+"Op die manier wordt een blanco rekeningenstelsel opgemaakt.\n"
+"\n"
+"Wizards in deze module:\n"
+"--------------------------------\n"
+"    * Intracommunautaire aangifte: Lijst van klanten met BTW en gefactureerde\n"
+"bedragen. Bereidt een XML-bestand voor.\n"
+"      \n"
+"        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Intracommunautaire aangifte\n"
+"    *Periodieke BTW aangifte: Bereidt een XML-bestand voor met de periodieke BTW aangifte\n"
+"      van het hoofdbedrijf van de ingelogde gebruiker.\n"
+"      \n"
+"        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Periodieke BTW aangiften\n"
+"    * Jaarlijkse klantenlisting: Bereidt een XML-bestand voor met de klantenlijst \n"
+"      van het hoofdbedrijf van de ingelogde gebruiker gebaseerd op\n"
+"      Boekjaar.\n"
+"      \n"
+"        **Te volgen Pad:** Facturatie / Rapportages / Belgische aangiften / Jaarlijkse klantenlisting\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -9034,6 +9434,10 @@ msgid ""
 "\n"
 "This module has been built with the help of Caudigef.\n"
 msgstr ""
+"\n"
+"Dit is de basismodule om het grootboekschema voor Marokko te beheren.\n"
+"\n"
+"Deze module is gemaakt met de hulp van Caudigef.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9478,6 +9882,14 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt generieke functies toe om een Odoo DB te registreren op de proxy die verantwoordelijk is voor het ontvangen van gegevens (via verzoeken van webservices).\n"
+"- Een edi_proxy_user heeft een unieke identificatie op een specifieke proxytype (bijv/ l10n_it_edi, peppol) die\n"
+"het mogelijk maakt hem te identificeren bij ontvangst van een aan hem gericht document. Het is gekoppeld aan een specifiek bedrijf op een specifieke\n"
+"Odoo-database.\n"
+"- Coderingsfuncties maken het mogelijk om alle gegevens van de gebruiker te decoderen wanneer deze van de proxy worden ontvangen.\n"
+"- Authenticatie biedt een extra beveiligingsniveau om imitatie te voorkomen, voor het geval iemand toegang krijgt tot de database van de gebruiker.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -9732,6 +10144,18 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Deze module laat je toe om je betalingen op voorgedrukte chequepapier af te drukken.\n"
+"Je kan de opmaak configuren (lay-out, strookjes, papierformaat, enz.) in de instellingen van het bedrijf en de\n"
+"nummering van de cheques beheren (als je voorgedrukt chequepapier zonder nummering gebruikt) in de instellingen van het dagboek.\n"
+"Overeenkomstig de Canadian Payment Association (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Ondersteunde formaten\n"
+"-----------------\n"
+"- Bovenste cheque : Quicken / QuickBooks standard\n"
+"- Middelste cheque: Peachtree standard\n"
+"- Onderste cheque: ADP standard\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -9959,6 +10383,11 @@ msgid ""
 "Install this if you are using the Point of Sale app in Germany.\n"
 "\n"
 msgstr ""
+"\n"
+"Deze module brengt de technische vereisten voor de nieuwe Duitse regelgeving met het technische beveiligingssysteem door gebruik te maken van een cloudgebaseerde oplossing met Fiskaly.\n"
+"\n"
+"Installeer deze als je de Kassa-app in Duitsland gebruikt.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_res_cert
@@ -11289,7 +11718,7 @@ msgstr "# Record regels"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "#{alt}"
-msgstr ""
+msgstr "#{alt}"
 
 #. module: base
 #. odoo-python
@@ -11547,6 +11976,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contact: Gebruik dit om de contactgegevens van een bepaald bedrijf te organiseren (bijv. CEO, CFO, ...).\n"
+"- Factuuradres: Voorkeursadres voor alle facturen. Standaard geselecteerd wanneer je een bestelling factureert dat bij dit bedrijf hoort.\n"
+"- Afleveradres: Voorkeursadres voor alle leveringen. Standaard geselecteerd wanneer je een bestelling aflevert die bij dit bedrijf hoort.\n"
+"- Privé: Privé-adressen zijn alleen zichtbaar voor geautoriseerde gebruikers en bevatten gevoelige gegevens (thuisadressen van werknemers, ...).\n"
+"- Opvolgingsadres: Voorkeursadres bij opvolgingsrapporten. Standaard geselecteerd wanneer je herinneringen verstuurt over achterstallige facturen.\n"
+"- Andere: Ander adres van het bedrijf (bijv. dochteronderneming, ...)"
 
 #. module: base
 #. odoo-python
@@ -12114,27 +12549,27 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "<span class=\"o_stat_text\">Activate and Translate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Inschakelen en Vertalen</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Add to the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Toevoegen aan het 'Afdrukken' menu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Qweb Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Qweb-weergaven</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Remove from the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verwijderen van het 'Afdrukken' menu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Gearchiveerd</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -12339,7 +12774,7 @@ msgstr "<strong>C</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies:</strong>"
-msgstr ""
+msgstr "<strong>Afhankelijkheden:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12380,7 +12815,7 @@ msgstr "<strong>Label</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Menu:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12413,7 +12848,7 @@ msgstr "<strong>R</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports:</strong>"
-msgstr ""
+msgstr "<strong>Rapportages:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12463,7 +12898,7 @@ msgstr "<strong>U</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View:</strong>"
-msgstr ""
+msgstr "<strong>Weergave:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -13982,7 +14417,7 @@ msgstr "Algerije - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dz_reports
 msgid "Algeria - Accounting Reports"
-msgstr ""
+msgstr "Algerije - Boekhoudrapportages"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -14064,7 +14499,7 @@ msgstr "Sta klanten toe om een product wensenlijst te maken"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_stock
 msgid "Allow to create recurring order on storable product"
-msgstr ""
+msgstr "Laat toe om herhalende orders te maken op voorraadproducten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15553,7 +15988,7 @@ msgstr "Koppelmodule tussen IAP en CRM"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_accountant
 msgid "Bridge between Mrp and Accounting"
-msgstr ""
+msgstr "Brugmodule tussen Mrp en Boekhouding"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -16298,7 +16733,7 @@ msgstr "Chili - Elektronische ontvangst"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_website_sale
 msgid "Chilean eCommerce"
-msgstr ""
+msgstr "Chileense E-commerce"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -18773,7 +19208,7 @@ msgstr "Dominicaanse Republiek - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do_reports
 msgid "Dominican Republic - Accounting Reports"
-msgstr ""
+msgstr "Dominicaanse Republiek - Boekhoudrapportages"
 
 #. module: base
 #. odoo-python
@@ -20679,7 +21114,7 @@ msgstr "Frankrijk - Loonadministratie met boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_holidays
 msgid "France - Time Off"
-msgstr ""
+msgstr "Frankrijk - Verlof"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
@@ -20691,7 +21126,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_work_entry_holidays
 msgid "France - Work Entries Time Off"
-msgstr ""
+msgstr "Frankrijk - Werkboekingen Verlof"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -24654,7 +25089,7 @@ msgstr "Beheer je voorraad en logistieke activiteiten"
 #: model:ir.module.module,summary:base.module_l10n_fr_hr_holidays
 #: model:ir.module.module,summary:base.module_l10n_fr_hr_work_entry_holidays
 msgid "Management of leaves for part-time workers in France"
-msgstr ""
+msgstr "Verlofbeheer voor deeltijdwerkers in Frankrijk"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -25510,7 +25945,7 @@ msgstr "Marokko - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_reports
 msgid "Morocco - Accounting Reports"
-msgstr ""
+msgstr "Marokko - Boekhoudrapportages"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_hr_payroll
@@ -25545,7 +25980,7 @@ msgstr "Dhr."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_accountant
 msgid "Mrp Accounting"
-msgstr ""
+msgstr "Mrp Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -27206,6 +27641,115 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo Kassa\n"
+"-----------------------------\n"
+"\n"
+"<a href=\"https://www.odoo.com/app/point-of-sale-shop\">Kassa</a> van Odoo\n"
+"introduceert een superschone interface zonder installatie die wordt uitgevoerd\n"
+"online en offline op moderne hardware.\n"
+"\n"
+"Het is volledige integratie met de bedrijfsinventaris en boekhouding, geeft je real\n"
+"tijdstatistieken en consolidaties tussen alle winkels zonder het gedoe van\n"
+"integratie van meerdere applicaties.\n"
+"\n"
+"Werk met de hardware die je al hebt\n"
+"---------------------------------------\n"
+"\n"
+"### In je webbrowser\n"
+"\n"
+"Odoo's Kassa is een webapplicatie die kan draaien op elk apparaat dat kan weergeven\n"
+"websites met weinig tot geen installatie vereist.\n"
+"\n"
+"### Touchscreen of toetsenbord?\n"
+"\n"
+"Het Kassa werkt perfect op elk soort aanraakapparaat, of\n"
+"het zijn multi-touch tablets zoals een iPad of een toetsenbordloos resistief touchscreen\n"
+"terminals.\n"
+"\n"
+"### Weegschalen en printers\n"
+"\n"
+"Barcodescanners en printers worden standaard ondersteund zonder installatie\n"
+"verplicht. Weegschalen, kassa's en andere randapparatuur kunnen worden gebruikt met de proxy\n"
+"API.\n"
+"\n"
+"Online en offline\n"
+"------------------\n"
+"\n"
+"### Odoo's Kassa blijft betrouwbaar, zelfs als je verbinding dat niet is\n"
+"\n"
+"Implementeer nieuwe winkels met alleen een internetverbinding: **geen installatie, nee\n"
+"specifieke hardware vereist**. Het werkt met elke **iPad, tablet-pc, laptop** of\n"
+"industriële Kassa-machine.\n"
+"\n"
+"Hoewel een internetverbinding vereist is om het Kassa te starten, zal het:\n"
+"blijven operationeel, zelfs na een volledige ontkoppeling.\n"
+"\n"
+"\n"
+"Een super schone gebruikersinterface\n"
+"----------------------------\n"
+"\n"
+"### Eenvoudig en mooi\n"
+"\n"
+"Zeg vaarwel tegen lelijke, verouderde Kassa-software en geniet van de Odoo-webinterface\n"
+"ontworpen voor de moderne retailer.\n"
+"\n"
+"### Ontworpen voor productiviteit\n"
+"\n"
+"Of het nu voor een restaurant of een winkel is, je kunt de meerdere bestellingen activeren\n"
+"parallel om je klanten niet te laten wachten.\n"
+"\n"
+"### Razendsnel zoeken\n"
+"\n"
+"Scan producten, blader door hiërarchische categorieën of krijg snel informatie\n"
+"over producten met het razendsnelle filter over al je producten.\n"
+"\n"
+"Geïntegreerd voorraadbeheer\n"
+"-------------------------------\n"
+"\n"
+"Consolideer al je verkoopteams in realtime: winkels, e-commerce, verkoop\n"
+"teams. Krijg realtime controle over de voorraad en nauwkeurige prognoses om te beheren\n"
+"inkopen.\n"
+"\n"
+"Een volledig magazijnbeheersysteem binnen handbereik: krijg informatie over:\n"
+"productbeschikbaarheid, trigger inkoopverzoeken, etc.\n"
+"\n"
+"Klantenservice in de winkel leveren\n"
+"----------------------------------\n"
+"\n"
+"Geef je shopper een sterke ervaring door de klant in de winkel te integreren\n"
+"Diensten. Reparaties afhandelen, garanties volgen, claims van klanten opvolgen, plannen\n"
+"leveringsopdrachten, enz.\n"
+"\n"
+"Integratie van facturering en boekhouding\n"
+"----------------------------------\n"
+"\n"
+"Maak klantfacturen in slechts een paar klikken. Controle verkoop en contant geld in het echt\n"
+"tijd en gebruik Odoo's krachtige rapportage om slimmere beslissingen te nemen om te verbeteren\n"
+"de efficiëntie van je winkel.\n"
+"\n"
+"Geen gedoe meer met het moeten integreren van software: haal al je verkopen en\n"
+"voorraadbewerkingen automatisch geboekt in je grootboek.\n"
+"\n"
+"Uniforme gegevens voor alle winkels\n"
+"------------------------------\n"
+"\n"
+"Laat nieuwe producten, prijsstrategieën en promoties automatisch toepassen op\n"
+"geselecteerde winkels. Werk aan een verenigd klantenbestand. Geen complexe interface is\n"
+"nodig om een globale strategie uit te werken voor al je winkels.\n"
+"\n"
+"Met Odoo als backend heb je een systeem waarvan bewezen is dat het perfect geschikt is voor\n"
+"kleine winkels of grote multinationals.\n"
+"\n"
+"Ken je klanten - in de winkel en daarbuiten\n"
+"--------------------------------------\n"
+"\n"
+"Succesvolle merken integreren al hun klantrelaties in al hun\n"
+"kanalen om een nauwkeurig klantprofiel te ontwikkelen en met klanten te communiceren als\n"
+"ze nemen aankoopbeslissingen, in de winkel of online.\n"
+"\n"
+"Met Odoo krijg je een 360° klantbeeld, inclusief cross-channel verkoop,\n"
+"interactiegeschiedenis, profielen en meer.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -28593,7 +29137,7 @@ msgstr "Organiseer en plan je projecten"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_todo
 msgid "Organize your work with memos and to-do lists"
-msgstr ""
+msgstr "Organiseer je werk met memo's en to-dolijsten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -28821,7 +29365,7 @@ msgstr "Kassa restaurant Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order
 msgid "POS Self Order"
-msgstr ""
+msgstr "Kassa Self-Order"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -29266,7 +29810,7 @@ msgstr "Loonadministratie lokalisatie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -29435,7 +29979,7 @@ msgstr "Kassa keukenscherm"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
 msgid "PoS Preparation Display Restaurant"
-msgstr ""
+msgstr "Kassa Keukenscherm Restaurant"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -29808,7 +30352,7 @@ msgstr "Project"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account
 msgid "Project - Account"
-msgstr ""
+msgstr "Project - Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sms
@@ -31468,7 +32012,7 @@ msgstr "Verkoop voorraadmarge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
 msgid "Sale Subscriptions Stock"
-msgstr ""
+msgstr "Verkoop Abonnementen Voorraad"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_stock
@@ -31485,6 +32029,17 @@ msgid ""
 "- Invoice delivered recurring product at the end of invoicing period\n"
 "- Report planned delivery for active subscriptions\n"
 msgstr ""
+"Verkoop Abonnementen Voorraad\n"
+"\n"
+"Verkoop Abonnementsn Voorraad is een brugmodule tussen sale_subscription en\n"
+"sale_stock. Het doel van de module is om de gebruiker toe te laten om\n"
+"een abonnementverkooporder te maken met voorraadproducten waardoor \n"
+"een herhalende leveringsbon en de herhalende facturatie van deze producten worden bereikt.\n"
+"Functies:\n"
+"- Het aanmaken van herhalende voorraadproducten toestaan\n"
+"- Het automatisch aanmaken van leveringsbonnen voor de herhalende voorraadproducten\n"
+"- Het factureren van geleverde herhalende producten aan het einde van de facturatieperiode\n"
+"- De rapportage van geplande leveringen voor actieve abonnementen\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -32656,7 +33211,7 @@ msgstr "Spanje - Boekhoudkundige rapportages (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_facturae
 msgid "Spain - Facturae EDI"
-msgstr ""
+msgstr "Spanje - Facturae EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -32835,7 +33390,7 @@ msgstr "Spreadsheetdashboard voor boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale
 msgid "Spreadsheet dashboard for eCommerce"
-msgstr ""
+msgstr "Spreadsheetdashboard voor E-commerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale_slides
@@ -32907,7 +33462,7 @@ msgstr "Spreadsheetdashboard voor voorraad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_subscription
 msgid "Spreadsheet dashboard for subscriptions"
-msgstr ""
+msgstr "Spreadsheetdashboard voor abonnementen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_timesheet
@@ -35123,7 +35678,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "To-Do"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -36236,7 +36791,7 @@ msgstr "Gebruikers van deze groep erven automatisch deze groep"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uses_default_logo
 msgid "Uses Default Logo"
-msgstr ""
+msgstr "Gebruikt standaardlogo"
 
 #. module: base
 #. odoo-python
@@ -37574,7 +38129,7 @@ msgstr "Rekening"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "account_qr_code_emv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
@@ -38045,7 +38600,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account
 msgid "project profitability items computation"
-msgstr ""
+msgstr "berekening winstbaarheid items project"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties

@@ -3,21 +3,24 @@
 # 	* website_membership
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Mariusz, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
+# Mariusz, 2023
+# Dawid Prus, 2023
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2023
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
+# Maksym <ms@myodoo.pl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +42,8 @@ msgid "All"
 msgstr "Wszystko"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:83
+#. odoo-python
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Wszystkie kraje"
@@ -60,21 +64,30 @@ msgid "Find a business partner"
 msgstr "Znajdź partnera biznesowego"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:126
+#. odoo-python
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
 msgstr "Wolni członkowie"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
 msgid "Location"
-msgstr "Strefa"
+msgstr "Miejsce"
 
 #. module: website_membership
+#. odoo-python
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#: model:website.menu,name:website_membership.menu_members
+#, python-format
 msgid "Members"
 msgstr "Członkowie"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid "Members Page"
+msgstr "Strona członków"
 
 #. module: website_membership
 #: model:ir.model,name:website_membership.model_membership_membership_line
@@ -84,7 +97,7 @@ msgstr "Linia Członków"
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "No result found."
-msgstr "Nie znaleziono rezultatów."
+msgstr "Nic nie znaleziono."
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -92,11 +105,12 @@ msgid "Our Members Directory"
 msgstr "Nasz katalog członków"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
-msgid "World Map"
-msgstr "Mapa świata"
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
+msgstr "Strona internetowa"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "float-left"
-msgstr "pływające-lewo"
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid "World Map"
+msgstr "Mapa świata"

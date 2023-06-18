@@ -9,8 +9,8 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,8 +94,8 @@ msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
 msgstr ""
-"(0) Coincidencia exacta. (-1) Devolver el siguiente artículo más pequeño si "
-"no hay coincidencia. (1) Devolver el siguiente artículo más grande si no hay"
+"(0) Coincidencia exacta. (-1) Devolver el siguiente elemento más pequeño si "
+"no hay coincidencia. (1) Devolver el siguiente elemento más grande si no hay"
 " coincidencia."
 
 #. module: spreadsheet
@@ -374,6 +374,7 @@ msgstr "Un número específico, sin cambios."
 msgid ""
 "A string indicating the name of the sheet into which the address points."
 msgstr ""
+"Una cadena que indica el nombre de la hoja en la que apunta la dirección."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -396,6 +397,14 @@ msgid ""
 " number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
+"Una abreviatura de texto para unidad de tiempo. Los valores aceptados son "
+"\"Y\" (el número de años enteros entre start_date y end_date), \"M\" (el "
+"número de meses enteros entre start_date y end_date), \"D\" (el número de "
+"días entre start_date y end_date), \"MD\" (el número de días entre "
+"start_date y end_date después de restar meses enteros), \"YM\" (número de "
+"meses enteros entre start_date y end_date después de restar años enteros), "
+"\"YD\" (el número de días entre start_date y end_date, suponiendo que "
+"start_date y end_date no tienen más de un año de diferencia)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -434,7 +443,7 @@ msgid ""
 "permission for this page in your browser settings."
 msgstr ""
 "Acceso al portapapeles denegado por el navegador, habilite el permiso para "
-"el portapapeles para esta página en la configuración de su navegador."
+"el portapapeles en esta página en la configuración de su navegador."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -455,21 +464,21 @@ msgstr "Filtros activos"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add any characters or symbol"
-msgstr ""
+msgstr "Agregar cualquier carácter o símbolo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add new columns to avoid overwriting cells"
-msgstr ""
+msgstr "Agregar nuevas columnas para evitar sobrescribir celdas"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -544,7 +553,7 @@ msgstr "Rangos adicionales a verificar."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional text item(s)."
-msgstr "Artículos de texto adicionales."
+msgstr "Elementos de texto adicionales."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -815,6 +824,11 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
+"Un indicador de si la referencia es absoluta de fila/columna. 1 corresponde "
+"a fila y columna absoluta (por ejemplo, $A$1), 2 corresponde a fila absoluta"
+" y columna relativa (por ejemplo, A$1), 3 corresponde a fila relativa y "
+"columna absoluta (por ejemplo, $A1) y 4 corresponde a fila y columna "
+"relativa (por ejemplo, A1)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1233,7 +1247,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot split the selection for an unknown reason"
-msgstr ""
+msgstr "No se puede dividir la selección por algún motivo desconocido"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1271,7 +1285,7 @@ msgstr "Centro"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Chart"
-msgstr "Gráfica"
+msgstr "Gráfico"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1300,7 +1314,7 @@ msgstr "Referencia circular"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Clear"
-msgstr "Limpiar"
+msgstr "Borrar"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1427,7 +1441,7 @@ msgstr "Coma"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compare two numeric values, returning 1 if they're equal."
-msgstr "Compare dos valores numéricos, se regresa 1 si son iguales."
+msgstr "Compara dos valores numéricos, devuelve 1 si son iguales."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1782,7 +1796,7 @@ msgstr "Formato de divisa personalizada"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom separator"
-msgstr ""
+msgstr "Separador personalizado"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2060,7 +2074,7 @@ msgstr "Diseño"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Detect automatically"
-msgstr ""
+msgstr "Detectar de forma automática"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2413,14 +2427,14 @@ msgstr "Viernes"
 #. module: spreadsheet
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Frozen and copied on"
-msgstr ""
+msgstr "Congelado y copiado en"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Frozen version - Anyone can view"
-msgstr ""
+msgstr "Versión congelada - Cualquiera puede ver"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2784,7 +2798,7 @@ msgstr "ID de la lista."
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "ID of the pivot."
-msgstr "ID de la tabla dinámica"
+msgstr "ID de la tabla dinámica."
 
 #. module: spreadsheet
 #. odoo-javascript

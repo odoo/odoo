@@ -72,7 +72,7 @@ msgstr "# Tarefas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__done_task_count
 msgid "# of Done Tasks"
-msgstr ""
+msgstr "Nº de tarefas finalizadas"
 
 #. module: project
 #. odoo-javascript
@@ -172,6 +172,8 @@ msgid ""
 ",\n"
 "    <br/><br/>"
 msgstr ""
+",\n"
+"    <br/><br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -431,7 +433,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Voltar para o modo de edição"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -486,7 +488,7 @@ msgstr "<span class=\"o_stat_text\">Última classificação</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Recurring Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tarefas recorrentes</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -497,12 +499,12 @@ msgstr "<span class=\"o_stat_text\">Sub-tarefas</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Feito</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Tarefas</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -719,12 +721,12 @@ msgstr "Adicione contatos para compartilhar o projeto..."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "Adicionar detalhes sobre essa tarefa..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Adicionar conteúdo a ser exibido no email"
+msgstr "Adicionar conteúdo a ser exibido no e-mail"
 
 #. module: project
 #. odoo-javascript
@@ -748,42 +750,42 @@ msgstr "Scrum Agile"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
 msgid "Alias"
-msgstr "Codinome"
+msgstr "Alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr "Apelido do contato de segurança"
+msgstr "Alias do contato de segurança"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr "Codinome"
+msgstr "Nome do alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr "Status do codinome"
+msgstr "Status do alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias domain"
-msgstr "Codinome do domínio"
+msgstr "Domínio do alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_value
 msgid "Alias email"
-msgstr "Codinome de e-mail"
+msgstr "Alias do e-mail"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Status do codinome classificado na última mensagem recebida."
+msgstr "Status do alias avaliado na última mensagem recebida."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo do codinome"
+msgstr "Modelo do alias"
 
 #. module: project
 #. odoo-python
@@ -816,7 +818,7 @@ msgstr "Tempo alocado"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Allocated Time:"
-msgstr ""
+msgstr "Tempo alocado:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
@@ -858,7 +860,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analítico"
+msgstr "Análise"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -1630,7 +1632,7 @@ msgstr "Data"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "Date and Stage"
-msgstr "Data e estágio"
+msgstr "Data e estágio  "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_last_stage_update
@@ -2157,6 +2159,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Conceda aos funcionários acesso ao seu projeto ou às suas tarefas, "
+"adicionando-os como seguidores. Os funcionários obtêm automaticamente acesso"
+" às tarefas às quais estão atribuídos."
 
 #. module: project
 #. odoo-python
@@ -2167,6 +2172,9 @@ msgid ""
 "followers. Customers automatically get access to their tasks in their "
 "portal."
 msgstr ""
+"Conceda aos usuários do portal acesso ao seu projeto ou tarefas, "
+"adicionando-os como seguidores. Os clientes obtêm automaticamente acesso às "
+"suas tarefas no portal deles."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2263,8 +2271,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID do registro primário que possui o codinome (exemplo: projeto que tem o "
-"codinome de criação de tarefa)"
+"ID do registro primário que detém o alias (exemplo: projeto detém o alias da"
+" criação de tarefa)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2456,12 +2464,12 @@ msgstr "Convidar pessoas"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Usuários internos convidados (privados)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "Usuários do portal convidados e todos os usuários internos (público)"
 
 #. module: project
 #. odoo-javascript
@@ -2502,7 +2510,7 @@ msgstr "É privado?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "Versão do Incidente"
+msgstr "Versão do incidente"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2881,12 +2889,12 @@ msgstr "Nome"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__name_cropped
 msgid "Name Cropped"
-msgstr "Nome Recortado"
+msgstr "Nome recortado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr ""
+msgstr "Nome das tarefas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -2895,7 +2903,7 @@ msgid ""
 "sprints, etc..."
 msgstr ""
 "Nome usado para se referir às tarefas de seu projeto, ex.: tarefas, "
-"tíquetes, sprints, etc..."
+"chamados, sprints, etc..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3281,9 +3289,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo primário que possui o codinome. O modelo que possui a referência de codinome\n"
+"Modelo primário que contém o alias. O modelo que contém a referência de alias\n"
 "não é necessariamente o modelo dado por alias_model_id\n"
-"(example: project (parent_model) and task (model))"
+"(examplo: projeto (parent_model) e tarefa (model))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3622,7 +3630,7 @@ msgstr "Atualização do projeto"
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr "Atualizações de Projeto"
+msgstr "Atualização do projeto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -3882,7 +3890,7 @@ msgstr "Recorrente"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr "Tarefas Recorrentes"
+msgstr "Tarefas recorrentes"
 
 #. module: project
 #. odoo-javascript
@@ -3962,7 +3970,7 @@ msgstr "Pesquisando"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr "Alocação de Recursos"
+msgstr "Alocação de recursos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
@@ -3990,7 +3998,7 @@ msgstr "Erro no envio de SMS"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr "Carinha Triste"
+msgstr "Carinha triste"
 
 #. module: project
 #. odoo-python
@@ -4049,7 +4057,7 @@ msgstr "Pesquisar em responsáveis"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr "Procurar em Cliente"
+msgstr "Pesquisar em cliente"
 
 #. module: project
 #. odoo-python
@@ -4327,7 +4335,7 @@ msgstr "Estágios para excluir"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "Tarefas com estrela"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4703,9 +4711,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"O modelo (Odoo Documento Tipo), ao qual este codinome corresponde. Qualquer "
-"e-mails recebidos que não responde a um registro existente fará com que a "
-"criação de um novo registro desse modelo (e.g. a Project Task)"
+"O modelo (documento de tipo Odoo), ao qual este alias corresponde. Qualquer "
+"e-mails recebido que não responde a um registro existente fará com que a "
+"criação de um novo registro desse modelo (ex.: atividade do projeto)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -4713,8 +4721,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"O nome do codinome de e-mail, por exemplo, 'empregos' se você quer pegar "
-"e-mails para <empregos@suaempresa.com.br>"
+"O nome do alias de e-mail, ex.: 'empregos' se você quer pegar e-mails para "
+"<empregos@suaempresa.com.br>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -4830,6 +4838,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"Essa é uma prévia de como o projeto ficará quando for compartilhado com os "
+"clientes e eles tiverem acesso de edição."
 
 #. module: project
 #. odoo-javascript
@@ -5143,8 +5153,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
-"Use o chatter para <b>enviar e-mails</b> e se comunicar de forma eficiente com seus clientes. \n"
-"Adicione novas pessoas à lista de seguidores para que elas saibam das principais alterações dessa tarefa."
+"Use o chat para <b>enviar e-mails</b> e se comunicar de forma eficiente com seus clientes. \n"
+"Adicione novas pessoas à lista de seguidores para que elas saibam do andamento desse chamado."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5538,7 +5548,7 @@ msgstr "ex.: Festa do escritório"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr "ex.: Lançamento de Produto"
+msgstr "ex.: Lançamento de produto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -5549,17 +5559,17 @@ msgstr "ex.: Enviar convites"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "ex.: Tarefas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr "ex.: festa do escritório"
+msgstr "ex.: Festa do escritório"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr "ex.: Lançamento de Produto"
+msgstr "ex.: Lançamento de produto"
 
 #. module: project
 #. odoo-javascript
@@ -5609,7 +5619,7 @@ msgstr "pronto para ser marcado como atingido"
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "subtarefas)"
 
 #. module: project
 #. odoo-python
@@ -5677,3 +5687,5 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ "
 "record.subtask_count.value }}"
 msgstr ""
+"{{ record.closed_subtask_count.value }} subtarefas encerradas de {{ "
+"record.subtask_count.value }}"

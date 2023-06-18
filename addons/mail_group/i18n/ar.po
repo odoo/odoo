@@ -51,6 +51,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                مرحباً،<br><br>\n"
+"                لقد طلبت إلغاء الاشتراك في القائمة البريدية <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                للتأكيد، يرجى زيارة الرابط التالي: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                إذا كان ذلك عن طريق الخطأ أو إذا لم تطلب تنفيذ هذا الإجراء، يرجى تجاهل هذه الرسالة.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -65,6 +74,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                مرحباً،<br><br>\n"
+"                لقد طلبت إلغاء الاشتراك في القائمة البريدية <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                للتأكيد، يرجى زيارة الرابط التالي: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                إذا كان ذلك عن طريق الخطأ أو إذا لم تطلب تنفيذ هذا الإجراء، يرجى تجاهل هذه الرسالة.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -76,6 +94,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>مرحباً <t t-out=\"object.partner_id.name or ''\"></t>،</p>\n"
+"                <p>ستجد أدناه إرشادات القائمة البريدية {{ object.mail_group_id.name }} .</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer

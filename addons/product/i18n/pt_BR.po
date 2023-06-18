@@ -3,10 +3,9 @@
 # 	* product
 # 
 # Translators:
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Claudecir Garcia Martins, 2023
-# Kevilyn Rosa, 2023
 # Martin Trigaux, 2023
+# Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
 # 
 msgid ""
@@ -71,7 +70,7 @@ msgstr "%s (cópia)"
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s: data final (%s) deve ser depois da data de início (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -107,7 +106,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "1 year"
-msgstr "1 Ano"
+msgstr "1 ano"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -122,7 +121,7 @@ msgstr "2 x 7 com preço"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
 msgid "2 year"
-msgstr "2 Anos"
+msgstr "2 anos"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -163,6 +162,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Preços adicionais\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Preços adicionais\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -266,13 +271,13 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
-msgstr "Telas de Blocos Acústicos"
+msgstr "Telas de blocos acústicos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "Ação Necessária"
+msgstr "Ação necessária"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -301,19 +306,19 @@ msgstr "Atividades"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoração de Atividade Excepcional"
+msgstr "Decoração de atividade excepcional"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
-msgstr "Estado de Atividade"
+msgstr "Estado da atividade"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícone do Tipo de Atividade"
+msgstr "Ícone do tipo de atividade"
 
 #. module: product
 #. odoo-javascript
@@ -331,7 +336,7 @@ msgstr "Etiqueta adicional do produto"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Advanced Pricelists"
-msgstr "Lista de Preços Avançada"
+msgstr "Lista de preços avançada"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
@@ -346,7 +351,7 @@ msgstr "Todas as etiquetas de produtos"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr "Todas as variantes de produtos que usam essa etiqueta"
+msgstr "Todas as variantes de produtos que usam esse marcador"
 
 #. module: product
 #. odoo-python
@@ -437,7 +442,7 @@ msgstr "Atributo"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr "Linha de Atributo"
+msgstr "Linha de atributo"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -515,6 +520,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Preço base para cálculo.\n"
+"Preço de venda: o preço base será o preço de venda.\n"
+"Preço de custo: o preço base será o preço de custo.\n"
+"Outra lista de preços: cálculo do preço base com base em outra lista de preços."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -552,14 +561,14 @@ msgstr "A imagem variante 1024 pode ser ampliada"
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "Pode ser Comprado"
+msgstr "Pode ser comprado"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "Pode ser Vendido"
+msgstr "Pode ser vendido"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -576,7 +585,7 @@ msgstr "Categoria: %s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr "Categorias Secundárias"
+msgstr "Categorias secundárias"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
@@ -607,7 +616,7 @@ msgstr "Cor"
 #: model:ir.model.fields,field_description:product.field_product_product__color
 #: model:ir.model.fields,field_description:product.field_product_template__color
 msgid "Color Index"
-msgstr "Índice de Cores"
+msgstr "Índice de cores"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__columns
@@ -617,7 +626,7 @@ msgstr "Colunas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr "Índices de Combinação"
+msgstr "Índices de combinação"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -942,7 +951,7 @@ msgstr "Desconto"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr "Política de Desconto"
+msgstr "Política de desconto"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
@@ -1116,7 +1125,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
+msgstr "Seguidores (parceiros)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
@@ -1201,7 +1210,7 @@ msgstr "Agrupar por"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr "Índice de Cores HTML"
+msgstr "Índice de cores HTML"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
@@ -1369,7 +1378,7 @@ msgstr "Referência interna"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "Número Internacional de Artigo, usado para identificação do produto."
+msgstr "Número internacional de artigo, usado para identificação do produto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2088,7 +2097,7 @@ msgstr "Etiqueta do produto"
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr "Tags do produto"
+msgstr "Marcadores de produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2124,7 +2133,7 @@ msgstr "Etiquetas de modelos de produtos"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr "Tmpl do produto"
+msgstr "Template do produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
@@ -2640,7 +2649,7 @@ msgstr ""
 "O número de variantes a gerar é muito alto. Você não deve gerar variantes "
 "para cada combinação ou gerá-las sob demanda a partir do pedido de vendas. "
 "Para fazer isso, abra a visualização de formulário dos atributos e altere o "
-"modo de *Criar Variantes*."
+"modo de *criar variantes*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -2673,7 +2682,7 @@ msgid ""
 " Variants' button to set the extra attribute prices."
 msgstr ""
 "O preço de venda é gerenciado a partir do modelo do produto. Clique no botão"
-" 'Configurar Variações' para definir os preços de atributos extras."
+" 'configurar variações' para definir os preços de atributos extras."
 
 #. module: product
 #. odoo-python
@@ -2843,7 +2852,7 @@ msgstr "UdM"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr "Venda incrementada & Venda cruzada"
+msgstr "Venda incrementada & venda cruzada"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products

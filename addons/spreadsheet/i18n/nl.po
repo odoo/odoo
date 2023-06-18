@@ -5,9 +5,9 @@
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2023
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,6 +183,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
+"Een boolean dat bepaalt of het verwijzingstype A1 (WAAR) of het "
+"verwijzingstype R1C1 (FOUT) gebruikt wordt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -366,6 +368,8 @@ msgstr "Een opgegeven aantal, ongewijzigd."
 msgid ""
 "A string indicating the name of the sheet into which the address points."
 msgstr ""
+"Een tekenreeks die de naam van het blad waarnaar het adres verwijst "
+"aangeeft."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -388,6 +392,15 @@ msgid ""
 " number of days between start_date and end_date, assuming start_date and "
 "end_date were no more than one year apart)."
 msgstr ""
+"Een tekstafkorting van de tijdseenheid. Aaanvaarde waardes zijn \"J\" (het "
+"aantal volledige jaren tussen start_date en end_date), \"M\" (het aantal "
+"volledige maanden tussen start_date en end_date), \"D\" (het aantal dagen "
+"tussen start_date en end_date), \"MD\" (het aantal dagen tussen start_date "
+"en end_date na aftrek van de volledige maanden), \"JM\" (het aantal "
+"volledige maanden tussen start_date en end_date na aftrek van de volledige "
+"jaren), \"JD\" (het aantal dagen tussen start_date en end_date, "
+"veronderstellend dat er niet meer dan één jaar is tussen start_date en "
+"end_date)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -454,7 +467,7 @@ msgstr "Toevoegen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add any characters or symbol"
-msgstr ""
+msgstr "Voeg eender welk karakter of symbool toe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -462,6 +475,7 @@ msgstr ""
 #, python-format
 msgid "Add new columns to avoid overwriting cells"
 msgstr ""
+"Voeg nieuwe kolommen toe om te vermijden dat cellen overschreven worden"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -816,6 +830,10 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
+"Een indicator of de verwijzing een absolute rij/kolom is. 1 is een absolute "
+"rij en kolom (bijv. $A$1), 2 is een absolute rij en een relatieve kolom "
+"(bijv. A$1), 3 is een relatieve rij en een absolute kolom (bijv. ($A1) en 4 "
+"is een relatieve rij en kolom (bijv. A1)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1145,7 +1163,7 @@ msgstr "Vet"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Border color"
-msgstr ""
+msgstr "Randkleur"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1183,7 +1201,7 @@ msgstr "Berekent de effectieve rente."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates the number of days, months, or years between two dates."
-msgstr ""
+msgstr "Berekent het aantal dagen, maanden of jaren tussen twee data."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1242,7 +1260,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot split the selection for an unknown reason"
-msgstr ""
+msgstr "Kan de selectie niet splitsen voor een onbekende reden"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1789,7 +1807,7 @@ msgstr "Aangepaste valuta-indeling"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Custom separator"
-msgstr ""
+msgstr "Gepersonaliseerd scheidingsteken"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2064,7 +2082,7 @@ msgstr "Ontwerp"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Detect automatically"
-msgstr ""
+msgstr "Automatisch detecteren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2415,14 +2433,14 @@ msgstr "Vrijdag"
 #. module: spreadsheet
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Frozen and copied on"
-msgstr ""
+msgstr "Vergrendeld en gekopieerd op"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Frozen version - Anyone can view"
-msgstr ""
+msgstr "Vergrendelde versie - Iedereen kan lezen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2585,7 +2603,7 @@ msgstr "Meterdiagram"
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Generating sharing link"
-msgstr ""
+msgstr "Gedeelde link genereren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3031,7 +3049,7 @@ msgstr "Rij hieronder invoegen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Insert sheet"
-msgstr ""
+msgstr "Blad invoegen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3489,14 +3507,14 @@ msgstr "Regel"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line Break"
-msgstr ""
+msgstr "Regeleinde"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Line style"
-msgstr ""
+msgstr "Regelstijl"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3698,7 +3716,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Merge cells"
-msgstr ""
+msgstr "Cellen samenvoegen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4189,7 +4207,7 @@ msgstr "Het ene getal gedeeld door het andere."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Only a selection from a single column can be split"
-msgstr ""
+msgstr "Enkel een selectie van één enkele kolom kan worden gesplitst"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4566,7 +4584,7 @@ msgstr "Retourneert de huidige waarde van een spreadsheetfilter."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns a cell reference as a string. "
-msgstr ""
+msgstr "Retourneert een celverwijzing als een tekenreeks."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5015,21 +5033,21 @@ msgstr "Spatie"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text into columns"
-msgstr ""
+msgstr "Tekst splitsen in kolommen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text to columns"
-msgstr ""
+msgstr "Tekst splitsen in kolommen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Splitting will overwrite existing content"
-msgstr ""
+msgstr "Het splitsen zal de bestaande inhoud overschrijven"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_data
@@ -5039,19 +5057,19 @@ msgstr "Spreadsheetgegevens"
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_binary_data
 msgid "Spreadsheet file"
-msgstr ""
+msgstr "Spreadsheetbestand"
 
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_spreadsheet_mixin
 msgid "Spreadsheet mixin"
-msgstr ""
+msgstr "Spreadsheet mixin"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
 #, python-format
 msgid "Spreadsheet published"
-msgstr ""
+msgstr "Gepubliceerde spreadsheet"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5523,7 +5541,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The column number (not name) of the cell reference. A is column number 1. "
-msgstr ""
+msgstr "De kolomnummer (niet naam) van de celverwijzing. A is kolom nummer 1."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5872,6 +5890,9 @@ msgid ""
 "The end date to consider in the calculation. Must be a reference to a cell "
 "containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"De einddatum waarmee bij de berekening rekening moet worden gehouden. Moet "
+"een verwijzing zijn naar een cel die een DATUM, een functie die een "
+"datumtype retourneert, of een getal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6237,6 +6258,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value between %s and %s "
 "inclusive, but receives %s."
 msgstr ""
+"De functie [[FUNCTION_NAME]] verwacht een getalwaarde tussen %s en %s "
+"inbegrepen, maar ontvangt %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6246,6 +6269,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value to be greater than or "
 "equal to 1, but receives %s."
 msgstr ""
+"De functie [[FUNCTION_NAME]] verwacht een getalwaarde groter dan of gelijk "
+"aan 1, maar ontvangt %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6266,6 +6291,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be"
 " one of: %s."
 msgstr ""
+"De functie [[FUNCTION_NAME]] heeft een argument met de waarde '%s'. Het moet"
+" een van de volgende zijn: %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7471,7 +7498,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The row number of the cell reference. "
-msgstr ""
+msgstr "De rijnummer van de celverwijzing"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7677,6 +7704,9 @@ msgid ""
 "The start date to consider in the calculation. Must be a reference to a cell"
 " containing a DATE, a function returning a DATE type, or a number."
 msgstr ""
+"De startdatum waarmee bij de berekening rekening moet worden gehouden. Moet "
+"een verwijzing zijn naar een cel die een DATUM, een functie die een "
+"datumtype retourneert of een getal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8468,6 +8498,8 @@ msgstr "Er is geen lijst met id \"%s\""
 #, python-format
 msgid "There is no match for the selected separator in the selection"
 msgstr ""
+"Er is geen overeenstemming voor het geselecteerde scheidingsteken in de "
+"selectie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8568,6 +8600,8 @@ msgstr ""
 #, python-format
 msgid "This will overwrite data in the subsequent columns. Split anyway?"
 msgstr ""
+"Dit zal de gegevens in de aansluitende kolommen overschrijven. Toch "
+"splitsen?"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8757,7 +8791,7 @@ msgstr "Tot huidige rij"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Use row"
-msgstr ""
+msgstr "Gebruik rij"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9157,7 +9191,7 @@ msgstr "Jaar gespecificeerd door een bepaalde datum."
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr ""
+msgstr "Year to Date"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9272,7 +9306,7 @@ msgstr "en waarde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "as headers"
-msgstr ""
+msgstr "als kopteksten"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9328,4 +9362,4 @@ msgstr "searchMode moet een waarde zijn in [-1, 1, -2, 2]."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
-msgstr ""
+msgstr "start_date (%s) moet op of voor end_date (%s) liggen."
