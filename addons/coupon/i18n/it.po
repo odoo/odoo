@@ -10,8 +10,8 @@
 # Luana Andronico <andronicoluana@gmail.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,7 +122,7 @@ msgstr "<span>prodotti</span>"
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
-"<strong style=\"font-size: 55px; color: #875A7B\">ottieni spedizione "
+"<strong style=\"font-size: 55px; color: #875A7B\">ottieni la spedizione "
 "gratuita</strong>"
 
 #. module: coupon
@@ -226,6 +226,93 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        % if object.partner_id.name:\n"
+"        Congratulationi ${object.partner_id.name},<br/>\n"
+"        % endif\n"
+"\n"
+"        ecco il premio da parte di ${object.program_id.company_id.name}.<br/>\n"
+"\n"
+"        % if object.program_id.reward_type == 'discount':\n"
+"            % if object.program_id.discount_type == 'fixed_amount':\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">in meno sul prossimo ordine</strong><br/>\n"
+"            % else\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                ${object.program_id.discount_percentage} %\n"
+"            </span>\n"
+"            % if object.program_id.discount_apply_on == 'specific_products'\n"
+"                <br/>\n"
+"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
+"                % set display_specific_products = True\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                    su alcuni prodotti*\n"
+"                </strong>\n"
+"                % else\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                    ${'sul prodotto %s' % object.program_id.discount_specific_product_ids.name}\n"
+"                </strong>\n"
+"                % endif\n"
+"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                in meno sul prodotto più economico\n"
+"            </strong>\n"
+"            % else\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                in meno sul prossimo ordine\n"
+"            </strong>\n"
+"            % endif\n"
+"            <br/>\n"
+"            % endif\n"
+"        % elif object.program_id.reward_type == 'product':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                ${'ottieni gratuitamente %s %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">sul prossimo ordine</strong><br/>\n"
+"        % elif object.program_id.reward_type == 'free_shipping':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                ottieni la spedizione gratuita\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">sul prossimo ordine</strong><br/>\n"
+"        % endif\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Utilizza questo codice promozionale\n"
+"        % if object.expiration_date:\n"
+"            prima del ${object.expiration_date}\n"
+"        % endif\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
+"                ${object.code}\n"
+"            </strong>\n"
+"        </p>\n"
+"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            Acquisto minimo di ${object.program_id.rule_min_quantity} prodotti\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if object.program_id.rule_minimum_amount != 0.00\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            Valido per acquisti superiori a ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if display_specific_products\n"
+"        <span>\n"
+"            *Valido per i seguenti prodotti: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        <br/>\n"
+"        Grazie,\n"
+"        % if object.order_id.user_id.signature:\n"
+"            <br/>\n"
+"            ${object.order_id.user_id.signature | safe}\n"
+"        % endif\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
@@ -253,12 +340,12 @@ msgid ""
 "                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
 "                order or create a coupon for a next order."
 msgstr ""
-"Un programma promozionale può essere un'offerta promozionale limitata senza codice (applicata automaticamente)\n"
-"                o con un codice (pubblicato in una rivista ad esempio) che genera uno sconto sull'ordine\n"
-"                attuale o crea un buono sconto per il prossimo ordine.\n"
+"Un programma promozionale può essere un'offerta limitata senza codice (applicata automaticamente)\n"
+"                oppure con codice (ad esempio pubblicato su una rivista) che può generare uno sconto sull'ordine attuale\n"
+"                oppure creare un buono sconto per un ordine successivo.\n"
 "\n"
-"                Un programma buono sconto consente di generare buoni sconto con un codice che può essere usato per generare uno sconto sull'ordine\n"
-"                attuale o creare un buono sconto per un prossimo ordine. "
+"                Un programma buono sconto genera buoni sconto con un codice che può essere utilizzato per creare uno sconto sull'ordine attuale\n"
+"                oppure un buono sconto per un ordine successivo."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__active
@@ -304,7 +391,7 @@ msgid ""
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
 "Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate viene applicato il premio (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
-"Utilizzo di un codice - Se le regole del programma sono rispettate, per applicare il premio è obbligatorio un codice valido.\n"
+"Utilizzare un codice - Se le regole del programma sono rispettate, per applicare il premio è obbligatorio un codice valido.\n"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -667,12 +754,12 @@ msgstr "Tipo di generazione"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
 msgid "Has Partner Email"
-msgstr "Ha email del partner"
+msgstr "Contiene e-mail partner"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr "Ecco il tuo premio da"
+msgstr "Ecco il premio da parte di"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -727,7 +814,7 @@ msgstr "Importo massimo di sconto"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum Use Number"
-msgstr "Numero massimo di utilizzo"
+msgstr "Numero massimo di utilizzi"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
@@ -986,7 +1073,7 @@ msgstr "Importo minimo della regola"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount_tax_inclusion
 msgid "Rule Minimum Amount Tax Inclusion"
-msgstr "Importo minimo della regola per inclusione imposte"
+msgstr "Aggiunta imposte nell'importo minimo della regola"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_report_coupon_report_coupon
@@ -1119,12 +1206,12 @@ msgstr "Unità"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr "Usa un codice"
+msgstr "Utilizzare un codice"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr "Usa questo codice promo prima"
+msgstr "Utilizza questo codice promozionale prima del"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1161,7 +1248,7 @@ msgstr "Impossibile eliminare un programma con stato attivo"
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
 msgid "Your Coupon Code"
-msgstr "Il tuo codice buono sconto"
+msgstr "Codice buono sconto"
 
 #. module: coupon
 #: model:mail.template,subject:coupon.mail_template_sale_coupon
