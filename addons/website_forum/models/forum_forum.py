@@ -130,6 +130,21 @@ class Forum(models.Model):
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
+    has_pending_post = fields.Boolean(string='Has pending post', compute='_compute_has_pending_post')
+
+    @api.depends_context('uid')
+    def _compute_has_pending_post(self):
+        domain = [
+            ('create_uid', '=', self.env.user.id),
+            ('state', '=', 'pending'),
+            ('parent_id', '=', False),
+        ]
+        pending_forums = self.env['forum.forum'].search([
+            ('id', 'in', self.ids),
+            ('post_ids', 'any', domain),
+        ])
+        pending_forums.has_pending_post = True
+        (self - pending_forums).has_pending_post = False
 
     @api.depends('description')
     def _compute_teaser(self):
