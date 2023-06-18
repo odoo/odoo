@@ -1405,7 +1405,7 @@ msgstr "대기 선별 수"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
 msgid "Count Sheet"
-msgstr ""
+msgstr "시트 수"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -1565,7 +1565,7 @@ msgstr "작성일"
 msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
-msgstr ""
+msgstr "새로운 창고를 생성하면 보관 위치 설정이 자동으로 활성화됩니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
@@ -1659,7 +1659,7 @@ msgstr "날짜"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Processing"
-msgstr ""
+msgstr "날짜 처리"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -1703,7 +1703,7 @@ msgstr "마감일 초과 또는/및 예정일"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
-msgstr ""
+msgstr "%s 지연으로 인해 업데이트된 기한"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
@@ -1796,7 +1796,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__delay_alert_date
 msgid "Delay Alert Date"
-msgstr ""
+msgstr "지연 알림일"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -2207,6 +2207,9 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
+"Odoo 바코드 앱을 통해 신속하게 업무가 진행되는 것을 경험해보시기 바랍니다. 아주 빠르게로 작동하며 인터넷 연결이 안정적이지 않은 "
+"상태에서도 가능합니다. 재고 조정이나 배치 픽업, 로트나 팔레트 이동, 재고 부족 확인과 같이 어떤 업무 흐름에서도 지원할 수 있습니다."
+" \"앱\" 메뉴로 이동하여 바코드 인터페이스를 활성화시키십시오."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2276,13 +2279,13 @@ msgstr ""
 #: code:addons/stock/static/src/xml/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr ""
+msgstr "예상"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "예상 %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2458,7 +2461,7 @@ msgstr "예측 배송"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr ""
+msgstr "예측되는 예상일"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action
@@ -2491,7 +2494,7 @@ msgstr "예상 입고"
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
 #, python-format
 msgid "Forecasted Report"
-msgstr ""
+msgstr "예측 보고서"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
@@ -2502,7 +2505,7 @@ msgstr "예상 재고"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted with Pending"
-msgstr ""
+msgstr "보류 중인 예측치"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
@@ -2658,12 +2661,12 @@ msgstr "높이(Z)"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Hidden until next scheduler."
-msgstr ""
+msgstr "다음 스케줄까지 숨깁니다"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
 msgid "Hide Picking Type"
-msgstr ""
+msgstr "픽업 유형 숨기기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -3052,7 +3055,7 @@ msgstr "잘못된 도메인 오른쪽 피연산자 %s"
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr ""
+msgstr "잘못된 규칙 구성입니다. 다음 규칙으로 인해 무한 반복되고 있습니다: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -3211,12 +3214,12 @@ msgstr "초기 수요 편집 여부"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_deadline_issue
 msgid "Is late"
-msgstr ""
+msgstr "지연됨"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
+msgstr "마감일 및 예정일에 따라서 지연되었거나 지연될 예정입니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -3430,7 +3433,7 @@ msgstr "지연된 이송"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
 msgid "Lead Days Date"
-msgstr ""
+msgstr "리드일 날짜"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
@@ -3850,7 +3853,7 @@ msgstr "다중-단계 경로"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr ""
+msgstr "여러 수량"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__my_activity_date_deadline
@@ -4033,7 +4036,7 @@ msgstr "사용불가"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr ""
+msgstr "일시 중지되지 않음"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4236,13 +4239,13 @@ msgstr "주문"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr ""
+msgstr "단일 주문"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed"
-msgstr ""
+msgstr "완료된 주문"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4283,7 +4286,7 @@ msgstr "원점 이동"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr ""
+msgstr "원래의 재주문 규칙"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4311,7 +4314,7 @@ msgstr "출고"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Outgoing Draft Transfer"
-msgstr ""
+msgstr "출고 초안 전송"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -4572,7 +4575,7 @@ msgstr "선별 유형"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr ""
+msgstr "픽업 유형 코드 도메인"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -4594,12 +4597,12 @@ msgstr "계획된 이송"
 #: code:addons/stock/static/src/js/stock_rescheduling_popover.js:0
 #, python-format
 msgid "Planning Issue"
-msgstr ""
+msgstr "계획 문제"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Planning Issues"
-msgstr ""
+msgstr "계획 문제"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4635,7 +4638,7 @@ msgstr "사전 채우기 세부 작업"
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "Preceding operations"
-msgstr ""
+msgstr "선행 작업"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
@@ -4677,7 +4680,7 @@ msgstr "우선 순위"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__delay_alert_date
 msgid "Process at this date to be on time"
-msgstr ""
+msgstr "해당 날짜에 정시 처리"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5064,7 +5067,7 @@ msgstr "Quant"
 msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
-msgstr ""
+msgstr "수량은 필요할 경우 자동 삭제됩니다. 수기로 삭제해야 하는 경우에는 재고 관리자에게 연락하시기 바랍니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5076,7 +5079,7 @@ msgstr "Quant의 생성이 제한되어 있으므로 이 작업을 수행할 수
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
-msgstr ""
+msgstr "퀀트 편집이 제한되어 있는 관계로 이 작업을 수행할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
@@ -5448,7 +5451,7 @@ msgstr "재보충 보고서"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr ""
+msgstr "보충 보고서 검색"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
@@ -5464,7 +5467,7 @@ msgstr "보고"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr ""
+msgstr "배송주문서에 서명이 필요합니다"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -5498,7 +5501,7 @@ msgstr "재고에서 예약됨"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserving a negative quantity is not allowed."
-msgstr ""
+msgstr "수량을 음수로 예약하는 것은 허용되지 않습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -5589,7 +5592,7 @@ msgstr "경로"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_company_id
 msgid "Route Company"
-msgstr ""
+msgstr "회사 경로"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -5657,7 +5660,7 @@ msgstr "품목 규칙"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__rule_ids
 msgid "Rules used"
-msgstr ""
+msgstr "사용된 규칙"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
@@ -5700,7 +5703,7 @@ msgstr "계획된 날짜"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
 msgid "Scheduled date until move is done, then date of actual move processing"
-msgstr ""
+msgstr "이동이 완료될 때까지의 예정일 후, 실제 이동 처리일"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -6018,7 +6021,7 @@ msgstr "재공급 표시"
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__show_transfers
 msgid "Show Transfers"
-msgstr ""
+msgstr "전송 표시"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
@@ -6065,22 +6068,22 @@ msgstr "다시 알림"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr ""
+msgstr "중지일"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
 msgid "Snooze Orderpoint"
-msgstr ""
+msgstr "중지 주문 시점"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
 msgid "Snooze for"
-msgstr ""
+msgstr "다시 알림"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Snoozed"
-msgstr ""
+msgstr "다시 알림"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -6534,7 +6537,7 @@ msgstr ""
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr ""
+msgstr "생성한 전송의 예상일은 이 리드 타임을 기준으로 계산됩니다."
 
 #. module: stock
 #. openerp-web
@@ -6606,6 +6609,8 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"품목 %s의 최종 수량에는 기본 단위 %s에 정의되어 있는 소수점 자릿수가 반영되지 않습니다.\n"
+"최종 수량 또는 기본 단위의 소수점 수준을 변경해 주십시오."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6820,7 +6825,7 @@ msgstr ""
 msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
-msgstr ""
+msgstr "다른 회사에서 사용 중인 수량이 있는 경우, 이 품목의 회사는 변경할 수 없습니다."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -6828,7 +6833,7 @@ msgstr ""
 msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
-msgstr ""
+msgstr "다른 회사에서 재고 이동이 있는 경우, 이 품목의 회사는 변경할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7061,7 +7066,7 @@ msgstr "그룹으로 이송"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
-msgstr ""
+msgstr "전송이 예정 시간보다 지연되거나 픽업 중에 지연되는 항목이 있습니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -7194,7 +7199,7 @@ msgstr "단위"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "측정 단위"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7307,7 +7312,7 @@ msgstr "나만의 경로 사용"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Used by"
-msgstr ""
+msgstr "사용자"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
@@ -7741,7 +7746,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
-msgstr ""
+msgstr "이미 품목 유형을 사용한 경우에는 변경할 수 없습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7914,7 +7919,7 @@ msgstr "'완료'로 설정된 재고 이동을 예약 해제할 수 없습니다
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
+msgstr "재고 이동을 취소한 경우에는 변경할 수 없으며, 대신 새로운 항목을 생성합니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7947,7 +7952,7 @@ msgstr "품목 내역를 수동으로 생성했습니다. 계속 진행하려면
 msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
-msgstr ""
+msgstr "아직 <i>완료</i> 수량을 기록하지 않았습니다. <i>적용</i>을 클릭하면 Odoo에서 수량 전체를 처리합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -8024,7 +8029,7 @@ msgstr "품목 %s의 Lot/Serial 번호를 지정해야 합니다."
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr ""
+msgstr "%s 창고의 %s 픽업 유형에 대한 작업이 아직 진행 중입니다."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8056,6 +8061,9 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
+"여기에서 재고 예측을 기반으로 한 스마트 보충 안내를 확인할 수 있습니다.\n"
+"            클릭 한 번으로 구매 또는 제조 수량을 선택하여 주문을 완료합니다. \n"
+"            규칙을 \"자동\"으로 설정해놓으면 소요되는 시간을 줄일 수 있습니다. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -8138,7 +8146,7 @@ msgstr "of"
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "planned on"
-msgstr ""
+msgstr "예정일"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking

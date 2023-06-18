@@ -1357,6 +1357,10 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
+"Domain filter on tietueiden suodattamista varten. Yleinen sääntö, ei "
+"käyttäjästä riippuvainen, esim. [('state', '=', 'done')]. Lauseke voi "
+"sisältää viittauksen 'user'-tietueeseen, joka on nykyisen käyttäjän "
+"selaustietue, jos se ei ole eräajotilassa."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1526,14 +1530,14 @@ msgstr "Pelillistämisen yleinen tavoite haasteelle"
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr ""
+msgstr "Pelillistäminen: Tavoitteiden haasteiden tarkistus"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
 #: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
 #: model:ir.cron,name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
-msgstr ""
+msgstr "Pelillistäminen: Karman seurannan konsolidointi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1675,7 +1679,7 @@ msgstr "Miten tavoite lasketaan?"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Henkilöstöresurssit / sitoutuminen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1771,6 +1775,8 @@ msgid ""
 "In batch mode, this indicates which field distinguishes one user from the "
 "other, e.g. user_id, partner_id..."
 msgstr ""
+"Erätilassa tämä ilmaisee, mikä kenttä erottaa yhden käyttäjän toisesta, "
+"esim. user_id, partner_id...."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
@@ -2204,6 +2210,8 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
+"Python-koodi, joka suoritetaan kullekin käyttäjälle. 'result' sisältää uuden"
+" nykyisen arvon. Arvioitu käyttäjä on käytettävissä object.user_id:n kautta."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
@@ -2607,6 +2615,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Määritelmän %s toimialue vaikuttaa virheelliseltä, tarkista se.\n"
+"\n"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_id
@@ -2619,6 +2630,8 @@ msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
+"Käyttäjäprofiilin (res.users) kentän nimi, joka sisältää toiminnan res_id "
+"arvon."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2662,6 +2675,9 @@ msgid ""
 "\n"
 "%(error)s not found"
 msgstr ""
+"Määritelmän %(name)s mallin konfiguraatio vaikuttaa virheelliseltä, tarkista se.\n"
+"\n"
+"%(error)s ei löydy"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2671,6 +2687,9 @@ msgid ""
 "\n"
 "%(field_name)s not stored"
 msgstr ""
+"Määritelmän %(name)s mallin konfiguraatio vaikuttaa virheelliseltä, tarkista se.\n"
+"\n"
+"%(field_name)s ei tallennettu"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
@@ -2775,6 +2794,8 @@ msgid ""
 "There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Tähän haasteeseen ei liity tavoitetta, joka vastaisi hakuasi.\n"
+"            Varmista, että haasteesi on aktiivinen ja määritetty vähintään yhdelle käyttäjälle."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
@@ -2875,7 +2896,7 @@ msgstr "Käyttäjä"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
-msgstr ""
+msgstr "Käyttäjän verkkotunnus"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users

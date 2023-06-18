@@ -495,6 +495,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=”{’invisible’: [(’holiday_type’, ’!=’, ’employee’)]}”>\n"
+"                        Medarbetaren har en annan tidszon än du! Här visas datum och tider i medarbetarens tidszon\n"
+"                    </span>\n"
+"                    <span attrs=”{’invisible’: [(’holiday_type’, ’!=’, ’department’)]}”>\n"
+"                        Avdelningens företag har en annan tidszon än du! Här visas datum och tider i företagets tidszon\n"
+"                    </span>\n"
+"                    <span attrs=”{’invisible’: [(’holiday_type’, ’!=’, ’company’)]}”>\n"
+"                        Företaget har en annan tidszon än du! Här visas datum och tider i företagets tidszon\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
@@ -629,6 +639,8 @@ msgid ""
 "A great way to keep track on employee’s PTOs, sick days, and approval "
 "status."
 msgstr ""
+"Ett bra sätt att hålla koll på medarbetarnas PTO, sjukdagar och "
+"godkännandestatus."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -637,6 +649,8 @@ msgid ""
 "A great way to keep track on your time off requests, sick days, and approval"
 " status."
 msgstr ""
+"Ett bra sätt att hålla koll på dina ledighetsansökningar, sjukdagar och "
+"godkännandestatus."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -688,7 +702,7 @@ msgstr "Frånvarande idag"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr ""
+msgstr "Periodiserad fördelning"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -827,7 +841,7 @@ msgstr "Beskrivning av tilldelning"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr ""
+msgstr "Visning av tilldelning"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
@@ -900,7 +914,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
-msgstr ""
+msgstr "En begäran om tilldelning måste bekräftas för att kunna godkännas."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -908,6 +922,8 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
+"En begäran om tilldelning måste bekräftas eller valideras för att den ska "
+"kunna avslås."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -916,6 +932,8 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
+"Tilldelningsförfrågan måste vara i Utkast-status (”Att skicka in”) för att "
+"kunna bekräfta den."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -924,6 +942,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
+"Status för tilldelningsbegäran måste vara ”Avisad” eller ”Till godkännande” "
+"för att återställas till Draft."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -950,6 +970,11 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Tillåt att skapa förfrågningar i batcher:\n"
+"- Per anställd: för en specifik anställd\n"
+"- Per företag: alla anställda i det angivna företaget\n"
+"- Per avdelning: alla anställda i den angivna avdelningen\n"
+"- Per anställdetikett: alla anställda i den specifika anställdgruppkategorin"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary

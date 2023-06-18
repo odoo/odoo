@@ -15,7 +15,7 @@
 # Efrem Jimenez <efj@odoo.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2020
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2020
+# Daniel Blanco <daniel@blancomartin.cl>, 2020
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
 # Sergio Flores <vitavitae1@gmail.com>, 2020
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
@@ -49,8 +49,8 @@
 # Yolann Sabaux, 2022
 # jabelchi, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# Xabi Spacebiker <xabispacebiker@gmail.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Xabi Spacebiker <xabispacebiker@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -58,7 +58,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Xabi Spacebiker <xabispacebiker@gmail.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +78,12 @@ msgstr "Añadir imágenes"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\" alerta con un"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
+msgstr ""
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -3619,7 +3625,7 @@ msgstr "Tamaño de letra"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font family"
-msgstr "Familia del tipo de letra"
+msgstr "Familia tipográfica"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6298,7 +6304,7 @@ msgstr "Tipo de redirección"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_rewrite
 msgid "Redirects"
-msgstr "Redirige"
+msgstr "Redirecciones"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
@@ -7569,6 +7575,16 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9478,7 +9494,7 @@ msgstr "no es necesario pedir el consentimiento"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "⌙ Active"
-msgstr "Activo"
+msgstr "⌙ Activo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9488,27 +9504,27 @@ msgstr "⌙ Fondo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "⌙ Blur"
-msgstr "Blur"
+msgstr "⌙ Difuminado"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Buttons"
-msgstr "Botones"
+msgstr "⌙ Botones"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "⌙ Color"
-msgstr "Color"
+msgstr "⌙ Color"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Colors"
-msgstr "Colores"
+msgstr "⌙ Colores"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "⌙ Delay"
-msgstr "Retraso"
+msgstr "⌙ Retraso"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9518,7 +9534,7 @@ msgstr "Epígrafes"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Height"
-msgstr "Altura"
+msgstr "⌙ Altura"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9528,22 +9544,22 @@ msgstr "⌙ Altura (Desplazada)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "⌙ Inactive"
-msgstr "Inactivo"
+msgstr "⌙ Inactivo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "⌙ Intensity"
-msgstr "Intensidad"
+msgstr "⌙ Intensidad"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Label"
-msgstr "Etiqueta"
+msgstr "⌙ Etiqueta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Large"
-msgstr "Grande"
+msgstr "⌙ Grande"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -9553,27 +9569,27 @@ msgstr "⌙ Dispositivos normales"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Off-Canvas Logo"
-msgstr "Logotipo fuera de lienzo"
+msgstr "⌙ Logotipo fuera de lienzo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "⌙ Offset (X, Y)"
-msgstr "Offset (X, Y)"
+msgstr "⌙ Offset (X, Y)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "⌙ Parallax"
-msgstr "Parallax"
+msgstr "⌙ Parallax"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
 msgid "⌙ Separator"
-msgstr "Separador"
+msgstr "⌙ Separador"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Small"
-msgstr "Pequeño"
+msgstr "⌙ Pequeño"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -9583,27 +9599,27 @@ msgstr "⌙ Dispositivos pequeños"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Spacing"
-msgstr "Espaciado"
+msgstr "⌙ Espaciado"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "⌙ Spread"
-msgstr "Spread"
+msgstr "⌙ Difusión"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 msgid "⌙ Style"
-msgstr "Estilo"
+msgstr "⌙ Estilo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "⌙ Video"
-msgstr "Vídeo"
+msgstr "⌙ Vídeo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
-msgstr "Ancho"
+msgstr "⌙ Ancho"
 
 #. module: website
 #. openerp-web

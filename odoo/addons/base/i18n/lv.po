@@ -6,12 +6,12 @@
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2020
 # JanisJanis <jbojars@gmail.com>, 2020
 # InfernalLV <karlisdreizis@gmail.com>, 2020
-# ievaputnina <ievai.putninai@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Arnis Putniņš <arnis@allegro.lv>, 2020
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2020
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Will Sensors, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Will Sensors, 2023\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6879,19 +6879,19 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
 msgid "# Record Rules"
-msgstr ""
+msgstr "# Ierakstu piekļuves nosacījumi"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(action_name)s is not a valid action on %(model_name)s"
-msgstr ""
+msgstr "%(action_name)s nav derīga darbība ar %(model_name)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(attribute)r value must be an integer (%(value)s)"
-msgstr ""
+msgstr "%(attribute)r vērtībai ir jābūt veselam skaitlim (%(value)s)"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -6994,7 +6994,7 @@ msgstr "%s (kopija)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Day of the week number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w — Nedēļas dienas numurs [0(svētdiena),6].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -7004,7 +7004,7 @@ msgstr "%y - Year without century [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "&amp; Close"
-msgstr ""
+msgstr "&amp; Aizvērt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -7039,12 +7039,12 @@ msgstr "'%s' does not seem to be an integer for field '%%(field)s'"
 #: code:addons/fields.py:0
 #, python-format
 msgid "(Record: %s, User: %s)"
-msgstr ""
+msgstr "(Ieraksts: %s, Lietotājs: %s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure to create a new one?"
-msgstr ""
+msgstr "),vai esat pārliecināts, ka vēlaties izveidot jaunu?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -7068,6 +7068,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r pieder uzņēmumam %(company)r un %(field)r (%(fname)s: "
+"%(values)s) pieder citam uzņēmumam."
 
 #. module: base
 #: code:addons/model.py:0
@@ -7084,6 +7086,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Ieraksts ir uzņēmums %(company)r un %(field)r (%(fname)s: "
+"%(values)s)pieder citam uzņēmumam."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7296,7 +7300,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Nederīgs\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -7306,7 +7310,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Pieslēgties\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -7366,6 +7370,8 @@ msgid ""
 "<span class=\"o_form_label\">The selected modules have been updated / "
 "installed !</span>"
 msgstr ""
+"<span class=\"o_form_label\">Atlasītie moduļi ir atjaunināti / "
+"instalēti!</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -7373,6 +7379,8 @@ msgid ""
 "<span class=\"o_form_label\">We suggest to reload the menu tab to see the "
 "new menus (Ctrl+T then Ctrl+R).\"</span>"
 msgstr ""
+"<span class=\"o_form_label\">Iesakām atkārtoti ielādēt izvēlnes cilni, lai "
+"redzētu jaunās izvēlnes (Ctrl+T, pēc tam Ctrl+R).\"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
@@ -7420,27 +7428,27 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Module</span>"
-msgstr ""
+msgstr "<span>Modulis</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Name</span>"
-msgstr ""
+msgstr "<span>Nosaukums</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Object:</span>"
-msgstr ""
+msgstr "<span>Objekts:</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Version</span>"
-msgstr ""
+msgstr "<span>Versija</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Web</span>"
-msgstr ""
+msgstr "<span>Web</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -7508,7 +7516,7 @@ msgstr "<strong>Name</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr ""
+msgstr "<strong>Tālrunis:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -7544,6 +7552,7 @@ msgstr "<strong>Seq</strong>"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<strong>The contact linked to this user is still active</strong>"
 msgstr ""
+"<strong>Ar šo lietotāju saistītā kontaktpersona joprojām ir aktīva</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -7792,6 +7801,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
+"Kontaktpersona ar tādu pašu <span><span class=\"o_vat_label\">PVN "
+"reģistrācijas numuru</span></span> jau pastāv ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -7867,7 +7878,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 msgid "API Keys"
-msgstr ""
+msgstr "API atslēgas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
@@ -7945,7 +7956,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
 msgid "Access the website profile of the users"
-msgstr ""
+msgstr "Piekļuve lietotāju vietnes profilam"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
@@ -7955,13 +7966,13 @@ msgstr "Access to Private Addresses"
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr ""
+msgstr "Piekļuve eksportēšanas funkcijai"
 
 #. module: base
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Piekļuve neautorizētiem vai nederīgiem uzņēmumiem."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -8026,7 +8037,7 @@ msgstr "Account Number must be unique"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Konta drošība"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -8068,7 +8079,7 @@ msgstr "Account and Payment Link and Portal"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Konta turētāja vārds, ja tas atšķiras no konta īpašnieka vārda"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -8230,17 +8241,17 @@ msgstr "Darbības Lietojums"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr ""
+msgstr "Darbības logs"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "Action Window Close"
-msgstr ""
+msgstr "Aizvērt darbības logu"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Darbības loga skatījums"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -8259,7 +8270,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "Activate and Translate"
-msgstr ""
+msgstr "Aktivizēt un tulkot"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__active
@@ -8288,13 +8299,13 @@ msgstr "Aktīvs Sistēmā"
 #: model:ir.model.fields,field_description:base.field_res_partner__active_lang_count
 #: model:ir.model.fields,field_description:base.field_res_users__active_lang_count
 msgid "Active Lang Count"
-msgstr ""
+msgstr "Aktīvo valodu skaits"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
-msgstr ""
+msgstr "Faktiskais nākamais numurs"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -8309,7 +8320,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
 msgid "Add OdooBot in discussions"
-msgstr ""
+msgstr "Pievienot OdooBot diskusijās"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_sepa_direct_debit
@@ -8467,7 +8478,7 @@ msgstr "Adrese"
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Address Format"
-msgstr ""
+msgstr "Adreses formāts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__type
@@ -8484,7 +8495,7 @@ msgstr "Address format..."
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Address separator"
-msgstr ""
+msgstr "Adreses atdalītājs"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_adyen
@@ -8740,7 +8751,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "All done!"
-msgstr ""
+msgstr "Viss pabeigts!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -9354,12 +9365,12 @@ msgstr "Authorize.Net Payment Acquirer"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
 msgid "Auto Install Required"
-msgstr ""
+msgstr "Nepieciešama automātiskā instalēšana"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
-msgstr ""
+msgstr "Automātiski aizpildīt komtaktpersonu datus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9542,7 +9553,7 @@ msgstr "Bankas konti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank Address"
-msgstr ""
+msgstr "Bankas adrese"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
@@ -9565,6 +9576,7 @@ msgstr "Bankas konts"
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Bankas konta veids: parasts vai IBAN. Izsecināts pēc bankas konta numura."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -9682,7 +9694,7 @@ msgstr "Base Properties"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
 msgid "Base View Architecture"
-msgstr ""
+msgstr "Bāzes skatījuma arhitektūra"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -9910,7 +9922,7 @@ msgstr "Binding Type"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_view_types
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Saistītā skatījuma veids"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -10103,7 +10115,7 @@ msgstr "Burundi"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Button must have a name"
-msgstr ""
+msgstr "Pogai ir jābūt iestatītam nosaukumam"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -10223,7 +10235,7 @@ msgstr "Can only rename one field at a time!"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Can't compare more than two views."
-msgstr ""
+msgstr "Nevar salīdzināt vairāk par diviem skatījumiem."
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -10282,7 +10294,7 @@ msgstr "Atcelt Jaunināšanu"
 #: code:addons/models.py:0
 #, python-format
 msgid "Cannot aggregate field %r."
-msgstr ""
+msgstr "Nevar apvienot lauku %r."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -10291,12 +10303,14 @@ msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
 msgstr ""
+"Nevar izveidot jaunus '%s' ierakstus tikai no to vārda. Lūdzu, izveidojiet "
+"šos ierakstus manuāli un mēģiniet importēt vēlreiz."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr ""
+msgstr "Nevar deaktivizēt valodu, kuru pašlaik izmanto kontaktpersonas."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -10355,12 +10369,12 @@ msgstr "Centrālāfrikas Republika"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
 msgid "Centralize employee information"
-msgstr ""
+msgstr "Centralizēt darbinieku informāciju"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
 msgid "Centralize your address book"
-msgstr ""
+msgstr "Centralizējiet savu adrešu grāmatu"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -10757,7 +10771,7 @@ msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "Komats"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__view_mode
@@ -10834,7 +10848,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr ""
+msgstr "Favikona"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -10863,7 +10877,7 @@ msgstr "Company Properties"
 #. module: base
 #: model:ir.model,name:base.model_ir_property
 msgid "Company Property"
-msgstr ""
+msgstr "Uzņēmuma īpašība"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
@@ -10892,7 +10906,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
 msgid "Compare To View"
-msgstr ""
+msgstr "Salīdzināt ar skatījumu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
@@ -10907,7 +10921,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
 msgid "Compare/Reset"
-msgstr ""
+msgstr "Salīdzināt/Atiestatīt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address
@@ -10982,7 +10996,7 @@ msgstr "Konfigurācija"
 #. module: base
 #: model:ir.model,name:base.model_res_config_installer
 msgid "Config Installer"
-msgstr ""
+msgstr "Konfigurācijas instalētājs"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
@@ -11108,7 +11122,7 @@ msgstr "Constraint Type"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 msgid "Constraint type"
-msgstr ""
+msgstr "Ierobežojuma veids"
 
 #. module: base
 #: code:addons/model.py:0
@@ -11185,13 +11199,15 @@ msgstr "Kontakta Nosaukums"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact image"
-msgstr ""
+msgstr "Kontaktpersonas attēls"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Contact your administrator to request access if necessary."
 msgstr ""
+"Sazinieties ar savu administratoru, lai vajadzības gadījumā pieprasītu "
+"piekļuvi."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -11218,7 +11234,7 @@ msgstr "Kontaktam nepieciešams vārds"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr ""
+msgstr "Ietver pirkumus lietotnē"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -11293,7 +11309,7 @@ msgstr "Couldn't create contact without email address!"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
 msgid "Count (Incl. Archived)"
-msgstr ""
+msgstr "Skaits (iesk. arhivētos)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -11404,7 +11420,7 @@ msgstr "Izveidot Izvēlni"
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "Create Menu Wizard"
-msgstr ""
+msgstr "Izvēlnes izveidošanas vednis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
@@ -11435,7 +11451,7 @@ msgstr "Izveidot bankas kontu"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Create a customized view"
-msgstr ""
+msgstr "Izveidot pielāgotu skatījumu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
@@ -11450,7 +11466,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
 msgid "Create a new company"
-msgstr ""
+msgstr "Izveidot jaunu uzņēmumu"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -11461,7 +11477,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
-msgstr ""
+msgstr "Izveidot jaunukontaktpersonu adrešu grāmatā"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -11471,7 +11487,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
 msgid "Create a new vendor in your address book"
-msgstr ""
+msgstr "Izveidot jaunu piegādātāju adrešu grāmatā"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -11715,7 +11731,7 @@ msgstr "Izveides datums"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Creation details"
-msgstr ""
+msgstr "Izveides detaļas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
@@ -11858,7 +11874,7 @@ msgstr "Pielāgotas saīsnes"
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "Custom View"
-msgstr ""
+msgstr "Pielāgots skatījums"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -11955,7 +11971,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr ""
+msgstr "Domuzīme"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
@@ -12050,25 +12066,27 @@ msgstr "Datuma Formāts"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date format"
-msgstr ""
+msgstr "Datuma Formāts"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
+"Datums, kas jāsalīdzina ar lauka vērtību, pēc noklusējuma izmantojiet "
+"pašreizējo datumu."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit"
-msgstr ""
+msgstr "Datuma vienība"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit used for comparison and formatting"
-msgstr ""
+msgstr "Salīdzināšanai un formatēšanai izmantotā datuma vienība"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12077,6 +12095,8 @@ msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
 "you use the digital formatting."
 msgstr ""
+"Noapaļošanai izmantotā datuma vienība. Ja izmantojat digitālo formatējumu, "
+"vērtībai ir jābūt mazākai par stundu."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12100,7 +12120,7 @@ msgstr "Dienas"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr ""
+msgstr "Parādzīmes"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -12111,7 +12131,7 @@ msgstr "Atkļūdošana"
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
 #: model:ir.ui.menu,name:base.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr ""
+msgstr "Decimālā precizitāte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
@@ -12150,7 +12170,7 @@ msgstr "Apvienot citus kontaktus"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "Noklusējuma uzņēmums"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -12185,7 +12205,7 @@ msgstr "Default paper format ?"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme"
-msgstr ""
+msgstr "Mājas lapas noklusējuma tēma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
@@ -12409,7 +12429,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Digital formatting"
-msgstr ""
+msgstr "Digitālā formatēšana"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
@@ -12455,7 +12475,7 @@ msgstr "Atmest"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Discover more"
-msgstr ""
+msgstr "Uzziniet vairāk"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -12624,13 +12644,13 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display country image"
-msgstr ""
+msgstr "Attēlot valsts attēlu"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display currency"
-msgstr ""
+msgstr "Attēlot valūtu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_format
@@ -12655,19 +12675,19 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the date"
-msgstr ""
+msgstr "Attēlot tikai datumu"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the time"
-msgstr ""
+msgstr "Attēlot tikai laiku"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display phone icons"
-msgstr ""
+msgstr "Attēlot telefona ikonas"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12685,7 +12705,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Displayed fields"
-msgstr ""
+msgstr "Attēlotie lauki"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -12722,7 +12742,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "Document type:"
-msgstr ""
+msgstr "Dokumenta veids:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
@@ -12847,7 +12867,7 @@ msgstr "Gatavs"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
-msgstr ""
+msgstr "Gatavs!"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
@@ -13108,7 +13128,7 @@ msgstr "Email Marketing"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr ""
+msgstr "E-pasta paraksts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -13465,7 +13485,7 @@ msgstr "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__group_expand
 msgid "Expand Groups"
-msgstr ""
+msgstr "Izvērst grupas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_expenses
@@ -13541,12 +13561,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr ""
+msgstr "Eksports"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr ""
+msgstr "Eksportēšanas rinda"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines__value
@@ -13592,7 +13612,7 @@ msgstr "Ārējais ID"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_data_name_nospaces
 msgid "External IDs cannot contain spaces"
-msgstr ""
+msgstr "Ārējais ID nedrīkst saturēt atstarpes"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__name
@@ -13667,11 +13687,13 @@ msgstr "F CONSTRUCTION"
 #: model:ir.actions.server,name:base.demo_failure_action
 msgid "Failed to install demo data for some modules, demo disabled"
 msgstr ""
+"Neizdevās instalēt demonstrācijas datus dažiem moduļiem, demonstrācija ir "
+"atspējota"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
 msgid "Failures Count"
-msgstr ""
+msgstr "Neveiksmju skaits"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -13808,7 +13830,7 @@ msgstr "Lauks"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
-msgstr ""
+msgstr "Lauks \"%(field_name)s\" nepastāv modelī \"%(model_name)s\"."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -13918,7 +13940,7 @@ msgstr "Lauka Tips"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field `%(name)s` does not exist"
-msgstr ""
+msgstr "Lauks `%(name)s` neeksistē"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -13974,7 +13996,7 @@ msgstr "Fields Description"
 #: model:ir.model,name:base.model_ir_model_fields_selection
 #: model:ir.ui.menu,name:base.ir_model_model_fields_selection
 msgid "Fields Selection"
-msgstr ""
+msgstr "Selekcijas lauki"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -14025,12 +14047,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Faila saturs (base64)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Faila saturs (neapstrādāts)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -14143,7 +14165,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
 msgid "First Day of Week"
-msgstr ""
+msgstr "Pirmā nedēļas diena"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports_closing
@@ -14176,12 +14198,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
-msgstr ""
+msgstr "Karogs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
 msgid "Flag Image Url"
-msgstr ""
+msgstr "Karoga attēla URL"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_fleet
@@ -14278,7 +14300,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr ""
+msgstr "Aizmirsāt paroli?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -14328,6 +14350,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Atrastas vairāk nekā 10 kļūdas un vairāk nekā viena kļūda uz 10 ierakstiem, "
+"pārtraukts, lai netiktu rādīts pārāk daudz kļūdu."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -14937,7 +14961,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP maršrutēšana"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -15216,13 +15240,13 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide badges"
-msgstr ""
+msgstr "Slēpt nozīmītes"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide seconds"
-msgstr ""
+msgstr "Slēpt sekundes"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -15242,7 +15266,7 @@ msgstr "Home Action"
 #. module: base
 #: model:ir.actions.act_url,name:base.action_open_website
 msgid "Home Menu"
-msgstr ""
+msgstr "Mājas lapa"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -15313,7 +15337,7 @@ msgstr "Hr Recruitment Interview Forms"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Human Readable"
-msgstr ""
+msgstr "Cilvēkam lasāms"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -15762,7 +15786,7 @@ msgstr "Iesaistītie moduļi"
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_password_policy
 msgid "Implement basic password policy configuration & check"
-msgstr ""
+msgstr "Ieviesiet paroles politikas pamata konfigurāciju un pārbaudi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__implementation
@@ -15820,7 +15844,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Importēt veidni klientiem"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -15837,7 +15861,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr ""
+msgstr "Importēt/eksportēt rēķinus no XML/PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
@@ -15875,7 +15899,7 @@ msgstr "Inactive Users"
 #: code:addons/models.py:0
 #, python-format
 msgid "Incompatible companies on records:"
-msgstr ""
+msgstr "Nesaderīgie uzņēmumi ierakstos:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -15966,7 +15990,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr ""
+msgstr "Nozares"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -16176,7 +16200,7 @@ msgstr "Internal Source"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "Iekšējais lietotājs"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -16191,7 +16215,7 @@ msgstr "Iekšējā piezīme..."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal notes..."
-msgstr ""
+msgstr "Iekšējās piezīmes..."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
@@ -17126,7 +17150,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Uzzināt vairāk"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -17184,7 +17208,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "Let's do it"
-msgstr ""
+msgstr "Darīsim to"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -17236,7 +17260,7 @@ msgstr "Line"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Linebreak"
-msgstr ""
+msgstr "Līnijas pārtraukums"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
@@ -17264,7 +17288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Saistītais lauks"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -17347,7 +17371,7 @@ msgstr "Load a Translation"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Ielādēt demonstrācijas datus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -17376,7 +17400,7 @@ msgstr "Logging"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Logging details"
-msgstr ""
+msgstr "Reģistra detaļas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
@@ -17564,7 +17588,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Main Apps"
-msgstr ""
+msgstr "Galvenās lietotnes"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__sequence_id
@@ -18262,7 +18286,7 @@ msgstr "Missing SMTP Server"
 #: code:addons/models.py:0
 #, python-format
 msgid "Missing required value for the field '%s'"
-msgstr ""
+msgstr "Trūkst obligātās vērtības laukā '%s'"
 
 #. module: base
 #: code:addons/models.py:0
@@ -18339,17 +18363,17 @@ msgstr "Model %s does not exist!"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed."
-msgstr ""
+msgstr "Modelis “%s” satur moduļa datus, un to nevar noņemt."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr ""
+msgstr "Modeļa piekļuve"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
 msgid "Model Constraint"
-msgstr ""
+msgstr "Modeļa ierobežojumi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
@@ -18464,7 +18488,7 @@ msgstr "Module Category"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Module Info"
-msgstr ""
+msgstr "Moduļa informācija"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
@@ -18480,7 +18504,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Moduļa atinstalēšana"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -18765,7 +18789,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr ""
+msgstr "Jauna API atslēga"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -18847,7 +18871,7 @@ msgstr "Nicaragua"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Nice work! Your configuration is done."
-msgstr ""
+msgstr "Labs darbs! Jūsu konfigurācija ir pabeigta."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -18901,7 +18925,7 @@ msgstr "No gap"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "No group currently allows this operation."
-msgstr ""
+msgstr "Neviena grupa pašlaik neatļauj šo darbību."
 
 #. module: base
 #: code:addons/fields.py:0
@@ -18937,12 +18961,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr ""
+msgstr "Neviens modulis nav atrasts!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
 msgid "No of Views"
-msgstr ""
+msgstr "Skatījumu skaits"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -20743,7 +20767,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Oops, no!"
-msgstr ""
+msgstr "Ak, nē!"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -20775,7 +20799,7 @@ msgstr "Open a Window"
 #: code:addons/models.py:0
 #, python-format
 msgid "Operation:"
-msgstr ""
+msgstr "Operācija:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -21071,7 +21095,7 @@ msgstr "Original View"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Original currency"
-msgstr ""
+msgstr "Oriģinālā valūta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__oswald
@@ -21087,7 +21111,7 @@ msgstr "Other"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Cita adrese"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -21273,7 +21297,7 @@ msgstr "Paper Format"
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Paper Format Config"
-msgstr ""
+msgstr "Papīra formāta iestatījumi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
@@ -21377,7 +21401,7 @@ msgstr "Partner Tags"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr ""
+msgstr "Kontaktpersonas tituls"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
@@ -21388,7 +21412,7 @@ msgstr "Partner Titles"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
 msgid "Partner is Active"
-msgstr ""
+msgstr "Kontaktpersona ir aktīva"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -21399,7 +21423,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr ""
+msgstr "Kontaktpersona ar tādu pašu PVN reģistrācijuas numuru"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -21422,7 +21446,7 @@ msgstr "Partners Geolocation"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr ""
+msgstr "Kontaktpersonas: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -21434,12 +21458,12 @@ msgstr "Parole"
 #. module: base
 #: model:ir.model,name:base.model_res_users_identitycheck
 msgid "Password Check Wizard"
-msgstr ""
+msgstr "Paroles pārbaudes vednis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy
 msgid "Password Policy"
-msgstr ""
+msgstr "Paroļu politika"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy_portal
@@ -21694,6 +21718,8 @@ msgid ""
 "Please note that modifications will be applied for all users of the "
 "specified group"
 msgstr ""
+"Lūdzu, ņemiet vērā, ka izmaiņas tiks piemērotas visiem norādītās grupas "
+"lietotājiem"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -21752,7 +21778,7 @@ msgstr "Portal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_rating
 msgid "Portal Rating"
-msgstr ""
+msgstr "Portāla reitings"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
@@ -21860,7 +21886,7 @@ msgstr "Price Accuracy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Primārā krāsa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
@@ -21875,12 +21901,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_height
 msgid "Print page height (mm)"
-msgstr ""
+msgstr "Drukas lapas augstums (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr ""
+msgstr "Drukas lapas platums (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
@@ -22116,7 +22142,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
-msgstr ""
+msgstr "Izredzes"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -22588,13 +22614,13 @@ msgstr ""
 #: code:addons/models.py:0 code:addons/models.py:0
 #, python-format
 msgid "Records:"
-msgstr ""
+msgstr "Ieraksti:"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Records: %s"
-msgstr ""
+msgstr "Ieraksti: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -22616,7 +22642,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "Recursion Detected."
-msgstr ""
+msgstr "Rekursija konstatēta."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -22664,7 +22690,7 @@ msgstr "Related Field"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
 msgid "Related Model"
-msgstr ""
+msgstr "Saistītais modelis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
@@ -22679,7 +22705,7 @@ msgstr "Related Server Action"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr ""
+msgstr "Saistītais lauks"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -22701,7 +22727,7 @@ msgstr "Relation Field"
 #. module: base
 #: model:ir.model,name:base.model_ir_model_relation
 msgid "Relation Model"
-msgstr ""
+msgstr "Relācijas modulis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__name
@@ -22751,7 +22777,7 @@ msgstr "Remove from the 'Print' menu"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related to this report"
-msgstr ""
+msgstr "Noņemt ar šo izdruku saistīto kontekstuālo darbību"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -22804,7 +22830,7 @@ msgstr "Atskaite"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Atskaites darbība"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -22819,7 +22845,7 @@ msgstr "Report Footer"
 #. module: base
 #: model:ir.model,name:base.model_report_layout
 msgid "Report Layout"
-msgstr ""
+msgstr "Atskaites izkārtojums"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -22959,7 +22985,7 @@ msgstr "Restaurant extensions for the Point of Sale "
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "Atjaunot iepriekšējo versiju (soft reset)."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__restrict
@@ -23000,13 +23026,13 @@ msgstr "Rounding Factor"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding precision"
-msgstr ""
+msgstr "Noapaļošanas precizitāte"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding unit"
-msgstr ""
+msgstr "Noapaļošanas vienība"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -23047,7 +23073,7 @@ msgstr "Run Manually"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run this action manually."
-msgstr ""
+msgstr "Palaist šo darbību manuāli."
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -23459,7 +23485,7 @@ msgstr "Scientific"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__scope
 msgid "Scope"
-msgstr ""
+msgstr "Darbības joma"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -23475,7 +23501,7 @@ msgstr "Search Actions"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_bank_view_search
 msgid "Search Bank"
-msgstr ""
+msgstr "Meklēt banku"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -23485,12 +23511,12 @@ msgstr "Search Partner"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr ""
+msgstr "Meklēt kontaktpersonu kategoriju"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr ""
+msgstr "Meklēt nozari"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
@@ -23532,7 +23558,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Sekundārā krāsa"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
@@ -23547,7 +23573,7 @@ msgstr "Drošība"
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Drošības kontrole"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -23757,7 +23783,7 @@ msgstr "Separator Format"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Separator use to split the address from the display_name."
-msgstr ""
+msgstr "Atdalītājs tiek izmantots, lai atdalītu adresi no attēlotā nosaukuma."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
@@ -23787,7 +23813,7 @@ msgstr "Sequence Code"
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_date_range
 msgid "Sequence Date Range"
-msgstr ""
+msgstr "Sekvences datumu diapazons"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__padding
@@ -23878,12 +23904,12 @@ msgstr "Set as Todo"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
 msgid "Set your company data"
-msgstr ""
+msgstr "Iestatiet sava uzņēmuma datus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr ""
+msgstr "Iestatiet sava uzņēmuma datus dokumentu galvenei/kājenei."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -23975,7 +24001,7 @@ msgstr "Show technical modules"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
 msgid "Show your company address on Google Maps"
-msgstr ""
+msgstr "Rādīt sava uzņēmuma adresi pakalpojumā Google Maps"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -24067,7 +24093,7 @@ msgstr "Izlaist šos kontaktus"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Slash"
-msgstr ""
+msgstr "Slīpsvītra"
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -24161,7 +24187,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
-msgstr ""
+msgstr "Atvainojiet, jums nav atļauts piekļūt šiem pielikuma laukiem."
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:0
@@ -24220,7 +24246,7 @@ msgstr "South Sudan"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "Atstarpe"
 
 #. module: base
 #: model:res.country,name:base.es
@@ -24336,7 +24362,7 @@ msgstr "State Name"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr ""
+msgstr "Nepieciešama valsts"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -24549,7 +24575,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
 #: model:ir.module.module,shortdesc:base.module_sale_subscription
 msgid "Subscriptions"
-msgstr ""
+msgstr "Abonementi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__date_range_ids
@@ -24641,7 +24667,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Switch to"
-msgstr ""
+msgstr "Pārslēgties uz"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -24691,7 +24717,7 @@ msgstr "Syria"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Sistēmas parametrs"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -24796,7 +24822,7 @@ msgstr "Target Model"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_name
 msgid "Target Model Name"
-msgstr ""
+msgstr "Mērķa modeļa nosaukums"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__target
@@ -25029,7 +25055,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
 msgid "The Lang Code displayed in the URL"
-msgstr ""
+msgstr "URL redzamais valodas kods"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
@@ -25070,7 +25096,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique !"
-msgstr ""
+msgstr "Valodas URL kodam ir jābūt unikālam!"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -25086,7 +25112,7 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
-msgstr ""
+msgstr "Šos moduļus nevar atinstalēt: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -25147,7 +25173,7 @@ msgstr "The currency code must be unique!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_currency_rate_check
 msgid "The currency rate must be strictly positive."
-msgstr ""
+msgstr "Valūtas kursam jābūt strikti pozitīvam."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__res_model
@@ -25157,12 +25183,12 @@ msgstr "The database object this attachment will be attached to."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Šī lietotāja noklusējuma uzņēmums."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "The demonstration data of"
-msgstr ""
+msgstr "Demonstrācijas dati par"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -25252,7 +25278,7 @@ msgstr "The full name of the country."
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr ""
+msgstr "Iekšējais lietotājs, kas ir atbildīgs par šo kontaktpersonu."
 
 #. module: base
 #: code:addons/base/models/res_country.py:106
@@ -25493,7 +25519,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The user cannot have more than one user types."
-msgstr ""
+msgstr "Lietotājam nevar būt vairāk par vienu lietotāju veidu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
@@ -25540,12 +25566,12 @@ msgstr "Theme"
 #: model:ir.ui.menu,name:base.menu_theme_store
 #: model:ir.ui.menu,name:base.theme_store
 msgid "Theme Store"
-msgstr ""
+msgstr "Tēmu veikals"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "There are no more contacts to merge for this request"
-msgstr ""
+msgstr "Šim pieprasījumam nav vairāk kontaktpersonu, kuras apvienot"
 
 #. module: base
 #: code:addons/base/models/ir_filters.py:0
@@ -25561,7 +25587,7 @@ msgstr ""
 #: model:ir.actions.act_url,name:base.action_third_party
 #: model:ir.ui.menu,name:base.menu_third_party
 msgid "Third-Party Apps"
-msgstr ""
+msgstr "Trešo pušu lietotnes"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__iso_code
@@ -25584,6 +25610,8 @@ msgstr "This column contains module data and cannot be removed!"
 msgid ""
 "This field holds the image used to display a favicon for a given company."
 msgstr ""
+"Šajā laukā ir attēls, ko izmanto, lai parādītu konkrēta uzņēmuma favikonu "
+"(WEB ikonu)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
@@ -25838,6 +25866,8 @@ msgid ""
 "This operation is allowed for the following groups:\n"
 "%(groups_list)s"
 msgstr ""
+"Šī darbība ir atļauta šādām grupām:\n"
+" %(groups_list)s"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -25845,7 +25875,7 @@ msgstr ""
 msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
-msgstr ""
+msgstr "Šo ierobežojumu nosaka šādi noteikumi.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -25876,7 +25906,7 @@ msgstr "Time Format"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Atvaļinājumi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_holidays
@@ -26033,6 +26063,8 @@ msgstr ""
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
+"Pārāk daudz pieteikšanās kļūdu. Lūdzu, nedaudz uzgaidiet, pirms mēģināt "
+"vēlreiz."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_tools
@@ -26390,7 +26422,7 @@ msgstr "URL"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__url_code
 msgid "URL Code"
-msgstr ""
+msgstr "URL kods"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
@@ -26560,7 +26592,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
 msgid "Units of measure"
-msgstr ""
+msgstr "Mērvienības"
 
 #. module: base
 #: code:addons/model.py:0 code:addons/model.py:0 code:addons/model.py:0
@@ -26576,7 +26608,7 @@ msgstr "Nezināms"
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Nezināma datu bāzes kļūda: '%s'"
 
 #. module: base
 #: code:addons/models.py:0
@@ -26710,7 +26742,7 @@ msgstr "Upgrade"
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
 msgid "Upgrade Module"
-msgstr ""
+msgstr "Jaunināt moduli"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -26770,7 +26802,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Use comma"
-msgstr ""
+msgstr "Lietot komatu"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -26891,7 +26923,7 @@ msgstr "Lietotājvārds"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "User Type"
-msgstr ""
+msgstr "Lietotāja veids"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
@@ -26901,12 +26933,12 @@ msgstr "User log entries"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Lietotāju veidi"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "User, Change Password Wizard"
-msgstr ""
+msgstr "Lietotājs, paroles maiņas vednis"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_default_menu_action
@@ -26932,13 +26964,13 @@ msgstr ""
 #: code:addons/models.py:0 code:addons/models.py:0
 #, python-format
 msgid "User:"
-msgstr ""
+msgstr "Lietotājs:"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Lietotājs: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -27154,7 +27186,7 @@ msgstr "Venezuela - Accounting"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Vertical bar"
-msgstr ""
+msgstr "Vertikālā josla"
 
 #. module: base
 #: model:res.country,name:base.vn
@@ -27178,13 +27210,13 @@ msgstr "Skatīt"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' accessible only to groups %(groups)s "
-msgstr ""
+msgstr "Skatījums '%(name)s' pieejams tikai grupām %(groups)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
-msgstr ""
+msgstr "Skatījums '%(name)s' ir privāts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -27235,7 +27267,7 @@ msgstr "View inheritance mode"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
 msgid "View livechat sessions for leads"
-msgstr ""
+msgstr "Skatīt potenciālo pirkumu tiešsaistes tērzēšanas sesijas"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -27562,7 +27594,7 @@ msgstr "Western Sahara"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "Kam paredzēta šī atslēga?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -27722,7 +27754,7 @@ msgstr "Write Access Right"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Rediģēšanas datums"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -27769,6 +27801,8 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Jums nav atļauts piekļūt '%(document_kind)s' (%(document_model)s) "
+"ierakstiem."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -27777,6 +27811,8 @@ msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Jums nav atļauts izveidot '%(document_kind)s' (%(document_model)s) "
+"ierakstus."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -27785,6 +27821,7 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Jums nav atļauts dzēst '%(document_kind)s' (%(document_model)s) ierakstus."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -27793,6 +27830,8 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Jums nav atļauts modificēt '%(document_kind)s' (%(document_model)s) "
+"ierakstus."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -27805,12 +27844,12 @@ msgstr "You are trying to install incompatible modules in category \"%s\":"
 #, python-format
 msgid ""
 "You are trying to remove a module that is installed or will be installed."
-msgstr ""
+msgstr "Jūs mēģināt noņemt moduli, kas ir instalēts vai tiks instalēts."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "You can archive the contact"
-msgstr ""
+msgstr "Kontaktu var arhivēt"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__type
@@ -27845,6 +27884,8 @@ msgstr "You can not have two users with the same login !"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Jūs nevarat noņemt API atslēgas, ja vien tās nav jūsu vai ja neesat sistēmas"
+" lietotājs"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -27863,12 +27904,13 @@ msgid ""
 "You can select either a format or a specific page width/height, but not "
 "both."
 msgstr ""
+"Varat atlasīt formātu vai konkrētu lapas platumu/augstumu, bet ne abus."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot activate the superuser."
-msgstr ""
+msgstr "Jūs nevarat aktivizēt superlietotāju."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -27886,7 +27928,7 @@ msgstr "You cannot create recursive Partner hierarchies."
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "You cannot create recursive companies."
-msgstr ""
+msgstr "Jūs nevarat izveidot rekursīvas partneru hierarhijas."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -27914,7 +27956,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
-msgstr ""
+msgstr "Jūs nevarat izdzēst valodu, kas ir lietotāja izvēlētā valoda."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -27935,7 +27977,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "Jums nav pietiekami daudz piekļuves tiesību, lai veiktu šo darbību."
 
 #. module: base
 #: code:addons/models.py:0
@@ -27943,12 +27985,13 @@ msgstr ""
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Jums nav tiesību eksportēt datus. Lūdzu, sazinieties ar administratoru."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You have to specify a filter for your selection."
-msgstr ""
+msgstr "Jūsu atlasei ir jānorāda filtrs."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -28138,7 +28181,7 @@ msgstr "datetime"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "day"
-msgstr ""
+msgstr "diena"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -28164,7 +28207,7 @@ msgstr "e.g. English"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mister"
-msgstr ""
+msgstr "piem. Kungs"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -28192,7 +28235,7 @@ msgstr "e.g. en_US"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "piem. https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -28251,7 +28294,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "forbidden for groups %s"
-msgstr ""
+msgstr "aizliegts grupām %s"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -28275,7 +28318,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "hour"
-msgstr ""
+msgstr "stunda"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__html
@@ -28347,12 +28390,12 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "minūte"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr ""
+msgstr "moduli(-us) neizdevās instalēt, un tie tika atspējoti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__monetary
