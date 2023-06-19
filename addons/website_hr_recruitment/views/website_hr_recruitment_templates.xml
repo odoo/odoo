@@ -141,7 +141,11 @@
             <nav aria-label="breadcrumb" class="mt-5">
                 <ol class="breadcrumb ps-0 mb-0 pb-1">
                     <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a t-attf-href="/jobs/detail/#{slug(job)}">
+                            <span t-field="job.name"/>
+                        </a>
+                    </li>
                 </ol>
             </nav>
             <h1 class="mb-4">
@@ -230,9 +234,11 @@
                                                 <input id="recruitment6" type="file"
                                                     class="form-control s_website_form_input o_resume_input"
                                                     name="Resume"/>
+                                                <span class="text-muted" style="font-size: 0.8rem">Optional if you provided a Linkedin profile</span>
                                             </div>
                                         </div>
-                                        <span class="text-muted" style="margin-left: 200px; font-size: 0.8rem">The resume is optional if you have a Linkedin profile</span>
+                                        <!-- TODO: remove in master -->
+                                        <span class="d-none text-muted" style="margin-left: 200px; font-size: 0.8rem">The resume is optional if you have a Linkedin profile</span>
                                     </div>
                                     <div class="col-12 mb-0 py-2 s_website_form_field"
                                         data-type="text" data-name="Field">
