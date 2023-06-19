@@ -307,6 +307,8 @@ class ResPartnerBank(models.Model):
             account.partner_id._message_log(body=msg)
         return super().unlink()
 
+    @api.depends('allow_out_payment', 'acc_number', 'bank_id')
+    @api.depends_context('display_account_trust')
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get('display_account_trust'):

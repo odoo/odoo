@@ -16,6 +16,7 @@ class L10nLatamIdentificationType(models.Model):
     is_vat = fields.Boolean()
     country_id = fields.Many2one('res.country')
 
+    @api.depends('country_id')
     def _compute_display_name(self):
         multi_localization = len(self.search([]).mapped('country_id')) > 1
         for rec in self:

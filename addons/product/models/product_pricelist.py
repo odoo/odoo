@@ -64,6 +64,7 @@ class Pricelist(models.Model):
         ],
         copy=True)
 
+    @api.depends('currency_id')
     def _compute_display_name(self):
         for pricelist in self:
             pricelist.display_name = f'{pricelist.name} ({pricelist.currency_id.name})'

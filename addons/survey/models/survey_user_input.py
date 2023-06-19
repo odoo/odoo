@@ -656,7 +656,11 @@ class SurveyUserInputLine(models.Model):
     answer_score = fields.Float('Score')
     answer_is_correct = fields.Boolean('Correct')
 
-    @api.depends('answer_type')
+    @api.depends(
+        'answer_type', 'value_text_box', 'value_numerical_box',
+        'value_char_box', 'value_date', 'value_datetime',
+        'suggested_answer_id.value', 'matrix_row_id.value',
+    )
     def _compute_display_name(self):
         for line in self:
             if line.answer_type == 'char_box':

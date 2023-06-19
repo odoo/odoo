@@ -29,6 +29,7 @@ class PaymentToken(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('payment_details', 'create_date')
     def _compute_display_name(self):
         for token in self:
             token.display_name = token._build_display_name()

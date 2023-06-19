@@ -30,6 +30,7 @@ class Bank(models.Model):
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
+    @api.depends('bic')
     def _compute_display_name(self):
         for bank in self:
             name = (bank.name or '') + (bank.bic and (' - ' + bank.bic) or '')
@@ -111,6 +112,7 @@ class ResPartnerBank(models.Model):
         """
         return 'bank'
 
+    @api.depends('acc_number', 'bank_id')
     def _compute_display_name(self):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number

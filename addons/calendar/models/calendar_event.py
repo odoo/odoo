@@ -645,6 +645,7 @@ class Meeting(models.Model):
 
         return True
 
+    @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
         """ Hide private events' name for events which don't belong to the current user
         """

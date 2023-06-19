@@ -485,9 +485,8 @@ class ProductTemplate(models.Model):
             default['name'] = _("%s (copy)", self.name)
         return super(ProductTemplate, self).copy(default=default)
 
+    @api.depends('name', 'default_code')
     def _compute_display_name(self):
-        # Prefetch the fields used by the `display_name`, so `browse` doesn't fetch other fields
-        self.fetch(['name', 'default_code'])
         for template in self:
             template.display_name = '{}{}'.format(template.default_code and '[%s] ' % template.default_code or '', template.name)
 

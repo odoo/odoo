@@ -19,6 +19,8 @@ class SkillLevel(models.Model):
         ('check_level_progress', 'CHECK(level_progress BETWEEN 0 AND 100)', "Progress should be a number between 0 and 100."),
     ]
 
+    @api.depends('level_progress')
+    @api.depends_context('from_skill_level_dropdown')
     def _compute_display_name(self):
         if not self._context.get('from_skill_level_dropdown'):
             return super()._compute_display_name()

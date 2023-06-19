@@ -696,6 +696,7 @@ class AccountJournal(models.Model):
                 'journal_id': self,
             }).id
 
+    @api.depends('currency_id')
     def _compute_display_name(self):
         for journal in self:
             name = journal.name
