@@ -237,4 +237,31 @@ QUnit.module("Fields", (hooks) => {
             "The readonly field don't contain a link if no value is set"
         );
     });
+
+    QUnit.test("href is correctly formatted", async function (assert) {
+        serverData.models.partner.records[0].foo = "+12 345 67 89 00";
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            mode: "readonly",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        const phone = target.querySelector(".o_field_phone a");
+        assert.strictEqual(
+            phone.textContent,
+            "+12 345 67 89 00",
+            "value should be displayed properly with spaces as separators"
+        );
+        assert.hasAttrValue(phone, "href", "tel:+12345678900", "href should not contain any space");
+    });
 });

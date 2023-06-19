@@ -10,6 +10,9 @@ export class SendSMSButton extends Component {
         this.user = useService("user");
         this.title = this.env._t("Send SMS Text Message");
     }
+    get phoneHref() {
+        return "sms:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
+    }
     async onClick() {
         await this.props.record.save();
         this.action.doAction({
