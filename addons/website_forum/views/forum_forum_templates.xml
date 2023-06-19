@@ -27,7 +27,7 @@
                             <span class="fa fa-tag text-muted me-1"/>
                             <span t-esc="tag.name"/>
                         </div>
-                        <a t-att-href="url_for('/forum/') + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my')" class="btn py-1">&#215;</a>
+                        <a t-att-href="url_for('/forum') + '/' + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my')" class="btn py-1">&#215;</a>
                     </span>
                 </div>
                 <div t-if="uid and request.env.user.forum_waiting_posts_count"
