@@ -24,3 +24,7 @@ class Forum(models.Model):
     def _compute_image_1920(self):
         for forum in self.filtered(lambda f: not f.image_1920 and f.slide_channel_id.image_1920):
             forum.image_1920 = forum.slide_channel_id.image_1920
+
+    @api.model
+    def _get_forum_superuser_access_groups(self):
+        return super()._get_forum_superuser_access_groups() + ['website_slides.group_website_slides_officer']

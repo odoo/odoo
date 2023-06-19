@@ -88,7 +88,8 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-    def _get_forum_post_search_options(self, forum=None, tag=None, filters=None, my=None, create_uid=False, include_answers=False, **post):
+    def _get_forum_post_search_options(self, forum=None, tag=None, filters=None, my=None, create_uid=False,
+                                       visible=True, include_answers=False, **post):
         return {
             'allowFuzzy': not post.get('noFuzzy'),
             'create_uid': create_uid,
@@ -99,6 +100,7 @@ class WebsiteForum(WebsiteProfile):
             'displayImage': False,
             'filters': filters,
             'forum': str(forum.id) if forum else None,
+            'visible': visible,
             'include_answers': include_answers,
             'my': my,
             'tag': str(tag.id) if tag else None,
@@ -111,11 +113,13 @@ class WebsiteForum(WebsiteProfile):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
-    def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
+    def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False,
+                  include_answers=False, visible=True, **post):
         Post = request.env['forum.post']
+        visible = tools.str2bool(visible)
+        include_answers = tools.str2bool(include_answers)
 
         author = request.env['res.users'].browse(int(create_uid))
-
         if author == request.env.user:
             my = 'mine'
         if sorting:
@@ -136,6 +140,7 @@ class WebsiteForum(WebsiteProfile):
             filters=filters,
             my=my,
             create_uid=author.id,
+            visible=visible,
             include_answers=include_answers,
             my_profile=request.env.user == author,
             **post
@@ -152,8 +157,8 @@ class WebsiteForum(WebsiteProfile):
 
         url_args = {'sorting': sorting}
 
-        for name, value in zip(['filters', 'search', 'my'], [filters, search, my]):
-            if value:
+        for name, value in zip(['filters', 'search', 'my', 'visible'], [filters, search, my, visible]):
+            if value is not None:
                 url_args[name] = value
 
         pager = tools.lazy(lambda: request.website.pager(
@@ -171,6 +176,7 @@ class WebsiteForum(WebsiteProfile):
             'tag': tag,
             'filters': filters,
             'my': my,
+            'visible': visible,
             'sorting': sorting,
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
@@ -289,13 +295,7 @@ class WebsiteForum(WebsiteProfile):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
 
-        # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
-            raise werkzeug.exceptions.NotFound()
-
-        # Hide pending posts from non-moderators and non-creator
-        user = request.env.user
-        if question.state == 'pending' and user.karma < forum.karma_post and question.create_uid != user:
             raise werkzeug.exceptions.NotFound()
 
         if question.parent_id:
@@ -332,7 +332,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
-        reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
+        reasons = request.env['forum.post.reason'].search([])
 
         values = self._prepare_user_values(**post)
         values.update({
@@ -364,12 +364,12 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
-        question.active = False
+        question.visible = False
         return request.redirect("/forum/%s" % slug(forum))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
-        question.active = True
+        question.visible = True
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     # Post
@@ -502,8 +502,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/validation_queue', type='http', auth="user", website=True)
     def validation_queue(self, forum, **kwargs):
-        user = request.env.user
-        if user.karma < forum.karma_moderate:
+        if not forum.can_moderate:
             raise werkzeug.exceptions.NotFound()
 
         Post = request.env['forum.post']
@@ -520,8 +519,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/flagged_queue', type='http', auth="user", website=True)
     def flagged_queue(self, forum, **kwargs):
-        user = request.env.user
-        if user.karma < forum.karma_moderate:
+        if not forum.can_moderate:
             raise werkzeug.exceptions.NotFound()
 
         Post = request.env['forum.post']
@@ -541,12 +539,11 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/offensive_posts', type='http', auth="user", website=True)
     def offensive_posts(self, forum, **kwargs):
-        user = request.env.user
-        if user.karma < forum.karma_moderate:
+        if not forum.can_moderate:
             raise werkzeug.exceptions.NotFound()
 
         Post = request.env['forum.post']
-        domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive'), ('active', '=', False)]
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive')]
         offensive_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_user_values(forum=forum)
@@ -559,11 +556,11 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/closed_posts', type='http', auth="user", website=True)
     def closed_posts(self, forum, **kwargs):
-        if request.env.user.karma < forum.karma_moderate:
+        if not forum.can_moderate:
             raise werkzeug.exceptions.NotFound()
 
         closed_posts_ids = request.env['forum.post'].search(
-            [('forum_id', '=', forum.id), ('state', '=', 'close')],
+            [('forum_id', '=', forum.id), ('state', 'in', ('close', 'offensive')), ('visible', '=', True)],
             order='write_date DESC, id DESC',
         )
         values = self._prepare_user_values(forum=forum)
@@ -690,7 +687,9 @@ class WebsiteForum(WebsiteProfile):
         # showing questions which user following
         post_ids = [follower.res_id for follower in Followers.sudo().search(
             [('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]
-        followed = Post.search([('id', 'in', post_ids), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
+        followed = Post.search([
+            ('id', 'in', post_ids), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)
+        ])
 
         # showing Favourite questions of user.
         favourite = Post.search(
@@ -717,10 +716,7 @@ class WebsiteForum(WebsiteProfile):
              ('subtype_id', '!=', comment)],
             order='date DESC', limit=100)
 
-        posts = {}
-        for act in activities:
-            posts[act.res_id] = True
-        posts_ids = Post.search([('id', 'in', list(posts))])
+        posts_ids = Post.search([('id', 'in', [act.res_id for act in activities])])
         posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
         if user != request.env.user:

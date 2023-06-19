@@ -11,10 +11,9 @@ class TestForumController(TestForumCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls._activate_multi_website()
-        cls.minimum_karma_allowing_to_post = KARMA['ask']
         cls.forums = cls.env['forum.forum'].create([{
             'name': f'Forum {idx + 2}',
-            'karma_ask': cls.minimum_karma_allowing_to_post,
+            'karma_post': KARMA['post'],
             'website_id': website.id,
         } for idx, website in enumerate(
             (cls.base_website, cls.base_website, cls.base_website, cls.website_2, cls.website_2))])
@@ -34,26 +33,29 @@ class TestForumController(TestForumCommon):
 
     def test_prepare_user_values_my_other_forum(self):
         """ Test user other forums values (my_other_forums) in various contexts. """
+        self.user_employee_2.karma = KARMA['post']
         employee_2_forum_2_post = self.forum_post(self.user_employee_2, self.forum_2)
         employee_2_website_2_forum_2_post = self.forum_post(self.user_employee_2, self.forum_2_website_2)
         for user in (self.user_admin, self.user_employee, self.user_portal, self.user_public):
-            with self.with_user(user.login), MockRequest(self.env, website=self.base_website):
+            with (self.subTest(user=user.name, website="base_website"),
+                  self.with_user(user.login), MockRequest(self.env, website=self.base_website)):
                 self.assertFalse(self._get_my_other_forums(self.forum_1))
                 self.assertFalse(self._get_my_other_forums(None))
                 self.assertFalse(self._get_my_other_forums(True))
                 if user != self.user_public:
-                    self.env.user.karma = self.minimum_karma_allowing_to_post
                     # Like a post on forum 2 and verify that forum 2 is now in "my other forum"
                     employee_2_forum_2_post.favourite_ids += self.env.user
                     self.assertEqual(self._get_my_other_forums(self.forum_1), self.forum_2)
                     self.assertFalse(self._get_my_other_forums(self.forum_2))
                     # Check similarly with posting and also checking that we don't see forum of website 2
+                    self.env.user.karma = KARMA['ask']
                     self.forum_post(self.env.user, self.forum_3)
                     self.forum_post(self.env.user, self.forum_1_website_2)
                     self.assertEqual(self._get_my_other_forums(self.forum_1), self.forum_2 + self.forum_3)
                     self.assertEqual(self._get_my_other_forums(self.forum_2), self.forum_3)
                     self.assertEqual(self._get_my_other_forums(self.forum_3), self.forum_2)
-            with self.with_user(user.login), MockRequest(self.env, website=self.website_2):
+            with (self.subTest(user=user.name, website="website_2"),
+                  self.with_user(user.login), MockRequest(self.env, website=self.website_2)):
                 self.assertFalse(self._get_my_other_forums(None))
                 self.assertFalse(self._get_my_other_forums(True))
                 if user != self.user_public:

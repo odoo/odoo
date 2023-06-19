@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import Counter
+
 from odoo.tests import common
 from odoo.tools import mute_logger
 
@@ -124,3 +126,66 @@ class TestForumCommon(common.TransactionCase):
                 for tag_idx in range(1, 8)
             ]
         )
+
+
+class TestForumPostCommon(TestForumCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_portal_2 = cls.user_portal.copy({
+            'name': 'Portal user 2',
+            'login': 'portalUser2',
+            'email': 'pu2@odoo.com',
+        })
+        cls.reason_duplicate = cls.env.ref('website_forum.reason_1')
+        cls.reason_insulting = cls.env.ref('website_forum.reason_11')
+
+    def _generate_posts(self, user):
+        """Create multiple posts disregarding current user rights to post."""
+        user_karma = user.karma
+        user.karma = KARMA['moderate']
+        posts = self.env['forum.post'].with_user(user).create([
+            {
+                'name': f"{user.name}'s Post - {values.get('state', 'active')} - {values.get('visible', True)}",
+                'forum_id': self.forum.id,
+                **values,
+            }
+            for values in [
+                {'state': 'active'},
+                {'state': 'flagged'},  # should be same as active
+                {'state': 'pending'},
+                {'state': 'close', 'closed_reason_id': self.reason_duplicate.id},
+                {'state': 'close', 'closed_reason_id': self.reason_duplicate.id, 'visible': False},
+                {'state': 'offensive', 'closed_reason_id': self.reason_insulting.id},
+                {'state': 'offensive', 'closed_reason_id': self.reason_insulting.id, 'visible': False},
+            ]
+        ])
+        self.assertDictEqual(
+            Counter(posts.mapped('state')),
+            {
+                'active': 1,
+                'pending': 1,
+                'flagged': 1,
+                'close': 2,
+                'offensive': 2,
+            },
+        )
+        user.karma = user_karma
+        return posts
+
+    def _check_post_can_view_cases(self, cases, all_posts):
+        for user, expected_viewable in cases:
+            with self.subTest(user=user.name, op='='):
+                ForumPostUser = self.env['forum.post'].with_user(user)
+                viewable_posts = ForumPostUser.search([('can_view', '=', True)])
+                not_viewable_posts = ForumPostUser.sudo().search([('can_view', '=', False)])
+                expected_viewable_posts_names = set(expected_viewable.mapped('name'))
+                self.assertSetEqual(set(viewable_posts.mapped('name')), expected_viewable_posts_names)
+                self.assertSetEqual(set(not_viewable_posts.mapped('name')), set(all_posts.mapped('name')) - expected_viewable_posts_names)
+
+            with self.subTest(user=user.name, op='='):
+                viewable_posts_redo = ForumPostUser.search([('can_view', '!=', False)])
+                not_viewable_posts_redo = ForumPostUser.sudo().search([('can_view', '!=', True)])
+                self.assertEqual(viewable_posts, viewable_posts_redo)
+                self.assertEqual(not_viewable_posts, not_viewable_posts_redo)

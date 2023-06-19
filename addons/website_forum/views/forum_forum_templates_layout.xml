@@ -41,14 +41,8 @@
                 <div class="d-flex gap-2 align-items-baseline">
                     <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
-                        <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
-                        <span t-elif="not question.active" class="badge bg-danger">
-                            <t t-if="question.state!='offensive'">Deleted</t>
-                            <t t-if="question.state=='offensive'">Offensive</t>
-                            <t t-if="question.state=='offensive' and question.closed_reason_id">
-                                <t t-out="question.closed_reason_id.name.capitalize()"/>
-                            </t>
-                        </span>
+                        <i t-if="question.state == 'close'" class="fa fa-lock mx-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
+                        <span t-elif="question.state == 'offensive'" class="badge bg-danger">Offensive</span>
                         <a t-elif="uid" type="button" aria-label="Favorite"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                             t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 px-1">
@@ -57,7 +51,7 @@
                                 data-bs-placement="top"
                                 title="Favorite"/>
                         </a>
-                        <t t-if="question.state == 'active'" t-call="website_forum.follow">
+                        <t t-if="question.state in ('active', 'flagged')" t-call="website_forum.follow">
                             <t t-set="object" t-value="question"/>
                             <t t-set="icons_design" t-value="True"/>
                             <t t-set="btn_classes" t-value="'btn-lg opacity-50 opacity-100-hover' "/>
@@ -96,7 +90,12 @@
             <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
                     <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"></t></span>
-                    <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
+                    <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
+                       class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
+                </span>
+                <span t-if="visible is False" class="btn btn-light rounded ps-2">
+                    <span><i class="fa fa-trash d-inline-block mx-1" title="Deleted" data-bs-toggle="tooltip" data-bs-placement="top"/></span>
+                    <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'create_uid', visible=True) }"
                        class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
                 </span>
                 <span t-if="search" class="btn btn-light rounded ps-2">
@@ -107,9 +106,10 @@
                 </span>
                 <div t-if="question_count or tags" class="dropdown ms-lg-auto">
                     <t t-if="_page_name == 'tags'" t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
+                    <t t-set="can_moderate" t-value="forum and forum.can_moderate"/>
                     <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                         <!-- Foreach tag_filter/ Foreach filters -->
-                        <t t-if="filters == 'all' or tag_filter == 'all' or not tag_filter and not filters">All</t>
+                        <t t-if="filters == 'all' or tag_filter == 'all' or not tag_filter and (not filters or filters=='tag')">All</t>
                         <t t-if="_page_name == 'tags'">
                             <t t-if="tag_filter == 'followed'">Followed Tags</t>
                             <t t-elif="tag_filter == 'unused'">Unused Tags</t>
@@ -119,10 +119,14 @@
                             <t t-if="filters == 'solved'">Solved</t>
                             <t t-elif="filters == 'unsolved'">Unsolved</t>
                             <t t-elif="filters == 'unanswered'">Unanswered</t>
+                            <t t-elif="my == 'offensive'">Offensive</t>
+                            <t t-elif="my == 'close'">Closed</t>
                         </t>
                     </a>
                     <div class="dropdown-menu" role="menu">
-                        <a t-attf-href="?#{ keep_query('search', 'sorting', 'create_uid', filters='all') }"
+                        <a t-attf-href="?#{ keep_query('search', 'sorting', 'create_uid', 'visible', filters='all')
+                                            if _page_name != 'tags'
+                                            else keep_query('search', 'sorting', 'create_uid', filters='all') }"
                             class="dropdown-item">
                             All
                         </a>
@@ -132,7 +136,7 @@
                                 t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='followed') }"
                                 class="dropdown-item">Followed Tags
                             </a>
-                            <t t-if="forum and forum.can_moderate">
+                            <t t-if="can_moderate">
                                 <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unused') }"
                                     class="dropdown-item">Unused Tags
                                 </a>
@@ -143,16 +147,41 @@
                         </t>
                         <t t-else="">
                             <t t-if="not forum or (forum and forum.mode == 'questions')">
-                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='solved') }"
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'visible', filters='solved') }"
                                     class="dropdown-item">Solved
                                 </a>
-                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unsolved') }"
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'visible', filters='unsolved') }"
                                     class="dropdown-item">Unsolved
                                 </a>
                             </t>
-                            <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unanswered') }"
+                            <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'visible', filters='unanswered') }"
                                 class="dropdown-item">Unanswered
                             </a>
+                            <t t-if="can_moderate">
+                                <div class="dropdown-divider"/>
+                                <a t-attf-href="/forum/#{ slug(forum) }/validation_queue"
+                                    class="dropdown-item">To Validate
+                                </a>
+                                <a t-attf-href="/forum/#{ slug(forum) }/flagged_queue"
+                                    class="dropdown-item">Flagged
+                                </a>
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'visible', 'my', filters='close') }"
+                                    class="dropdown-item">Closed
+                                </a>
+                            </t>
+                            <t t-if="my != 'mine' and can_moderate">
+                                <div class="dropdown-divider"/>
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'visible', 'my', filters='offensive') }"
+                                    class="dropdown-item">Offensive
+                                </a>
+                            </t>
+                            <t t-if="visible and (my == 'mine' or can_moderate)" >
+                                <div class="dropdown-divider"/>
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'filters', visible=False) }"
+                                    class="dropdown-item">Deleted
+                                </a>
+                            </t>
+
                         </t>
                     </div>
                 </div>
@@ -283,6 +312,7 @@
 </template>
 
 <template id="user_sidebar_body">
+    <t t-set="can_moderate" t-value="forum and forum.can_moderate"/>
     <div class="o_wforum_sidebar_section">
         <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
         <!-- All Posts -->
@@ -310,7 +340,7 @@
             <i class="fa fa-shield fa-fw opacity-50"/> Badges
         </a>
     </div>
-    <div t-if="forum and user.karma>=forum.karma_moderate" class="o_wforum_sidebar_section pt-3">
+    <div t-if="can_moderate" class="o_wforum_sidebar_section pt-3">
         <!-- Moderation Tools -->
         <div class="px-3 pb-1 fw-bold">Moderation tools</div>
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
@@ -391,6 +421,9 @@
                 <t t-elif="filters == 'unsolved'">
                     Sorry, we could not find any <b>unsolved</b> results
                 </t>
+                <t t-elif="not visible">
+                    Sorry, we could not find any <b>deleted</b> results
+                </t>
                 <t t-else="">
                     Sorry, we could not find any results
                 </t>
@@ -407,8 +440,19 @@
                 <p><i class="fa fa-check fa-fw me-1"/>Check your spelling and try again.</p>
                 <p><i class="fa fa-check fa-fw me-1"/>Try searching for one or two words.</p>
                 <p><i class="fa fa-check fa-fw me-1"/>Be less specific in your wording for a wider search result.</p>
+                <p t-if="visible and (my=='mine' or can_moderate)">
+                    <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
+                    <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'filters', visible=False) }">
+                        <i class="fa fa-check fa-fw me-1"/>Are you looking for <b>deleted</b> posts?
+                    </a>
+                </p>
             </div>
-            <span t-elif="forum and forum.total_posts == 0">Because there are no posts in this forum yet.</span>
+            <span t-elif="forum and forum.total_posts == 0" class="text-center" >
+                Because there are no posts in this forum yet.<br/>
+                <t t-if="can_moderate" >
+                    Maybe there are <b><a t-attf-href="?#{ keep_query('search', 'sorting', 'my', 'filters', visible=False) }">deleted</a></b> posts.
+                </t>
+            </span>
             <div class="mt-3">
                 <a t-if="uid and forum and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{_forum_slug}/ask">Start by creating a post</a>
                 <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>

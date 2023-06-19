@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_forum.models.forum_forum import MOST_USED_TAGS_COUNT
-from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
+from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon, TestForumPostCommon
 from odoo.tests import tagged, users
 
 
@@ -61,7 +61,7 @@ class TestForumInternals(TestForumCommon):
 
 
 @tagged('forum_internals')
-class TestPostInternals(TestForumCommon):
+class TestPostInternals(TestForumPostCommon):
 
     def test_post_fields(self):
         Forum = self.env['forum.forum']
@@ -82,6 +82,38 @@ class TestPostInternals(TestForumCommon):
             'parent_id': questions_post.id,
         })
         self.assertTrue(questions_post.uid_has_answered)
+
+    def test_posts_can_view(self):
+        self.env['forum.post'].search([]).unlink()
+
+        self.assertGreater(self.user_admin.karma, self.forum.karma_moderate)
+        admin_posts = self._generate_posts(self.user_admin)
+
+        self.user_employee_2.karma = KARMA['close_all']
+        employee_2_posts = self._generate_posts(self.user_employee_2)
+
+        self.user_employee.karma = KARMA['ask']
+        employee_posts = self._generate_posts(self.user_employee)
+
+        portal_posts = self._generate_posts(self.user_portal)
+        portal_2_posts = self._generate_posts(self.user_portal_2)
+
+        # Posts are not publicly visible when user karma is back at or below 0
+        self.user_portal.karma = 0
+        self.user_portal_2.karma = 0
+
+        all_posts = admin_posts | employee_2_posts | employee_posts | portal_posts | portal_2_posts
+        expected_public_posts = all_posts.filtered(lambda p: p.state in ('active', 'flagged') and (p.create_uid.karma > 0))
+        cases = [
+            (self.user_admin, all_posts),
+            (self.user_employee_2, expected_public_posts | employee_2_posts | all_posts.filtered(
+                 lambda p: p.state in ('active', 'flagged', 'close'))),  # active and flagged for 0-karma users too
+            (self.user_employee, expected_public_posts | employee_posts),
+            (self.user_portal, expected_public_posts | portal_posts),
+            (self.user_portal_2, expected_public_posts | portal_2_posts),
+            (self.user_public, expected_public_posts),
+        ]
+        self._check_post_can_view_cases(cases, all_posts)
 
 
 @tagged('forum_internals')

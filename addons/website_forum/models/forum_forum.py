@@ -159,6 +159,9 @@ class Forum(models.Model):
     @api.depends_context('uid')
     @api.depends('karma_moderate')
     def _compute_can_moderate(self):
+        if self._is_forum_superuser():
+            self.can_moderate = True
+            return
         for forum in self:
             forum.can_moderate = self.env.user.karma >= forum.karma_moderate
 
@@ -196,12 +199,13 @@ class Forum(models.Model):
         for forum in self:
             forum.teaser = textwrap.shorten(forum.description, width=180, placeholder='...') if forum.description else ""
 
-    @api.depends('post_ids')
+    @api.depends('post_ids', 'post_ids.state', 'post_ids.visible')
     def _compute_last_post_id(self):
         for forum in self:
-            forum.last_post_id = forum.post_ids.search(
-                [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')],
-                order='create_date desc', limit=1,
+            forum.last_post_id = min(
+                forum.post_ids.filtered(lambda p: not bool(p.parent_id) and p.state in ('active', 'flagged') and p.visible),
+                key=lambda post: post.write_date,
+                default=False,
             )
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
@@ -214,7 +218,8 @@ class Forum(models.Model):
 
         result = {cid: dict(default_stats) for cid in self.ids}
         read_group_res = self.env['forum.post']._read_group(
-            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
+            [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'flagged', 'close')), ('parent_id', '=', False),
+             ('visible', '=', True)],
             ['forum_id'],
             ['__count', 'views:sum', 'child_count:sum', 'favourite_count:sum'])
         for forum, count, views_sum, child_count_sum, favourite_count_sum in read_group_res:
@@ -229,12 +234,12 @@ class Forum(models.Model):
 
     def _compute_count_posts_waiting_validation(self):
         for forum in self:
-            domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'pending'), ('visible', '=', True)]
             forum.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
 
     def _compute_count_flagged_posts(self):
         for forum in self:
-            domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged'), ('visible', '=', True)]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
     # EXTENDS WEBSITE.MULTI.MIXIN
@@ -285,6 +290,24 @@ class Forum(models.Model):
     def _set_default_faq(self):
         for forum in self:
             forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+
+    # ----------------------------------------------------------------------
+    # ACCESS RIGHTS
+    # ----------------------------------------------------------------------
+
+    @api.model
+    def _is_forum_superuser(self):
+        # Does not work as a field
+        return self.env.user._is_superuser() or self.user_has_groups(','.join(self._get_forum_superuser_access_groups()))
+
+    @api.model
+    def _get_forum_superuser_access_groups(self):
+        """Return groups with providing full access to their allowed forums' posts.
+
+        Access to particular forums can still be restricted via access rules.
+        :rtype: list[str]
+        """
+        return ['base.group_erp_manager']
 
     # ----------------------------------------------------------------------
     # TOOLS

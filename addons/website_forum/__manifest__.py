@@ -7,7 +7,7 @@
     'category': 'Website/Website',
     'sequence': 265,
     'summary': 'Manage a forum with FAQ and Q&A',
-    'version': '1.2',
+    'version': '1.3',
     'description': """
 Ask questions, get answers, no distractions
         """,
