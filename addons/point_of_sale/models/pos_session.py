@@ -1891,7 +1891,7 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update', 'image_128'
+                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update', 'image_128', 'show_product_in_pos'
                 ],
                 'order': 'sequence,default_code,name',
             },
