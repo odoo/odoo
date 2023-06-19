@@ -14,6 +14,9 @@ class ProjectTaskType(models.Model):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
+    def _default_user_id(self):
+        return 'default_project_id' not in self.env.context and self.env.uid
+    
     active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Name', required=True, translate=True)
     description = fields.Text(translate=True)
@@ -41,7 +44,7 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
-    user_id = fields.Many2one('res.users', 'Stage Owner', compute='_compute_user_id', store=True, index=True)
+    user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -151,11 +154,10 @@ class ProjectTaskType(models.Model):
 
     @api.depends('project_ids')
     def _compute_user_id(self):
+        # If project_ids is set after stage creation (e.g. when setting demo data), the default user_id has to be removed
         for stage in self.sudo():
             if stage.project_ids:
                 stage.user_id = False
-            elif not stage.user_id:
-                stage.user_id = self.env.uid
 
     @api.constrains('user_id', 'project_ids')
     def _check_personal_stage_not_linked_to_projects(self):
