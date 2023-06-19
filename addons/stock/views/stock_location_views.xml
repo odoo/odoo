@@ -30,7 +30,7 @@
                     <label for="name"/>
                     <h1><field name="name" placeholder="e.g. Spare Stock"/></h1>
                     <label for="location_id"/>
-                    <h2><field name="location_id" placeholder="e.g. Physical Locations" options="{'no_create': True}"/></h2>
+                    <h2><field name="location_id" placeholder="e.g. Physical Locations"/></h2>
 
                     <group>
                         <group string="Additional Information" name="additional_info">
@@ -214,8 +214,8 @@
                             <tree>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>
-                                <field name="location_src_id" options="{'no_create': True}"/>
-                                <field name="location_dest_id" options="{'no_create': True}"/>
+                                <field name="location_src_id"/>
+                                <field name="location_dest_id"/>
                             </tree>
                         </field>
                     </group>

@@ -436,10 +436,10 @@
                             <group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" groups="stock.group_stock_multi_locations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
-                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                 </group>
                                 <group>

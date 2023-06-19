@@ -21,6 +21,7 @@ class Location(models.Model):
     _rec_name = 'complete_name'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
+    _view_options = {'no_create': True}
 
     @api.model
     def default_get(self, fields):

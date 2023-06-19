@@ -68,8 +68,8 @@
                     <field name="company_id" invisible="1"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
-                    <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
+                    <field name="location_id" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
+                    <field name="location_dest_id" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="partner_id" optional="show"/>
                     <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
@@ -209,8 +209,8 @@
                                    domain="context.get('restricted_picking_type_code', []) and [('code', '=', context.get('restricted_picking_type_code'))]"/>
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                             <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
-                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="backorder_id" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>

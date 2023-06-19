@@ -45,7 +45,7 @@
                 <field name="product_tmpl_id" invisible="1"/>
                 <field name="unwanted_replenish" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1"/>
-                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>
                 <field name="qty_forecast" force_save="1"/>
@@ -162,7 +162,7 @@
                         <group>
                             <field name="allowed_location_ids" invisible="1"/>
                             <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
                             <label for="group_id" groups="base.group_no_one"/>
                             <div groups="base.group_no_one">
                                 <field name="group_id" groups="stock.group_adv_location"/>

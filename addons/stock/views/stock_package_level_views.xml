@@ -16,8 +16,8 @@
                     <field name="picking_type_code" invisible="1"/>
                     <group>
                         <field name="package_id"/>
-                        <field name="location_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
-                        <field name="location_dest_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_id" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_dest_id" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                         <field name="is_done"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
@@ -72,8 +72,8 @@
                 <field name="is_fresh_package" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="package_id" attrs="{'readonly': [('state', 'in', ('confirmed', 'assigned', 'done', 'cancel'))]}" options="{'no_create': True}"/>
-                <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
-                <field name="location_dest_id" options="{'no_create': True}"  attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id"  attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                 <field name="state"/>
                 <field name="is_done" attrs="{'readonly': ['|', ('parent.state', 'in', ('draft', 'new', 'done')), ('is_fresh_package', '=', True)]}"/>
                 <button name="action_show_package_details" title="Display package content" type="object" icon="fa-list" />
