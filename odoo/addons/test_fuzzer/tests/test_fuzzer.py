@@ -1,19 +1,21 @@
+import inspect
 import itertools
 import logging
-from typing import Type
+from typing import Type, Callable, Any
 
 import psycopg2
 
 from odoo import registry, tools
-from odoo.addons.test_fuzzer.injection import *
+from odoo.addons.test_fuzzer.injection import InjectionReport, payload_generator, delete_from_table
 from odoo.addons.test_fuzzer.models import FuzzerModel
 from odoo.exceptions import UserError
 from odoo.models import BaseModel
-from odoo.tests import common
+from odoo.tests import common, tagged
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('nightly')
 class TestFuzzer(common.TransactionCase):
     def setUp(self):
         super(TestFuzzer, self).setUp()
@@ -190,17 +192,16 @@ class TestFuzzer(common.TransactionCase):
 
         if successful_injections or unsafe_injections:
             injections_str = "\n\n\n".join(map(str, successful_injections + unsafe_injections))
-            _logger.debug(f"\n\n{injections_str}\n\n")
+            _logger.debug("\n\n%s\n\n", injections_str)
 
-        _logger.info(f"Performed {len(self.injection_reports)} injections: "
-                     f"{len(successful_injections)} were successful, "
-                     f"{len(unsafe_injections)} were unsafe.")
+        _logger.info("Performed %d injections: %d were successful, %d were unsafe.",
+                     len(self.injection_reports), len(successful_injections), len(unsafe_injections))
 
         def construct_report_message() -> str:
             msg = ""
 
             if successful_injections:
-                msg += f"\n\nSuccessful injections:\n\n"
+                msg += "\n\nSuccessful injections:\n\n"
 
                 by_function_name = itertools.groupby(successful_injections, lambda report: report.function.__name__)
                 for function_name, injections in by_function_name:
@@ -208,7 +209,7 @@ class TestFuzzer(common.TransactionCase):
                            f"{len(list(injections))} successful injections.\n"
 
             if unsafe_injections:
-                msg += f"\n\nUnsafe injections:\n\n"
+                msg += "\n\nUnsafe injections:\n\n"
 
                 unsafe_injections.sort(key=lambda report: report.function.__name__)
                 by_function_name = itertools.groupby(unsafe_injections, lambda report: report.function.__name__)

@@ -16,7 +16,7 @@ class InjectionReport:
     def __str__(self) -> str:
         s = f"{format_bound_arguments(self.function, self.arguments)}\n\n"
         if self.is_injection_successful:
-            s += f"Injection successful !\n"
+            s += "Injection successful !\n"
         elif self.error:
             s += "".join(traceback.format_exception(self.error))
         else:
@@ -76,7 +76,7 @@ def pipe(a: PayloadGenerator, b: PayloadGenerator) -> PayloadGenerator:
 
 
 def compose(*functions) -> PayloadGenerator:
-    return functools.reduce(lambda a, b: pipe(a, b), functions)
+    return functools.reduce(pipe, functions)
 
 
 payload_generator: PayloadGenerator = compose(
