@@ -93,12 +93,20 @@
                 </div>
             </div>
         </t>
+        <t t-elif="my_profile">
+            <div class="text-muted d-inline-block">
+                Certifications are exams that you successfully passed. <br />
+                <a href="/slides/all?slide_type=certification" class="btn-link">
+                    <i class="fa fa-arrow-right"></i> Get Certified
+                </a>
+            </div>
+        </t>
         <t t-else="">
             <div class="text-muted d-inline-block">No certifications yet!</div>
+            <div class="text-end d-inline-block pull-right">
+                <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
+            </div>
         </t>
-        <div class="text-end d-inline-block pull-right">
-            <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
-        </div>
     </template>
 
     <template id="top3_user_card" inherit_id="website_profile.top3_user_card">

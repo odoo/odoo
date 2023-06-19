@@ -9,6 +9,7 @@ from datetime import datetime
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.osv import expression
 from odoo.tools import sql
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 
@@ -807,30 +808,36 @@ class Post(models.Model):
         }
 
         domain = website.website_domain()
-        domain += [('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
+        domain = expression.AND([domain, [('state', '=', 'active'), ('can_view', '=', True)]])
+        include_answers = options.get('include_answers', False)
+        if not include_answers:
+            domain = expression.AND([domain, [('parent_id', '=', False)]])
         forum = options.get('forum')
         if forum:
-            domain += [('forum_id', '=', unslug(forum)[1])]
+            domain = expression.AND([domain, [('forum_id', '=', unslug(forum)[1])]])
         tags = options.get('tag')
         if tags:
-            domain += [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]
+            domain = expression.AND([domain, [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]])
         filters = options.get('filters')
         if filters == 'unanswered':
-            domain += [('child_ids', '=', False)]
+            domain = expression.AND([domain, [('child_ids', '=', False)]])
         elif filters == 'solved':
-            domain += [('has_validated_answer', '=', True)]
+            domain = expression.AND([domain, [('has_validated_answer', '=', True)]])
         elif filters == 'unsolved':
-            domain += [('has_validated_answer', '=', False)]
+            domain = expression.AND([domain, [('has_validated_answer', '=', False)]])
         user = self.env.user
         my = options.get('my')
-        if my == 'mine':
-            domain += [('create_uid', '=', user.id)]
-        elif my == 'followed':
-            domain += [('message_partner_ids', '=', user.partner_id.id)]
+        create_uid = user.id if my == 'mine' else options.get('author_id')
+        if create_uid:
+            domain = expression.AND([domain, [('create_uid', '=', create_uid)]])
+        if my == 'followed':
+            domain = expression.AND([domain, [('message_partner_ids', '=', user.partner_id.id)]])
         elif my == 'tagged':
-            domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
+            domain = expression.AND([domain, [('tag_ids.message_partner_ids', '=', user.partner_id.id)]])
         elif my == 'favourites':
-            domain += [('favourite_ids', '=', user.id)]
+            domain = expression.AND([domain, [('favourite_ids', '=', user.id)]])
+        elif my == 'upvoted':
+            domain = expression.AND([domain, [('vote_ids.user_id', '=', user.id)]])
 
         # 'sorting' from the form's "Order by" overrides order during auto-completion
         order = options.get('sorting', order)

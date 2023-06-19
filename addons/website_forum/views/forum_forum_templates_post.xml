@@ -17,10 +17,15 @@
                 data-bs-toggle="tooltip"
                 class="fa fa-star o_wforum_gold"/>
 
-            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
+            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{'/#answer-%s' % answer.id if answer else ''}"
                 t-attf-title="Read: #{question.name}"
                 class="text-reset"
-                t-esc="question.name"/>
+                t-esc="question.name" t-if="question.name"/>
+
+            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{'/#answer-%s' % answer.id if answer else ''}"
+                t-attf-title="Read: #{question.name}"
+                class="text-reset"
+                t-esc="'Re: %s' % question.parent_id.name" t-else=""/>
         </div>
         <span t-if="not question.active" class="text-muted">
             <t t-if="question.state!='offensive'"> [Deleted]</t>
@@ -66,7 +71,7 @@
             </span>
             <span class="d-none d-sm-inline">
                 <span class="mx-1">|</span>
-                <span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
+                <span t-field="question.views" /> <t t-if="question.views == 1">View</t><t t-else="">Views</t>
                 <span t-if="question.favourite_count &gt; 0">
                     <span class="mx-1">|</span>
                     <i class="fa fa-star"/>

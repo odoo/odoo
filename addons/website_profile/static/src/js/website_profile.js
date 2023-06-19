@@ -52,14 +52,14 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      * @override
      */
     start: async function () {
-        var def = this._super.apply(this, arguments);
+        const def = this._super.apply(this, arguments);
         if (this.editableMode) {
             return def;
         }
 
-        var $textarea = this.$('textarea.o_wysiwyg_loader');
+        const $textarea = this.$('textarea.o_wysiwyg_loader');
 
-        this._wysiwyg = await wysiwygLoader.loadFromTextarea(this, $textarea[0], {
+        const options = {
             recordInfo: {
                 context: this._getContext(),
                 res_model: 'res.users',
@@ -67,7 +67,13 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             },
             resizable: true,
             userGeneratedContent: true,
-        });
+        }
+
+        if ($textarea[0].attributes.placeholder) {
+            options.placeholder = $textarea[0].attributes.placeholder.value;
+        }
+
+        this._wysiwyg = await wysiwygLoader.loadFromTextarea(this, $textarea[0], options);
 
         return Promise.all([def]);
     },

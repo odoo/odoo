@@ -56,17 +56,40 @@
             <t t-if="forum">
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="questions">
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-1">
+                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
                             Questions
-                            <t t-call="website_forum.forum_filter_tag"/>
+                             <t t-if="count_questions &gt; 0">
+                                <t class="float-end" t-call="website.website_search_box_input">
+                                    <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
+                                    <t t-set="search_type" t-valuef="forums"/>
+                                    <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, ('/tag/%s/questions' % slug(tag)) if tag else '')"/>
+                                    <t t-else="" t-set="action" t-value="'/forum/all%s' % (('/tag/%s/questions' % slug(tag)) if tag else '')"/>
+                                    <t t-set="display_description" t-value="true"/>
+                                    <t t-set="display_detail" t-valuef="false"/>
+                                    <t t-set="placeholder" t-valuef="Search Questions..."/>
+                                    <input type="hidden" name="author" t-att-value="user.id"/>
+                                    <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
+                                    <input t-if="my_profile" type="hidden" name="my" t-att-value="mine"/>
+                                    <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
+                                </t>
+                            </t>
                         </h5>
+                        <t t-call="website_forum.forum_filter_tag"/>
                         <t t-if="questions">
                             <div class="mb-1" t-foreach="questions" t-as="question">
                                 <t t-call="website_forum.display_post"/>
                             </div>
                         </t>
+                        <t t-elif="my_profile">
+                            <div class="text-muted">
+                                You have not asked any question yet. <br />
+                                <a href="/forum/" class="btn-link">
+                                    <i class="fa fa-arrow-right"></i> Go To Forums
+                                </a>
+                            </div>
+                        </t>
                         <t t-else="">
-                            <span class="fw-bold">No question posted yet.</span>
+                            <span class="text-muted">No question posted yet.</span>
                         </t>
                     </div>
                     <t t-if="favourite">
@@ -90,33 +113,73 @@
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="answers">
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-1">
+                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
                             Answers
-                            <t t-call="website_forum.forum_filter_tag"/>
+                            <t t-if="count_questions &gt; 0">
+                                <t class="float-end" t-call="website.website_search_box_input">
+                                    <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
+                                    <t t-set="search_type" t-valuef="forums"/>
+                                    <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, '/tag/%s/questions' % slug(tag)) if tag else ''"/>
+                                    <t t-else="" t-set="action" t-value="'/forum/all%s' % (('/tag/%s/questions' % slug(tag)) if tag else '')"/>
+                                    <t t-set="display_description" t-value="true"/>
+                                    <t t-set="display_detail" t-valuef="false"/>
+                                    <t t-set="placeholder" t-valuef="Search Answers..."/>
+                                    <input type="hidden" name="author" t-att-value="user.id"/>
+                                    <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
+                                    <input t-if="my_profile" type="hidden" name="my" t-att-value="mine"/>
+                                    <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
+                                    <input type="hidden" name="include_answers" t-att-value="True"/>
+                                </t>
+                            </t>
                         </h5>
+                        <t t-call="website_forum.forum_filter_tag"/>
 
                         <t t-if="answers">
                             <div class="mb-1" t-foreach="answers" t-as="answer">
                                 <t t-call="website_forum.display_post_answer"/>
                             </div>
                         </t>
+                        <t t-elif="my_profile">
+                            <div class="text-muted">
+                                You have not answered to any question yet. <br />
+                                <a href="/forum/" class="btn-link">
+                                    <i class="fa fa-arrow-right"></i> Go To Forums
+                                </a>
+                            </div>
+                        </t>
                         <t t-else="">
-                            <span class="fw-bold">No answer posted yet.</span>
+                            <span class="text-muted">No answer posted yet.</span>
                         </t>
                     </div>
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="votes" t-if="uid == user.id">
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-1">Votes</h5>
+                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">Votes
+                             <t t-if="my_profile">
+                                <t class="float-end" t-call="website.website_search_box_input">
+                                    <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
+                                    <t t-set="search_type" t-valuef="forums"/>
+                                    <t t-set="action" t-value="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"/>
+                                    <t t-set="display_description" t-value="true"/>
+                                    <t t-set="display_detail" t-valuef="false"/>
+                                    <t t-set="placeholder" t-valuef="Search Posts..."/>
+                                    <input type="hidden" name="my" value="upvoted"/>
+                                    <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
+                                    <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
+                                    <input type="hidden" name="include_answers" t-att-value="True"/>
+                                </t>
+                            </t>
+                        </h5>
+                        <t t-call="website_forum.forum_filter_tag"/>
                         <t t-call="website_forum.user_votes"/>
                     </div>
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="activity" t-if="uid == user.id">
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-1">
+                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between" style="height:43px;">
                             Activities
-                            <t t-call="website_forum.forum_filter_tag"/>
                         </h5>
+                        <t t-call="website_forum.forum_filter_tag"/>
                         <t t-call="website_forum.display_activities"/>
                     </div>
                 </div>
@@ -126,7 +189,7 @@
 
     <template id="forum_filter_tag" name="Filtering Forum Tag">
         <t t-if="forum_filtered">
-            <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-1 ms-4">
+            <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                 <i class="fa fa-filter me-2 text-muted"/>
                 <t t-esc="forum_filtered"/>
                 <a t-attf-href="/profile/user/#{uid}" class="btn border-0 py-1">&#215;</a>
@@ -172,7 +235,13 @@
             </t>
         </div>
         <div class="mb16" t-if="not vote_post">
-            <p class="text-muted">No vote given by you yet!</p>
+            <div t-if="request.env.user == user" class="text-muted">
+                Help moderating the forums by upvoting and downvoting posts. <br />
+                <a href="/forum/" class="btn-link">
+                    <i class="fa fa-arrow-right"></i> Go To Forums
+                </a>
+            </div>
+            <p t-else="" class="text-muted">No vote given by you yet!</p>
         </div>
     </template>
 </data></odoo>
