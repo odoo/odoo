@@ -10,10 +10,8 @@ return new Registry();
 odoo.define('website.send_mail_form', function (require) {
 'use strict';
 
-var core = require('web.core');
 var FormEditorRegistry = require('website.form_editor_registry');
-
-var _t = core._t;
+const { _lt } = require('@web/core/l10n/translation');
 
 FormEditorRegistry.add('send_mail', {
     formFields: [{
@@ -57,7 +55,7 @@ FormEditorRegistry.add('send_mail', {
         name: 'email_to',
         type: 'char',
         required: true,
-        string: _t('Recipient Email'),
+        string: _lt('Recipient Email'),
         defaultValue: 'info@yourcompany.example.com',
     }],
 });
