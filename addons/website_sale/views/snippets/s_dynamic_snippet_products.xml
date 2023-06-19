@@ -20,13 +20,11 @@
                     <we-button data-select-data-attribute="all">All Products</we-button>
                     <we-button data-select-data-attribute="current">Current Category or All</we-button>
                 </we-select>
-                <t t-set="domain" t-translation="off">["|", ["website_id", "=", false], ["website_id", "=", <t t-out="current_website.id"/>]]</t>
                 <we-many2many string="Tags"
                     data-name="product_tag_opt"
                     data-attribute-name="productTagIds"
                     data-no-preview="true"
                     data-model="product.tag"
-                    t-att-data-domain="domain"
                     data-allow-delete="true"
                     data-fakem2m="true"
                     data-select-data-attribute=""/>
