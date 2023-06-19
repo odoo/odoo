@@ -810,6 +810,9 @@ class Project(models.Model):
             })
             project.write({'analytic_account_id': analytic_account.id})
 
+    def _get_projects_to_make_billable_domain(self):
+        return [('partner_id', '!=', False)]
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
