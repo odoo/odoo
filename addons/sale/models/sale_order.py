@@ -1551,6 +1551,7 @@ class SaleOrder(models.Model):
         upselling_orders = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
         upselling_orders._create_upsell_activity()
 
+    @api.depends('partner_id')
     @api.depends_context('sale_show_partner_name')
     def _compute_display_name(self):
         if not self._context.get('sale_show_partner_name'):

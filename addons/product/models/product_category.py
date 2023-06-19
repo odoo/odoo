@@ -51,6 +51,7 @@ class ProductCategory(models.Model):
         category = self.create({'name': name})
         return category.id, category.display_name
 
+    @api.depends_context('hierarchical_naming')
     def _compute_display_name(self):
         if self.env.context.get('hierarchical_naming', True):
             return super()._compute_display_name()

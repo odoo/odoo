@@ -528,6 +528,11 @@ class HolidaysAllocation(models.Model):
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_name, field_onchange)
 
+    @api.depends(
+        'holiday_type', 'mode_company_id', 'department_id',
+        'category_id', 'employee_id', 'holiday_status_id',
+        'type_request_unit', 'number_of_days',
+    )
     def _compute_display_name(self):
         for allocation in self:
             if allocation.holiday_type == 'company':

@@ -597,6 +597,7 @@ class AccountAccount(models.Model):
             self.name = name
             self.code = code
 
+    @api.depends('code')
     def _compute_display_name(self):
         for account in self:
             account.display_name = f"{account.code} {account.name}"
@@ -826,6 +827,7 @@ class AccountGroup(models.Model):
             if not group.code_prefix_start or group.code_prefix_start > group.code_prefix_end:
                 group.code_prefix_start = group.code_prefix_end
 
+    @api.depends('code_prefix_start', 'code_prefix_end')
     def _compute_display_name(self):
         for group in self:
             prefix = group.code_prefix_start and str(group.code_prefix_start)

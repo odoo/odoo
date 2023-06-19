@@ -634,6 +634,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 defaults['additional'] = True  # to trigger `_autoconfirm_picking`
         return defaults
 
+    @api.depends('picking_id', 'product_id', 'location_id', 'location_dest_id')
     def _compute_display_name(self):
         for move in self:
             move.display_name = '%s%s%s>%s' % (

@@ -31,6 +31,7 @@ class HrAttendance(models.Model):
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
 
+    @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
         for attendance in self:
             if not attendance.check_out:

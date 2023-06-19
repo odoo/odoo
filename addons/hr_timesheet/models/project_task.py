@@ -181,6 +181,8 @@ class Task(models.Model):
 
         return res
 
+    @api.depends('allow_timesheets', 'planned_hours', 'encode_uom_in_days', 'remaining_hours')
+    @api.depends_context('hr_timesheet_display_remaining_hours')
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get('hr_timesheet_display_remaining_hours'):

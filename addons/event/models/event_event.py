@@ -589,6 +589,8 @@ class EventEvent(models.Model):
             self.message_subscribe([vals['organizer_id']])
         return res
 
+    @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
+    @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
         """Adds ticket seats availability if requested by context."""
         if not self.env.context.get('name_with_seats_availability'):

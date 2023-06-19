@@ -117,6 +117,7 @@ class LunchSupplier(models.Model):
          'Automatic Email Sending Time should be between 0 and 12'),
     ]
 
+    @api.depends('phone')
     def _compute_display_name(self):
         for supplier in self:
             if supplier.phone:

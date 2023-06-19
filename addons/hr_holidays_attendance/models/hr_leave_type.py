@@ -13,6 +13,7 @@ class HRLeaveType(models.Model):
         "Deduct Extra Hours", default=False,
         help="Once a time off of this type is approved, extra hours in attendances will be deducted.")
 
+    @api.depends_context('request_type', 'leave', 'holiday_status_name_get', 'employee_id')
     def _compute_display_name(self):
         # Exclude hours available in allocation contexts, it might be confusing otherwise
         if not self.requested_name_get() or self._context.get('request_type', 'leave') == 'allocation':

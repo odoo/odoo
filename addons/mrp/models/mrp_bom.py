@@ -219,6 +219,7 @@ class MrpBom(models.Model):
         self.with_context({'active_test': False}).operation_ids.toggle_active()
         return super().toggle_active()
 
+    @api.depends('code', 'product_tmpl_id')
     def _compute_display_name(self):
         for bom in self:
             bom.display_name = f"{bom.code + ': ' if bom.code else ''}{bom.product_tmpl_id.display_name}"

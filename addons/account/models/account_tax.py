@@ -362,6 +362,8 @@ class AccountTax(models.Model):
             default['name'] = _("%s (Copy)") % self.name
         return super(AccountTax, self).copy(default=default)
 
+    @api.depends('type_tax_use', 'tax_scope')
+    @api.depends_context('append_type_to_tax_name')
     def _compute_display_name(self):
         type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
         tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))

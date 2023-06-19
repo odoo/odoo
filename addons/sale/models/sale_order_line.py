@@ -1133,6 +1133,7 @@ class SaleOrderLine(models.Model):
             if so_line.order_partner_id.ref or so_line.order_partner_id.name
         }
 
+    @api.depends('order_id', 'name', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():

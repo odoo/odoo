@@ -33,6 +33,7 @@ class PosPayment(models.Model):
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move')
 
+    @api.depends('amount', 'currency_id')
     def _compute_display_name(self):
         for payment in self:
             if payment.name:

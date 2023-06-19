@@ -1522,6 +1522,7 @@ class AccountMoveLine(models.Model):
 
         return res
 
+    @api.depends('move_id', 'ref', 'product_id')
     def _compute_display_name(self):
         for line in self:
             line.display_name = " ".join(

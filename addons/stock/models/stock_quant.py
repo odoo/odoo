@@ -523,6 +523,7 @@ class StockQuant(models.Model):
             'target': 'new',
         }
 
+    @api.depends('location_id', 'lot_id', 'package_id', 'owner_id')
     def _compute_display_name(self):
         """name that will be displayed in the detailed operation"""
         for record in self:

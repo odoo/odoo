@@ -160,6 +160,7 @@ class PickingType(models.Model):
             for record in self:
                 record[field_name] = count.get(record.id, 0)
 
+    @api.depends('warehouse_id')
     def _compute_display_name(self):
         """ Display 'Warehouse_name: PickingType_name' """
         for picking_type in self:

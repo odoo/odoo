@@ -73,7 +73,7 @@ class SnailmailLetter(models.Model):
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
 
-    @api.depends('reference', 'partner_id')
+    @api.depends('attachment_id', 'partner_id')
     def _compute_display_name(self):
         for letter in self:
             if letter.attachment_id:

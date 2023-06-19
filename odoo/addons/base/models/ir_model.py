@@ -1023,6 +1023,7 @@ class IrModelFields(models.Model):
             self.clear_caches()
         return res
 
+    @api.depends('field_description', 'model')
     def _compute_display_name(self):
         for field in self:
             field.display_name = f'{field.field_description} ({field.model})'
@@ -1972,6 +1973,7 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
+    @api.depends('res_id', 'model')
     def _compute_display_name(self):
         for model, model_data_records in self.grouped('model').items():
             records = self.env[model].browse(model_data_records.mapped('res_id'))

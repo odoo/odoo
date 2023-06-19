@@ -495,6 +495,8 @@ class Applicant(models.Model):
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
+    @api.depends('partner_name')
+    @api.depends_context('show_partner_name')
     def _compute_display_name(self):
         if not self.env.context.get('show_partner_name'):
             return super()._compute_display_name()
