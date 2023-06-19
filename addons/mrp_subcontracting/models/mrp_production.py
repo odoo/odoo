@@ -92,10 +92,10 @@ class MrpProduction(models.Model):
             return action
         return {'type': 'ir.actions.act_window_close'}
 
-    def _pre_button_mark_done(self):
+    def pre_button_mark_done(self):
         if self._get_subcontract_move():
             return True
-        return super()._pre_button_mark_done()
+        return super().pre_button_mark_done()
 
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """

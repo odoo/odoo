@@ -7,11 +7,11 @@ from odoo import models, _
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.production'
 
-    def _pre_button_mark_done(self):
+    def pre_button_mark_done(self):
         confirm_expired_lots = self._check_expired_lots()
         if confirm_expired_lots:
             return confirm_expired_lots
-        return super()._pre_button_mark_done()
+        return super().pre_button_mark_done()
 
     def _check_expired_lots(self):
         # We use the 'skip_expired' context key to avoid to make the check when
