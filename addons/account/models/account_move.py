@@ -2484,11 +2484,11 @@ class AccountMove(models.Model):
         if not self.date or not self.journal_id:
             return "WHERE FALSE", {}
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
-        param = {'journal_id': self.journal_id.id}
+        param = {'journal_id': self.journal_id.id or self.journal_id._origin.id}
         is_payment = self.payment_id or self._context.get('is_payment')
 
         if not relaxed:
-            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
+            domain = [('journal_id', '=', self.journal_id.id or self.journal_id._origin.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]

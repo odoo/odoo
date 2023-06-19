@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
+import psycopg2
+
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
+from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tests.common import Form
+from odoo.tools import mute_logger
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -157,3 +162,58 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journal_2.code = 'ぁ'
         journal_2.alias_name = False
         self.assertEqual(journal_2.alias_name, 'sale-' + company_2_id)
+
+    def test_change_payment_sequence_journal(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'bank',
+            'code': 'TEST',
+            'payment_sequence': False,
+        })
+        vendor_payments = self.env['account.payment'].create([
+            {
+                'payment_type': 'outbound',
+                'partner_type': 'supplier',
+                'partner_id': self.partner_a.id,
+                'journal_id': journal.id,
+                'amount': 100,
+            },
+            {
+                'payment_type': 'outbound',
+                'partner_type': 'supplier',
+                'partner_id': self.partner_a.id,
+                'journal_id': journal.id,
+                'amount': 100,
+            },
+            {
+                'payment_type': 'outbound',
+                'partner_type': 'supplier',
+                'partner_id': self.partner_a.id,
+                'journal_id': journal.id,
+                'amount': 100,
+            },
+        ])
+
+        vendor_payments.action_post()
+
+        # Not necesseray to raise the error
+        for i in range(1, 3):  # error will be raised only in the case of having a payment with sequence == 'TEST/2023/00001'
+            vendor_payments[i].move_id.button_draft()
+            vendor_payments[i].move_id.name = 'TEST2/2023/0000' + str(i)
+            vendor_payments[i].move_id.action_post()
+
+        with self.assertLogs(level="WARNING"):
+            with Form(journal) as journal_form:
+                journal_form.payment_sequence = True  # We should have a warning here
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'line_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'name': 'line_debit', 'account_id': self.company_data['default_account_revenue'].id, 'debit': 100, 'credit': 0}),
+                Command.create({'partner_id': self.partner_a.id, 'name': 'line_credit', 'account_id': self.company_data['default_account_revenue'].id, 'debit': 0, 'credit': 100}),
+            ]
+        })
+
+        with mute_logger('odoo.sql_db'):
+            with self.assertRaises(psycopg2.errors.UniqueViolation):
+                move.action_post()
