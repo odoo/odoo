@@ -935,6 +935,76 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
+    QUnit.test("header field don't dirty settings", async (assert) => {
+        assert.expect(6);
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            4: {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[2, "list"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                <form string="Settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <setting type="header" string="Foo">
+                            <field name="foo" title="Foo?."/>
+                        </setting>
+                        <button name="4" string="Execute action" type="action"/>
+                    </app>
+                </form>`,
+            "task,2,list": '<tree><field name="display_name"/></tree>',
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method === "create") {
+                assert.deepEqual(
+                    args.args[0],
+                    { foo: true },
+                    "should create a record with foo=true"
+                );
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+
+        await click(target.querySelector(".o_field_boolean input"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+
+        assert.containsNone(
+            target,
+            ".modal-title",
+            "should not say that there are unsaved changes"
+        );
+
+        await click(target.querySelector("button[name='4']"));
+        assert.containsNone(document.body, ".modal", "should not open a warning dialog");
+
+        assert.containsOnce(target, ".o_list_view", "should be open list view");
+    });
+
     QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
         registry.category("services").add(
             "action",
