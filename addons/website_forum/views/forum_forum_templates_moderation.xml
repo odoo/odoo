@@ -18,7 +18,8 @@
         <div class="alert bg-light text-muted" t-if="not offensive">
             If you close this post, it will be hidden for most users. Only
             users having a high karma can see closed posts to moderate
-            them.
+            them. If you close the post with offensive reason, it will not show up
+            for moderators in "Closed" queue.
         </div>
         <div class="alert bg-light text-muted" t-if="offensive">
             If you mark this post as offensive, it will be hidden for most users. Only
@@ -36,7 +37,9 @@
                 <label class="form-label col-lg-2" for="reason"><t t-if="offensive">Offensive</t><t t-if="not offensive">Closing</t> Reason:</label>
                 <select class="form-select form-select col" name="reason_id">
                     <t t-foreach="reasons or []" t-as="reason">
-                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-out="reason.name"/></option>
+                        <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id">
+                        <t t-out="reason.name"/> <t t-if="reason.reason_type=='offensive'"> - <t t-out="reason.reason_type"/></t>
+                        </option>
                     </t>
                 </select>
             </div>
@@ -206,7 +209,7 @@
                                 <t t-set="classes" t-value="'btn-outline-primary flex-grow-1'"/>
                             </t>
                             <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
-                                <t t-set="url" t-valuef="#{ post_url }/delete"/>
+                                <t t-set="url" t-valuef="/forum/#{ slug(forum) }/question/#{ slug(question) }/delete"/>
                                 <t t-set="label">Delete</t>
                                 <t t-set="icon" t-value="'fa fa-trash'"/>
                                 <t t-set="karma" t-value="question.karma_unlink if not question.can_unlink else 0"/>

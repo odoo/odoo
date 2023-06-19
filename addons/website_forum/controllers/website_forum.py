@@ -334,7 +334,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
     def question_ask_for_close(self, forum, question, **post):
-        reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
+        reasons = request.env['forum.post.reason'].search([])
 
         values = self._prepare_user_values(**post)
         values.update({
@@ -366,12 +366,13 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
-        question.active = False
+        question.state = 'deleted'
         return request.redirect("/forum/%s" % slug(forum))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
-        question.active = True
+        question.state = 'closed'
+        question.closed_reason_id = False
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     # Post
@@ -548,7 +549,7 @@ class WebsiteForum(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         Post = request.env['forum.post']
-        domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive'), ('active', '=', False)]
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive')]
         offensive_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_user_values(forum=forum)

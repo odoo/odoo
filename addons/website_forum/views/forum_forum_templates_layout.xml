@@ -42,10 +42,9 @@
                     <h3 t-attf-class="col-lg-10 mb-0" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
-                        <span t-elif="not question.active" class="badge bg-danger">
-                            <t t-if="question.state!='offensive'">Deleted</t>
-                            <t t-if="question.state=='offensive'">Offensive</t>
-                            <t t-if="question.state=='offensive' and question.closed_reason_id">
+                        <span t-elif="question.state == 'deleted'" class="badge bg-danger">Deleted</span>
+                        <span t-elif="question.state == 'offensive'" class="badge bg-danger">Offensive
+                            <t t-if="question.closed_reason_id">
                                 <t t-out="question.closed_reason_id.name.capitalize()"/>
                             </t>
                         </span>
@@ -119,6 +118,8 @@
                             <t t-if="filters == 'solved'">Solved</t>
                             <t t-elif="filters == 'unsolved'">Unsolved</t>
                             <t t-elif="filters == 'unanswered'">Unanswered</t>
+                            <t t-elif="filters == 'offensive'">Offensive</t>
+                            <t t-elif="filters == 'deleted'">Deleted</t>
                         </t>
                     </a>
                     <div class="dropdown-menu" role="menu">
@@ -153,6 +154,32 @@
                             <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unanswered') }"
                                 class="dropdown-item">Unanswered
                             </a>
+                            <t t-if="user.karma>=forum.karma_moderate">
+                                <div class="dropdown-divider"/>
+                                <a t-attf-href="/forum/#{ slug(forum) }/validation_queue"
+                                    class="dropdown-item">To Validate
+                                </a>
+                                <a t-attf-href="/forum/#{ slug(forum) }/flagged_queue"
+                                    class="dropdown-item">Flagged
+                                </a>
+                                <a t-attf-href="/forum/#{ slug(forum) }/closed_posts"
+                                    class="dropdown-item">Closed
+                                </a>
+                            </t>
+                            <div class="dropdown-divider"/>
+                            <t t-if="user.karma>=forum.karma_moderate">
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='offensive') }"
+                                    class="dropdown-item">Offensive
+                                </a>
+                                <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='deleted') }"
+                                    class="dropdown-item">Deleted
+                                </a>
+                            </t>
+                            <t>
+                                <a t-if="my=='mine' and forum.karma_moderate>=user.karma" t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='hidden') }"
+                                    class="dropdown-item">Hidden
+                                </a>
+                            </t>
                         </t>
                     </div>
                 </div>

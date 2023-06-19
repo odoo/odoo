@@ -37,6 +37,7 @@ class Post(models.Model):
             ('active', 'Active'), ('pending', 'Waiting Validation'),
             ('close', 'Closed'), ('offensive', 'Offensive'),
             ('flagged', 'Flagged'),
+            ('deleted', 'Deleted')
         ], string='Status', default='active')
     views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
@@ -323,7 +324,7 @@ class Post(models.Model):
 
         for post in posts:
             # deleted or closed questions
-            if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
+            if post.parent_id and (post.parent_id.active is False or post.parent_id.state in ['close', 'deleted']):
                 raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
             # karma-based access
             if not post.parent_id and not post.can_ask:
@@ -476,10 +477,9 @@ class Post(models.Model):
         if any(post.parent_id or post.state != 'close' for post in self):
             return False
 
-        reason_offensive = self.env.ref('website_forum.reason_7')
         reason_spam = self.env.ref('website_forum.reason_8')
         for post in self:
-            if post.closed_reason_id in (reason_offensive, reason_spam):
+            if post.closed_reason_id.reason_type == 'offensive' or post.closed_reason_id == reason_spam:
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
 
@@ -491,15 +491,15 @@ class Post(models.Model):
                         karma *= 10
                 post.create_uid.sudo()._add_karma(karma * -1, post, _('Reopen a banned question'))
 
-        self.sudo().write({'state': 'active'})
+        self.sudo().write({'state': 'active', 'closed_reason_id': False})
 
     def close(self, reason_id):
         if any(post.parent_id for post in self):
             return False
 
-        reason_offensive = self.env.ref('website_forum.reason_7').id
-        reason_spam = self.env.ref('website_forum.reason_8').id
-        if reason_id in (reason_offensive, reason_spam):
+        reason = self.env['forum.post.reason'].browse(reason_id)
+        reason_spam = self.env.ref('website_forum.reason_8')
+        if reason.reason_type == 'offensive' or reason_id == reason_spam:
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
@@ -515,11 +515,10 @@ class Post(models.Model):
                     _('Post is closed and marked as offensive content')
                 )
                 post.create_uid.sudo()._add_karma(karma, post, message)
-
         self.write({
-            'state': 'close',
+            'state': 'offensive' if reason.reason_type == 'offensive' else 'close',
             'closed_uid': self._uid,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'closed_date': datetime.today(),
             'closed_reason_id': reason_id,
         })
         return True
@@ -555,8 +554,6 @@ class Post(models.Model):
         for post in self:
             if not post.can_flag:
                 raise AccessError(_('%d karma required to flag a post.', post.forum_id.karma_flag))
-            if post.state == 'flagged':
-               res.append({'error': 'post_already_flagged'})
             elif post.state == 'active':
                 # TODO: potential performance bottleneck, can be batched
                 post.write({
@@ -585,7 +582,6 @@ class Post(models.Model):
                 'moderator_id': self.env.user.id,
                 'closed_date': fields.Datetime.now(),
                 'closed_reason_id': reason_id,
-                'active': False,
             })
         return True
 
@@ -803,13 +799,15 @@ class Post(models.Model):
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
-
+        values = options.get('values') or False
         domain = website.website_domain()
-        domain = expression.AND([domain, [('state', '=', 'active'), ('can_view', '=', True)]])
+        domain = expression.AND([domain, [('can_view', '=', True)]])
         include_answers = options.get('include_answers', False)
         if not include_answers:
             domain = expression.AND([domain, [('parent_id', '=', False)]])
         forum = options.get('forum')
+        if not values or values['user'].karma < values['forum'].karma_moderate:
+            domain = expression.AND([domain, [('state', '!=', 'close'), ('state', '!=', 'pending')]])
         if forum:
             domain = expression.AND([domain, [('forum_id', '=', unslug(forum)[1])]])
         tags = options.get('tag')
@@ -822,6 +820,10 @@ class Post(models.Model):
             domain = expression.AND([domain, [('has_validated_answer', '=', True)]])
         elif filters == 'unsolved':
             domain = expression.AND([domain, [('has_validated_answer', '=', False)]])
+        elif filters in ('pending', 'offensive', 'deleted'):
+            domain = expression.AND([domain, [('state', '=', filters)]])
+        else:
+            domain = expression.AND([domain, [('state', '!=', 'deleted'), ('state', '!=', 'offensive')]])
         user = self.env.user
         my = options.get('my')
         create_uid = user.id if my == 'mine' else options.get('create_uid')
@@ -835,7 +837,12 @@ class Post(models.Model):
             domain = expression.AND([domain, [('favourite_ids', '=', user.id)]])
         elif my == 'upvoted':
             domain = expression.AND([domain, [('vote_ids.user_id', '=', user.id)]])
-
+        elif filters == 'pending':
+            domain = expression.AND([domain, [('state', '=', 'pending')]])
+        elif my == 'hidden':
+            domain += [expression.OR([('state', '=', 'deleted'), ('state', '=', 'offensive'), ('state', '=', 'close')])]
+        elif filters not in ('deleted', 'offensive'):
+            domain = expression.AND([domain, [('state', '!=', 'deleted'), ('state', '!=', 'offensive')]])
         # 'sorting' from the form's "Order by" overrides order during auto-completion
         order = options.get('sorting', order)
         if 'is_published' in order:
