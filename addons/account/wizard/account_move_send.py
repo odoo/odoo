@@ -491,7 +491,7 @@ class AccountMoveSend(models.Model):
         self.ensure_one()
         return not tools.config['test_enable'] and not modules.module.current_test
 
-    def _call_web_service(self, invoices_data):
+    def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # TO OVERRIDE
         # call a web service before the pdfs are rendered
         self.ensure_one()
@@ -523,7 +523,7 @@ class AccountMoveSend(models.Model):
             if not invoice_data.get('error')
         }
         if invoices_data_web_service:
-            self._call_web_service(invoices_data_web_service)
+            self._call_web_service_before_invoice_pdf_render(invoices_data_web_service)
 
         invoices_data_pdf = {
             invoice: invoice_data
