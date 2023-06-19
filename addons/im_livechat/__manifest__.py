@@ -106,7 +106,6 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'web/static/src/legacy/js/common_env.js'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
-            'web/static/src/legacy/js/services/session.js',
             'bus/static/src/bus_parameters_service.js',
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
 
