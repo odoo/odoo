@@ -1252,6 +1252,11 @@ class MrpProduction(models.Model):
         parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
         return (dest_moves | parent_moves).group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
+    def set_qty_producing(self):
+        # This method is used to call `_set_lot_producing` when the onchange doesn't apply.
+        self.ensure_one()
+        self._set_qty_producing()
+
     def _set_lot_producing(self):
         self.ensure_one()
         self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
@@ -1888,7 +1893,7 @@ class MrpProduction(models.Model):
     def button_mark_done(self):
         self._button_mark_done_sanity_checks()
 
-        res = self._pre_button_mark_done()
+        res = self.pre_button_mark_done()
         if res is not True:
             return res
 
@@ -1969,7 +1974,7 @@ class MrpProduction(models.Model):
             })
         return action
 
-    def _pre_button_mark_done(self):
+    def pre_button_mark_done(self):
         for production in self:
             if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production._set_quantities()
