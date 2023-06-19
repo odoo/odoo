@@ -211,7 +211,7 @@ export const ormService = {
     async: [
         "call",
         "create",
-        "name_get",
+        "nameGet",
         "read",
         "readGroup",
         "search",
