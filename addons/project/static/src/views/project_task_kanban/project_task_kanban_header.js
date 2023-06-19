@@ -1,7 +1,6 @@
 /** @odoo-module */
 import { useService } from '@web/core/utils/hooks';
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { onWillStart } from "@odoo/owl";
 
 export class ProjectTaskKanbanHeader extends KanbanHeader {
