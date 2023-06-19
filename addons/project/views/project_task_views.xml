@@ -312,8 +312,11 @@
                                 <field name="priority" widget="priority_switch" class="me-3"/>
                                 <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                             </div>
-                            <div class="d-flex justify-content-end o_state_container">
-                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            <div class="d-flex justify-content-end o_state_container" attrs="{'invisible': [('active', '=', False)]}">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
+                            </div>
+                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" attrs="{'invisible': [('active', '=', True)]}">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                             </div>
                         </h1>
                     </div>
