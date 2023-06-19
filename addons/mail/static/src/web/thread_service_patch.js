@@ -106,7 +106,7 @@ patch(ThreadService.prototype, "mail/web", {
             type: "chatter",
         });
         if (resId === false) {
-            const tmpId = `virtual${this.nextId++}`;
+            const tmpId = this.messageService.getNextTemporaryId();
             const tmpData = {
                 id: tmpId,
                 author: { id: this.store.self.id },

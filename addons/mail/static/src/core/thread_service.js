@@ -904,8 +904,7 @@ export class ThreadService {
                 .map((recipient) => recipient.persona.id);
             partner_ids?.push(...recipientIds);
         }
-        const lastMessageId = this.messageService.getLastMessageId();
-        const tmpId = lastMessageId + 0.01;
+        const tmpId = this.messageService.getNextTemporaryId();
         const params = {
             context: {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
