@@ -161,7 +161,10 @@ class Menu(models.Model):
         - query string parameters should be the same to be considered equal, as
           those could drasticaly alter a page result
         """
-        if not request:
+        if not request or self.is_mega_menu:
+            # There is no notion of `active` if we don't have a request to
+            # compare the url to.
+            # Also, mega menu are never considered active.
             return False
 
         request_url = url_parse(request.httprequest.url)
