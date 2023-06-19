@@ -43,6 +43,8 @@ class PosSelfOrderController(http.Controller):
         :return: the rendered template
         """
         _, pos_config_id = unslug(pos_name)
+        if not pos_config_id:
+            raise werkzeug.exceptions.NotFound()
         pos_config_sudo = self._get_pos_config_sudo(pos_config_id)
         session_info = request.env["ir.http"].get_frontend_session_info()
         session_info.update({
