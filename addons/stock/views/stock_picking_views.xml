@@ -109,6 +109,7 @@
 
                 <field name="is_locked" invisible="1"/>
                 <field name="show_check_availability" invisible="1"/>
+                <field name="show_validate" invisible="1"/>
                 <field name="show_lots_text" invisible="1"/>
                 <field name="immediate_transfer" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
@@ -127,8 +128,8 @@
                 <header>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
-                    <button name="button_validate" attrs="{'invisible': [('state', 'in', ('waiting','confirmed', 'draft', 'done', 'cancel'))]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
-                    <button name="button_validate" attrs="{'invisible': [('state', 'in', ('draft', 'assigned', 'done', 'cancel'))]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
+                    <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('waiting','confirmed', 'draft', 'done', 'cancel')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
+                    <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'assigned', 'done', 'cancel')), ('show_validate', '=', False)]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
                     <button name="action_reset_draft" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" string="Set Draft" type="object" groups="stock.group_stock_user" class="o_highlight" data-hotkey="d"/>
                     <button name="action_set_quantities_to_reservation" attrs="{'invisible': [('show_set_qty_button', '=', False)]}" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <button name="action_clear_quantities_to_zero" attrs="{'invisible': [('show_clear_qty_button', '=', False)]}" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
