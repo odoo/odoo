@@ -17,10 +17,6 @@
 		<t t-else=""><t t-out="timesheet.so_line.display_name"/></t>
 	    </td>
         </xpath>
-        <xpath expr="//tfoot/tr/th[@colspan='3']" position="replace">
-            <t t-if="display_sol"><th colspan="4"></th></t>
-            <t t-else=""><th colspan="3"></th></t>
-        </xpath>            
     </template>
 
 </odoo>
