@@ -2464,16 +2464,58 @@ QUnit.module("Views", (hooks) => {
             await toggleGroupByMenu(target);
             await toggleMenuItem(target, "candle");
 
-            assert.containsNone(
+            assert.containsOnce(
                 target,
                 ".o_list_button_add",
-                "Create not available as list is grouped"
+                "Create available as list is grouped"
             );
             assert.containsNone(
                 target,
                 ".o_list_button_save",
                 "Save not available as no row in edition"
             );
+        }
+    );
+
+    QUnit.test(
+        "editable list view: check that add button is present when groupby applied",
+        async function (assert) {
+            assert.expect(4);
+
+            serverData.models.foo.fields.foo = { string: "Foo", type: "char", required: true };
+            serverData.actions = {
+                11: {
+                    id: 11,
+                    name: "Partners Action 11",
+                    res_model: "foo",
+                    type: "ir.actions.act_window",
+                    views: [[3, "list"], [4, "form"]],
+                    search_view_id: [9, "search"],
+                }
+            };
+            serverData.views = {
+                "foo,3,list":
+                    '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+                "foo,4,form":
+                    '<form><field name="display_name"/><field name="foo"/></form>',
+                "foo,9,search": `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 11);
+
+            assert.containsOnce(target, ".o_list_button_add");
+
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "candle");
+            assert.containsOnce(target, ".o_list_button_add");
+
+            assert.containsOnce(target, ".o_list_view");
+            await click(target.querySelector(".o_list_button_add"));
+            assert.containsOnce(target, ".o_form_view");
         }
     );
 
@@ -12733,7 +12775,7 @@ QUnit.module("Views", (hooks) => {
         await toggleGroupByMenu(target);
         await toggleMenuItem(target, "bar");
 
-        assert.containsNone(target, ".o_list_button_add");
+        assert.containsOnce(target, ".o_list_button_add");
 
         // reload without groupby
         await toggleMenuItem(target, "bar");
