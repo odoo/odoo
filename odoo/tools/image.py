@@ -79,7 +79,7 @@ class ImageProcess():
         else:
             try:
                 self.image = Image.open(io.BytesIO(source))
-            except (OSError, binascii.Error):
+            except (OSError, binascii.Error, Image.DecompressionBombError):
                 raise UserError(_("This file could not be decoded as an image file."))
 
             # Original format has to be saved before fixing the orientation or
