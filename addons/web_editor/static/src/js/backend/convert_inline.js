@@ -305,6 +305,16 @@ function bootstrapToTable(editable) {
             }
             tr.remove(); // row was cloned and inserted already
         }
+        // Merge tables in tds into one common table, each in its own row.
+        const tds = [...editable.querySelectorAll('td')]
+            .filter(td => td.children.length > 1 && [...td.children].every(child => child.nodeName === 'TABLE'))
+            .reverse();
+        for (const td of tds) {
+            const table = _createTable();
+            const trs = [...td.children].map(child => _wrap(child, 'td')).map(wrappedChild => _wrap(wrappedChild, 'tr'));
+            trs[0].before(table);
+            table.append(...trs);
+        }
     }
     for (const table of editable.querySelectorAll('table')) {
         table.removeAttribute('o-temp-width');
@@ -430,7 +440,13 @@ function classToStyle($editable, cssRules) {
             writes.push(() => {
                 node.setAttribute('style', style);
                 if (node.style.width) {
+<<<<<<< HEAD
                     node.setAttribute('width', node.style.width.replace('px', '').trim());
+||||||| parent of 0474f74325c (temp)
+                    node.setAttribute('width', node.style.width);
+=======
+                    node.setAttribute('width', ('' + node.style.width).replace('px', ''));
+>>>>>>> 0474f74325c (temp)
                 }
             });
         }
@@ -693,6 +709,7 @@ async function toInline($editable, cssRules, $iframe) {
             }
         }
     }
+<<<<<<< HEAD
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
@@ -707,6 +724,38 @@ async function toInline($editable, cssRules, $iframe) {
         image.before(_createMso(clone.outerHTML));
         _hideForOutlook(image);
     }
+||||||| parent of 0474f74325c (temp)
+
+    // Fix outlook image rendering bug (this change will be kept in both
+    // fields).
+    for (const attributeName of ['width', 'height']) {
+        const images = editable.querySelectorAll('img');
+        for (const image of images) {
+            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
+            if (!value) {
+                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+            }
+            image.setAttribute(attributeName, value);
+            image.style.setProperty(attributeName, value + 'px');
+        };
+    };
+=======
+    // Fix card-img-top heights (must happen before we transform everything).
+    for (const imgTop of editable.querySelectorAll('.card-img-top')) {
+        imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+    }
+    // Fix Outlook image rendering bug.
+    for (const attributeName of ['width', 'height']) {
+        const images = editable.querySelectorAll('img');
+        for (const image of images) {
+            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
+            if (!value) {
+                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+            }
+            image.setAttribute(attributeName, ('' + value).replace('px', ''));
+        };
+    };
+>>>>>>> 0474f74325c (temp)
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
@@ -758,6 +807,40 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.find('style').remove();
 
     editable.querySelectorAll('.o_converted_col').forEach(node => node.classList.remove('o_converted_col'));
+
+    // Fix mx-auto on images in table cells.
+    for (const centeredImage of editable.querySelectorAll('td > img.mx-auto')) {
+        if (centeredImage.parentElement.children.length === 1) {
+            centeredImage.parentElement.style.setProperty('text-align', 'center');
+        }
+    }
+    // Ensure preservation of aspect-ratio.
+    for (const loneImage of editable.querySelectorAll('img:only-child:not(.img-fluid,[data-class*=fa-])')) {
+        loneImage.style.setProperty('object-fit', 'cover');
+    }
+    // Fix img-fluid.
+    for (const image of editable.querySelectorAll('img.img-fluid')) {
+        // Outlook requires absolute width/height.
+        const width = _getWidth(image);
+        const clone = image.cloneNode();
+        clone.setAttribute('width', width);
+        clone.style.setProperty('width', width + 'px');
+        clone.style.removeProperty('max-width');
+        image.before(document.createComment(`[if mso]>${clone.outerHTML}<![endif]`));
+        image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
+        image.before(document.createComment('[if !mso]><!'));
+        image.after(document.createComment('<![endif]'));
+        // Account for the absence of responsive stacking (let max-width do the
+        // resizing work outside of Outlook).
+        if (!image.style.width.endsWith('%')) {
+            image.removeAttribute('width');
+            image.style.removeProperty('width');
+        }
+        if (!image.style.height.endsWith('%')) {
+            image.removeAttribute('height');
+            image.style.removeProperty('height');
+        }
+    }
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
@@ -1377,6 +1460,13 @@ function _createMso(content='') {
 function _createTable(attributes = []) {
     const table = document.createElement('table');
     Object.entries(TABLE_ATTRIBUTES).forEach(([att, value]) => table.setAttribute(att, value));
+<<<<<<< HEAD
+||||||| parent of 0474f74325c (temp)
+    // $table.attr(TABLE_ATTRIBUTES);
+    table.style.setProperty('width', '100%', 'important');
+=======
+    table.style.setProperty('width', '100%', 'important');
+>>>>>>> 0474f74325c (temp)
     for (const attr of attributes) {
         if (!(attr.name === 'width' && attr.value === '100%')) {
             table.setAttribute(attr.name, attr.value);
