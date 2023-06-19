@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import frozendict
+from odoo.tools import format_date, frozendict
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -342,7 +340,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
         context = {'lang': order.partner_id.lang}
         so_values = {
-            'name': _('Down Payment: %s (Draft)', time.strftime('%m %Y')),
+            'name': _(
+                'Down Payment: %(date)s (Draft)', date=format_date(self.env, fields.Date.today())
+            ),
             'product_uom_qty': 0.0,
             'order_id': order.id,
             'discount': 0.0,
