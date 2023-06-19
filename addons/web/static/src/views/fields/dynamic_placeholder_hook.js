@@ -13,7 +13,7 @@ export function useDynamicPlaceholder(elementRef) {
     let positionCallback;
     const popover = usePopover(DynamicPlaceholderPopover, {
         onclose: () => closeCallback?.(),
-        onPositioned: () => positionCallback?.(),
+        onPositioned: (popper, position) => positionCallback?.(popper, position),
     });
     const notification = useService("notification");
 
