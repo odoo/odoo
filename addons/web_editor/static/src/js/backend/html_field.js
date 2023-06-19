@@ -370,7 +370,7 @@ export class HtmlField extends Component {
             // Ensure the focus is in the editable document
             // before inserting the <t> element.
             this.wysiwyg.focus();
-            let dynamicPlaceholder = "object." + chain.join('.');
+            let dynamicPlaceholder = "object." + chain;
             dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
             const t = document.createElement('T');
             t.setAttribute('t-out', dynamicPlaceholder);
