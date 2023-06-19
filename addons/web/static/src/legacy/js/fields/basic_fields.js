@@ -1804,7 +1804,15 @@ var FieldPhone = FieldEmail.extend({
      * @private
      */
     _renderReadonly: function () {
-        this._super();
+        if (this.value) {
+            this.el.innerHTML = '';
+            this.el.classList.add("o_form_uri", "o_text_overflow");
+            const anchorEl = Object.assign(document.createElement('a'), {
+                text: this.value,
+                href: `${this.prefix}:${this.value.replace(/\s+/g, "")}`,
+            });
+            this.el.appendChild(anchorEl);
+        }
 
         // This class should technically be there in case of a very very long
         // phone number, but it breaks the o_row mechanism, which is more
