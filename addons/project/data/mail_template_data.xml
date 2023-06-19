@@ -57,8 +57,8 @@
             </t>
         </td></tr>
         <tr><td style="text-align: center;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
-                <tr><td style="font-size: 13px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin: 32px 0px 32px 0px; display: inline-table;">
+                <tr><td style="font-size: 13px;text-align:center;">
                     <strong>Tell us how you feel about our services</strong><br/>
                     <span style="font-size: 12px; opacity: 0.5; color: #454748;">(click on one of these smileys)</span>
                 </td></tr>
@@ -66,17 +66,17 @@
                     <table style="width:100%;text-align:center;margin-top:2rem;">
                         <tr>
                             <td>
-                                <a t-attf-href="/rate/{{ access_token }}/5">
+                                <a t-attf-href="/rate/{{ access_token }}/5" t-att-class="'pe-none' if object._rating_get_operator() else ''">
                                     <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied"/>
                                 </a>
                             </td>
                             <td>
-                                <a t-attf-href="/rate/{{ access_token }}/3">
+                                <a t-attf-href="/rate/{{ access_token }}/3" t-att-class="'pe-none' if object._rating_get_operator() else ''">
                                     <img alt="Okay" src="/rating/static/src/img/rating_3.png" title="Okay"/>
                                 </a>
                             </td>
                             <td>
-                                <a t-attf-href="/rate/{{ access_token }}/1">
+                                <a t-attf-href="/rate/{{ access_token }}/1" t-att-class="'pe-none' if object._rating_get_operator() else ''">
                                     <img alt="Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Dissatisfied"/>
                                 </a>
                             </td>
