@@ -1,7 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import standalone
+from odoo.tests import HttpCase, standalone, tagged
+
+
+@tagged('website_nightly', '-standard')
+class TestWebsiteNightlyRunbot(HttpCase):
+    def test_01_website_nightly_runbot(self):
+        """ This test is just here to avoid runbot to raise an error on the
+        ``website_nightly`` build. Indeed, if not a single test with this tag is
+        found, the build will be considered as failed.
+        In Odoo 16.4 a real test is using this tag.
+        """
+
 
 """
 This test ensure `inherit_id` update is correctly replicated on cow views.
