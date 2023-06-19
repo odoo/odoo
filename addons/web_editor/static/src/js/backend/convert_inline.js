@@ -89,8 +89,8 @@ function attachmentThumbnailToLinkImg($editable) {
         const image = document.createElement('img');
         image.setAttribute('src', _getStylePropertyValue(link, 'background-image').replace(/(^url\(['"])|(['"]\)$)/g, ''));
         // Note: will trigger layout thrashing.
-        image.setAttribute('height', Math.max(1, _getHeight(link)) + 'px');
-        image.setAttribute('width', Math.max(1, _getWidth(link)) + 'px');
+        image.setAttribute('height', Math.max(1, _getHeight(link)));
+        image.setAttribute('width', Math.max(1, _getWidth(link)));
         link.prepend(image);
     };
 }
@@ -413,7 +413,7 @@ function classToStyle($editable, cssRules) {
             writes.push(() => {
                 node.setAttribute('style', style);
                 if (node.style.width) {
-                    node.setAttribute('width', node.style.width);
+                    node.setAttribute('width', ('' + node.style.width).replace('px', ''));
                 }
             });
         }
@@ -487,7 +487,7 @@ function toInline($editable, cssRules, $iframe) {
             if (!value) {
                 value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
             }
-            image.setAttribute(attributeName, value);
+            image.setAttribute(attributeName, ('' + value).replace('px', ''));
         };
     };
 
