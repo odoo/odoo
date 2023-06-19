@@ -965,6 +965,25 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(model.domain, [["date_deadline", "<", "2021-09-17"]]);
     });
 
+    QUnit.test("no search items created for search panel sections", async function (assert) {
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch: `
+                        <search>
+                            <searchpanel>
+                                <field name="company_id"/>
+                                <field name="company_id" select="multi"/>
+                            </searchpanel>
+                        </search>
+                    `,
+            resModel: "partner",
+            config: { viewType: "kanban" },
+        });
+        const sections = model.getSections();
+        assert.strictEqual(sections.length, 2);
+        assert.deepEqual(sanitizeSearchItems(model), []);
+    });
+
     QUnit.test(
         "a field of type 'properties' should not be accepted as a search_default",
         async function (assert) {

@@ -69,8 +69,7 @@ export class SearchArchParser extends XMLParser {
                     this.visitSearch(node, visitChildren);
                     break;
                 case "searchpanel":
-                    this.visitSearchPanel(node);
-                    break;
+                    return this.visitSearchPanel(node);
                 case "group":
                     this.visitGroup(node, visitChildren);
                     break;
