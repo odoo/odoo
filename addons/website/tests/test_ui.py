@@ -415,3 +415,16 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_29_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
+        self.start_tour("/?enable_editor=1", "website_page_options", login="admin")
+
+    def test_30_website_backend_menus_redirect(self):
+        Menu = self.env['ir.ui.menu']
+        menu_root = Menu.create({'name': 'Test Root'})
+        Menu.create({
+            'name': 'Test Child',
+            'parent_id': menu_root.id,
+            'action': 'ir.actions.act_window,%d' % (self.env.ref('base.open_module_tree').id,),
+        })
+        self.env.ref('base.user_admin').action_id = self.env.ref('base.menu_administration').id
+        self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
+        self.start_tour('/', 'website_backend_menus_redirect', login='admin')
