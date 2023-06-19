@@ -486,7 +486,6 @@ function toInline($editable, cssRules, $iframe) {
                 value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
             }
             image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, value + 'px');
         };
     };
 
@@ -503,8 +502,9 @@ function toInline($editable, cssRules, $iframe) {
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
 
-    // Fix img-fluid for Outlook.
+    // Fix img-fluid.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
+        // Outlook requires absolute width/height.
         const width = _getWidth(image);
         const clone = image.cloneNode();
         clone.setAttribute('width', width);
@@ -514,6 +514,16 @@ function toInline($editable, cssRules, $iframe) {
         image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
         image.before(document.createComment('[if !mso]><!'));
         image.after(document.createComment('<![endif]'));
+        // Account for the absence of responsive stacking (let max-width do the
+        // resizing work outside of Outlook).
+        if (!image.style.width.endsWith('%')) {
+            image.removeAttribute('width');
+            image.style.removeProperty('width');
+        }
+        if (!image.style.height.endsWith('%')) {
+            image.removeAttribute('height');
+            image.style.removeProperty('height');
+        }
     }
 
     for (const [node, displayValue] of displaysToRestore) {
