@@ -550,12 +550,31 @@ class Module(models.Model):
                 "is best to write it as a standalone script, and ask the runbot/metastorm team "
                 "for help."
             )
+
+        # We must abort requested module operation if it may lead to a mess and inconsistency.
+        # Here we test that no other module operation is in progress
+        if self.search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
+            # Note. There is possiblity that module states are corrupted and no
+            # process does the module operation. In this case admin must use
+            # "Cancel install" button. Also, the states are reset automatically
+            # if cron queue is not moving after 5 hours of waiting.
+            raise UserError(_("Odoo is currently processing another module operation.\n"
+                              "Please try again later or contact your system administrator."))
         try:
-            # This is done because the installation/uninstallation/upgrade can modify a currently
-            # running cron job and prevent it from finishing, and since the ir_cron table is locked
-            # during execution, the lock won't be released until timeout.
+            # Here we check that there is no running cron job.
             self._cr.execute("SELECT * FROM ir_cron FOR UPDATE NOWAIT")
         except psycopg2.OperationalError:
+            # Note. It's very unlikely that cron is locked because of another
+            # UPDATE NOWAIT sql-query. There are two reasons for this:
+            # 1. Another installation request changes module state, which means
+            #    that the current proccess must be aborted even before checking
+            #    lock on ir_cron table
+            # 2. It's supposed to be only one user logged in as admin. Good
+            #    admin doesn't click installation button again before previous
+            #    request is finished. Even if we have multiple installation
+            #    requests, the cron table is locked only until next COMMIT,
+            #    which happens right after finishing installation of a first
+            #    module dependency.
             raise UserError(_("Odoo is currently processing a scheduled action.\n"
                               "Module operations are not possible at this time, "
                               "please try again later or contact your system administrator."))
