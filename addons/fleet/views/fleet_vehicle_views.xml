@@ -103,7 +103,7 @@
                             <field name="write_off_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="vin_sn"/>
                             <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                            <div class="o_row o_hr_narrow_field" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
@@ -114,8 +114,10 @@
                     <notebook>
                         <page string="Tax Info">
                             <group>
-                                <group string="Fiscality">
-                                    <field name="horsepower_tax" widget="monetary"/>
+                                <group col="1" name="fiscality_group" string="Fiscality">
+                                    <group col="1" name="fiscality_first_group">
+                                        <field name="horsepower_tax" widget="monetary"/>
+                                    </group>
                                 </group>
                                 <group string="Contract">
                                     <field name="first_contract_date"/>
