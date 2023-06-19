@@ -76,6 +76,10 @@ export class MessageService {
         );
     }
 
+    getNextTemporaryId() {
+        return this.getLastMessageId() + 0.01;
+    }
+
     getMentionsFromText(rawMentions, body) {
         if (!this.store.user) {
             // mentions are not supported for guests
