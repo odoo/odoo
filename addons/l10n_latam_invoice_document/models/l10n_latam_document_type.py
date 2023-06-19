@@ -35,6 +35,7 @@ class L10nLatamDocumentType(models.Model):
         self.ensure_one()
         return document_number
 
+    @api.depends('code')
     def _compute_display_name(self):
         for rec in self:
             name = rec.name

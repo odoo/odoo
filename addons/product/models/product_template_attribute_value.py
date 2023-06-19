@@ -147,6 +147,7 @@ class ProductTemplateAttributeValue(models.Model):
         ptav_to_archive.write({'ptav_active': False})
         return True
 
+    @api.depends('attribute_id')
     def _compute_display_name(self):
         """Override because in general the name of the value is confusing if it
         is displayed without the name of the corresponding attribute.

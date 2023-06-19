@@ -128,6 +128,7 @@ class PartnerCategory(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You can not create recursive tags.'))
 
+    @api.depends('parent_id')
     def _compute_display_name(self):
         """ Return the categories' display name, including their direct
             parent by default.
@@ -814,7 +815,7 @@ class Partner(models.Model):
                 'target': 'new',
                 }
 
-    @api.depends('complete_name')
+    @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat')
     def _compute_display_name(self):
         for partner in self:

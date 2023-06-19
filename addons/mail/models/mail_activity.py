@@ -404,6 +404,7 @@ class MailActivity(models.Model):
         )
         return activities._as_query(order)
 
+    @api.depends('summary', 'activity_type_id')
     def _compute_display_name(self):
         for record in self:
             name = record.summary or record.activity_type_id.display_name

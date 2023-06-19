@@ -157,6 +157,8 @@ class SaleOrderLine(models.Model):
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', 'Timesheets')
 
+    @api.depends('remaining_hours_available', 'remaining_hours')
+    @api.depends_context('with_remaining_hours', 'company')
     def _compute_display_name(self):
         super()._compute_display_name()
         with_remaining_hours = self.env.context.get('with_remaining_hours')

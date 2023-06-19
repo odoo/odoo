@@ -272,6 +272,7 @@ class MrpWorkorder(models.Model):
         if not self._check_m2m_recursion('blocked_by_workorder_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
+    @api.depends('production_id', 'product_id')
     def _compute_display_name(self):
         for wo in self:
             if len(wo.production_id.workorder_ids) == 1:

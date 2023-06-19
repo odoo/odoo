@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import models, fields, _
+from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 
@@ -23,6 +23,8 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.has_timesheet = result.get(employee.id, False)
 
+    @api.depends('company_id', 'user_id')
+    @api.depends_context('allowed_company_ids')
     def _compute_display_name(self):
         super()._compute_display_name()
         allowed_company_ids = self.env.context.get('allowed_company_ids', [])

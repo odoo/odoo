@@ -52,6 +52,8 @@ class Menu(models.Model):
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
+    @api.depends('website_id')
+    @api.depends_context('display_website')
     def _compute_display_name(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
             return super()._compute_display_name()

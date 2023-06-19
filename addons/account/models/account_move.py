@@ -2387,6 +2387,8 @@ class AccountMove(models.Model):
         self.line_ids.unlink()
         return super().unlink()
 
+    @api.depends('partner_id', 'date', 'state', 'move_type')
+    @api.depends_context('input_full_display_name')
     def _compute_display_name(self):
         for move in self:
             move.display_name = move._get_move_display_name(show_ref=True)

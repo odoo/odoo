@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class EWayBillType(models.Model):
@@ -22,6 +22,7 @@ class EWayBillType(models.Model):
     )
     active = fields.Boolean("Active", default=True)
 
+    @api.depends('sub_type')
     def _compute_display_name(self):
         """Show name and sub_type in name"""
         for ewaybill_type in self:
