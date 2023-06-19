@@ -169,7 +169,7 @@ export class ListController extends Component {
 
     async createRecord({ group } = {}) {
         const list = (group && group.list) || this.model.root;
-        if (this.editable) {
+        if (this.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
