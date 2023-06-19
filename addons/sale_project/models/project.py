@@ -604,6 +604,12 @@ class Project(models.Model):
     def _get_hide_partner(self):
         return not self.allow_billable
 
+    def _get_projects_to_make_billable_domain(self):
+        return expression.AND([
+            super()._get_projects_to_make_billable_domain(),
+            [('allow_billable', '=', False)],
+        ])
+
     def action_view_tasks(self):
         action = super().action_view_tasks()
         action['context']['hide_partner'] = self._get_hide_partner()
@@ -789,6 +795,16 @@ class ProjectTask(models.Model):
     def _onchange_partner_id(self):
         if not self.partner_id and self.sale_line_id:
             self.partner_id = self.sale_line_id.order_partner_id
+
+    def _get_projects_to_make_billable_domain(self, additional_domain=None):
+        return expression.AND([
+            super()._get_projects_to_make_billable_domain(additional_domain),
+            [
+                ('partner_id', '!=', False),
+                ('allow_billable', '=', False),
+                ('project_id', '!=', False),
+            ],
+        ])
 
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'
