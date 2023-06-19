@@ -3232,7 +3232,7 @@ QUnit.module('Legacy basic_fields', {
         assert.hasAttrValue(form.$('div[name="picture"] > img'), 'height', "270",
             "the image should correctly set its attributes");
         const image2Style = form.$('div[name="picture"] > img').attr('style');
-        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+        assert.ok(['max-height: 270px', 'width: auto !important', 'max-width: 100%'].every(e => image2Style.includes(e)),
             "the image should correctly set its style");
 
         form.destroy();
@@ -3492,7 +3492,7 @@ QUnit.module('Legacy basic_fields', {
         assert.hasAttrValue(form.$('div[name="tortue"] > img'), 'height', "270",
             "the image should correctly set its attributes");
         const image2Style = form.$('div[name="tortue"] > img').attr('style');
-        assert.ok(['max-height: 270px', 'width: auto', 'max-width: 100%'].every(e => image2Style.includes(e)),
+        assert.ok(['max-height: 270px', 'width: auto !important', 'max-width: 100%'].every(e => image2Style.includes(e)),
             "the image should correctly set its style");
 
         form.destroy();

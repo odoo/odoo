@@ -2284,7 +2284,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             $img.attr('height', height);
             $img.css('max-height', height + 'px');
             if (!width) {
-                $img.css('width', 'auto');
+                $img[0].style.setProperty('width', 'auto', 'important');
                 $img.css('max-width', '100%');
             }
         }
@@ -2402,7 +2402,7 @@ var CharImageUrl = AbstractField.extend({
                 $img.attr('height', height);
                 $img.css('max-height', height + 'px');
                 if (!width) {
-                    $img.css('width', 'auto');
+                    $img[0].style.setProperty('width', 'auto', 'important');
                     $img.css('max-width', '100%');
                 }
             }
