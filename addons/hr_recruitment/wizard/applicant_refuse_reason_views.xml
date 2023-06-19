@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Refuse Reason">
                     <group col="1">
-                        <field name="refuse_reason_id"/>
+                        <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
                         <field name="send_mail" attrs="{'invisible': [('refuse_reason_id', '=', False)]}"/>
                         <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}" />
                         <field name="applicant_ids" invisible="1"/>

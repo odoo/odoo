@@ -18,7 +18,7 @@
                             <field name="active" invisible="1"/>
                         </div>
                         <group>
-                            <field name="template_id"/>
+                            <field name="template_id" context="{'default_model': 'hr.applicant'}"/>
                         </group>
                     </sheet>
                 </form>
@@ -32,7 +32,7 @@
                 <tree string="Refuse Reason" editable="bottom">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="template_id"/>
+                    <field name="template_id" context="{'default_model': 'hr.applicant'}"/>
                 </tree>
             </field>
         </record>
