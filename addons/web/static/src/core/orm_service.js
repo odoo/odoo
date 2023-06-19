@@ -304,7 +304,7 @@ export const ormService = {
         "search",
         "searchRead",
         "unlink",
-        "web_search_read",
+        "webSearchRead",
         "write",
     ],
     start(env, { rpc, user }) {
