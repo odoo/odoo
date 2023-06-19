@@ -219,7 +219,7 @@
             </div>
         </a>
 
-        <t t-set="location" t-value="url_for('/forum/') + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
+        <t t-set="location" t-value="url_for('/forum') + '/' + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
 
         <!-- My Posts -->
         <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active fw-bold">
