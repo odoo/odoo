@@ -192,7 +192,8 @@ class PurchaseOrder(models.Model):
             else:
                 order.date_planned = False
 
-    @api.depends('name', 'partner_ref')
+    @api.depends('name', 'partner_ref', 'amount_total', 'currency_id')
+    @api.depends_context('show_total_amount')
     def _compute_display_name(self):
         for po in self:
             name = po.name

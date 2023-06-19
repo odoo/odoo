@@ -53,6 +53,7 @@ class FleetVehicleModel(models.Model):
             domain = expression.AND([name_domain, domain])
         return self._search(domain, limit=limit, order=order)
 
+    @api.depends('brand_id')
     def _compute_display_name(self):
         for record in self:
             name = record.name

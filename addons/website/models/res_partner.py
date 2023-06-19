@@ -31,6 +31,7 @@ class Partner(models.Model):
         }
         return 'https://maps.google.com/maps?' + werkzeug.urls.url_encode(params)
 
+    @api.depends('website_id')
     @api.depends_context('display_website')
     def _compute_display_name(self):
         super()._compute_display_name()

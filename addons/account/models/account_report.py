@@ -559,6 +559,7 @@ class AccountReportExpression(models.Model):
             tags_to_archive.active = False
             tags_to_unlink.unlink()
 
+    @api.depends('report_line_name', 'label')
     def _compute_display_name(self):
         for expr in self:
             expr.display_name = f'{expr.report_line_name} [{expr.label}]'

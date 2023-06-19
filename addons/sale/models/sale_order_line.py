@@ -263,6 +263,7 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('order_partner_id', 'order_id', 'product_id')
     def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():

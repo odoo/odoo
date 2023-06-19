@@ -295,8 +295,7 @@ class SaleOrder(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    
-
+    @api.depends('partner_id')
     @api.depends_context('sale_show_partner_name')
     def _compute_display_name(self):
         if not self._context.get('sale_show_partner_name'):

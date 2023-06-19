@@ -16,8 +16,8 @@ class ProjectCollaborator(models.Model):
         ('unique_collaborator', 'UNIQUE(project_id, partner_id)', 'A collaborator cannot be selected more than once in the project sharing access. Please remove duplicate(s) and try again.'),
     ]
 
+    @api.depends('project_id', 'partner_id')
     def _compute_display_name(self):
-        self.fetch(['project_id', 'partner_id'])
         for collaborator in self:
             collaborator.display_name = f'{collaborator.project_id.display_name} - {collaborator.partner_id.display_name}'
 

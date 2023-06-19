@@ -772,7 +772,13 @@ class HolidaysRequest(models.Model):
     # ORM Overrides methods
     ####################################################
 
-    @api.depends('employee_id', 'holiday_status_id')
+    @api.depends(
+        'tz', 'date_from', 'date_to', 'employee_id',
+        'holiday_status_id', 'number_of_hours_display',
+        'leave_type_request_unit', 'number_of_days', 'mode_company_id',
+        'category_id', 'department_id',
+    )
+    @api.depends_context('short_name', 'hide_employee_name', 'groupby')
     def _compute_display_name(self):
         for leave in self:
             user_tz = timezone(leave.tz)

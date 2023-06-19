@@ -55,6 +55,8 @@ class ProductAttributeValue(models.Model):
         for pav in self:
             pav.is_used_on_products = bool(pav.pav_attribute_line_ids)
 
+    @api.depends('attribute_id')
+    @api.depends_context('show_attribute')
     def _compute_display_name(self):
         """Override because in general the name of the value is confusing if it
         is displayed without the name of the corresponding attribute.

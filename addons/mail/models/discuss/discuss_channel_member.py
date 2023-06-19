@@ -59,6 +59,7 @@ class ChannelMember(models.Model):
         else:
             self.message_unread_counter = 0
 
+    @api.depends('partner_id', 'guest_id')
     def _compute_display_name(self):
         for record in self:
             record.display_name = record.partner_id.name or record.guest_id.name

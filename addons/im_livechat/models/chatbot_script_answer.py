@@ -21,6 +21,8 @@ class ChatbotScriptAnswer(models.Model):
         'chatbot.script.step', string='Script Step', required=True, ondelete='cascade')
     chatbot_script_id = fields.Many2one(related='script_step_id.chatbot_script_id')
 
+    @api.depends('script_step_id')
+    @api.depends_context('chatbot_script_answer_display_short_name')
     def _compute_display_name(self):
         if self._context.get('chatbot_script_answer_display_short_name'):
             return super()._compute_display_name()

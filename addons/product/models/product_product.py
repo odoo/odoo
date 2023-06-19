@@ -416,7 +416,8 @@ class ProductProduct(models.Model):
             domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
-    @api.depends_context('display_default_code', 'seller_id', 'company_id')
+    @api.depends('name', 'default_code', 'product_tmpl_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
@@ -435,9 +436,6 @@ class ProductProduct(models.Model):
         # check access and use superuser
         self.check_access_rights("read")
         self.check_access_rule("read")
-
-        # prefetch the fields used by the `display_name`
-        self.sudo().fetch(['name', 'default_code', 'product_tmpl_id'])
 
         product_template_ids = self.sudo().product_tmpl_id.ids
 

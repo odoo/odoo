@@ -19,6 +19,7 @@ class LoyaltyCard(models.Model):
         """
         return '044' + str(uuid4())[7:-18]
 
+    @api.depends('program_id', 'code')
     def _compute_display_name(self):
         for card in self:
             card.display_name = f'{card.program_id.name}: {card.code}'

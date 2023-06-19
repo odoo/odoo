@@ -92,6 +92,7 @@ class MaintenanceEquipment(models.Model):
             return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
+    @api.depends('serial_no')
     def _compute_display_name(self):
         for record in self:
             if record.name and record.serial_no:

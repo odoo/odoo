@@ -283,6 +283,7 @@ class AccountPayment(models.Model):
             })
         return res
 
+    @api.depends('check_number', 'payment_method_line_id')
     def _compute_display_name(self):
         """ Add check number to display_name on check_id m2o field """
         super()._compute_display_name()

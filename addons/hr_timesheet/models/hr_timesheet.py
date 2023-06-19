@@ -65,6 +65,7 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(string="Readonly Timesheet", compute="_compute_readonly_timesheet")
 
+    @api.depends('project_id', 'task_id')
     def _compute_display_name(self):
         analytic_line_with_project = self.filtered('project_id')
         super(AccountAnalyticLine, self - analytic_line_with_project)._compute_display_name()

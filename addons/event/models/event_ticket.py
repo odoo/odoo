@@ -163,6 +163,8 @@ class EventTicket(models.Model):
             raise ValidationError(_('There are not enough seats available for:')
                                   + '\n%s\n' % '\n'.join(sold_out_tickets))
 
+    @api.depends('seats_max', 'seats_available')
+    @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
         """Adds ticket seats availability if requested by context."""
         if not self.env.context.get('name_with_seats_availability'):

@@ -31,6 +31,7 @@ class Department(models.Model):
     master_department_id = fields.Many2one(
         'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
 
+    @api.depends_context('hierarchical_naming')
     def _compute_display_name(self):
         if self.env.context.get('hierarchical_naming', True):
             return super()._compute_display_name()

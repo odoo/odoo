@@ -147,6 +147,7 @@ class Alias(models.Model):
             vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
         return super(Alias, self).write(vals)
 
+    @api.depends('alias_domain', 'alias_name')
     def _compute_display_name(self):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".

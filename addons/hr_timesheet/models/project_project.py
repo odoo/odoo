@@ -164,6 +164,8 @@ class Project(models.Model):
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
+    @api.depends('is_internal_project', 'company_id')
+    @api.depends_context('allowed_company_ids')
     def _compute_display_name(self):
         super()._compute_display_name()
         if len(self.env.context.get('allowed_company_ids', [])) <= 1:

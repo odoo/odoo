@@ -32,6 +32,7 @@ class PosCategory(models.Model):
         self.ensure_one()
         return (self.parent_id._get_hierarchy() if self.parent_id else []) + [self.name]
 
+    @api.depends('parent_id')
     def _compute_display_name(self):
         for cat in self:
             cat.display_name = " / ".join(cat._get_hierarchy())

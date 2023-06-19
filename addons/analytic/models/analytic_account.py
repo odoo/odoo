@@ -115,6 +115,7 @@ class AccountAnalyticAccount(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
 
+    @api.depends('code', 'partner_id')
     def _compute_display_name(self):
         for analytic in self:
             name = analytic.name

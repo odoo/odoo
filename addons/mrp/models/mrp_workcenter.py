@@ -327,7 +327,6 @@ class MrpWorkcenterProductivityLossType(models.Model):
     _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
-    @api.depends('loss_type')
     def _compute_display_name(self):
         """ As 'category' field in form view is a Many2one, its value will be in
         lower case. In order to display its value capitalized 'display_name' is

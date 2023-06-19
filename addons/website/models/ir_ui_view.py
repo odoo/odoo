@@ -69,6 +69,8 @@ class View(models.Model):
                     raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
         return super().create(vals_list)
 
+    @api.depends('website_id', 'key')
+    @api.depends_context('display_key', 'display_website')
     def _compute_display_name(self):
         if not (self._context.get('display_key') or self._context.get('display_website')):
             return super()._compute_display_name()
