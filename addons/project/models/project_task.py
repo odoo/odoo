@@ -1421,6 +1421,12 @@ class Task(models.Model):
             self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
+    def _get_projects_to_make_billable_domain(self, additional_domain=None):
+        return expression.AND([
+            [('partner_id', '!=', False)],
+            additional_domain or [],
+        ])
+
     def _get_all_subtasks(self):
         return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))
 
