@@ -5,7 +5,7 @@
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                 <t t-set-slot="control-panel-create-button">
-                    <t t-if="!model.root.editedRecord and activeActions.create and (!model.root.isGrouped or !editable) and !env.inDialog">
+                    <t t-if="!model.root.editedRecord and activeActions.create and !env.inDialog">
                         <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                             New
                         </button>
