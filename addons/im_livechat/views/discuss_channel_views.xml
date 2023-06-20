@@ -7,11 +7,18 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <search string="Search history">
-                    <field name="name"/>
+                    <field name="name" string="Attendees"/>
+                    <filter name="filter_my_sessions" domain="[('channel_member_ids.partner_id.user_ids.id', 'in', [uid])]" string="My Sessions"/>
+                    <separator/>
+                    <filter name="filter_session_date" date="create_date" string="Session Date"/>
+                    <separator/>
+                    <filter name="filter_session_bad_rating" domain="[('rating_ids', '!=', False), ('rating_avg', '&lt;', 2.5)]" string="Bad Ratings"/>
+                    <filter name="filter_session_good_rating" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 2.5)]" string="Good Ratings"/>
+                    <filter name="fiter_session_unrated" domain="[('rating_ids', '=', False)]" string="Unrated"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter name="group_by_month" string="Creation Date" domain="[]" context="{'group_by':'create_date:month'}"/>
+                        <filter name="group_by_month" string="Session Date" domain="[]" context="{'group_by':'create_date:month'}"/>
                     </group>
                 </search>
             </field>
