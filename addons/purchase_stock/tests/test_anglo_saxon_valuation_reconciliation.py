@@ -316,6 +316,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'amount': 33.3333,
             'company_id': self.company_data['company'].id,
             'cash_basis_transition_account_id': cash_basis_transfer_account.id,
+            'type_tax_use': 'purchase',
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {

@@ -381,6 +381,8 @@ class AccountTax(models.Model):
                 name += ' (%s)' % type_tax_use.get(record.type_tax_use)
             if record.tax_scope:
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
+            if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
+                name += ' (%s)' % record.company_id.display_name
             record.display_name = name
 
     @api.onchange('amount')

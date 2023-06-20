@@ -42,3 +42,4 @@ from . import test_multivat
 from . import test_account_partner
 from . import test_setup_wizard
 from . import test_structured_reference
+from . import test_product
