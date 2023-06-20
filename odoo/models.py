@@ -2629,7 +2629,7 @@ class BaseModel(metaclass=MetaModel):
             # TODO: Should be _search([]) but some override can be horrible
             # What about mail.message / ir.attachment where _search is override for security reason
 
-            # TODO: not correct, apply_ir_rule won't use the coorect alias and then condition on join won't be correct
+            # TODO: not correct, apply_ir_rule won't use the correct alias and then condition on join won't be correct
             subquery = Query(self.env.cr, alias_table, relational_model._table)
             # Alias `{rhs}` will be format (into the alias choose by the object query) in `_join`
             relational_model._apply_ir_rules(subquery, 'read', '{rhs}')
