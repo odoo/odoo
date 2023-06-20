@@ -252,9 +252,12 @@ class StockPickingBatch(models.Model):
         if len(empty_pickings) == len(pickings):
             return pickings.with_context(**context).button_validate()
         else:
+            for picking in self.env['stock.picking'].browse(empty_pickings):
+                # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
+                if any(p.state != 'done' for p in picking.batch_id.picking_ids):
+                    picking.batch_id = None
             # If some pickings are at least partially done, other pickings (empty & waiting) will be removed from batch without being cancelled in case of no backorder
             pickings = pickings - self.env['stock.picking'].browse(empty_pickings)
-            context['pickings_to_detach'] = context['pickings_to_detach'] + list(empty_pickings)
             return pickings.with_context(skip_immediate=True, **context).button_validate()
 
     def action_assign(self):

@@ -130,9 +130,6 @@ class StockPicking(models.Model):
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
-            # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
-            if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
-                picking.batch_id = None
             # If backorder were made, if auto-batch is enabled, seek a batch for each of them with the selected criterias.
             to_assign_ids.update(picking.backorder_ids.ids)
 
