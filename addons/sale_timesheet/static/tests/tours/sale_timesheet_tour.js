@@ -48,10 +48,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select Service product type',
     run: 'click',
 }, {
-    trigger: 'input.o_input[id="list_price_0"]',
-    content: 'Choose a sales price for that product (e.g. 250$)',
-    run: 'text 250',
-}, {
     trigger: 'input.o_input[id="uom_id_0"]',
     content: 'Unit should be set to Hours for a service product',
     run() {
@@ -62,6 +58,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
             );
         }
     },
+}, {
+    trigger: 'input.o_input[id="list_price_0"]',
+    content: 'Choose a sales price for that product (e.g. 250$)',
+    run: 'text 250',
 }, {
     trigger: 'input.o_input[id="standard_price_0"]',
     content: 'Set the cost of that product (e.g. 190$)',
