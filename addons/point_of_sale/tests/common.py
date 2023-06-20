@@ -486,7 +486,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         def create_order_line(product, quantity, discount=0.0):
             price_unit = self.pricelist._get_product_price(product, quantity)
-            tax_ids = fiscal_position.map_tax(product.taxes_id)
+            tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
             price_unit_after_discount = price_unit * (1 - discount / 100.0)
             tax_values = (
                 tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
