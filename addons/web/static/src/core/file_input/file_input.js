@@ -30,6 +30,7 @@ export class FileInput extends Component {
 
         onMounted(() => {
             if (this.props.autoOpen) {
+                this.props.state.fileInput = this.fileInputRef.el;
                 this.onTriggerClicked();
             }
         });

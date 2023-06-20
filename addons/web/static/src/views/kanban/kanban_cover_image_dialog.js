@@ -18,6 +18,7 @@ export class KanbanCoverImageDialog extends Component {
         this.state = useState({
             selectFile: false,
             selectedAttachmentId: attachment[0],
+            fileInput: false,
         });
         onWillStart(async () => {
             this.attachments = await this.orm.searchRead(
@@ -66,6 +67,9 @@ export class KanbanCoverImageDialog extends Component {
 
     uploadImage() {
         this.state.selectFile = true;
+        if (this.state.fileInput) {
+            this.state.fileInput.click();
+        }
     }
 }
 

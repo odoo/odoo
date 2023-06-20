@@ -44,6 +44,8 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { Component, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/views/sample_server";
 import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
+import { FileInput } from "@web/core/file_input/file_input";
+import { patch } from "@web/core/utils/patch";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -13328,4 +13330,56 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("reopen file dialog", async (assert) => {
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="name"/>
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
+                                    </div>
+                                </div>
+                            <div>
+                                <field name="displayed_image_id" widget="attachment_image"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        patch(FileInput.prototype, 'file dialog', {
+            async onTriggerClicked() {
+                const input = target.querySelector(".o_file_input input");
+                input.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.querySelector('body').classList.add('new_input_window_opened');
+                });
+                await this._super();
+            }
+        })
+
+        await toggleRecordDropdown(2);
+        await click(getCard(2), ".oe_kanban_action");
+        await nextTick();
+        await click(document.body, ".modal .btn-primary");
+        await assert.strictEqual(document.querySelector('body').classList.contains('new_input_window_opened'), true);
+        document.querySelector('body').classList.remove('new_input_window_opened');
+        await click(document.body, ".modal .btn-primary");
+        await assert.strictEqual(document.querySelector('body').classList.contains('new_input_window_opened'), true);
+    });
 });
