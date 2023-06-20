@@ -333,11 +333,9 @@ class PosOrder(models.Model):
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
-    refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields')
-    is_refunded = fields.Boolean(compute='_compute_refund_related_fields')
-    refunded_order_ids = fields.Many2many('pos.order', compute='_compute_refund_related_fields')
+    refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields', help="Number of orders where items from this order were refunded")
+    refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
-    refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
     tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
 
@@ -357,9 +355,7 @@ class PosOrder(models.Model):
     def _compute_refund_related_fields(self):
         for order in self:
             order.refund_orders_count = len(order.mapped('lines.refund_orderline_ids.order_id'))
-            order.is_refunded = order.refund_orders_count > 0
-            order.refunded_order_ids = order.mapped('lines.refunded_orderline_id.order_id')
-            order.refunded_orders_count = len(order.refunded_order_ids)
+            order.refunded_order_id = order.lines.refunded_orderline_id.order_id
 
     @api.depends('lines.refunded_qty', 'lines.qty')
     def _compute_has_refundable_lines(self):
@@ -490,8 +486,8 @@ class PosOrder(models.Model):
         return super(PosOrder, self).write(vals)
 
     def _compute_order_name(self):
-        if len(self.refunded_order_ids) != 0:
-            return ','.join(self.refunded_order_ids.mapped('name')) + _(' REFUND')
+        if self.refunded_order_id.exists():
+            return self.refunded_order_id.name + _(' REFUND')
         else:
             return self.session_id.config_id.sequence_id._next()
 
@@ -514,6 +510,18 @@ class PosOrder(models.Model):
             'res_id': self.account_move.id,
         }
 
+    # the refunded order is the order from which the items were refunded in this order
+    def action_view_refunded_order(self):
+        return {
+            'name': _('Refunded Order'),
+            'view_mode': 'form',
+            'view_id': self.env.ref('point_of_sale.view_pos_pos_form').id,
+            'res_model': 'pos.order',
+            'type': 'ir.actions.act_window',
+            'res_id': self.refunded_order_id.id,
+        }
+
+    # the refund orders are the orders where the items from this order were refunded
     def action_view_refund_orders(self):
         return {
             'name': _('Refund Orders'),
@@ -521,15 +529,6 @@ class PosOrder(models.Model):
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
-        }
-
-    def action_view_refunded_orders(self):
-        return {
-            'name': _('Refunded Orders'),
-            'view_mode': 'tree,form',
-            'res_model': 'pos.order',
-            'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.refunded_order_ids.ids)],
         }
 
     def _is_pos_order_paid(self):
@@ -675,9 +674,9 @@ class PosOrder(models.Model):
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
         }
-        if self.refunded_order_ids.account_move:
-            vals['ref'] = _('Reversal of: %s', self.refunded_order_ids.account_move.name)
-            vals['reversed_entry_id'] = self.refunded_order_ids.account_move.id
+        if self.refunded_order_id.account_move:
+            vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
+            vals['reversed_entry_id'] = self.refunded_order_id.account_move.id
         if self.note:
             vals.update({'narration': self.note})
         return vals
@@ -923,7 +922,7 @@ class PosOrder(models.Model):
         """ Create and update Orders from the frontend PoS application.
 
         Create new orders and update orders that are in draft status. If an order already exists with a status
-        different from 'draft'it will be discarded, otherwise it will be saved to the database. If saved with
+        different from 'draft' it will be discarded, otherwise it will be saved to the database. If saved with
         'draft' status the order can be overwritten later by this function.
 
         :param orders: dictionary with the orders to be created.
@@ -935,6 +934,9 @@ class PosOrder(models.Model):
         order_ids = []
         for order in orders:
             existing_draft_order = None
+
+            if len(self._get_refunded_orders(order)) > 1:
+                raise ValidationError(_('You can only refund products from the same order.'))
 
             if 'server_id' in order['data'] and order['data']['server_id']:
                 # if the server id exists, it must only search based on the id
@@ -977,6 +979,11 @@ class PosOrder(models.Model):
             return False
 
         return True
+
+    @api.model
+    def _get_refunded_orders(self, order):
+        refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['data']['lines'] if line[2].get('refunded_orderline_id')]
+        return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
