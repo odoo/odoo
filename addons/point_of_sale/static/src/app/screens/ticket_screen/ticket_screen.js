@@ -252,9 +252,15 @@ export class TicketScreen extends Component {
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
         const destinationOrder =
+<<<<<<< HEAD:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js
             this.props.destinationOrder &&
             partner === this.props.destinationOrder.get_partner() &&
             !this.pos.doNotAllowRefundAndSales()
+||||||| parent of dcc99763f32 (temp):addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js
+            this.props.destinationOrder && partner === this.props.destinationOrder.get_partner()
+=======
+            this.props.destinationOrder && partner === this.props.destinationOrder.get_partner() && !this.pos.globalState.doNotAllowRefundAndSales()
+>>>>>>> dcc99763f32 (temp):addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
