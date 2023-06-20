@@ -20,7 +20,7 @@ from xml.etree import ElementTree as ET
 import odoo
 
 from odoo import http, models, fields, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
@@ -678,6 +678,8 @@ class Website(Home):
             fields.extend(['website_indexed', 'website_id'])
 
         record = request.env[res_model].browse(res_id)
+        if res_model != 'website.page' and 'website.seo.metadata' not in request.env[res_model]._inherit_module.keys():
+            raise UserError(_("You can not optimize SEO."))
         res = record.read(fields)[0]
         res['has_social_default_image'] = request.website.has_social_default_image
 
