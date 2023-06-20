@@ -1855,6 +1855,7 @@ export class ListRenderer extends Component {
         this.resizing = true;
         const table = this.tableRef.el;
         const th = ev.target.closest("th");
+        const thAdjacent = th.nextElementSibling || th.previousElementSibling;
         const handler = th.querySelector(".o_resize");
         table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
@@ -1863,7 +1864,8 @@ export class ListRenderer extends Component {
             .map((tr) => tr.children[thPosition]);
         const initialX = ev.clientX;
         const initialWidth = th.getBoundingClientRect().width;
-        const initialTableWidth = table.getBoundingClientRect().width;
+        const initialAdjacentWidth = thAdjacent.getBoundingClientRect().width;
+        // const initialTableWidth = table.getBoundingClientRect().width;
         const resizeStoppingEvents = ["keydown", "mousedown", "mouseup"];
 
         // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
@@ -1885,11 +1887,15 @@ export class ListRenderer extends Component {
             ev.preventDefault();
             ev.stopPropagation();
             const delta = ev.clientX - initialX;
-            const newWidth = Math.max(10, initialWidth + delta);
-            const tableDelta = newWidth - initialWidth;
+            const maxWidth = initialWidth + initialAdjacentWidth - 10;
+            const newWidth = Math.min(Math.max(10, initialWidth + delta), maxWidth);
+            // const tableDelta = newWidth - initialWidth;
+            const newAdjacentWidth = Math.min(Math.max(10, initialAdjacentWidth - delta), maxWidth);
             th.style.width = `${Math.floor(newWidth)}px`;
             th.style.maxWidth = `${Math.floor(newWidth)}px`;
-            table.style.width = `${Math.floor(initialTableWidth + tableDelta)}px`;
+            thAdjacent.style.width = `${Math.floor(newAdjacentWidth)}px`;
+            thAdjacent.style.maxWidth = `${Math.floor(newAdjacentWidth)}px`;
+            // table.style.width = `${Math.floor(initialTableWidth + tableDelta)}px`;
         };
         window.addEventListener("mousemove", resizeHeader);
 
