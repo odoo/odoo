@@ -5,7 +5,7 @@ import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
@@ -14,6 +14,7 @@ import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 import { UPDATE_METHODS } from "@web/core/orm_service";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
 
 import {
     Component,
@@ -26,6 +27,22 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
+
+class BlankComponent extends Component {
+    static props = ["onMounted", "withControlPanel", "*"];
+    static template = xml`
+        <ControlPanel display="{disableDropdown: true}" t-if="props.withControlPanel and !env.isSmall">
+            <t t-set-slot="layout-buttons">
+                <button class="btn btn-primary invisible"> empty </button>
+            </t>
+        </ControlPanel>`;
+    static components = { ControlPanel };
+
+    setup() {
+        useChildSubEnv({ config: { breadcrumbs: [], noBreadcrumbs: true } });
+        onMounted(() => this.props.onMounted());
+    }
+}
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -809,6 +826,21 @@ function makeActionManager(env) {
 
         const closingProm = _executeCloseAction();
 
+        if (options.clearBreadcrumbs && !options.noEmptyTransition) {
+            const def = new Deferred();
+            env.bus.trigger("ACTION_MANAGER:UPDATE", {
+                id: ++id,
+                Component: BlankComponent,
+                componentProps: {
+                    onMounted: () => def.resolve(),
+                    withControlPanel: action.type === "ir.actions.act_window",
+                },
+            });
+            await def;
+        }
+        if (options.onActionReady) {
+            options.onActionReady(action);
+        }
         controller.__info__ = {
             id: ++id,
             Component: ControllerComponent,
@@ -924,6 +956,8 @@ function makeActionManager(env) {
             clearBreadcrumbs: options.clearBreadcrumbs,
             onClose: options.onClose,
             stackPosition: options.stackPosition,
+            onActionReady: options.onActionReady,
+            noEmptyTransition: options.noEmptyTransition,
         };
 
         if (lazyView) {
@@ -985,6 +1019,8 @@ function makeActionManager(env) {
                 clearBreadcrumbs: options.clearBreadcrumbs,
                 stackPosition: options.stackPosition,
                 onClose: options.onClose,
+                onActionReady: options.onActionReady,
+                noEmptyTransition: options.noEmptyTransition,
             });
         } else {
             const next = await clientAction(env, action);
