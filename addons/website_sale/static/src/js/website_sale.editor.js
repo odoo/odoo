@@ -3,7 +3,8 @@
 import options from "web_editor.snippets.options";
 import Wysiwyg from "website.wysiwyg";
 import { ComponentWrapper } from "web.OwlCompatibility";
-import { MediaDialog, MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 import { useWowlService } from "@web/legacy/utils";
 import {qweb, _t} from "web.core";
 import {Markup} from "web.utils";
