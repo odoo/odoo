@@ -77,6 +77,7 @@
                 <field name="last_delivery_partner_id" optional="hide" string="Transfer to"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="lot_properties" optional="hide"/>
+                <field name="product_qty" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -123,9 +124,15 @@
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
                 <field name="product_id"/>
                 <field name="lot_properties"/>
+                <field name="create_date"/>
+                <filter string="At Customer" name="at_customer" domain="[('quant_ids.location_id.usage','=','customer'), ('quant_ids.quantity', '>', 0)]"/>
+                <filter string="On Hand" name="on_hand" domain="[('product_qty', '>', 0)]"/>
+                <filter string="Creation Date" name="creation_date" date="create_date"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter name="group_by_creation_date" string="Creation date" domain="[]" context="{'group_by': 'create_date'}"/>
+                    <filter name="group_by_Company" string="Company" domain="[]" context="{'group_by': 'company_id'}"/>
                 </group>
             </search>
         </field>
