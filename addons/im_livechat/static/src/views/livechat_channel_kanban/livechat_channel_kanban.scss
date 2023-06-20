@@ -1,0 +1,15 @@
+.o_kanban_record:has(.o-livechat-ChannelKanban-highlighted) {
+    & .oe_kanban_global_click {
+        background-color: $o-component-active-bg !important;
+        color: $o-component-active-color;
+    }
+}
+
+.o-livechat-ChannelKanban-highlighted {
+    background-color: $o-component-active-bg !important;
+    color: $o-component-active-color;
+
+    &::before {
+        background-color: $o-component-active-bg !important;
+    }
+}
