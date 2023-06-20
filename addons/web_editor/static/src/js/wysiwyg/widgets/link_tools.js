@@ -386,19 +386,15 @@ const LinkTools = Link.extend({
      * Add hint to the classes of the link and button.
      */
     _addHintClasses () {
-        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
-        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
     /**
      * Remove hint to the classes of the link and button.
      */
     _removeHintClasses () {
-        this.options.wysiwyg.odooEditor.observerUnactive("hint_classes");
         $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
         this.$button.removeClass('active');
-        this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
 
     //--------------------------------------------------------------------------
