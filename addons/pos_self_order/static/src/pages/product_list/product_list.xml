@@ -9,8 +9,9 @@
                     <div t-if="search.isFocused" class="input-group d-flex align-items-center" >
                         <input type="text"
                             class="form-control p-3 border-0 shadow-none"
-                            placeholder="Pizza"
-                            t-model="search.input"/>
+                            placeholder="Search product"
+                            t-model="search.input"
+                            t-ref="searchInput"/>
                         <div class="px-2">
                             <button class="btn bg-200 rounded" t-on-click="closeSearch">
                                 <i class="fa fa-times"/>
@@ -82,23 +83,5 @@
                 </button>
             </div>
         </div>
-    </t>
-    <t t-name="pos_self_order.SearchBox" owl="1">
-        <div class="input-group d-flex align-items-center">
-            <input type="text"
-                class="form-control p-3 border-0 shadow-none"
-                placeholder="Pizza"
-                t-model="search.input"/>
-            <div class="px-2">
-                <button class="btn bg-200 rounded" t-on-click="closeSearch">
-                    <i class="fa fa-times"/>
-                </button>
-            </div>
-        </div>
-    </t>
-    <t t-name="pos_self_order.SearchIcon" owl="1">
-        <button class="btn btn-link text-dark px-3" t-on-click="focusSearch">
-            <i class="oi oi-search px-1"/>
-        </button>
     </t>
 </templates>
