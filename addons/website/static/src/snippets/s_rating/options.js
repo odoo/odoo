@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ComponentWrapper } from "web.OwlCompatibility";
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 
 import options from "web_editor.snippets.options";
 
