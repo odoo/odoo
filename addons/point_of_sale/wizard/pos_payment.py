@@ -20,7 +20,7 @@ class PosMakePayment(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             order = self.env['pos.order'].browse(active_id)
-            amount = -order.refunded_order_ids.amount_paid if order.refunded_order_ids else order.amount_total
+            amount = -order.refunded_order_id.amount_paid if order.refunded_order_id else order.amount_total
             return amount - order.amount_paid
         return False
 

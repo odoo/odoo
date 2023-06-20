@@ -264,17 +264,22 @@ export class TicketScreen extends Component {
 
         const partner = order.get_partner();
 
-        const allToRefundDetails = this._getRefundableDetails(partner);
-        if (allToRefundDetails.length == 0) {
+        const allToRefundDetails = this._getRefundableDetails(partner, order);
+
+        if (!allToRefundDetails) {
             this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
             return;
         }
-
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
         const destinationOrder =
             this.props.destinationOrder &&
+            this.props.destinationOrder.orderlines.every(
+                (l) =>
+                    l.quantity >= 0 ||
+                    order.orderlines.some((ol) => ol.id === l.refunded_orderline_id)
+            ) &&
             partner === this.props.destinationOrder.get_partner() &&
             !this.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
@@ -578,14 +583,16 @@ export class TicketScreen extends Component {
      * - It's not yet linked to an active order (no destinationOrderUid)
      *
      * @param {Object} partner (optional)
+     * @param {Order} order
      * @returns {Array} refundableDetails
      */
-    _getRefundableDetails(partner) {
+    _getRefundableDetails(partner, order) {
         return Object.values(this.pos.toRefundLines).filter(
             ({ qty, orderline, destinationOrderUid }) =>
                 !this.pos.isProductQtyZero(qty) &&
                 (partner ? orderline.orderPartnerId == partner.id : true) &&
-                !destinationOrderUid
+                !destinationOrderUid &&
+                orderline.orderUid === order.uid
         );
     }
     /**
