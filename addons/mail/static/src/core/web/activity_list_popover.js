@@ -78,6 +78,10 @@ export class ActivityListPopover extends Component {
         return this.activities.filter((activity) => activity.state === "today");
     }
 
+    get doneActivities() {
+        return this.activities.filter((activity) => activity.state === "done");
+    }
+
     async updateFromProps(props) {
         const activitiesData = await this.orm.silent.call(
             "mail.activity",
