@@ -2,6 +2,7 @@
 
 from odoo import Command
 import odoo.tests
+from odoo.models import Model
 
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
@@ -24,6 +25,8 @@ class TestUi(odoo.tests.HttpCase):
         })
         # This tour doesn't work with demo data on runbot
         all_moves = self.env['account.move'].search([('move_type', '!=', 'entry')])
+        # Hashed entries cannot be reset to draft, so we have to bypass account.move's write method to reset the hash
+        Model.write(all_moves, {'blockchain_inalterable_hash': False})
         all_moves.button_draft()
         all_moves.with_context(force_delete=True).unlink()
 

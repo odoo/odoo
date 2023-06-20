@@ -16,11 +16,3 @@ def _preserve_tag_on_taxes(env):
 def _setup_inalterability(env):
     # enable ping for this module
     env['publisher_warranty.contract'].update_notification(cron_mode=True)
-
-    fr_companies = env['res.company'].search([('partner_id.country_id.code', 'in', env['res.company']._get_unalterable_country())])
-    if fr_companies:
-        fr_companies._create_secure_sequence(['l10n_fr_closing_sequence_id'])
-
-        for fr_company in fr_companies:
-            fr_journals = env['account.journal'].search([('company_id', '=', fr_company.id)])
-            fr_journals.filtered(lambda x: not x.secure_sequence_id)._create_secure_sequence(['secure_sequence_id'])

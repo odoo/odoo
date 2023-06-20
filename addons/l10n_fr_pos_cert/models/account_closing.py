@@ -48,13 +48,13 @@ class AccountClosing(models.Model):
 
         if first_move_sequence_number is not False and first_move_sequence_number is not None:
             params['first_move_sequence_number'] = first_move_sequence_number
-            query += '''AND m.secure_sequence_number > %(first_move_sequence_number)s'''
+            query += '''AND m.blockchain_secure_sequence_number > %(first_move_sequence_number)s'''
         elif date_start:
             #the first time we compute the closing, we consider only from the installation of the module
             params['date_start'] = date_start
             query += '''AND m.date >= %(date_start)s'''
 
-        query += " ORDER BY m.secure_sequence_number DESC) "
+        query += " ORDER BY m.blockchain_secure_sequence_number DESC) "
         query += '''SELECT array_agg(move_id) AS move_ids,
                            array_agg(line_id) AS line_ids,
                            sum(balance) AS balance
@@ -87,8 +87,8 @@ class AccountClosing(models.Model):
             cumulative_total += previous_closing.cumulative_total
 
         domain = [('company_id', '=', company.id), ('state', 'in', ('paid', 'done', 'invoiced'))]
-        if first_order.l10n_fr_secure_sequence_number is not False and first_order.l10n_fr_secure_sequence_number is not None:
-            domain = AND([domain, [('l10n_fr_secure_sequence_number', '>', first_order.l10n_fr_secure_sequence_number)]])
+        if first_order.blockchain_secure_sequence_number and first_order.blockchain_secure_sequence_number:
+            domain = AND([domain, [('blockchain_secure_sequence_number', '>', first_order.blockchain_secure_sequence_number)]])
         elif date_start:
             #the first time we compute the closing, we consider only from the installation of the module
             domain = AND([domain, [('date_order', '>=', date_start)]])
@@ -106,7 +106,7 @@ class AccountClosing(models.Model):
         return {'total_interval': total_interval,
                 'cumulative_total': cumulative_total,
                 'last_order_id': last_order.id,
-                'last_order_hash': last_order.l10n_fr_secure_sequence_number,
+                'last_order_hash': last_order.blockchain_secure_sequence_number,
                 'date_closing_stop': interval_dates['date_stop'],
                 'date_closing_start': date_start,
                 'name': interval_dates['name_interval'] + ' - ' + interval_dates['date_stop'][:10]}

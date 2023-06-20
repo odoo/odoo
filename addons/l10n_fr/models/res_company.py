@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
+    l10n_fr_closing_sequence_id = fields.Many2one(
+        'ir.sequence', 'Sequence to use to build sale closings',
+        compute='_compute_l10n_fr_closing_sequence_id', store=True,
+        copy=False,
+    )
     siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
 
@@ -20,43 +24,8 @@ class ResCompany(models.Model):
             return False
         return self.country_id and self.country_id.code in self._get_unalterable_country()
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        companies = super().create(vals_list)
-        for company in companies:
-            #when creating a new french company, create the securisation sequence as well
-            if company._is_accounting_unalterable():
-                sequence_fields = ['l10n_fr_closing_sequence_id']
-                company._create_secure_sequence(sequence_fields)
-        return companies
-
-    def write(self, vals):
-        res = super(ResCompany, self).write(vals)
-        #if country changed to fr, create the securisation sequence
+    @api.depends('country_id')
+    def _compute_l10n_fr_closing_sequence_id(self):
         for company in self:
             if company._is_accounting_unalterable():
-                sequence_fields = ['l10n_fr_closing_sequence_id']
-                company._create_secure_sequence(sequence_fields)
-        return res
-
-    def _create_secure_sequence(self, sequence_fields):
-        """This function creates a no_gap sequence on each company in self that will ensure
-        a unique number is given to all posted account.move in such a way that we can always
-        find the previous move of a journal entry on a specific journal.
-        """
-        for company in self:
-            vals_write = {}
-            for seq_field in sequence_fields:
-                if not company[seq_field]:
-                    vals = {
-                        'name': _('Securisation of %s - %s') % (seq_field, company.name),
-                        'code': 'FRSECURE%s-%s' % (company.id, seq_field),
-                        'implementation': 'no_gap',
-                        'prefix': '',
-                        'suffix': '',
-                        'padding': 0,
-                        'company_id': company.id}
-                    seq = self.env['ir.sequence'].create(vals)
-                    vals_write[seq_field] = seq.id
-            if vals_write:
-                company.write(vals_write)
+                self.env['blockchain.mixin']._create_blockchain_secure_sequence(company, "l10n_fr_closing_sequence_id", company.id)

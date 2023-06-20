@@ -11,7 +11,7 @@ patch(PaymentScreen.prototype, "l10n_fr_pos_cert.PaymentScreen", {
                 const result = await this.orm.searchRead(
                     "pos.order",
                     [["id", "in", order_server_ids]],
-                    ["l10n_fr_hash"]
+                    ["blockchain_inalterable_hash"]
                 );
                 order.set_l10n_fr_hash(result[0].l10n_fr_hash || false);
             }

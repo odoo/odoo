@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_blockchain_integrity">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="company">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <h1 id="title">Blockchain Integrity Result</h1>
+                                    <h5 id="date">Date: <span t-esc="data['printing_date']"/></h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12" id="hash_data_consistency_table">
+                                    <table class="table table-bordered" style="table-layout: fixed">
+                                        <thead style="display: table-row-group">
+                                            <tr>
+                                                <th id="status_header" class="text-center" style="width: 25%" scope="col">Status</th>
+                                                <th class="text-center" style="width: 25%" scope="col">First entry</th>
+                                                <th class="text-center" style="width: 25%" scope="col">Last entry</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="data['results']" t-as="result">
+                                                <tr>
+                                                    <td>
+                                                        <span t-out="result['msg']"/>
+                                                    </td>
+                                                    <t t-if="result['status'] == 'verified'">
+                                                        <td>
+                                                            <b>Name:</b> <span t-out="result['first_name']"/> <br/>
+                                                            <b>Date:</b> <span t-out="result['first_date']"/> <br/>
+                                                            <b>Hash:</b> <span t-esc="result['first_hash']"/>
+                                                        </td>
+                                                        <td>
+                                                            <b>Name:</b> <span t-out="result['last_name']"/> <br/>
+                                                            <b>Date:</b> <span t-out="result['last_date']"/> <br/>
+                                                            <b>Hash:</b> <span t-esc="result['last_hash']"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td>/</td>
+                                                        <td>/</td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

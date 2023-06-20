@@ -12,12 +12,10 @@ from odoo.tools import frozendict, formatLang, format_date, float_compare
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
-from odoo.addons.account.models.account_move import MAX_HASH_VERSION
-
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
-    _inherit = "analytic.mixin"
+    _inherit = ["analytic.mixin", "sub.blockchain.mixin"]
     _description = "Journal Item"
     _order = "date desc, move_name desc, id"
     _check_company_auto = True
@@ -1400,17 +1398,6 @@ class AccountMoveLine(models.Model):
         # Check writing a deprecated account.
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
-
-        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
-        hashed_moves = self.move_id.filtered('inalterable_hash')
-        violated_fields = set(vals) & inalterable_fields
-        if hashed_moves and violated_fields:
-            raise UserError(_(
-                "You cannot edit the following fields: %s.\n"
-                "The following entries are already hashed:\n%s",
-                ', '.join(f['string'] for f in self.fields_get(violated_fields).values()),
-                '\n'.join(hashed_moves.mapped('name')),
-            ))
 
         line_to_write = self
         vals = self._sanitize_vals(vals)
@@ -2830,17 +2817,25 @@ class AccountMoveLine(models.Model):
         }
 
     # -------------------------------------------------------------------------
-    # MISC
+    # HASH
     # -------------------------------------------------------------------------
+    def _get_sub_blockchain_parent(self):
+        self.ensure_one()
+        return self.move_id
 
-    def _get_integrity_hash_fields(self):
+    def _get_sub_blockchain_inalterable_hash_fields(self):
         # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        max_hash_version = self.env['account.move']._get_blockchain_max_version()
+        hash_version = self._context.get('hash_version', max_hash_version)
         if hash_version == 1:
             return ['debit', 'credit', 'account_id', 'partner_id']
         elif hash_version in (2, 3):
             return ['name', 'debit', 'credit', 'account_id', 'partner_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
 
     def _reconciled_lines(self):
         ids = []

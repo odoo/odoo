@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_l10n_fr_pos_blockchain_integrity" primary="True" inherit_id="blockchain.report_blockchain_integrity">
+            <xpath expr="//div[@id='hash_header']" position="after">
+                <h6>
+                    Selon l’article 286 du code général des impôts français, toute livraison de bien ou prestation
+                    de services ne donnant pas lieu à facturation et étant enregistrée au moyen d’un logiciel ou
+                    d’un système de caisse doit satisfaire à des conditions d’inaltérabilité et de sécurisation des
+                    données en vue d’un contrôle de l’administration fiscale.
+                    <br/>
+                    <br/>
+                    Ces conditions sont respectées via une fonction de hachage des ventes du Point de Vente.
+                    <br/>
+                    <br/>
+                </h6>
+            </xpath>
+        </template>
+    </data>
+</odoo>

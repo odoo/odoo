@@ -14,7 +14,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends' : ['base_setup', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['base_setup', 'product', 'analytic', 'portal', 'digest', 'blockchain'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -65,7 +65,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/account_incoterms_data.xml',
         'views/digest_views.xml',
         'wizard/account_move_send_views.xml',
-        'report/account_hash_integrity_templates.xml',
+        'report/account_blockchain_integrity.xml',
         'views/res_currency.xml',
         'views/account_menuitem.xml',
         'wizard/account_tour_upload_bill.xml',

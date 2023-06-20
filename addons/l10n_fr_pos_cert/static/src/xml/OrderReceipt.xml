@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
     <t t-name="l10n_fr_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
-            <t t-if="receipt.l10n_fr_hash !== false">
+            <t t-if="receipt.blockchain_inalterable_hash !== false">
                 <br/>
-                <div style="word-wrap:break-word;"><t t-out="receipt.l10n_fr_hash"/></div>
+                <div style="word-wrap:break-word;"><t t-esc="receipt.blockchain_inalterable_hash"/></div>
             </t>
         </xpath>
     </t>
 
     <t t-name="l10n_fr_pos_cert.OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
-            <t t-if="receipt.l10n_fr_hash !== false and line.price_type === 'manual'">
+            <t t-if="receipt.blockchain_inalterable_hash !== false and line.price_type === 'manual'">
                 <div class="pos-receipt-right-padding">
                     Old unit price:
                     <span class="oldPrice">

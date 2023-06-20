@@ -28,19 +28,19 @@ patch(PosStore.prototype, "l10n_fr_pos_cert.PosStore", {
 patch(Order.prototype, "l10n_fr_pos_cert.Order", {
     setup() {
         this._super(...arguments);
-        this.l10n_fr_hash = this.l10n_fr_hash || false;
+        this.blockchain_inalterable_hash = this.blockchain_inalterable_hash || false;
         this.save_to_db();
     },
     export_for_printing() {
         var result = this._super(...arguments);
-        result.l10n_fr_hash = this.get_l10n_fr_hash();
+        result.blockchain_inalterable_hash = this.get_blockchain_inalterable_hash();
         return result;
     },
-    set_l10n_fr_hash(l10n_fr_hash) {
-        this.l10n_fr_hash = l10n_fr_hash;
+    set_blockchain_inalterable_hash(blockchain_inalterable_hash) {
+        this.blockchain_inalterable_hash = blockchain_inalterable_hash;
     },
-    get_l10n_fr_hash() {
-        return this.l10n_fr_hash;
+    get_blockchain_inalterable_hash() {
+        return this.blockchain_inalterable_hash;
     },
     wait_for_push_order() {
         var result = this._super(...arguments);

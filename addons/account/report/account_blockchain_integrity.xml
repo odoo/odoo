@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_accounting_blockchain_integrity" primary="True" inherit_id="blockchain.report_blockchain_integrity">
+            <xpath expr="//thead/tr/th" position="before">
+                <th class="text-center" style="width: 20%" scope="col">Journal</th>
+            </xpath>
+            <xpath expr="//tbody//tr//td" position="before">
+                <td><span t-esc="result['journal_name']"/>  <br/> [<span t-esc="result['journal_code']"/>] </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

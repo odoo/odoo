@@ -1614,12 +1614,12 @@ if records:
             </field>
         </record>
 
-        <record model="ir.actions.server" id="action_check_hash_integrity">
-            <field name="name">Data Inalterability Check</field>
+        <record model="ir.actions.server" id="action_check_account_blockchain_integrity">
+            <field name="name">Accounting Inalterability Check</field>
             <field name="model_id" ref="account.model_res_company"/>
             <field name="state">code</field>
             <field name="code">
-                action = env.company._action_check_hash_integrity()
+                action = env.company._action_check_account_blockchain_integrity()
             </field>
         </record>
 
