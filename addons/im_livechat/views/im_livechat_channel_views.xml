@@ -69,7 +69,7 @@
                 <form>
                     <header>
                         <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
-                        <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                        <button type="object" name="action_quit" class="btn btn-primary" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
                         <field name="are_you_inside" invisible="1"/>
                     </header>
                     <sheet>
@@ -106,7 +106,13 @@
                                                             <img t-att-src="kanban_image('res.users', 'avatar_1024', record.id.raw_value)" alt="User"/>
                                                         </div>
                                                         <div class="o_kanban_details">
-                                                            <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                                            <div class="d-flex justify-content-between align-items-baseline">
+                                                                <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                                                <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_manager" type="delete">
+                                                                    <i title="Remove operator" class="fa fa-fw fa-lg fa-close"/>
+                                                                </a>
+                                                            </div>
+                                                            <field name="livechat_username" string="Online Chat Name"/>
                                                         </div>
                                                     </div>
                                                 </t>
