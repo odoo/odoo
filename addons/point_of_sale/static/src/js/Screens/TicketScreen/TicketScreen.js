@@ -250,7 +250,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
         const destinationOrder =
-            this.props.destinationOrder && partner === this.props.destinationOrder.get_partner()
+            this.props.destinationOrder && partner === this.props.destinationOrder.get_partner() && !this.env.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
