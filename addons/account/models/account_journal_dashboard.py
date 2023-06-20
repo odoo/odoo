@@ -522,8 +522,18 @@ class account_journal(models.Model):
                 key = (document_currency, target_currency, company, date)
                 if key not in curr_cache:
                     curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
+<<<<<<< HEAD
                 total_amount += (result.get('amount_total') or 0) * curr_cache[key]
         return (len(results_dict), target_currency.round(total_amount))
+||||||| parent of 78f16d9528b (temp)
+                amount = curr_cache[key] * result.get('amount_total', 0) or 0
+            rslt_sum += target_currency.round(amount)
+        return (rslt_count, rslt_sum)
+=======
+                amount = curr_cache[key] * (result.get('amount_total') or 0)
+            rslt_sum += target_currency.round(amount)
+        return (rslt_count, rslt_sum)
+>>>>>>> 78f16d9528b (temp)
 
     def _get_journal_dashboard_bank_running_balance(self):
         # In order to not recompute everything from the start, we take the last
