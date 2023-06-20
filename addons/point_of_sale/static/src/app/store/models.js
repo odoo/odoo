@@ -2338,10 +2338,13 @@ export class Order extends PosModel {
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
                 if (
-                    (this.get_total_with_tax() < 0 && remaining > 0) ||
-                    (this.get_total_with_tax() > 0 && remaining < 0)
+                    (
+                        (this.get_total_with_tax() < 0 && remaining > 0) ||
+                        (this.get_total_with_tax() > 0 && remaining < 0)
+                    ) &&
+                    rounding_method !== "HALF-UP"
                 ) {
-                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : "UP";
+                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
                 }
 
                 remaining *= sign;
@@ -2363,6 +2366,9 @@ export class Order extends PosModel {
                 } else if (rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0) {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 } else if (rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0) {
+                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                }
+                else if(rounding_method === "HALF-UP" && rounding_applied === this.pos.cash_rounding[0].rounding / -2){
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;
