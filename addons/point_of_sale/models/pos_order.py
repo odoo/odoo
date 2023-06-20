@@ -1445,6 +1445,7 @@ class PosOrderLine(models.Model):
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
             'full_product_name': orderline.full_product_name,
+            'refunded_orderline_id': orderline.refunded_orderline_id,
         }
 
     def export_for_ui(self):
