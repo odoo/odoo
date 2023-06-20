@@ -68,4 +68,11 @@ input.o_field_property_input[type=number] {
     select:not(:hover) {
         background: none !important;
     }
+
+    // Many2one and Many2many avatar
+    .o_field_property_many2one_value img,
+    .o_m2m_avatar {
+        height: var(--Avatar-size, #{$o-avatar-size});
+        aspect-ratio: 1;
+    }
 }
