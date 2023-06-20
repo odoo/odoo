@@ -46,7 +46,7 @@
                 <field name="allow_timesheets" invisible="1"/>
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                     <field name="timesheet_ids" mode="tree,kanban"
-                          invisible="not analytic_account_active">
+                          readonly="not analytic_account_active">
                         <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
