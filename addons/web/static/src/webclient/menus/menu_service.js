@@ -53,8 +53,12 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             if (!menu.actionID) {
                 return;
             }
-            await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true });
-            this.setCurrentMenu(menu);
+            await env.services.action.doAction(menu.actionID, {
+                clearBreadcrumbs: true,
+                onActionReady: () => {
+                    this.setCurrentMenu(menu);
+                },
+            });
         },
         setCurrentMenu(menu) {
             menu = typeof menu === "number" ? this.getMenu(menu) : menu;

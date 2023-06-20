@@ -8,7 +8,7 @@
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
                         <div class="btn-group d-xl-none o_control_panel_collapsed_create">
                             <t t-slot="control-panel-create-button"/>
-                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split o_control_panel_collapsed_create" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button t-att-class="{invisible: display.disableDropdown}" type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split o_control_panel_collapsed_create" data-bs-toggle="dropdown" aria-expanded="false">
                                  <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu o_control_panel_collapsed_create">

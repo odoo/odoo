@@ -556,6 +556,7 @@ QUnit.module("ActionManager", (hooks) => {
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
             await createWebClient({ serverData });
             await nextTick(); // wait for the load state (default app)
+            await nextTick(); // wait for the action to be mounted
             assert.containsOnce(target, "nav .o_menu_brand");
             assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
             await click(target.querySelector("button[name='24']"));

@@ -6,6 +6,7 @@ import { session } from "@web/session";
 import AbstractAction from "web.AbstractAction";
 import core from "web.core";
 import { makeTestEnv } from "../../helpers/mock_env";
+import testUtils from "web.test_utils";
 import {
     click,
     getFixture,
@@ -22,6 +23,7 @@ import {
 } from "./../helpers";
 import { listView } from "@web/views/list/list_view";
 import { companyService } from "@web/webclient/company_service";
+import { onWillStart } from "@odoo/owl";
 
 let serverData;
 let target;
@@ -435,6 +437,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             // Create the web client. It should execute the stored action.
             const webClient = await createWebClient({ serverData });
+            await nextTick();
 
             // Check the current action context
             assert.deepEqual(webClient.env.services.action.currentController.action.context, {
@@ -445,6 +448,46 @@ QUnit.module("ActionManager", (hooks) => {
                 uid: 42,
                 // note there is no 'allowed_company_ids' in the action context
             });
+        }
+    );
+
+    QUnit.test(
+        "action is removed while waiting for another action with selectMenu",
+        async (assert) => {
+            let def;
+            const actionRegistry = registry.category("actions");
+            const ClientAction = actionRegistry.get("__test__client__action__");
+
+            patchWithCleanup(ClientAction.prototype, {
+                setup() {
+                    this._super();
+                    onWillStart(() => {
+                        return def;
+                    });
+                },
+            });
+            const webClient = await createWebClient({ serverData });
+            // starting point: a kanban view
+            await doAction(webClient, 4);
+            const root = document.querySelector(".o_web_client");
+            assert.containsOnce(root, ".o_kanban_view");
+
+            // select one new app in navbar menu
+            def = testUtils.makeTestPromise();
+            const menus = webClient.env.services.menu.getApps();
+            webClient.env.services.menu.selectMenu(menus[1], { resetScreen: true });
+            await nextTick();
+
+            // check that the action manager is empty, even though client action is loading
+            assert.strictEqual(root.querySelector(".o_action_manager").textContent, "");
+
+            // resolve onwillstart so client action is ready
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                root.querySelector(".o_action_manager").textContent,
+                " ClientAction_Id 1"
+            );
         }
     );
 });

@@ -111,6 +111,8 @@ QUnit.test("opens an app", async (assert) => {
     triggerHotkey("enter");
     await nextTick();
     await nextTick();
+    // empty screen for now, wait for actual action to show up
+    await nextTick();
     assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "Contact");
     assert.strictEqual(
         target.querySelector(".test_client_action").textContent,
@@ -130,6 +132,8 @@ QUnit.test("opens a menu items", async (assert) => {
 
     click(target, "#o_command_2");
     await nextTick();
+    await nextTick();
+    // empty screen for now, wait for actual action to show up
     await nextTick();
     assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "Sales");
     assert.strictEqual(
