@@ -5,5 +5,16 @@
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">[('group_ids', 'in', user.groups_id.ids)]</field>
     </record>
+
+    <record model="ir.module.category" id="dashboard_management">
+        <field name="name">Dashboard</field>
+        <field name="description">User access level for Dashboard module</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="dashboard_manager" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="dashboard_management"/>
+    </record>
 </odoo>
 
