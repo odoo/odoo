@@ -17,6 +17,7 @@ import {
     markup,
     onMounted,
     onPatched,
+    onWillDestroy,
     onWillStart,
     onWillUpdateProps,
     useChildSubEnv,
@@ -86,6 +87,8 @@ export class Chatter extends Component {
         this.messaging = useMessaging();
         /** @type {import("@mail/activity/activity_service").ActivityService} */
         this.activityService = useState(useService("mail.activity"));
+        /** @type {import("@mail/core/common/chat_window_service").chatWindowService} */
+        this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.store = useStore();
@@ -127,8 +130,30 @@ export class Chatter extends Component {
             "o-mail-Chatter-dropzone"
         );
 
-        onMounted(this.scrollPosition.restore);
-        onPatched(this.scrollPosition.restore);
+        onMounted(() => {
+            this.scrollPosition.restore;
+            this.chatWindowService.chatter = this;
+            const chatWindow = this.chatWindowService.store.chatWindows.find((chatWindow) => chatWindow.thread === this.state.thread);
+            if (chatWindow) {
+                this.chatWindowService.hide(chatWindow);
+                this.refreshChatWindows();
+            }
+        });
+        onPatched(() => {
+            this.scrollPosition.restore;
+            if (this.chatWindowService.chatter?.state.thread !== this.state.thread) {
+                this.chatWindowService.chatter = this;
+                const chatWindow = this.chatWindowService.store.chatWindows.find((chatWindow) => chatWindow.thread === this.state.thread);
+                if (chatWindow) {
+                    this.chatWindowService.hide(chatWindow);
+                }
+                this.refreshChatWindows();
+            } 
+        });
+        onWillDestroy(() => {
+            this.chatWindowService.chatter = null;
+            this.refreshChatWindows();
+        });
         onWillStart(() => {
             if (this.props.threadId) {
                 this.state.thread = this.threadService.insert({
@@ -308,6 +333,12 @@ export class Chatter extends Component {
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
         this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
+    }
+
+    refreshChatWindows() {
+        while(this.chatWindowService.visible.length < this.chatWindowService.maxVisible && this.chatWindowService.hidden.length > 0) {
+            this.chatWindowService.show(this.chatWindowService.hidden[0]);
+        }
     }
 
     async reloadParentView() {

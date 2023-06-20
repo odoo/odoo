@@ -17,6 +17,7 @@ export class ChatWindowService {
     }
 
     setup(env, services) {
+        this.chatter = null;
         this.env = env;
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
@@ -57,7 +58,7 @@ export class ChatWindowService {
     }
 
     get hidden() {
-        return this.store.chatWindows.filter((chatWindow) => chatWindow.hidden);
+        return this.store.chatWindows.filter((chatWindow) => chatWindow.thread !== this.chatter?.state.thread && chatWindow.hidden);
     }
 
     get maxVisible() {

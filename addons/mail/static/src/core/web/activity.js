@@ -69,6 +69,12 @@ export class Activity extends Component {
         this.state.showDetails = !this.state.showDetails;
     }
 
+    onClickActivityNote(ev) {
+        if (ev.target.closest(".o_mail_internal") && ev.target.href !== window.location.href) {
+            this.threadService.open(this.thread, false);
+        }
+    }
+
     async onClickMarkAsDone(ev) {
         if (this.popover.isOpen) {
             this.popover.close();

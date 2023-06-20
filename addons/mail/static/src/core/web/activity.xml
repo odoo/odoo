@@ -38,7 +38,7 @@
                     </tbody>
                 </table>
             </div>
-            <div t-if="activity.note" class="o-mail-Activity-note text-break" t-out="activity.note"/>
+            <div t-if="activity.note" class="o-mail-Activity-note text-break" t-on-click="onClickActivityNote" t-out="activity.note"/>
             <div t-if="activity.mail_template_ids.length > 0" class="o-mail-Activity-mailTemplates">
                 <ActivityMailTemplate activity="activity" onUpdate="props.onUpdate"/>
             </div>

@@ -4,6 +4,7 @@ import { Follower } from "@mail/core/common/follower_model";
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 import { createLocalId } from "@mail/utils/common/misc";
+import { addLink, parseAndTransform } from "@mail/utils/common/format";
 
 import { markup } from "@odoo/owl";
 
@@ -53,7 +54,7 @@ patch(ThreadService.prototype, "mail/core/web", {
             const existingIds = new Set();
             for (const activity of result.activities) {
                 if (activity.note) {
-                    activity.note = markup(activity.note);
+                    activity.note = markup(parseAndTransform(activity.note, addLink));
                 }
                 existingIds.add(this.activityService.insert(activity).id);
             }

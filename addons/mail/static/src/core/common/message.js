@@ -355,6 +355,8 @@ export class Message extends Component {
                     views: [[false, "form"]],
                     res_id: id,
                 });
+            } else if (ev.target.closest(".o_mail_internal") && ev.target.href !== window.location.href) {
+                this.threadService.open(this.message.originThread, false);
             }
             return;
         }

@@ -109,7 +109,8 @@ function linkify(text) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         const url = match[0];
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result += `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
+        const [target, classVal] = (new URL(href)).origin === window.location.origin ? ["_self", "o_mail_internal"] : ["_blank", "o_mail_external"];
+        result += `<a target="${target}" rel="noreferrer noopener" class="${classVal}" href="${href}">${_escapeEntities(
             url
         )}</a>`;
         curIndex = match.index + match[0].length;
@@ -133,6 +134,13 @@ export function addLink(node, transformChildren) {
         return node.textContent;
     }
     if (node.tagName === "A") {
+        node.target = node.target || (node.origin === window.location.origin ? "_self" : "_blank");
+        if (node.target === "_self") {
+            node.classList.add("o_mail_internal");
+        } else {
+            node.rel = "noreferrer noopener";
+            node.classList.add("o_mail_external");
+        }
         return node.outerHTML;
     }
     transformChildren();
