@@ -16,14 +16,13 @@
                             <field name="font" widget="selection" required="1"/>
                             <field name="logo" widget="image" options="{'size': [0, 50]}"/>
                             <label for="primary_color" string="Colors" />
-                            <div class="o_document_layout_colors">
-                                <field name="primary_color" widget="color"/>
-                                <field name="secondary_color" widget="color"/>
-                                <div class="o_custom_colors" title="Reset to logo colors"
-                                    invisible="not custom_colors">
-                                    <span class="fa fa-refresh fa-2x"></span>
-                                    <field name="custom_colors" nolabel="1"/>
-                                </div>
+                            <div class="o_document_layout_colors d-flex align-items-end mb-4">
+                                <field name="primary_color" widget="color" class="w-auto m-0 me-1"/>
+                                <field name="secondary_color" widget="color" class="w-auto m-0"/>
+                                <a class="o_custom_colors btn btn-secondary btn-sm position-relative ms-2" role="button" title="Reset to logo colors" invisible="not custom_colors">
+                                    <i class="fa fa-repeat"/> Reset
+                                    <field name="custom_colors" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" nolabel="1"/>
+                                </a>
                             </div>
                             <field name="layout_background" widget="selection" required="1"/>
                             <field name="layout_background_image" options="{'accepted_file_extensions': 'image/*'}" invisible="layout_background != 'Custom'" required="layout_background == 'Custom'">Upload your file</field>
