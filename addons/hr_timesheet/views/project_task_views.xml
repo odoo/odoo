@@ -27,18 +27,18 @@
                         (<field name="progress" invisible="not project_id" class="oe_inline" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>)
                     </div>
                 </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning text-center mb-2" role="alert" invisible="analytic_account_active" groups="hr_timesheet.group_hr_timesheet_user">
+                        You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/> Please change this account, or reactivate the current one to timesheet on the project.
+                    </div>
+                </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                     <t groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
                     <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
-                        <group name="timesheet_error" invisible="analytic_account_active">
-                            <div class="alert alert-warning mb-n4 mt-3" role="alert" colspan="2">
-                                You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.
-                            </div>
-                        </group>
-                    <field name="timesheet_ids" mode="tree,kanban" invisible="not analytic_account_active" context="{'default_project_id': project_id, 'default_name':''}">
+                    <field name="timesheet_ids" mode="tree,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': ''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
                             <field name="readonly_timesheet" column_invisible="True"/>
                             <field name="date" readonly="readonly_timesheet"/>
