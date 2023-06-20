@@ -11323,6 +11323,14 @@ QUnit.module("Fields", (hooks) => {
             "second partner turtle is Michelangelo"
         );
         await clickDiscard(target.querySelector(".modal"));
+
+        // re-open, edit michelangelo row, click out -> row still there, in readonly
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await click(target.querySelector(".modal .o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal .o_selected_row");
+        await click(target.querySelector(".modal"));
+        assert.containsOnce(target, ".modal .o_data_row");
+        assert.strictEqual(target.querySelector(".modal .o_data_cell").innerText, "Michelangelo");
     });
 
     QUnit.test("quickly switch between pages in one2many list", async function (assert) {

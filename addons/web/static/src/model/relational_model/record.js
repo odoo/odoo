@@ -37,7 +37,6 @@ export class Record extends DataPoint {
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
 
-        let savePoint;
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         const vals = this._parseServerValues({
             ...this._getDefaultValues(missingFields),
@@ -46,13 +45,14 @@ export class Record extends DataPoint {
         if (this.resId) {
             this._values = markRaw(vals);
             this._changes = markRaw({});
-            savePoint = {};
         } else {
             this._values = markRaw({});
             this._changes = markRaw(vals);
-            savePoint = { ...this._changes };
         }
-        this._savePoint = markRaw(savePoint);
+        this._savePoint = markRaw({
+            dirty: false,
+            changes: { ...this._changes },
+        });
         this.data = { ...this._values, ...this._changes };
 
         const parentRecord = this._parentRecord;
@@ -258,7 +258,8 @@ export class Record extends DataPoint {
     // -------------------------------------------------------------------------
 
     _addSavePoint() {
-        Object.assign(this._savePoint, this._changes);
+        this._savePoint.dirty = this.dirty;
+        Object.assign(this._savePoint.changes, this._changes);
         for (const fieldName in this._changes) {
             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
                 this._changes[fieldName]._addSavePoint();
@@ -400,13 +401,13 @@ export class Record extends DataPoint {
     }
 
     _discard() {
-        this.dirty = false;
         for (const fieldName in this._changes) {
             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
                 this._changes[fieldName]._discard();
             }
         }
-        this._changes = { ...this._savePoint };
+        this.dirty = this._savePoint.dirty;
+        this._changes = { ...this._savePoint.changes };
         this.data = { ...this._values, ...this._changes };
         this._setEvalContext();
         this._invalidFields.clear();
