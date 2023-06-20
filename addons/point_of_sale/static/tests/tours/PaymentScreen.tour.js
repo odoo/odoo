@@ -148,6 +148,7 @@ registry
 
 startSteps();
 
+ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.exec.addOrderline("Product Test 1.2", "1");
 ProductScreen.do.clickPayButton();
@@ -183,6 +184,21 @@ PaymentScreen.do.clickPaymentMethod("Cash");
 
 PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
+
+Chrome.do.clickMenuButton();
+Chrome.do.clickTicketButton();
+TicketScreen.do.clickNewTicket();
+
+ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.00');
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.pressNumpad('2');
+PaymentScreen.do.fillPaymentLineAmountMobile('Cash', '2');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('1.0');
 
 registry
     .category("web_tour.tours")
