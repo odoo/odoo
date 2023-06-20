@@ -236,16 +236,3 @@ MediaDialog.components = {
     Dialog,
     Notebook,
 };
-
-export class MediaDialogWrapper extends Component {
-    setup() {
-        this.dialogs = useWowlService('dialog');
-
-        onRendered(() => {
-            this.dialogs.add(MediaDialog, this.props, {
-                onClose: this.props.close,
-            });
-        });
-    }
-}
-MediaDialogWrapper.template = xml``;
