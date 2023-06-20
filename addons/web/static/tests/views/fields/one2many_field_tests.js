@@ -2885,9 +2885,9 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("sorting one2many fields", async function (assert) {
         serverData.models.partner.fields.foo.sortable = true;
-        serverData.models.partner.records.push({ id: 23, foo: "abc" });
-        serverData.models.partner.records.push({ id: 24, foo: "xyz" });
-        serverData.models.partner.records.push({ id: 25, foo: "def" });
+        serverData.models.partner.records.push({ id: 23, foo: "abc", int_field: 1 });
+        serverData.models.partner.records.push({ id: 24, foo: "xyz", int_field: 1 });
+        serverData.models.partner.records.push({ id: 25, foo: "def", int_field: 2 });
         serverData.models.partner.records[0].p = [23, 24, 25];
 
         let rpcCount = 0;
@@ -2900,6 +2900,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="p">
                         <tree>
                             <field name="foo"/>
+                            <field name="int_field"/>
                         </tree>
                     </field>
                 </form>`,
@@ -2910,22 +2911,34 @@ QUnit.module("Fields", (hooks) => {
         });
 
         rpcCount = 0;
-        assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
-            "abc xyz def"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='foo']")].map((c) => c.textContent),
+            ["abc", "xyz", "def"]
         );
 
-        await click(target.querySelector("table thead .o_column_sortable"));
+        await click(target.querySelector("table thead [data-name='foo'].o_column_sortable"));
         assert.strictEqual(rpcCount, 0, "in memory sort, no RPC should have been done");
-        assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
-            "abc def xyz"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='foo']")].map((c) => c.textContent),
+            ["abc", "def", "xyz"]
         );
 
-        await click(target.querySelector("table thead .o_column_sortable"));
-        assert.strictEqual(
-            [...target.querySelectorAll(".o_data_cell")].map((c) => c.textContent).join(" "),
-            "xyz def abc"
+        await click(target.querySelector("table thead [data-name='foo'].o_column_sortable"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='foo']")].map((c) => c.textContent),
+            ["xyz", "def", "abc"]
+        );
+
+        await click(target.querySelector("table thead [data-name='int_field'].o_column_sortable"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='foo']")].map((c) => c.textContent),
+            ["xyz", "abc", "def"]
+        );
+
+        await click(target.querySelector("table thead [data-name='int_field'].o_column_sortable"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell[name='foo']")].map((c) => c.textContent),
+            ["def", "xyz", "abc"]
         );
     });
 
