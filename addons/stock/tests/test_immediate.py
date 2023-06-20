@@ -15,6 +15,7 @@ class StockMove(TransactionCase):
             'type': 'product',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+        cls.env['stock.quant']._update_available_quantity(cls.product, cls.stock_location, 10.0)
         cls.product_consu = cls.env['product.product'].create({
             'name': 'Product A',
             'type': 'consu',
@@ -40,3 +41,23 @@ class StockMove(TransactionCase):
         self.assertEqual(action['context']['show_quant'], True)
         action = picking.move_ids[1].action_show_details()
         self.assertEqual(action['context']['show_quant'], False)
+
+    def test_create_move_line_reserved(self):
+        """ Create a delivery immediate transfer with a storable product.
+        The move line should be reserved.
+        """
+        # create a delivery order
+        picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
+        with picking.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 1.0
+        picking = picking.save()
+        self.env['stock.move.line'].create({
+            'move_id': picking.move_ids_without_package.id,
+            'product_id': self.product.id,
+            'reserved_uom_qty': 1.0,
+            'qty_done': 0,
+        })
+        self.assertEqual(picking.move_ids.reserved_availability, 1.0)
+        self.assertEqual(picking.move_ids.state, 'assigned')
+        self.assertEqual(picking.move_ids.quantity_done, 0)
