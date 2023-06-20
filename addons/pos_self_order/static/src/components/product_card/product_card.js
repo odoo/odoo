@@ -30,7 +30,7 @@ export class ProductCard extends Component {
         if (!this.canOpenProductMainView(product)) {
             return;
         }
-        this.router.navigate("product", { product_id: product.id });
+        this.router.navigate("product", { id: product.id });
     }
 
     canOpenProductMainView(product) {

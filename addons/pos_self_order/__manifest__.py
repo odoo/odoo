@@ -22,6 +22,7 @@
     ],
     "assets": {
         "pos_self_order.assets_self_order": [
+            "web/static/lib/jquery/jquery.js",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
             ("include", "web._assets_primary_variables"),
