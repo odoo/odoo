@@ -62,19 +62,29 @@ export class ActivityRenderer extends Component {
 
     getGroupInfo(group) {
         const types = {
+            done: {
+                inProgressBar: false,
+                value: 0,
+            },
             planned: {
                 color: "success",
+                inProgressBar: true,
                 value: 0,
             },
             today: {
                 color: "warning",
+                inProgressBar: true,
                 value: 0,
             },
             overdue: {
-                value: 0,
                 color: "danger",
+                inProgressBar: true,
+                value: 0,
             },
         };
+        for (const [type, label] of this.props.fields.activity_state.selection) {
+            types[type].label = label;
+        }
         const typeId = group[0];
         const isColumnFiltered = this.activeFilter.activityTypeId === group[0];
         const progressValue = isColumnFiltered ? this.activeFilter.progressValue : { active: null };
@@ -82,7 +92,7 @@ export class ActivityRenderer extends Component {
         let totalCount = 0;
         for (const activities of Object.values(this.props.groupedActivities)) {
             if (typeId in activities) {
-                types[activities[typeId].state].value += 1;
+                types[activities[typeId].state].value += activities[typeId].count;
                 totalCount++;
             }
         }
@@ -92,19 +102,27 @@ export class ActivityRenderer extends Component {
             activeBar: isColumnFiltered ? this.activeFilter.progressValue.active : null,
         };
         for (const [value, count] of Object.entries(types)) {
-            progressBar.bars.push({
-                count: count.value,
-                value,
-                string: this.props.fields.activity_state.selection.find((e) => e[0] === value)[1],
-                color: count.color,
-            });
+            if (count.inProgressBar) {
+                progressBar.bars.push({
+                    count: count.value,
+                    value,
+                    string: types[value].label,
+                    color: count.color,
+                });
+            }
         }
 
+        const plannedAndDoneCount = types.planned.value + types.done.value;
+        const aggregatedOn = plannedAndDoneCount ? {
+            title: `${types.planned.label} + ${types.done.label}`,
+            value: types.planned.value + types.done.value,
+        } : undefined;
         return {
             aggregate: {
-                title: group[1],
-                value: isColumnFiltered ? types[progressValue.active].value : totalCount,
+                title: types.planned.label,
+                value: isColumnFiltered ? types[progressValue.active].value : types.planned.value,
             },
+            aggregateOn: aggregatedOn,
             data: {
                 count: totalCount,
                 filterProgressValue: (name) => this.onSetProgressBarState(typeId, name),
