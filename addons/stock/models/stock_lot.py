@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import operator as py_operator
 from operator import attrgetter
 from re import findall as regex_findall, split as regex_split
-
-import operator as py_operator
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -44,7 +43,7 @@ class StockLot(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    product_qty = fields.Float('Quantity', compute='_product_qty', search='_search_product_qty')
+    product_qty = fields.Float('On Hand Quantity', compute='_product_qty', search='_search_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)

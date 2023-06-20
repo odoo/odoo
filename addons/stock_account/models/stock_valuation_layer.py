@@ -33,12 +33,30 @@ class StockValuationLayer(models.Model):
     account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index="btree_not_null")
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
+    warehouse_id = fields.Many2one('stock.warehouse', string="Receipt WH", compute='_compute_warehouse_id', search='_search_warehouse_id')
 
     def init(self):
         tools.create_index(
             self._cr, 'stock_valuation_layer_index',
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
+
+    def _compute_warehouse_id(self):
+        for svl in self:
+            if svl.stock_move_id.location_id.usage == "internal":
+                svl.warehouse_id = svl.stock_move_id.location_id.warehouse_id.id
+            else:
+                svl.warehouse_id = svl.stock_move_id.location_dest_id.warehouse_id.id
+
+    def _search_warehouse_id(self, operator, value):
+        layer_ids = self.search([
+            '|',
+            ('stock_move_id.location_dest_id.warehouse_id', operator, value),
+            '&',
+            ('stock_move_id.location_id.usage', '=', 'internal'),
+            ('stock_move_id.location_id.warehouse_id', operator, value),
+        ]).ids
+        return [('id', 'in', layer_ids)]
 
     def _validate_accounting_entries(self):
         am_vals = []
@@ -63,6 +81,7 @@ class StockValuationLayer(models.Model):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
 
+    # TODO: delete in master, no longer in use
     def action_open_layer(self):
         self.ensure_one()
         return {
@@ -70,6 +89,17 @@ class StockValuationLayer(models.Model):
             'type': 'ir.actions.act_window',
             'views': [[False, "form"]],
             'res_id': self.id,
+        }
+
+    def action_open_journal_entry(self):
+        self.ensure_one()
+        if not self.account_move_id:
+            return
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'account.move',
+            'res_id': self.account_move_id.id
         }
 
     def action_valuation_at_date(self):
