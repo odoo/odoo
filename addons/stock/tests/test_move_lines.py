@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import Form
 
 
 class StockMoveLine(TestStockCommon):
@@ -57,8 +58,12 @@ class StockMoveLine(TestStockCommon):
             'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location,
             'location_dest_id': self.stock_location,
-            'move_line_ids': [(0, 0, {'quant_id': self.quant.id})]
         })
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.new() as ml:
+            ml.quant_id = self.quant
+
+        move = move_form.save()
 
         self.assertEqual(move.move_line_ids.lot_id, self.lot)
         self.assertEqual(move.move_line_ids.package_id, self.pack)
