@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
+import { usePager } from "@web/search/pager_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -42,6 +43,21 @@ export class ActivityController extends Component {
         this.messaging = useMessaging();
         this.activity = useService("mail.activity");
         this.ui = useState(useService("ui"));
+
+        usePager(() => {
+            const model = this.model;
+            const {offset, limit} = model;
+            return {
+                offset: offset,
+                limit: limit,
+                total: model.activityData.activity_res_ids.length,
+                onUpdate: async ({ offset, limit }, hasNavigated) => {
+                    await model.loadRelatedModel({ limit:limit, offset:offset });
+                    this.render(true); // FIXME WOWL reactivity
+                },
+                updateTotal: undefined,
+            };
+        });
     }
 
     scheduleActivity() {
@@ -100,9 +116,10 @@ export class ActivityController extends Component {
     }
 
     get rendererProps() {
+        const loadedRecordsSet = new Set(this.model.root.records.map(e => e.resId));
         return {
             activityTypes: this.model.activityData.activity_types,
-            activityResIds: this.model.activityData.activity_res_ids,
+            activityResIds: this.model.activityData.activity_res_ids.filter(e => loadedRecordsSet.has(e)),
             fields: this.model.root.fields,
             records: this.model.root.records,
             resModel: this.props.resModel,
