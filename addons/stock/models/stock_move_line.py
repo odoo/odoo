@@ -327,6 +327,7 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
+        move_to_recompute_state = self.env['stock.move']
         for move_line in mls:
             reserved_uom_qty = move_line.reserved_uom_qty
             location = move_line.location_id
@@ -346,6 +347,9 @@ class StockMoveLine(models.Model):
                 if not reserved_quants or float_compare(reserved_qty, sum(map(lambda q: q[1], reserved_quants)), product.uom_id.rounding) != 0:
                     reserved_uom_qty = product.uom_id._compute_quantity(reserved_qty, ml_uom, rounding_method='HALF-UP')
                     move_line.with_context(bypass_reservation=True).reserved_uom_qty = reserved_uom_qty
+                if move:
+                    move_to_recompute_state |= move
+        move_to_recompute_state._recompute_state()
 
         moves_to_update = mls.filtered(
             lambda ml:
@@ -910,8 +914,6 @@ class StockMoveLine(models.Model):
             'location_id': quant.location_id.id,
             'owner_id': quant.owner_id.id,
         }
-        if not (self.qty_done or vals.get('qty_done')):
-            line_data['qty_done'] = uom._compute_quantity(quant.available_quantity, quant.product_uom_id, rounding_method='HALF_UP')
         return line_data
 
     def action_open_reference(self):
