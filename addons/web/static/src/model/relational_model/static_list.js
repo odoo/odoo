@@ -27,7 +27,7 @@ function compareRecords(r1, r2, orderBy, fields) {
         return 1;
     }
     if (orderBy.length > 1) {
-        return compareRecords(r1, r2, orderBy.slice(1));
+        return compareRecords(r1, r2, orderBy.slice(1), fields);
     }
     return 0;
 }
