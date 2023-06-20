@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussPublic" owl="1">
     <div class="o-mail-DiscussPublic d-flex h-100 w-100 position-absolute">
         <WelcomePage t-if="state.welcome" data="props.data" proceed="() => state.welcome = false"/>
-        <Discuss t-else=""/>
+        <Discuss t-elif="!ui.isSmall"/>
     </div>
 </t>
 

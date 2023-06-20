@@ -17,6 +17,8 @@ export class DiscussPublic extends Component {
         this.messaging = useMessaging();
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        this.chatWindowService = useService("mail.chat_window");
+        this.ui = useState(useService("ui"));
         this.store = useStore();
         this.state = useState({
             welcome: this.props.data.discussPublicViewData.shouldDisplayWelcomeViewInitially,
@@ -37,6 +39,7 @@ export class DiscussPublic extends Component {
                 `/discuss/channel/${this.thread.id}${window.location.search}`
             );
         }
+        this.chatWindowService.insert({ thread: this.thread });
     }
 
     displayChannel() {

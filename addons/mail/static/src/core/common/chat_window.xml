@@ -5,7 +5,7 @@
     <div class="o-mail-ChatWindow"
         t-att-style="style"
         t-att-class="{
-                'w-100 h-100': ui.isSmall,
+                'w-100 h-100': ui.isSmall or store.inPublicPage,
                 'o-folded': props.chatWindow.folded,
                 'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
                 'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
@@ -14,10 +14,10 @@
         tabindex="1"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="toggleFold" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
-            <div t-if="ui.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
+            <div t-if="ui.isSmall and !store.inPublicPage" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
                 <i class="oi oi-arrow-left"/>
             </div>
-            <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !ui.isSmall, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
+            <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !ui.isSmall or store.inPublicPage, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
                 <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
             </div>
             <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread" className="'me-1'"/>
@@ -38,7 +38,7 @@
                  <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-title="secondAction.name" t-on-click.stop="() => secondAction.onSelect()"><i t-att-class="secondAction.icon"/></button>
              </t>
              <t t-elif="threadActions.actions.length > 3">
-                 <Dropdown position="'bottom-end'" onStateChanged="state => this.onMoreActionsStateChanged(state)" togglerClass="'o-mail-ChatWindow-command d-flex btn p-0 p-2'" menuClass="'d-flex flex-column py-0'" class="'d-flex'" title="moreMenuText">
+                 <Dropdown position="'bottom-end'" onStateChanged="state => this.onMoreActionsStateChanged(state)" togglerClass="'o-mail-ChatWindow-command d-flex btn p-0 p-2 ' + (store.inPublicPage? 'me-1' : '')" menuClass="'d-flex flex-column py-0'" class="'d-flex'" title="moreMenuText">
                      <t t-set-slot="toggler">
                          <i class="fa fa-fw fa-ellipsis-h" tabindex="1"/>
                      </t>
@@ -47,7 +47,7 @@
                      </t>
                  </Dropdown>
              </t>
-             <t t-if="threadActions.actions.length > 0">
+             <t t-if="threadActions.actions.length > 0 and !store.inPublicPage">
                  <t t-set="lastAction" t-value="threadActions.actions.at(-1)"/>
                  <button class="o-mail-ChatWindow-command btn d-flex p-2 me-1 opacity-75 opacity-100-hover" t-att-title="lastAction.name" t-on-click.stop="() => lastAction.onSelect()"><i t-att-class="lastAction.icon"/></button>
              </t>
