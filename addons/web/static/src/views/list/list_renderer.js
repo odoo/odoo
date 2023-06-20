@@ -110,7 +110,10 @@ export class ListRenderer extends Component {
 
         this.cellToFocus = null;
         this.activeRowId = null;
-        onMounted(() => {
+        onMounted(async () => {
+            // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
+            // we need to wait the next micro task tick to set the activeElement.
+            await Promise.resolve();
             this.activeElement = this.uiService.activeElement;
         });
         onWillPatch(() => {
