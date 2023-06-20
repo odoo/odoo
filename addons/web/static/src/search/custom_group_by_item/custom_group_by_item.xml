@@ -1,12 +1,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomGroupByItem" owl="1">
-        <Dropdown class="'o_add_custom_group_menu'">
+        <Dropdown class="'o_add_custom_group_menu'" togglerClass="'text-truncate'">
             <t t-set-slot="toggler">
                 Add Custom Group
             </t>
             <div class="px-3 py-2">
-                <select class="w-100 o_input" t-model="state.fieldName">
+                <select class="w-100 pe-3 text-truncate o_input" t-model="state.fieldName">
                     <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
                     t-esc="field.string"

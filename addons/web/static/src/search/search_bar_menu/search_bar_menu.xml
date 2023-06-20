@@ -3,7 +3,7 @@
 
     <t t-name="web.SearchBarMenu" owl="1">
         <Dropdown togglerClass="'o_searchview_dropdown_toggler d-print-none btn btn-outline-secondary o-no-caret rounded-start-0 h-100'"
-                  menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap mt-2 py-3'"
+                  menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-n3 mx-md-auto mt-2 py-3'"
                   position="'bottom-end'"
                   t-if="this.env.searchModel.searchMenuTypes.size">
             <t t-set-slot="toggler" t-slot-scope="scope">
@@ -22,7 +22,7 @@
                             <div class="dropdown-divider" role="separator"/>
                         </t>
                         <t t-if="item.options">
-                            <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
+                            <Dropdown togglerClass="'o_menu_item text-truncate' + (item.isActive ? ' selected' : '')">
                                 <t t-set-slot="toggler">
                                     <t t-esc="item.description"/>
                                 </t>
@@ -42,7 +42,7 @@
                             </Dropdown>
                         </t>
                         <t t-else="">
-                            <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
@@ -70,7 +70,7 @@
                             <div class="dropdown-divider" role="separator"/>
                         </t>
                         <t t-if="item.options">
-                            <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
+                            <Dropdown togglerClass="'o_menu_item text-truncate' + (item.isActive ? ' selected' : '')">
                                 <t t-set-slot="toggler">
                                     <t t-esc="item.description"/>
                                 </t>
@@ -90,7 +90,7 @@
                             </Dropdown>
                         </t>
                         <t t-else="">
-                            <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 t-esc="item.description"
@@ -113,7 +113,7 @@
                         <h5 class="o_dropdown_title d-inline">Comparison</h5>
                     </div>
                     <t t-foreach="comparisonItems" t-as="item" t-key="item.id">
-                        <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                        <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                             checked="item.isActive"
                                             parentClosingMode="'none'"
                                             t-esc="item.description"
@@ -135,13 +135,13 @@
                             <div role="separator" class="dropdown-divider"/>
                         </t>
                         <t t-if="item.type ==='favorite'">
-                            <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
+                            <SearchDropdownItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
                                                 checked="item.isActive"
                                                 parentClosingMode="'none'"
                                                 onSelected="() => this.onFavoriteSelected(item.id)"
                             >
                                 <span class="d-flex p-0 align-items-center justify-content-between">
-                                    <t t-esc="item.description"/>
+                                    <span t-out="item.description" class="text-truncate"/>
                                     <i class="ms-1 o_icon_right fa fa-trash-o"
                                        title="Delete item"
                                        t-on-click.stop="() => this.openConfirmationDialog(item.id)"
