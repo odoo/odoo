@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
-
+from odoo.tests.common import Form
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheet(TestCommonSaleTimesheet):
@@ -818,6 +818,43 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(10, sale_order_line_template_1.project_id.allocated_hours)
         self.assertEqual(5, sale_order_line_template_2.project_id.allocated_hours)
 
+    def test_onchange_uom_service_product(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+
+        # Create product (consumable that will be switch to service)
+        product_1 = self.env['product.template'].create([
+            {
+                'name': "Consumable to convert to service 1",
+                'standard_price': 10,
+            },
+        ])
+        product_2 = self.env['product.product'].create({
+                'name': "Consumable to convert to service 2",
+                'standard_price': 15,
+        })
+
+        # Initial uom should be unit
+        self.assertEqual([product_1.uom_id.id, product_2.uom_id.id], [uom_unit.id]*2)
+        products = [product_1, product_2] #perform the tests for both product and variants
+        for product in products:
+            # 1. product.template form: [uom: unit] --> change to service --> [uom: hour]
+            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+                product_form.detailed_type = 'service'
+                product_form.service_policy = 'delivered_timesheet'
+                self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
+
+            # 2. product.template form: [uom: kgm] --> change to service --> [uom: hour] --> change to consumable --> [uom: kgm]
+            product.write({
+                'detailed_type': 'consu',
+                'uom_id': uom_kg.id,
+            })
+            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+                product_form.detailed_type = 'service'
+                product_form.service_policy = 'delivered_timesheet'
+                self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
+                product_form.detailed_type = 'consu'
+                self.assertEqual(product_form.uom_id.id, uom_kg.id)
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
