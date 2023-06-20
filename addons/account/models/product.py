@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import format_amount
@@ -27,12 +27,12 @@ class ProductTemplate(models.Model):
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
         domain=[('type_tax_use', '=', 'sale')],
-        default=lambda self: self.env.company.account_sale_tax_id or self.env.company.root_id.account_sale_tax_id,
+        default=lambda self: self.env.companies.account_sale_tax_id or self.env.companies.root_id.account_sale_tax_id,
     )
     tax_string = fields.Char(compute='_compute_tax_string')
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
         domain=[('type_tax_use', '=', 'purchase')],
-        default=lambda self: self.env.company.account_purchase_tax_id or self.env.company.root_id.account_purchase_tax_id,
+        default=lambda self: self.env.companies.account_purchase_tax_id or self.env.companies.root_id.account_purchase_tax_id,
     )
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
@@ -117,6 +117,27 @@ class ProductTemplate(models.Model):
                 "This product is already being used in posted Journal Entries.\n"
                 "If you want to change its Unit of Measure, please archive this product and create a new one."
             ))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super().create(vals_list)
+        # If no company was set for the product, the product will be available for all companies and therefore should
+        # have the default taxes of the other companies as well. sudo() is used since we're going to need to fetch all
+        # the other companies default taxes which the user may not have access to.
+        other_companies = self.env['res.company'].sudo().search([('id', 'not in', self.env.companies.ids)])
+        if not other_companies:
+            return products
+
+        default_customer_tax_ids = other_companies.filtered('account_sale_tax_id').account_sale_tax_id.ids
+        default_supplier_tax_ids = other_companies.filtered('account_purchase_tax_id').account_purchase_tax_id.ids
+
+        products_without_company = products.filtered(lambda p: not p.company_id).sudo()
+        products_without_company.taxes_id = [Command.link(tax) for tax in default_customer_tax_ids]
+        products_without_company.supplier_taxes_id = [Command.link(tax) for tax in default_supplier_tax_ids]
+
+        products_without_company.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
+        products.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
+        return products
 
 
 class ProductProduct(models.Model):
