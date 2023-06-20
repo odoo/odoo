@@ -42,6 +42,22 @@
     }
 }
 
+@each $-name, $-value in $o-btns-bs-override {
+    .btn-fill-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+        );
+    }
+}
+
 // 2. Render '$theme-colors' buttons excluding the ones already generated
 //    using the custom maps.
 @each $-name, $-color in $theme-colors {
