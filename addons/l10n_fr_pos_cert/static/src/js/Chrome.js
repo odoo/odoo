@@ -13,7 +13,7 @@ patch(Chrome.prototype, "l10n_fr_pos_cert.Chrome", {
             limitDate.setDate(limitDate.getDate() + 1);
             if (limitDate.getTime() < now) {
                 const info = await this.env.pos.getClosePosInfo();
-                this.popup.add(ClosePosPopup, { info });
+                this.popup.add(ClosePosPopup, { info: info, keepBehind: true });
             }
         }
     },
