@@ -2942,6 +2942,48 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("sorting one2many fields with multi page", async function (assert) {
+        serverData.models.partner.fields.foo.sortable = true;
+        serverData.models.partner.records.push({ id: 23, foo: "abc", int_field: 1 });
+        serverData.models.partner.records.push({ id: 24, foo: "xyz", int_field: 1 });
+        serverData.models.partner.records.push({ id: 25, foo: "def", int_field: 2 });
+        serverData.models.partner.records.push({ id: 26, foo: "otc", int_field: 2 });
+        serverData.models.partner.records[0].p = [23, 24, 25, 26];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree limit="2">
+                            <field name="foo"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((c) => c.textContent),
+            ["abc1", "xyz1"]
+        );
+
+        await click(target.querySelector("table thead [data-name='foo'].o_column_sortable"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((c) => c.textContent),
+            ["abc1", "def2"]
+        );
+
+        await click(target.querySelector(".o_field_widget[name='p'] .o_pager_next"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((c) => c.textContent),
+            ["otc2", "xyz1"]
+        );
+    });
+
     QUnit.test("one2many list field edition", async function (assert) {
         serverData.models.partner.records.push({
             id: 3,

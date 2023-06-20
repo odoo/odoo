@@ -10,8 +10,8 @@ import { markRaw } from "@odoo/owl";
 
 function compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
-        v1 = v1 ? v1[1] : false;
-        v2 = v2 ? v2[1] : false;
+        v1 = v1 ? v1[1] : "";
+        v2 = v2 ? v2[1] : "";
     }
     return v1 < v2;
 }
@@ -317,7 +317,7 @@ export class StaticList extends DataPoint {
         this._onUpdate();
     }
 
-    load({ limit, offset, orderBy }) {
+    load({ limit, offset, orderBy } = {}) {
         return this.model.mutex.exec(async () => {
             if (this.editedRecord && !(await this.editedRecord.checkValidity())) {
                 return;
@@ -750,10 +750,30 @@ export class StaticList extends DataPoint {
         return commands;
     }
 
-    async _load({ limit, offset, orderBy }) {
-        const currentIds = this._currentIds.slice(offset, offset + limit);
-        // FIXME: record in cache could be not yet loaded
-        const resIds = currentIds.filter((id) => typeof id === "number" && !this._cache[id]);
+    _getResIdsToLoad(resIds, fieldNames = this.fieldNames) {
+        return resIds.filter((resId) => {
+            if (typeof resId === "string") {
+                // this is a virtual id, we don't want to read it
+                return false;
+            }
+            const record = this._cache[resId];
+            if (!record) {
+                // record hasn't been loaded yet
+                return true;
+            }
+            // record has already been loaded -> check if we already read all orderBy fields
+            return intersection(fieldNames, record.fieldNames).length !== fieldNames.length;
+        });
+    }
+
+    async _load({
+        limit = this.limit,
+        offset = this.offset,
+        orderBy = this.orderBy,
+        nextCurrentIds = this._currentIds,
+    } = {}) {
+        const currentIds = nextCurrentIds.slice(offset, offset + limit);
+        const resIds = this._getResIdsToLoad(currentIds);
         if (resIds.length) {
             const records = await this.model._loadRecords({ ...this.config, resIds });
             for (const record of records) {
@@ -761,6 +781,7 @@ export class StaticList extends DataPoint {
             }
         }
         this.records = currentIds.map((id) => this._cache[id]);
+        this._currentIds = nextCurrentIds;
         await this.model._updateConfig(this.config, { limit, offset, orderBy }, { noReload: true });
     }
 
@@ -834,19 +855,7 @@ export class StaticList extends DataPoint {
 
     async _sort(currentIds = this.currentIds, orderBy = this.orderBy) {
         const fieldNames = orderBy.map((o) => o.name);
-        const resIds = currentIds.filter((id) => {
-            if (typeof id === "string") {
-                // this is a virtual id, we don't want to read it
-                return false;
-            }
-            const record = this._cache[id];
-            if (!record) {
-                // record hasn't been loaded yet
-                return true;
-            }
-            // record has already been loaded -> check if we already read all orderBy fields
-            return intersection(record.fieldNames, fieldNames).length !== fieldNames.length;
-        });
+        const resIds = this._getResIdsToLoad(currentIds, fieldNames);
         if (resIds.length) {
             const activeFields = pick(this.activeFields, fieldNames);
             const config = { ...this.config, resIds, activeFields };
@@ -859,10 +868,10 @@ export class StaticList extends DataPoint {
         const sortedRecords = allRecords.sort((r1, r2) => {
             return compareRecords(r1, r2, orderBy, this.fields);
         });
-        const currentPageRecords = sortedRecords.slice(this.offset, this.offset + this.limit);
-        //TODO: read records that haven't been fully read yet
-        this.model._updateConfig(this.config, { orderBy }, { noReload: true });
-        this.records = currentPageRecords;
+        await this._load({
+            orderBy,
+            nextCurrentIds: sortedRecords.map((r) => r.resId || r._virtualId),
+        });
         this._needsReordering = false;
     }
 
