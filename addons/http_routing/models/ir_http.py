@@ -637,7 +637,7 @@ class IrHttp(models.AbstractModel):
         code, values = cls._get_exception_code_values(exception)
 
         request.cr.rollback()
-        if code == 403:
+        if code in (404, 403):
             try:
                 response = cls._serve_fallback()
                 if response:
