@@ -13,11 +13,9 @@
                         invisible="state == 'draft' or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                     <field name="has_refundable_lines" invisible="1" />
-                    <field name="refunded_orders_count" invisible="1" />
                 </header>
                 <sheet>
                 <field name="failed_pickings" invisible="1"/>
-                <field name="is_refunded" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_stock_picking"
                         type="object"
@@ -38,15 +36,15 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-undo"
-                        invisible="not is_refunded">
+                        invisible="refund_orders_count == 0">
                         <field name="refund_orders_count" widget="statinfo" string="Refunds" />
                     </button>
-                    <button name="action_view_refunded_orders"
+                    <button name="action_view_refunded_order"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-shopping-cart "
-                        invisible="refunded_orders_count == 0">
-                        <field name="refunded_orders_count" widget="statinfo" string="Refunded Orders" />
+                        invisible="not refunded_order_id">
+                        <field name="refunded_order_id" widget="statinfo" string="Refunded Orders" />
                     </button>
                 </div>
                 <group col="4" colspan="4" name="order_fields">
