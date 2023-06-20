@@ -50,7 +50,7 @@ export const overlayService = {
             return removeCurrentOverlay;
         };
 
-        return { add };
+        return { add, overlays };
     },
 };
 

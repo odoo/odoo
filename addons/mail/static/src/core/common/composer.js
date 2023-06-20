@@ -241,10 +241,6 @@ export class Composer extends Component {
         return true;
     }
 
-    get allowEmojis() {
-        return true;
-    }
-
     get message() {
         return this.props.composer.message ?? null;
     }

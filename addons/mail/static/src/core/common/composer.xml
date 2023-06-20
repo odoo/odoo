@@ -65,7 +65,6 @@
                         />
                     </div>
                     <div class="o-mail-Composer-actions d-flex bg-view"
-                        t-if="allowUpload or allowEmojis"
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
                             'mx-1 me-2': compact and !ui.isSmall,
@@ -74,7 +73,7 @@
                         }"
                     >
                         <div class="d-flex flex-grow-1 align-items-center" >
-                            <button t-if="allowEmojis" class="btn border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
+                            <button class="btn border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
                                     <button t-att-disabled="!state.active" class="btn fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>

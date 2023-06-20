@@ -12,10 +12,6 @@ patch(Composer.prototype, "im_livechat/disabled", {
     get allowUpload() {
         return false;
     },
-
-    get allowEmojis() {
-        return false;
-    },
 });
 
 patch(MessageModel.prototype, "im_livechat/disabled", {

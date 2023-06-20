@@ -35,10 +35,11 @@ export class PopoverController extends Component {
     }
 
     onClickAway(ev) {
+        const target = ev.composedPath()[0];
         if (
-            this.props.closeOnClickAway(ev.target) &&
-            !this.props.target.contains(ev.target) &&
-            !this.popoverRef.el.contains(ev.target)
+            this.props.closeOnClickAway(target) &&
+            !this.props.target.contains(target) &&
+            !this.popoverRef.el.contains(target)
         ) {
             this.props.close();
         }
