@@ -595,9 +595,7 @@
         <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag m-2 o_not_editable">
             <i class="fa fa-sort"></i>
         </div>
-        <t t-call="website_slides.slide_icon">
-            <t t-set="icon_class" t-value="'py-2 mx-2'"/>
-        </t>
+        <i t-attf-class="fa #{slide.slide_icon} py-2 mx-2"/>
         <div class="text-truncate me-auto">
             <a t-if="not invite_preview and (slide.is_preview or channel.is_member or channel.can_publish)" class="o_wslides_js_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}">
                 <span t-field="slide.name"/>
@@ -631,6 +629,7 @@
             <t t-call="website_slides.slide_sidebar_done_button">
                 <t t-set="is_member" t-value="channel.is_member"/>
                 <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
+                <t t-set="use_slide_icon" t-value="False"/>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
                 <a t-if="slide.slide_category == 'article'" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
@@ -900,10 +899,10 @@
     <i t-if="slide.slide_type == 'slides'" t-att-class="'fa fa-file-powerpoint-o %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'image'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'youtube_video'" t-att-class="'fa fa-youtube-play %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'google_drive_video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'google_drive_video'" t-att-class="'fa fa-play-circle-o %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'vimeo_video'" t-att-class="'fa fa-vimeo %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'article'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'article'" t-att-class="'fa fa-file-text-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle-o %s' % icon_class"></i>
     <i t-if="not slide.slide_type" t-att-class="'fa fa-file-o %s' % icon_class"></i>
 </template>
 

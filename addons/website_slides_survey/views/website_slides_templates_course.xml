@@ -18,12 +18,6 @@
             </xpath>
         </template>
 
-        <template id="slide_icon_inherit_survey" inherit_id="website_slides.slide_icon">
-            <xpath expr="//i[last()]" position="after">
-                <i t-if="slide.slide_type == 'certification'" t-att-class="'fa fa-trophy %s' % icon_class"></i>
-            </xpath>
-        </template>
-
         <template id="course_slides_list_slide_inherit_survey" inherit_id="website_slides.course_slides_list_slide">
             <xpath expr="//a[hasclass('o_wslides_js_slides_list_slide_link')]" position="attributes">
                 <attribute name="t-attf-href">#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(slide.id) if slide.slide_category == 'certification' and slide.channel_id.total_slides == 1 else '/slides/slide/%s' %(slug(slide))}</attribute>

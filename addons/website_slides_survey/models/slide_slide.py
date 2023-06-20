@@ -65,6 +65,13 @@ class Slide(models.Model):
             if slide.slide_category == 'certification' or not slide.is_preview:
                 slide.is_preview = False
 
+    @api.depends('slide_type')
+    def _compute_slide_icon(self):
+        super(Slide, self)._compute_slide_icon()
+        for slide in self:
+            if slide.slide_type == 'certification':
+                slide.slide_icon = 'fa-trophy'
+
     @api.depends('slide_category', 'source_type')
     def _compute_slide_type(self):
         super(Slide, self)._compute_slide_type()

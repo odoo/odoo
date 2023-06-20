@@ -183,6 +183,7 @@ class Slide(models.Model):
     image_google_url = fields.Char('Image Link', related='url', readonly=False,
         help="Link of the image (we currently only support Google Drive as source)")
     # content - documents
+    slide_icon = fields.Char('Slide Icon', compute='_compute_slide_icon', store=True)
     slide_type = fields.Selection([
         ('image', 'Image'),
         ('article', 'Article'),
@@ -400,6 +401,32 @@ class Slide(models.Model):
         for category in self.filtered(lambda slide: slide.is_category):
             filtered_slides = category.slide_ids.filtered(lambda slide: slide.is_published)
             category.completion_time = sum(filtered_slides.mapped("completion_time"))
+
+    @api.depends('slide_type')
+    def _compute_slide_icon(self):
+        for slide in self:
+            if slide.slide_type == 'image':
+                slide.slide_icon = 'fa-file-picture-o'
+            elif slide.slide_type == 'article':
+                slide.slide_icon = 'fa-file-text-o'
+            elif slide.slide_type == 'quiz':
+                slide.slide_icon = 'fa-question-circle-o'
+            elif slide.slide_type == 'pdf':
+                slide.slide_icon = 'fa-file-pdf-o'
+            elif slide.slide_type == 'sheet':
+                slide.slide_icon = 'fa-file-excel-o'
+            elif slide.slide_type == 'doc':
+                slide.slide_icon = 'fa-file-word-o'
+            elif slide.slide_type == 'slides':
+                slide.slide_icon = 'fa-file-powerpoint-o'
+            elif slide.slide_type == 'youtube_video':
+                slide.slide_icon = 'fa-youtube-play'
+            elif slide.slide_type == 'google_drive_video':
+                slide.slide_icon = 'fa-play-circle-o'
+            elif slide.slide_type == 'vimeo_video':
+                slide.slide_icon = 'fa-vimeo'
+            else:
+                slide.slide_icon = 'fa-file-o'
 
     @api.depends('slide_category', 'source_type', 'video_source_type')
     def _compute_slide_type(self):
