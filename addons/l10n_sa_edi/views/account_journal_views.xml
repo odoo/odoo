@@ -12,7 +12,7 @@
                     <field name="l10n_sa_compliance_csid_json" invisible="1"/>
                     <field name="l10n_sa_production_csid_json" invisible="1"/>
                     <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
-                    <page name="zatca_einvoicing" string="ZATCA" attrs="{'invisible': [('country_code', '!=', 'SA')]}">
+                    <page name="zatca_einvoicing" string="ZATCA" attrs="{'invisible': ['|', ('country_code', '!=', 'SA'), ('type', '!=', 'sale')]}">
                         <group>
                             <group>
                                 <field name="l10n_sa_serial_number"/>
