@@ -99,9 +99,9 @@ class ProductProduct(models.Model):
                 "has_image": bool(product.image_1920),
                 "attributes": product._get_attributes(pos_config),
                 "name": product._get_name(),
-                "product_id": product.id,
+                "id": product.id,
                 "description_sale": product.description_sale,
-                "tags": product.pos_categ_ids.mapped("name") or ["Other"],
+                "pos_categ_ids": product.pos_categ_ids.mapped("name") or ["Other"],
                 "is_pos_groupable": product.uom_id.is_pos_groupable,
             }
             for product in self

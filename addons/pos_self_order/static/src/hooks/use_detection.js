@@ -7,8 +7,8 @@ import { useEffect, useState } from "@odoo/owl";
  * @param {ref} root : reference to the element that is the root of the intersection observer
  * @param {Object} targets : object with references to each target
  * @param {()=>{[boolean]}} getDeps : function that returns a list with one item; this item should be true when the effect should be run and false when it should be stopped
- * @param {*} callback : function that is called when the tag is detected
- * @returns {{name:string}} : object with the name of the tag that is currently selected
+ * @param {*} callback : function that is called when the category is detected
+ * @returns {{name:string}} : object with the name of the category that is currently selected
  */
 export function useDetection(root, targets, getDeps) {
     const detected = useState({ name: "" });
@@ -48,8 +48,8 @@ export function useDetection(root, targets, getDeps) {
                 rootMargin: "-100px",
             }
         );
-        Object.keys(targets).forEach((tag) => {
-            observer.observe(targets[tag]?.el);
+        Object.keys(targets).forEach((category) => {
+            observer.observe(targets[category]?.el);
         });
         return () => {
             observer.disconnect();

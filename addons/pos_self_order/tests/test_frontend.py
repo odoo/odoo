@@ -45,7 +45,6 @@ class TestFrontendMobile(odoo.tests.HttpCase):
             self.pos_config._get_self_order_route(),
             "self_order_after_meal_cart_tour",
             login=None,
-            watch=True
         )
         self.start_tour(
             self.pos_config._get_self_order_route(),
@@ -62,5 +61,4 @@ class TestFrontendMobile(odoo.tests.HttpCase):
             self.pos_config._get_self_order_route(),
             "self_order_after_each_cart_tour",
             login=None,
-            watch=True
         )

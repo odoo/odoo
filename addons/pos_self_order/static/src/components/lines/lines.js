@@ -25,7 +25,7 @@ export class Lines extends Component {
             (order.state === "draft" && this.selfOrder.self_order_mode === "meal")
         ) {
             this.selfOrder.editedOrder = order;
-            this.router.navigate("product", { product_id: line.product_id });
+            this.router.navigate("product", { id: line.product_id });
         } else {
             this.selfOrder.notification.add(_t("You cannot edit an posted order!"), {
                 type: "danger",

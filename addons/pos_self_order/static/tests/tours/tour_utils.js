@@ -51,6 +51,13 @@ export const PosSelf = {
                 run: () => {},
             };
         },
+        isProductPrice: (name, price) => {
+            return {
+                content: `Verify is there a product with ${name} and ${price} price`,
+                trigger: `.o_self_order_item_card div:contains('${name}') ~ span.card-text:contains('${price}')`,
+                run: () => {},
+            };
+        },
         cannotAddProduct: (name) => {
             return [
                 {
