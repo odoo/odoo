@@ -1043,3 +1043,33 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.assertEqual(move_form.name, 'MISC/2021/10/0001')
             move_form.journal_id, journal = journal, move_form.journal_id
             self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+
+    def test_manually_modifying_taxes(self):
+        """Manually modifying taxes on a move should not automatically recompute them"""
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'name': 'Receivable',
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'debit': 0.0,
+                    'credit': 5531.04,
+                }),
+                Command.create({
+                    'name': 'Revenue',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                    'debit': 4809.61,
+                    'credit': 0.0,
+                }),
+            ]
+        })
+        tax_line = move.line_ids.filtered('tax_repartition_line_id')
+        self.assertEqual(tax_line.debit, 721.44)
+        with Form(move) as move_form:
+            with move_form.line_ids.edit(2) as line_form:
+                line_form.debit = 721.43
+            move_form.line_ids.remove(3)
+        move = move_form.save()
+        tax_line = move.line_ids.filtered('tax_repartition_line_id')
+        self.assertEqual(tax_line.debit, 721.43)
