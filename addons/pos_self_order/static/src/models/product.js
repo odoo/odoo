@@ -8,34 +8,34 @@ export class Product extends Reactive {
             has_image,
             attributes,
             name,
-            product_id,
+            id,
             description_sale,
-            tags,
+            pos_categ_ids,
             is_pos_groupable,
         },
-        selfOrder
+        showPriceTaxIncluded
     ) {
         super();
         this.setup(...arguments);
     }
 
-    setup(product, selfOrder) {
+    setup(product, showPriceTaxIncluded) {
         // server data
-        this.id = product.product_id;
+        this.id = product.id;
         this.price_info = product.price_info;
         this.has_image = product.has_image;
         this.attributes = product.attributes;
         this.name = product.name;
         this.description_sale = product.description_sale;
-        this.tags = product.tags;
+        this.pos_categ_ids = product.pos_categ_ids;
         this.is_pos_groupable = product.is_pos_groupable;
 
         // data
-        this.selfOrder = selfOrder;
+        this.showPriceTaxIncluded = showPriceTaxIncluded;
     }
 
     get prices() {
-        return this.selfOrder.show_prices_with_tax_included
+        return this.showPriceTaxIncluded
             ? this.price_info.price_with_tax
             : this.price_info.price_without_tax;
     }
