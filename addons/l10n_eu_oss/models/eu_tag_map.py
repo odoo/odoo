@@ -59,7 +59,7 @@ EU_TAG_MAP = {
     },
     # Denmark
     'dk': {
-        'invoice_base_tag': None,
+        'invoice_base_tag': 'l10n_dk.account_tax_report_line_section_b_products_non_eu_tag',
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
