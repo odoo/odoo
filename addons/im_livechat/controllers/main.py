@@ -74,7 +74,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
-        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
+        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
         rule = {}
         # find the country from the request
         country_id = False

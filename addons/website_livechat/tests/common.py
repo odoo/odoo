@@ -61,10 +61,11 @@ class TestLivechatCommon(tests.TransactionCase):
         self.message_info_url = base_url + "/mail/init_messaging"
 
         # override the get_available_users to return only Michel as available
-        operators = self.operator
-        def get_available_users(self):
-            return operators
-        self.patch(type(self.env['im_livechat.channel']), '_get_available_users', get_available_users)
+        def _compute_available_operator_ids(channel_self):
+            for record in channel_self:
+                record.available_operator_ids = self.operator
+
+        self.patch(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids)
 
         # override the _get_visitor_from_request to return self.visitor
         self.target_visitor = self.visitor
