@@ -420,7 +420,7 @@ class account_journal(models.Model):
                 # existence of the key in the cache instead.
                 if key not in curr_cache:
                     curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                amount = curr_cache[key] * result.get('amount_total', 0) or 0
+                amount = curr_cache[key] * (result.get('amount_total') or 0)
             rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
