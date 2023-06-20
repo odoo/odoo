@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: '.o-mail-AttachmentCard[title="text.txt"]',
+            trigger: '.o_attachment[title="text.txt"]',
             run() {},
         },
         {
