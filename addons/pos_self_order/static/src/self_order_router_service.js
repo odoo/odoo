@@ -15,6 +15,7 @@ export class SelfOrderRouter extends Reactive {
     setup(env) {
         this.path = window.location.pathname;
         this.registeredRoutes = {};
+        this.historyPage = "";
 
         window.addEventListener("popstate", (event) => {
             this.path = window.location.pathname;
@@ -22,8 +23,16 @@ export class SelfOrderRouter extends Reactive {
     }
 
     back() {
+        if (!this.historyPage.length) {
+            // We use the browser history, so if the user arrives on a page with a back button from a link,
+            // we don't know the previous page, so we send them back to the beginning of the feed.
+            this.navigate("default");
+            return;
+        }
+
         history.back();
         this.path = window.location.pathname;
+        this.historyPage = window.location.pathname;
     }
 
     /**
@@ -42,6 +51,7 @@ export class SelfOrderRouter extends Reactive {
 
         history.pushState({}, "", url);
         this.path = window.location.pathname;
+        this.historyPage = this.path;
     }
 
     registerRoutes(routes) {

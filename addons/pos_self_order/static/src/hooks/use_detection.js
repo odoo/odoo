@@ -10,7 +10,7 @@ import { useEffect, useState } from "@odoo/owl";
  * @param {*} callback : function that is called when the tag is detected
  * @returns {{name:string}} : object with the name of the tag that is currently selected
  */
-export function useDetection(root, targets, getDeps, callback = () => {}) {
+export function useDetection(root, targets, getDeps) {
     const detected = useState({ name: "" });
     useEffect((stop) => {
         if (stop) {
@@ -40,11 +40,11 @@ export function useDetection(root, targets, getDeps, callback = () => {}) {
 
                 if (selectedName) {
                     detected.name = selectedName;
-                    callback(detected);
                 }
             },
             {
                 root: root.el,
+                threshold: [0, 0.25, 0.5, 0.75, 1],
                 rootMargin: "-100px",
             }
         );

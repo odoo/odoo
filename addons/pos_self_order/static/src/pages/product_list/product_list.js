@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/self_order_service";
 import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
 import { NavBar } from "@pos_self_order/components/navbar/navbar";
@@ -24,17 +24,24 @@ export class ProductList extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.productsList = useRef("productsList");
+        this.tagList = useRef("tagList");
         this.currentProductCard = useChildRef();
         this.search = useState({
             isFocused: false,
             input: "",
         });
 
-        useAutofocus({ refName: "input", mobile: true });
+        useAutofocus({ refName: "searchInput", mobile: true });
 
         this.productGroups = Object.fromEntries(
             Array.from(this.selfOrder.tagList).map((tag) => {
                 return [tag, useRef(`productsWithTag_${tag}`)];
+            })
+        );
+
+        this.tagButtons = Object.fromEntries(
+            Array.from(this.selfOrder.tagList).map((tag) => {
+                return [tag, useRef(`tag_${tag}`)];
             })
         );
 
@@ -51,6 +58,22 @@ export class ProductList extends Component {
         this.currentProductGroup = useDetection(this.productsList, this.productGroups, () => [
             this.search.isFocused,
         ]);
+
+        useEffect(
+            () => {
+                const tag = this.tagButtons[this.currentProductGroup.name]?.el;
+
+                if (!tag) {
+                    return;
+                }
+
+                this.tagList.el.scroll({
+                    left: tag.offsetLeft + tag.offsetWidth / 2 - window.innerWidth / 2,
+                    behavior: "smooth",
+                });
+            },
+            () => [this.currentProductGroup.name]
+        );
     }
 
     shouldNavbarBeShown() {
