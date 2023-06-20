@@ -269,3 +269,18 @@ $o-btns-bs-override: map-merge((
 ), $o-btns-bs-override);
 
 $o-btns-bs-outline-override: () !default;
+$o-btns-bs-outline-override: map-merge((
+    "secondary": (
+        background: transparent,
+        border: $o-gray-300,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-300,
+        hover-color: $o-gray-800,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+), $o-btns-bs-outline-override);
