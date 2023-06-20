@@ -1,9 +1,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomGroupByItem" owl="1">
-        <AccordionItem class="'o_add_custom_group_menu'" description="'Add Custom Group'">
+        <AccordionItem class="'o_add_custom_group_menu text-truncate'" description="'Add Custom Group'">
             <div class="px-3 py-2">
-                <select class="o_input" t-model="state.fieldName">
+                <select class="pe-3 text-truncate o_input" t-model="state.fieldName">
                     <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
                     t-esc="field.string"
