@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import { _t } from "@web/core/l10n/translation";
+import { isVisible } from "@web/core/utils/ui";
 import weUtils from "@web_editor/js/common/utils";
 import {
     Component,
@@ -15,7 +17,6 @@ import {
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
 const EMAIL_REGEX = OdooEditorLib.EMAIL_REGEX;
-import { _t } from "@web/core/l10n/translation";
 
 /**
  * Allows to customize link content and style.
@@ -131,6 +132,15 @@ export class Link extends Component {
                 if (this.state.iniClassName && this.state.iniClassName.split(' ').includes(linkClass)) {
                     data.classes += " btn " + linkClass;
                 }
+            }
+        }
+        // When multiple buttons follow each other, they may break on 2 lines
+        // or more on mobile, so they need a margin-bottom.
+        if (data.classes.split(" ").includes("btn")) {
+            const closestButtonSiblingEls = this._getDirectButtonSiblings(this.linkEl);
+            if (closestButtonSiblingEls.length) {
+                data.classes += " mb-2";
+                closestButtonSiblingEls.forEach(btnEl => btnEl.classList.add("mb-2"));
             }
         }
         if (['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
@@ -552,15 +562,44 @@ export class Link extends Component {
         const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
         const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
+        const btnMarginBottom = /(?<!\S)mb-2(?!\S)/i;
         this.state.className = this.state.iniClassName
             .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
-            .replace(allBtnShapes, ' ');
+            .replace(allBtnShapes, " ")
+            .replace(btnMarginBottom, " ");
         this.state.className += ' ' + keptClasses.join(' ');
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
         if (/(?:s_website_form_send|o_submit)/.test(this.state.className)) {
             this.state.isButton = true;
         }
+    }
+    /**
+     * Returns an array of the buttons which are the closest non empty
+     * previousSibling and/or nextSibling.
+     *
+     * @param {HTMLElement} el
+     * @returns {HTMLElement[]}
+     */
+    _getDirectButtonSiblings(el) {
+        return ["previous", "next"].reduce((buttonSiblingsEls, side) => {
+            let siblingNode = el[`${side}Sibling`];
+            while (siblingNode) {
+                // If the node is an empty text node, or if it is a <br> tag or
+                // an invisible element, it is not taken into account.
+                if ((siblingNode.nodeType === 3 && !!siblingNode.textContent.match(/^\s*$/)) ||
+                        (siblingNode.nodeType === 1 &&
+                        (siblingNode.nodeName === "BR" || !isVisible(siblingNode)))) {
+                    siblingNode = siblingNode[`${side}Sibling`];
+                    continue;
+                }
+                if (siblingNode.nodeType === 1 && siblingNode.classList.contains("btn")) {
+                    buttonSiblingsEls.push(siblingNode);
+                }
+                break;
+            }
+            return buttonSiblingsEls;
+        }, []);
     }
 
     //--------------------------------------------------------------------------
