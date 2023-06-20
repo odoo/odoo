@@ -14,6 +14,8 @@ class HrPlanWizard(models.TransientModel):
     def _default_plan_id(self):
         # We know that all employees belong to the same company
         employees = self.env['hr.employee'].browse(self.env.context.get('active_ids') if self.env.context.get('active_ids') else [])
+        if not employees:
+            return None
         if len(employees.department_id) > 1:
             return self.env['hr.plan'].search([
                 ('company_id', '=', employees[0].company_id.id),
@@ -53,7 +55,7 @@ class HrPlanWizard(models.TransientModel):
     @api.depends('employee_ids')
     def _compute_company_id(self):
         for wizard in self:
-            wizard.company_id = wizard.employee_ids[0].company_id
+            wizard.company_id = wizard.employee_ids and wizard.employee_ids[0].company_id or self.env.company
 
     def _get_warnings(self):
         self.ensure_one()
