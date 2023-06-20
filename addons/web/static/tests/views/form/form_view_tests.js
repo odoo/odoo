@@ -1777,6 +1777,8 @@ QUnit.module("Views", (hooks) => {
             const webClient = await createWebClient({ serverData });
 
             await doAction(webClient, 1);
+            await nextTick();
+            await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_main_navbar .o_menu_brand").textContent,
                 "App0"
