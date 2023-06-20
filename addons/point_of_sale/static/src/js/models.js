@@ -1430,6 +1430,9 @@ export class PosGlobalState extends PosModel {
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
     }
+    doNotAllowRefundAndSales() {
+        return false;
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
@@ -3010,7 +3013,21 @@ export class Order extends PosModel {
         line.set_unit_price(line.compute_fixed_price(line.price));
     }
 
+    _isRefundOrder() {
+        if (this.orderlines.length > 0 && this.orderlines[0].refunded_orderline_id) {
+            return true;
+        }
+        return false;
+    }
+
     add_product(product, options) {
+        if(this.pos.doNotAllowRefundAndSales() && this._isRefundOrder()) {
+            Gui.showPopup('ErrorPopup', {
+                title: _t('Refund and Sales not allowed'),
+                body: _t('It is not allowed to mix refunds and sales')
+            });
+            return;
+        }
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);
