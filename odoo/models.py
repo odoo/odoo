@@ -2819,10 +2819,11 @@ class BaseModel(metaclass=MetaModel):
 
         elif field.translate and not self.env.context.get('prefetch_langs'):
             sql_field = SQL.identifier(alias, fname)
-            lang = self.env.lang or 'en_US'
-            if lang == 'en_US':
-                return SQL("%s->>'en_US'", sql_field)
-            return SQL("COALESCE(%s->>%s, %s->>'en_US')", sql_field, lang, sql_field)
+            langs = field.get_translation_fallback_langs(self.env)
+            sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
+            if len(sql_field_langs) == 1:
+                return sql_field_langs[0]
+            return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
 
         elif field.type == 'properties' and property_name:
             return self._field_properties_to_sql(alias, fname, property_name, query)
@@ -3618,13 +3619,16 @@ class BaseModel(metaclass=MetaModel):
             # assert record_fr.with_context(lang='fr_FR') == '<div>English 1</div><div>French 2<div/>'
             # assert record_nl.with_context(lang='nl_NL') == '<div>English 3</div><div>English 2<div/>'
 
-            old_translations = field._get_stored_translations(self)
-            if not old_translations:
+            stored_translations = field._get_stored_translations(self)
+            if not stored_translations:
                 return False
-            new_translations = old_translations
-            old_value_en = old_translations.get('en_US')
+            old_translations = {
+                k: stored_translations.get(f'_{k}', v)
+                for k, v in stored_translations.items()
+                if not k.startswith('_')
+            }
             for lang, translation in translations.items():
-                old_value = new_translations.get(lang, old_value_en)
+                old_value = old_translations.get(lang) or old_translations.get('en_US')
                 if digest:
                     old_terms = field.get_trans_terms(old_value)
                     old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
@@ -3633,8 +3637,9 @@ class BaseModel(metaclass=MetaModel):
                         for key, value in translation.items()
                         if key in old_terms_digested2value
                     }
-                new_translations[lang] = field.translate(translation.get, old_value)
-            self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+                stored_translations[lang] = field.translate(translation.get, old_value)
+                stored_translations.pop(f'_{lang}', None)
+            self.env.cache.update_raw(self, field, [stored_translations], dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified
@@ -3657,16 +3662,17 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[field_name]
         # We don't forbid reading inactive/non-existing languages,
         langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
-        val_en = self.with_context(lang='en_US')[field_name]
+        self_lang = self.with_context(check_translations=True, prefetch_langs=True)
+        val_en = self_lang.with_context(lang='en_US')[field_name]
         if not callable(field.translate):
             translations = [{
                 'lang': lang,
                 'source': val_en,
-                'value': self.with_context(lang=lang)[field_name]
+                'value': self_lang.with_context(lang=lang)[field_name]
             } for lang in langs]
         else:
             translation_dictionary = field.get_translation_dictionary(
-                val_en, {lang: self.with_context(lang=lang)[field_name] for lang in langs}
+                val_en, {lang: self_lang.with_context(lang=lang)[field_name] for lang in langs}
             )
             translations = [{
                 'lang': lang,
@@ -5474,25 +5480,27 @@ class BaseModel(metaclass=MetaModel):
 
             elif field.translate and field.store and name not in excluded and old[name]:
                 # for translatable fields we copy their translations
-                old_translations = field._get_stored_translations(old)
-                if not old_translations:
+                old_stored_translations = field._get_stored_translations(old)
+                if not old_stored_translations:
                     continue
                 lang = self.env.lang or 'en_US'
-                old_value_lang = old_translations.pop(lang, old_translations['en_US'])
-                old_translations = {
-                    lang: value
-                    for lang, value in old_translations.items()
-                    if lang in valid_langs
-                }
-                if not old_translations:
-                    continue
-                if not callable(field.translate):
-                    new.update_field_translations(name, old_translations)
+                if field.translate is True:
+                    new.update_field_translations(name, {
+                        k: v for k, v in old_stored_translations.items() if k in valid_langs and k != lang
+                    })
                 else:
+                    old_translations = {
+                        k: old_stored_translations.get(f'_{k}', v)
+                        for k, v in old_stored_translations.items()
+                        if k in valid_langs
+                    }
+                    # {from_lang_term: {lang: to_lang_term}
+                    translation_dictionary = field.get_translation_dictionary(
+                        old_translations.pop(lang, old_translations['en_US']),
+                        old_translations
+                    )
                     # {lang: {old_term: new_term}}
                     translations = defaultdict(dict)
-                    # {from_lang_term: {lang: to_lang_term}
-                    translation_dictionary = field.get_translation_dictionary(old_value_lang, old_translations)
                     for from_lang_term, to_lang_terms in translation_dictionary.items():
                         for lang, to_lang_term in to_lang_terms.items():
                             translations[lang][from_lang_term] = to_lang_term
