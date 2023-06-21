@@ -19,9 +19,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'active',
     'priority',
     'project_id',
+    'project_root_id',
     'color',
     'subtask_count',
-    'is_private',
     'email_from',
     'create_date',
     'write_date',
@@ -123,7 +123,7 @@ class Task(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
-        domain="[('project_ids', '=', project_id)]")
+        domain="[('project_ids', '=', project_root_id)]")
     tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([
@@ -150,7 +150,7 @@ class Task(models.Model):
 
     project_id = fields.Many2one('project.project', string='Project',
         index=True, tracking=True, check_company=True, change_default=True)
-    project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', search='_search_project_root_id', recursive=True)
+    project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', store=True, recursive=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     planned_hours = fields.Float("Allocated Time", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
@@ -201,8 +201,7 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
-    is_private = fields.Boolean(compute='_compute_is_private', search='_search_is_private')
-    allow_milestones = fields.Boolean(related='project_id.allow_milestones')
+    allow_milestones = fields.Boolean(related='project_root_id.allow_milestones')
     milestone_id = fields.Many2one(
         'project.milestone',
         'Milestone',
@@ -219,14 +218,14 @@ class Task(models.Model):
         search='_search_has_late_and_unreached_milestone',
     )
     # Task Dependencies fields
-    allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
+    allow_task_dependencies = fields.Boolean(related='project_root_id.allow_task_dependencies')
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id)]")
+                                     domain="[('project_root_id', '!=', False), ('id', '!=', id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id)]")
+                                     domain="[('project_root_id', '!=', False), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
     # Project sharing fields
@@ -282,97 +281,13 @@ class Task(models.Model):
         for task in self:
             task.analytic_account_id = task.project_id.analytic_account_id
 
-    @api.depends('project_id', 'parent_id')
-    def _compute_is_private(self):
-        # Modify accordingly, this field is used to display the lock on the task's kanban card
-        for task in self:
-            task.is_private = not task.project_id and not task.parent_id
-
     @api.depends('project_id', 'parent_id.project_id')
     def _compute_project_root_id(self):
-        # project of the first ascendant that has one. Let's call it the root task.
+        # project of the first ascendant that has one.
         for task in self:
             task.project_root_id = task.project_id or task.parent_id.project_root_id
 
-    def _search_project_root_id(self, operator, value):
-        if operator not in ("in", "not in", "any", "not any", "=", "!=", "=?"):
-            raise UserError(_("Unsupported operator for search on project_root_id"))
-
-        where_query_1 = where_query_2 = "TRUE"
-        params = tuple()
-        if operator in ("any", "not any"):
-            query = self.env['project.project']._where_calc(value)
-            subquery_str, params = query.subselect()
-            where_operator = 'in' if operator == 'any' else 'not in'
-            where_query_1 = f"""
-                project_id {where_operator} ({subquery_str})
-            """
-            where_query_2 = f"""
-                project_root_id {'in' if operator == 'any' else 'not in'} ({subquery_str})
-            """
-        elif operator != "=?" or (value is not False and value is not None):
-            where_operator = operator if operator != '=?' else '='
-            where_query_1 = f"project_id {where_operator} %s"
-            where_query_2 = f"project_root_id {where_operator} %s"
-            if isinstance(value, (list, tuple)):
-                params = (tuple(value),)
-            else:
-                params = (value,)
-
-        self.env.cr.execute(
-            f"""
-                SELECT ARRAY_AGG(id)
-                  FROM project_task
-                 WHERE {where_query_1}
-                   AND project_id IS NOT NULL
-            """, params
-        )
-        task_ids = self._cr.fetchone()[0] or []
-
-        self.env.cr.execute(
-            f"""
-                WITH RECURSIVE project_hierarchy AS (
-                       SELECT pt.id,
-                              pt.parent_id,
-                              pt.project_id,
-                              pt.project_id AS project_root_id
-                         FROM project_task pt
-                        WHERE pt.project_id IS NULL
-                          AND pt.parent_id IS NOT NULL
-
-                    UNION ALL
-
-                       SELECT ph.id,
-                              pt.parent_id,
-                              ph.project_id,
-                              COALESCE(ph.project_root_id, pt.project_id) AS project_root_id
-                         FROM project_hierarchy ph
-                         JOIN project_task pt ON ph.parent_id = pt.id
-                )
-                SELECT ARRAY_AGG(id)
-                  FROM project_hierarchy
-                 WHERE {where_query_2}
-            """, params
-        )
-        if not self._cr.rowcount and not task_ids:
-            return expression.FALSE_DOMAIN
-        task_ids += self.env.cr.fetchone()[0] or []
-        if not task_ids:
-            return expression.FALSE_DOMAIN
-        return [('id', 'in', task_ids)]
-
-    def _search_is_private(self, operator, value):
-        if not isinstance(value, bool):
-            raise ValueError(_('Value should be True or False (not %s)'), value)
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('Operation should be = or != (not %s)'), value)
-        domain = expression.normalize_domain([('project_id', '=', False), ('parent_id', '=', False)])
-        if (operator == '=') != value:
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
-        return domain
-
-    @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
+    @api.depends('depend_on_ids.state', 'allow_task_dependencies')
     def _compute_state(self):
         for task in self:
             dependent_open_tasks = []
@@ -1116,14 +1031,14 @@ class Task(models.Model):
     # Subtasks
     # ---------------------------------------------------
 
-    @api.depends('parent_id.partner_id', 'project_id', 'is_private')
+    @api.depends('parent_id.partner_id', 'project_root_id')
     def _compute_partner_id(self):
         """ Compute the partner_id when the tasks have no partner_id.
 
             Use the project partner_id if any, or else the parent task partner_id.
         """
         for task in self:
-            if task.partner_id and task.is_private:
+            if task.partner_id and not task.project_root_id:
                 task.partner_id = False
                 continue
             if not task.partner_id:
@@ -1261,7 +1176,7 @@ class Task(models.Model):
             res -= self.env.ref('project.mt_task_rating')
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_task_waiting')
-            if ((self.project_id and not self.project_id.allow_task_dependencies)\
+            if ((self.project_id and not self.allow_task_dependencies)\
                 or (not self.project_id and not self.user_has_groups('project.group_project_task_dependencies')))\
                 and waiting_subtype in res:
                 res -= waiting_subtype

@@ -115,10 +115,10 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     /**
      * determine if a single click will trigger the toggleState() method
      * which will switch the state from in progress to done.
-     * Either the isToggleMode is active on the record OR the task is_private
+     * Either the isToggleMode is active on the record OR the task is private
      */
     get isToggleMode() {
-        return this.props.isToggleMode || !this.props.record.data.project_id;
+        return this.props.isToggleMode || !this.props.record.data.project_root_id;
     }
 
     isView(viewNames) {

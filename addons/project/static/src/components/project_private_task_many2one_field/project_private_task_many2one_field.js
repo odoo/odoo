@@ -6,7 +6,7 @@ import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2on
 export class ProjectPrivateTaskMany2OneField extends Many2OneField {
     get Many2XAutocompleteProps() {
         const props = super.Many2XAutocompleteProps;
-        if (this.props.record.data.is_private) {
+        if (!this.props.record.data.project_root_id) {
             props.placeholder = this.env._t("Private");
         }
         return props;
@@ -19,7 +19,7 @@ export const projectPrivateTaskMany2OneField = {
     component: ProjectPrivateTaskMany2OneField,
     fieldDependencies: [
         ...(many2OneField.fieldDependencies || []),
-        { name: "is_private", type: "boolean" },
+        { name: "project_root_id", type: "many2one" },
     ],
 };
 
