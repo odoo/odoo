@@ -18,6 +18,7 @@ class DiscussChannel(models.Model):
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
+    duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator')
@@ -27,6 +28,13 @@ class DiscussChannel(models.Model):
 
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
                          'Livechat Operator ID is required for a channel of type livechat.')]
+
+    @api.depends('message_ids')
+    def _compute_duration(self):
+        for record in self:
+            start = record.message_ids[-1].date if record.message_ids else record.create_date
+            end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
+            record.duration = (end - start).total_seconds() / 3600
 
     def _compute_is_chat(self):
         super()._compute_is_chat()

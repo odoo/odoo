@@ -28,9 +28,12 @@
             <field name="name">discuss.channel.tree</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <tree string="History" create="false" default_order="create_date desc">
+                <tree js_class="im_livechat.discuss_channel_list" string="History" create="false" default_order="create_date desc">
+                    <field name="is_member" invisible="1"/>
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Attendees"/>
+                    <field name="country_id"/>
+                    <field name="duration" widget="float_time" options="{'displaySeconds': True}"/>
                     <field name="message_ids" string="# Messages"/>
                     <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}' class="bg-view"/>
                 </tree>

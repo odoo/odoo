@@ -16,6 +16,7 @@ export class FloatTimeField extends Component {
         ...standardFieldProps,
         inputType: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        displaySeconds: { type: Boolean, optional: true },
     };
     static defaultProps = {
         inputType: "text",
@@ -31,7 +32,9 @@ export class FloatTimeField extends Component {
     }
 
     get formattedValue() {
-        return formatFloatTime(this.props.record.data[this.props.name]);
+        return formatFloatTime(this.props.record.data[this.props.name], {
+            displaySeconds: this.props.displaySeconds,
+        });
     }
 }
 
@@ -48,6 +51,7 @@ export const floatTimeField = {
     supportedTypes: ["float"],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({
+        displaySeconds: options.displaySeconds,
         inputType: options.type,
         placeholder: attrs.placeholder,
     }),

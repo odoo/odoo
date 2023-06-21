@@ -72,6 +72,20 @@ export class ThreadService {
         return thread;
     }
 
+    /**
+     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {number} id
+     * @returns {Promise<Thread>}
+     */
+    async fetchChannel(id) {
+        const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+        return this.insert({
+            ...channelData,
+            model: "discuss.channel",
+            type: channelData.channel.channel_type,
+        });
+    }
+
     async fetchChannelMembers(thread) {
         const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
         const results = await this.rpc("/discuss/channel/members", {
@@ -439,6 +453,9 @@ export class ThreadService {
     }
 
     unpin(thread) {
+        if (this.store.discuss.threadLocalId === thread.localId) {
+            this.router.replaceState({ active_id: undefined });
+        }
         if (thread.model !== "discuss.channel") {
             return;
         }
