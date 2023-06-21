@@ -426,7 +426,7 @@ var BasicModel = AbstractModel.extend({
                 }
                 elem._isDirty = !isNew;
             } else {
-                elem._changes = null;
+                elem._changes = { record: {}, list: [] }[elem.type];
                 elem._isDirty = false;
             }
             elem.offset = 0;
