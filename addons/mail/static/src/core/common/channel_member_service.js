@@ -63,6 +63,14 @@ export class ChannelMemberService {
                 break;
         }
     }
+
+    /**
+     * @param {import("@mail/core/common/channel_member_model").ChannelMember} member
+     * @returns {string}
+     */
+    getName(member) {
+        return member.persona.nameOrDisplayName;
+    }
 }
 
 export const channelMemberService = {

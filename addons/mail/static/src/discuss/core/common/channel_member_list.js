@@ -15,6 +15,7 @@ export class ChannelMemberList extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
+        this.channelMemberService = useService("discuss.channel.member");
         this.threadService = useState(useService("mail.thread"));
         onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
         onWillUpdateProps((nextProps) => {

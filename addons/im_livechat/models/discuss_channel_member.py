@@ -27,6 +27,7 @@ class ChannelMember(models.Model):
                 'active': self.partner_id.active,
                 'id': self.partner_id.id,
                 'is_public': self.partner_id.is_public,
+                'is_bot': self.partner_id.id in self.channel_id.livechat_channel_id.rule_ids.mapped('chatbot_script_id.operator_partner_id.id')
             }
             if self.partner_id.user_livechat_username:
                 data['user_livechat_username'] = self.partner_id.user_livechat_username

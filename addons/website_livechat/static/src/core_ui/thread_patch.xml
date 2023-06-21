@@ -11,7 +11,7 @@
                     <div class="d-flex align-items-baseline">
                         <ImStatus t-if="visitor.isConnected" className="'me-1'" persona="visitor"/>
                         <span class="me-2 fw-bolder" t-esc="visitor.nameOrDisplayName"/>
-                        <img t-if="visitor.country" class="me-2 o_country_flag" t-att-src="visitor.countryFlagUrl" t-att-alt="visitor.country.code or visitor.country.name"/>
+                        <img t-if="visitor.country" class="me-2 o_country_flag align-self-center" t-att-src="visitor.countryFlagUrl" t-att-alt="visitor.country.code or visitor.country.name"/>
                         <span class="me-2">
                             <i class="me-1 fa fa-comment-o" aria-label="Lang"/>
                             <t t-esc="visitor.langName"/>
