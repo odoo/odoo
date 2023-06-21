@@ -3465,9 +3465,9 @@ class TestViewTranslations(common.TransactionCase):
         # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
         # while the `test_sync_update` specifically needs empty translations
         self.env.flush_all()
-        val = {'en_US': archf % terms}
+        val = {'en_US': archf % terms, '_en_US': archf % terms}
         for lang, trans_terms in kwargs.items():
-            val[lang] = archf % trans_terms
+            val['_' + lang] = val[lang] = archf % trans_terms
         query = "UPDATE ir_ui_view SET arch_db = %s WHERE id = %s"
         self.env.cr.execute(query, [Json(val), view.id])
         self.env.invalidate_all()
@@ -3547,6 +3547,7 @@ class TestViewTranslations(common.TransactionCase):
         # check whether translations have been reset
         self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        view.update_field_translations('arch_db', {'fr_FR': {}, 'nl_NL': {}})
         self.assertEqual(view.with_env(env_fr).arch, archf % terms_en)
         self.assertEqual(view.with_env(env_nl).arch, archf % terms_en)
 

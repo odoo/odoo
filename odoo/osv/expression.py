@@ -1373,10 +1373,14 @@ class expression(object):
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
                     lang = model.env.lang or 'en_US'
-                    if lang == 'en_US':
-                        left = unaccent(f""""{alias}"."{field.name}"->>'en_US'""")
+                    en_US = 'en_US'
+                    if (model.env.context.get('edit_translations') or model.env.context.get('check_translations')) and callable(field.translate):
+                        lang = '_' + lang
+                        en_US = '_' + en_US
+                    if lang == en_US:
+                        left = unaccent(f""""{alias}"."{field.name}"->>'{en_US}'""")
                     else:
-                        left = unaccent(f'''COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'en_US')''')
+                        left = unaccent(f'''COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'{en_US}')''')
 
                     if need_wildcard:
                         right = f'%{right}%'
@@ -1391,10 +1395,14 @@ class expression(object):
                     if params:
                         params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
                         lang = model.env.lang or 'en_US'
-                        if lang == 'en_US':
-                            query = f'''("{alias}"."{field.name}"->>'en_US' {operator} %s)'''
+                        en_US = 'en_US'
+                        if (model.env.context.get('edit_translations') or model.env.context.get('check_translations')) and callable(field.translate):
+                            lang = '_' + lang
+                            en_US = '_' + en_US
+                        if lang == en_US:
+                            query = f'''("{alias}"."{field.name}"->>'{en_US}' {operator} %s)'''
                         else:
-                            query = f'''(COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'en_US') {operator} %s)'''
+                            query = f'''(COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'{en_US}') {operator} %s)'''
                         params = [tuple(params)]
                     else:
                         # The case for (left, 'in', []) or (left, 'not in', []).

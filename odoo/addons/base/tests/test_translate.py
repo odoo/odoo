@@ -875,9 +875,9 @@ class TestXMLTranslation(TransactionCase):
         })
         view.invalidate_recordset()
 
-        val = {'en_US': archf % terms}
+        val = {'en_US': archf % terms, '_en_US': archf % terms}
         for lang, trans_terms in kwargs.items():
-            val[lang] = archf % trans_terms
+            val[lang] = val['_' + lang] = archf % trans_terms
         query = """UPDATE ir_ui_view
                       SET arch_db = %s
                     WHERE id = %s"""
@@ -994,6 +994,9 @@ class TestXMLTranslation(TransactionCase):
         # check whether translations have been reset
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+        view.update_field_translations('arch_db', {'fr_FR': {}, 'nl_NL': {}})
         self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_en[0], terms_fr[1]))
         self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_en[0], terms_nl[1]))
 
@@ -1036,13 +1039,16 @@ class TestXMLTranslation(TransactionCase):
 
         # modify the arch view, keep the same text content: 'Hi'
         terms_en = 'Hi'
-        archf = '<form string="X"><setting string="%s"><span color="red"/></setting></form>'
-        view.with_env(env_en).write({'arch_db': archf % terms_en})
+        new_archf = '<form string="X"><setting string="%s"><span color="red"/></setting></form>'
+        view.with_env(env_en).write({'arch_db': new_archf % terms_en})
 
-        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
-        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_nolang).arch_db, new_archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch_db, new_archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        view.invalidate_recordset(['arch_db'])
         # check that we didn't set string="&lt;span&gt;Salut&lt;/span&gt;"
-        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_en)
+        view.update_field_translations('arch_db', {'fr_FR': {}})
+        self.assertEqual(view.with_env(env_fr).arch_db, new_archf % terms_en)
 
     def test_sync_xml_collision(self):
         """ Check translations of 'arch' after xml tags changes in source terms
@@ -1084,6 +1090,10 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+        view.update_field_translations('arch_db', {'fr_FR': {}, 'nl_NL': {}, 'en_US': {}})
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
         # modify source term in view (actual text change)
         terms_en = ('Bread and cheese', 'Fork and Knife', 'Fork <span style="font-weight:bold">and</span> Knife')
@@ -1091,6 +1101,10 @@ class TestXMLTranslation(TransactionCase):
 
         # check whether translations have been reset
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+        view.update_field_translations('arch_db', {'fr_FR': {}, 'nl_NL': {}})
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_fr[0], terms_en[1], terms_en[2]))
         self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_nl[0], terms_en[1], terms_en[2]))

@@ -1669,7 +1669,7 @@ class _String(Field):
     def _convert_db_column(self, model, column):
         # specialized implementation for converting from/to translated fields
         if self.translate or column['udt_name'] == 'jsonb':
-            sql.convert_column_translatable(model._cr, model._table, self.name, self.column_type[1])
+            sql.convert_column_translatable(model._cr, model._table, self.name, self.column_type[1], callable(self.translate))
         else:
             sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
 
@@ -1693,7 +1693,9 @@ class _String(Field):
         if callable(self.translate):
             # pylint: disable=not-callable
             cache_value = self.translate(lambda t: None, cache_value)
-        if self.translate:
+            lang = record.env.lang or 'en_US'
+            cache_value = {'en_US': cache_value, lang: cache_value, '_en_US': cache_value, '_' + lang: cache_value}
+        elif self.translate:
             cache_value = {'en_US': cache_value, record.env.lang or 'en_US': cache_value}
         return self._convert_from_cache_to_column(cache_value)
 
@@ -1804,18 +1806,20 @@ class _String(Field):
         # pylint: disable=not-callable
         cache_value = self.translate(lambda t: None, cache_value)
         new_terms = set(self.get_trans_terms(cache_value))
+        _lang = '_' + lang
         for record in records:
             # shortcut when no term needs to be translated
             if not new_terms:
-                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+                new_translations_list.append({'en_US': cache_value, lang: cache_value, '_en_US': cache_value, _lang: cache_value})
                 continue
             # _get_stored_translations can be refactored and prefetches translations for multi records,
             # but it is really rare to write the same non-False/None/no-term value to multi records
-            old_translations = self._get_stored_translations(record)
-            if not old_translations:
-                new_translations_list.append({'en_US': cache_value, lang: cache_value})
+            stored_translations = self._get_stored_translations(record)
+            if not stored_translations:
+                new_translations_list.append({'en_US': cache_value, lang: cache_value, '_en_US': cache_value, _lang: cache_value})
                 continue
-            from_lang_value = old_translations.get(lang, old_translations['en_US'])
+            old_translations = {k: v for k, v in stored_translations.items() if k.startswith('_')}
+            from_lang_value = old_translations.get(_lang, old_translations['_en_US'])
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
@@ -1836,10 +1840,13 @@ class _String(Field):
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
                 for l in old_translations.keys()
             }
-            new_translations[lang] = cache_value
+            new_translations[_lang] = cache_value
+            new_store_translations = {k: v for k, v in stored_translations.items() if not k.startswith('_')}
+            new_store_translations.update(new_translations)
+            new_store_translations[lang] = cache_value
             if not records.env['res.lang']._lang_get_id('en_US'):
-                new_translations['en_US'] = cache_value
-            new_translations_list.append(new_translations)
+                new_store_translations['en_US'] = new_store_translations['_en_US'] = cache_value
+            new_translations_list.append(new_store_translations)
         # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
         cache.update_raw(records, self, new_translations_list, dirty=True)
 

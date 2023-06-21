@@ -1092,7 +1092,8 @@ class TranslationModuleReader:
             if not records:
                 continue
 
-            for record in records:
+            records.invalidate_recordset()
+            for record in records.with_context(check_translations=True):
                 module = imd_per_id[record.id].module
                 xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
                 for field_name, field in record._fields.items():
@@ -1112,6 +1113,7 @@ class TranslationModuleReader:
                         for term_en, term_langs in field.get_translation_dictionary(value_en, {self._lang: value_lang}).items():
                             term_lang = term_langs.get(self._lang)
                             self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
+            records.invalidate_recordset()
 
     def _get_module_from_path(self, path):
         for (mp, rec) in self._path_list:
@@ -1326,30 +1328,33 @@ class TranslationImporter:
                     for id_, xmlid, values, noupdate in cr.fetchall():
                         if not values:
                             continue
-                        value_en = values.get('en_US')
-                        if not value_en:
+                        _value_en = values.get('_en_US')
+                        if not _value_en:
                             continue
 
+                        _values = {k: v for k, v in values.items() if k.startswith('_')}
                         # {src: {lang: value}}
                         record_dictionary = field_dictionary[xmlid]
-                        langs = {lang for translations in record_dictionary.values() for lang in translations.keys()}
+                        _langs = {'_' + lang for translations in record_dictionary.values() for lang in translations.keys()}
                         translation_dictionary = field.get_translation_dictionary(
-                            value_en,
-                            {k: v for k, v in values.items() if k in langs}
+                            _value_en,
+                            {k: v for k, v in _values.items() if k in _langs}
                         )
 
                         if force_overwrite or (not noupdate and overwrite):
                             # overwrite existing translations
                             for term_en, translations in record_dictionary.items():
-                                translation_dictionary[term_en].update(translations)
+                                translation_dictionary[term_en].update({'_' + k: v for k, v in translations.items()})
                         else:
                             # keep existing translations
                             for term_en, translations in record_dictionary.items():
+                                translations = {'_' + k: v for k, v in translations.items()}
                                 translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
                                 translation_dictionary[term_en] = translations
 
-                        for lang in langs:
-                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), value_en)
+                        for _lang in _langs:
+                            lang = _lang[1:]
+                            values[_lang] = values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(_lang), _value_en)
                         params.extend((id_, Json(values)))
                     if params:
                         env.cr.execute(f"""
