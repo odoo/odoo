@@ -248,7 +248,7 @@ class SaleOrder(models.Model):
             'name': _('Milestones'),
             'domain': [('sale_line_id', 'in', self.order_line.ids)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'list')],
+            'views': [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list')],
             'view_mode': 'list',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">

@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { ViewButton } from '@web/views/view_button/view_button';
-import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
 
 import { ProjectRightSidePanelSection } from './components/project_right_side_panel_section';
 import { ProjectMilestone } from './components/project_milestone';
@@ -132,34 +131,22 @@ export class ProjectRightSidePanel extends Component {
         return data;
     }
 
-    async loadMilestones() {
-        const milestones = await this.orm.call(
-            'project.project',
-            'get_milestones',
-            [[this.projectId]],
-            { context: this.context },
-        );
-        this.state.data.milestones = milestones;
-        return milestones;
-    }
-
-    addMilestone() {
-        const context = {
-            ...this.context,
-            'default_project_id': this.projectId,
-        };
-        this.openFormViewDialog({
-            context,
-            title: _t('New Milestone'),
-            resModel: 'project.milestone',
-            onRecordSaved: async () => {
-                await this.loadMilestones();
-            },
+    async viewTasks() {
+        this.actionService.doActionButton({
+            type: "object",
+            resId: this.projectId,
+            name: "action_view_tasks_from_project_milestone",
+            resModel: "project.project",
         });
     }
 
-    async openFormViewDialog(params, options = {}) {
-        this.dialog.add(FormViewDialog, params, options);
+    async viewMilestones() {
+        this.actionService.doActionButton({
+            type: "object",
+            resId: this.projectId,
+            name: "action_get_list_view",
+            resModel: "project.project",
+        });
     }
 
     async onProjectActionClick(params) {

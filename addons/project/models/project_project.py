@@ -756,26 +756,15 @@ class Project(models.Model):
         return dict(action, context=action_context)
 
     def action_get_list_view(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _("%(name)s's Milestones", name=self.name),
-            'domain': [('project_id', '=', self.id)],
-            'res_model': 'project.milestone',
-            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'list')],
-            'view_mode': 'list',
-            'help': _("""
-                <p class="o_view_nocontent_smiling_face">
-                    No milestones found. Let's create one!
-                </p><p>
-                    Track major progress points that must be reached to achieve success.
-                </p>
-            """),
-            'context': {
-                'default_project_id': self.id,
-                **self.env.context
-            }
-        }
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_milestone_action')
+        action['display_name'] = _("%(name)s's Milestones", name=self.name)
+        return action
+
+    def action_view_tasks_from_project_milestone(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_milestone_action_view_tasks')
+        action['display_name'] = _("Tasks")
+        action['domain'] = [('milestone_id', 'in', self.milestone_ids.ids)]
+        return action
 
     # ---------------------------------------------
     #  PROJECT UPDATES
