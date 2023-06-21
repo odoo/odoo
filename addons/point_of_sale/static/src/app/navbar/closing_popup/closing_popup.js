@@ -54,7 +54,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
                 body: this.env._t(
-                    "Do you want to accept payments difference and post a profit/loss journal entry?"
+                    "Counted payment is not meet with expected. Still Accepting payment differences and posting profit/loss journal entry?"
                 ),
             });
             if (confirmed) {
