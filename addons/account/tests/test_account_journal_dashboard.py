@@ -43,7 +43,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         })
 
         # Check Draft
-        dashboard_data = journal.get_journal_dashboard_datas()
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
 
         self.assertEqual(dashboard_data['number_draft'], 2)
         self.assertIn('68.42', dashboard_data['sum_draft'])
@@ -54,7 +54,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         # Check Both
         invoice.action_post()
 
-        dashboard_data = journal.get_journal_dashboard_datas()
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['number_draft'], 1)
         self.assertIn('-\N{ZERO WIDTH NO-BREAK SPACE}13.30', dashboard_data['sum_draft'])
 
@@ -64,7 +64,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         # Check waiting payment
         refund.action_post()
 
-        dashboard_data = journal.get_journal_dashboard_datas()
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['number_draft'], 0)
         self.assertIn('0.00', dashboard_data['sum_draft'])
 
@@ -84,14 +84,14 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
             .filtered(lambda line: line.account_type == 'asset_receivable')\
             .reconcile()
 
-        dashboard_data = journal.get_journal_dashboard_datas()
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['number_draft'], 0)
         self.assertIn('0.00', dashboard_data['sum_draft'])
 
         self.assertEqual(dashboard_data['number_waiting'], 2)
         self.assertIn('78.42', dashboard_data['sum_waiting'])
 
-        dashboard_data = journal.get_journal_dashboard_datas()
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['number_late'], 2)
         self.assertIn('78.42', dashboard_data['sum_late'])
 
@@ -125,7 +125,8 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
             ('account_id', '=', self.company_data['default_account_payable'].id)
         ]).reconcile()
 
-        dashboard_data = self.company_data['default_journal_purchase'].get_journal_dashboard_datas()
+        default_journal_purchase = self.company_data['default_journal_purchase']
+        dashboard_data = default_journal_purchase._get_journal_dashboard_data_batched()[default_journal_purchase.id]
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
 
@@ -159,6 +160,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
             ('account_id', '=', self.company_data['default_account_receivable'].id)
         ]).reconcile()
 
-        dashboard_data = self.company_data['default_journal_sale'].get_journal_dashboard_datas()
+        default_journal_sale = self.company_data['default_journal_sale']
+        dashboard_data = default_journal_sale._get_journal_dashboard_data_batched()[default_journal_sale.id]
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
