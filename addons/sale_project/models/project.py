@@ -33,6 +33,7 @@ class Project(models.Model):
     vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons')
+    sale_order_state = fields.Selection(related='sale_order_id.state')
 
     @api.model
     def _map_tasks_default_values(self, task, project):
@@ -761,6 +762,7 @@ class ProjectTask(models.Model):
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
+    sale_order_state = fields.Selection(related='sale_order_id.state')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     partner_id = fields.Many2one(inverse='_inverse_partner_id')
