@@ -2971,6 +2971,12 @@ QUnit.module("Fields", (hooks) => {
             ["abc1", "xyz1"]
         );
 
+        await click(target.querySelector("table thead [data-name='int_field'].o_column_sortable"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row")].map((c) => c.textContent),
+            ["abc1", "xyz1"]
+        );
+
         await click(target.querySelector("table thead [data-name='foo'].o_column_sortable"));
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row")].map((c) => c.textContent),
