@@ -11,7 +11,7 @@
                 <span t-field="o.shipping_weight"/>
                 <span t-field="o.weight_uom_name"/>
             </div>
-            <div t-if="o.carrier_tracking_ref" class="col-auto">
+            <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
                 <strong>Tracking Number:</strong>
                 <p t-field="o.carrier_tracking_ref"/>
             </div>
