@@ -2805,9 +2805,9 @@ class TestFields(TransactionCaseWithUserDemo):
 
         with self.assertQueries(["""
             SELECT "test_new_api_prefetch"."id",
-                   "test_new_api_prefetch"."name"->>'en_US',
-                   "test_new_api_prefetch"."description"->>'en_US',
-                   "test_new_api_prefetch"."html_description"->>'en_US',
+                   "test_new_api_prefetch"."name"->>%s,
+                   "test_new_api_prefetch"."description"->>%s,
+                   "test_new_api_prefetch"."html_description"->>%s,
                    "test_new_api_prefetch"."create_uid",
                    "test_new_api_prefetch"."create_date",
                    "test_new_api_prefetch"."write_uid",

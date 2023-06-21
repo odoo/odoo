@@ -944,7 +944,7 @@ class Cache(object):
             cache_value = field_cache.get(record.id, EMPTY_DICT)
             if cache_value is None:
                 return True
-            lang = record.env.lang or 'en_US'
+            lang = field._lang(record.env)
             return lang in cache_value
 
         return record.id in field_cache
@@ -965,7 +965,7 @@ class Cache(object):
             field_cache = self._get_field_cache(record, field)
             cache_value = field_cache[record._ids[0]]
             if field.translate and cache_value is not None:
-                lang = record.env.lang or 'en_US'
+                lang = field._lang(record.env)
                 return cache_value[lang]
             return cache_value
         except KeyError:
@@ -986,6 +986,7 @@ class Cache(object):
         """
         field_cache = self._set_field_cache(record, field)
         if field.translate and value is not None:
+            # only for model translated fields
             lang = record.env.lang or 'en_US'
             cache_value = field_cache.get(record._ids[0]) or {}
             cache_value[lang] = value
@@ -1019,6 +1020,7 @@ class Cache(object):
             dirty must raise an exception
         """
         if field.translate:
+            # only for model translated fields
             lang = records.env.lang or 'en_US'
             field_cache = self._get_field_cache(records, field)
             cache_values = []
@@ -1065,14 +1067,20 @@ class Cache(object):
         if field.translate:
             if records.env.context.get('prefetch_langs'):
                 langs = {lang for lang, _ in records.env['res.lang'].get_installed()} | {'en_US'}
+                _langs = {f'_{l}' for l in langs} if field._lang(records.env).startswith('_') else set()
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
                     else:
-                        val_all_en = dict.fromkeys(langs, val['en_US'])
-                        field_cache[id_] = {**val_all_en, **val}
+                        if _langs:  # fallback missing _lang to lang if exists
+                            val.update({f'_{k}': v for k, v in val.items() if k in langs and f'_{k}' not in val})
+                        field_cache[id_] = {
+                            **dict.fromkeys(langs, val['en_US']),  # fallback missing lang to en_US
+                            **dict.fromkeys(_langs, val.get('_en_US')),  # fallback missing _lang to _en_US
+                            **val
+                        }
             else:
-                lang = records.env.lang or 'en_US'
+                lang = field._lang(records.env)
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1106,7 +1114,7 @@ class Cache(object):
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
         field_cache = self._get_field_cache(records, field)
         if field.translate:
-            lang = records.env.lang or 'en_US'
+            lang = field._lang(records.env)
 
             def get_value(id_):
                 cache_value = field_cache[id_]
@@ -1160,7 +1168,7 @@ class Cache(object):
         """ Return the ids of ``records`` that have no value for ``field``. """
         field_cache = self._get_field_cache(records, field)
         if field.translate:
-            lang = records.env.lang or 'en_US'
+            lang = field._lang(records.env)
             for record_id in records._ids:
                 cache_value = field_cache.get(record_id, False)
                 if cache_value is False or not (cache_value is None or lang in cache_value):

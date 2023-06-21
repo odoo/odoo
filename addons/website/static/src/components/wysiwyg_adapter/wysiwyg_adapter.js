@@ -995,7 +995,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 });
             };
         }
-        if (this._isDirty()) {
+        if (this._isDirty() || this.options.enableTranslation) {
             return this.save().then(callback, event.data.onFailure);
         } else {
             return callback();

@@ -46,19 +46,19 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
             WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND "test_new_api_indexed_translation"."name"->>'en_US' ILIKE %s)
+            AND "test_new_api_indexed_translation"."name"->>%s ILIKE %s)
             ORDER BY "test_new_api_indexed_translation"."id"
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
             WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
-            AND COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>'en_US') ILIKE %s)
+            AND COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>%s) ILIKE %s)
             ORDER BY "test_new_api_indexed_translation"."id"
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
             WHERE ("test_new_api_indexed_translation"."name" IS NULL
-            OR COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>'en_US') ILIKE %s)
+            OR COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>%s) ILIKE %s)
             ORDER BY "test_new_api_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])

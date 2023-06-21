@@ -2544,12 +2544,18 @@ export class Wysiwyg extends Component {
         // iframe or not.
         // If the element is given, then search within not from the document.
         const $ = element ? getJqueryFromDocument(element) : getJqueryFromDocument(this.$editable[0].ownerDocument);
-        const $allBlocks = $((this.options || {}).savableSelector).filter('.o_dirty');
+        const $allBlocks = $((this.options || {}).savableSelector).filter(
+            this.options.enableTranslation
+            ? '.o_dirty, .o_delay_translation'
+            : '.o_dirty');
 
         const $dirty = $('.o_dirty');
         $dirty
             .removeAttr('contentEditable')
             .removeClass('o_dirty oe_carlos_danger o_is_inline_editable');
+
+        const $delay_translation = $('.o_delay_translation');
+        $delay_translation.removeClass('o_delay_translation');
 
         $('.o_editable')
             .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
@@ -2678,7 +2684,10 @@ export class Wysiwyg extends Component {
             escapedHtml,
             !$el.data('oe-expression') && $el.data('oe-xpath') || null
         ], {
-            context,
+            context: {
+                ...context,
+                delay_translations: true,
+            },
         });
         return result;
     }
