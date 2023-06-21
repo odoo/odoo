@@ -120,12 +120,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             })
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_limited_type_no_days(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
-
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_limited_type_days_left(self):
         """  Employee creates a leave request in a limited category and has enough days left  """
         with freeze_time('2022-01-05'):
@@ -181,12 +175,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': fields.Datetime.from_string('2017-03-11 19:00:00'),
             'number_of_days': 1,
         })
-
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_accrual_validity_time_not_valid(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_department_leave(self):
