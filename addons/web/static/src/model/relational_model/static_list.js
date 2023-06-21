@@ -775,7 +775,10 @@ export class StaticList extends DataPoint {
         const currentIds = nextCurrentIds.slice(offset, offset + limit);
         const resIds = this._getResIdsToLoad(currentIds);
         if (resIds.length) {
-            const records = await this.model._loadRecords({ ...this.config, resIds });
+            const records = await this.model._loadRecords(
+                { ...this.config, resIds },
+                this.evalContext
+            );
             for (const record of records) {
                 this._createRecordDatapoint(record);
             }
