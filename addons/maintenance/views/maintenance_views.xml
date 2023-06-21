@@ -232,7 +232,7 @@
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{'default_user_id': uid}</field>
         <field name="help" type="html">
@@ -247,7 +247,7 @@
     <record id="hr_equipment_request_action_link" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="search_view_id" ref="hr_equipment_request_view_search"/>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
@@ -267,7 +267,7 @@
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
         <field name="binding_model_id" ref="maintenance.model_maintenance_equipment"/>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="context">{
             'default_equipment_id': active_id,
         }</field>
@@ -284,7 +284,7 @@
     <record id="hr_equipment_todo_request_action_from_dashboard" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="context">{
             'default_maintenance_team_id': active_id,
         }</field>
@@ -301,7 +301,7 @@
     <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">calendar,kanban,tree,form,pivot,graph</field>
+        <field name="view_mode">calendar,kanban,tree,form,pivot,graph,activity</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -315,7 +315,7 @@
     <record id="maintenance_request_action_reports" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
+        <field name="view_mode">graph,pivot,kanban,tree,form,calendar,activity</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
