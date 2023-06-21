@@ -37,9 +37,11 @@ export class SelfOrder {
             effect((state) => this.saveOrderToLocalStorage(state.orders), [this]);
         }
 
-        if (!this.has_active_session && this.self_order_mode !== "qr_code") {
+        if (!this.has_active_session || this.self_order_mode === "qr_code") {
             this.closeNotification = this.notification.add(
-                _t("The restaurant is closed. You can browse the menu, but ordering is disabled."),
+                _t(
+                    "The restaurant is closed. You can browse the menu, but ordering is not available."
+                ),
                 { type: "warning" }
             );
         }
