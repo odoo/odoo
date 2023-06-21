@@ -43,9 +43,9 @@ class AccountMove(models.Model):
 
         return lot_values
 
-    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+    def _get_reconciled_vals(self, reconciled_partial, currency_id, counterpart_line):
         """Add pos_payment_name field in the reconciled vals to be able to show the payment method in the invoice."""
-        result = super()._get_reconciled_vals(partial, amount, counterpart_line)
+        result = super()._get_reconciled_vals(reconciled_partial, currency_id, counterpart_line)
         if counterpart_line.move_id.sudo().pos_payment_ids:
             pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
             result['pos_payment_name'] = pos_payment.payment_method_id.name
