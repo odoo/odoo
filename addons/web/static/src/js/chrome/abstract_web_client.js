@@ -24,11 +24,24 @@ var RainbowMan = require('web.RainbowMan');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-
 const env = require('web.env');
+const SessionClass = require('web.Session')
 
 var _t = core._t;
 
+// Whether the tag is a firefox browser    
+let isFirefoxReload = false;
+
+SessionClass.include({
+    setCompanies: function () {
+        if　(navigator.userAgent.match(/Firefox/i)) {
+            isFirefoxReload = true;
+        }
+        return this._super.apply(this, arguments);
+    },
+})
+
+    
 var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
     dependencies: ['notification'],
     events: _.extend({}, KeyboardNavigationMixin.events),
@@ -369,6 +382,9 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
      * @private
      */
     _onConnectionLost: function () {
+        if (isFirefoxReload) {
+            return;
+        }
         this.connectionNotificationID = this.displayNotification({
             message: _t('Connection lost. Trying to reconnect...'),
             sticky: true
