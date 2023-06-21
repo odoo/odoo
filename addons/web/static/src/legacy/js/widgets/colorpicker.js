@@ -39,17 +39,18 @@ var ColorpickerWidget = Widget.extend({
         this.uniqueId = _.uniqueId('colorpicker');
         this.selectedHexValue = '';
 
-        // Needs to be bound on document to work in all possible cases.
-        const $document = $(
-            (parent.el && parent.el.parentElement && parent.el.ownerDocument)
-            || (parent.options && parent.options.$editable && parent.options.$editable[0] && parent.options.$editable[0].ownerDocument)
-            || document);
-        $document.on(`mousemove.${this.uniqueId}`, _.throttle((ev) => {
+        // Need to be bound on all documents to work in all possible cases (we
+        // have to be able to start dragging/moving from the colorpicker to
+        // anywhere on the screen, crossing iframes).
+        // TODO adapt in master: these events should probably be bound in
+        // `start` instead of `init` (at least to be more conventional).
+        this.$documents = $([window.top, ...Array.from(window.top.frames)].map(w => w.document));
+        this.$documents.on(`mousemove.${this.uniqueId}`, _.throttle((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
             this._onMouseMoveOpacitySlider(ev);
         }, 50));
-        $document.on(`mouseup.${this.uniqueId}`, _.throttle((ev) => {
+        this.$documents.on(`mouseup.${this.uniqueId}`, _.throttle((ev) => {
             if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
                 this._colorSelected();
             }
@@ -105,7 +106,7 @@ var ColorpickerWidget = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(document).off(`.${this.uniqueId}`);
+        this.$documents.off(`.${this.uniqueId}`);
     },
     /**
      * Sets the currently selected color
