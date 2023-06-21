@@ -29,7 +29,7 @@ class Job(models.Model):
         default=_get_default_description, prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
-    website_published = fields.Boolean(help='Set if the application is published on the website of the company.')
+    website_published = fields.Boolean(help='Set if the application is published on the website of the company.', tracking=True)
     website_description = fields.Html(
         'Website description', translate=html_translate,
         default=_get_default_website_description, prefetch=False,
