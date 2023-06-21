@@ -351,6 +351,13 @@
 
         <!-- ACTIONS -->
 
+        <record id="action_account_all_payments" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,kanban,form,graph,activity</field>
+            <field name="view_id" ref="view_account_payment_tree"/>
+        </record>
+
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Customer Payments</field>
             <field name="res_model">account.payment</field>
