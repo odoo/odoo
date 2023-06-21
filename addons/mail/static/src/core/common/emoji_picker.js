@@ -19,7 +19,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 /**
  *
@@ -269,16 +269,8 @@ export class EmojiPicker extends Component {
     getEmojis() {
         const search = this.state.searchStr;
         if (search.length > 1) {
-            const regexp = new RegExp(
-                search
-                    .split("")
-                    .map((x) => escapeRegExp(x))
-                    .join(".*")
-            );
-            return this.emojis.filter((emoji) =>
-                [emoji.name, ...emoji.keywords, ...emoji.emoticons, ...emoji.shortcodes].some((x) =>
-                    x.match(regexp)
-                )
+            return fuzzyLookup(this.state.searchStr, this.emojis, (emoji) =>
+                [emoji.name, ...emoji.keywords, ...emoji.emoticons, ...emoji.shortcodes].join(" ")
             );
         }
         return this.emojis;

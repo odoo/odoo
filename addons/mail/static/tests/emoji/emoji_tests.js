@@ -23,6 +23,16 @@ QUnit.test("search emoji from keywords", async (assert) => {
     assert.containsOnce($, ".o-mail-Emoji:contains(🌮)");
 });
 
+QUnit.test("search emoji from keywords should be case insensitive", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await insertText("input[placeholder='Search for an emoji']", "ok");
+    assert.containsOnce($, ".o-mail-Emoji:contains(🆗)"); // all search terms are uppercase OK
+});
+
 QUnit.test("search emoji from keywords with special regex character", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
