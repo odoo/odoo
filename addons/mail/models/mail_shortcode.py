@@ -20,3 +20,4 @@ class MailShortcode(models.Model):
         help="Content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.")
     description = fields.Char('Description')
     message_ids = fields.Many2one('mail.message', string="Messages", store=False)
+    last_used = fields.Datetime('Last Used', help="Last time this shortcode was used")
