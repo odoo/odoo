@@ -140,6 +140,13 @@ class AccountBankStatementLine(models.Model):
     statement_valid = fields.Boolean(
         related='statement_id.is_valid',
     )
+    statement_balance_end_real = fields.Monetary(
+        related='statement_id.balance_end_real',
+    )
+    statement_name = fields.Char(
+        string="Statement Name",
+        related='statement_id.name',
+    )
 
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)
