@@ -157,10 +157,6 @@ export class PosStore extends Reactive {
             searchProductWord: "",
         });
 
-        this.ready = new Promise((resolve) => {
-            this.markReady = resolve;
-        });
-
         this.hardwareProxy = hardware_proxy;
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
@@ -201,7 +197,6 @@ export class PosStore extends Reactive {
         this.hasBigScrollBars = this.config.iface_big_scrollbars;
         // Push orders in background, do not await
         this.push_orders();
-        this.markReady();
     }
 
     async load_server_data() {
@@ -243,7 +238,6 @@ export class PosStore extends Reactive {
         this._loadPosPaymentMethod();
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
-        await this._loadFonts();
         await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
     }

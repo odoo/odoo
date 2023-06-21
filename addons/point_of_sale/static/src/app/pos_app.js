@@ -30,7 +30,10 @@ export class Chrome extends Component {
             }
         });
 
-        onMounted(this.props.disableLoader);
+        onMounted(() => {
+            this.props.disableLoader();
+            this.pos._loadFonts();
+        });
     }
 
     // GETTERS //
