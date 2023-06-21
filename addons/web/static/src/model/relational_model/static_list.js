@@ -860,7 +860,7 @@ export class StaticList extends DataPoint {
         const fieldNames = orderBy.map((o) => o.name);
         const resIds = this._getResIdsToLoad(currentIds, fieldNames);
         if (resIds.length) {
-            const activeFields = pick(this.activeFields, fieldNames);
+            const activeFields = pick(this.activeFields, ...fieldNames);
             const config = { ...this.config, resIds, activeFields };
             const records = await this.model._loadRecords(config);
             for (const record of records) {
