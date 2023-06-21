@@ -91,21 +91,31 @@ function insert(editor, data, isText = true) {
     // In case the html inserted is all contained in a single root <p> or <li>
     // tag, we take the all content of the <p> or <li> and avoid inserting the
     // <p> or <li>. The same is true for a <pre> inside a <pre>.
+    const isBlockElement = (node) => isBlock(node) && !["TABLE", "UL", "OL"].includes(node.nodeName) && startNode.textContent !== "";
+
     if (fakeEl.childElementCount === 1 && (
         fakeEl.firstChild.nodeName === 'P' ||
         fakeEl.firstChild.nodeName === 'LI' ||
-        fakeEl.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+        fakeEl.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre') ||
+        // In case <p>te[]st</p> -----> <h1>A<br>B<br>C</h1>(pasted text)--->  <p>teA<br>B<br>Cst</p>
+        isBlockElement(fakeEl.firstChild)
     )) {
         const p = fakeEl.firstElementChild;
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
         // Grab the content of the first child block and isolate it.
-        if (isBlock(fakeEl.firstChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.firstChild.nodeName)) {
+        if (
+            isBlockElement(fakeEl.firstChild) ||
+            fakeEl.firstChild.nodeName === "P"
+        ) {
             fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
             fakeEl.firstElementChild.remove();
         }
         // Grab the content of the last child block and isolate it.
-        if (isBlock(fakeEl.lastChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.lastChild.nodeName)) {
+        if (
+            isBlockElement(fakeEl.lastChild) ||
+            fakeEl.lastChild.nodeName === 'P'
+        ) {
             fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
             fakeEl.lastElementChild.remove();
         }
