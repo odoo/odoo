@@ -312,7 +312,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, `<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-ddad60c5-7fff-0a8f-fdd5-c1107201fe26"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test1</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></b>`);
                     },
-                    contentAfter: '<p>test1</p><p>test2[]<br></p>',
+                    contentAfter: '<p>test1</p><p>test2[]</p>',
                 });
             });
             it('should remove unwanted b tag and p tag with unwanted styles when pasting list from gdocs', async () => {
@@ -321,7 +321,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-5d8bcf85-7fff-ebec-8604-eedd96f2d601"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></li></ul></b>');
                     },
-                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2</li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2[]</li></ul>',
                 });
             });
             it('should remove unwanted styles and keep tags when pasting list from gdoc', async () => {
@@ -330,7 +330,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-477946a8-7fff-f959-18a4-05014997e161"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:6pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></h1></li></ul></b>');
                     },
-                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2</h1></li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2[]</h1></li></ul>',
                 });
             });
         });
@@ -2024,6 +2024,66 @@ describe('Paste', () => {
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',
+                });
+            });
+        });
+    });
+    describe('Pasting h1', () => {
+        describe('range collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c[]</h1>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
+                });
+            });
+        });
+        describe('range not collapsed', async () => {
+            it('should paste h1 when pasting in empty p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[test]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<h1>a</h1><h1>b</h1><h1>c[]</h1>',
+                });
+            });
+            it('should paste first and last child into p when pasting h1 in p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a</h1><h1>b</h1><h1>c</h1>');
+                    },
+                    contentAfter: '<p>tea</p><h1>b</h1><p>c[]st</p>',
+                });
+            });
+            it('should convert single h1 into p if p has content', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>te[xx]st</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>a<br>b<br>c</h1>');
+                    },
+                    contentAfter: '<p>tea<br>b<br>c[]st</p>',
                 });
             });
         });
