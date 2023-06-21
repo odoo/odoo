@@ -102,14 +102,15 @@ QUnit.module("Tour service", (hooks) => {
     });
 
     QUnit.test("override existing tour by using saveAs", async function (assert) {
-        registry.category("web_tour.tours")
+        registry
+            .category("web_tour.tours")
             .add("Tour 1", {
                 steps: [{ trigger: "#1" }],
-                saveAs: "homepage"
+                saveAs: "homepage",
             })
             .add("Tour 2", {
                 steps: [{ trigger: "#2" }],
-                saveAs: "homepage"
+                saveAs: "homepage",
             });
         const env = await makeTestEnv({});
         const sortedTours = env.services.tour_service.getSortedTours();
@@ -144,7 +145,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(800);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await click(target, "button.inc");
@@ -181,7 +181,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100);
         assert.containsOnce(document.body, ".o_tour_pointer");
 
@@ -241,7 +240,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100); // awaits the macro engine
 
         // Even if this seems weird, it should show the initial pointer.
@@ -333,7 +331,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(100); // awaits the macro engine
         assert.containsOnce(document.body, ".o_tour_pointer");
         assert.equal(document.body.querySelector(".o_tour_pointer").textContent, stepContent);
@@ -408,7 +405,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await editInput(target, ".interval input", "5");
@@ -441,7 +437,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         env.services.tour_service.bus.addEventListener("STEP-CONSUMMED", ({ detail }) => {
             assert.step(`Tour ${detail.tour.name}, step ${detail.step.trigger}`);
         });
@@ -485,8 +480,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
-        env.services.tour_service.startTour("tour2", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(document.body, ".o_tour_pointer");
         await editInput(target, ".interval input", "5");
@@ -522,7 +515,6 @@ QUnit.module("Tour service", (hooks) => {
         }
 
         await mount(Root, target, { env, props: { tourPointerProps } });
-        env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(target, ".o_tour_pointer");
         triggerEvent(target, "button.inc", "mouseenter");
@@ -536,4 +528,75 @@ QUnit.module("Tour service", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_tour_pointer_content.invisible");
     });
+
+    QUnit.test(
+        "registering non-test tour after service is started auto-starts the tour",
+        async function (assert) {
+            const env = await makeTestEnv({});
+
+            const { Component: TourPointerContainer, props: tourPointerProps } = registry
+                .category("main_components")
+                .get("TourPointerContainer");
+
+            class Root extends Component {
+                static components = { TourPointerContainer, Counter };
+                static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+                </t>
+            `;
+            }
+
+            await mount(Root, target, { env, props: { tourPointerProps } });
+            assert.containsNone(target, ".o_tour_pointer");
+            registry.category("web_tour.tours").add("tour1", {
+                steps: [
+                    {
+                        content: "content",
+                        trigger: "button.inc",
+                    },
+                ],
+            });
+            await mock.advanceTime(750);
+            await nextTick();
+            assert.containsOnce(target, ".o_tour_pointer");
+        }
+    );
+
+    QUnit.test(
+        "registering test tour after service is started doesn't auto-start the tour",
+        async function (assert) {
+            const env = await makeTestEnv({});
+
+            const { Component: TourPointerContainer, props: tourPointerProps } = registry
+                .category("main_components")
+                .get("TourPointerContainer");
+
+            class Root extends Component {
+                static components = { TourPointerContainer, Counter };
+                static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+                </t>
+            `;
+            }
+
+            await mount(Root, target, { env, props: { tourPointerProps } });
+            assert.containsNone(target, ".o_tour_pointer");
+            registry.category("web_tour.tours").add("tour1", {
+                test: true,
+                steps: [
+                    {
+                        content: "content",
+                        trigger: "button.inc",
+                    },
+                ],
+            });
+            await mock.advanceTime(750);
+            await nextTick();
+            assert.containsNone(target, ".o_tour_pointer");
+        }
+    );
 });
