@@ -229,9 +229,14 @@
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
                 <field name="refuse_reason_id"/>
+                <field name="application_status"/>
+                <field name="date_closed"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Resume's content"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
+                <filter string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
@@ -263,10 +268,10 @@
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
+                    <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
                     <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
-                    <filter string="Degree" name="degree" domain="[]" context="{'group_by': 'type_id'}"/>
-                    <filter string="Tags" name="group_by_categ_ids" context="{'group_by':'categ_ids'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
            </search>
         </field>

@@ -32,8 +32,8 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <page name="recruitment_page" position="inside">
-                <label for="job_details" class="mb-2"/>
-                <field name="job_details"/>
+                <separator string="Process Details"/>
+                <field name="job_details" nolabel="1"/>
             </page>
         </field>
     </record>
