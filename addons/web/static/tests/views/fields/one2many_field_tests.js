@@ -5086,6 +5086,42 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "one2many list, multi page, with many2one and with context with parent key",
+        async function (assert) {
+            serverData.models.partner.records[0].turtles = [1, 2, 3];
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="turtles">
+                            <tree limit="2">
+                                <field name="product_id" context="{'partner_foo': parent.foo}"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+                mockRPC(route, { method, model, kwargs }) {
+                    if (method === "web_read" && model === "turtle") {
+                        assert.step("web_read turtle");
+                        assert.deepEqual(
+                            kwargs.specification.product_id.context,
+                            { partner_foo: "yop" },
+                            "should have correctly evaluated parent foo field"
+                        );
+                    }
+                },
+            });
+
+            await click(target, ".o_x2m_control_panel .o_pager_next");
+            assert.verifySteps(["web_read turtle"]);
+        }
+    );
+
     QUnit.test("one2many list, editable, with a date in the context", async function (assert) {
         assert.expect(1);
 
