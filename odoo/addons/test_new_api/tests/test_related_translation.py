@@ -139,6 +139,31 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             translation_importer.save(overwrite=True)
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Nouveau couteau')
 
+    def test_write_from_ori_term(self):
+        self.test1.with_context(lang='fr_FR').html = '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>'
+        self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def test_delay_write_from_ori_term(self):
+        self.test1.with_context(lang='fr_FR', delay_translations=True).html = '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>'
+        self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+        self.assertEqual(self.test1.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
     def test_translate_from_ori_term(self):
         self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
         self.assertEqual(self.test1.with_context(lang='fr_FR').html, '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>')
@@ -157,6 +182,31 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(self.test2.with_context(lang='fr_FR').computed_html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
         self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
         self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def test_write_from_related_term(self):
+        self.test3.with_context(lang='fr_FR').html = '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>'
+        self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def test_delay_write_from_related_term(self):
+        self.test3.with_context(lang='fr_FR', delay_translations=True).html = '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>'
+        self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+        self.assertEqual(self.test1.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test1.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test2.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test2.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
+        self.assertEqual(self.test3.with_context(lang='en_US', check_translations=True).html, '<p>Nouveau couteau</p><p>Fork</p><p>Spoon</p>')
+        self.assertEqual(self.test3.with_context(lang='fr_FR', check_translations=True).html, '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>')
 
     def test_translate_from_related_term(self):
         self.assertEqual(self.test1.with_context(lang='en_US').html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
