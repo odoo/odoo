@@ -3194,8 +3194,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelectorAll("tfoot td")[1].textContent,
-            "—",
-            "aggregates monetary should never work if no currency field is present"
+            "2000.000",
+            "aggregates monetary use digits attribute if available"
         );
     });
 
@@ -3263,7 +3263,7 @@ QUnit.module("Views", (hooks) => {
             "0.00",
         ]);
 
-        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "2000.00");
     });
 
     QUnit.test("aggregates monetary (currency field in view)", async function (assert) {
