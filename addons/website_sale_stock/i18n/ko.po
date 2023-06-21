@@ -27,11 +27,12 @@ msgid ""
 "<span attrs=\"{'invisible': [('show_availability', '=', "
 "False)]}\">Units</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('show_availability', '=', False)]}\">단위</span>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "재고 있음 알림"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -49,7 +50,7 @@ msgstr "판매 계속"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "품절 시에도 계속 판매하기"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -66,37 +67,37 @@ msgstr "새로 만든 저장 가능한 제품에 설정된 기본 가용성 모�
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default visibility for custom messages."
-msgstr ""
+msgstr "사용자 지정 메시지의 기본 표시 여부."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
-msgstr ""
+msgstr "재입고 시 알림 받기"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
-msgstr ""
+msgstr "수량이 적은 제품(재고 보유-예약)을 표시하는 방법"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
-msgstr ""
+msgstr "잘못된 이메일"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
-msgstr ""
+msgstr "잘못된 이메일"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "재고 기본값"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -115,19 +116,19 @@ msgstr "지금 주문"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
-msgstr ""
+msgstr "품절"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr ""
+msgstr "품절"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr ""
+msgstr "품절 메시지"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/product_product.py:0
@@ -146,7 +147,7 @@ msgstr "품목 세부선택"
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
 #: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "제품: 제품 구매 가능 여부에 대한 이메일 전송"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -167,21 +168,21 @@ msgstr "판매 주문 내역"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Qty"
-msgstr ""
+msgstr "구매 가능 수량 보기"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Show Threshold"
-msgstr ""
+msgstr "임계값 보기"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "주문 가능 수량 표시"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -194,20 +195,20 @@ msgstr "일부 제품이 품절되어 장바구니가 업데이트되었습니�
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr ""
+msgstr "다음 제품은 현재 주문하실 수 있습니다."
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
-msgstr ""
+msgstr "이제 '%(product_name)s' 제품을 구매하실 수 있습니다."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
-msgstr ""
+msgstr "이 제품은 현재 품절되었습니다."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -231,7 +232,7 @@ msgstr "창고"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
-msgstr ""
+msgstr "해당 품목이 재입고되면 다시 알려드리겠습니다."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -242,7 +243,7 @@ msgstr "웹사이트"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr ""
+msgstr "전자상거래 주문이 이루어진 웹사이트."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -256,21 +257,21 @@ msgstr "이미 추가되었습니다"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
-msgstr ""
+msgstr "이미 장바구니에 구매 가능한 모든 제품을 추가했습니다."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
-msgstr ""
+msgstr "장바구니에 이미 %s 단위가 있습니다."
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
-msgstr ""
+msgstr "요청하신 품목 수량은 %(desired_qty)s이나 현재 가능한 수량은 %(new_qty)s 입니다."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -278,7 +279,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
-msgstr ""
+msgstr "요청하신 단위는 %s이나 현재 사용 가능한 단위는 %s입니다."
 
 #. module: website_sale_stock
 #. openerp-web
@@ -292,17 +293,17 @@ msgstr "장바구니"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
-msgstr ""
+msgstr "재고가 남았습니다."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr ""
+msgstr "다음과 같은 경우에만"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"

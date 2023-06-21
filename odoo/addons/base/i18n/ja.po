@@ -9,6 +9,7 @@
 # Noma Yuki, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1719,6 +1720,7 @@ msgid ""
 "inclusion of rating directly within the customer portal discuss widget.\n"
 "        "
 msgstr ""
+"\n"
 "ポータルに評価機能を追加するブリッジモジュール。特に、カスタマーポータルのディスカッションウィジェット内に直接評価を含めることが含まれます。"
 
 #. module: base
@@ -1732,6 +1734,7 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"\n"
 "リーフをタイムシートに統合するためのブリッジモジュール\n"
 "================================================\n"
 "\n"
@@ -1858,6 +1861,7 @@ msgid ""
 "Allows to contact directly the employee in case of unjustified absence.\n"
 "    "
 msgstr ""
+"\n"
 "従業員のプレゼンスを制御する\n"
 "==========================\n"
 "\n"
@@ -1908,6 +1912,7 @@ msgid ""
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
 "美しい調査を作成し、回答を視覚化する\n"
 "==============================================\n"
 "異なるユーザーによるいくつかの質問の回答またはレビューに依存します。\n"
@@ -2266,6 +2271,7 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
 "機能\n"
 "----------\n"
 "\n"
@@ -2280,7 +2286,7 @@ msgstr ""
 "ローカリゼーションに必要な場合、このロジックはこのモジュールを依存関係として追加し、ローカリゼーションモジュールに拡張する必要があります。\n"
 "\n"
 "*会社の_localization_use_documents()メソッドを拡張します。\n"
-"*特定の国に存在するドキュメントタイプのデータを作成します。ドキュメントタイプには国フィールドがあります"
+"*特定の国に存在するドキュメントタイプのデータを作成します。ドキュメントタイプには国フィールドがあります\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -9034,7 +9040,7 @@ msgstr "アドレス帳を一元化する"
 #. module: base
 #: model:ir.module.module,summary:base.module_knowledge
 msgid "Centralize, manage, share and grow your knowledge library"
-msgstr ""
+msgstr "ナレッジライブラリの一元化、管理、共有、育成"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -9598,6 +9604,13 @@ msgstr "完全な名前"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "集計日"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -10528,7 +10541,7 @@ msgstr "顧客リファレンス"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr "顧客関係管理"
+msgstr "CRM"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -25913,6 +25926,12 @@ msgstr "現在ログインしているユーザを無効にすることはでき
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
