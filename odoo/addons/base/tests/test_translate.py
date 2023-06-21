@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from hashlib import sha256
 from unittest.mock import patch
 import logging
 import time
@@ -1158,6 +1159,117 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_context(lang='en_US').arch_db, '<form string="X">Bread and cheese<div>Fork3</div></form>')
         self.assertEqual(view.with_context(lang='es_ES').arch_db, '<form string="X">Bread and cheese<div>Tenedor3</div></form>')
 
+    def test_delay_translations(self):
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        terms_fr = ('Couteau', 'Fourchette', 'Cuiller')
+        view0 = self.create_view(archf, terms_en, fr_FR=terms_fr)
+
+        archf2 = '<form string="%s"><p>%s</p><div>%s</div></form>'
+        terms_en2 = ('new Knife', 'Fork', 'Spoon')
+        # write en_US with delay_translations
+        view0.with_context(lang='en_US', delay_translations=True).arch_db = archf2 % terms_en2
+        view0.invalidate_recordset()
+
+        self.assertEqual(
+            view0.with_context(lang='en_US').arch_db,
+            archf2 % terms_en2,
+            'en_US value should be the latest one since it is updated directly'
+        )
+        self.assertEqual(view0.with_context(lang='en_US', check_translations=True).arch_db, archf2 % terms_en2)
+
+        self.assertEqual(
+            view0.with_context(lang='fr_FR').arch_db,
+            archf % terms_fr,
+            "fr_FR value should keep the same since its translations hasn't been confirmed"
+        )
+        self.assertEqual(
+            view0.with_context(lang='fr_FR', edit_translations=True).arch_db,
+            '<form string="'
+                '&lt;span '
+                     'class=&quot;o_dirty&quot; '
+                     'data-oe-model=&quot;ir.ui.view&quot; '
+                    f'data-oe-id=&quot;{view0.id}&quot; '
+                     'data-oe-field=&quot;arch_db&quot; '
+                     'data-oe-translation-state=&quot;to_translate&quot; '
+                    f'data-oe-translation-initial-sha=&quot;{sha256(terms_en2[0].encode()).hexdigest()}&quot;'
+                '&gt;'
+                    f'{terms_en2[0]}'
+                '&lt;/span&gt;"'
+            '>'
+                '<p>'
+                    '<span '
+                         'class="o_dirty" '
+                         'data-oe-model="ir.ui.view" '
+                        f'data-oe-id="{view0.id}" '
+                         'data-oe-field="arch_db" '
+                         'data-oe-translation-state="translated" '
+                        f'data-oe-translation-initial-sha="{sha256(terms_fr[1].encode()).hexdigest()}"'
+                    '>'
+                        f'{terms_fr[1]}'
+                    '</span>'
+                '</p>'
+                '<div>'
+                    '<span '
+                         'class="o_dirty" '
+                         'data-oe-model="ir.ui.view" '
+                        f'data-oe-id="{view0.id}" '
+                         'data-oe-field="arch_db" '
+                         'data-oe-translation-state="translated" '
+                        f'data-oe-translation-initial-sha="{sha256(terms_fr[2].encode()).hexdigest()}"'
+                    '>'
+                        f'{terms_fr[2]}'
+                    '</span>'
+                '</div>'
+            '</form>'
+        )
+        self.assertEqual(
+            view0.with_context(lang='fr_FR', check_translations=True).arch_db,
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+        )
+
+        self.assertEqual(
+            view0.with_context(lang='nl_NL').arch_db,
+            archf2 % terms_en2,
+            "nl_NL value should fallback to en_US value"
+        )
+        self.assertEqual(
+            view0.with_context(lang='nl_NL', check_translations=True).arch_db,
+            archf2 % terms_en2
+        )
+
+        # update and confirm translations
+        view0.update_field_translations('arch_db', {'fr_FR': {}})
+        self.assertEqual(
+            view0.with_context(lang='fr_FR').arch_db,
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+        )
+        self.assertEqual(
+            view0.with_context(lang='fr_FR', check_translations=True).arch_db,
+            archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
+        )
+
+    def test_delay_translations_no_term(self):
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        terms_fr = ('Couteau', 'Fourchette', 'Cuiller')
+        view0 = self.create_view(archf, terms_en, fr_FR=terms_fr)
+
+        archf2 = '<form/>'
+        # delay_translations only works when the written value has at least one translatable term
+        view0.with_context(lang='en_US', delay_translations=True).arch_db = archf2
+        for lang in ('en_US', 'fr_FR', 'nl_NL'):
+            self.assertEqual(
+                view0.with_context(lang=lang).arch_db,
+                archf2,
+                f'arch_db for {lang} should be {archf2}'
+            )
+            self.assertEqual(
+                view0.with_context(lang=lang, check_translations=True).arch_db,
+                archf2,
+                f'arch_db for {lang} should be {archf2} when check_translations'
+            )
+
 
 class TestHTMLTranslation(TransactionCase):
     def test_write_non_existing(self):
@@ -1171,6 +1283,28 @@ class TestHTMLTranslation(TransactionCase):
         # flushing on non-existing records does not break for scalar fields; the
         # same behavior is expected for translated fields
         company.flush_recordset()
+
+    def test_delay_translations_no_term(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        Company = self.env['res.company']
+        company0 = Company.create({'name': 'company_1', 'report_footer': '<h1>Knife</h1>'})
+        company0.update_field_translations('report_footer', {'fr_FR': {'Knife': 'Couteau'}})
+
+        for html in ('<h1></h1>', '', False):
+            # delay_translations only works when the written value has at least one translatable term
+            company0.with_context(lang='en_US', delay_translations=True).report_footer = html
+            for lang in ('en_US', 'fr_FR', 'nl_NL'):
+                self.assertEqual(
+                    company0.with_context(lang=lang).report_footer,
+                    html,
+                    f'report_footer for {lang} should be {html}'
+                )
+                self.assertEqual(
+                    company0.with_context(lang=lang, check_translations=True).report_footer,
+                    html,
+                    f'report_footer for {lang} should be {html} when check_translations'
+                )
 
 
 @tagged('post_install', '-at_install')

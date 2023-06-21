@@ -1014,7 +1014,7 @@ class TranslationReader:
         if not records:
             return
 
-        for record in records:
+        for record in records.with_context(check_translations=True):
             module = imd_per_id[record.id].module
             xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
             for field_name, field in record._fields.items():
@@ -1403,16 +1403,20 @@ class TranslationImporter:
                     for id_, xmlid, values, noupdate in cr.fetchall():
                         if not values:
                             continue
-                        value_en = values.get('en_US')
-                        if not value_en:
+                        _value_en = values.get('_en_US', values['en_US'])
+                        if not _value_en:
                             continue
 
                         # {src: {lang: value}}
                         record_dictionary = field_dictionary[xmlid]
                         langs = {lang for translations in record_dictionary.values() for lang in translations.keys()}
                         translation_dictionary = field.get_translation_dictionary(
-                            value_en,
-                            {k: v for k, v in values.items() if k in langs}
+                            _value_en,
+                            {
+                                k: values.get(f'_{k}', v)
+                                for k, v in values.items()
+                                if not k.startswith('_') and k in langs
+                            }
                         )
 
                         if force_overwrite or (not noupdate and overwrite):
@@ -1426,7 +1430,9 @@ class TranslationImporter:
                                 translation_dictionary[term_en] = translations
 
                         for lang in langs:
-                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), value_en)
+                            # translate and confirm model_terms translations
+                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
+                            values.pop('_' + lang, None)
                         params.extend((id_, Json(values)))
                     if params:
                         env.cr.execute(f"""

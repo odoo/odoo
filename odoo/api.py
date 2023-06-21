@@ -944,6 +944,9 @@ class Cache(object):
             if cache_value is None:
                 return True
             lang = record.env.lang or 'en_US'
+            context = record.env.context
+            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
+                lang = f'_{lang}'
             return lang in cache_value
 
         return record.id in field_cache
@@ -965,6 +968,9 @@ class Cache(object):
             cache_value = field_cache[record._ids[0]]
             if field.translate and cache_value is not None:
                 lang = record.env.lang or 'en_US'
+                context = record.env.context
+                if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
+                    lang = f'_{lang}'
                 return cache_value[lang]
             return cache_value
         except KeyError:
@@ -985,6 +991,7 @@ class Cache(object):
         """
         field_cache = self._set_field_cache(record, field)
         if field.translate and value is not None:
+            # only for model translated fields
             lang = record.env.lang or 'en_US'
             cache_value = field_cache.get(record._ids[0]) or {}
             cache_value[lang] = value
@@ -1018,6 +1025,7 @@ class Cache(object):
             dirty must raise an exception
         """
         if field.translate:
+            # only for model translated fields
             lang = records.env.lang or 'en_US'
             field_cache = self._get_field_cache(records, field)
             cache_values = []
@@ -1072,6 +1080,9 @@ class Cache(object):
                         field_cache[id_] = {**val_all_en, **val}
             else:
                 lang = records.env.lang or 'en_US'
+                context = records.env.context
+                if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
+                    lang = f'_{lang}'
                 for id_, val in zip(records._ids, values):
                     if val is None:
                         field_cache.setdefault(id_, None)
@@ -1106,6 +1117,9 @@ class Cache(object):
         field_cache = self._get_field_cache(records, field)
         if field.translate:
             lang = records.env.lang or 'en_US'
+            context = records.env.context
+            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
+                lang = f'_{lang}'
 
             def get_value(id_):
                 cache_value = field_cache[id_]
@@ -1160,6 +1174,9 @@ class Cache(object):
         field_cache = self._get_field_cache(records, field)
         if field.translate:
             lang = records.env.lang or 'en_US'
+            context = records.env.context
+            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
+                lang = f'_{lang}'
             for record_id in records._ids:
                 cache_value = field_cache.get(record_id, False)
                 if cache_value is False or not (cache_value is None or lang in cache_value):

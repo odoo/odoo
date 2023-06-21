@@ -2678,7 +2678,10 @@ export class Wysiwyg extends Component {
             escapedHtml,
             !$el.data('oe-expression') && $el.data('oe-xpath') || null
         ], {
-            context,
+            context: {
+                ...context,
+                delay_translations: true,
+            },
         });
         return result;
     }
