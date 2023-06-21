@@ -237,7 +237,7 @@ class AccountReportLine(models.Model):
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null')
     children_ids = fields.One2many(string="Child Lines", comodel_name='account.report.line', inverse_name='parent_id')
     groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
-    sequence = fields.Integer(string="Sequence")
+    sequence = fields.Integer(string="Sequence", default=0)
     code = fields.Char(string="Code", help="Unique identifier for this line.")
     foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
     print_on_new_page = fields.Boolean('Print On New Page', help='When checked this line and everything after it will be printed on a new page.')
