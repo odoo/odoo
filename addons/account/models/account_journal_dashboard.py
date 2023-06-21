@@ -138,11 +138,6 @@ class account_journal(models.Model):
         elif self.type == 'bank':
             return ['', _('Bank: Balance')]
 
-    # TODO remove in master
-    def get_line_graph_datas(self):
-        self.ensure_one()
-        return self._get_bank_cash_graph_data()[self.id]
-
     def _get_bank_cash_graph_data(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
         def build_graph_data(date, amount, currency):
@@ -204,11 +199,6 @@ class account_journal(models.Model):
 
             result[journal.id] = [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
         return result
-
-    # TODO remove in master
-    def get_bar_graph_datas(self):
-        self.ensure_one()
-        return self._get_sale_purchase_graph_data()[self.id]
 
     def _get_sale_purchase_graph_data(self):
         today = fields.Date.today()
@@ -278,10 +268,6 @@ class account_journal(models.Model):
 
             result[journal.id] = [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
         return result
-
-    # TODO remove in master
-    def get_journal_dashboard_datas(self):
-        return self._get_journal_dashboard_data_batched()[self.id]
 
     def _get_journal_dashboard_data_batched(self):
         self.env['account.move'].flush_model()
