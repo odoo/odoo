@@ -179,7 +179,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
-                                <div class="col-3 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
+                                <div class="col-4 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
                                     <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="o_event_fontsize_20"/>
                                     <div>
                                         <t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
@@ -190,7 +190,7 @@
                                             <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>
-                                <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">
+                                <div class="col-8 py-2 px-3 d-flex flex-column justify-content-between pt-3">
                                     <div>
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
@@ -200,7 +200,7 @@
                                             <span t-esc="record.address_id.value"/>
                                         </div>
                                     </div>
-                                    <h5 class="o_event_fontsize_11 p-0">
+                                    <h5 class="p-0">
                                         <a name="%(event_registration_action_stats_from_event)d"
                                            type="action"
                                            context="{'search_default_expected': True}">
