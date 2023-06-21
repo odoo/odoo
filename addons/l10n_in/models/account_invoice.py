@@ -23,7 +23,7 @@ class AccountMove(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, copy=True)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
@@ -32,6 +32,17 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+    show_warning = fields.Boolean(compute="_compute_show_warning")
+
+    @api.depends('partner_id.l10n_in_gst_treatment')
+    def _compute_show_warning(self):
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        (self - indian_invoice).show_warning = False
+        for move in indian_invoice:
+            if move.state == 'draft' and move.partner_id.l10n_in_gst_treatment and move.l10n_in_gst_treatment != move.partner_id.l10n_in_gst_treatment:
+                move.show_warning = True
+            else:
+                move.show_warning = False
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
@@ -144,3 +155,10 @@ class AccountMove(models.Model):
             barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120)
             return image_data_uri(base64.b64encode(barcode))
         return super()._generate_qr_code(silent_errors)
+
+    def update_gst_treatment(self):
+        self.ensure_one()
+        if self.partner_id and self.partner_id.l10n_in_gst_treatment:
+            self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
+        elif self.partner_id and not self.partner_id.l10n_in_gst_treatment:
+            raise UserError(_("Gst treatment is not set in %s", self.partner_id.complete_name))

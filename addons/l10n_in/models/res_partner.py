@@ -64,3 +64,34 @@ class ResPartner(models.Model):
         if vat == TEST_GST_NUMBER:
             return True
         return super().check_vat_in(vat)
+
+    def update_draft_invoices(self):
+        draft_move_ids = self.env['account.move'].search([
+            ('state', '=', 'draft'),
+            ('partner_id', '=', self.id),
+            ('company_id', '=', self.env.company.id),
+            ('move_type', '!=', 'entry')
+        ])
+        draft_move_ids.write({'l10n_in_gst_treatment': self.l10n_in_gst_treatment})
+        draft_move_count_by_type_name = {}
+        for move in draft_move_ids:
+            type_name = move.type_name
+            draft_move_count_by_type_name.setdefault(type_name, 0)
+            draft_move_count_by_type_name[type_name] += 1
+        action = self.env.ref('l10n_in.action_view_move')
+        action.domain = [('id', 'in', draft_move_ids.ids)]
+        message = (", ".join(_("%s %s", moves, type_name) for type_name, moves in draft_move_count_by_type_name.items()))
+        notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': (_('The following Invoice/Bills is updated')),
+                'message': message + ' %s',
+                'links': [{
+                    'label': 'View moves',
+                    'url': f'#action={action.id}&model=account.move&view_type=list'
+                }],
+                'sticky': False,
+            }
+        }
+        return notification
