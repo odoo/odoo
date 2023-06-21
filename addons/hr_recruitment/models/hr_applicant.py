@@ -440,6 +440,7 @@ class Applicant(models.Model):
             'default_user_id': self.env.uid,
             'default_name': self.name,
             'default_categ_ids': category and [category.id] or False,
+            'attachment_ids': self.attachment_ids.ids
         }
         return res
 
