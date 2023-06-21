@@ -63,7 +63,38 @@ patch(ThreadService.prototype, "im_livechat", {
         this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
             const thread1 = this.store.threads[localId_1];
             const thread2 = this.store.threads[localId_2];
-            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
+            return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
         });
+    },
+
+    /**
+     * @returns {boolean} Whether the livechat thread changed.
+     */
+    goToOldestUnreadLivechatThread() {
+        const oldestUnreadThread =
+            this.store.threads[
+                Object.values(this.store.discuss.livechat.threads)
+                    .filter((localId) => this.store.threads[localId].isUnread)
+                    .sort(
+                        (localId_1, localId_2) =>
+                            this.store.threads[localId_1].lastInterestDateTime?.ts -
+                            this.store.threads[localId_2].lastInterestDateTime?.ts
+                    )[0]
+            ];
+        if (!oldestUnreadThread) {
+            return false;
+        }
+        if (this.store.discuss.isActive) {
+            this.setDiscussThread(oldestUnreadThread);
+            return true;
+        }
+        const chatWindow = this.chatWindowService.insert({ thread: oldestUnreadThread });
+        if (chatWindow.hidden) {
+            this.chatWindowService.makeVisible(chatWindow);
+        } else if (chatWindow.folded) {
+            this.chatWindowService.toggleFold(chatWindow);
+        }
+        this.chatWindowService.focus(chatWindow);
+        return true;
     },
 });
