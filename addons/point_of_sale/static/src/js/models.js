@@ -277,7 +277,6 @@ export class PosGlobalState extends PosModel {
         this._loadPosPaymentMethod();
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
-        await this._loadFonts();
         await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
     }
