@@ -5,45 +5,16 @@ import contextlib
 import logging
 import json
 import requests
+import threading
 import uuid
-from unittest.mock import patch
 
 from odoo import exceptions, _
-from odoo.tests.common import BaseCase
 from odoo.tools import email_normalize, pycompat
 
 _logger = logging.getLogger(__name__)
 
 DEFAULT_ENDPOINT = 'https://iap.odoo.com'
 
-
-# We need to mock iap_jsonrpc during tests as we don't want to perform real calls to RPC endpoints
-def iap_jsonrpc_mocked(*args, **kwargs):
-    raise exceptions.AccessError("Unavailable during tests.")
-
-
-iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked)
-
-@contextlib.contextmanager
-def enable_iap_test():
-    """Enables real calls to be made to IAP during a test. Note that this should
-    only be done if the purpose of the test is to test the return from IAP.
-    Otherwise, you have to mock IAP. Use this function with care and use it only
-    in tests tagged as external."""
-    try:
-        iap_patch.stop()
-        yield
-    finally:
-        iap_patch.start()
-
-def setUp(self):
-    old_setup_func(self)
-    iap_patch.start()
-    self.addCleanup(iap_patch.stop)
-
-
-old_setup_func = BaseCase.setUp
-BaseCase.setUp = setUp
 
 #----------------------------------------------------------
 # Tools globals
@@ -138,6 +109,9 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
     Calls the provided JSON-RPC endpoint, unwraps the result and
     returns JSON-RPC errors as exceptions.
     """
+    if hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing:
+        raise exceptions.AccessError("Unavailable during tests.")
+
     payload = {
         'jsonrpc': '2.0',
         'method': method,

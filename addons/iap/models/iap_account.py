@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import threading
 import uuid
 import werkzeug.urls
 
@@ -44,6 +45,10 @@ class IapAccount(models.Model):
                 IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
                 accounts = accounts - accounts_without_token
         if not accounts:
+            if hasattr(threading.current_thread(), 'testing') and threading.current_thread().testing:
+                # During testing, we don't want to commit the creation of a new IAP account to the database
+                return self.create({'service_name': service_name})
+
             with self.pool.cursor() as cr:
                 # Since the account did not exist yet, we will encounter a NoCreditError,
                 # which is going to rollback the database and undo the account creation,
