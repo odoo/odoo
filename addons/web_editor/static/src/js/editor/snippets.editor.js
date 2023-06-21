@@ -819,6 +819,8 @@ var SnippetEditor = Widget.extend({
                     return false;
                 }
                 this.dragStarted = true;
+                this.mousePositionYOnElement = ev.originalEvent.clientY - ui.offset.top;
+                this.mousePositionXOnElement = ev.originalEvent.clientX - ui.offset.left;
                 this._onDragAndDropStart();
             },
             stop: (...args) => {
@@ -1634,15 +1636,15 @@ var SnippetEditor = Widget.extend({
         const borderWidth = parseFloat(window.getComputedStyle(columnEl).borderWidth);
         const columnHeight = columnEl.clientHeight + 2 * borderWidth;
         const columnWidth = columnEl.clientWidth + 2 * borderWidth;
-        const columnMiddle = columnWidth / 2;
 
         // Placing the column where the mouse is.
-        const top = ev.pageY - rowElTop;
+        let top = ev.pageY - rowElTop - this.mousePositionYOnElement;
         const bottom = top + columnHeight;
-        let left = ev.pageX - rowElLeft - columnMiddle;
+        let left = ev.pageX - rowElLeft - this.mousePositionXOnElement;
 
-        // Horizontal overflow.
+        // Horizontal & vertical overflow.
         left = clamp(left, 0, rowEl.clientWidth - columnWidth);
+        top = clamp(top, 0, rowEl.clientHeight - columnHeight);
 
         columnEl.style.top = top + 'px';
         columnEl.style.left = left + 'px';
