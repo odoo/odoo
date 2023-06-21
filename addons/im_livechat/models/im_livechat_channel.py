@@ -162,7 +162,7 @@ class ImLivechatChannel(models.Model):
             'name': name,
         }
 
-    def _open_livechat_discuss_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True):
+    def _open_livechat_discuss_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True, lang=None):
         """ Return a livechat session. If the session is persisted, creates a discuss.channel record with a connected operator or with Odoobot as
             an operator if a chatbot has been configured, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the session
@@ -171,6 +171,7 @@ class ImLivechatChannel(models.Model):
             :param user_id : the id of the logged in visitor, if any
             :param country_code : the country of the anonymous person of the session
             :param persisted: whether or not the session should be persisted
+            :param lang: code of the preferred lang of the visitor.
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
@@ -189,7 +190,7 @@ class ImLivechatChannel(models.Model):
             if previous_operator_id in self.available_operator_ids.mapped('partner_id').ids:
                 user_operator = next(available_user for available_user in self.available_operator_ids if available_user.partner_id.id == previous_operator_id)
         if not user_operator and not chatbot_script:
-            user_operator = self._get_random_operator()
+            user_operator = self._get_random_operator(lang=lang, country_id=country_id)
         if not user_operator and not chatbot_script:
             # no one available
             return False
@@ -211,13 +212,39 @@ class ImLivechatChannel(models.Model):
                 'chatbot_script_id': chatbot_script.id if chatbot_script else None
             }
 
-    def _get_random_operator(self):
+    def _get_less_active_operator(self, active_channels, operators):
+        """ Get the operator with the less active conversations.
+        :param active_channels: list of active livechats (with at least
+            one message within the last 30 minutes)
+        :param operators: list of operators to choose from
+        """
+        if not operators:
+            return False
+        active_channels = [active_channel for active_channel in active_channels if active_channel['livechat_operator_id'] in operators.mapped('partner_id').ids]
+        active_operators = [active_channel['livechat_operator_id'] for active_channel in active_channels]
+        inactive_operators = [operator for operator in operators if operator.partner_id.id not in active_operators]
+        if inactive_operators:
+            return random.choice(inactive_operators)
+
+        # Get the less active operator using the active_channels first element's count (since they are sorted 'ascending')
+        lowest_number_of_conversations = active_channels[0]['count']
+        less_active_operator = random.choice([
+            active_channel['livechat_operator_id'] for active_channel in active_channels
+            if active_channel['count'] == lowest_number_of_conversations])
+
+        # convert the selected 'partner_id' to its corresponding res.users
+        return next(operator for operator in operators if operator.partner_id.id == less_active_operator)
+
+    def _get_random_operator(self, lang=None, country_id=None):
         """ Return a random operator from the available users of the channel that have the lowest number of active livechats.
         A livechat is considered 'active' if it has at least one message within the 30 minutes.
+        This method will try to match the given lang and country_id.
 
         (Some annoying conversions have to be made on the fly because this model holds 'res.users' as available operators
         and the discuss_channel model stores the partner_id of the randomly selected operator)
 
+        :param lang: code of the preferred lang of the visitor.
+        :param country_id: id of the country of the visitor.
         :return : user
         :rtype : res.users
         """
@@ -233,24 +260,21 @@ class ImLivechatChannel(models.Model):
             GROUP BY c.livechat_operator_id
             ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(self.available_operator_ids.mapped('partner_id').ids),))
         active_channels = self.env.cr.dictfetchall()
-
-        # If inactive operator(s), return one of them
-        active_channel_operator_ids = [active_channel['livechat_operator_id'] for active_channel in active_channels]
-        inactive_operators = [
-            operator for operator in self.available_operator_ids if operator.partner_id.id not in active_channel_operator_ids
-        ]
-        if inactive_operators:
-            return random.choice(inactive_operators)
-
-        # If no inactive operator, active_channels is not empty as len(operators) > 0 (see above).
-        # Get the less active operator using the active_channels first element's count (since they are sorted 'ascending')
-        lowest_number_of_conversations = active_channels[0]['count']
-        less_active_operator = random.choice([
-            active_channel['livechat_operator_id'] for active_channel in active_channels
-            if active_channel['count'] == lowest_number_of_conversations])
-
-        # convert the selected 'partner_id' to its corresponding res.users
-        return next(operator for operator in self.available_operator_ids if operator.partner_id.id == less_active_operator)
+        operator = None
+        # Try to match an operator with the same lang as the visitor
+        if lang:
+            same_lang_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.lang == lang)
+            if same_lang_operator_ids:
+                operator = self._get_less_active_operator(active_channels, same_lang_operator_ids)
+        # Try to match an operator with the same country as the visitor
+        if country_id and not operator:
+            same_country_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.country_id.id == country_id)
+            if same_country_operator_ids:
+                operator = self._get_less_active_operator(active_channels, same_country_operator_ids)
+        # Try to get a random operator, regardless of the lang or the country
+        if not operator:
+            operator = self._get_less_active_operator(active_channels, self.available_operator_ids)
+        return operator
 
     def _get_channel_infos(self):
         self.ensure_one()
