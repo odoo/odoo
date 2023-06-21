@@ -71,6 +71,13 @@ export const PosSelf = {
                 },
             ];
         },
+        isNoOrderInHistory: () => {
+            return {
+                content: `Verify if there is no order in history`,
+                trigger: `.justify-content-center:contains('No order found')`,
+                run: () => {},
+            };
+        },
     },
     action: {
         clickBack: () => {

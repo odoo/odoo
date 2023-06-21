@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
 import uuid
 
 from odoo import http, fields, Command
@@ -137,6 +138,7 @@ class PosSelfOrderController(http.Controller):
     def get_orders_by_access_token(self, access_tokens):
         orders_sudo = request.env["pos.order"].sudo().search([
             ("access_token", "in", access_tokens),
+            ("date_order", ">=", fields.Datetime.now() - timedelta(days=7)),
         ])
 
         if not orders_sudo:
