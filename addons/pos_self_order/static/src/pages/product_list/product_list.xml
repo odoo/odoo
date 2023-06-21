@@ -38,7 +38,7 @@
             </header>
             <!-- the body is set to overflow: hidden and this div is set to overflow-auto
             this way we only scroll on the product list, and not on the whole page, which includes the navbar -->
-            <main t-ref="productsList" class="bg-white overflow-auto d-flex flex-row flex-wrap">
+            <main t-ref="productsList" class="bg-white overflow-auto d-flex flex-row flex-wrap" style="padding-bottom: 120px">
                 <t t-if="search.isFocused">
                     <t t-set="filteredProducts" t-value="filteredProducts()"/>
                     <p t-if="!filteredProducts?.length" class="mx-auto mt-3 text-center">No products found</p>
@@ -52,7 +52,7 @@
                     <p t-if="!categories?.length" class="mx-auto mt-3 text-center">No products found</p>
                     <t t-foreach="categories" t-as="category" t-key="category">
                         <section t-if="selfOrder.productsGroupedByCategory[category].length" t-ref="productsWithCategory_{{category}}" class="w-100 d-flex flex-wrap">
-                            <h3 class="w-100 m-0 mt-n1 pb-3 pt-4 px-3 bg-light" t-esc="category" />
+                             <h4 class="w-100 m-0 mt-n1 pb-2 pt-3 px-3 bg-secondary" t-esc="category" />
                             <t t-foreach="selfOrder.productsGroupedByCategory[category]" t-as="product" t-key="product.id">
                                 <!-- If this is the product that we last visited, we use currentProductCard to
                                 get a reference to it -->
@@ -70,8 +70,7 @@
             but if there are no products (for example if you search for something that does not exist), the button
             would be at the top of the page )
             -->
-            <div class="flex-grow-1"></div>
-            <div t-if="selfOrder.table and selfOrder.currentOrder.totalQuantity" class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
+            <div t-if="selfOrder.table and selfOrder.currentOrder.totalQuantity" class="d-flex flex-column align-items-center w-100 p-3 fixed-bottom">
                 <t t-set="order" t-value="selfOrder.currentOrder"/>
                 <button t-on-click="() => this.router.navigate('cart')" class="o_self_order_main_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
                     <div class="d-flex align-items-center justify-content-between mx-2">

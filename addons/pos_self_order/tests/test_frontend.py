@@ -34,7 +34,6 @@ class TestFrontendMobile(odoo.tests.HttpCase):
             self.pos_config._get_self_order_route(),
             "self_order_menu_only_tour",
             login=None,
-            watch=True,
         )
 
     def test_self_order_pay_after_meal_tour(self):

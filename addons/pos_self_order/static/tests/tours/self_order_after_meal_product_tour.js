@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("self_order_after_meal_product_tour", {
         PosSelf.check.isProductQuantity("Conference Chair (Aluminium)", 7),
 
         // Check if product price are shown.
-        PosSelf.check.isProductPrice("Large Cabinet", "368.00"),
+        PosSelf.check.isProductPrice("Cabinet with Doors", "161.00"),
         PosSelf.check.isProductPrice("Desk Pad", "2.28"),
         PosSelf.check.isProductPrice("Letter Tray", "5.52"),
     ],

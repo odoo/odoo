@@ -7,18 +7,18 @@
             t-ref="currentProductCard"
             >
             <div class="d-flex flex-column w-100 py-1">
-                <div class="d-flex flex-row align-items-center text-900 fw-bold fs-6">
+                <h5 class="mb-0 text-900 fw-bold o_self_product_name" t-esc="props.product.name" />
+                <div class="d-flex flex-row">
                     <span
-                        class="d-flex align-items-center me-1 text-primary fw-bolder"
+                        class="me-1 text-primary fw-bolder"
                         t-if="quantityInCart and selfOrder.table"
                         t-esc="`${quantityInCart}x`"
                         />
-                    <h3 class="mb-0" t-esc="props.product.name" />
+                    <span class="card-text small" t-esc="getTotalPriceString()" />
                 </div>
-                <span class="card-text small" t-esc="getTotalPriceString()" />
                 <p
                     t-if="props.product.description_sale"
-                    class="o_self_order_item_card_description m-0 text-muted small break-line"
+                    class="m-0 text-muted small break-line"
                     t-esc="props.product.description_sale"
                     />
             </div>

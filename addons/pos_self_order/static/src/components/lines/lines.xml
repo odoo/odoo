@@ -9,7 +9,7 @@
                 <div class="d-flex w-100 py-1 justify-content-between">
                     <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} text-900 fw-bold fs-6">
                         <t t-set="lineName" t-value="getNameAndDescription(line)" />
-                        <h3 class="mb-0" t-esc="lineName.productName" />
+                        <h3 class="mb-0 o_self_product_name" t-esc="lineName.productName" />
                         <span
                             t-if="line.qty"
                             class="flex-grow-1 me-3 small text-muted"
