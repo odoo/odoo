@@ -575,10 +575,10 @@ class ProjectTask(models.Model):
             if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task._get_last_sol_of_customer()
 
-    @api.depends('project_id.sale_line_employee_ids')
+    @api.depends('project_root_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
-            task.is_project_map_empty = not bool(task.sudo().project_id.sale_line_employee_ids)
+            task.is_project_map_empty = not bool(task.sudo().project_root_id.sale_line_employee_ids)
 
     @api.depends('timesheet_ids')
     def _compute_has_multi_sol(self):
@@ -598,7 +598,7 @@ class ProjectTask(models.Model):
             ('state', '=', 'sale'),
             ('remaining_hours', '>', 0),
         ]
-        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
+        if self.project_root_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_root_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)
 

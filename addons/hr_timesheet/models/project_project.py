@@ -98,7 +98,7 @@ class Project(models.Model):
             SELECT Project.id
               FROM project_project AS Project
               JOIN project_task AS Task
-                ON Project.id = Task.project_id
+                ON Project.id = Task.project_root_id
              WHERE Project.allocated_hours > 0
                AND Project.allow_timesheets = TRUE
                AND Task.parent_id IS NULL

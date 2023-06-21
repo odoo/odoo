@@ -77,7 +77,7 @@ class ProjectTags(models.Model):
                         SELECT project_tags_id
                         FROM project_tags_project_task_rel AS rel
                         JOIN project_task AS task
-                            ON task.project_id = %(project_id)s
+                            ON task.project_root_id = %(project_id)s
                             AND task.id = rel.project_task_id
                         ORDER BY task.id DESC
                         LIMIT 1000 -- arbitrary limit to speed up lookup on huge projects (fallback below on global scope)

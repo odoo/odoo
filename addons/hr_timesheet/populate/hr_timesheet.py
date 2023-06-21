@@ -29,9 +29,9 @@ class AccountAnalyticLine(models.Model):
             for project, ids in self.env['project.task']._read_group(
                 domain=[
                     ('id', 'in', self.env.registry.populated_models["project.task"]),
-                    ('project_id', 'in', project_ids),
+                    ('project_root_id', 'in', project_ids),
                 ],
-                groupby=['project_id'],
+                groupby=['project_root_id'],
                 aggregates=['id:array_agg'],
             )
         }

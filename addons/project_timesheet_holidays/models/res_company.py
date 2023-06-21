@@ -9,7 +9,7 @@ class Company(models.Model):
 
     leave_timesheet_task_id = fields.Many2one(
         'project.task', string="Time Off Task",
-        domain="[('project_id', '=', internal_project_id)]")
+        domain="[('project_root_id', '=', internal_project_id)]")
 
     def init(self):
         type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]

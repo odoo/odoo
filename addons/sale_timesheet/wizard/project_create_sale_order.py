@@ -184,7 +184,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
     def _make_billable_at_employee_rate(self, sale_order):
         # trying to simulate the SO line created a task, according to the product configuration
         # To avoid, generating a task when confirming the SO
-        task_id = self.env['project.task'].search([('project_id', '=', self.project_id.id)], order='create_date DESC', limit=1).id
+        task_id = self.env['project.task'].search([('project_root_id', '=', self.project_id.id)], order='create_date DESC', limit=1).id
         project_id = self.project_id.id
 
         lines_already_present = dict([(l.employee_id.id, l) for l in self.project_id.sale_line_employee_ids])

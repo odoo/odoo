@@ -49,6 +49,12 @@ class Task(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
+    @api.constrains('project_root_id')
+    def _check_project_root(self):
+        orphan_tasks = self.filtered(lambda t: not t.project_root_id)
+        if orphan_tasks and self.env['account.analytic.line'].sudo().search_count([('task_id', 'in', orphan_tasks.ids)], limit=1):
+            raise UserError(_("This task cannot be private because there are some timesheets linked to it."))
+
     def _uom_in_days(self):
         return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
 
@@ -151,8 +157,8 @@ class Task(models.Model):
             new_views.insert(0, view) if view[1] == 'tree' else new_views.append(view)
         action.update({
             'display_name': _('Timesheets'),
-            'context': {'default_project_id': self.project_id.id, 'grid_range': 'week'},
-            'domain': [('project_id', '!=', False), ('task_id', 'in', task_ids)],
+            'context': {'default_project_id': self.project_root_id.id, 'grid_range': 'week'},
+            'domain': [('project_root_id', '!=', False), ('task_id', 'in', task_ids)],
             'views': new_views,
         })
         return action
@@ -160,26 +166,6 @@ class Task(models.Model):
     def _get_timesheet(self):
         # Is override in sale_timesheet
         return self.timesheet_ids
-
-    def write(self, values):
-        # a timesheet must have an analytic account (and a project)
-        is_removed_project = 'project_id' in values and not values['project_id']
-        is_removed_parent = 'parent_id' in values and not values['parent_id']
-        if (
-            ((is_removed_project and (not self.parent_id or is_removed_parent))
-            or (is_removed_parent and not (self.project_id or is_removed_project)))
-            and self._get_timesheet()
-        ):
-            raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
-        res = super(Task, self).write(values)
-
-        if 'project_id' in values:
-            project = self.env['project.project'].browse(values.get('project_id'))
-            if project.allow_timesheets:
-                # We write on all non yet invoiced timesheet the new project_id (if project allow timesheet)
-                self._get_timesheet().write({'project_id': values.get('project_id')})
-
-        return res
 
     @api.depends('allow_timesheets', 'planned_hours', 'encode_uom_in_days', 'remaining_hours')
     @api.depends_context('hr_timesheet_display_remaining_hours')

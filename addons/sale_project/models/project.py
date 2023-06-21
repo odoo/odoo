@@ -64,7 +64,7 @@ class Project(models.Model):
                AND (   EXISTS(SELECT 1
                                 FROM sale_order so
                                 JOIN project_task pt ON pt.sale_order_id = so.id
-                               WHERE pt.project_id = pp.id
+                               WHERE pt.project_root_id = pp.id
                                  AND pt.active = true
                                  AND so.invoice_status = %(invoice_status)s)
                     OR EXISTS(SELECT 1
@@ -258,7 +258,7 @@ class Project(models.Model):
         project_query_str, project_params = project_query.select('id', 'sale_line_id')
 
         Task = self.env['project.task']
-        task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        task_domain = [('project_root_id', 'in', self.ids), ('sale_line_id', '!=', False)]
         if Task._name in domain_per_model:
             task_domain = expression.AND([
                 domain_per_model[Task._name],
@@ -266,7 +266,7 @@ class Project(models.Model):
             ])
         task_query = Task._where_calc(task_domain)
         Task._apply_ir_rules(task_query, 'read')
-        task_query_str, task_params = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
+        task_query_str, task_params = task_query.select(f'{Task._table}.project_root_id AS id', f'{Task._table}.sale_line_id')
 
         ProjectMilestone = self.env['project.milestone']
         milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True), ('sale_line_id', '!=', False)]
@@ -720,7 +720,7 @@ class ProjectTask(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
 
-    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_root_id', 'partner_id.commercial_partner_id', 'allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -729,8 +729,8 @@ class ProjectTask(models.Model):
             sale_order_id = task.sale_order_id or self.env["sale.order"]
             if task.sale_line_id:
                 sale_order_id = task.sale_line_id.sudo().order_id
-            elif task.project_id.sale_order_id:
-                sale_order_id = task.project_id.sale_order_id
+            elif task.project_root_id.sale_order_id:
+                sale_order_id = task.project_root_id.sale_order_id
             if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
                 sale_order_id = False
             if sale_order_id and not task.partner_id:
@@ -743,21 +743,21 @@ class ProjectTask(models.Model):
         (self - billable_task).partner_id = False
         super(ProjectTask, billable_task)._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_root_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not task.allow_billable:
                 task.sale_line_id = False
                 continue
             if not task.sale_line_id:
-                # if the project_id is set then it means the task is classic task or a subtask with another project than its parent.
+                # if the project_root_id is set then it means the task is classic task or a subtask with another project than its parent.
                 # To determine the sale_line_id, we first need to look at the parent before the project to manage the case of subtasks.
                 # Two sub-tasks in the same project do not necessarily have the same sale_line_id (need to look at the parent task).
                 sale_line = False
                 if task.parent_id.sale_line_id and task.parent_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
                     sale_line = task.parent_id.sale_line_id
-                elif task.project_id.sale_line_id and task.project_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
-                    sale_line = task.project_id.sale_line_id
+                elif task.project_root_id.sale_line_id and task.project_root_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
+                    sale_line = task.project_root_id.sale_line_id
                 task.sale_line_id = sale_line or task.milestone_id.sale_line_id
             # check sale_line_id and customer are coherent
             if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
@@ -855,7 +855,7 @@ class ProjectTask(models.Model):
             [
                 ('partner_id', '!=', False),
                 ('allow_billable', '=', False),
-                ('project_id', '!=', False),
+                ('project_root_id', '!=', False),
             ],
         ])
 

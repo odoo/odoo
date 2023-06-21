@@ -434,7 +434,7 @@ class Project(models.Model):
         res = super(Project, self).write(vals) if vals else True
 
         if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
-            self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
+            self.env['project.task'].search([('project_root_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
 
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too

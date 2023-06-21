@@ -34,14 +34,14 @@ class MailPluginController(mail_plugin.MailPluginController):
             partner_tasks = request.env['project.task'].search(
                 [('partner_id', '=', partner.id)], offset=0, limit=5)
 
-            accessible_projects = partner_tasks.project_id._filter_access_rules('read').mapped("id")
+            accessible_projects = partner_tasks.project_root_id._filter_access_rules('read').mapped("id")
 
             tasks_values = [
                 {
                     'task_id': task.id,
                     'name': task.name,
-                    'project_name': task.project_id.name,
-                } for task in partner_tasks if task.project_id.id in accessible_projects]
+                    'project_name': task.project_root_id.name,
+                } for task in partner_tasks if task.project_root_id.id in accessible_projects]
 
             contact_values['tasks'] = tasks_values
             contact_values['can_create_project'] = request.env['project.project'].check_access_rights(

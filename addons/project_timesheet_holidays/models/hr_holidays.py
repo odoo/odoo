@@ -23,8 +23,8 @@ class HolidaysType(models.Model):
     timesheet_task_id = fields.Many2one(
         'project.task', string="Task", compute='_compute_timesheet_task_id',
         store=True, readonly=False, default=_default_task_id,
-        domain="[('project_id', '=', timesheet_project_id),"
-                "('project_id', '!=', False),"
+        domain="[('project_root_id', '=', timesheet_project_id),"
+                "('project_root_id', '!=', False),"
                 "('company_id', '=', company_id)]")
 
     @api.depends('timesheet_task_id', 'timesheet_project_id')
@@ -38,7 +38,7 @@ class HolidaysType(models.Model):
             company = leave_type.company_id if leave_type.company_id else self.env.company
             default_task_id = company.leave_timesheet_task_id
 
-            if default_task_id and default_task_id.project_id == leave_type.timesheet_project_id:
+            if default_task_id and default_task_id.project_root_id == leave_type.timesheet_project_id:
                 leave_type.timesheet_task_id = default_task_id
             else:
                 leave_type.timesheet_task_id = False
