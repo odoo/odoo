@@ -35,11 +35,45 @@
         <field name="context">{'search_default_rating_last_7_days': 1}</field>
     </record>
 
+    <record id="im_livechat.rating_rating_view_kanban" model="ir.ui.view">
+        <field name="name">im_livechat.rating.rating.view.kanban</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="type">object</attribute>
+                <attribute name="action">action_open_rated_object</attribute>
+            </xpath>
+            <xpath expr="//*[@name='action_open_rated_object']" position="attributes">
+                <attribute name="style">pointer-events: none;</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="im_livechat.rating_rating_view_tree" model="ir.ui.view">
+        <field name="name">im_livechat.rating.rating.view.tree</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="type">object</attribute>
+                <attribute name="action">action_open_rated_object</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="rating_rating_action_livechat_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="rating_rating_action_livechat"/>
-        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="view_id" ref="im_livechat.rating_rating_view_kanban"/>
+    </record>
+
+    <record id="rating_rating_action_livechat_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="rating_rating_action_livechat"/>
+        <field name="view_id" ref="im_livechat.rating_rating_view_tree"/>
     </record>
 
     <record id="rating_rating_action_livechat_view_form" model="ir.actions.act_window.view">
