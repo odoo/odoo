@@ -622,14 +622,10 @@ export class ListRenderer extends Component {
                     this.props.list.activeFields[fieldName].options.currency_field ||
                     this.fields[fieldName].currency_field ||
                     "currency_id";
-                if (!(currencyField in this.props.list.activeFields)) {
-                    aggregates[fieldName] = {
-                        help: _t("No currency provided"),
-                        value: "—",
-                    };
-                    continue;
-                }
-                currencyId = values[0][currencyField] && values[0][currencyField][0];
+                currencyId =
+                    currencyField in this.props.list.activeFields &&
+                    values[0][currencyField] &&
+                    values[0][currencyField][0];
                 if (currencyId) {
                     const sameCurrency = values.every(
                         (value) => currencyId === value[currencyField][0]
