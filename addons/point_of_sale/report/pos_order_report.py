@@ -9,6 +9,7 @@ class PosOrderReport(models.Model):
     _description = "Point of Sale Orders Report"
     _auto = False
     _order = 'date desc'
+    _rec_name = 'order_id'
 
     date = fields.Datetime(string='Order Date', readonly=True)
     order_id = fields.Many2one('pos.order', string='Order', readonly=True)
