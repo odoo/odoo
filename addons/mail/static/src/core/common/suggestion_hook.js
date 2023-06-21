@@ -13,6 +13,9 @@ export function useSuggestion() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
+        clearCannedReponses() {
+            comp.props.composer.cannedResponseIds.clear();
+        },
         clearSearch() {
             Object.assign(self.search, {
                 delimiter: undefined,
@@ -89,6 +92,9 @@ export function useSuggestion() {
             }
             if (option.thread) {
                 comp.props.composer.rawMentions.threadIds.add(option.thread.id);
+            }
+            if (option.cannedResponse) {
+                comp.props.composer.cannedResponseIds.add(option.cannedResponse.id);
             }
             self.clearSearch();
             comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
