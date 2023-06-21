@@ -1305,7 +1305,7 @@ export function isUnbreakable(node) {
     }
     return (
         isUnremovable(node) || // An unremovable node is always unbreakable.
-        ['THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
+        ['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
         node.hasAttribute('t') ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.nodeName === 'T' ||

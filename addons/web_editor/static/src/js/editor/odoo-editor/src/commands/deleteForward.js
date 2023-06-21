@@ -26,6 +26,8 @@ import {
     boundariesOut,
     isEditorTab,
     isVisible,
+    isUnbreakable,
+    isEmptyBlock,
 } from '../utils/utils.js';
 
 /**
@@ -201,6 +203,16 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         filterFunc,
     );
     if (firstOutNode) {
+        // If next sibblings is an unbreadable node, and current node is empty, we
+        // delete the current node and put the selection at the beginning of the
+        // next sibbling.
+        if (nextSibling && isUnbreakable(nextSibling) && isEmptyBlock(this)) {
+            const restore = prepareUpdate(...boundariesOut(this));
+            this.remove();
+            restore();
+            setSelection(firstOutNode, 0);
+            return;
+        }
         const [node, offset] = leftPos(firstOutNode);
         // If the next node is a <LI> we call directly the htmlElement
         // oDeleteBackward : because we don't want the special cases of
