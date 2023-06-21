@@ -287,8 +287,8 @@ describe('Editor', () => {
                             `<div class="oe_unbreakable">abc</div></div></div></div>`,
                         stepFunction: deleteForward,
                         contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
-                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
-                            `<div class="oe_unbreakable">abc</div></div></div></div>`,
+                            `<div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable">[]abc</div></div></div></div>`,
                     });
                 });
                 it('should remove empty unbreakable', async () => {
@@ -1895,6 +1895,36 @@ X[]
                         contentAfter: `<div class="oe_unbreakable">` +
                             `<div class="oe_unbreakable">7a[]</div>` +
                             `</div>`,
+                    });
+                });
+
+                it('should not merge p with an unbreakable.', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>ab[]</p><table><tbody><tr><td>cd</td></tr></tbody></table>`,
+                        stepFunction: deleteForward,
+                        contentAfter: `<p>ab[]</p><table><tbody><tr><td>cd</td></tr></tbody></table>`,
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>ab[]</p><div class="oe_unbreakable">cd</div>`,
+                        stepFunction: deleteForward,
+                        contentAfter: `<p>ab[]</p><div class="oe_unbreakable">cd</div>`,
+                    });
+                });
+                it('should delete empty p just before an unbreakable.', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>[]</p><table><tbody><tr><td>cd</td></tr></tbody></table>`,
+                        stepFunction: deleteForward,
+                        contentAfter: `<table><tbody><tr><td>[]cd</td></tr></tbody></table>`,
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>[]</p><div class="oe_unbreakable">cd</div>`,
+                        stepFunction: deleteForward,
+                        contentAfter: `<div class="oe_unbreakable">[]cd</div>`,
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p class="oe_unbreakable no-class">[]<br></p><div class="oe_unbreakable class-name">cd</div>`,
+                        stepFunction: deleteForward,
+                        contentAfter: `<div class="oe_unbreakable class-name">[]cd</div>`,
                     });
                 });
                 it('should merge the following inline text node', async () => {
