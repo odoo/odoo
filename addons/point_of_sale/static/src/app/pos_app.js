@@ -6,7 +6,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { reactive, Component, onMounted } from "@odoo/owl";
+import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -30,6 +30,7 @@ export class Chrome extends Component {
             }
         });
 
+        onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
     }
 
