@@ -33,28 +33,28 @@ export const PosSelf = {
         isOrderline: (name, price, description = "", attributes = "") => {
             return {
                 content: `Verify is there an orderline with ${name} and ${price} and ${description}`,
-                trigger: `.o_self_order_item_card:has(h3:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}"))`,
+                trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}"))`,
                 run: () => {},
             };
         },
         isNotOrderline: (name, price, description = "", attributes = "") => {
             return {
                 content: `Verify is there an orderline with ${name} and ${price} and ${description}`,
-                trigger: `.o_self_order_item_card:not(:has(h3:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}")))`,
+                trigger: `.o_self_order_item_card:not(:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}")))`,
                 run: () => {},
             };
         },
         isProductQuantity: (name, quantity) => {
             return {
                 content: `Verify is there a product with ${name} and ${quantity} selected quantity`,
-                trigger: `.o_self_order_item_card span.text-primary:contains('${quantity}x') ~ h3:contains('${name}')`,
+                trigger: `.o_self_order_item_card .o_self_product_name:contains('${name}') ~ div span.text-primary:contains('${quantity}x')`,
                 run: () => {},
             };
         },
         isProductPrice: (name, price) => {
             return {
                 content: `Verify is there a product with ${name} and ${price} price`,
-                trigger: `.o_self_order_item_card div:contains('${name}') ~ span.card-text:contains('${price}')`,
+                trigger: `.o_self_order_item_card .o_self_product_name:contains('${name}') ~ div span.card-text:contains('${price}')`,
                 run: () => {},
             };
         },
@@ -62,7 +62,7 @@ export const PosSelf = {
             return [
                 {
                     content: `Click on product '${name}'`,
-                    trigger: `.o_self_order_item_card h3:contains('${name}')`,
+                    trigger: `.o_self_order_item_card .o_self_product_name:contains('${name}')`,
                 },
                 {
                     content: `Click on 'Add' button`,
@@ -89,7 +89,7 @@ export const PosSelf = {
             return [
                 {
                     content: `Click on product '${name}'`,
-                    trigger: `.o_self_order_item_card h3:contains('${name}')`,
+                    trigger: `.o_self_order_item_card .o_self_product_name:contains('${name}')`,
                 },
                 ...quantityHelper(quantity),
                 descriptionHelper(description),
@@ -104,14 +104,14 @@ export const PosSelf = {
             return [
                 {
                     content: `Click on orderline ${name}, price ${price} and description ${description}`,
-                    trigger: `.o_self_order_item_card:has(h3:contains("${name}")):has(span:contains("${description}")):has(span.card-text:contains("${price}"))`,
+                    trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span.card-text:contains("${price}"))`,
                 },
                 ...quantityHelper(addQuantity),
                 descriptionHelper(newDescription),
                 ...attributeHelper(newAtr),
                 {
                     content: `Click on 'Add' button`,
-                    trigger: `.o_self_order_main_button:contains('Update Cart')`,
+                    trigger: `.o_self_order_main_button`,
                 },
             ];
         },
