@@ -23,13 +23,13 @@ class Container(models.Model):
 
     some_ids = fields.Many2many('test_access_right.some_obj', 'test_access_right_rel', 'container_id', 'some_id')
 
-class Parent(models.Model):
-    _name = 'test_access_right.parent'
+class Inherits(models.Model):
+    _name = 'test_access_right.inherits'
     _description = 'Object for testing related access rights'
 
-    _inherits = {'test_access_right.some_obj': 'obj_id'}
+    _inherits = {'test_access_right.some_obj': 'some_id'}
 
-    obj_id = fields.Many2one('test_access_right.some_obj', required=True, ondelete='restrict')
+    some_id = fields.Many2one('test_access_right.some_obj', required=True, ondelete='restrict')
 
 class Child(models.Model):
     _name = 'test_access_right.child'
