@@ -22,6 +22,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { Component, useState, xml } from "@odoo/owl";
+import { session } from "@web/session";
 
 let target, mock;
 
@@ -89,12 +90,12 @@ QUnit.module("Tour service", (hooks) => {
             .category("web_tour.tours")
             .add("Tour 1", {
                 sequence: 10,
-                steps: [{ trigger: ".anchor" }],
+                steps: () => [{ trigger: ".anchor" }],
             })
-            .add("Tour 2", { steps: [{ trigger: ".anchor" }] })
+            .add("Tour 2", { steps: () => [{ trigger: ".anchor" }] })
             .add("Tour 3", {
                 sequence: 5,
-                steps: [{ trigger: ".anchor", content: "Oui" }],
+                steps: () => [{ trigger: ".anchor", content: "Oui" }],
             });
         const env = await makeTestEnv({});
         const sortedTours = env.services.tour_service.getSortedTours();
@@ -102,14 +103,15 @@ QUnit.module("Tour service", (hooks) => {
     });
 
     QUnit.test("override existing tour by using saveAs", async function (assert) {
-        registry.category("web_tour.tours")
+        registry
+            .category("web_tour.tours")
             .add("Tour 1", {
                 steps: () => [{ trigger: "#1" }],
-                saveAs: "homepage"
+                saveAs: "homepage",
             })
             .add("Tour 2", {
                 steps: () => [{ trigger: "#2" }],
-                saveAs: "homepage"
+                saveAs: "homepage",
             });
         const env = await makeTestEnv({});
         const sortedTours = env.services.tour_service.getSortedTours();
@@ -545,4 +547,77 @@ QUnit.module("Tour service", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_tour_pointer_content.invisible");
     });
+
+    QUnit.test(
+        "registering non-test tour after service is started auto-starts the tour",
+        async function (assert) {
+            patchWithCleanup(session, { tour_disable: false });
+            const env = await makeTestEnv({});
+
+            const { Component: OverlayContainer, props: overlayContainerProps } = registry
+                .category("main_components")
+                .get("OverlayContainer");
+
+            class Root extends Component {
+                static components = { OverlayContainer, Counter };
+                static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            }
+
+            await mount(Root, target, { env, props: { overlayContainerProps } });
+            assert.containsNone(target, ".o_tour_pointer");
+            registry.category("web_tour.tours").add("tour1", {
+                steps: () => [
+                    {
+                        content: "content",
+                        trigger: "button.inc",
+                    },
+                ],
+            });
+            await mock.advanceTime(750);
+            await nextTick();
+            assert.containsOnce(target, ".o_tour_pointer");
+        }
+    );
+
+    QUnit.test(
+        "registering test tour after service is started doesn't auto-start the tour",
+        async function (assert) {
+            patchWithCleanup(session, { tour_disable: false });
+            const env = await makeTestEnv({});
+
+            const { Component: OverlayContainer, props: overlayContainerProps } = registry
+                .category("main_components")
+                .get("OverlayContainer");
+
+            class Root extends Component {
+                static components = { OverlayContainer, Counter };
+                static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            }
+
+            await mount(Root, target, { env, props: { overlayContainerProps } });
+            assert.containsNone(target, ".o_tour_pointer");
+            registry.category("web_tour.tours").add("tour1", {
+                test: true,
+                steps: () => [
+                    {
+                        content: "content",
+                        trigger: "button.inc",
+                    },
+                ],
+            });
+            await mock.advanceTime(750);
+            await nextTick();
+            assert.containsNone(target, ".o_tour_pointer");
+        }
+    );
 });
