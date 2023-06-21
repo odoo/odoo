@@ -9,14 +9,9 @@ registry.category("web_tour.tours").add('account_tax_group', {
     url: "/web",
     steps: [stepUtils.showAppsMenuItem(),
     {
+        id: 'account_menu_click',
         content: "Go to Invoicing",
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
-        edition: 'community',
-    },
-    {
-        content: "Go to Accounting",
-        trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
-        edition: 'enterprise',
     },
     {
         content: "Go to Vendors",
