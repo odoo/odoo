@@ -23,7 +23,10 @@
                             </td>
                             <td t-att-colspan="product.has_image ? '1' : '2'">
                                 <h5><t t-esc="product.name"/></h5>
-                                <span class="text-muted d-none d-md-inline-block" t-if="product.description_sale" t-out="product.description_sale"/>
+                                <t t-foreach="product.description_sale" t-as="name_line" t-key="name_line">
+                                    <span class="text-muted d-none d-md-inline-block" t-if="name_line" t-out="name_line"/>
+                                    <br/>
+                                </t>
                             </td>
                             <t t-if="product.add_to_cart_allowed">
                                 <td class="text-center td-qty">

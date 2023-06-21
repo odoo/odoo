@@ -148,9 +148,11 @@ export class ReorderDialog extends Component {
         product.combinationInfo = await this.rpc("/sale/get_combination_info_website", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
-            combination: [],
+            combination: product.combination || [],
             add_qty: product.qty,
             pricelist_id: false,
+            no_variant_attribute_values: product.no_variant_attribute_values,
+            product_custom_attribute_values: product.product_custom_attribute_values,
             context: {
                 website_sale_no_images: true,
             },
@@ -212,6 +214,8 @@ export class ReorderDialog extends Component {
             await this.rpc("/shop/cart/update_json", {
                 product_id: product.product_id,
                 add_qty: product.qty,
+                product_custom_attribute_values: product.product_custom_attribute_values,
+                no_variant_attribute_values: product.no_variant_attribute_values,
             });
         }
     }
