@@ -1036,10 +1036,10 @@ class Tags(models.Model):
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
-    @api.depends("post_ids.tag_ids", "post_ids.state")
+    @api.depends("post_ids", "post_ids.tag_ids", "post_ids.state", "post_ids.active")
     def _get_posts_count(self):
         for tag in self:
-            tag.posts_count = len(tag.post_ids)
+            tag.posts_count = len(tag.post_ids)  # state filter is in field domain
 
     @api.model
     def create(self, vals):
