@@ -1136,15 +1136,6 @@ class Meeting(models.Model):
             result[event.id] = attendee[:1]
         return result
 
-    # YTI TODO MASTER: Remove deprecated method
-    def _find_attendee(self):
-        """ Return the first attendee where the user connected has been invited
-            or the attendee selected in the filter that is the owner
-            from all the meeting_ids in parameters.
-        """
-        self.ensure_one()
-        return self._find_attendee_batch()[self.id]
-
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
         If no starting time is assigned (yet), return today as default
