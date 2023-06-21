@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-from typing import Dict, Union
+from typing import Dict
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class PosOrderLine(models.Model):
@@ -25,6 +24,29 @@ class PosOrderLine(models.Model):
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
+    @api.model
+    def create_from_ui(self, orders, draft=False):
+        orders = super().create_from_ui(orders, draft)
+        order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
+        self._send_notification(order_ids)
+        return orders
+
+    @api.model
+    def remove_from_ui(self, server_ids):
+        order_ids = self.env['pos.order'].browse(server_ids)
+        order_ids.state = 'cancel'
+        self._send_notification(order_ids)
+
+        return super().remove_from_ui(server_ids)
+
+    def _send_notification(self, order_ids):
+        for order in order_ids:
+            if order.access_token and order.state != 'draft':
+                self.env['bus.bus']._sendone(f'self_order-{order.access_token}', 'ORDER_STATE_CHANGED', {
+                    'access_token': order.access_token,
+                    'state': order.state
+                })
+
     def _export_for_self_order(self) -> Dict:
         self.ensure_one()
 
@@ -34,7 +56,7 @@ class PosOrder(models.Model):
             "pos_reference": self.pos_reference,
             "access_token": self.access_token,
             "state": self.state,
-            "date": str(self.date_order),
+            "date_order": str(self.date_order),
             "amount_total": self.amount_total,
             "amount_tax": self.amount_tax,
             "lines": [
