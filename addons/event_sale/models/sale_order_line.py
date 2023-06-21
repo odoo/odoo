@@ -16,6 +16,12 @@ class SaleOrderLine(models.Model):
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
 
+    def _get_event_sale_total(self):
+        return self.price_total
+
+    def _get_event_sale_state(self):
+        return self.order_id.state  == 'sale'
+
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
         event_lines = self.filtered(lambda line: line.event_id)

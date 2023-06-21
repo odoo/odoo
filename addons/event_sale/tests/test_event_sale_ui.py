@@ -19,10 +19,10 @@ class TestUi(HttpCase):
         self.env['event.event.ticket'].create([{
             'name': 'Standard',
             'event_id': event.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': self.env.ref('event_product.product_product_event').id,
         }, {
             'name': 'VIP',
             'event_id': event.id,
-            'product_id': self.env.ref('event_sale.product_product_event').id,
+            'product_id': self.env.ref('event_product.product_product_event').id,
         }])
         self.start_tour("/web", 'event_configurator_tour', login="admin")
