@@ -18,6 +18,7 @@ class ProjectMilestone(models.Model):
         return self.env.context.get('default_project_id') or self.env.context.get('active_id')
 
     name = fields.Char(required=True)
+    sequence = fields.Integer('Sequence', index=True)
     project_id = fields.Many2one('project.project', required=True, default=_get_default_project_id, ondelete='cascade')
     deadline = fields.Date(tracking=True, copy=False)
     is_reached = fields.Boolean(string="Reached", default=False, copy=False)
@@ -102,7 +103,7 @@ class ProjectMilestone(models.Model):
 
     @api.model
     def _get_fields_to_export(self):
-        return ['id', 'name', 'deadline', 'is_reached', 'reached_date', 'is_deadline_exceeded', 'is_deadline_future', 'can_be_marked_as_done']
+        return ['id', 'name', 'deadline', 'is_reached', 'reached_date', 'is_deadline_exceeded', 'is_deadline_future', 'can_be_marked_as_done', 'sequence']
 
     def _get_data(self):
         self.ensure_one()

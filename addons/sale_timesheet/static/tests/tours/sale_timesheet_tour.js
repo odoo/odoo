@@ -272,16 +272,20 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: ".o_add_milestone a",
     content: "Add a first milestone",
 }, {
+    trigger: ".o_list_button_add",
+    content: "Add a first milestone",
+},{
     trigger: "div.o_field_widget[name=name] input",
-    content: "Edit new Milestone",
     run: 'text New milestone',
 }, {
     trigger: "input[data-field=deadline]",
     content: "Edit new Milestone",
     run: 'text 12/12/2099',
 }, {
-    trigger: ".modal-footer button",
+    trigger: ".o_list_button_save",
     content: "Save new Milestone",
+}, {
+    trigger: ".breadcrumb-item.o_back_button",
 }, {
     trigger: ".o-kanban-button-new",
     content: "Create new Project Update",

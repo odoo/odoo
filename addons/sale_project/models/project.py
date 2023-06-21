@@ -167,7 +167,12 @@ class Project(models.Model):
     def action_get_list_view(self):
         action = super().action_get_list_view()
         if self.allow_billable:
-            action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, 'tree'), (False, 'form')]
+            action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, view_type) if view_type == 'tree' else (view_id, view_type) for view_id, view_type in action['views']]
+        return action
+
+    def action_get_list_view_project_update(self):
+        action = super().action_get_list_view_project_update()
+        action['views'] = [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, view_type) if view_type == 'tree' else (view_id, view_type) for view_id, view_type in action['views']]
         return action
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):

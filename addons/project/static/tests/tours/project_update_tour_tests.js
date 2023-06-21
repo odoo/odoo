@@ -99,15 +99,19 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: ".o_add_milestone a",
     content: "Add a first milestone"
 }, {
+    trigger: ".o_list_button_add",
+    content: "Create new milestone"
+}, {
     trigger: "div.o_field_widget[name=name] input",
     run: 'text New milestone'
 }, {
     trigger: "input[data-field=deadline]",
     run: 'text 12/12/2099'
 }, {
-    trigger: ".modal-footer .o_form_button_save"
+    trigger: ".o_list_button_save"
 }, {
-    trigger: ".o_add_milestone a",
+    trigger: ".o_list_button_add",
+    content: "Create new milestone"
 }, {
     trigger: "div.o_field_widget[name=name] input",
     run: 'text Second milestone'
@@ -115,14 +119,22 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: "input[data-field=deadline]",
     run: 'text 12/12/2022'
 }, {
-    trigger: ".modal-footer .o_form_button_save"
+    trigger: ".o_list_button_save",
 }, {
-    trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
+    trigger: ".breadcrumb-item.o_back_button",
 }, {
-    trigger: "input[data-field=deadline]",
-    run: 'text 12/12/2100'
+    trigger: ".o_add_milestone a",
+    content: "Add a first milestone"
 }, {
-    trigger: ".modal-footer .o_form_button_save"
+    trigger: "tr.o_data_row:first-child .o_data_cell[name='deadline']:contains('12/12/2099')",
+    run: 'click'
+}, {
+    trigger: "div[name='deadline'] .o_input",
+    run: "text 12/12/2100",
+}, {
+    trigger: ".o_list_button_save"
+}, {
+    trigger: ".breadcrumb-item.o_back_button"
 }, {
     trigger: ".o-kanban-button-new",
     content: "Create a new update"

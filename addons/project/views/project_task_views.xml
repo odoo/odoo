@@ -921,6 +921,58 @@
             </field>
         </record>
 
+        <record id="project_task_kanban_view_project_milestone" model="ir.ui.view">
+            <field name="name">project.task.kanban.inherit.project.milestone</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">milestone_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_tree_view_project_milestone" model="ir.ui.view">
+            <field name="name">project.task.view.tree.project.milestone</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_task_view_tree_base"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_group_by">milestone_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='milestone_id']" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_pivot_view_project_milestone" model="ir.ui.view">
+            <field name="name">project.task.view.pivot.project.milestone</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_project_task_pivot"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='project_id']" position="replace">
+                    <field name="milestone_id" type="row"/>
+                    <field name="stage_id" type="col"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_graph_view_project_milestone" model="ir.ui.view">
+            <field name="name">project.task.view.graph.project.milestone</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_project_task_graph"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="replace">
+                    <field name="milestone_id"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>

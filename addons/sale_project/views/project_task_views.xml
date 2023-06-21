@@ -376,4 +376,21 @@
             </xpath>
         </field>
     </record>
+
+    <record id="project_milestone_view_kanban" model="ir.ui.view">
+        <field name="name">project.milestone.view.kanban.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="is_deadline_exceeded" position="after">
+                <field name="quantity_percentage"/>
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_record_title')]" position="after">
+                <div t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value">
+                    <field name="sale_line_display_name"/>
+                    (<field name="quantity_percentage" widget="percentage"/>)
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>
