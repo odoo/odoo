@@ -6,7 +6,7 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('pt')
+    @template('pt_account')
     def _get_pt_template_data(self):
         return {
             'property_account_receivable_id': 'chart_2111',
@@ -19,7 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_receivable_account_id': 'chart_2437',
         }
 
-    @template('pt', 'res.company')
+    @template('pt_account', 'res.company')
     def _get_pt_res_company(self):
         return {
             self.env.company.id: {

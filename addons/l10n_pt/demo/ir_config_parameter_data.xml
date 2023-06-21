@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="ir.config_parameter" id="iap_endpoint">
+            <field name="key">l10n_pt.iap_endpoint</field>
+            <field name="value">demo</field>
+        </record>
+
+        <record model="ir.config_parameter" id="private_key">
+    <!--
+    This example of private key is taken from https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Faturacao/Paginas/certificacao-de-software.aspx
+    and should be overriden by the software company that wants to be certified by the Portuguese Tax Authority.
+    -->
+            <field name="key">l10n_pt.private_key</field>
+            <field name="value">-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDWDX9wVqj6ZqNZU1ojwBpyKKkuzHTCmfK39xx/T9vWkqpcV7h3
+sx++ZOv2KhhNkIe/1I4OCWDPCXRE4g0uIQr0NS29vMlP3aHHayy76+lbBCNVcHFx
+M0ggjre1acnD0qUpZ6Vza7F+PpCyuypD2V/pkL1nX9Z6z5uYyqc0XaSFdwIDAQAB
+AoGBAJCA7j6Vkl/w+GeuOJUX9AKLZqN8TXquWUhOX4OnEt9Jhg7u/U55s31iPlWh
+12RNpQcg5IGfXSaH2GFEReeVUQGMrb89kkfbeY5HSRHh3/sBSyJTMn2cjsqfUnUJ
+hywJPxT8NFIcS2pRBJe/QN/pL+M2jk+Fl40wyVXRhnog+4fhAkEA//Tijl5SA7a/
+uCyfOQkJ6yop13dfN4EHEWYMzI6SlnYWuJfdIOz4wkzBWgD0r/btFAths1zElmRW
+INjWsB84ZwJBANYWywqsZA4FShXkDEWfG1GbrEIXiOnPJay2p7en3DQ+lx4GfE10
+iO52f54QRu13SZp06050YkrWcRfBGCXaYHECQQCU8vMsmmLr2ltzWDRIQqRM/7pd
+sw/sAuAUFej42Tcg7BOI1IdQc9bHa1dRgyDhjbalZYIzmJamVjlw3/7/ewudAkB/
+ipatpiP5YldPkUtqUq5QwOAvg5vSRtEYAr0KIZuDGGKoxY5aCnnlLn06qlHG+JDF
+zq+8ToOcOAKp9yQusNlRAkEA+0DarosTmn2I7+fj2/3ojVKdW/eIisz547U3bGbW
+/hBCZRi+y+cQnPlZ7Cr4LcGInhdxR+fSWptMNwrDCUiYHA==
+-----END RSA PRIVATE KEY-----</field>
+        </record>
+    </data>
+</odoo>
