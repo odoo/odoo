@@ -1444,11 +1444,12 @@ class expression(object):
                     check_null = len(params) < len(right)
                     if params:
                         params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
-                        lang = model.env.lang or 'en_US'
-                        if lang == 'en_US':
-                            sql_left = SQL("%s->>'en_US'", sql_field)
+                        langs = field.get_translation_fallback_langs(model.env)
+                        sql_left_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
+                        if len(sql_left_langs) == 1:
+                            sql_left = sql_left_langs[0]
                         else:
-                            sql_left = SQL("COALESCE(%s->>%s, %s->>'en_US')", sql_field, lang, sql_field)
+                            sql_left = SQL('COALESCE(%s)', SQL(', ').join(sql_left_langs))
                         sql = SQL("%s %s %s", sql_left, sql_operator, tuple(params))
                     else:
                         # The case for (left, 'in', []) or (left, 'not in', []).
