@@ -1202,7 +1202,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             case 'hidden_condition_opt':
                 return this.$target[0].classList.contains('s_website_form_field_hidden_if');
             case 'char_input_type_opt':
-                return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
+                return !this.$target[0].classList.contains('s_website_form_custom') &&
+                    ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type) &&
+                    !this.$target[0].classList.contains('s_website_form_model_required');
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
             case 'required_opt':
