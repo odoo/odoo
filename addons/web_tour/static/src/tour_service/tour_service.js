@@ -19,6 +19,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  *
  * @typedef Tour
  * @property {string} url
+ * @property {string} name
  * @property {() => TourStep[]} steps
  * @property {boolean} [rainbowMan]
  * @property {number} [sequence]
@@ -58,13 +59,17 @@ export const tourService = {
     dependencies: ["orm", "effect", "ui", "overlay", "localization"],
     start: async (_env, { orm, effect, ui, overlay }) => {
         await whenReady();
+        const toursEnabled = "tour_disable" in session && !session.tour_disable;
+        const consumedTours = new Set(session.web_tours);
 
         /** @type {{ [k: string]: Tour }} */
         const tours = {};
         const tourRegistry = registry.category("web_tour.tours");
         function register(name, tour) {
-            name = tour.saveAs || name
+            name = tour.saveAs || name;
+            const wait_for = tour.wait_for || Promise.resolve();
             tours[name] = {
+                wait_for,
                 name,
                 get steps() {
                     if (typeof tour.steps === "function") {
@@ -83,9 +88,18 @@ export const tourService = {
                 fadeout: tour.fadeout || "medium",
                 sequence: tour.sequence || 1000,
                 test: tour.test,
-                wait_for: tour.wait_for || Promise.resolve(),
                 checkDelay: tour.checkDelay,
             };
+            wait_for.then(() => {
+                if (
+                    !tour.test &&
+                    toursEnabled &&
+                    !consumedTours.has(name) &&
+                    !tourState.getActiveTourNames().includes(name)
+                ) {
+                    startTour(name, { mode: "manual", redirect: false });
+                }
+            });
         }
         for (const [name, tour] of tourRegistry.getEntries()) {
             register(name, tour);
@@ -93,7 +107,11 @@ export const tourService = {
         tourRegistry.addEventListener("UPDATE", ({ detail: { key, value } }) => {
             if (tourRegistry.contains(key)) {
                 register(key, value);
-                if (tourState.getActiveTourNames().includes(key)) {
+                if (
+                    tourState.getActiveTourNames().includes(key) &&
+                    // Don't resume onboarding tours when tours are disabled
+                    (toursEnabled || tourState.get(key, "mode") === "auto")
+                ) {
                     resumeTour(key);
                 }
             } else {
@@ -103,18 +121,24 @@ export const tourService = {
 
         const bus = new EventBus();
         const macroEngine = new MacroEngine({ target: document });
-        const consumedTours = new Set(session.web_tours);
 
         const pointers = reactive({});
         /** @type {Set<string>} */
         const runningTours = new Set();
 
+        // FIXME: this is a hack for stable: whenever the macros advance, for each call to pointTo,
+        // we push a function that will do the pointing as well as the tour name. Then after
+        // a microtask tick, when all pointTo calls have been made by the macro system, we can sort
+        // these by tour priority/sequence and only call the one with the highest priority so we
+        // show the correct pointer.
+        const possiblePointTos = [];
         function createPointer(tourName, config) {
             const { state: pointerState, methods } = createPointerState();
             let remove;
             return {
                 start() {
                     pointers[tourName] = {
+                        methods,
                         id: tourName,
                         component: TourPointer,
                         props: { pointerState, ...config },
@@ -127,13 +151,29 @@ export const tourService = {
                     methods.destroy();
                 },
                 ...methods,
-                pointTo(anchor, step) {
-                    // `first` = first visible pointer.
-                    const [first] = Object.values(pointers).filter(
-                        (p) => p.props.pointerState.isVisible
+                async pointTo(anchor, step) {
+                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step)]);
+                    await Promise.resolve();
+                    // only done once per macro advance
+                    if (!possiblePointTos.length) {
+                        return;
+                    }
+                    const toursByPriority = Object.fromEntries(
+                        getSortedTours().map((t, i) => [t.name, i])
                     );
-                    if (!first || (first && first.id === tourName)) {
-                        methods.pointTo(anchor, step);
+                    const sortedPointTos = possiblePointTos
+                        .slice(0)
+                        .sort(([a], [b]) => toursByPriority[a] - toursByPriority[b]);
+                    possiblePointTos.splice(0); // reset for the next macro advance
+
+                    const active = sortedPointTos[0];
+                    const [activeId, enablePointer] = active || [];
+                    for (const { id, methods } of Object.values(pointers)) {
+                        if (id === activeId) {
+                            enablePointer();
+                        } else {
+                            methods.hide();
+                        }
                     }
                 },
             };
@@ -146,7 +186,7 @@ export const tourService = {
         function shouldOmit(step, mode) {
             const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
             const getEdition = () =>
-                session.server_version_info.slice(-1)[0] === "e" ? "enterprise" : "community";
+                (session.server_version_info || []).at(-1) === "e" ? "enterprise" : "community";
             const correctEdition = isDefined("edition", step)
                 ? step.edition === getEdition()
                 : true;
@@ -258,11 +298,11 @@ export const tourService = {
             if (mode === "auto") {
                 transitionConfig.disabled = true;
             }
-            macroEngine.activate(macro);
+            macroEngine.activate(macro, mode === "auto");
         }
 
         function startTour(tourName, options = {}) {
-            if (runningTours.has(tourName)) {
+            if (runningTours.has(tourName) && options.mode === "manual") {
                 return;
             }
             runningTours.add(tourName);
@@ -349,17 +389,6 @@ export const tourService = {
 
         odoo.startTour = startTour;
         odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
-
-        // Auto start unconsumed tours if tour is not disabled and if the user is not on mobile.
-        const isTourEnabled = "tour_disable" in session && !session.tour_disable;
-        if (isTourEnabled && !ui.isSmall) {
-            const sortedTours = getSortedTours().filter((tour) => !consumedTours.has(tour.name));
-            for (const tour of sortedTours) {
-                odoo.isTourReady(tour.name).then(() => {
-                    startTour(tour.name, { mode: "manual", redirect: false });
-                });
-            }
-        }
 
         return {
             bus,
