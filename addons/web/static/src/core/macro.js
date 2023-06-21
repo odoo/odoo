@@ -197,12 +197,20 @@ export class MacroEngine {
         });
     }
 
-    async activate(descr) {
+    async activate(descr, exclusive = false) {
+        if (this.exclusive) {
+            return;
+        }
+        this.exclusive = exclusive;
         // micro task tick to make sure we add the macro in a new call stack,
         // so we are guaranteed that we are not iterating on the current macros
         await Promise.resolve();
         const macro = new Macro(descr);
-        this.macros.add(macro);
+        if (exclusive) {
+            this.macros = new Set([macro]);
+        } else {
+            this.macros.add(macro);
+        }
         this.start();
     }
 
