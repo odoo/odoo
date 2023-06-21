@@ -30,6 +30,10 @@ patch(Thread.prototype, "im_livechat", {
         return this.type === "livechat" ? false : this._super();
     },
 
+    get correspondents() {
+        return this._super().filter((correspondent) => !correspondent.is_bot);
+    },
+
     get displayName() {
         if (this.type !== "livechat" || !this.correspondent) {
             return this._super();

@@ -9,14 +9,16 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     const countryId = pyEnv["res.country"].create({ code: "BE" });
     const visitorId = pyEnv["website.visitor"].create({
         country_id: countryId,
-        display_name: "Visitor #11",
         history: "Home → Contact",
         is_connected: true,
         lang_name: "English",
         website_name: "General website",
     });
+    pyEnv["website.visitor"].write([visitorId], {
+        display_name: `Visitor #${visitorId}`,
+    });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Website Visitor 11",
+        anonymous_name: `Visitor #${visitorId}`,
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
@@ -34,7 +36,7 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    assert.containsOnce($, "span:contains(Visitor #11)");
+    assert.containsOnce($, `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`);
     assert.containsOnce($, "span:contains(English)");
     assert.containsOnce($, "span>:contains(General website)");
     assert.containsOnce($, "span:contains(Home → Contact)");
