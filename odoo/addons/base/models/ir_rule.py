@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import warnings
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import config
@@ -126,14 +125,20 @@ class IrRule(models.Model):
                        'tuple(self._compute_domain_context_values())'),
     )
     def _compute_domain(self, model_name, mode="read"):
+        global_domains = []                     # list of domains
+
+        # add rules for parent models
+        for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
+            if domain := self._compute_domain(parent_model_name, mode):
+                global_domains.append([(parent_field_name, 'any', domain)])
+
         rules = self._get_rules(model_name, mode=mode)
         if not rules:
-            return
+            return expression.AND(global_domains) if global_domains else []
 
-        # browse user and rules as SUPERUSER_ID to avoid access errors!
+        # browse user and rules with sudo to avoid access errors!
         eval_context = self._eval_context()
         user_groups = self.env.user.groups_id
-        global_domains = []                     # list of domains
         group_domains = []                      # list of domains
         for rule in rules.sudo():
             # evaluate the domain for the current user
