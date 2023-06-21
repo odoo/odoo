@@ -437,7 +437,7 @@
         <record id="action_picking_tree_incoming" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -453,7 +453,7 @@
         <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
             <field name="name">Deliveries</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
