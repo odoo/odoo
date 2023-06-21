@@ -324,12 +324,6 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.all_employee_ids = leave.employee_id | leave.employee_ids
 
-    @api.constrains('holiday_status_id', 'number_of_days')
-    def _check_allocation_duration(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
-
     @api.depends_context('uid')
     def _compute_description(self):
         self.check_access_rights('read')
@@ -364,12 +358,6 @@ class HolidaysRequest(models.Model):
     def _compute_state(self):
         for leave in self:
             leave.state = 'confirm' if leave.validation_type != 'no_validation' else 'draft'
-
-    @api.depends('holiday_status_id.requires_allocation', 'validation_type', 'employee_id', 'date_from', 'date_to')
-    def _compute_from_holiday_status_id(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        self.holiday_allocation_id = False
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                  'request_unit_half', 'request_unit_hours', 'employee_id')
@@ -892,18 +880,6 @@ class HolidaysRequest(models.Model):
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
-
-    @api.constrains('holiday_allocation_id')
-    def _check_allocation_id(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
-
-    @api.constrains('holiday_allocation_id', 'date_to', 'date_from')
-    def _check_leave_type_validity(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
 
     @api.constrains('date_from', 'date_to')
     def _check_stress_day(self):
