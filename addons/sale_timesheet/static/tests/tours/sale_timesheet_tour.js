@@ -303,16 +303,22 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: "Add a first milestone",
     run: "click",
 }, {
+    trigger: ".o_list_button_add",
+    content: "Add a first milestone",
+    run: "click",
+}, {
     trigger: "div.o_field_widget[name=name] input",
-    content: "Edit new Milestone",
     run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
     content: "Edit new Milestone",
     run: "edit 12/12/2099",
 }, {
-    trigger: ".modal-footer button",
+    trigger: ".o_list_button_save",
     content: "Save new Milestone",
+    run: "click",
+}, {
+    trigger: ".breadcrumb-item.o_back_button",
     run: "click",
 }, {
     trigger: ".o-kanban-button-new",

@@ -2,9 +2,7 @@
 
 import { formatDate } from "@web/core/l10n/dates";
 import { useService } from '@web/core/utils/hooks';
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { Component, useState, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -12,8 +10,6 @@ export class ProjectMilestone extends Component {
     static props = {
         context: Object,
         milestone: Object,
-        open: Function,
-        load: Function,
     };
     static template = "project.ProjectMilestone";
 
@@ -53,35 +49,6 @@ export class ProjectMilestone extends Component {
         }
         if (nextProps.context) {
             this.contextValue = nextProps.context;
-        }
-    }
-
-    async onDeleteMilestone() {
-        this.dialog.add(ConfirmationDialog, {
-            body: _t("Are you sure you want to delete this record?"),
-            confirm: async () => {
-                await this.orm.call('project.milestone', 'unlink', [this.milestone.id]);
-                await this.props.load();
-            },
-            cancel: () => {},
-        });
-    }
-
-    async onOpenMilestone() {
-        if (!this.write_mutex) {
-            this.write_mutex = true;
-            this.props.open({
-                resModel: this.resModel,
-                resId: this.milestone.id,
-                title: _t("Milestone"),
-            }, {
-                onClose: async () => {
-                    if (status(this) === "mounted") {
-                        await this.props.load();
-                        this.write_mutex = false;
-                    }
-                },
-            });
         }
     }
 
