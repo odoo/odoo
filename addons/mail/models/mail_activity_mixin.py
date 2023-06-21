@@ -65,6 +65,11 @@ class MailActivityMixin(models.AbstractModel):
         related='activity_ids.user_id', readonly=False,
         search='_search_activity_user_id',
         groups="base.group_user")
+    activity_create_uid = fields.Many2one(
+        'res.users', 'Activity created by',
+        related='activity_ids.create_uid', readonly=True,
+        search='_search_activity_create_uid',
+        groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
         related='activity_ids.activity_type_id', readonly=False,
@@ -201,6 +206,10 @@ class MailActivityMixin(models.AbstractModel):
         if operator == '=' and not operand:
             return [('activity_ids', '=', False)]
         return [('activity_ids.date_deadline', operator, operand)]
+
+    @api.model
+    def _search_activity_create_uid(self, operator, operand):
+        return [('activity_ids.create_uid', operator, operand)]
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
