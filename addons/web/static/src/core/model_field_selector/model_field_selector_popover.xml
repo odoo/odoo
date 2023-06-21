@@ -58,7 +58,7 @@
                                 t-att-data-name="fieldKey"
                                 t-attf-class="o_field_selector_item #{fieldKey === currentActiveField and ' active' or ''}">
                                 <t t-out="field.string" />
-                                <div t-if="props.isDebugMode" class="text-muted o_field_selector_item_title"><t t-out="fieldKey"/> (<t t-out="field.type"/>)</div>
+                                <div t-if="props.isDebugMode" class="o_field_selector_item_title"><t t-out="fieldKey"/> (<t t-out="field.type"/>)</div>
                                 <t t-if="field.relation and props.followRelations">
                                     <i
                                         class="fa fa-chevron-right o_field_selector_relation_icon"
