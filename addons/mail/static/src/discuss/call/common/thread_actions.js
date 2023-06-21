@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { eq } from "@mail/core/common/store_service";
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
@@ -42,7 +43,7 @@ threadActionsRegistry
         name: _t("Show Call Settings"),
         nameActive: _t("Hide Call Settings"),
         sequence(component) {
-            return component.props.chatWindow && component.thread === component.rtc.state.channel
+            return component.props.chatWindow && eq(component.thread, component.rtc.state.channel)
                 ? 6
                 : 60;
         },

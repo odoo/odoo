@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { start } from "@mail/../tests/helpers/test_utils";
+import { insertMessage } from "@mail/core/common/message_service";
 import { insertThread } from "@mail/core/common/thread_service";
 
 import { str_to_datetime } from "web.time";
@@ -8,14 +9,14 @@ import { str_to_datetime } from "web.time";
 QUnit.module("message model test", {});
 
 QUnit.test("Message model properties", async (assert) => {
-    const { env } = await start();
+    await start();
     insertThread({
         id: 3,
         model: "res.partner",
         name: "general",
     });
     /** @type {import("@mail/core/common/message_model").Message} */
-    const message = env.services["mail.message"].insert({
+    const message = insertMessage({
         attachment_ids: [
             {
                 filename: "test.txt",

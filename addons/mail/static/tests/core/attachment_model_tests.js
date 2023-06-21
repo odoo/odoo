@@ -1,13 +1,13 @@
 /* @odoo-module */
 
 import { start } from "@mail/../tests/helpers/test_utils";
+import { insertAttachment } from "@mail/core/common/attachment_service";
 
 QUnit.module("attachment model test", {});
 
 QUnit.test("Attachment model properties", async (assert) => {
-    const { env } = await start();
-
-    const attachment = env.services["mail.attachment"].insert({
+    await start();
+    const attachment = insertAttachment({
         filename: "test.txt",
         id: 750,
         mimetype: "text/plain",

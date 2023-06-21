@@ -2,13 +2,7 @@
 
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
-import {
-    fetchPinnedMessages,
-    getPinnedMessages,
-    hasPinnedMessages,
-    setPinOnMessage,
-    useMessagePinService,
-} from "@mail/discuss/message_pin/common/message_pin_service";
+import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
 
 import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
 
@@ -27,14 +21,12 @@ export class PinnedMessagesPanel extends Component {
         this.rpc = useService("rpc");
         this.ui = useState(useService("ui"));
         this.messagePinService = useMessagePinService();
-        this.hasPinnedMessages = hasPinnedMessages;
-        this.getPinnedMessages = getPinnedMessages;
         onWillStart(() => {
-            fetchPinnedMessages(this.props.thread);
+            this.messagePinService.fetchPinnedMessages(this.props.thread);
         });
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.thread.id !== this.props.thread.id) {
-                fetchPinnedMessages(nextProps.thread);
+                this.messagePinService.fetchPinnedMessages(nextProps.thread);
             }
         });
         useSubEnv({
@@ -69,7 +61,7 @@ export class PinnedMessagesPanel extends Component {
             message,
             messageComponent: Message,
             prompt: _t("Are you sure you want to remove this pinned message?"),
-            onConfirm: () => setPinOnMessage(message, false),
+            onConfirm: () => this.messagePinService.setPin(message, false),
         });
     }
 

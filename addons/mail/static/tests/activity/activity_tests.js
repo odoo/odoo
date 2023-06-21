@@ -17,8 +17,14 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
+import { patch } from "@web/core/utils/patch";
+import { ActivityService } from "@mail/core/web/activity_service";
 
 const { inputFiles } = file;
+
+patch(ActivityService.prototype, "tests/activity/activitiy_tests", {
+    _onBroadcastChannelMessage() {},
+});
 
 const views = {
     "res.fake,false,form": `

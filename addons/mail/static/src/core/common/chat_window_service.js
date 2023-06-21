@@ -1,11 +1,13 @@
 /* @odoo-module */
 
 import { ChatWindow } from "@mail/core/common/chat_window_model";
+import { Store } from "@mail/core/common/store_service";
 import { assignDefined } from "@mail/utils/common/misc";
 import { makeFnPatchable } from "@mail/utils/common/patch";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
 export const CHAT_WINDOW_INBETWEEN_WIDTH = 5;
@@ -18,12 +20,12 @@ let store;
 let ui;
 
 export const closeChatWindow = makeFnPatchable(function (chatWindow, { escape = false } = {}) {
-    if (getMaxVisibleChatWindows() < store.chatWindows.length) {
-        const swaped = getHiddenChatWindows()[0];
+    if (store.maxVisibleChatWindows < store.chatWindows.length) {
+        const swaped = store.hiddenChatWindows[0];
         swaped.hidden = false;
         swaped.folded = false;
     }
-    const index = store.chatWindows.findIndex((c) => c === chatWindow);
+    const index = store.chatWindows.findIndex((c) => store.eq(c, chatWindow));
     if (index > -1) {
         store.chatWindows.splice(index, 1);
     }
@@ -47,28 +49,6 @@ export function focusChatWindow(chatWindow) {
     chatWindow.autofocus++;
 }
 
-export function getHiddenChatWindows() {
-    return store.chatWindows.filter((chatWindow) => chatWindow.hidden);
-}
-
-export function getMaxVisibleChatWindows() {
-    const startGap = ui.isSmall
-        ? 0
-        : getHiddenChatWindows().length > 0
-        ? CHAT_WINDOW_END_GAP_WIDTH + CHAT_WINDOW_HIDDEN_WIDTH
-        : CHAT_WINDOW_END_GAP_WIDTH;
-    const endGap = ui.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
-    const available = browser.innerWidth - startGap - endGap;
-    const maxAmountWithoutHidden = Math.floor(
-        available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH)
-    );
-    return maxAmountWithoutHidden;
-}
-
-export const getVisibleChatWindows = makeFnPatchable(function () {
-    return store.chatWindows.filter((chatWindow) => !chatWindow.hidden);
-});
-
 export const hideChatWindow = makeFnPatchable(function (chatWindow) {
     chatWindow.hidden = true;
     chatWindow.folded = true;
@@ -86,9 +66,9 @@ export function insertChatWindow(data = {}) {
         assignDefined(chatWindow, data);
         let index;
         if (!data.replaceNewMessageChatWindow) {
-            if (getMaxVisibleChatWindows() <= store.chatWindows.length) {
-                const swaped = getVisibleChatWindows()[getVisibleChatWindows().length - 1];
-                index = getVisibleChatWindows().length - 1;
+            if (store.maxVisibleChatWindows <= store.chatWindows.length) {
+                const swaped = store.visibleChatWindows[store.visibleChatWindows.length - 1];
+                index = store.visibleChatWindows.length - 1;
                 hideChatWindow(swaped);
             } else {
                 index = store.chatWindows.length;
@@ -110,7 +90,7 @@ export function insertChatWindow(data = {}) {
 }
 
 export function makeChatWindowVisible(chatWindow) {
-    const swaped = getVisibleChatWindows()[getVisibleChatWindows().length - 1];
+    const swaped = store.visibleChatWindows[store.visibleChatWindows.length - 1];
     hideChatWindow(swaped);
     showChatWindow(chatWindow);
 }
@@ -159,6 +139,28 @@ export const toggleFoldChatWindow = makeFnPatchable(function (chatWindow) {
     if (thread) {
         thread.state = chatWindow.folded ? "folded" : "open";
     }
+});
+
+patch(Store.prototype, "core/common/chat_window_service", {
+    get hiddenChatWindows() {
+        return this.chatWindows.filter((chatWindow) => chatWindow.hidden);
+    },
+    get maxVisibleChatWindows() {
+        const startGap = ui.isSmall
+            ? 0
+            : this.hiddenChatWindows.length > 0
+            ? CHAT_WINDOW_END_GAP_WIDTH + CHAT_WINDOW_HIDDEN_WIDTH
+            : CHAT_WINDOW_END_GAP_WIDTH;
+        const endGap = ui.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
+        const available = browser.innerWidth - startGap - endGap;
+        const maxAmountWithoutHidden = Math.floor(
+            available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH)
+        );
+        return maxAmountWithoutHidden;
+    },
+    get visibleChatWindows() {
+        return this.chatWindows.filter((chatWindow) => !chatWindow.hidden);
+    },
 });
 
 export class ChatWindowService {

@@ -10,6 +10,7 @@ import {
     insertMessage,
 } from "@mail/core/common/message_service";
 import { DEFAULT_AVATAR, insertPersona } from "@mail/core/common/persona_service";
+import { incl } from "@mail/core/common/store_service";
 import { Thread } from "@mail/core/common/thread_model";
 import {
     removeFromArray,
@@ -282,7 +283,7 @@ export const fetchPreviews = memoize(async () => {
             });
             if (!thread.isLoaded) {
                 thread.messages.push(message);
-                if (message.isNeedaction && !thread.needactionMessages.includes(message)) {
+                if (message.isNeedaction && !incl(thread.needactionMessages, message)) {
                     thread.needactionMessages.push(message);
                 }
             }
@@ -334,10 +335,10 @@ export const fetchNewMessages = makeFnPatchable(async function (thread) {
         // feed needactions
         // same for needaction messages, special case for mailbox:
         // kinda "fetch new/more" with needactions on many origin threads at once
-        if (thread === store.discuss.inbox) {
+        if (store.eq(thread, store.discuss.inbox)) {
             for (const message of fetched) {
                 const thread = message.originThread;
-                if (!thread.needactionMessages.includes(message)) {
+                if (!incl(thread.needactionMessages, message)) {
                     thread.needactionMessages.unshift(message);
                 }
             }

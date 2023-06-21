@@ -16,6 +16,7 @@ import { createChannelThread, getChat } from "../common/thread_service";
 import { patchFn } from "@mail/utils/common/patch";
 import { insertChatWindow } from "@mail/core/common/chat_window_service";
 
+let notificationService;
 let ui;
 /** @type {import("@mail/core/common/store_service").Store} */
 let store;
@@ -49,6 +50,7 @@ patch(Messaging.prototype, "mail/core/web", {
         this._super(env, services, initialThreadLocalId);
         store = services["mail.store"];
         ui = services["ui"];
+        notificationService = services.notification;
         this.bus.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
@@ -57,7 +59,7 @@ patch(Messaging.prototype, "mail/core/web", {
                 _t("%(user)s connected. This is their first connection. Wish them luck."),
                 { user: username }
             );
-            this.notificationService.add(notification, { type: "info" });
+            notificationService.add(notification, { type: "info" });
             const chat = await getChat({ partnerId });
             if (chat) {
                 insertChatWindow({ thread: chat });

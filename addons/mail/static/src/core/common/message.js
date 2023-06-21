@@ -53,6 +53,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+import { eq } from "./store_service";
 
 /**
  * @typedef {Object} Props
@@ -125,7 +126,7 @@ export class Message extends Component {
         });
         useEffect(
             (editingMessage) => {
-                if (editingMessage === this.props.message) {
+                if (eq(editingMessage, this.props.message)) {
                     this.enterEditMode();
                 }
             },
@@ -277,7 +278,7 @@ export class Message extends Component {
         if (!this.props.thread) {
             return false;
         }
-        return this.message.originThread === this.props.thread;
+        return this._store.eq(this.message.originThread, this.props.thread);
     }
 
     get isInInbox() {

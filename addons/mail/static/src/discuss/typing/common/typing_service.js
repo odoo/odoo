@@ -57,7 +57,7 @@ export class Typing {
     getTypingMembers(channel) {
         return [...(this.memberIdsByChannelId.get(channel.id) ?? new Set())]
             .map((id) => insertChannelMember({ id }))
-            .filter((member) => member.persona !== this.storeService.self);
+            .filter((member) => !this.storeService.eq(member.persona, this.storeService.self));
     }
 
     /**

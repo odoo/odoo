@@ -13,7 +13,7 @@ import { escape } from "@web/core/utils/strings";
 function setQUnitDebugMode() {
     owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
     QUnit.config.debug = true; // allows for helper functions to behave differently (logging, the HTML element in which the test occurs etc...)
-    QUnit.config.testTimeout = 60 * 60 * 1000;
+    // QUnit.config.testTimeout = 60 * 60 * 1000;
     // Allows for interacting with the test when it is over
     // In fact, this will pause QUnit.
     // Also, logs useful info in the console.
@@ -40,7 +40,7 @@ export function setupQUnit() {
     // -----------------------------------------------------------------------------
     // QUnit config
     // -----------------------------------------------------------------------------
-    QUnit.config.testTimeout = 1 * 60 * 1000;
+    // QUnit.config.testTimeout = 1 * 60 * 1000;
     QUnit.config.hidepassed = window.location.href.match(/[?&]testId=/) === null;
 
     // -----------------------------------------------------------------------------

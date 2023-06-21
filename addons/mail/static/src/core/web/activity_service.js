@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { fetchNewMessages } from "../common/thread_service";
 import { makeFnPatchable } from "@mail/utils/common/patch";
+import { markup } from "@odoo/owl";
 
 let gEnv;
 let actionService;

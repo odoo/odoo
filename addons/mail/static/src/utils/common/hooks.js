@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { eq } from "@mail/core/common/store_service";
 import { loadAround } from "@mail/core/common/thread_service";
 import {
     onMounted,
@@ -362,7 +363,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isNotSelected(thread, message) {
-            return this.thread === thread && this.message !== message;
+            return eq(this.thread, thread) && this.message !== message;
         },
         /**
          * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -370,7 +371,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isSelected(thread, message) {
-            return this.thread === thread && this.message === message;
+            return eq(this.thread, thread) && eq(this.message, message);
         },
         /** @type {import("@mail/core/common/message_model").Message|null} */
         message: null,
@@ -381,7 +382,7 @@ export function useMessageToReplyTo() {
          * @param {import("@mail/core/common/message_model").Message} message
          */
         toggle(thread, message) {
-            if (this.message === message) {
+            if (eq(this.message, message)) {
                 this.cancel();
             } else {
                 Object.assign(this, { message, thread });

@@ -57,7 +57,7 @@
                                     <i class="fa fa-calendar-o"/>
                                 </span>
                             </div>
-                            <div t-if="message.originThread === props.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
+                            <div t-if="store.eq(message.originThread, props.thread) and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
                                 <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
                                     <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
                                 </span>
@@ -124,7 +124,7 @@
                                     <button t-if="canAddReaction" class="btn px-1 py-0 rounded-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
                                     <button t-if="canReplyTo" class="btn px-1 py-0 rounded-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
                                     <button t-if="canToggleStar" class="btn px-1 py-0 rounded-0" t-on-click="() => toggleMessageStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
-                                    <Dropdown t-if="editable or deletable or isInInbox or props.thread?.model === 'discuss.channel'" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.newestMessage === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
+                                    <Dropdown t-if="editable or deletable or isInInbox or props.thread?.model === 'discuss.channel'" onStateChanged="state => this.state.expandOptions = state.open" position="store.eq(props.thread?.newestMessage, props.message) ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
                                         <t t-set-slot="toggler">
                                             <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                                         </t>

@@ -7,7 +7,7 @@ import { NotificationGroup } from "@mail/core/common/notification_group_model";
 import { Notification } from "@mail/core/common/notification_model";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 import { makeFnPatchable } from "@mail/utils/common/patch";
@@ -291,6 +291,7 @@ export async function unstarAllMessages() {
  * @param {Object} data
  */
 export function updateMessage(message, data) {
+    nullifyClearCommands(data);
     const {
         attachment_ids: attachments = message.attachments,
         default_subject: defaultSubject = message.defaultSubject,
@@ -402,7 +403,7 @@ function updateNotification(notification, data) {
               })
             : undefined,
     });
-    if (notification.message.author !== store.self) {
+    if (!store.eq(notification.message.author, store.self)) {
         return;
     }
     const thread = notification.message.originThread;
@@ -448,7 +449,7 @@ export function updateStarred(message, isStarred) {
     const starred = store.discuss.starred;
     if (isStarred) {
         starred.counter++;
-        if (!starred.messages.includes(message)) {
+        if (!store.incl(starred.messages, message)) {
             starred.messages.push(message);
         }
     } else {
@@ -486,6 +487,9 @@ function _updateReactions(message, reactionGroups) {
 
 export class MessageService {
     constructor(env, services) {
+        this.setup(env, services);
+    }
+    setup(env, services) {
         gEnv = env;
         store = services["mail.store"];
         rpc = services.rpc;

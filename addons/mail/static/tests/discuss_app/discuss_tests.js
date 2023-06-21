@@ -662,8 +662,6 @@ QUnit.test("rendering of inbox message", async (assert) => {
 });
 
 QUnit.test("Unfollow message", async function (assert) {
-    assert.expect(12);
-
     const pyEnv = await startServer();
     const currentPartnerId = pyEnv.currentPartnerId;
     const [threadFollowedId, threadNotFollowedId] = pyEnv["res.partner"].create([
@@ -699,22 +697,23 @@ QUnit.test("Unfollow message", async function (assert) {
     // 2 messages about "Thread followed" with unfollow button and 1 message about "Thread not followed" without it
     assert.containsN($, ".o-mail-Message", 3);
     for (const messageN of [0, 1]) {
-        const $message = $(`.o-mail-Message:eq(${messageN})`);
-        assert.containsOnce($message, ".o-mail-Message-header:contains(on Thread followed)");
-        await afterNextRender(() => $message.find("[title='Expand']").click());
-        assert.containsOnce($message, "[title='Unfollow']");
+        assert.containsOnce(
+            $,
+            `.o-mail-Message:eq(${messageN}) .o-mail-Message-header:contains(on Thread followed)`
+        );
+        await click(`.o-mail-Message:eq(${messageN}) [title='Expand']`);
+        assert.containsOnce($, `.o-mail-Message:eq(${messageN}) [title='Unfollow']`);
     }
-    const $messageNotFollowed = $(".o-mail-Message:eq(2)");
     assert.containsOnce(
-        $messageNotFollowed,
-        ".o-mail-Message-header:contains(on Thread not followed)"
+        $,
+        ".o-mail-Message:eq(2) .o-mail-Message-header:contains(on Thread not followed)"
     );
-    await afterNextRender(() => $messageNotFollowed.find("[title='Expand']").click());
-    assert.containsNone($messageNotFollowed, "[title='Unfollow']");
+    await click(".o-mail-Message:eq(2) [title='Expand']");
+    assert.containsNone($, ".o-mail-Message:eq(2) [title='Unfollow']");
 
-    const $message0Followed = $(".o-mail-Message:eq(0)");
-    await afterNextRender(() => $message0Followed.find("[title='Expand']").click());
-    await afterNextRender(() => $message0Followed.find("[title='Unfollow']").click());
+    // const $message0Followed = $(".o-mail-Message:eq(0)");
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await click(".o-mail-Message:eq(0) [title='Unfollow']");
 
     assert.containsN(
         $,
@@ -725,8 +724,7 @@ QUnit.test("Unfollow message", async function (assert) {
     assert.containsOnce($, ".o-mail-Message-header:contains(on Thread followed)");
     assert.containsOnce($, ".o-mail-Message-header:contains(on Thread not followed)");
     for (const messageN of [0, 1]) {
-        const $message = $(`.o-mail-Message:eq(${messageN})`);
-        await afterNextRender(() => $message.find("[title='Expand']").click());
+        await click(`.o-mail-Message:eq(${messageN}) [title='Expand']`);
         assert.containsNone(
             $,
             "button[title='Unfollow']",

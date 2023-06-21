@@ -9,6 +9,7 @@ import {
     updateStarred,
 } from "@mail/core/common/message_service";
 import { insertPersona } from "@mail/core/common/persona_service";
+import { incl } from "@mail/core/common/store_service";
 import {
     createChannelThread,
     fetchMoreMessages,
@@ -143,12 +144,12 @@ function handleNotification(notifications) {
                 const data = Object.assign(notif.payload, { body: markup(notif.payload.body) });
                 const message = insertMessage(data);
                 const inbox = store.discuss.inbox;
-                if (!inbox.messages.includes(message)) {
+                if (!incl(inbox.messages, message)) {
                     inbox.messages.push(message);
                     inbox.counter++;
                 }
                 const thread = message.originThread;
-                if (!thread.needactionMessages.includes(message)) {
+                if (!incl(thread.needactionMessages, message)) {
                     thread.needactionMessages.push(message);
                     thread.message_needaction_counter++;
                 }
@@ -222,7 +223,7 @@ function handleNotification(notifications) {
                     removeFromArray(message.needaction_partner_ids, partnerIndex);
                     removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
                     const history = store.discuss.history;
-                    if (!history.messages.includes(message)) {
+                    if (!incl(history.messages, message)) {
                         history.messages.push(message);
                     }
                 }
@@ -473,7 +474,7 @@ export const _handleNotificationNewMessage = makeFnPatchable(async function (not
         res_id: channel.id,
         model: channel.model,
     });
-    if (!channel.messages.includes(message)) {
+    if (!incl(channel.messages, message)) {
         if (!channel.loadNewer) {
             channel.messages.push(message);
         } else if (channel.state === "loading") {
@@ -487,13 +488,13 @@ export const _handleNotificationNewMessage = makeFnPatchable(async function (not
             }
             if (message.isNeedaction) {
                 const inbox = store.discuss.inbox;
-                if (!inbox.messages.includes(message)) {
+                if (!incl(inbox.messages, message)) {
                     inbox.messages.push(message);
                     if (notif.id > store.initBusId) {
                         inbox.counter++;
                     }
                 }
-                if (!channel.needactionMessages.includes(message)) {
+                if (!incl(channel.needactionMessages, message)) {
                     channel.needactionMessages.push(message);
                     if (notif.id > store.initBusId) {
                         channel.message_needaction_counter++;
@@ -519,7 +520,7 @@ export const _handleNotificationNewMessage = makeFnPatchable(async function (not
         channel.composer.isFocused &&
         channel.newestPersistentMessage &&
         !store.guest &&
-        channel.newestPersistentMessage === channel.newestMessage
+        store.eq(channel.newestPersistentMessage, channel.newestMessage)
     ) {
         markThreadAsRead(channel);
     }

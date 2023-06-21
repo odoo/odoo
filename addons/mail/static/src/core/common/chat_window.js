@@ -2,9 +2,7 @@
 
 import {
     closeChatWindow,
-    getVisibleChatWindows,
     makeChatWindowVisible,
-    notifyChatWindowState,
     toggleFoldChatWindow,
 } from "@mail/core/common/chat_window_service";
 import { Composer } from "@mail/core/common/composer";
@@ -88,13 +86,14 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = getVisibleChatWindows().findIndex(
+                const index = this.store.visibleChatWindows.findIndex(
                     (cw) => cw === this.props.chatWindow
                 );
                 if (index === 0) {
-                    getVisibleChatWindows()[getVisibleChatWindows().length - 1].autofocus++;
+                    this.store.visibleChatWindows[this.store.visibleChatWindows.length - 1]
+                        .autofocus++;
                 } else {
-                    getVisibleChatWindows()[index - 1].autofocus++;
+                    this.store.visibleChatWindows[index - 1].autofocus++;
                 }
                 break;
             }

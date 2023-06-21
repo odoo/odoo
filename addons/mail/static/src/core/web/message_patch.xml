@@ -35,7 +35,7 @@
             <attribute name="t-att-title">authorText</attribute>
             <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
         </xpath>
-        <xpath expr="//DropdownItem/*[1]" position="after">
+        <xpath expr="//DropdownItem" position="after">
             <DropdownItem t-if="showUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => unfollowMessage(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
         </xpath>
     </t>

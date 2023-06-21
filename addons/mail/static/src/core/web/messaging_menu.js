@@ -26,6 +26,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { eq } from "../common/store_service";
 
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, ImStatus };
@@ -33,6 +34,7 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     setup() {
+        window.aku = this;
         this.messaging = useMessaging();
         this.store = useStore();
         this.hasTouch = hasTouch;
@@ -69,6 +71,7 @@ export class MessagingMenu extends Component {
             this.openDiscussion(thread);
             return;
         }
+        console.log("HERE");
         this.markAsRead(thread);
     }
 
@@ -248,7 +251,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.chatWindows.find(({ thr }) => thr === thread)?.close();
+            this.store.chatWindows.find(({ thr }) => eq(thr, thread))?.close();
         } else {
             openThread(thread);
         }

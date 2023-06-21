@@ -63,7 +63,7 @@ export class MessageReactions extends Component {
     }
 
     hasSelfReacted(reaction) {
-        return reaction.personas.includes(this.store.self);
+        return this.store.incl(reaction.personas, this.store.self);
     }
 
     onClickReaction(reaction) {

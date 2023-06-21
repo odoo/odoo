@@ -2,6 +2,7 @@
 
 import { insertChannelMember } from "@mail/core/common/channel_member_service";
 import { playSound, stopPlaying } from "@mail/core/common/sound_effects_service";
+import { eq } from "@mail/core/common/store_service";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
@@ -338,7 +339,7 @@ export class Rtc {
      */
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSessionId = undefined;
-        if (this.state.channel === channel) {
+        if (eq(this.state.channel, channel)) {
             this.clear();
             playSound("channel-leave");
         }
@@ -528,7 +529,7 @@ export class Rtc {
             return;
         }
         this.state.hasPendingRequest = true;
-        const isActiveCall = Boolean(this.state.channel && this.state.channel === channel);
+        const isActiveCall = Boolean(this.state.channel && eq(this.state.channel, channel));
         if (this.state.channel) {
             await this.leaveCall(this.state.channel);
         }

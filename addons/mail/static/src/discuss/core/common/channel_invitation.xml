@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             <span class="flex-grow-1 mx-2 text-truncate text-start fs-6" t-esc="selectablePartner.name"/>
-                            <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="state.selectedPartners.includes(selectablePartner) ? 'checked' : undefined"/>
+                            <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="store.incl(state.selectedPartners, selectablePartner) ? 'checked' : undefined"/>
                         </div>
                     </t>
                     <div t-if="state.selectablePartners.length === 0" class="mx-3">No user found that is not already a member of this channel.</div>

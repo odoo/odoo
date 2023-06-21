@@ -47,7 +47,7 @@ function updateChannelMember(member, data) {
     switch (command) {
         case "insert":
             {
-                if (!member.thread.channelMembers.includes(member)) {
+                if (!store.incl(member.thread.channelMembers, member)) {
                     member.thread.channelMembers.push(member);
                 }
             }

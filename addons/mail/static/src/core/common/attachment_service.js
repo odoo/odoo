@@ -99,7 +99,7 @@ export const updateAttachment = makeFnPatchable(function (attachment, data) {
             id: threadData.id,
         });
         attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
-        if (!attachment.originThread.attachments.includes(attachment)) {
+        if (!store.incl(attachment.originThread.attachments, attachment)) {
             attachment.originThread.attachments.push(attachment);
         }
     }

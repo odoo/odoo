@@ -11,7 +11,7 @@ import {
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 
-QUnit.module("messaging menu");
+QUnit.module("messaging menu (web)");
 
 QUnit.test('"Start a conversation" item selection opens chat', async (assert) => {
     patchUiSize({ height: 360, width: 640 });

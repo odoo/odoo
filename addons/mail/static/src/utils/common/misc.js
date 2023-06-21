@@ -11,8 +11,9 @@ export function nullifyClearCommands(data) {
         if (!Array.isArray(data[key])) {
             continue;
         }
+        const hadClear = data[key].some((val) => val[0] === "clear");
         data[key] = data[key].filter((val) => val[0] !== "clear");
-        if (data[key].length === 0) {
+        if (hadClear && data[key].length === 0) {
             data[key] = null;
         }
     }

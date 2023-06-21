@@ -2,11 +2,19 @@
 
 import { onChange } from "@mail/utils/common/misc";
 
-import { reactive } from "@odoo/owl";
+import { reactive, toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+
+export function eq(a, b) {
+    return toRaw(a) === toRaw(b);
+}
+
+export function incl(list, item) {
+    return toRaw(list).includes(toRaw(item));
+}
 
 export class Store {
     constructor(env) {
@@ -17,6 +25,14 @@ export class Store {
     setup(env) {
         this.env = env;
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
+    }
+
+    eq(a, b) {
+        return toRaw(a) === toRaw(b);
+    }
+
+    incl(list, item) {
+        return toRaw(list).includes(toRaw(item));
     }
 
     async updateBusSubscription() {

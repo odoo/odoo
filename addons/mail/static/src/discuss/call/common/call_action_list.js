@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { useStore } from "@mail/core/common/messaging_hook";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
 import { Component } from "@odoo/owl";
@@ -12,6 +13,7 @@ export class CallActionList extends Component {
 
     setup() {
         this.rtc = useRtc();
+        this.store = useStore();
     }
 
     get isOfActiveCall() {

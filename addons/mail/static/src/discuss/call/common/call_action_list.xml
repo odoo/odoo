@@ -107,7 +107,7 @@
                         <i class="fa fa-times fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                     </div>
                 </button>
-                <t t-if="props.thread === rtc.state.channel" t-set="callText">Disconnect</t>
+                <t t-if="store.eq(props.thread, rtc.state.channel)" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
                 <button class="btn d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-aria-label="callText"

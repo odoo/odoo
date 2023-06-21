@@ -23,6 +23,7 @@ import { insertAttachment } from "../common/attachment_service";
 import { openChatWindow } from "../common/chat_window_service";
 import { insertPersona } from "../common/persona_service";
 import { deleteActivity, insertActivity } from "./activity_service";
+import { incl } from "../common/store_service";
 
 let nextId = 1;
 
@@ -150,7 +151,7 @@ export function insertFollower(data) {
         partner: insertPersona({ ...data.partner, type: "partner" }),
         _store: store,
     });
-    if (!follower.followedThread.followers.includes(follower)) {
+    if (!incl(follower.followedThread.followers, follower)) {
         follower.followedThread.followers.push(follower);
     }
     return follower;

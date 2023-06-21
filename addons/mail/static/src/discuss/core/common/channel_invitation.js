@@ -3,6 +3,7 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { insertPersona } from "@mail/core/common/persona_service";
+import { incl } from "@mail/core/common/store_service";
 import { sortPartnerSuggestions } from "@mail/core/common/suggestion_service";
 import { avatarUrl, createGroupChat } from "@mail/core/common/thread_service";
 
@@ -75,7 +76,7 @@ export class ChannelInvitation extends Component {
     }
 
     onClickSelectablePartner(partner) {
-        if (this.state.selectedPartners.includes(partner)) {
+        if (incl(this.state.selectedPartners, partner)) {
             const index = this.state.selectedPartners.indexOf(partner);
             if (index !== -1) {
                 this.state.selectedPartners.splice(index, 1);

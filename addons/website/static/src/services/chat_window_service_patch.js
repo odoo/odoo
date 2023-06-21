@@ -1,14 +1,16 @@
 /* @odoo-module */
 
-import { ChatWindowService, getVisibleChatWindows } from "@mail/core/common/chat_window_service";
-import { patchFn } from "@mail/utils/common/patch";
+import { ChatWindowService } from "@mail/core/common/chat_window_service";
+import { Store } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
 
 let gEnv;
 
-patchFn(getVisibleChatWindows, function () {
-    return gEnv.services.website?.context.isPreviewOpen ? [] : this._super();
+patch(Store.prototype, "website_chat_window_service", {
+    get visibleChatWindows() {
+        return gEnv.services.website?.context.isPreviewOpen ? [] : this._super();
+    },
 });
 
 patch(ChatWindowService.prototype, "website/chat_window_service", {
