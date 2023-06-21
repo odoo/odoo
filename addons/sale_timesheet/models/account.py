@@ -31,6 +31,7 @@ class AccountAnalyticLine(models.Model):
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
     allow_billable = fields.Boolean(related="project_id.allow_billable")
+    sale_order_state = fields.Selection(related='order_id.state')
 
     def _default_sale_line_domain(self):
         return expression.OR([[
