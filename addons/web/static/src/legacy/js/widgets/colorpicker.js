@@ -39,20 +39,19 @@ var ColorpickerWidget = Widget.extend({
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = '';
 
-        // Needs to be bound on document to work in all possible cases.
-        const $document = $(
-            parent.options.ownerDocument ||
-            (parent.el && parent.el.parentElement && parent.el.ownerDocument)
-            || (parent.options && parent.options.$editable && parent.options.$editable[0] && parent.options.$editable[0].ownerDocument)
-            || document);
-
+        // Need to be bound on all documents to work in all possible cases (we
+        // have to be able to start dragging/moving from the colorpicker to
+        // anywhere on the screen, crossing iframes).
+        // TODO adapt in master: these events should probably be bound in
+        // `start` instead of `init` (at least to be more conventional).
+        this.$documents = $([window.top, ...Array.from(window.top.frames)].map(w => w.document));
         this.throttleOnMouseMove = throttleForAnimation((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
             this._onMouseMoveOpacitySlider(ev);
         });
-        $document.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
-        $document.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
+        this.$documents.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
+        this.$documents.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
             if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
                 this._colorSelected();
             }
@@ -108,7 +107,7 @@ var ColorpickerWidget = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(document).off(`.${this.uniqueId}`);
+        this.$documents.off(`.${this.uniqueId}`);
         if (this.throttleOnMouseMove)  {
             this.throttleOnMouseMove.cancel();
         }
