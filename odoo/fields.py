@@ -1715,20 +1715,23 @@ class _String(Field):
         if value is None:
             return False
         if callable(self.translate) and record.env.context.get('edit_translations'):
-            terms = self.get_trans_terms(value)
+            if not (terms := self.get_trans_terms(value)):
+                return value
             base_lang = record._get_base_lang()
             if base_lang != (record.env.lang or 'en_US'):
-                base_value = record.with_context(edit_translations=None, lang=base_lang)[self.name]
+                base_value = record.with_context(edit_translations=None, check_translations=True, lang=base_lang)[self.name]
                 base_terms = self.get_trans_terms(base_value)
                 term_to_state = {term: "translated" if base_term != term else "to_translate" for term, base_term in zip(terms, base_terms)}
             else:
                 term_to_state = defaultdict(lambda: 'translated')
+            lang = record.env.lang or 'en_US'
+            delay_translation = value != record.with_context(edit_translations=None, check_translations=None, lang=lang)[self.name]
+
             # use a wrapper to let the frontend js code identify each term and its metadata in the 'edit_translations' context
+            def translate_func(term):
+                return f'''<span {'class="o_delay_translation" ' if delay_translation else ''}data-oe-model="{record._name}" data-oe-id="{record.id}" data-oe-field="{self.name}" data-oe-translation-state="{term_to_state[term]}" data-oe-translation-initial-sha="{sha256(term.encode()).hexdigest()}">{term}</span>'''
             # pylint: disable=not-callable
-            value = self.translate(
-                lambda term: f'''<span data-oe-model="{record._name}" data-oe-id="{record.id}" data-oe-field="{self.name}" data-oe-translation-state="{term_to_state[term]}" data-oe-translation-initial-sha="{sha256(term.encode()).hexdigest()}">{term}</span>''',
-                value
-            )
+            value = self.translate(translate_func, value)
         return value
 
     def convert_to_write(self, value, record):
@@ -1773,6 +1776,23 @@ class _String(Field):
         res = cr.fetchone()
         return res[0] if res else None
 
+    def get_translation_fallback_langs(self, env):
+        lang = self._lang(env)
+        if lang == '_en_US':
+            return '_en_US', 'en_US'
+        if lang == 'en_US':
+            return ('en_US',)
+        if lang.startswith('_'):
+            return lang, lang[1:], '_en_US', 'en_US'
+        return lang, 'en_US'
+
+    def _lang(self, env):
+        context = env.context
+        lang = env.lang or 'en_US'
+        if callable(self.translate) and (context.get('edit_translations') or context.get('check_translations')):
+            lang = '_' + lang
+        return lang
+
     def write(self, records, value):
         if not self.translate or value is False or value is None:
             super().write(records, value)
@@ -1793,6 +1813,7 @@ class _String(Field):
 
         # not dirty fields
         if not dirty:
+            lang = self._lang(records.env)
             cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
             return
 
@@ -1812,6 +1833,7 @@ class _String(Field):
         # pylint: disable=not-callable
         cache_value = self.translate(lambda t: None, cache_value)
         new_terms = set(self.get_trans_terms(cache_value))
+        delay_translations = records.env.context.get('delay_translations')
         for record in records:
             # shortcut when no term needs to be translated
             if not new_terms:
@@ -1819,11 +1841,16 @@ class _String(Field):
                 continue
             # _get_stored_translations can be refactored and prefetches translations for multi records,
             # but it is really rare to write the same non-False/None/no-term value to multi records
-            old_translations = self._get_stored_translations(record)
-            if not old_translations:
+            stored_translations = self._get_stored_translations(record)
+            if not stored_translations:
                 new_translations_list.append({'en_US': cache_value, lang: cache_value})
                 continue
-            from_lang_value = old_translations.get(lang, old_translations['en_US'])
+            old_translations = {
+                k: stored_translations.get(f'_{k}', v)
+                for k, v in stored_translations.items()
+                if not k.startswith('_')
+            }
+            from_lang_value = old_translations.pop(lang, old_translations['en_US'])
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
@@ -1844,10 +1871,18 @@ class _String(Field):
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
                 for l in old_translations.keys()
             }
-            new_translations[lang] = cache_value
+            if delay_translations:
+                new_store_translations = stored_translations
+                new_store_translations.update({f'_{k}': v for k, v in new_translations.items()})
+                new_store_translations.pop(f'_{lang}', None)
+            else:
+                new_store_translations = new_translations
+            new_store_translations[lang] = cache_value
+
             if not records.env['res.lang']._lang_get_id('en_US'):
-                new_translations['en_US'] = cache_value
-            new_translations_list.append(new_translations)
+                new_store_translations['en_US'] = cache_value
+                new_store_translations.pop('_en_US', None)
+            new_translations_list.append(new_store_translations)
         # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
         cache.update_raw(records, self, new_translations_list, dirty=True)
 
