@@ -1673,41 +1673,45 @@ class AccountMove(models.Model):
             move.invoice_outstanding_credits_debits_widget = json.dumps(payments_widget_vals)
             move.invoice_has_outstanding = True
 
+    def _get_reconciled_vals(self, partial, amount, counterpart_line, exchange_diff_moves):
+        if counterpart_line.move_id.ref:
+            reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+        else:
+            reconciliation_ref = counterpart_line.move_id.name
+        currency = self.currency_id
+        is_exchange = counterpart_line.move_id.id in exchange_diff_moves
+        if is_exchange:
+            amount = counterpart_line.move_id.amount_total_signed
+            currency = self.company_id.currency_id
+
+        return {
+            'name': counterpart_line.name,
+            'journal_name': counterpart_line.journal_id.name,
+            'amount': amount,
+            'currency': currency.symbol,
+            'digits': [69, currency.decimal_places],
+            'position': currency.position,
+            'date': counterpart_line.date,
+            'payment_id': counterpart_line.id,
+            'partial_id': partial.id,
+            'account_payment_id': counterpart_line.payment_id.id,
+            'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+            'move_id': counterpart_line.move_id.id,
+            'ref': reconciliation_ref,
+            # these are necessary for the views to change depending on the values
+            'is_exchange': is_exchange,
+            'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance),
+                                                  currency_obj=counterpart_line.company_id.currency_id),
+            'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency),
+                                                  currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False
+        }
+
     def _get_reconciled_info_JSON_values(self):
         self.ensure_one()
         reconciled_vals = []
         reconciled_partials, exchange_diff_moves = self._get_reconciled_invoices_partials()
         for partial, amount, counterpart_line in reconciled_partials:
-            if counterpart_line.move_id.ref:
-                reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
-            else:
-                reconciliation_ref = counterpart_line.move_id.name
-
-            currency = self.currency_id
-            is_exchange = counterpart_line.move_id.id in exchange_diff_moves
-            if is_exchange:
-                amount = counterpart_line.move_id.amount_total_signed
-                currency = self.company_id.currency_id
-
-            reconciled_vals.append({
-                'name': counterpart_line.name,
-                'journal_name': counterpart_line.journal_id.name,
-                'amount': amount,
-                'currency': currency.symbol,
-                'digits': [69, currency.decimal_places],
-                'position': currency.position,
-                'date': counterpart_line.date,
-                'payment_id': counterpart_line.id,
-                'partial_id': partial.id,
-                'account_payment_id': counterpart_line.payment_id.id,
-                'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
-                'move_id': counterpart_line.move_id.id,
-                'ref': reconciliation_ref,
-                # these are necessary for the views to change depending on the values
-                'is_exchange': is_exchange,
-                'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance), currency_obj=counterpart_line.company_id.currency_id),
-                'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False
-            })
+            reconciled_vals.append(self._get_reconciled_vals(partial, amount, counterpart_line, exchange_diff_moves))
         return reconciled_vals
 
     @api.depends('move_type', 'line_ids.amount_residual')
