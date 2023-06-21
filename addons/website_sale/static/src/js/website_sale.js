@@ -838,7 +838,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      */
     _onClickDeleteProduct: function (ev) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('tbody').find('.js_quantity').val(0).trigger('change');
+        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
     },
 });
 
