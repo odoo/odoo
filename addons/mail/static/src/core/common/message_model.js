@@ -85,10 +85,7 @@ export class Message {
         if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
             return false;
         }
-        if (this.type !== "comment") {
-            return false;
-        }
-        return this.isNote || this.resModel === "discuss.channel";
+        return this.type === "comment";
     }
 
     get dateDay() {

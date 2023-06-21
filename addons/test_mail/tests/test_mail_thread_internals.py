@@ -75,20 +75,18 @@ class TestAPI(MailCommon, TestRecipients):
         """ Test cases where updating content should be prevented """
         ticket_record = self.ticket_record.with_env(self.env)
 
-        # cannot edit user comments (subtype)
         message = ticket_record.message_post(
             body="<p>Initial Body</p>",
             message_type="comment",
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
-        with self.assertRaises(exceptions.UserError):
-            ticket_record._message_update_content(
-                message, "<p>New Body</p>"
-            )
+        ticket_record._message_update_content(
+            message, "<p>New Body 1</p>"
+        )
 
         message.sudo().write({'subtype_id': self.env.ref('mail.mt_note')})
         ticket_record._message_update_content(
-            message, "<p>New Body</p>"
+            message, "<p>New Body 2</p>"
         )
 
         # cannot edit notifications
