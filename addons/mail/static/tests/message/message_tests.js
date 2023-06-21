@@ -46,6 +46,25 @@ QUnit.test("Start edition on click edit", async (assert) => {
     assert.strictEqual($(".o-mail-Message-editable .o-mail-Composer-input").val(), "Hello world");
 });
 
+QUnit.test("Can edit message comment in chatter", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await editInput(document.body, ".o-mail-Message .o-mail-Composer-input", "edited message");
+    await click(".o-mail-Message a:contains('save')");
+    assert.containsOnce($, ".o-mail-Message:contains(edited message)");
+});
+
 QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

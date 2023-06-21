@@ -443,13 +443,9 @@ class MailThread(models.AbstractModel):
         """" Checks that the current user can update the content of the message.
         Current heuristic is
 
-          * limited to note;
           * if no tracking;
           * only for user generated content;
         """
-        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if any(message.subtype_id.id != note_id for message in messages):
-            raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
         if messages.tracking_value_ids:
             raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
         if any(message.message_type != 'comment' for message in messages):
