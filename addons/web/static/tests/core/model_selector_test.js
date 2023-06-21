@@ -163,7 +163,11 @@ QUnit.test("model_selector: with more than 8 models", async function (assert) {
         "model_10",
     ]);
     await openAutocomplete();
-    assert.containsN(fixture, "li.o-autocomplete--dropdown-item", 8);
+    assert.containsN(fixture, "li.o-autocomplete--dropdown-item", 9);
+    assert.strictEqual(
+        fixture.querySelectorAll("li.o-autocomplete--dropdown-item")[8].innerText,
+        "Start typing..."
+    );
 });
 
 QUnit.test(
@@ -225,6 +229,31 @@ QUnit.test("model_selector: select a model", async function (assert) {
     await openAutocomplete();
     await click(fixture.querySelector(".o_model_selector_model_2"));
     assert.verifySteps(["model selected"]);
+});
+
+QUnit.test("model_selector: click on start typing", async function (assert) {
+    await mountModelSelector([
+        "model_1",
+        "model_2",
+        "model_3",
+        "model_4",
+        "model_5",
+        "model_6",
+        "model_7",
+        "model_8",
+        "model_9",
+        "model_10",
+        ]);
+    await openAutocomplete();
+    await click(fixture.querySelectorAll("li.o-autocomplete--dropdown-item")[8]);
+    assert.equal(fixture.querySelector(".o-autocomplete--input").value, "");
+    assert.equal(fixture.querySelector(".o-autocomplete.dropdown ul"), null);
+
+    //label must be empty
+    assert.equal(fixture.querySelector(".o_global_filter_label"), null);
+
+    //Default value and matching fields should not be available
+    assert.equal(fixture.querySelector(".o_side_panel_section"), null);
 });
 
 QUnit.test("model_selector: with an initial value", async function (assert) {
