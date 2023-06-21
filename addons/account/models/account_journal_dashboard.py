@@ -378,6 +378,7 @@ class account_journal(models.Model):
                 'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(last_statement.balance_end_real),
+                'last_statement_id': last_statement.id,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
             })
