@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("self_order_after_each_cart_tour", {
         PosSelf.check.isNotNotification(),
         PosSelf.check.isPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("My Orders"),
-        PosSelf.check.isNotification("found on the server"),
+        PosSelf.check.isNoOrderInHistory(),
         PosSelf.action.clickBack(),
         PosSelf.action.clickPrimaryBtn("View Menu"),
 

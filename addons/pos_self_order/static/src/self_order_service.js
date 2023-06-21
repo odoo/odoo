@@ -9,12 +9,14 @@ import { effect } from "@web/core/utils/reactive";
 import { Order } from "./models/order";
 import { Product } from "./models/product";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
+import { batched } from "@point_of_sale/utils";
 
 export class SelfOrder {
     constructor(...args) {
-        this.setup(...args);
+        this.ready = this.setup(...args).then(() => this);
     }
-    setup(env, rpc, notification, router) {
+
+    async setup(env, rpc, notification, router) {
         Object.assign(this, {
             ...session.pos_self_order_data,
         });
@@ -48,6 +50,14 @@ export class SelfOrder {
                     "The restaurant is closed. You can browse the menu, but ordering is not available."
                 ),
                 { type: "warning" }
+            );
+        }
+
+        if (this.self_order_mode !== "qr_code") {
+            await this.getOrdersFromServer();
+            effect(
+                batched((state) => this.saveOrderToLocalStorage(state.orders)),
+                [this]
             );
         }
     }
@@ -143,25 +153,39 @@ export class SelfOrder {
     }
 
     async getOrdersFromServer() {
-        const accessTokens = this.orders.map((order) => order.access_token);
+        const accessTokens = this.orders.map((order) => order.access_token).filter(Boolean);
+
+        if (accessTokens.length === 0) {
+            return;
+        }
 
         try {
-            const orderChanges = {};
             const orders = await this.rpc(`/pos-self-order/get-orders/`, {
                 access_tokens: accessTokens,
             });
 
-            this.orders = this.orders.filter((order) => {
-                orderChanges[order.access_token] = order.lastChangesSent;
-                return !order.access_token;
-            });
+            const ordersToRecreate = {};
+            for (const order of this.orders.filter((o) => o.access_token)) {
+                ordersToRecreate[order.access_token] = {
+                    lastChangesSent: order.lastChangesSent,
+                    lines: order.lines.filter((l) => !l.id),
+                };
+            }
+
+            for (const index in this.orders) {
+                if (this.orders[index].access_token) {
+                    this.orders.splice(index, 1);
+                }
+            }
 
             this.orders.push(
                 ...orders.map((o) => {
+                    const data = ordersToRecreate[o.access_token] || {};
                     const newOrder = new Order({
                         ...o,
-                        lastChangesSent: orderChanges[o.access_token],
+                        lastChangesSent: data.lastChangesSent ?? {},
                     });
+                    newOrder.lines.push(...(data.lines ?? []));
                     return newOrder;
                 })
             );
@@ -179,12 +203,16 @@ export class SelfOrder {
         this.priceLoading = true;
 
         try {
+            if (!this.currentOrder) {
+                return;
+            }
+
             const taxes = await this.rpc(`/pos-self-order/get-orders-taxes/`, {
                 order: this.currentOrder,
                 pos_config_id: this.pos_config_id,
             });
 
-            for (const line of this.editedOrder.lines) {
+            for (const line of this.currentOrder.lines) {
                 const lineTaxes = taxes.lines.find((ol) => ol.uuid === line.uuid);
                 line.price_subtotal = lineTaxes.price_subtotal;
                 line.price_subtotal_incl = lineTaxes.price_subtotal_incl;
@@ -218,15 +246,44 @@ export class SelfOrder {
 
         if (accessToken) {
             this.editedOrder = null;
-            this.orders = this.orders.filter((o) => !accessToken.includes(o.access_token));
+
+            for (const index in this.orders) {
+                if (accessToken.includes(this.orders[index].access_token)) {
+                    this.orders.splice(index, 1);
+                }
+            }
         }
+    }
+
+    changeOrderState(access_token, state) {
+        const order = this.orders.filter((o) => o.access_token === access_token);
+        let message = _t("Your order status has been changed");
+
+        if (order.length !== 1) {
+            throw new Error("Warning, two orders with the same access_token");
+        } else {
+            order[0].state = state;
+        }
+
+        if (state === "paid") {
+            this.editedOrder = null;
+            message = _t("Your order has been paid");
+        } else if (state === "cancel") {
+            this.editedOrder = null;
+            message = _t("Your order has been canceled");
+        }
+
+        this.notification.add(message, {
+            type: "success",
+        });
+        this.router.navigate("default");
     }
 }
 
 export const selfOrderService = {
     dependencies: ["rpc", "notification", "router"],
     async start(env, { rpc, notification, router }) {
-        return new SelfOrder(env, rpc, notification, router);
+        return new SelfOrder(env, rpc, notification, router).ready;
     },
 };
 
