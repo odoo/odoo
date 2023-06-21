@@ -206,14 +206,21 @@ This restriction is due to the following rules:
 Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
+        ChildModel = self.env['test_access_right.inherits']
+        with self.assertRaises(AccessError) as ctx:
+            ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})
+        self.assertEqual(
+            ctx.exception.args[0],
+            """Due to security restrictions, you are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
 
+Records: %s (id=%s)
+User: %s (id=%s)
 
-        p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        with self.assertRaisesRegex(
-            AccessError,
-            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",
-        ):
-            p.with_user(self.user).write({'val': 1})
+This restriction is due to the following rules:
+- rule 0
+
+Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
+        )
 
     def test_locals(self):
         self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
@@ -390,12 +397,12 @@ Note: this might be a multi-company issue.
 
 Contact your administrator to request access if necessary.""" % (self.record.display_name, self.record.id, self.record.sudo().company_id.display_name, self.user.name, self.user.id)
         )
-        p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
+        p = self.env['test_access_right.inherits'].create({'some_id': self.record.id})
         self.env.flush_all()
         self.env.invalidate_all()
         with self.assertRaisesRegex(
             AccessError,
-            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.parent\)\.",
+            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.inherits\)\.",
         ):
             p.with_user(self.user).val
 
