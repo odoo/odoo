@@ -31,7 +31,7 @@ export class ModelSelector extends Component {
     }
 
     get placeholder() {
-        return _t("Search a Model...");
+        return _t("Type a model here...");
     }
 
     get sources() {
@@ -53,9 +53,17 @@ export class ModelSelector extends Component {
 
     filterModels(name) {
         if (!name) {
-            return this.models.slice(0, 8);
+            const visibleModels = this.models.slice(0, 8);
+            if (this.models.length - visibleModels.length > 0) {
+                visibleModels.push({
+                    label: _t("Start typing..."),
+                    unselectable: true,
+                    classList: "o_m2o_start_typing",
+                });
+            }
+            return visibleModels;
         }
-        return fuzzyLookup(name, this.models, (model) => model.technical + model.label).slice(0, 8);
+        return fuzzyLookup(name, this.models, (model) => model.technical + model.label);
     }
 
     loadOptionsSource(request) {
