@@ -32,7 +32,7 @@
                      t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
                 <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
-            <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
+            <span t-ref="displayName" class="ms-2 text-truncate" t-esc="channelMemberService.getName(member)"/>
             <span class="ms-auto">
                 <span t-if="props.thread.invitedMemberIds.has(member.id)" class="p-1 fa fa-user-plus"/>
                 <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash"/>
