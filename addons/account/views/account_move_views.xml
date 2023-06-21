@@ -1283,6 +1283,7 @@
                     <filter string="Reversed" name="reversed" domain="[('payment_state', '=', 'reversed')]"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <filter invisible="1" string="Auto Post Issue" name="auto_post_issue" domain="[('auto_post_issue', '=', True)]"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
@@ -1326,6 +1327,7 @@
                     <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
+                    <filter invisible="1" string="Auto Post Issue" name="auto_post_issue" domain="[('auto_post_issue', '=', True)]"/>
                     <separator/>
                     <!-- not_paid & partial -->
                     <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>

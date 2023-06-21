@@ -234,6 +234,18 @@
                                     </div>
                                 </div>
                             </t>
+                            <t t-if="dashboard.number_auto_post_issue > 0">
+                                <div class="row">
+                                    <div class="col overflow-hidden text-start">
+                                        <a type="object" name="open_action" context="{'search_default_unposted': True, 'search_default_auto_post_issue': True}">
+                                            <span title="Entries that could not be auto posted"><t t-out="dashboard.number_auto_post_issue"/> Entries auto posted issues</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-auto text-end">
+                                        <span><t t-out="dashboard.auto_post_issue_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
                     </t>
 
@@ -354,6 +366,19 @@
                                     </div>
                                     <div class="col-auto text-end">
                                         <span><t t-out="dashboard.to_check_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="dashboard.number_auto_post_issue > 0">
+                                <div class="row">
+                                    <div class="col overflow-hidden text-start">
+                                        <a type="object" name="open_action" context="{'search_default_auto_post_issue': True}">
+                                            <span t-if="journal_type == 'sale'" title="Invoices that could not be auto posted"><t t-out="dashboard.number_auto_post_issue"/> Invoices auto posted issues</span>
+                                            <span t-if="journal_type == 'purchase'" title="Bills that could not be auto posted"><t t-out="dashboard.number_auto_post_issue"/> Bills auto posted issues</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-auto text-end">
+                                        <span><t t-out="dashboard.auto_post_issue_balance"/></span>
                                     </div>
                                 </div>
                             </t>

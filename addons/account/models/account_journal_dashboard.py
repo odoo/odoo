@@ -431,6 +431,15 @@ class account_journal(models.Model):
             )
         }
 
+        auto_post_issue_vals = {
+            vals['journal_id'][0]: vals
+            for vals in self.env['account.move'].read_group(
+                domain=[('journal_id', 'in', sale_purchase_journals.ids), ('auto_post_issue', '=', True)],
+                fields=['auto_post_issue', 'amount_total_signed'],
+                groupby=['journal_id'],
+            )
+        }
+
         curr_cache = {}
         sale_purchase_journals._fill_dashboard_data_count(dashboard_data, 'account.move', 'entries_count', [])
         for journal in sale_purchase_journals:
@@ -439,6 +448,7 @@ class account_journal(models.Model):
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
             to_check = to_check_vals.get(journal.id, {})
+            auto_post_issue = auto_post_issue_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': to_check.get('__count', 0),
                 'to_check_balance': to_check.get('amount_total_signed', 0),
@@ -451,6 +461,8 @@ class account_journal(models.Model):
                 'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
                 'is_sample_data': dashboard_data[journal.id]['entries_count'],
+                'number_auto_post_issue': auto_post_issue.get('journal_id_count', 0),
+                'auto_post_issue_balance': currency.format(auto_post_issue.get('amount_total_signed', 0)),
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
@@ -467,11 +479,25 @@ class account_journal(models.Model):
                 lazy=False,
             )
         }
+
+        auto_post_issue_vals = {
+            vals['journal_id'][0]: vals
+            for vals in self.env['account.move'].read_group(
+                domain=[('journal_id', 'in', general_journals.ids), ('auto_post_issue', '=', True)],
+                fields=['auto_post_issue', 'amount_total_signed'],
+                groupby=['journal_id'],
+            )
+        }
+
         for journal in general_journals:
+            currency = journal.currency_id or journal.company_id.currency_id
             vals = to_check_vals.get('journal_id', {})
+            auto_post_issue = auto_post_issue_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': vals.get('__count', 0),
                 'to_check_balance': vals.get('amount_total_signed', 0),
+                'number_auto_post_issue': auto_post_issue.get('journal_id_count', 0),
+                'auto_post_issue_balance': currency.format(auto_post_issue.get('amount_total_signed', 0)),
             })
 
     def _get_open_bills_to_pay_query(self):
@@ -498,6 +524,7 @@ class account_journal(models.Model):
             ('payment_state', 'in', ('not_paid', 'partial')),
             ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
         ])
+
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum

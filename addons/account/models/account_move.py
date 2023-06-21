@@ -231,6 +231,10 @@ class AccountMove(models.Model):
         string='First recurring entry',
         readonly=True, copy=False,
     )
+    auto_post_issue = fields.Boolean(
+        store=True, readonly=True, copy=False,
+        string='had issue while being auto posted'
+    )
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
     to_check = fields.Boolean(
         string='To Check',
@@ -3585,6 +3589,7 @@ class AccountMove(models.Model):
         to_post.write({
             'state': 'posted',
             'posted_before': True,
+            'auto_post_issue': False,
         })
 
         draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
@@ -3915,12 +3920,22 @@ class AccountMove(models.Model):
         It is used to post entries such as those created by the module
         account_asset and recurring entries created in _post().
         '''
+        odoobot = self.env.ref('base.partner_root')
         records = self.search([
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
         ], limit=100)
-        records._post()
+        for move in records:
+            try:
+                move._post()
+            except UserError as e:
+                move.auto_post_issue = True
+                msg = _('The move could not be posted: %(error_message)s', error_message=e)
+                move.message_post(body=msg,
+                                  message_type='comment',
+                                  subtype_xmlid='mail.mt_note',
+                                  author_id=odoobot.id)
 
         if len(records) == 100:  # assumes there are more whenever search hits limit
             self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
