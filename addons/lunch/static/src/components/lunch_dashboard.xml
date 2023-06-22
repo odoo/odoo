@@ -108,11 +108,23 @@
                     </ul>
                 </div>
                 <div class="col-12 col-md-3 d-flex flex-column justify-content-between" t-if="hasLines">
-                    <h4 class="d-flex flex-row mt-1">
+                    <span class="d-flex flex-row mt-1 text-muted">
                         <span class="flex-grow-1">
                             Total
                         </span>
                         <LunchCurrency currency="currency" amount="state.infos.total"/>
+                    </span>
+                    <span class="d-flex flex-row mt-1 text-muted">
+                        <span class="flex-grow-1">
+                            Already Paid
+                        </span>
+                        <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
+                    </span>
+                    <h4 class="d-flex flex-row mt-1">
+                        <span class="flex-grow-1">
+                            To Pay
+                        </span>
+                        <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
                     </h4>
                     <button class="btn btn-primary" t-if="canOrder" t-on-click="orderNow">Order Now</button>
                 </div>
