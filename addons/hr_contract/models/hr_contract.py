@@ -305,6 +305,11 @@ class Contract(models.Model):
             return self.env.ref('hr_contract.mt_contract_close')
         return super(Contract, self)._track_subtype(init_values)
 
+    def _is_struct_from_country(self, country_code):
+        self.ensure_one()
+        self_sudo = self.sudo()
+        return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
+
     def action_open_contract_form(self):
         self.ensure_one()
         action = self.env['ir.actions.actions']._for_xml_id('hr_contract.action_hr_contract')
