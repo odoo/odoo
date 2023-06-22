@@ -4577,7 +4577,7 @@ export class OdooEditor extends EventTarget {
                         ? splitAroundUrl[i]
                         : 'https://' + splitAroundUrl[i];
                     // Even indexes will always be plain text, and odd indexes will always be URL.
-                    // only allow images emebed inside an existing link. No other url or video embed.
+                    // A url cannot be transformed inside an existing link.
                     if (i % 2 && !selectionIsInsideALink) {
                         this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
                     } else if (splitAroundUrl[i] !== '') {
