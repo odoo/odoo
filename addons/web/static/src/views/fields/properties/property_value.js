@@ -227,7 +227,7 @@ export class PropertyValue extends Component {
                     : false;
 
             if (newValue && newValue[0] && newValue[1] === undefined) {
-                // The "Search More" option in the Many2XAutocomplete component
+                // The "View all" option in the Many2XAutocomplete component
                 // only return the record ID, and not the name. But we need to name
                 // in the component props to be able to display it.
                 // Make a RPC call to resolve the display name of the record.

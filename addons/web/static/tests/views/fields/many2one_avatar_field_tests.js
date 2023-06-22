@@ -383,9 +383,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // load more
-        await click(
-            document.querySelector(".o-overlay-container .o_m2o_dropdown_option_search_more")
-        );
+        await click(document.querySelector(".o-overlay-container .o_m2o_dropdown_option_view_all"));
         await click(document.querySelector(".o_dialog .o_list_table .o_data_row .o_data_cell"));
         assert.strictEqual(
             target.querySelector(

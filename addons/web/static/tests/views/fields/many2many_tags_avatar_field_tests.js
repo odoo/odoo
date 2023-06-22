@@ -424,7 +424,7 @@ QUnit.module("Fields", (hooks) => {
             "Should have 2 tags"
         );
         // load more
-        await click(popover.querySelector(".o_m2o_dropdown_option_search_more"));
+        await click(popover.querySelector(".o_m2o_dropdown_option_view_all"));
         // first item
         await click(document.querySelector(".o_dialog .o_list_table .o_data_row .o_data_cell"));
         assert.strictEqual(popover.querySelectorAll(".o_tag").length, 4, "Should have 4 tags");

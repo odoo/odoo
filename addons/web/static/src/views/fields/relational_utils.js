@@ -284,11 +284,11 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!this.props.noSearchMore && this.props.searchLimit < records.length) {
+        if (!this.props.noViewAll && records.length > 0) {
             options.push({
-                label: this.env._t("Search More..."),
-                action: this.onSearchMore.bind(this, request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                label: this.env._t("View all"),
+                action: this.onViewAll.bind(this, request),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_view_all",
             });
         }
 
@@ -326,10 +326,10 @@ export class Many2XAutocomplete extends Component {
 
     async onBarcodeSearch() {
         const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
-        return this.onSearchMore(autoCompleteInput.value);
+        return this.onViewAll(autoCompleteInput.value);
     }
 
-    async onSearchMore(request) {
+    async onViewAll(request) {
         const { resModel, getDomain, context, fieldString } = this.props;
 
         const domain = getDomain();
@@ -339,7 +339,7 @@ export class Many2XAutocomplete extends Component {
                 name: request,
                 args: domain,
                 operator: "ilike",
-                limit: this.props.searchMoreLimit,
+                limit: this.props.viewAllLimit,
                 context,
             });
 
@@ -379,8 +379,8 @@ Many2XAutocomplete.props = {
     getDomain: Function,
     searchLimit: { type: Number, optional: true },
     quickCreate: { type: [Function, { value: null }], optional: true },
-    noSearchMore: { type: Boolean, optional: true },
-    searchMoreLimit: { type: Number, optional: true },
+    noViewAll: { type: Boolean, optional: true },
+    viewAllLimit: { type: Number, optional: true },
     fieldString: String,
     id: { type: String, optional: true },
     placeholder: { type: String, optional: true },
@@ -392,7 +392,7 @@ Many2XAutocomplete.props = {
 };
 Many2XAutocomplete.defaultProps = {
     searchLimit: 7,
-    searchMoreLimit: 320,
+    viewAllLimit: 320,
     nameCreateField: "name",
     value: "",
     setInputFloats: () => {},
@@ -609,7 +609,7 @@ X2ManyFieldDialog.props = {
     save: Function,
     title: String,
     delete: { optional: true },
-    deleteButtonLabel: {optional: true},
+    deleteButtonLabel: { optional: true },
     config: Object,
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
@@ -697,8 +697,9 @@ export function useOpenX2ManyRecord({
                 views: { form },
             });
             const { delete: canDelete, onDelete } = activeActions;
-            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;            
-            deleteButtonLabel = activeActions.type === 'one2many' ? env._t('Delete') : env._t('Remove');
+            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;
+            deleteButtonLabel =
+                activeActions.type === "one2many" ? env._t("Delete") : env._t("Remove");
         } else {
             const recordParams = {
                 context: makeContext([list.context, context]),
