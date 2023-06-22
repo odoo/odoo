@@ -57,6 +57,11 @@ async function makeDomainSelector(params = {}) {
                 },
             };
         }
+        async set(domain) {
+            this.domainSelectorProps.domain = domain;
+            this.render();
+            await nextTick();
+        }
     }
     Parent.components = { DomainSelector };
     Parent.template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
@@ -1287,5 +1292,16 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".o_model_field_selector");
         await click(target, ".o_model_field_selector_popover_item[data-name=foo] button");
+    });
+
+    QUnit.test("treat false and true like False and True", async (assert) => {
+        const parent = await makeDomainSelector({
+            resModel: "partner",
+            domain: `[("bar","=",false)]`,
+            readonly: true,
+        });
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris not set`);
+        await parent.set(`[("bar","=",true)]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris set`);
     });
 });
