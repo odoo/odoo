@@ -473,6 +473,15 @@ export function getActionManagerServerData() {
             views: [[3, "form"]],
         },
         {
+            id: 26,
+            xml_id: "action_26",
+            name: "Partner",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        },
+        {
             id: 1001,
             tag: "__test__client__action__",
             target: "main",
