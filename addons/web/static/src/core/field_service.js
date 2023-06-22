@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 
 export const fieldService = {
     dependencies: ["orm"],
+    async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
     start(env, { orm }) {
         const cache = new Cache(
             (resModel, options) => {
