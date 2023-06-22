@@ -16,7 +16,7 @@ export class OrderField extends Many2OneField {
         // hide the search more option from the dropdown menu
        return {
            ...super.Many2XAutocompleteProps,
-           noSearchMore: true,
+           noViewAll: true,
        }
     }
 }

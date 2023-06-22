@@ -77,7 +77,7 @@ export class AnalyticDistribution extends Component {
 
         this.selectCreateIsOpen = false;
         this.addDialog = useOwnedDialogs();
-        this.onSearchMore = this._onSearchMore.bind(this);
+        this.onViewAll = this._onViewAll.bind(this);
     }
 
     // Lifecycle
@@ -245,15 +245,15 @@ export class AnalyticDistribution extends Component {
             color: result.color,
         }));
 
-        if (searchLimit < records.length) {
+        if (records.length) {
             options.push({
-                label: this.env._t("Search More..."),
-                action: (editedTag) => this.onSearchMore(searchTerm, editedTag),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                label: this.env._t("View all"),
+                action: (editedTag) => this.onViewAll(searchTerm, editedTag),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_view_all",
             });
         }
 
-        if (!options.length) {
+        else {
             options.push({
                 label: this.env._t("No Analytic Accounts for this plan"),
                 classList: "o_m2o_no_result",
@@ -264,7 +264,7 @@ export class AnalyticDistribution extends Component {
         return options;
     }
 
-    async _onSearchMore(searchTerm, editedTag) {
+    async _onViewAll(searchTerm, editedTag) {
         let dynamicFilters = [];
         if (searchTerm.length) {
             dynamicFilters = [

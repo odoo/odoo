@@ -607,7 +607,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "foo partner 8",
                 "foo partner 9",
                 "foo partner 10",
-                "Search More...",
+                "View all",
             ]
         );
 
@@ -630,7 +630,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "foo partner 10",
                 "foo partner 11",
                 "foo partner 12",
-                "Search More...",
+                "View all",
             ]
         );
 
@@ -690,7 +690,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "foo partner 9",
                 "foo partner 10",
                 "foo partner 11",
-                "Search More...",
+                "View all",
             ]
         );
 
@@ -712,7 +712,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "foo partner 11",
                 "foo partner 12",
                 "foo partner 13",
-                "Search More...",
+                "View all",
             ]
         );
 
@@ -957,12 +957,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event-container .fc-event", 10, "should display 10 events");
         // move to next month
         await navigate(target, "next");
-        assert.containsN(
-            target,
-            ".fc-event-container .fc-event",
-            0,
-            "should display 0 events"
-        );
+        assert.containsN(target, ".fc-event-container .fc-event", 0, "should display 0 events");
         await pickDate(target, "2017-01-01");
         assert.containsN(
             target,

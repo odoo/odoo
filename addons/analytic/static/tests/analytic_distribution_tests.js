@@ -249,7 +249,7 @@ QUnit.module("Analytic", (hooks) => {
 
         let incompleteCountryTag = popup.querySelector("table#plan_5 .incomplete .o_analytic_account_name input");
         await click(incompleteCountryTag);
-        await click(target.querySelector(".o_m2o_dropdown_option_search_more"));
+        await click(target.querySelector(".o_m2o_dropdown_option_view_all"));
 
         assert.containsN(target, ".modal-dialog .o_list_renderer", 1, "select create list dialog is visible");
 
@@ -281,7 +281,7 @@ QUnit.module("Analytic", (hooks) => {
         // replace the first analytic account with 4 accounts
         triggerHotkey("shift+Tab");
         await click(document.activeElement);
-        await click(target.querySelector(".o_m2o_dropdown_option_search_more"));
+        await click(target.querySelector(".o_m2o_dropdown_option_view_all"));
         accountRows = [...target.querySelectorAll(".modal-dialog .o_data_row")];
         for (const row of accountRows.slice(0,4)) {
             await click(row.querySelector(".o_list_record_selector input"));

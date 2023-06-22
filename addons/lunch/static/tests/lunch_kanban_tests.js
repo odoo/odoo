@@ -203,7 +203,7 @@ QUnit.module('LunchKanban', (hooks) => {
         await nextTick();
         assert.containsOnce(target, '.lunch_location .dropdown-item:contains(New Office)');
 
-        click(target, '.lunch_location .dropdown-item:not(.ui-state-active)');
+        click(target, '.lunch_location .ui-menu-item:nth-child(2) .dropdown-item');
 
         await nextTick();
         assert.containsN(target, 'div[role=article].o_kanban_record', 2);
@@ -245,7 +245,7 @@ QUnit.module('LunchKanban', (hooks) => {
         assert.containsOnce(target, '.lunch_user .dropdown-item:contains(David Elora)');
 
         expectedUserId = 2;
-        click(target, '.lunch_user .dropdown-item:not(.ui-state-active)');
+        click(target, '.lunch_user .ui-menu-item:nth-child(2) .dropdown-item');
 
         await nextTick();
         const wallet = target.querySelector('.o_lunch_banner .col-9 > .d-flex > span:nth-child(2)');
@@ -253,7 +253,7 @@ QUnit.module('LunchKanban', (hooks) => {
 
         click(target, '.lunch_location input');
         await nextTick();
-        click(target, '.lunch_location .dropdown-item:not(.ui-state-active)');
+        click(target, '.lunch_location .ui-menu-item:nth-child(2) .dropdown-item');
 
         await nextTick();
         const user = target.querySelector('.lunch_user input');
