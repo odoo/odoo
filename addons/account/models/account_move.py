@@ -1449,7 +1449,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids = move_to_duplicate_move.get(move, self.env['account.move'])
 
     def _fetch_duplicate_supplier_reference(self, only_posted=False):
-        moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
+        moves = self.filtered(lambda m: m.is_purchase_document() or m.is_sale_document() and m.ref)
         if not moves:
             return {}
 
@@ -3665,7 +3665,7 @@ class AccountMove(models.Model):
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
         }
 
-    def open_duplicated_ref_bill_view(self):
+    def open_duplicated_ref_move_view(self):
         moves = self + self.duplicated_ref_ids
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_line_form")
         action['domain'] = [('id', 'in', moves.ids)]
