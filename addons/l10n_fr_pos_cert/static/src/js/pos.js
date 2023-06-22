@@ -16,7 +16,7 @@ patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
             });
             return false;
         }
-        return french_countries.includes(this.company.country.code);
+        return french_countries.includes(this.company.country?.code);
     },
     disallowLineQuantityChange() {
         const result = this._super(...arguments);
