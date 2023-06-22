@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('header-row')]/div[2]" position="after">
+            <div class="col p-2" t-if="pos.config.is_spanish">Simplified Invoice</div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]/div[2]" position="after">
+            <div t-if="pos.config.is_spanish" class="col p-2">
+                <t t-if="order.l10n_es_unique_id">
+                    <t t-if="ui.isSmall">Simplified Invoice: </t>
+                    <t t-esc="order.l10n_es_unique_id"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

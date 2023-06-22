@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- POS order form -->
+    <record id="view_pos_pos_form_simplified_invoice" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_es_unique_id" readonly="1" invisible="not l10n_es_unique_id" />
+            </field>
+        </field>
+    </record>
+    <!-- POS order tree -->
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree" />
+        <field name="arch" type="xml">
+            <field name="pos_reference" position="before">
+                <field name="pos_is_spanish" column_invisible="True"/>
+                <!-- FIXME this invisible attr does not work -->
+                <field name="l10n_es_unique_id" invisible="not pos_is_spanish" />
+            </field>
+        </field>
+    </record>
+    <!-- POS order search -->
+    <record id="view_pos_order_filter_simplified_invoice" model="ir.ui.view">
+        <field name="name">pos.order.list.select</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter" />
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <field name="date_order" position="after">
+                <separator />
+                <filter
+                    string="Invoices"
+                    name="invoices"
+                    domain="[('is_l10n_es_simplified_invoice', '=', False)]"
+                />
+                <filter
+                    string="Simplified invoices"
+                    name="invoices"
+                    domain="[('is_l10n_es_simplified_invoice', '!=', False)]"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

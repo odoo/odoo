@@ -32,12 +32,10 @@
                 <t t-if="receipt.header">
                     <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                 </t>
-                <t t-if="receipt.cashier">
-                    <div class="cashier">
-                        <div>--------------------------------</div>
-                        <div>Served by <t t-esc="receipt.cashier" /></div>
-                    </div>
-                </t>
+                <div t-if="receipt.cashier" class="cashier">
+                    <div>--------------------------------</div>
+                    <div>Served by <t t-esc="receipt.cashier" /></div>
+                </div>
             </div>
             <br /><br />
 

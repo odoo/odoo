@@ -176,6 +176,15 @@ class Check {
             },
         ];
     }
+    isInvoiceOptionSelected() {
+        return [
+            {
+                content: "Invoice option is selected",
+                trigger: ".payment-buttons .js_invoice.highlight",
+                isCheck: true,
+            },
+        ];
+    }
 
     /**
      * Check if the remaining is the provided amount.
