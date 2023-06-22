@@ -279,6 +279,8 @@ QUnit.module('LunchKanban', (hooks) => {
             ],
             raw_state: "new",
             total: "4.95",
+            paid_subtotal: "0",
+            unpaid_subtotal: "4.95",
         };
         await makeLunchView({
             mockRPC: (route, args) => {
@@ -328,6 +330,8 @@ QUnit.module('LunchKanban', (hooks) => {
             ],
             raw_state: "new",
             total: "4.95",
+            paid_subtotal: "0",
+            unpaid_subtotal: "4.95",
         };
         await makeLunchView({
             mockRPC: (route, args) => {
@@ -348,6 +352,7 @@ QUnit.module('LunchKanban', (hooks) => {
                             }
                         ],
                         total: 4.95 * 2,
+                        unpaid_subtotal: 4.95 * 2,
                     };
 
                     return Promise.resolve(true);
@@ -377,6 +382,8 @@ QUnit.module('LunchKanban', (hooks) => {
             ],
             raw_state: "new",
             total: "4.95",
+            paid_subtotal: "0",
+            unpaid_subtotal: "4.95",
         };
         await makeLunchView({
             mockRPC: (route, args) => {
