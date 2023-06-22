@@ -767,16 +767,6 @@ blockquote {
             .btn-outline-primary {
                 @include button-outline-variant($-btn-primary-border-color);
             }
-            @at-root .o_mail_wrapper #{&}, .o_mail_wrapper {
-                // This requires variable definitions that are only available
-                // here in web_editor (not in mass_mailing).
-                .btn-fill-primary, .btn-primary {
-                    @include button-variant($-btn-primary-color, $-btn-primary-border-color, $-btn-primary-color, $-btn-primary-border-color, $-btn-primary-color, $-btn-primary-border-color);
-                }
-                .btn-outline-primary {
-                    @include button-outline-variant($-btn-primary-border-color, $-btn-primary-border-color, transparent);
-                }
-            }
 
             // Secondary
             $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
@@ -786,24 +776,6 @@ blockquote {
             }
             .btn-outline-secondary {
                 @include button-outline-variant($-btn-secondary-border-color);
-            }
-            @at-root .o_mail_wrapper #{&}, .o_mail_wrapper {
-                // This requires variable definitions that are only available
-                // here in web_editor (not in mass_mailing).
-                .btn-fill-secondary, .btn-secondary {
-                    @include button-variant($-btn-secondary-color, $-btn-secondary-border-color, $-btn-secondary-color, $-btn-secondary-border-color, $-btn-secondary-color, $-btn-secondary-border-color);
-                }
-                .btn-outline-secondary {
-                    @include button-outline-variant($-btn-secondary-border-color, $-btn-secondary-border-color, transparent);
-                }
-                .btn-custom:hover,
-                .btn-fill-custom:hover {
-                    filter: invert(0);
-                }
-                .btn-outline-custom:hover {
-                    background-color: transparent !important;
-                    background-image: none !important;
-                }
             }
 
             // 'Active' states. Note: this only emulates very common components
