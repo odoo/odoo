@@ -2,20 +2,26 @@
 
 import { getBasicData } from "@spreadsheet/../tests/utils/data";
 
-
 export function getMenuServerData() {
     const serverData = {};
     serverData.menus = {
-        root: { id: "root", children: [1, 2], name: "root", appID: "root" },
+        root: { id: "root", children: [1], name: "root", appID: "root" },
         1: {
             id: 1,
+            children: [11, 12],
+            name: "App_1",
+            appID: 1,
+            xmlid: "app_1",
+        },
+        11: {
+            id: 11,
             children: [],
             name: "menu with xmlid",
             appID: 1,
             xmlid: "test_menu",
             actionID: "action1",
         },
-        2: { id: 2, children: [], name: "menu without xmlid", appID: 2 },
+        12: { id: 12, children: [], name: "menu without xmlid", actionID: "action1", appID: 1 },
     };
     serverData.actions = {
         action1: {
@@ -39,8 +45,8 @@ export function getMenuServerData() {
                 groups_id: { string: "Groups", type: "many2many", relation: "res.group" },
             },
             records: [
-                { id: 1, name: "menu with xmlid", action: "action1", groups_id: [10] },
-                { id: 2, name: "menu without xmlid", action: "action2", groups_id: [10] },
+                { id: 11, name: "menu with xmlid", action: "action1", groups_id: [10] },
+                { id: 12, name: "menu without xmlid", action: "action1", groups_id: [10] },
             ],
         },
         "res.users": {
