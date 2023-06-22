@@ -1,8 +1,10 @@
 /** @odoo-module */
 
 import { Message } from "./message_model";
+import { Message as MessageComponent } from "@mail/core_ui/message";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
+import { MessageConfirmDialog } from "@mail/core_ui/message_confirm_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -17,6 +19,7 @@ const { DateTime } = luxon;
 export class MessageService {
     constructor(env, services) {
         this.env = env;
+        this.dialog = services.dialog;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
         this.rpc = services.rpc;
@@ -132,6 +135,27 @@ export class MessageService {
         });
     }
 
+    /**
+     * Prompts the user for confirmation, then pins the message.
+     *
+     * @param {Message} message
+     */
+    pin(message) {
+        const thread = message.originThread;
+        this.dialog.add(MessageConfirmDialog, {
+            confirmText: _t("Yeah, pin it!"),
+            message: message,
+            messageComponent: MessageComponent,
+            prompt: sprintf(
+                _t("You sure want this message pinned to %(conversation)s forever and ever?"),
+                { conversation: thread.prefix + thread.displayName }
+            ),
+            size: "md",
+            title: _t("Pin It"),
+            onConfirm: () => this.setPin(message, true),
+        });
+    }
+
     async toggleStar(message) {
         await this.orm.silent.call("mail.message", "toggle_message_starred", [[message.id]]);
     }
@@ -159,6 +183,26 @@ export class MessageService {
             }),
             { type: "success" }
         );
+    }
+
+    /**
+     * Prompts the user for confirmation, then unpins the message.
+     *
+     * @param {Message} message
+     */
+    unpin(message) {
+        this.dialog.add(MessageConfirmDialog, {
+            confirmColor: "btn-danger",
+            confirmText: _t("Yes, remove it please"),
+            message: message,
+            messageComponent: MessageComponent,
+            prompt: _t(
+                "Well, nothing lasts forever, but are you sure you want to unpin this message?"
+            ),
+            size: "md",
+            title: _t("Unpin Message"),
+            onConfirm: () => this.setPin(message, false),
+        });
     }
 
     async unstarAll() {
@@ -535,7 +579,7 @@ export class MessageService {
 }
 
 export const messageService = {
-    dependencies: ["mail.store", "rpc", "orm", "user", "mail.persona", "mail.attachment"],
+    dependencies: ["dialog", "mail.store", "rpc", "orm", "user", "mail.persona", "mail.attachment"],
     start(env, services) {
         return new MessageService(env, services);
     },
