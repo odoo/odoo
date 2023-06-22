@@ -14,6 +14,7 @@ export class OrderCart extends Component {
     static template = "pos_self_order.OrderCart";
     setup() {
         this.selfOrder = useSelfOrder();
+        this.sendInProgress = false;
 
         onWillStart(() => {
             this.selfOrder.getPricesFromServer();
@@ -24,9 +25,18 @@ export class OrderCart extends Component {
         return this.selfOrder.self_order_mode === "each" ? "Pay" : "Order";
     }
 
-    processOrder() {
+    async processOrder() {
+        if (this.sendInProgress) {
+            return;
+        }
+
         if (this.selfOrder.self_order_mode === "meal") {
-            this.selfOrder.sendDraftOrderToServer();
+            this.sendInProgress = true;
+            try {
+                await this.selfOrder.sendDraftOrderToServer();
+            } finally {
+                this.sendInProgress = false;
+            }
         } else {
             this.selfOrder.notification.add(_t("Not yet implemented!"), { type: "danger" });
         }
