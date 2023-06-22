@@ -59,6 +59,7 @@ export class HrOrgChart extends Component {
         this.popover = useUniquePopover();
 
         this.state = useState({'employee_id': null});
+        this.lastParent = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
         onWillStart(this.handleComponentUpdate.bind(this));
@@ -72,7 +73,9 @@ export class HrOrgChart extends Component {
         this.employee = this.props.record.data;
         // the widget is either dispayed in the context of a hr.employee form or a res.users form
         this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.employee.id;
-        const forceReload = this.lastRecord !== this.props.record;
+        const manager = this.employee.parent_id || this.employee.employee_parent_id;
+        const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
+        this.lastParent = manager;
         this.lastRecord = this.props.record;
         await this.fetchEmployeeData(this.state.employee_id, forceReload);
     }
