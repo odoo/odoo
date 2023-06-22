@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_payment_form" model="ir.ui.view">
+        <field name="name">pos.payment.form</field>
+        <field name="model">pos.payment</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transaction_id']" position='after'>
+                <field name="paytm_authcode" invisible="not paytm_authcode"/>
+                <field name="paytm_issuer_card_no" invisible="not paytm_issuer_card_no"/>
+                <field name="paytm_issuer_bank" invisible="not paytm_issuer_bank"/>
+                <field name="paytm_payment_method" invisible="not paytm_payment_method"/>
+                <field name="paytm_reference_no" invisible="not paytm_reference_no"/>
+                <field name="paytm_card_scheme" invisible="not paytm_card_scheme"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
