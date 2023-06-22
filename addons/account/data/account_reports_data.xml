@@ -11,12 +11,14 @@
             <field name="only_tax_exigible" eval="True"/>
             <field name="column_ids">
                 <record id="generic_tax_report_column_net" model="account.report.column">
-                    <field name="name">NET</field>
+                    <field name="name">Net</field>
                     <field name="expression_label">net</field>
+                    <field name="figure_type">monetary</field>
                 </record>
                 <record id="generic_tax_report_column_tax" model="account.report.column">
-                    <field name="name">TAX</field>
+                    <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
+                    <field name="figure_type">monetary</field>
                 </record>
             </field>
         </record>
@@ -26,12 +28,14 @@
             <field name="root_report_id" ref="generic_tax_report"/>
             <field name="column_ids">
                 <record id="generic_tax_report_account_tax_column_net" model="account.report.column">
-                    <field name="name">NET</field>
+                    <field name="name">Net</field>
                     <field name="expression_label">net</field>
+                    <field name="figure_type">monetary</field>
                 </record>
                 <record id="generic_tax_report_account_tax_column_tax" model="account.report.column">
-                    <field name="name">TAX</field>
+                    <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
+                    <field name="figure_type">monetary</field>
                 </record>
             </field>
         </record>
@@ -41,12 +45,14 @@
             <field name="root_report_id" ref="generic_tax_report"/>
             <field name="column_ids">
                 <record id="generic_tax_report_tax_account_column_net" model="account.report.column">
-                    <field name="name">NET</field>
+                    <field name="name">Net</field>
                     <field name="expression_label">net</field>
+                    <field name="figure_type">monetary</field>
                 </record>
                 <record id="generic_tax_report_tax_account_column_tax" model="account.report.column">
-                    <field name="name">TAX</field>
+                    <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
+                    <field name="figure_type">monetary</field>
                 </record>
             </field>
         </record>
