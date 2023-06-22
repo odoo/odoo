@@ -23,7 +23,6 @@ export class SelfOrder {
         this.router = router;
         this.rpc = rpc;
         this.orders = [];
-        this.categoryList = new Set();
         this.editedOrder = null;
         this.productByIds = {};
         this.priceLoading = false;
@@ -32,6 +31,12 @@ export class SelfOrder {
         this.productsGroupedByCategory = {};
         this.notification = notification;
         this.initData();
+        this.categoryList = new Set(
+            this.pos_category
+                .sort((a, b) => a.sequence - b.sequence)
+                .map((c) => c.name)
+                .filter((c) => this.productsGroupedByCategory[c])
+        );
 
         if (this.self_order_mode !== "qr_code") {
             effect((state) => this.saveOrderToLocalStorage(state.orders), [this]);
@@ -50,10 +55,7 @@ export class SelfOrder {
     initData() {
         this.products = this.products.map((p) => {
             const product = new Product(p, this.show_prices_with_tax_included);
-
-            this.categoryList.add(...product.pos_categ_ids);
             this.productByIds[product.id] = product;
-
             return product;
         });
 

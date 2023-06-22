@@ -3,6 +3,7 @@
 
     <t t-name="pos_self_order.ProductList" owl="1">
         <div class="d-flex flex-column dvh-100">
+            <t t-set="categories" t-value="Array.from(selfOrder.categoryList)" />
             <header class="bg-white shadow-sm">
                 <NavBar class="shouldNavbarBeShown() ? '' : 'o_self_order_navbar_hide' " />
                 <div class="o_self_order_searchbar_filter d-flex justify-content-start align-items-center p-0 m-0 border-bottom">
@@ -20,7 +21,7 @@
                     </div>
                     <t t-else="">
                         <ul t-ref="categoryList" class="nav nav-pills flex-nowrap flex-grow-1 px-2 border-end overflow-auto">
-                            <t t-foreach="Array.from(selfOrder.categoryList)" t-as="category" t-key="category">
+                            <t t-foreach="categories" t-as="category" t-key="category">
                                 <li class="nav-item mx-1 py-2"
                                     t-on-click="() => this.categoryOnClick(category)">
                                     <span
@@ -48,11 +49,10 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <t t-set="categories" t-value="Object.keys(selfOrder.productsGroupedByCategory)" />
                     <p t-if="!categories?.length" class="mx-auto mt-3 text-center">No products found</p>
                     <t t-foreach="categories" t-as="category" t-key="category">
-                        <section t-if="selfOrder.productsGroupedByCategory[category].length" t-ref="productsWithCategory_{{category}}" class="w-100 d-flex flex-wrap">
-                             <h4 class="w-100 m-0 mt-n1 pb-2 pt-3 px-3 bg-secondary" t-esc="category" />
+                        <section t-ref="productsWithCategory_{{category}}" class="w-100 d-flex flex-wrap">
+                            <h4 class="w-100 m-0 mt-n1 pb-2 pt-3 px-3 bg-secondary" t-esc="category" />
                             <t t-foreach="selfOrder.productsGroupedByCategory[category]" t-as="product" t-key="product.id">
                                 <!-- If this is the product that we last visited, we use currentProductCard to
                                 get a reference to it -->
