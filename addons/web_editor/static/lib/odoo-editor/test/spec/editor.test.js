@@ -1415,28 +1415,28 @@ X[]
                             '<table><tbody><tr><td>[ab</td><td>cd</td><td>e]f</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td>f</td></tr></tbody></table>',
+                            '<table><tbody><tr><td>[]<br></td><td><br></td><td>f</td></tr></tbody></table>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore:
                             '<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td>f</td></tr></tbody></table>',
+                            '<table><tbody><tr><td>a[]</td><td><br></td><td>f</td></tr></tbody></table>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore:
                             '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef]</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr></tbody></table>',
+                            '<table><tbody><tr><td>a[]</td><td><br></td><td><br></td></tr></tbody></table>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore:
                             '<table><tbody><tr><td>[ab</td><td>cd</td><td>ef]</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td></td></tr></tbody></table>',
+                            '<p>[]<br></p>',
                     });
                 });
                 it('should not break a table (cross rows)', async () => {
@@ -1445,21 +1445,235 @@ X[]
                             '<table><tbody><tr><td>[ab</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>k]l</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td></td></tr><tr><td></td><td></td><td>l</td></tr></tbody></table>',
+                            '<table><tbody><tr><td>[]<br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td>l</td></tr></tbody></table>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore:
                             '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>k]l</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr><tr><td></td><td></td><td>l</td></tr></tbody></table>',
+                            '<table><tbody><tr><td>a[]</td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td>l</td></tr></tbody></table>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore:
                             '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>kl]</td></tr></tbody></table>',
                         stepFunction: deleteBackward,
                         contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr></tbody></table>',
+                            '<table><tbody><tr><td>a[]</td><td><br></td><td><br></td></tr></tbody></table>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>[ab</td>
+                                        <td>cd</td>
+                                        <td>ef</td>
+                                    </tr>
+                                    <tr>
+                                        <td>gh</td>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                        <td>qr]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter:
+                            '<p>[]<br></p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef[</td>
+                                    </tr>
+                                    <tr>
+                                        <td>gh</td>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                        <td>qr]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `),
+                        stepFunction: deleteBackward,
+                        contentAfter: unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef[]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `),
+                    });
+                });
+                it('should not break a table (cross tables)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef</td>
+                                    </tr>
+                                    <tr>
+                                        <td>[gh</td>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                        <td>qr</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>st</td>
+                                        <td>uv</td>
+                                        <td>wx</td>
+                                        <td>yz</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef</td>
+                                        <td>g]h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                    </tr>
+                                </tbody>
+                            </table>`
+                        ),
+                        stepFunction: deleteBackward,
+                        contentAfter:unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef</td>
+                                    </tr>
+                                    <tr>
+                                        <td>[]<br></td>
+                                        <td><br></td>
+                                        <td><br></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><br></td>
+                                        <td><br></td>
+                                        <td><br></td>
+                                        <td>h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `),
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef[</td>
+                                    </tr>
+                                    <tr>
+                                        <td>gh</td>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                        <td>qr</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>st</td>
+                                        <td>uv</td>
+                                        <td>wx</td>
+                                        <td>yz</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef</td>
+                                        <td>g]h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                    </tr>
+                                </tbody>
+                            </table>`
+                        ),
+                        stepFunction: deleteBackward,
+                        contentAfter:unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>ab</td>
+                                        <td>cd</td>
+                                        <td>ef[]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><br></td>
+                                        <td><br></td>
+                                        <td><br></td>
+                                        <td>h</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ij</td>
+                                        <td>kl</td>
+                                        <td>mn</td>
+                                        <td>op</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `),
                     });
                 });
                 it('should merge the following inline text node', async () => {
