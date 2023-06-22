@@ -14,11 +14,9 @@
                 <br />
             </t>
             <div class="pos-receipt-contact">
-                <t t-if="_receipt.company.contact_address">
-                    <div>
-                        <t t-esc="_receipt.company.contact_address" />
-                    </div>
-                </t>
+                <div t-if="_receipt.company.contact_address">
+                    <t t-esc="_receipt.company.contact_address" />
+                </div>
                 <t t-if="_receipt.company.phone">
                     <div>Tel:
                         <t t-esc="_receipt.company.phone" />
