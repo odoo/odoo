@@ -944,5 +944,6 @@ class IrActionsReport(models.Model):
         py_ctx = json.loads(action.get('context', {}))
         report_action['close_on_report_download'] = True
         py_ctx['report_action'] = report_action
+        py_ctx['dialog_size'] = 'large'
         action['context'] = py_ctx
         return action
