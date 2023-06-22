@@ -56,6 +56,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select your project name (e.g. Project for Freeman)',
     run: 'text Project for Freeman',
 }, {
+    trigger: 'div[name="allow_billable"] input',
+    run: 'click',
+}, {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
 }, {

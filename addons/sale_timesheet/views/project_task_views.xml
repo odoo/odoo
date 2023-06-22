@@ -37,14 +37,14 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <xpath expr="//setting" position="before">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
                 <field name="company_id" invisible="1"/>
                 <setting help="Invoice your time and material to customers" invisible="context.get('hide_allow_billable', False)">
                     <field name="allow_billable"/>
                     <div attrs="{'invisible': [('allow_billable', '=', False)]}">
                         <label for="partner_id"/>
                         <field name="partner_id" class="ms-1" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"
-                            options="{'no_create_edit': True, 'no_open': True}"/>
+                            options="{'no_create_edit': True, 'no_open': True}" placeholder="Select who to bill..."/>
                     </div>
                 </setting>
             </xpath>
