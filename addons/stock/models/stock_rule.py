@@ -1,3 +1,4 @@
+from re import search
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
@@ -9,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, html_escape
+from odoo.tools import float_compare, float_is_zero, html_escape, ormcache
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -471,31 +472,40 @@ class ProcurementGroup(models.Model):
             raise_exception(procurement_errors)
         return True
 
+    @ormcache()
+    def _get_all_rules(self):
+        return self.env['stock.rule'].sudo().search_read(
+            [],
+            ['action', 'picking_type_id', 'location_src_id', 'location_dest_id', 'route_id', 'warehouse_id'],
+            order='route_sequence, sequence, id',
+            load=False,
+        )
+
     @api.model
     def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
         group, then try on the routes defined for the product, finally fallback
         on the default behavior
         """
+        rules = self._get_all_rules()
         if warehouse_id:
-            domain = expression.AND([['|', ('warehouse_id', '=', warehouse_id.id), ('warehouse_id', '=', False)], domain])
-        Rule = self.env['stock.rule']
-        res = self.env['stock.rule']
+            domain_2 = lambda r: domain(r) and r['warehouse_id'] in (False, warehouse_id.id)
+        res = 0
         if route_ids:
-            res = Rule.search(expression.AND([[('route_id', 'in', route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
+            res = next(filter(lambda r: domain_2(r) and r['route_id'] in route_ids.ids, rules),{'id': 0})
         if not res and packaging_id:
             packaging_routes = packaging_id.route_ids
             if packaging_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
+                res = next(filter(lambda r: domain_2(r) and r['route_id'] in packaging_routes.ids, rules),{'id': 0})
         if not res:
             product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
             if product_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
+                res = next(filter(lambda r: domain_2(r) and r['route_id'] in product_routes.ids, rules),{'id': 0})
         if not res and warehouse_id:
             warehouse_routes = warehouse_id.route_ids
             if warehouse_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        return res
+                res = next(filter(lambda r: domain_2(r) and r['route_id'] in warehouse_routes.ids, rules),{'id': 0})
+        return self.env['stock.rule'].browse(res.get('id'))
 
     @api.model
     def _get_rule(self, product_id, location_id, values):
@@ -512,13 +522,12 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_rule_domain(self, location, values):
-        domain = ['&', ('location_dest_id', '=', location.id), ('action', '!=', 'push')]
+        domain = lambda r: r['action'] != 'push' and r['location_dest_id'] == location.id
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.
         if self.env.su and values.get('company_id'):
-            domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
-            domain = expression.AND([domain, domain_company])
+            domain = lambda r: domain(r) and r['company_id'] == values['company_id']
         return domain
 
     @api.model
