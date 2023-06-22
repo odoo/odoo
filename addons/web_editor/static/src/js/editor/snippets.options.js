@@ -5282,6 +5282,11 @@ registry.layout_column = SnippetOptionWidget.extend({
             // were marked as such as they were allowed to have bare content in
             // the first place.
             return this.$target.is('.s_allow_columns');
+        } else if (params.optionsPossibleValues.selectCount) {
+            // TODO in master: use the option `data-name` that will be added.
+            // Hide the selectCount widget if the `s_nb_column_fixed` class is
+            // on the row.
+            return !this.$target[0].querySelector(":scope > .row.s_nb_column_fixed");
         }
         return this._super(...arguments);
     },
