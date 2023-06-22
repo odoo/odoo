@@ -5,7 +5,6 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
 /**
@@ -20,12 +19,6 @@ export const RATING = Object.freeze({
     OK: 3,
     BAD: 1,
 });
-
-export const RATING_TO_EMOJI = {
-    [RATING.GOOD]: "😊",
-    [RATING.OK]: "😐",
-    [RATING.BAD]: "😞",
-};
 
 export const SESSION_STATE = Object.freeze({
     NONE: "NONE",
@@ -172,17 +165,7 @@ export class LivechatService {
      * @param {string} reason
      */
     async sendFeedback(uuid, rate, reason) {
-        await this.rpc("/im_livechat/feedback", { reason, rate, uuid });
-        await this.rpc("/im_livechat/chat_post", {
-            uuid,
-            message_content: sprintf(_t("Rating: %s"), RATING_TO_EMOJI[rate]),
-        });
-        if (reason) {
-            await this.rpc("/im_livechat/chat_post", {
-                uuid,
-                message_content: sprintf(_t("Rating reason: %s"), reason),
-            });
-        }
+        return this.rpc("/im_livechat/feedback", { reason, rate, uuid });
     }
 
     /**

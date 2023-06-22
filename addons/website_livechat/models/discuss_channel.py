@@ -60,10 +60,10 @@ class DiscussChannel(models.Model):
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         name = _('The visitor') if not self.livechat_visitor_id else self.livechat_visitor_id.display_name
         if cancel:
-            message = _("""%s has started a conversation with %s. 
+            message = _("""%s started a conversation with %s.
                         The chat request has been canceled.""") % (name, operator or _('an operator'))
         else:
-            message = _('%s has left the conversation.', name)
+            message = _('%s left the conversation.', name)
 
         return message
 
