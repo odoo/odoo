@@ -215,7 +215,12 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             // The order that will contain the refund orderlines.
             // Use the destinationOrder from props if the order to refund has the same
             // partner as the destinationOrder.
-            const destinationOrder = this._setDestinationOrder(this.props.destinationOrder, partner);
+            const destinationOrder =
+                this.props.destinationOrder &&
+                partner === this.props.destinationOrder.get_partner() &&
+                !this.env.pos.doNotAllowRefundAndSales()
+                    ? this.props.destinationOrder
+                    : this._getEmptyOrder(partner);
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
@@ -236,14 +241,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             }
 
             this._onCloseScreen();
-        }
-         _setDestinationOrder(order, partner) {
-            if (order && partner === this.props.destinationOrder.get_partner() && !this.env.pos.doNotAllowRefundAndSales()) {
-                return order;
-            } else if(this.env.pos.get_order() && !this.env.pos.get_order().orderlines.length) {
-                return this.env.pos.get_order();
-            }
-            return this.env.pos.add_new_order({ silent: true });
         }
         //#endregion
         //#region PUBLIC METHODS
