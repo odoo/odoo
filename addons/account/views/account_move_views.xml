@@ -624,10 +624,17 @@
                     <div class="alert alert-warning mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('duplicated_ref_ids', '=', [])]}">
                         Warning: this bill might be a duplicate of
-                        <button name="open_duplicated_ref_bill_view"
+                        <button name="open_duplicated_ref_move_view"
                                 type="object"
                                 string="one of those bills"
                                 class="btn btn-link p-0"
+                                attrs="{'invisible': [('move_type', '!=', 'in_invoice')]}"
+                        />
+                        <button name="open_duplicated_ref_move_view"
+                                type="object"
+                                string="one of those invoices"
+                                class="btn btn-link p-0"
+                                attrs="{'invisible': [('move_type', '!=', 'out_invoice')]}"
                         />
                     </div>
                     <!-- Invoice outstanding credits -->

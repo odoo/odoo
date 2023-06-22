@@ -3585,3 +3585,18 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.assertEqual(aml.partner_id, self.partner_a)
         for aml in invoice2.line_ids:
             self.assertEqual(aml.partner_id, self.partner_b)
+
+    def test_out_invoice_single_duplicate_reference_with_form(self):
+        """ Ensure duplicated ref are computed correctly with UI's NEW_ID"""
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique reference that will be copied'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = invoice_1.invoice_date
+        move_form.ref = invoice_1.ref
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_b
+        invoice_2 = move_form.save()
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])
