@@ -1,11 +1,9 @@
 /** @odoo-module alias=website_sale_options.website_sale **/
 
-import ajax from "web.ajax";
 import core from "web.core";
 import publicWidget from "web.public.widget";
 import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "website_sale.website_sale";
-import wsUtils from "website_sale.utils";
 
 var _t = core._t;
 
@@ -110,23 +108,29 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
                 const productAndOptions = JSON.stringify(products);
-                ajax.post('/shop/cart/update_option', {
-                    product_and_options: productAndOptions,
-                    ...this._getOptionalCombinationInfoParam()
-                }).then(function (quantity) {
-                        if (goToShop) {
-                            window.location.pathname = "/shop/cart";
-                        }
-                        const $quantity = $(".my_cart_quantity");
-                        $quantity.parent().parent().removeClass('d-none');
-                        $quantity.text(quantity).hide().fadeIn(600);
-                        // find the closest div that has an img tag in it
-                        const imgContainerEl = self.$form.closest('div:has(img)');
-                        wsUtils.animateClone($('header .o_wsale_my_cart').first(), imgContainerEl, 25, 40);
-                        sessionStorage.setItem('website_sale_cart_quantity', quantity);
-                    }).then(()=>{
-                        this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
-                    });
+                this._rpc({
+                    route: '/shop/cart/update_option',
+                    params: {
+                        product_and_options: productAndOptions,
+                        ...this._getOptionalCombinationInfoParam(),
+                    },
+                }).then(function (values) {
+                    if (goToShop) {
+                        window.location.pathname = "/shop/cart";
+                    } else {
+                        // Show the notification about the cart
+                        let divToast = document.getElementById('cart_toast_container');
+                        divToast.innerHTML = values['website_sale.cart_toast'];
+                        var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
+                        toast.show();
+                    }
+                    const $quantity = $(".my_cart_quantity");
+                    $quantity.parent().parent().removeClass('d-none');
+                    $quantity.text(values.cart_quantity).hide().fadeIn(600);
+                    sessionStorage.setItem('website_sale_cart_quantity', values.cart_quantity);
+                }).then(()=>{
+                    this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
+                });;
             });
     },
 });

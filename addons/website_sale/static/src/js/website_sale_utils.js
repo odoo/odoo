@@ -35,10 +35,6 @@ const cartHandlerMixin = {
         }).then(async data => {
             sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
-                // No animation if the product's page images are hidden
-                if ($('div[data-image_width]').data('image_width') !== 'none') {
-                    await animateClone($('header .o_wsale_my_cart').first(), this.$itemImgContainer, 25, 40);
-                }
                 updateCartNavBar(data);
             }
         });
@@ -110,6 +106,12 @@ function updateCartNavBar(data) {
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
     $(".js_cart_summary").replaceWith(data['website_sale.short_cart_summary']);
+
+    // Show the notification about the cart
+    let divToast = document.getElementById('cart_toast_container');
+    divToast.innerHTML = data['website_sale.cart_toast'];
+    var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
+    toast.show();
 }
 
 /**

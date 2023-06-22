@@ -2,7 +2,7 @@
 
 import publicWidget from "web.public.widget";
 import DynamicSnippetCarousel from "website.s_dynamic_snippet_carousel";
-import wSaleUtils from "website_sale.utils";
+import wSaleUtils from "website_sale.utils"
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
@@ -127,8 +127,8 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
 
     /**
      * Event triggered by a click on the Add to cart button
-     * 
-     * @param {OdooEvent} ev 
+     *
+     * @param {OdooEvent} ev
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card');
@@ -139,8 +139,6 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
                 add_qty: 1
             },
         });
-        const $navButton = $('header .o_wsale_my_cart').first();
-        await wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
         wSaleUtils.updateCartNavBar(data);
         if (this.add2cartRerender) {
             this.trigger_up('widgets_start_request', {

@@ -63,7 +63,6 @@
             'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
             'website_sale/static/src/xml/website_sale.xml',
-            'website_sale/static/src/js/website_sale_cart.js',
             'website_sale/static/src/js/website_sale_offcanvas.js',
             'website_sale/static/src/js/website_sale_price_range_option.js',
             'website_sale/static/src/js/website_sale_utils.js',
