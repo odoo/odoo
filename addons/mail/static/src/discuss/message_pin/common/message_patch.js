@@ -1,12 +1,10 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { sprintf } from "@web/core/utils/strings";
 
 patch(Message, "discuss/message_pin/common", {
     components: { ...Message.components },
@@ -18,27 +16,12 @@ patch(Message.prototype, "discuss/message_pin/common", {
         this.messagePinService = useMessagePinService();
     },
     onClickPin() {
-        const pinnedAt = this.messagePinService.getPinnedAt(this.message.id);
-        const thread = this.message.originThread;
-        this.env.services.dialog.add(MessageConfirmDialog, {
-            confirmColor: pinnedAt ? "btn-danger" : undefined,
-            confirmText: pinnedAt ? _t("Yes, remove it please") : _t("Yeah, pin it!"),
-            message: this.message,
-            messageComponent: Message,
-            prompt: pinnedAt
-                ? _t("Well nothing lasts forever, but are you sure you want to unpin this message?")
-                : sprintf(
-                      _t("You sure want this message pinned to %(conversation)s forever and ever?"),
-                      { conversation: thread.prefix + thread.displayName }
-                  ),
-            size: "md",
-            title: pinnedAt ? _t("Unpin Message") : _t("Pin It"),
-            onConfirm: () =>
-                this.messagePinService.setPin(
-                    this.message,
-                    !this.messagePinService.getPinnedAt(this.message.id)
-                ),
-        });
+        const isPinned = Boolean(this.messagePinService.getPinnedAt(this.message.id));
+        if (isPinned) {
+            this.messagePinService.unpin(this.message);
+        } else {
+            this.messagePinService.pin(this.message);
+        }
     },
     get attClass() {
         const res = this._super();
