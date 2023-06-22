@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+import logging
+from datetime import datetime
+
 import lxml
 import requests
-import logging
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
-from datetime import datetime
-
-from odoo import http, tools, _
-from odoo.exceptions import AccessError
+from odoo import _, http, tools
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
-from odoo.addons.portal.controllers.portal import _build_url_w_params
-
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
-
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -117,28 +115,21 @@ class WebsiteForum(WebsiteProfile):
             my=my,
             **post
         )
-        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
-            limit=page * self._post_per_page, order=sorting, options=options)
+        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "forum_posts_only", search, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
-        if tag:
-            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
-        else:
-            url = "/forum/%s" % slug(forum)
+        url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+        url_args = {'sorting': sorting}
 
-        url_args = {
-            'sorting': sorting
-        }
-        if search:
-            url_args['search'] = search
-        if filters:
-            url_args['filters'] = filters
-        if my:
-            url_args['my'] = my
-        pager = tools.lazy(lambda: request.website.pager(url=url, total=question_count, page=page,
-                                      step=self._post_per_page, scope=self._post_per_page,
-                                      url_args=url_args))
+        for name, value in zip(['filters', 'search', 'my'], [filters, search, my]):
+            if value:
+                url_args[name] = value
+
+        pager = tools.lazy(lambda: request.website.pager(
+            url=url, total=question_count, page=page, step=self._post_per_page,
+            scope=self._post_per_page, url_args=url_args))
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
@@ -167,6 +158,9 @@ class WebsiteForum(WebsiteProfile):
         values = self._prepare_user_values(forum=forum, header={'is_guidelines': True, 'is_karma': True}, **post)
         return request.render("website_forum.faq_karma", values)
 
+    # Tags
+    # --------------------------------------------------
+
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, forum_id, query='', limit=25, **post):
         data = request.env['forum.tag'].search_read(
@@ -179,31 +173,53 @@ class WebsiteForum(WebsiteProfile):
             headers=[("Content-Type", "application/json")]
         )
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
-    def tags(self, forum, tag_char=None, **post):
-        # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
-        first_char_tag = forum.get_tags_first_char()
+    @http.route(['/forum/<model("forum.forum"):forum>/tag',
+                 '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>',
+                 ], type='http', auth="public", website=True, sitemap=False)
+    def tags(self, forum, tag_char=None, filters='all', search='', **post):
+        # Build tags result without using tag_char to build pager, then return tags matching it
+        values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
+        request.env["forum.post"].flush_model()
+        tags = request.env["forum.tag"]
+        order = 'posts_count DESC' if tag_char and tag_char != "all" else 'name'
+
+        if search:
+            values.update(search=search)
+            __, details, __ = request.website._search_with_fuzzy(
+                'forum_tags_only', search, limit=None, order=order, options={'forum': forum},
+            )
+            tags = details[0].get('results', tags)
+
+        if filters in ('unused', 'most_used'):
+            filter_tags = forum.tag_most_used_ids if filters == 'most_used' else forum.tag_unused_ids
+            tags = tags & filter_tags if tags else filter_tags
+
+        elif filters in ('all', 'followed'):
+            domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
+            if filters == 'followed' and not request.env.user._is_public():
+                domain = expression.AND([domain, [('message_is_follower', '=', True)]])
+            if search:
+                tags = tags.filtered_domain(domain) if tags else tags
+            else:
+                tags = request.env['forum.tag'].search(domain, limit=None, order=order)
+
+        else:
+            raise werkzeug.exceptions.BadRequest(f'Unknown tag "filters" {filters}')
+
+        first_char_tag = forum._get_tags_first_char(tags=tags)
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
         first_char_list.insert(0, (_('All'), 'all'))
-
-        active_char_tag = tag_char and tag_char.lower() or 'all'
-
-        # generate domain for searched tags
-        domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
-        order_by = 'name'
-        if active_char_tag and active_char_tag != 'all':
-            domain.append(('name', '=ilike', tools.escape_psql(active_char_tag) + '%'))
-            order_by = 'posts_count DESC'
-        tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
-        # prepare values and render template
-        values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
+        active_tag_char = tag_char.lower() if tag_char else 'all'
+        if tag_char and tag_char != 'all':
+            tags = tags.filtered(lambda t: t.name.startswith((tag_char.lower(), tag_char.upper())))
 
         values.update({
-            'tags': tags,
+            'active_char_tag': active_tag_char,
             'pager_tag_chars': first_char_list,
-            'active_char_tag': active_char_tag,
+            'search_count': len(tags) if search else None,
+            'tags': tags,
         })
-        return request.render("website_forum.tag", values)
+        return request.render("website_forum.forum_index_tags", values)
 
     # Questions
     # --------------------------------------------------
@@ -292,6 +308,8 @@ class WebsiteForum(WebsiteProfile):
             if record.create_uid.id == request.uid:
                 answer = record
                 break
+        else:
+            raise werkzeug.exceptions.NotFound()
         return request.redirect("/forum/%s/post/%s/edit" % (slug(forum), slug(answer)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
@@ -335,8 +353,7 @@ class WebsiteForum(WebsiteProfile):
             })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
-
-        if request.env.user.forum_waiting_posts_count:
+        if forum.has_pending_post:
             return request.redirect("/forum/%s/ask" % slug(forum))
 
         new_question = request.env['forum.post'].create({
@@ -346,6 +363,8 @@ class WebsiteForum(WebsiteProfile):
             'parent_id': post_parent and post_parent.id or False,
             'tag_ids': post_tag_ids
         })
+        if post_parent:
+            post_parent.bump(force=True)
         return request.redirect("/forum/%s/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
@@ -358,12 +377,15 @@ class WebsiteForum(WebsiteProfile):
                 body=body,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
+            question.bump(force=True)
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
+        if request.uid == post.create_uid.id:
+            return {'error': 'own_post'}
         if not request.session.uid:
             return {'error': 'anonymous_user'}
 
@@ -502,6 +524,24 @@ class WebsiteForum(WebsiteProfile):
 
         return request.render("website_forum.moderation_queue", values)
 
+    @http.route('/forum/<model("forum.forum"):forum>/closed_posts', type='http', auth="user", website=True)
+    def closed_posts(self, forum, **kwargs):
+        user = request.env.user
+        if user.karma < forum.karma_moderate:
+            raise werkzeug.exceptions.NotFound()
+
+        Post = request.env['forum.post']
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'close')]
+        close_posts_ids = Post.search(domain, order='write_date DESC')
+
+        values = self._prepare_user_values(forum=forum)
+        values.update({
+            'posts_ids': close_posts_ids.sudo(),
+            'queue_type': 'close',
+        })
+
+        return request.render("website_forum.moderation_queue", values)
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post, **kwargs):
         url = "/forum/%s/validation_queue" % (slug(forum))
@@ -509,6 +549,8 @@ class WebsiteForum(WebsiteProfile):
             url = "/forum/%s/flagged_queue" % (slug(forum))
         elif post.state == 'offensive':
             url = "/forum/%s/offensive_posts" % (slug(forum))
+        elif post.state == 'close':
+            url = "/forum/%s/closed_posts" % (slug(forum))
         post.validate()
         return request.redirect(url)
 
@@ -647,10 +689,7 @@ class WebsiteForum(WebsiteProfile):
         posts_ids = Post.search([('id', 'in', list(posts))])
         posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
-        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
-        if user == request.env.user:
-            kwargs['my_profile'] = True
-        else:
+        if user != request.env.user:
             kwargs['users'] = True
 
         values = {
