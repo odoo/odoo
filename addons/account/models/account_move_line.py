@@ -1019,9 +1019,9 @@ class AccountMoveLine(models.Model):
                     'price_subtotal': 0.0,
                 },
             )
-            epd_needed_vals['amount_currency'] -= line.amount_currency * percentage
-            epd_needed_vals['balance'] -= line.balance * percentage
-            epd_needed_vals['price_subtotal'] -= line.price_subtotal * percentage
+            epd_needed_vals['amount_currency'] -= line.currency_id.round(line.amount_currency * percentage)
+            epd_needed_vals['balance'] -= line.currency_id.round(line.balance * percentage)
+            epd_needed_vals['price_subtotal'] -= line.currency_id.round(line.price_subtotal * percentage)
             epd_needed_vals = epd_needed.setdefault(
                 frozendict({
                     'move_id': line.move_id.id,
@@ -1036,9 +1036,9 @@ class AccountMoveLine(models.Model):
                     'tax_ids': [Command.clear()],
                 },
             )
-            epd_needed_vals['amount_currency'] += line.amount_currency * percentage
-            epd_needed_vals['balance'] += line.balance * percentage
-            epd_needed_vals['price_subtotal'] += line.price_subtotal * percentage
+            epd_needed_vals['amount_currency'] += line.currency_id.round(line.amount_currency * percentage)
+            epd_needed_vals['balance'] += line.currency_id.round(line.balance * percentage)
+            epd_needed_vals['price_subtotal'] += line.currency_id.round(line.price_subtotal * percentage)
             line.epd_needed = {k: frozendict(v) for k, v in epd_needed.items()}
 
     @api.depends('move_id.move_type', 'balance', 'tax_repartition_line_id', 'tax_ids')
