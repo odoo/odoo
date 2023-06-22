@@ -1208,6 +1208,8 @@ class HrExpenseSheet(models.Model):
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
+        There can be more than one bank_account_id in the expense sheet when registering payment for multiple expenses.
+        The default_partner_bank_id is set only if there is one available, if more than one the field is left empty.
         :return: An action opening the account.payment.register wizard.
         '''
         return {
@@ -1217,7 +1219,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
