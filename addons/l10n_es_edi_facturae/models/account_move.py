@@ -359,8 +359,9 @@ class AccountMove(models.Model):
         xml_content = cleanup_xml_node(self.env['ir.qweb']._render('l10n_es_edi_facturae.account_invoice_facturae_export', template_values))
         certificate = self.env['l10n_es_edi_facturae.certificate'].search([("company_id", '=', company.id)], limit=1)
 
+        errors = []
         try:
             xml_content = certificate._sign_xml(xml_content, signature_values)
         except ValueError:
-            raise UserError(_('No valid certificate found for this company, Facturae EDI file will not be signed.\n'))
-        return xml_content
+            errors.append(_('No valid certificate found for this company, Facturae EDI file will not be signed.\n'))
+        return xml_content, errors
