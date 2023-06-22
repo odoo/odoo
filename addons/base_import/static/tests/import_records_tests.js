@@ -235,7 +235,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                 },
             });
 
-            await selectDropdownItem(target, "m2o", "Search More...");
+            await selectDropdownItem(target, "m2o", "View all");
             const dialog = target.querySelector(".modal");
             assert.containsNone(dialog, ".o_cp_action_menus");
             assert.containsNone(dialog, ".o_import_menu");

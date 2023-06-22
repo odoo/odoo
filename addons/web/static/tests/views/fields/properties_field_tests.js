@@ -1115,7 +1115,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Opening the "Search more..." modal
         await click(popover, ".o_field_property_definition_value input");
-        await click(popover, ".o_m2o_dropdown_option_search_more");
+        await click(popover, ".o_m2o_dropdown_option_view_all");
 
         // Checking the model loaded
         assert.verifySteps(["partner"]);
@@ -1129,7 +1129,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Opening the "Search more..." modal
         await click(popover, ".o_field_property_definition_value input");
-        await click(popover, ".o_m2o_dropdown_option_search_more");
+        await click(popover, ".o_m2o_dropdown_option_view_all");
 
         // Checking the model loaded
         assert.verifySteps(["res.users"]);

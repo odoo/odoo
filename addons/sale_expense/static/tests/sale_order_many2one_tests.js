@@ -70,6 +70,6 @@ QUnit.module('sale_expense', {
         await clickDropdown(this.target, "sale_order_id");
 
         assert.containsN(this.target, 'li.o-autocomplete--dropdown-item', 9);
-        assert.containsNone(this.target, '.o_m2o_dropdown_option_search_more', "Should not display the 'Search More... option'");
+        assert.containsNone(this.target, '.o_m2o_dropdown_option_view_all', "Should not display the 'View all option'");
     });
 });
