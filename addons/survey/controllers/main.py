@@ -781,13 +781,13 @@ class Survey(http.Controller):
         # Add filters domain to the base domain
         if user_input_line_subdomains:
             all_required_lines_domains = [
-                [('user_input_line_ids', 'in', request.env['survey.user_input.line'].sudo()._search(subdomain))]
+                [('user_input_line_ids', 'in', request.env['survey.user_input.line']._search(subdomain))]
                 for subdomain in user_input_line_subdomains
             ]
             user_input_domain = expression.AND([user_input_domain, *all_required_lines_domains])
 
         # Get the matching user input lines
-        user_inputs_query = request.env['survey.user_input'].sudo()._search(user_input_domain)
+        user_inputs_query = request.env['survey.user_input']._search(user_input_domain)
         user_input_lines = request.env['survey.user_input.line'].search([('user_input_id', 'in', user_inputs_query)])
 
         return user_input_lines, search_filters
