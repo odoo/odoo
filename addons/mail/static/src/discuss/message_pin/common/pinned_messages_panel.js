@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
 
 import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
@@ -59,12 +58,7 @@ export class PinnedMessagesPanel extends Component {
      * @param {Message} message
      */
     onClickUnpin(message) {
-        this.env.services.dialog.add(MessageConfirmDialog, {
-            message,
-            messageComponent: Message,
-            prompt: _t("Are you sure you want to remove this pinned message?"),
-            onConfirm: () => this.messagePinService.setPin(message, false),
-        });
+        this.messagePinService.unpin(message);
     }
 
     /**
