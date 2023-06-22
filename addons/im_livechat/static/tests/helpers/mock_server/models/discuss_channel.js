@@ -71,6 +71,6 @@ patch(MockServer.prototype, "im_livechat/models/discuss_channel", {
      * Simulates `_get_visitor_leave_message` on `discuss.channel`.
      */
     _mockDiscussChannel_getVisitorLeaveMessage() {
-        return "Visitor has left the conversation.";
+        return "Visitor left the conversation.";
     },
 });

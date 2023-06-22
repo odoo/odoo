@@ -114,11 +114,11 @@
 </t>
 
 <t t-name="mail.NotificationMessage" owl="1">
-    <div class="o-mail-NotificationMessage mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
+    <div class="o-mail-NotificationMessage text-break mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
         'mt-2': prevMsg and !prevMsg.isNotification,
     }" t-ref="root">
         <i t-if="msg.notificationIcon" t-attf-class="{{ msg.notificationIcon }} me-1"/>
-        <span t-if="!msg.body.includes(escape(msg.author.name))" class="d-inline mx-1" t-esc="msg.author.name"/> <t t-out="msg.body"/>
+        <span class="o-mail-NotificationMessage-author d-inline mx-1" t-if="msg.author and !msg.body.includes(escape(msg.author.name))" t-esc="msg.author.name"/> <t t-out="msg.body"/>
     </div>
 </t>
 
