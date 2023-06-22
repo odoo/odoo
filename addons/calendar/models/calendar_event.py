@@ -3,7 +3,6 @@
 
 import logging
 import math
-from collections import defaultdict
 from datetime import timedelta
 from itertools import repeat
 from werkzeug.urls import url_parse
@@ -65,6 +64,10 @@ class Meeting(models.Model):
     _inherit = ["mail.thread"]
 
     DISCUSS_ROUTE = 'calendar/join_videocall'
+
+    @api.model
+    def get_state_selections(self):
+        return Attendee.STATE_SELECTION
 
     @api.model
     def default_get(self, fields):
@@ -160,8 +163,6 @@ class Meeting(models.Model):
     # attendees
     attendee_ids = fields.One2many(
         'calendar.attendee', 'event_id', 'Participant')
-    attendee_status = fields.Selection(
-        Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
@@ -348,12 +349,6 @@ class Meeting(models.Model):
                     'start': startdate.replace(tzinfo=None),
                     'stop': enddate.replace(tzinfo=None)
                 })
-
-    def _compute_attendee(self):
-        mapped_attendees = self._find_attendee_batch()
-        for meeting in self:
-            attendee = mapped_attendees[meeting.id]
-            meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -1123,38 +1118,6 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
-
-    def _find_attendee_batch(self):
-        """ Return the first attendee where the user connected has been invited
-            or the attendee selected in the filter that is the owner
-            from all the meeting_ids in parameters.
-        """
-        result = defaultdict(lambda: self.env['calendar.attendee'])
-        self_attendees = self.attendee_ids.filtered(lambda a: a.partner_id == self.env.user.partner_id)
-        for attendee in self_attendees:
-            result[attendee.event_id.id] = attendee
-        remaining_events = self - self_attendees.event_id
-
-        events_checked_partners = self.env['calendar.filters'].search([
-            ('user_id', '=', self.env.user.id),
-            ('partner_id', 'in', remaining_events.attendee_ids.partner_id.ids),
-            ('partner_checked', '=', True)
-        ]).partner_id
-        filter_events = self.env['calendar.event']
-        for event in remaining_events:
-            event_partners = event.attendee_ids.partner_id
-            event_checked_partners = events_checked_partners & event_partners
-            if event.partner_id in event_checked_partners and event.partner_id in event_partners:
-                filter_events |= event
-                result[event.id] = event.attendee_ids.filtered(lambda attendee: attendee.partner_id == event.partner_id)[:1]
-        remaining_events -= filter_events
-
-        for event in remaining_events:
-            event_checked_partners = events_checked_partners & event_partners
-            attendee = event.attendee_ids.filtered(
-                lambda a: a.partner_id in event_checked_partners and a.state != "needsAction")
-            result[event.id] = attendee[:1]
-        return result
 
     # YTI TODO MASTER: Remove deprecated method
     def _find_attendee(self):
