@@ -10,6 +10,7 @@
     import session from 'web.session';
     import { Quiz } from '@website_slides/js/slides_course_quiz';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
+    import { unhideConditionalElements } from '@website/js/content/inject_dom';
     import Dialog from 'web.Dialog';
     import '@website_slides/js/slides_course_join';
 
@@ -686,6 +687,7 @@
                     $target: $content,
                 });
             }
+            unhideConditionalElements();
             return Promise.resolve();
         },
         //--------------------------------------------------------------------------
