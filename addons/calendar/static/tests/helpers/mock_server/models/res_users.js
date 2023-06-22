@@ -19,7 +19,7 @@ patch(MockServer.prototype, {
         startDate.setUTCHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setUTCHours(23, 59, 59, 999);
-        const currentPartnerAttendeeIds = this.pyEnv['calendar.attendee'].search([['partner_id', '=', this.pyEnv.currentPartnerId]]);
+        const currentPartnerAttendeeIds = this.pyEnv['calendar.attendee'].search([['partner_id', '=', this.pyEnv.currentPartnerId], ['state', '!=', 'declined']]);
         return [
             '&',
                 '|',
@@ -45,10 +45,10 @@ patch(MockServer.prototype, {
         const meetingsLines = this.pyEnv['calendar.event'].searchRead(
             this._mockResUsers_SystrayGetCalendarEventDomain(),
             {
-                fields: ['id', 'start', 'name', 'allday', 'attendee_status'],
+                fields: ['id', 'start', 'name', 'allday'],
                 order: 'start',
             }
-        ).filter(meetingLine => meetingLine['attendee_status'] !== 'declined');
+        )
         if (meetingsLines.length) {
             activities.unshift({
                 id: 'calendar.event', // for simplicity
