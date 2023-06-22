@@ -2,6 +2,7 @@
 
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useMessaging } from "@mail/core/common/messaging_hook";
+import { formatDate } from "@web/core/l10n/dates";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
@@ -14,6 +15,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
+const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -86,6 +88,10 @@ export class Activity extends Component {
         await this.activityService.markAsDone(this.props.data, attachmentId);
         this.props.onUpdate();
         await this.threadService.fetchNewMessages(this.thread);
+    }
+
+    get dateDoneFormatted() {
+        return formatDate(DateTime.fromSQL(this.props.data.date_done, { zone: 'utc' }).toLocal());
     }
 
     async edit() {
