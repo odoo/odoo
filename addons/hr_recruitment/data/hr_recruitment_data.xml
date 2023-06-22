@@ -103,5 +103,10 @@
             <field name="template_id" ref="email_template_data_applicant_not_interested"/>
         </record>
 
+        <record model="ir.config_parameter" id="hr_recruitment_blacklisted_emails" forcecreate="False">
+            <field name="key">hr_recruitment.blacklisted_emails</field>
+            <field name="value"> </field>
+        </record>
+
 </data>
 </odoo>
