@@ -79,19 +79,26 @@ def test_get_data(self, template_code):
         },
     }
 
-def _tax_vals(name, amount, tax_tag_id=None):
+def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=True):
     tag_command = [Command.set([tax_tag_id])] if tax_tag_id else None
-    return {
+    tax_vals = {
         'name': name,
         'amount': amount,
+        'amount_type': 'percent' if not children_tax_xmlids else 'group',
         'tax_group_id': 'tax_group_taxes',
-        'repartition_line_ids': [
+        'active': active,
+    }
+    if children_tax_xmlids:
+        tax_vals.update({'children_tax_ids': [Command.set(children_tax_xmlids)]})
+    else:
+        tax_vals.update({'repartition_line_ids': [
             Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': tag_command}),
             Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
             Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
             Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
-        ],
-    }
+        ]})
+    return tax_vals
+
 
 @tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
@@ -291,3 +298,68 @@ class TestChartTemplate(TransactionCase):
         # check that xmlid is now pointing to problematic_account
         xmlid_account = self.env.ref(f'account.{self.company_1.id}_test_account_income_template')
         self.assertEqual(problematic_account, xmlid_account, "xmlid is not pointing to the right account")
+
+    def test_update_taxes_children_tax_ids(self):
+        """ Ensures children_tax_ids are correctly generated when updating taxes with
+        amount_type='group'.
+        """
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            normal_tax_xmlids = ['test_tax_3_template', 'test_tax_4_template']
+            data['account.tax'].update({
+                xmlid: _tax_vals(name, amount, children_tax_xmlids=children_tax_xmlids)
+                for name, xmlid, amount, children_tax_xmlids in [
+                    ('Tax 3', normal_tax_xmlids[0], 16, None),
+                    ('Tax 4', normal_tax_xmlids[1], 17, None),
+                    ('Tax with children', 'test_tax_5_group_template', 0, normal_tax_xmlids)
+                ]
+            })
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        parent_tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company_1.id),
+            ('name', '=', 'Tax with children'),
+        ])
+        children_taxes = self.env['account.tax'].search([
+            ('company_id', '=', self.company_1.id),
+            ('name', 'in', ['Tax 3', 'Tax 4']),
+        ])
+        self.assertEqual(len(parent_tax), 1, "The parent tax should have been created.")
+        self.assertEqual(len(children_taxes), 2, "Two children should have been created.")
+        self.assertEqual(parent_tax.children_tax_ids.ids, children_taxes.ids, "The parent and its children taxes should be linked together.")
+
+    def test_update_taxes_children_tax_ids_inactive(self):
+        """ Ensure tax templates are correctly generated when updating taxes with children taxes,
+        even if templates are inactive.
+        """
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            normal_tax_xmlids = ['test_tax_3_template', 'test_tax_4_template']
+            data['account.tax'].update({
+                xmlid: _tax_vals(name, amount, children_tax_xmlids=children_tax_xmlids, active=active)
+                for name, xmlid, amount, children_tax_xmlids, active in [
+                    ('Inactive Tax 3', normal_tax_xmlids[0], 16, None, False),
+                    ('Inactive Tax 4', normal_tax_xmlids[1], 17, None, False),
+                    ('Inactive Tax with children', 'test_tax_5_group_template', 0, normal_tax_xmlids, False)
+                ]
+            })
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        parent_tax = self.env['account.tax'].with_context(active_test=False).search([
+            ('company_id', '=', self.company_1.id),
+            ('name', '=', 'Inactive Tax with children'),
+        ])
+        children_taxes = self.env['account.tax'].with_context(active_test=False).search([
+            ('company_id', '=', self.company_1.id),
+            ('name', 'in', ['Inactive Tax 3', 'Inactive Tax 4']),
+        ])
+        self.assertEqual(len(parent_tax), 1, "The parent tax should have been created, even if it is inactive.")
+        self.assertFalse(parent_tax.active, "The parent tax should be inactive.")
+        self.assertEqual(len(children_taxes), 2, "Two children should have been created, even if they are inactive.")
+        self.assertEqual(children_taxes.mapped('active'), [False] * 2, "Children taxes should be inactive.")
