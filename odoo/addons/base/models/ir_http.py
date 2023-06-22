@@ -299,6 +299,20 @@ class IrHttp(models.AbstractModel):
     def _xmlid_to_obj(cls, env, xmlid):
         return env.ref(xmlid, False)
 
+    def _check_access(self, model, record, field, access_token):
+        if model == 'ir.attachment':
+            record_sudo = record.sudo()
+            if access_token:
+                return record_sudo if consteq(record_sudo.access_token or '', access_token) else False
+            elif record_sudo.public:
+                return record_sudo
+            elif self.env.user.has_group('base.group_portal'):
+                # Check the read access on the record linked to the attachment
+                # eg: Allow to download an attachment on a task from /my/task/task_id
+                record.check('read')
+                return record_sudo
+        return record
+
     def _get_record_and_check(self, xmlid=None, model=None, id=None, field='datas', access_token=None):
         # get object and content
         record = None
@@ -312,19 +326,9 @@ class IrHttp(models.AbstractModel):
             return None, 404
 
         try:
-            if model == 'ir.attachment':
-                record_sudo = record.sudo()
-                if access_token and not consteq(record_sudo.access_token or '', access_token):
-                    return None, 403
-                elif (access_token and consteq(record_sudo.access_token or '', access_token)):
-                    record = record_sudo
-                elif record_sudo.public:
-                    record = record_sudo
-                elif self.env.user.has_group('base.group_portal'):
-                    # Check the read access on the record linked to the attachment
-                    # eg: Allow to download an attachment on a task from /my/task/task_id
-                    record.check('read')
-                    record = record_sudo
+            record = self._check_access(model, record, field, access_token)
+            if not record:
+                return None, 403
 
             # check read access
             try:
