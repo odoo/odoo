@@ -52,7 +52,10 @@ export const companyService = {
             const { data, error } = ev.detail;
             const { model, method } = data.params;
             if (!error && model === "res.company" && UPDATE_METHODS.includes(method)) {
-                if (!browser.localStorage.getItem("running_tour")) {
+                if (
+                    !browser.localStorage.getItem("running_tour") &&
+                    !data.params.kwargs?.context?.settings?.do_not_reload
+                ) {
                     action.doAction("reload_context");
                 }
             }
