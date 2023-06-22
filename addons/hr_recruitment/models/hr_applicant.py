@@ -279,7 +279,7 @@ class Applicant(models.Model):
                 applicant.partner_mobile = applicant.partner_id.mobile
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
+        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
             applicant.partner_id.email = applicant.email_from
 
     @api.depends('partner_phone')
@@ -341,6 +341,8 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if vals.get('email_from'):
             vals['email_from'] = vals['email_from'].strip()
+            if self._email_is_blacklisted(vals['email_from']):
+                del vals['email_from']
         old_interviewers = self.interviewer_ids
         # stage_id: track last stage before update
         if 'stage_id' in vals:
@@ -359,6 +361,9 @@ class Applicant(models.Model):
         if vals.get('emp_id'):
             self._update_employee_from_applicant()
         return res
+
+    def _email_is_blacklisted(self, mail):
+        return mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
 
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
@@ -542,7 +547,7 @@ class Applicant(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
+        # Remove default author when going through the mail gateway. Indeed, we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
@@ -554,9 +559,10 @@ class Applicant(models.Model):
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': partner_name or email_from_normalized,
-            'email_from': email_from_normalized,
             'partner_id': msg.get('author_id', False),
         }
+        if msg.get('from') and not self._email_is_blacklisted(msg.get('from')):
+            defaults['email_from'] = msg.get('from')
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if stage and stage.id:

@@ -16,6 +16,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         domain="[('model', '=', 'hr.applicant')]")
     applicant_without_email = fields.Text(compute='_compute_applicant_without_email',
         string='Applicant(s) not having email')
+    applicant_emails = fields.Text(compute='_compute_applicant_emails')
 
     @api.depends('refuse_reason_id')
     def _compute_send_mail(self):
@@ -35,6 +36,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 )
             else:
                 wizard.applicant_without_email = False
+
+    @api.depends('applicant_ids.email_from')
+    def _compute_applicant_emails(self):
+        for wizard in self:
+            wizard.applicant_emails = ', '.join(a.email_from for a in wizard.applicant_ids if a.email_from)
 
     def action_refuse_reason_apply(self):
         if self.send_mail:
