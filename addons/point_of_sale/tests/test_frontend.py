@@ -14,6 +14,10 @@ import odoo.tests
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
     @classmethod
+    def _get_main_company(cls):
+        return cls.company_data['company']
+
+    @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
@@ -21,7 +25,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.env.user.groups_id += env.ref('point_of_sale.group_pos_manager')
         journal_obj = env['account.journal']
         account_obj = env['account.account']
-        main_company = cls.company_data['company']
+        main_company = cls._get_main_company()
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
@@ -40,10 +44,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('account.group_account_invoice').id),
             ],
         })
         cls.pos_admin = cls.env['res.users'].create({
-            'name': 'A powerfull PoS man!',
+            'name': 'A powerful PoS man!',
             'login': 'pos_admin',
             'password': 'pos_admin',
             'groups_id': [

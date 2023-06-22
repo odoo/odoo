@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]//div" position="before">
+            <t t-set="partner" t-value="receiptData.order.get_partner()"/>
+            <t t-set="isSimplifiedInvoice" t-value="receiptData.order.is_l10n_es_simplified_invoice"/>
+            <t t-set="receipt" t-value="receiptData.receipt"/>
+            <t t-if="pos.config.is_spanish">
+                <t t-if="isSimplifiedInvoice">
+                    <div>Simplified invoice</div>
+                    <div class="simplified-invoice-number" t-esc="receiptData.order.invoice_name" />
+                </t>
+                <div t-if="receipt.company.street" t-esc="receipt.company.street" />
+                <div t-if="receipt.company.zip" t-esc="receipt.company.zip" />
+                <div t-if="receipt.company.city" t-esc="receipt.company.city" />
+                <div t-if="receipt.company.state_id">(<t t-esc="receipt.company.state_id[1]"/>)</div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+            <t t-if="pos.config.is_spanish and partner?.id !== pos.config.simplified_partner_id[0]">
+                <div>Customer: <t t-esc="partner.name" /></div>
+                <div t-if="partner.vat">
+                    <t t-esc="receipt.company.vat_label" />:
+                    <t t-esc="partner.vat" />
+                </div>
+                <div t-if="partner.address" t-esc="partner.address"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

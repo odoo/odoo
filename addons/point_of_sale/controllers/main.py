@@ -53,7 +53,7 @@ class PosController(PortalAccount):
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
         if not pos_session or config_id and not pos_config.active:
             return request.redirect('/web#action=point_of_sale.action_client_pos_menu')
-        # The POS only work in one company, so we enforce the one of the session in the context
+        # The POS only works in one company, so we enforce the one of the session in the context
         company = pos_session.company_id
         session_info = request.env['ir.http'].session_info()
         session_info['user_context']['allowed_company_ids'] = company.ids
