@@ -56,7 +56,7 @@
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
                 <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
-                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
+                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                     <div class="responsive-price">
                         <t t-esc="tax.name" />
                         <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
@@ -108,7 +108,7 @@
                 </div>
             </t>
             <t t-if="isTaxIncluded">
-                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
+                <t id="tax-details" t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                     <div>
                         <t t-esc="tax.name" />
                         <span t-esc="env.pos.format_currency_no_symbol(tax.amount)" class="pos-receipt-right-align"/>
