@@ -563,6 +563,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertRecordValues(wizard, [{'mode': 'invoice_multi'}])
 
         # Awaiting the CRON.
+        self.assertTrue(invoice1.is_being_sent)
+        self.assertTrue(invoice2.is_being_sent)
         self.assertFalse(invoice1.invoice_pdf_report_id)
         self.assertFalse(invoice2.invoice_pdf_report_id)
 
@@ -575,6 +577,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', 'invoice_pdf_report_file'),
         ])
         self.assertEqual(len(invoice_attachments), 1)
+        self.assertFalse(invoice1.is_being_sent)
+        self.assertFalse(invoice2.is_being_sent)
         self.assertTrue(invoice2.invoice_pdf_report_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice2._name),

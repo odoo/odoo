@@ -506,6 +506,14 @@ class AccountMove(models.Model):
         tracking=True,
         help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
     )
+    is_being_sent = fields.Boolean(
+        readonly=True,
+        default=False,
+        copy=False,
+        store=True,
+        help="Is the move being sent asynchronously",
+        compute='_compute_is_being_sent')
+
 
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -612,6 +620,12 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('is_move_sent')
+    def _compute_is_being_sent(self):
+        for move in self:
+            if move.is_move_sent:
+                move.is_being_sent = False
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (

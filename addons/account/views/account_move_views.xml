@@ -583,8 +583,14 @@
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_pdf_report_id', '!=', False), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
-                                class="oe_highlight"
+                                attrs="{'invisible':['|', '|', '|', ('is_being_sent', '=', True), ('state', '!=', 'posted'), ('invoice_pdf_report_id', '!=', False), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
+                                class="btn btn-primary"
+                                data-hotkey="y"/>
+                        <button name="action_invoice_sent"
+                                type="object"
+                                string="Send &amp; Print"
+                                attrs="{'invisible':['|', '|', '|', ('is_being_sent', '=', False), ('state', '!=', 'posted'), ('invoice_pdf_report_id', '!=', False), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
+                                class="btn btn-secondary"
                                 data-hotkey="y"/>
                         <button name="action_invoice_sent"
                                 type="object"
@@ -629,6 +635,9 @@
                                 string="one of those bills"
                                 class="btn btn-link p-0"
                         />
+                    </div>
+                    <div class="alert alert-info mb-0" role="alert" attrs="{'invisible': [('is_being_sent', '=', False)]}">
+                        This invoice is being sent in the background.
                     </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
@@ -758,6 +767,7 @@
                         <field name="hide_post_button" invisible="1"/>
                         <field name="duplicated_ref_ids" invisible="1"/>
                         <field name="quick_encoding_vals" invisible="1"/>
+                        <field name="is_being_sent" invisible="1"/>
 
                         <div class="oe_title">
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>

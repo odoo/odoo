@@ -587,6 +587,8 @@ class AccountMoveSend(models.Model):
         else:
             for move in self.move_ids:
                 moves_data[move]['_form'] = self.new(self._get_available_field_values_in_multi(move))
+            # Marks moves as being sent asynchronously.
+            self.move_ids.is_being_sent = True
 
         if generate_invoice_documents:
             # Generate all invoice documents.
