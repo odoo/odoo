@@ -30,8 +30,13 @@ class LunchController(http.Controller):
                       'raw_state': line.state,
                       'state': translated_states[line.state],
                       'note': line.note} for line in lines.sorted('date')]
+            total = float_round(sum(line['price'] for line in lines), 2)
+            paid_subtotal = float_round(sum(line['price'] for line in lines if line['raw_state'] != 'new'), 2)
+            unpaid_subtotal = total - paid_subtotal
             infos.update({
-                'total': float_repr(float_round(sum(line['price'] for line in lines), 2), 2),
+                'total': float_repr(total, 2),
+                'paid_subtotal': float_repr(paid_subtotal, 2),
+                'unpaid_subtotal': float_repr(unpaid_subtotal, 2),
                 'raw_state': self._get_state(lines),
                 'lines': lines,
             })
