@@ -288,7 +288,8 @@ class AccountReportLine(models.Model):
     def _compute_hierarchy_level(self):
         for report_line in self:
             if report_line.parent_id:
-                report_line.hierarchy_level = report_line.parent_id.hierarchy_level + 2
+                increase_level = 3 if report_line.parent_id.hierarchy_level == 0 else 2
+                report_line.hierarchy_level = report_line.parent_id.hierarchy_level + increase_level
             else:
                 report_line.hierarchy_level = 1
 
@@ -748,7 +749,7 @@ class AccountReportColumn(models.Model):
     report_id = fields.Many2one(string="Report", comodel_name='account.report')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
-    blank_if_zero = fields.Boolean(string="Blank if Zero", default=True, help="When checked, 0 values will not show in this column.")
+    blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")
     custom_audit_action_id = fields.Many2one(string="Custom Audit Action", comodel_name="ir.actions.act_window")
 
 
