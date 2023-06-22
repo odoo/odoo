@@ -2454,4 +2454,68 @@ QUnit.module("ActionManager", (hooks) => {
             "Second record"
         );
     });
+
+    QUnit.test("Uncaught error in target new is catch only once", async (assert) => {
+        /*
+         * By-pass QUnit's and test's error handling because the error service needs to be active
+         */
+        const handler = (ev) => {
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        const originOnunhandledrejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originOnunhandledrejection;
+        });
+        /*
+         * End By pass error handling
+         */
+
+        const warningOpened = makeDeferred();
+        class WarningDialogWait extends WarningDialog {
+            setup() {
+                super.setup();
+                onMounted(() => warningOpened.resolve());
+            }
+        }
+
+        serviceRegistry.add("error", errorService);
+        registry
+            .category("error_dialogs")
+            .add("odoo.exceptions.ValidationError", WarningDialogWait);
+
+        const mockRPC = (route, args) => {
+            if (args.method === "web_search_read" && args.model === "partner") {
+                throw makeServerError({ type: "ValidationError" });
+            }
+        };
+
+        serverData.views["partner,666,form"] = /*xml*/ `
+            <form>
+                <header>
+                    <button name="26" type="action"/>
+                </header>
+                <field name="display_name"/>
+            </form>`;
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 24);
+        await click(target, ".o_form_view button[name='26']");
+
+        await warningOpened;
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".modal .o_error_dialog");
+        assert.strictEqual(
+            target.querySelector(".modal .modal-title").textContent,
+            "Validation Error"
+        );
+    });
 });
