@@ -454,16 +454,144 @@ class MrpWorkcenterProductivity(models.Model):
 
     def _loss_type_change(self):
         self.ensure_one()
-        if self.workorder_id.duration > self.workorder_id.duration_expected:
+        if self.workorder_id.get_productive_duration() >= self.workorder_id.duration_expected:
             self.loss_id = self.env.ref("mrp.block_reason4").id
         else:
             self.loss_id = self.env.ref("mrp.block_reason7").id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if self.env.context.get('timesheet_splitting_merging'):
+            return super().create(vals_list)
+
+        created_time_ids = super().create(vals_list)
+        workorder_ids = {vals['workorder_id'] for vals in vals_list}
+        workorders = self.env['mrp.workorder'].browse(workorder_ids)
+
+        return_created_ids = [time_id for time_id in created_time_ids]
+        for wo in workorders:
+            self._split(wo)
+            return_created_ids = self._merge_timesheets(return_created_ids, wo)
+        return return_created_ids if len(return_created_ids) > 0 else self.env['mrp.workcenter.productivity'].browse()
+
+    def write(self, vals_list):
+        if self.env.context.get('timesheet_splitting_merging'):
+            return super().write(vals_list)
+
+        super().write(vals_list)
+        if vals_list.get("workorder_id"):
+            workorder = self.env['mrp.workorder'].browse(vals_list["workorder_id"])
+        else:
+            workorder = self.workorder_id
+        if workorder:
+            self._split(workorder)
+            self._merge_timesheets([], workorder)
+
+        return True
+
+    def _merge_timesheets(self, created_time_ids, workorder=None, ):
+        """
+            This method will check if two timesheet intersect and will merge them if necessary
+            2 cases are possible:
+                - a bigger timesheet "contains" a smaller one => the smaller one is deleted
+                - a timesheet ends after of exactly when another one start => merge the two timesheet together
+        """
+        timesheets = [time_id for time_id in workorder.time_ids]
+        to_unlink = []
+        for ts1 in timesheets:
+            for ts2 in timesheets:
+                if ts1 == ts2:
+                    continue
+                if not self._merge_user_condition(ts1, ts2):
+                    continue
+                if ts1.loss_id != ts2.loss_id:
+                    continue
+                if not ts2.date_end or not ts1.date_end:
+                    continue
+                if ts1.date_start <= ts2.date_start and ts1.date_end >= ts2.date_end:
+                    to_unlink.append(ts2.id)
+                    timesheets.remove(ts2)
+                    created_time_ids.remove(ts2) if ts2 in created_time_ids else False
+                if ts1.date_start <= ts2.date_start and ts1.date_end < ts2.date_end and ts2.date_start <= ts1.date_end:
+                    new_timesheet_vals = self._prepare_merge_timesheets(ts2, ts1)
+                    new_timesheet = self.with_context(timesheet_splitting_merging=True).create(new_timesheet_vals)
+                    timesheets.remove(ts1) if ts1 in timesheets else False
+                    timesheets.remove(ts2) if ts2 in timesheets else False
+                    created_time_ids.remove(ts2) if ts2 in created_time_ids else False
+                    created_time_ids.remove(ts1) if ts1 in created_time_ids else False
+                    timesheets.append(new_timesheet)
+                    created_time_ids.append(new_timesheet)
+                    to_unlink.extend([ts1.id, ts2.id])
+        self.env['mrp.workcenter.productivity'].browse(to_unlink).unlink()
+        return created_time_ids
+
+    def _split(self, workorder):
+        newly_created = []
+        deleted = []
+        expected = workorder.duration_expected
+        reduced_speed_id = self.env.ref('mrp.block_reason4').id
+        productive_id = self.env.ref('mrp.block_reason7').id
+        new_productive_duration = workorder.get_productive_duration()
+        while new_productive_duration > expected:
+            delta_time = new_productive_duration - expected
+            # need to modify the last timesheet that is in productive category
+            max_date_time = max([time for time in workorder.time_ids if time.loss_id.loss_type == "productive"], key=lambda x: x.date_end)
+
+            # the excedentary duration could be greater than the duration of the workorder
+            if delta_time >= max_date_time.duration:
+                max_date_time.loss_id = reduced_speed_id
+            else:
+                timesheet_vals = self._prepare_split_timesheets(max_date_time, delta_time, expected, reduced_speed_id, productive_id)
+                new_timesheet = self.create(timesheet_vals)
+                newly_created.extend([new_timesheet])
+                deleted.append(max_date_time)
+            new_productive_duration = workorder.get_productive_duration()
+        return {"created": newly_created, "deleted": deleted}
+
+    def _prepare_split_timesheets(self, timesheet, delta_time, expected_duration, reduced_id, productive_id):
+        new_timesheet_vals = {
+            'user_id': timesheet.user_id.id,
+            'workorder_id': timesheet.workorder_id.id,
+            'workcenter_id': timesheet.workcenter_id.id,
+            'date_start': timesheet.date_end - timedelta(minutes=delta_time),
+            'date_end': timesheet.date_end,
+            'duration': delta_time,
+            'loss_id': reduced_id,
+            'company_id': timesheet.company_id.id,
+        }
+        timesheet.with_context(timesheet_splitting_merging=True).write({'date_end': timesheet.date_end - timedelta(minutes=delta_time),
+                                                                        'duration': expected_duration,
+                                                                        'loss_id': productive_id})
+        return new_timesheet_vals
+
+    def _prepare_merge_timesheets(self, timesheet_start, timesheet_end):
+        if timesheet_start.date_end:
+            date_end = timesheet_start.date_end
+        else:
+            date_end = timesheet_end.date_start + timedelta(minutes=timesheet_start.duration + timesheet_end.duration) - timedelta(minutes=timesheet_end.date_end - timesheet_start.date_start),
+        duration = (date_end - timesheet_end.date_start).seconds / 60
+        new_timesheet_vals = {
+            'user_id': timesheet_end.user_id.id,
+            'workorder_id': timesheet_end.workorder_id.id,
+            'workcenter_id': timesheet_start.workcenter_id.id,
+            'date_start': timesheet_end.date_start,
+            'date_end': date_end,
+            'duration': duration,
+            'loss_id': timesheet_end.loss_id.id,
+            'company_id': timesheet_end.company_id.id,
+        }
+        return new_timesheet_vals
+
+    def _merge_user_condition(self, timesheet_1, timesheet_2):
+        if not timesheet_1.user_id or timesheet_1.user_id != timesheet_2.user_id:
+            return False
+        return True
 
     def _close(self):
         underperformance_timers = self.env['mrp.workcenter.productivity']
         for timer in self:
             wo = timer.workorder_id
-            timer.write({'date_end': datetime.now()})
+            timer.write({'date_end': datetime.now().replace(microsecond=0)})
             if wo.duration > wo.duration_expected:
                 productive_date_end = timer.date_end - relativedelta.relativedelta(minutes=wo.duration - wo.duration_expected)
                 if productive_date_end <= timer.date_start:

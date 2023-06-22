@@ -8,6 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import float_compare, float_round, format_datetime
 
 
@@ -86,7 +87,8 @@ class MrpWorkorder(models.Model):
         readonly=False, store=True) # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
-        readonly=False, store=True, copy=False)
+        readonly=False, store=True, copy=False, help="The duration represent the real duration used by the workorder on the workcenter." +
+        "If you cannot modify this duration, it may be because there is a user or an employee working on this workorder, or because multiple users or employees already worked on it")
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
@@ -147,6 +149,7 @@ class MrpWorkorder(models.Model):
                                      column1="blocked_by_id", column2="workorder_id", string="Blocks",
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
+    duration_editable = fields.Boolean('Makes duration editable', compute="_compute_duration_editable")
 
     @api.depends('production_availability', 'blocked_by_workorder_ids', 'blocked_by_workorder_ids.state')
     def _compute_state(self):
@@ -310,12 +313,23 @@ class MrpWorkorder(models.Model):
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
         for order in self:
-            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration = order.get_duration()
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
                 order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
             else:
                 order.duration_percent = 0
+
+    @api.depends('duration_editable')
+    def _compute_duration_editable(self):
+        for order in self:
+            users = {}
+            order.duration_editable = True
+            for time_id in order.time_ids:
+                users[time_id.user_id] = 1 if time_id.user_id else False
+                if len(users) > 1:
+                    order.duration_editable = False
+                    break
 
     def _set_duration(self):
 
@@ -325,32 +339,29 @@ class MrpWorkorder(models.Model):
             return minutes * 60 + seconds
 
         for order in self:
-            old_order_duration = sum(order.time_ids.mapped('duration'))
+            old_order_duration = order.get_duration()
             new_order_duration = order.duration
             if new_order_duration == old_order_duration:
                 continue
 
+            # still need to throw an user error because a timesheet could be added in another session and will not refresh the page.
+            order._compute_duration_editable()
+            if not order.duration_editable:
+                raise UserError(_('Since there are several users/employees time logs for this work order, you must edit the time log records manually to change the workorder duration.'))
+
             delta_duration = new_order_duration - old_order_duration
 
             if delta_duration > 0:
-                enddate = datetime.now()
+                enddate = min([time_id.date_start for time_id in order.time_ids]) if order.time_ids else datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
-                if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
-                    # either only productive or only performance (i.e. reduced speed) time respectively
-                    self.env['mrp.workcenter.productivity'].create(
-                        order._prepare_timeline_vals(new_order_duration, date_start, enddate)
-                    )
-                else:
-                    # split between productive and performance (i.e. reduced speed) times
-                    maxdate = fields.Datetime.from_string(enddate) - relativedelta(minutes=new_order_duration - order.duration_expected)
-                    self.env['mrp.workcenter.productivity'].create([
-                        order._prepare_timeline_vals(order.duration_expected, date_start, maxdate),
-                        order._prepare_timeline_vals(new_order_duration, maxdate, enddate)
-                    ])
+                # no need to split the last timesheet because the create will do it automatically
+                self.env['mrp.workcenter.productivity'].create(
+                    order._prepare_timeline_vals(new_order_duration, date_start, enddate)
+                )
             else:
                 duration_to_remove = abs(delta_duration)
                 timelines_to_unlink = self.env['mrp.workcenter.productivity']
-                for timeline in order.time_ids.sorted():
+                for timeline in order.time_ids.sorted(key="date_end", reverse=True):
                     if duration_to_remove <= 0.0:
                         break
                     if timeline.duration <= duration_to_remove:
@@ -358,7 +369,7 @@ class MrpWorkorder(models.Model):
                         timelines_to_unlink |= timeline
                     else:
                         new_time_line_duration = timeline.duration - duration_to_remove
-                        timeline.date_start = timeline.date_end - timedelta(seconds=_float_duration_to_second(new_time_line_duration))
+                        timeline.date_end = timeline.date_start + timedelta(seconds=_float_duration_to_second(new_time_line_duration))
                         break
                 timelines_to_unlink.unlink()
 
@@ -463,7 +474,19 @@ class MrpWorkorder(models.Model):
                         workorder.production_id.with_context(force_date=True).write({
                             'date_finished': fields.Datetime.to_datetime(values['date_finished'])
                         })
-        return super(MrpWorkorder, self).write(values)
+
+        if not values.get('time_ids'):
+            return super(MrpWorkorder, self).write(values)
+        to_link = {'time_ids': []}
+        others = {'time_ids': []}
+        for vals in values['time_ids']:
+            if vals[0] == 4:
+                to_link['time_ids'].append(vals)
+            else:
+                others['time_ids'].append(vals)
+
+        super(MrpWorkorder, self).write(to_link)
+        super(MrpWorkorder, self).write(others)
 
     @api.model_create_multi
     def create(self, values):
@@ -798,14 +821,9 @@ class MrpWorkorder(models.Model):
 
     def _prepare_timeline_vals(self, duration, date_start, date_end=False):
         # Need a loss in case of the real time exceeding the expected
-        if not self.duration_expected or duration <= self.duration_expected:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-        else:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
+        if len(loss_id) == 0:
+            raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         return {
             'workorder_id': self.id,
             'workcenter_id': self.workcenter_id.id,
@@ -866,16 +884,47 @@ class MrpWorkorder(models.Model):
             self.qty_producing = quantity
 
     def get_working_duration(self):
-        """Get the additional duration for 'open times' i.e. productivity lines with no date_end."""
         self.ensure_one()
-        duration = 0
-        for time in self.time_ids.filtered(lambda time: not time.date_end):
-            duration += (datetime.now() - time.date_start).total_seconds() / 60
-        return duration
+        return self._intervals_duration([(t.date_start, datetime.now(), t) for t in self.time_ids if not t.date_end])
 
     def get_duration(self):
         self.ensure_one()
-        return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
+        now = datetime.now()
+        loss_type_times = defaultdict(lambda: self.env['mrp.workcenter.productivity'])
+        for time in self.time_ids:
+            loss_type_times[time.loss_id.loss_type] |= time
+        duration = 0
+        for dummy, times in loss_type_times.items():
+            duration += self._intervals_duration([(t.date_start, t.date_end or now, t) for t in times])
+        return duration
+
+    def get_productive_duration(self):
+        self.ensure_one()
+        now = datetime.now()
+        productive_times = []
+        for time in self.time_ids:
+            if time.loss_id.loss_type == "productive":
+                productive_times.append(time)
+        duration = 0
+        duration += self._intervals_duration([(t.date_start, t.date_end or now, t) for t in productive_times])
+        return duration
+
+    def _intervals_duration(self, intervals):
+        """ Return the duration of the given intervals.
+        If intervals overlaps the duration is only counted once.
+
+        The timer could be share between several intervals. However it is not
+        an issue since the purpose is to make a difference between employee time and
+        blocking time.
+
+        :param list intervals: list of tuple (date_start, date_end, timer)
+        """
+        if not intervals:
+            return 0.0
+        duration = 0
+        for date_start, date_stop, timer in Intervals(intervals):
+            duration += timer.loss_id._convert_to_duration(date_start, date_stop, timer.workcenter_id)
+        return duration
 
     def action_mark_as_done(self):
         for wo in self:
