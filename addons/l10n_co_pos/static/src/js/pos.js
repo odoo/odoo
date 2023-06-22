@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosGlobalState.prototype, "l10n_co_pos.PosGlobalState", {
     is_colombian_country() {
-        return this.company.country.code === "CO";
+        return this.company.country?.code === "CO";
     },
 });
 
