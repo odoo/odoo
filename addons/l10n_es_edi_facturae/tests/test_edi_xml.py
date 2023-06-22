@@ -90,6 +90,16 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
             ],
         })
 
+    def create_send_and_print(self, invoices, **kwargs):
+        template = self.env.ref(invoices._get_mail_template())
+        return self.env['account.move.send'].with_context(
+            active_model='account.move',
+            active_ids=invoices.ids,
+        ).create({
+            'mail_template_id': template.id,
+            **kwargs,
+        })
+
     def test_generate_signed_xml(self, date=None):
         random.seed(42)
         date = date or self.frozen_today
@@ -109,7 +119,8 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
                 ],
             )
             invoice.action_post()
-            generated_file = invoice._l10n_es_edi_facturae_render_facturae()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
             self.assertTrue(generated_file)
 
             with file_open("l10n_es_edi_facturae/tests/data/expected_signed_document.xml", "rt") as f:
@@ -125,7 +136,9 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
                 patch(f"{self.certificate_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]},],)
             invoice.action_post()
-            self.assertRaises(UserError, invoice._l10n_es_edi_facturae_render_facturae)
+            wizard = self.create_send_and_print(invoice)
+            with self.assertRaises(UserError):
+                wizard.action_send_and_print()
 
     def test_tax_withheld(self):
         with freeze_time(self.frozen_today), \
@@ -155,7 +168,8 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
                 ],
             )
             invoice.action_post()
-            generated_file = invoice._l10n_es_edi_facturae_render_facturae()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
             self.assertTrue(generated_file)
             with file_open("l10n_es_edi_facturae/tests/data/expected_tax_withholding.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
@@ -179,7 +193,8 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
                 ],
             )
             invoice.action_post()
-            generated_file = invoice._l10n_es_edi_facturae_render_facturae()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
             self.assertTrue(generated_file)
 
             with file_open("l10n_es_edi_facturae/tests/data/expected_in_invoice_document.xml", "rt") as f:
@@ -212,7 +227,8 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
             })
             reversal_wizard.modify_moves()
             refund = invoice.reversal_move_id
-            generated_file = refund._l10n_es_edi_facturae_render_facturae()
+            generated_file, errors = refund._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
             self.assertTrue(generated_file)
 
             with file_open("l10n_es_edi_facturae/tests/data/expected_refund_document.xml", "rt") as f:

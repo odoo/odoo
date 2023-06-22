@@ -57,23 +57,23 @@ class AccountMoveSend(models.Model):
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if self.l10n_es_edi_facturae_checkbox_xml and invoice._l10n_es_edi_facturae_get_default_enable():
-            try:
-                xml_content = invoice._l10n_es_edi_facturae_render_facturae()
-            except Exception as error:
-                invoice_data['error'] = "".join((
+            xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            if errors:
+                invoice_data['error'] = "".join([
                     _("Errors occured while creating the EDI document (format: %s):", "Facturae"),
                     "\n",
-                    str(error),
-                ))
-
-            invoice_data['l10n_es_edi_facturae_attachment_values'] = {
-                'name': invoice._l10n_es_edi_facturae_get_filename(),
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-                'res_model': invoice._name,
-                'res_id': invoice.id,
-                'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
-            }
+                    "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
+                        else "\n".join(errors)
+                ])
+            else:
+                invoice_data['l10n_es_edi_facturae_attachment_values'] = {
+                    'name': invoice._l10n_es_edi_facturae_get_filename(),
+                    'raw': xml_content,
+                    'mimetype': 'application/xml',
+                    'res_model': invoice._name,
+                    'res_id': invoice.id,
+                    'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
+                }
 
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
