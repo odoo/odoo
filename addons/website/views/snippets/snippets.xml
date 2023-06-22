@@ -492,7 +492,7 @@
     <div data-js="layout_column"
         data-selector="section.s_features_grid, section.s_process_steps"
         data-target="> *:has(> .row), > .s_allow_columns">
-        <we-select string="Columns" data-no-preview="true">
+        <we-select string="Columns" data-no-preview="true" data-name="column_count_opt">
             <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
             <we-button data-select-count="1">1</we-button>
             <we-button data-select-count="2">2</we-button>
@@ -528,7 +528,7 @@
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
                 <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
             </we-button-group>
-            <we-select class="o_grid" data-no-preview="true" data-dependencies="normal_mode">
+            <we-select class="o_grid" data-no-preview="true" data-name="column_count_opt" data-dependencies="normal_mode">
                 <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
                 <we-button data-select-count="1">1</we-button>
                 <we-button data-select-count="2">2</we-button>
