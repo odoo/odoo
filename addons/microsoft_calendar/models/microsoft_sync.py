@@ -130,6 +130,12 @@ class MicrosoftSync(models.AbstractModel):
                 if with_uid
                 else [('microsoft_id', '=', False)]
             )
+        elif operator == '!=' and not value:
+            return (
+                [('microsoft_id', 'ilike', f'{IDS_SEPARATOR}_')]
+                if with_uid
+                else [('microsoft_id', '!=', False)]
+            )
         return (
             ['|'] * (len(value) - 1) + [_domain(v) for v in value]
             if operator.lower() == 'in'
