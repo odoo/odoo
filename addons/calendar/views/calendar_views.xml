@@ -112,7 +112,6 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
-                    <field name="attendee_status" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="user_can_edit" invisible="1"/>
                     <div class="oe_title mb-3">
@@ -355,7 +354,6 @@
                 quick_add="%(calendar.view_calendar_event_form_quick_create)d"
                 color="partner_ids">
                 <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
-                <field name="attendee_status" invisible="1"/>
                 <field name="attendees_count" invisible="1"/>
                 <field name="accepted_count" invisible="1"/>
                 <field name="declined_count" invisible="1"/>

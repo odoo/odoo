@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { onWillStart } from "@odoo/owl";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { useService } from "@web/core/utils/hooks";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
@@ -12,8 +13,17 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         this.user = useService("user");
         this.orm = useService("orm");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
+
+        onWillStart(this.onWillStart);
+    }
+
+    async onWillStart() {
         // Show status dropdown if user is in attendees list
         if (this.isCurrentUserAttendee) {
+            const stateSelections = await this.env.services.orm.call(
+                this.props.model.resModel,
+                "get_state_selections",
+            );
             this.statusColors = {
                 accepted: "text-success",
                 declined: "text-danger",
@@ -21,7 +31,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
                 needsAction: "text-dark",
             };
             this.statusInfo = {};
-            for (const selection of this.props.model.fields.attendee_status.selection) {
+            for (const selection of stateSelections) {
                 this.statusInfo[selection[0]] = {
                     text: selection[1],
                     color: this.statusColors[selection[0]],
