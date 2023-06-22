@@ -3,6 +3,9 @@
 import { fieldService } from "@web/core/field_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
+import { Component, useState, xml } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { getFixture, makeDeferred, mount, nextTick } from "@web/../tests/helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -269,4 +272,66 @@ QUnit.test("does not store loadFields calls in cache when failed", async (assert
     }
 
     assert.verifySteps(["fields_get", "fields_get"]);
+});
+
+QUnit.test("async method loadFields is protected", async (assert) => {
+    assert.expect(7);
+
+    let callFieldService;
+    class Child extends Component {
+        static template = xml`
+            <div class="o_child_component" />
+        `;
+        setup() {
+            this.fieldService = useService("field");
+            callFieldService = async () => {
+                assert.step("loadFields called");
+                await this.fieldService.loadFields("tortoise");
+                assert.step("loadFields result get");
+            };
+        }
+    }
+
+    class Parent extends Component {
+        static components = { Child };
+        static template = xml`
+            <t t-if="state.displayChild">
+                <Child />
+            </t>
+        `;
+        setup() {
+            this.state = useState({ displayChild: true });
+        }
+    }
+
+    const target = getFixture();
+    const def = makeDeferred();
+    const env = await makeTestEnv({
+        serverData,
+        async mockRPC() {
+            await def;
+        },
+    });
+    const parent = await mount(Parent, target, { env });
+
+    assert.containsOnce(target, ".o_child_component");
+
+    callFieldService();
+    assert.verifySteps(["loadFields called"]);
+
+    parent.state.displayChild = false;
+    await nextTick();
+
+    def.resolve();
+    await nextTick();
+
+    assert.verifySteps([]);
+
+    try {
+        await callFieldService();
+    } catch (e) {
+        assert.step(e.message);
+    }
+
+    assert.verifySteps(["loadFields called", "Component is destroyed"]);
 });
