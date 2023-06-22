@@ -586,6 +586,7 @@ function makeActionManager(env) {
         let resolve;
         let reject;
         let dialogCloseResolve;
+        let removeDialogFn;
         const currentActionProm = new Promise((_res, _rej) => {
             resolve = _res;
             reject = _rej;
@@ -655,32 +656,29 @@ function makeActionManager(env) {
                 onError(this.onError);
             }
             onError(error) {
-                reject(error);
                 cleanDomFromBootstrap();
-                if (action.target === "new") {
-                    // get the dialog service to close the dialog.
-                    throw error;
+                if (this.isMounted) {
+                    // the error occurred on the controller which is
+                    // already in the DOM, so simply show the error
+                    Promise.resolve().then(() => {
+                        throw error;
+                    });
                 } else {
-                    const lastCt = controllerStack[controllerStack.length - 1];
-                    let info = {};
-                    if (lastCt) {
-                        if (lastCt.jsId === controller.jsId) {
-                            // the error occurred on the controller which is
-                            // already in the DOM, so simply show the error
-                            Promise.resolve().then(() => {
-                                throw error;
-                            });
-                        } else {
-                            info = lastCt.__info__;
+                    reject(error);
+                    if (action.target === "new") {
+                        removeDialogFn?.();
+                    } else {
+                        const lastCt = controllerStack[controllerStack.length - 1];
+                        if (lastCt) {
                             // the error occurred while rendering a new controller,
                             // so go back to the last non faulty controller
                             // (the error will be shown anyway as the promise
                             // has been rejected)
                             restore(lastCt.jsId);
+                        } else {
+                            env.bus.trigger("ACTION_MANAGER:UPDATE", {});
                         }
-                        return;
                     }
-                    env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
             }
             onMounted() {
@@ -768,7 +766,7 @@ function makeActionManager(env) {
             }
 
             const onClose = _removeDialog();
-            const removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
+            removeDialogFn = env.services.dialog.add(ActionDialog, actionDialogProps, {
                 onClose: () => {
                     const onClose = _removeDialog();
                     if (onClose) {
@@ -778,7 +776,7 @@ function makeActionManager(env) {
                 },
             });
             nextDialog = {
-                remove: removeDialog,
+                remove: removeDialogFn,
                 onClose: onClose || options.onClose,
             };
             return currentActionProm;

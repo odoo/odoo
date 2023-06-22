@@ -358,6 +358,7 @@ QUnit.module("ActionManager", (hooks) => {
                     );
                 } catch (e) {
                     assert.strictEqual(e.cause.message, "my error");
+                    throw e;
                 }
             }
         }
@@ -483,7 +484,10 @@ QUnit.module("ActionManager", (hooks) => {
             res_model: "pony",
             type: "ir.actions.act_window",
             target: "new",
-            views: [[false, "list"], [false, "form"]],
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
         });
 
         // The list view has been opened in a dialog
