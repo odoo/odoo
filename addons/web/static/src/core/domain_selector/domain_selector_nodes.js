@@ -128,6 +128,8 @@ export function getValue(ast) {
         return ast.value;
     } else if (ast.type === 6 && ast.op === "-" && ast.right.type === 0) {
         return -ast.right.value;
+    } else if (ast.type === 5 && ["false", "true"].includes(ast.value)) {
+        return JSON.parse(ast.value);
     } else {
         return new DomainValueExpr(ast);
     }
