@@ -324,7 +324,7 @@
             </div>
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
             <div class="float-start company_address">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled" name='company_address_list'>
                     <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
                         <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                             <strong>Company address block</strong>
@@ -383,7 +383,7 @@
                 <div class="col-6 text-end mb4">
                     <div class="mt0 h4" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
                     <div name="company_address" class="float-end mb4">
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled" name="company_address_list">
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company address block</strong>
@@ -439,7 +439,7 @@
                         <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     </div>
                     <div class="col-5 offset-1" name="company_address">
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled" name='company_address_list'>
                             <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company address block</strong>
@@ -506,7 +506,7 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled" name="company_address_list">
                         <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
                             <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                 <strong>Company address block</strong>
