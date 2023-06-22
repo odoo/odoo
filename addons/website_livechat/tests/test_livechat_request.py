@@ -66,8 +66,8 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
         # Visitor Leave the conversation
         channel._close_livechat_session()
         self.assertEqual(len(channel.message_ids), 3)
-        self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the sender of the 'has left the conversation' message.")
-        self.assertEqual(channel.message_ids[0].body, "<p>%s has left the conversation.</p>" % self.visitor.display_name)
+        self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the sender of the 'left the conversation' message.")
+        self.assertIn("%s left the conversation." % self.visitor.display_name, channel.message_ids[0].body)
         self.assertEqual(channel.livechat_active, False, "The livechat session must be inactive as the visitor sent his feedback.")
 
         return channel

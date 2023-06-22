@@ -163,6 +163,22 @@ class LivechatController(http.Controller):
             persisted=persisted
         )
 
+    def _post_feedback_message(self, channel, rating, reason):
+        body = Markup('''
+            <div class="o_mail_notification o_hide_author">
+                %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/><br> %(reason)s
+            </div>
+        ''') % {
+            'rating': _('Rating'),
+            'rating_url': rating.rating_image_url,
+            'reason': reason,
+        }
+        channel.message_post(
+            body=body,
+            message_type='notification',
+            subtype_xmlid='mail.mt_comment'
+        )
+
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
         channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
@@ -189,6 +205,7 @@ class LivechatController(http.Controller):
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)
+            self._post_feedback_message(channel, rating, reason)
             return rating.id
         return False
 
