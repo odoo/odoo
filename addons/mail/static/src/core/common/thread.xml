@@ -90,7 +90,7 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent" owl="1">
-    <span t-if="state.showJumpPresent" class="o-mail-Thread-jumpPresent position-sticky btn btn-link alert alert-info d-flex cursor-pointer align-items-center py-2 m-0" t-att-class="{ 'px-4': !env.inChatWindow, 'px-2': env.inChatWindow, 'top-0': props.order !== 'asc', 'bottom-0': props.order === 'asc' }" role="button" t-on-click="jumpToPresent">
+    <span t-if="state.showJumpPresent" class="o-mail-Thread-jumpPresent position-sticky btn btn-link alert alert-info d-flex cursor-pointer align-items-center py-2 m-0" t-att-class="{ 'px-4': !env.inChatWindow, 'px-2': env.inChatWindow, 'top-0': props.order !== 'asc', 'bottom-0': props.order === 'asc' }" role="button" t-on-click="() => this.jumpToPresent()">
         <span class="small">You're viewing older messages</span>
         <span class="flex-grow-1"/>
         <span class="fw-bolder small pe-2">Jump to Present</span>
