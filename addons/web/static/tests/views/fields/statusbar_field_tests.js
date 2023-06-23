@@ -666,4 +666,50 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([]);
         }
     );
+
+    QUnit.test(
+        "open form with statusbar, leave and come back to another one with other domain",
+        async function (assert) {
+            serverData.views = {
+                "partner,3,list": '<tree><field name="display_name"/></tree>',
+                "partner,9,search": `<search></search>`,
+                "partner,false,form": `<form>
+                <header>
+                    <field name="trululu" widget="statusbar" domain="[['id', '>', id]]" readonly="1"/>
+                </header>
+            </form>`,
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partners",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                },
+            };
+
+            const mockRPC = (route, args) => {
+                if (args.method === "search_read") {
+                    assert.step("search_read");
+                }
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+
+            // open first record
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.verifySteps(["search_read"]);
+
+            // go back and open second record
+            await click(target, ".o_back_button");
+            await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+            assert.verifySteps(["search_read"]);
+        }
+    );
 });
