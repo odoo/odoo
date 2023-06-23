@@ -44,7 +44,15 @@ var ColorpickerWidget = Widget.extend({
         // anywhere on the screen, crossing iframes).
         // TODO adapt in master: these events should probably be bound in
         // `start` instead of `init` (at least to be more conventional).
-        this.$documents = $([window.top, ...Array.from(window.top.frames)].map(w => w.document));
+        this.$documents = $([window.top, ...Array.from(window.top.frames).filter(frame => {
+            try {
+                const document = frame.document;
+                return !!document;
+            } catch {
+                // We cannot access the document (cross origin).
+                return false;
+            }
+        })].map(w => w.document));
         this.throttleOnMouseMove = throttleForAnimation((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
