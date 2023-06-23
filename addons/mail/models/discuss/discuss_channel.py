@@ -237,9 +237,11 @@ class Channel(models.Model):
                 raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
             membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
 
+            partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
             # is_pinned + ensure they have rights to see channel
-            partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
+            if not self.env.context.get('install_mode'):
+                partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
             vals['channel_member_ids'] = membership_ids_cmd + [
                 (0, 0, {'partner_id': pid})
                 for pid in partner_ids_to_add if pid not in membership_pids

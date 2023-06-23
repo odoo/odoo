@@ -142,7 +142,7 @@ class TestDiscussFullPerformance(TransactionCase):
                         }], key=lambda member_data: member_data['id']))],
                         'custom_channel_name': False,
                         'id': self.channel_general.id,
-                        'memberCount': len(self.group_user.users | self.user_root),
+                        'memberCount': len(self.group_user.users),
                         'message_unread_counter': 5,
                     },
                     'create_uid': self.user_root.id,
