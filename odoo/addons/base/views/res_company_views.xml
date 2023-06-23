@@ -37,11 +37,16 @@
                                     <field name="mobile" class="o_force_ltr"/>
                                     <field name="email"/>
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                    <field name="parent_id"  groups="base.group_multi_company"/>
+                                    <field name="parent_id" groups="base.group_no_one"/>
+                                    <field name="parent_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
+                                    <field name="color" widget="color_picker"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>
+                        </page>
+                        <page string="Branches" name="branches">
+                            <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -56,6 +61,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </tree>
             </field>
         </record>
@@ -108,6 +114,7 @@
             <field name="name">Companies</field>
             <field name="res_model">res.company</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('parent_id', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new company

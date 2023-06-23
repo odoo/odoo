@@ -2,18 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import io
 import logging
-import os
 import warnings
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
-from odoo.modules.module import get_resource_path
-from odoo.tools import html2plaintext
-from odoo.tools import file_open
-from random import randrange
-from PIL import Image
+from odoo.tools import html2plaintext, file_open, ormcache
 
 _logger = logging.getLogger(__name__)
 
@@ -22,6 +16,7 @@ class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
     _order = 'sequence, name'
+    _parent_store = True
 
     def copy(self, default=None):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
@@ -37,7 +32,10 @@ class Company(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
-    child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
+    child_ids = fields.One2many('res.company', 'parent_id', string='Branches')
+    parent_path = fields.Char(index=True, unaccent=False)
+    parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
+    root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Html(string='Company Tagline', translate=True, help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
@@ -71,6 +69,7 @@ class Company(models.Model):
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal')], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
+    color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
     layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
     _sql_constraints = [
@@ -86,6 +85,16 @@ class Company(models.Model):
         if hasattr(sup, 'init'):
             sup.init()
 
+    def _get_company_root_delegated_field_names(self):
+        """Get the set of fields delegated to the root company.
+
+        Some fields need to be identical on all branches of the company. All
+        fields listed by this function will be copied from the root company and
+        appear as readonly in the form view.
+        :rtype: set
+        """
+        return ['currency_id']
+
     def _get_company_address_field_names(self):
         """ Return a list of fields coming from the address partner to match
         on company address fields. Fields are labeled same on both models. """
@@ -94,7 +103,13 @@ class Company(models.Model):
     def _get_company_address_update(self, partner):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
-    
+
+    @api.depends('parent_path')
+    def _compute_parent_ids(self):
+        for company in self:
+            company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
+            company.root_id = company.parent_ids[0]
+
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
@@ -140,6 +155,15 @@ class Company(models.Model):
         for company in self:
             company.uses_default_logo = not company.logo or company.logo == default_logo
 
+    @api.depends('root_id')
+    def _compute_color(self):
+        for company in self:
+            company.color = company.root_id.partner_id.color or (company.root_id.id % 12)
+
+    def _inverse_color(self):
+        for company in self:
+            company.root_id.partner_id.color = company.color
+
     @api.onchange('state_id')
     def _onchange_state(self):
         if self.state_id.country_id:
@@ -149,6 +173,28 @@ class Company(models.Model):
     def _onchange_country_id(self):
         if self.country_id:
             self.currency_id = self.country_id.currency_id
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        if self.parent_id:
+            for fname in self._get_company_root_delegated_field_names():
+                if self[fname] != self.parent_id[fname]:
+                    self[fname] = self.parent_id[fname]
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        def make_delegated_fields_readonly(node):
+            for child in node.iterchildren():
+                if child.tag == 'field' and child.get('name') in delegated_fnames:
+                    child.set('attrs', "{'readonly': [('parent_id', '!=', False)]}")
+                else:
+                    make_delegated_fields_readonly(child)
+            return node
+
+        delegated_fnames = set(self._get_company_root_delegated_field_names())
+        arch, view = super()._get_view(view_id, view_type, **options)
+        arch = make_delegated_fields_readonly(arch)
+        return arch, view
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -209,6 +255,12 @@ class Company(models.Model):
             for vals, partner in zip(no_partner_vals_list, partners):
                 vals['partner_id'] = partner.id
 
+        for vals in vals_list:
+            # Copy delegated fields from root to branches
+            if parent := self.browse(vals.get('parent_id')):
+                for fname in self._get_company_root_delegated_field_names():
+                    vals.setdefault(fname, self._fields[fname].convert_to_write(parent[fname], parent))
+
         self.env.registry.clear_cache()
         companies = super().create(vals_list)
 
@@ -241,12 +293,25 @@ class Company(models.Model):
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
+        if 'parent_id' in values:
+            raise UserError(_("The company hierarchy cannot be changed."))
+
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
 
         res = super(Company, self).write(values)
+
+        for company in self:
+            # Copy modified delegated fields from root to branches
+            if (changed := set(values) & set(self._get_company_root_delegated_field_names())) and not company.parent_id:
+                branches = self.sudo().search([
+                    ('id', 'child_of', company.id),
+                    ('id', '!=', company.id),
+                ])
+                for fname in sorted(changed):
+                    branches[fname] = company[fname]
 
         # invalidate company cache to recompute address based on updated partner
         company_address_fields = self._get_company_address_field_names()
@@ -272,10 +337,14 @@ class Company(models.Model):
                         active_users=company_active_users,
                     ))
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You cannot create recursive companies.'))
+    @api.constrains(lambda self: self._get_company_root_delegated_field_names() +['parent_id'])
+    def _check_root_delegated_fields(self):
+        for company in self:
+            if company.parent_id:
+                for fname in company._get_company_root_delegated_field_names():
+                    if company[fname] != company.parent_id[fname]:
+                        description = self.env['ir.model.fields']._get("res.company", fname).field_description
+                        raise ValidationError(_("The %s of a subsidiary must be the same as it's root company.", description))
 
     def open_company_edit_report(self):
         warnings.warn("Since 17.0.", DeprecationWarning, 2)
@@ -301,3 +370,26 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    @ormcache('tuple(self.env.companies.ids)', 'self.id')
+    def __accessible_branches(self):
+        # Get branches of this company that the current user can use
+        self.ensure_one()
+        children = self.search([('id', 'child_of', self.id)])
+        accessible = self.env.companies
+        return (children & accessible).ids
+
+    def _accessible_branches(self):
+        return self.browse(self.__accessible_branches())
+
+    def _all_branches_selected(self):
+        """Return whether or all the branches of the main company are selected.
+
+        Is ``True`` if all the branches, and only those, are selected.
+        Can be used when some actions only make sense for a whole company regardless of the
+        branches.
+        """
+        return (
+            len(self.env.companies.root_id) == 1
+            and self.env.companies == self.env['res.company'].sudo().search([('id', 'child_of', self.env.company.root_id.ids)])
+        )
