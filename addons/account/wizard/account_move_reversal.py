@@ -12,7 +12,7 @@ class AccountMoveReversal(models.TransientModel):
     _description = 'Account Move Reversal'
     _check_company_auto = True
 
-    move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')])
+    move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')], required=True)
     new_move_ids = fields.Many2many('account.move', 'account_move_reversal_new_move', 'reversal_id', 'new_move_id')
     date = fields.Date(string='Reversal date', default=fields.Date.context_today)
     reason = fields.Char(string='Reason displayed on Credit Note')
