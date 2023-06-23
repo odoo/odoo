@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useService, useAutofocus } from '@web/core/utils/hooks';
-import wUtils from 'website.utils';
+import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
 
 const { Component, useState, useEffect, onWillStart, useRef, onMounted } = owl;

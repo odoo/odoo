@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 const _t = core._t;
-import MailGroup from "mail_group.mail_group";
+import MailGroup from "@mail_group/js/mail_group";
 
 MailGroup.include({
     start: async function () {

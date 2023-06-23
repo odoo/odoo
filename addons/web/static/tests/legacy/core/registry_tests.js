@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Registry from "web.Registry";
+import Registry from "@web/legacy/js/core/registry";
 
 QUnit.module('core', {}, function () {
 

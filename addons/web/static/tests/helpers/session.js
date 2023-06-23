@@ -8,7 +8,7 @@
 // Obviously, we don't want that, ever.
 import { session as sessionInfo } from "@web/session";
 const initialSessionInfo = Object.assign({}, sessionInfo);
-import Session from "web.Session";
+import Session from "@web/legacy/js/core/session";
 import { patch } from "@web/core/utils/patch";
 
 patch(Session.prototype, "web.SessionTestPatch", {

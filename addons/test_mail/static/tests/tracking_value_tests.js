@@ -12,7 +12,7 @@ import {
 } from "@web/../tests/helpers/utils";
 
 import session from "web.session";
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 let target;
 

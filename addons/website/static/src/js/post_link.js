@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import wUtils from "website.utils";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import wUtils from "@website/js/utils";
 
 publicWidget.registry.postLink = publicWidget.Widget.extend({
     selector: '.post_link',

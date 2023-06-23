@@ -1,10 +1,10 @@
-/** @odoo-module alias=website_event_track.website_event_track_reminder **/
+/** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 var _t = core._t;
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     selector: '.o_wetrack_js_reminder',

@@ -1,9 +1,9 @@
-/** @odoo-module alias=survey.session_text_answers **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import core from "web.core";
-import time from "web.time";
-import SESSION_CHART_COLORS from "survey.session_colors";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import core from "@web/legacy/js/services/core";
+import time from "@web/legacy/js/core/time";
+import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
 
 var QWeb = core.qweb;
 

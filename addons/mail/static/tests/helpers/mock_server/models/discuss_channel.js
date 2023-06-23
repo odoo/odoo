@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-import { datetime_to_str } from "web.time";
+import { datetime_to_str } from "@web/legacy/js/core/time";
 import { assignDefined } from "@mail/utils/common/misc";
 import { formatDate } from "@web/core/l10n/dates";
 import { Command } from "@mail/../tests/helpers/command";

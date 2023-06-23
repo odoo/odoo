@@ -2,7 +2,7 @@
 
 import { Dialog } from "../core/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
-import OwlDialog from "web.OwlDialog";
+import OwlDialog from "@web/legacy/js/core/owl_dialog";
 
 import { useEffect } from "@odoo/owl";
 

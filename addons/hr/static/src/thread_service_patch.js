@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { ThreadService } from "@mail/core/common/thread_service";
-import { patch } from "web.utils";
+import { patch } from '@web/legacy/js/core/utils';
 
 /** @type {import("@mail/core/common/thread_service").ThreadService} */
 const threadServicePatch = {

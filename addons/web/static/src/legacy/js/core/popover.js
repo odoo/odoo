@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.Popover **/
-    
+/** @odoo-module **/
+
     import { debounce, throttleForAnimation } from "@web/core/utils/timing";
     import { LegacyComponent } from "@web/legacy/legacy_component";
     const { status, onWillUnmount, useEffect, useRef, useState } = owl;

@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 
 export const presenceService = {
     start(env) {

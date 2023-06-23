@@ -3,7 +3,7 @@
 import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
 
 import { session } from "@web/session";
-import { date_to_str } from "web.time";
+import { date_to_str } from "@web/legacy/js/core/time";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("activity menu");

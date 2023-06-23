@@ -2,15 +2,15 @@
 
 /* global YT, Vimeo */
 
-    import publicWidget from 'web.public.widget';
-    import  { qweb as QWeb, _t } from 'web.core';
-    import { Markup } from 'web.utils';
-    import config from 'web.config';
+    import publicWidget from '@web/legacy/js/public/public_widget';
+    import  { qweb as QWeb, _t } from "@web/legacy/js/services/core";
+    import { Markup } from "@web/legacy/js/core/utils";
+    import config from '@web/legacy/js/services/config';
 
     import session from 'web.session';
     import { Quiz } from '@website_slides/js/slides_course_quiz';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
-    import Dialog from 'web.Dialog';
+    import Dialog from '@web/legacy/js/core/dialog';
     import '@website_slides/js/slides_course_join';
 
     /**
@@ -696,7 +696,7 @@
          * When the current slide is changed, widget will be automatically updated
          * and allowed to: fetch the content if needed, render it, update the url,
          * and set slide as "completed" according to its category requirements. In
-         * mobile case (i.e. limited screensize), sidebar will be toggled since 
+         * mobile case (i.e. limited screensize), sidebar will be toggled since
          * sidebar will block most or all of new slide visibility.
          *
          * @private

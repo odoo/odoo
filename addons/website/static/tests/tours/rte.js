@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import session from "web.session";
-import wTourUtils from "website.tour_utils";
+import wTourUtils from "@website/js/tours/tour_utils";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 
 var domReady = new Promise(function (resolve) {

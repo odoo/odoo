@@ -1,17 +1,17 @@
 /** @odoo-module **/
-    
+
     import {
         ComponentAdapter,
         ComponentWrapper,
         WidgetAdapterMixin,
-    } from "web.OwlCompatibility";
-    import testUtils from "web.test_utils";
-    import Widget from "web.Widget";
+    } from "@web/legacy/js/owl_compatibility";
+    import testUtils from "@web/../tests/legacy/helpers/test_utils";
+    import Widget from "@web/legacy/js/core/widget";
     import { registry } from "@web/core/registry";
     import { LegacyComponent } from "@web/legacy/legacy_component";
     import { mapLegacyEnvToWowlEnv, useWowlService } from "@web/legacy/utils";
 
-    import makeTestEnvironment from "web.test_env";
+    import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { getFixture, mount, useLogLifeCycle, destroy } from "@web/../tests/helpers/utils";
 

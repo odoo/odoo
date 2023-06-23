@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event_booth_sale.tour.WebsiteEventBoothSaleTourMethods **/
-    
-    import { changePricelist, checkPriceCart } from "website_event_sale.tour.WebsiteEventSaleTourMethods";
+/** @odoo-module **/
+
+    import { changePricelist, checkPriceCart } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
 
     function checkPriceBooth(eventName, price, priceSelected) {
         return [
@@ -45,7 +45,7 @@
             },
         ]
     }
-    const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceSelected, priceCart, priceBeforeDiscount=false}) {
+    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceSelected, priceCart, priceBeforeDiscount=false}) {
         const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceSelected, priceBeforeDiscount) : checkPriceBooth(eventName, price, priceSelected);
         return [
            ...changePricelist(pricelistName),

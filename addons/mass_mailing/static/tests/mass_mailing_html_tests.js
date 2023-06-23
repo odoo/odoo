@@ -1,6 +1,6 @@
-/** @odoo-module alias=mass_mailing.field_html_tests **/
+/** @odoo-module **/
 
-import weTestUtils from "web_editor.test_utils";
+import weTestUtils from "@web_editor/../tests/test_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     editInput,
@@ -9,7 +9,7 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
-import * as legacyTestUtils from "web.test_utils";
+import * as legacyTestUtils from "@web/../tests/legacy/helpers/test_utils";
 import { assets } from "@web/core/assets";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 

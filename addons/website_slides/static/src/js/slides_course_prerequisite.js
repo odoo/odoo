@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { qweb } from 'web.core';
-import publicWidget from 'web.public.widget';
+import { qweb } from "@web/legacy/js/services/core";
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.extend({
     selector: '.o_wslides_js_prerequisite_course',

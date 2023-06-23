@@ -1,14 +1,14 @@
-/** @odoo-module alias=web.public.root */
+/** @odoo-module */
 
-import dom from 'web.dom';
-import legacyEnv from 'web.public_env';
+import dom from '@web/legacy/js/core/dom';
+import legacyEnv from '@web/legacy/js/public/public_env';
 import session from 'web.session';
-import {getCookie} from 'web.utils.cookies';
-import publicWidget from 'web.public.widget';
+import {getCookie} from '@web/legacy/js/core/cookie_utils';
+import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
 
-import AbstractService from "web.AbstractService";
-import lazyloader from "web.public.lazyloader";
+import AbstractService from "@web/legacy/js/core/abstract_service";
+import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import {
     makeLegacyNotificationService,
@@ -17,7 +17,7 @@ import {
     mapLegacyEnvToWowlEnv,
     makeLegacyRainbowManService,
 } from "../../utils";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 
 import { makeEnv, startServices } from "@web/env";
 import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';

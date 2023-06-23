@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
+import weUtils from '@web_editor/js/common/utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 import { KeepLast } from "@web/core/utils/concurrency";
 
@@ -155,7 +155,7 @@ export class ImageSelector extends FileSelector {
         // Color-substitution for dynamic SVG attachment
         const primaryColors = {};
         for (let color = 1; color <= 5; color++) {
-            primaryColors[color] = getCSSVariableValue('o-color-' + color);
+            primaryColors[color] = weUtils.getCSSVariableValue('o-color-' + color);
         }
         return attachments.map(attachment => {
             if (attachment.image_src.startsWith('/')) {
@@ -278,7 +278,7 @@ export class ImageSelector extends FileSelector {
                 colorCustomizedURL.searchParams.forEach((value, key) => {
                     const match = key.match(/^c([1-5])$/);
                     if (match) {
-                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
+                        colorCustomizedURL.searchParams.set(key, weUtils.getCSSVariableValue(`o-color-${match[1]}`));
                     }
                 });
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
@@ -332,11 +332,11 @@ export class ImageSelector extends FileSelector {
             if (response.headers.get('content-type') === 'image/svg+xml') {
                 let svg = await response.text();
                 const dynamicColors = {};
-                const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+                const combinedColorsRegex = new RegExp(Object.values(weUtils.DEFAULT_PALETTE).join('|'), 'gi');
                 svg = svg.replace(combinedColorsRegex, match => {
-                    const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                    const colorId = Object.keys(weUtils.DEFAULT_PALETTE).find(key => weUtils.DEFAULT_PALETTE[key] === match.toUpperCase());
                     const colorKey = 'c' + colorId
-                    dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                    dynamicColors[colorKey] = weUtils.getCSSVariableValue('o-color-' + colorId);
                     return dynamicColors[colorKey];
                 });
                 const fileName = mediaUrl.split('/').pop();

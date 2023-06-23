@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.test_utils_fields **/
-    
+/** @odoo-module **/
+
     /**
      * Field Test Utils
      *
@@ -9,7 +9,7 @@
      * testUtils file.
      */
 
-    import testUtilsDom from "web.test_utils_dom";
+    import testUtilsDom from "@web/../tests/legacy/helpers/test_utils_dom";
 
     const ARROW_KEYS_MAPPING = {
         down: 'ArrowDown',
@@ -34,7 +34,7 @@
      * @param {string[]} events
      * @returns {Promise}
      */
-    async function editAndTrigger(el, value, events) {
+    export async function editAndTrigger(el, value, events) {
         if (el instanceof jQuery) {
             if (el.length !== 1) {
                 throw new Error(`target ${el.selector} has length ${el.length} instead of 1`);
@@ -58,7 +58,7 @@
      * @param {string|number} value
      * @returns {Promise}
      */
-    async function editInput(el, value) {
+    export async function editInput(el, value) {
         return editAndTrigger(el, value, ['input']);
     }
 

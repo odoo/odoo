@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { useService } from "@web/core/utils/hooks";

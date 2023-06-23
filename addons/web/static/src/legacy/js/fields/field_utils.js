@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.field_utils **/
+/** @odoo-module **/
 
 /**
  * Field Utils
@@ -15,11 +15,11 @@
  */
 
 import { escape, escapeRegExp, sprintf } from "@web/core/utils/strings";
-import core from "web.core";
-import dom from "web.dom";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
 import session from "web.session";
-import time from "web.time";
-import utils from "web.utils";
+import time from "@web/legacy/js/core/time";
+import utils from "@web/legacy/js/core/utils";
 const { DateTime } = luxon;
 
 var _t = core._t;
@@ -436,7 +436,7 @@ function formatJson(value, field, options) {
 /**
  * Smart date inputs are shortcuts to write dates quicker.
  * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
- * 
+ *
  * e.g.
  *   "+1d" or "+1" will return now + 1 day
  *   "-2w" will return now - 2 weeks

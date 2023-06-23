@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { debounce } from "@web/core/utils/timing";
-import publicWidget from "web.public.widget";
-import {getCookie, setCookie} from "web.utils.cookies";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',

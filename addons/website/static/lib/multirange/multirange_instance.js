@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_sale.multirange.instance **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import multirange from "website_sale.multirange";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import multirange from "@website/../lib/multirange/multirange_custom";
 
 publicWidget.registry.WebsiteMultirangeInputs = publicWidget.Widget.extend({
     selector: 'input[type=range][multiple]:not(.multirange)',

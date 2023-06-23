@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import "website_sale_delivery.checkout";
-import {qweb as QWeb} from "web.core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import "@website_sale/js/website_sale_delivery";
+import {qweb as QWeb} from "@web/legacy/js/services/core";
 
 const WebsiteSaleDeliveryWidget = publicWidget.registry.websiteSaleDelivery;
 

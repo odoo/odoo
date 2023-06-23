@@ -1,10 +1,10 @@
-/** @odoo-module alias=website.content.menu **/
+/** @odoo-module **/
 
-import config from "web.config";
-import publicWidget from "web.public.widget";
-import animations from "website.content.snippets.animation";
-const extraMenuUpdateCallbacks = [];
-import dom from "web.dom";
+import config from "@web/legacy/js/services/config";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import animations from "@website/js/content/snippets.animation";
+export const extraMenuUpdateCallbacks = [];
+import dom from "@web/legacy/js/core/dom";
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,

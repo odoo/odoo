@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import options from 'web_editor.snippets.options';
-import weUtils from 'web_editor.utils';
+import options from '@web_editor/js/editor/snippets.options';
+import weUtils from '@web_editor/js/common/utils';
 import {SIZES, MEDIAS_BREAKPOINTS} from '@web/core/ui/ui_service';
 
 options.registry.StepsConnector = options.Class.extend({

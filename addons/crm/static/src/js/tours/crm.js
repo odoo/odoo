@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { _t } from 'web.core';
-import "web.legacy_tranlations_loaded";
-import { Markup } from 'web.utils';
+import { _t } from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
+import { Markup } from "@web/legacy/js/core/utils";
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";

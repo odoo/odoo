@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event.display_timer_widget **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
     selector: '.o_display_timer',

@@ -1,4 +1,4 @@
-/** @odoo-module alias=website_mass_mailing.tour.snippet_newsletter_popup_use **/
+/** @odoo-module **/
 
 import { registry } from "@web/core/registry";
 

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import ajax from 'web.ajax';
-import tourUtils from 'website_sale.tour_utils';
+import ajax from '@web/legacy/js/core/ajax';
+import tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('shop_sale_loyalty', {
     test: true,

@@ -1,9 +1,9 @@
-/** @odoo-module alias=website_sale.tour_utils **/
-    
-import core from "web.core";
+/** @odoo-module **/
+
+import core from "@web/legacy/js/services/core";
 const _t = core._t;
-import wTourUtils from "website.tour_utils";
-import "web.legacy_tranlations_loaded";
+import wTourUtils from "@website/js/tours/tour_utils";
+import "@web/legacy/translations_loaded";
 
 function addToCart({productName, search = true, productHasVariants = false}) {
     const steps = [];

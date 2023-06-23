@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
-import rpc from 'web.rpc';
+import rpc from '@web/legacy/js/core/rpc';
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     test: true,

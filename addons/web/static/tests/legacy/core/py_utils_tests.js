@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import Context from "web.Context";
-import pyUtils from "web.py_utils";
-import time from "web.time";
+import Context from "@web/legacy/js/core/context";
+import pyUtils from "@web/legacy/js/core/py_utils";
+import time from "@web/legacy/js/core/time";
 
 const r = String.raw;
 

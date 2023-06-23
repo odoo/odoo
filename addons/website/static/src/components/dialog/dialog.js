@@ -5,7 +5,7 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { _lt } from '@web/core/l10n/translation';
 import { Switch } from '@website/components/switch/switch';
 import {unslugHtmlDataObject} from '../../services/website_service';
-import { csrf_token } from 'web.core';
+import { csrf_token } from "@web/legacy/js/services/core";
 
 const { xml, useState, Component, onWillStart } = owl;
 

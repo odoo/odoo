@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.utils **/
+/** @odoo-module **/
 
 /**
  * Utils
@@ -6,10 +6,10 @@
  * Various generic utility functions
  */
 
-import translation from "web.translation";
+import translation from "@web/legacy/js/core/translation";
 
 import { Component } from "@odoo/owl";
-import { escape, escapeHTML, escapeMethod, sprintf } from "@web/core/utils/strings";
+import { escape, escapeHTML, escapeMethod, sprintf as str_sprtinf } from "@web/core/utils/strings";
 
 var _t = translation._t;
 var id = -1;
@@ -284,7 +284,7 @@ class UnknownPatchError extends Error {
 // * Markup#replace => automatically escapes the replacements (difficult impl)
 
 // get a reference to the internalMarkup class from owl
-const _Markup = owl.markup('').constructor; 
+const _Markup = owl.markup('').constructor;
 _Markup.prototype[escapeMethod] = function () {
     return this;
 }
@@ -328,7 +328,7 @@ window._escape = escapeHTML;
  * const asis = Markup`some <b>text</b>`;
  * const h = Markup`Regular strings get ${escaped} but markup is injected ${asis}`;
  */
-function Markup(v, ...exprs) {
+export function Markup(v, ...exprs) {
     if (!(v instanceof Array)) {
         return v ? new _Markup(v) : '';
     }
@@ -668,7 +668,7 @@ const utils = {
             return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         } else if (typeof(node.tag) !== 'string' || node.children && !(node.children instanceof Array) || node.attrs && !(node.attrs instanceof Object)) {
             throw new Error(
-                sprintf(_t("Node [%s] is not a JSONified XML node"),
+                str_sprtinf(_t("Node [%s] is not a JSONified XML node"),
                             JSON.stringify(node)));
         }
         for (var attr in node.attrs) {
@@ -743,7 +743,7 @@ const utils = {
      * @param {string} patchName
      * @param {Object} patch
      */
-    patch: function (obj, patchName, patch) {
+    patch:function (obj, patchName, patch) {
         if (!patchMap.has(obj)) {
             patchMap.set(obj, {
                 original: {},
@@ -1168,4 +1168,12 @@ const utils = {
     },
 };
 
+export const patch = utils.patch
+export const confine = utils.confine
+export const traverse = utils.traverse
+export const unpatch = utils.unpatch
+export const is_email = utils.is_email
+export const sprintf = utils.sprintf
+export const groupBy = utils.groupBy
+export const sortBy = utils.sortBy
 export default utils;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import testUtils from 'web.test_utils';
+import testUtils from '@web/../tests/legacy/helpers/test_utils';
 import { registry } from "@web/core/registry";
 import {
     click,
@@ -192,7 +192,7 @@ QUnit.module('MrpDocumentsKanbanView', {
             "Uploading... (50%)",
             "the current upload progress should be at 50%"
         );
-            
+
         progressEvent.loaded = 350000000;
         mockedXHRs[0].upload.dispatchEvent(progressEvent);
         await nextTick();

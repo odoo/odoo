@@ -1,9 +1,9 @@
-/** @odoo-module alias=website.s_popup **/
+/** @odoo-module **/
 
-import config from "web.config";
-import publicWidget from "web.public.widget";
-import {getCookie, setCookie} from "web.utils.cookies";
-import dom from "web.dom";
+import config from "@web/legacy/js/services/config";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
+import dom from "@web/legacy/js/core/dom";
 import {throttleForAnimation} from "@web/core/utils/timing";
 
 // TODO In master, export this class too or merge it with PopupWidget

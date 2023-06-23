@@ -1,11 +1,11 @@
-/** @odoo-module alias=web.ajax **/
+/** @odoo-module **/
 
-import config from "web.config";
-import core from "web.core";
-import {Markup} from "web.utils";
-import time from "web.time";
-import download from "web.download";
-import contentdisposition from "web.contentdisposition";
+import config from "@web/legacy/js/services/config";
+import core from "@web/legacy/js/services/core";
+import { Markup } from "@web/legacy/js/core/utils";
+import time from "@web/legacy/js/core/time";
+import download from "@web/legacy/js/libs/download";
+import contentdisposition from "@web/legacy/js/libs/content-disposition";
 import { session } from "@web/session";
 
 var _t = core._t;
@@ -122,7 +122,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
     return promise;
 };
 
-function jsonRpc(url, fct_name, params, settings) {
+export function jsonRpc(url, fct_name, params, settings) {
     settings = settings || {};
     return _genericJsonRpc(fct_name, params, settings, function(data) {
         return $.ajax(url, Object.assign({}, settings, {

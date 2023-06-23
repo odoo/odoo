@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_event.website_event **/
+/** @odoo-module **/
 
-import ajax from "web.ajax";
-import core from "web.core";
-import publicWidget from "web.public.widget";
+import ajax from "@web/legacy/js/core/ajax";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 var _t = core._t;
 

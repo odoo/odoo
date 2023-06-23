@@ -6,10 +6,10 @@ import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
 import { parseHTML } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered } from "@odoo/owl";
-import { wysiwygData } from "web_editor.test_utils";
+import { wysiwygData } from "@web_editor/../tests/test_utils";
 
 // Legacy
-import legacyEnv from 'web.commonEnv';
+import legacyEnv from '@web/legacy/js/common_env';
 
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();

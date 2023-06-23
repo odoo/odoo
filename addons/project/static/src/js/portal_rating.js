@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import time from 'web.time';
-import publicWidget from 'web.public.widget';
+import time from '@web/legacy/js/core/time';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
     selector: '.o_portal_project_rating .o_rating_image',

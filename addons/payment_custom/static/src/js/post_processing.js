@@ -1,13 +1,13 @@
 /** @odoo-module **/
-    
-    import paymentPostProcessing from "payment.post_processing";
+
+    import paymentPostProcessing from "@payment/js/post_processing";
 
     paymentPostProcessing.include({
         /**
          * Don't wait for the transaction to be confirmed before redirecting customers to the
          * landing route because custom transactions remain in the state 'pending' forever.
          *
-         * @override method from `payment.post_processing`
+         * @override method from `@payment/js/post_processing`
          * @param {Object} display_values_list - The post-processing values of the transactions
          */
         processPolledData: function (display_values_list) {

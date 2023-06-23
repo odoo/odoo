@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { AlreadyDefinedPatchError, patch, unpatch, UnknownPatchError } from "web.utils";
+import _utils from "@web/legacy/js/core/utils";
 
 function makeBaseClass(assert, assertInSetup) {
     class BaseClass {
@@ -51,7 +51,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -77,7 +77,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch1', {
+           _utils.patch(BaseClass.prototype, 'patch1', {
                 setup() {
                     this._super();
                     assert.step('patch1.setup');
@@ -88,7 +88,7 @@ QUnit.module('core', {}, function () {
                 },
             });
 
-            patch(BaseClass.prototype, 'patch2', {
+           _utils.patch(BaseClass.prototype, 'patch2', {
                 setup() {
                     this._super();
                     assert.step('patch2.setup');
@@ -116,12 +116,12 @@ QUnit.module('core', {}, function () {
 
             const A = class {};
 
-            patch(A.prototype, 'patch');
+           _utils.patch(A.prototype, 'patch');
 
             // keys should be unique
             assert.throws(() => {
-                patch(A.prototype, 'patch');
-            }, AlreadyDefinedPatchError);
+               _utils.patch(A.prototype, 'patch');
+            }, _utils.AlreadyDefinedPatchError);
         });
 
         QUnit.test('unpatch', async function (assert) {
@@ -129,7 +129,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -149,7 +149,7 @@ QUnit.module('core', {}, function () {
                 'patch.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             (new BaseClass()).fn();
 
@@ -164,7 +164,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch1', {
+           _utils.patch(BaseClass.prototype, 'patch1', {
                 setup() {
                     this._super();
                     assert.step('patch1.setup');
@@ -175,7 +175,7 @@ QUnit.module('core', {}, function () {
                 },
             });
 
-            patch(BaseClass.prototype, 'patch2', {
+           _utils.patch(BaseClass.prototype, 'patch2', {
                 setup() {
                     this._super();
                     assert.step('patch2.setup');
@@ -197,7 +197,7 @@ QUnit.module('core', {}, function () {
                 'patch2.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch1');
+           _utils.unpatch(BaseClass.prototype, 'patch1');
 
             (new BaseClass()).fn();
 
@@ -208,7 +208,7 @@ QUnit.module('core', {}, function () {
                 'patch2.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch2');
+           _utils.unpatch(BaseClass.prototype, 'patch2');
 
             (new BaseClass()).fn();
 
@@ -223,7 +223,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch1', {
+           _utils.patch(BaseClass.prototype, 'patch1', {
                 setup() {
                     this._super();
                     assert.step('patch1.setup');
@@ -234,7 +234,7 @@ QUnit.module('core', {}, function () {
                 },
             });
 
-            patch(BaseClass.prototype, 'patch2', {
+           _utils.patch(BaseClass.prototype, 'patch2', {
                 setup() {
                     this._super();
                     assert.step('patch2.setup');
@@ -256,7 +256,7 @@ QUnit.module('core', {}, function () {
                 'patch2.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch1');
+           _utils.unpatch(BaseClass.prototype, 'patch1');
 
             (new BaseClass()).fn();
 
@@ -267,7 +267,7 @@ QUnit.module('core', {}, function () {
                 'patch2.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch2');
+           _utils.unpatch(BaseClass.prototype, 'patch2');
 
             (new BaseClass()).fn();
 
@@ -282,20 +282,20 @@ QUnit.module('core', {}, function () {
 
             const A = class {};
             assert.throws(() => {
-                unpatch(A.prototype, 'patch');
-            }, UnknownPatchError);
+               _utils.unpatch(A.prototype, 'patch');
+            }, _utils.UnknownPatchError);
         });
 
         QUnit.test('unpatch twice the same patch name', async function (assert) {
             assert.expect(1);
 
             const A = class {};
-            patch(A.prototype, 'patch');
+           _utils.patch(A.prototype, 'patch');
 
-            unpatch(A.prototype, 'patch');
+           _utils.unpatch(A.prototype, 'patch');
             assert.throws(() => {
-                unpatch(A.prototype, 'patch');
-            }, UnknownPatchError);
+               _utils.unpatch(A.prototype, 'patch');
+            }, _utils.UnknownPatchError);
         });
 
         QUnit.test('unpatch and re-patch', async function (assert) {
@@ -303,7 +303,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -323,7 +323,7 @@ QUnit.module('core', {}, function () {
                 'patch.fn',
             ]);
 
-            const p = unpatch(BaseClass.prototype, 'patch');
+            const p =_utils.unpatch(BaseClass.prototype, 'patch');
 
             (new BaseClass()).fn();
 
@@ -332,7 +332,7 @@ QUnit.module('core', {}, function () {
                 'base.fn',
             ]);
 
-            patch(BaseClass.prototype, 'patch', p);
+           _utils.patch(BaseClass.prototype, 'patch', p);
 
             (new BaseClass()).fn();
 
@@ -358,7 +358,7 @@ QUnit.module('core', {}, function () {
                 }
             };
 
-            patch(A.prototype, 'patch', {
+           _utils.patch(A.prototype, 'patch', {
                 setup() {
                     this._super('patch', ...arguments);
                 },
@@ -373,7 +373,7 @@ QUnit.module('core', {}, function () {
             assert.expect(3);
 
             const BaseClass = makeBaseClass(assert, false);
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super(...arguments);
 
@@ -396,7 +396,7 @@ QUnit.module('core', {}, function () {
 
             assert.notOk((new BaseClass()).f);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 f() {
                     assert.step('patch.f');
                 },
@@ -405,7 +405,7 @@ QUnit.module('core', {}, function () {
             (new BaseClass()).f();
             assert.verifySteps(['patch.f']);
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             assert.notOk((new BaseClass()).f);
         });
@@ -418,7 +418,7 @@ QUnit.module('core', {}, function () {
             BaseClass.staticFn();
             assert.verifySteps(['base.staticFn']);
 
-            patch(BaseClass, 'patch', {
+           _utils.patch(BaseClass, 'patch', {
                 staticFn() {
                     this._super();
                     assert.step('patch.staticFn');
@@ -428,7 +428,7 @@ QUnit.module('core', {}, function () {
             BaseClass.staticFn();
             assert.verifySteps(['base.staticFn', 'patch.staticFn']);
 
-            unpatch(BaseClass, 'patch');
+           _utils.unpatch(BaseClass, 'patch');
 
             BaseClass.staticFn();
             assert.verifySteps(['base.staticFn']);
@@ -439,7 +439,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass, 'patch', {
+           _utils.patch(BaseClass, 'patch', {
                 staticStr: BaseClass.staticStr + 'patch',
                 staticArr: [...BaseClass.staticArr, 'patch'],
                 staticObj: {...BaseClass.staticObj, patch: 'patch'},
@@ -449,7 +449,7 @@ QUnit.module('core', {}, function () {
             assert.deepEqual(BaseClass.staticArr, ['base', 'patch']);
             assert.deepEqual(BaseClass.staticObj, { base: 'base', patch: 'patch' });
 
-            unpatch(BaseClass, 'patch');
+           _utils.unpatch(BaseClass, 'patch');
 
             assert.strictEqual(BaseClass.staticStr, 'base');
             assert.deepEqual(BaseClass.staticArr, ['base']);
@@ -462,7 +462,7 @@ QUnit.module('core', {}, function () {
             const BaseClass = makeBaseClass(assert);
             const instance = new BaseClass();
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     // will not be called
@@ -481,7 +481,7 @@ QUnit.module('core', {}, function () {
                 'patch.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             instance.fn();
             assert.verifySteps([
@@ -494,7 +494,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert, false);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 get dynamic() {
                     return this._super() + 'patch';
                 },
@@ -503,7 +503,7 @@ QUnit.module('core', {}, function () {
             const instance = new BaseClass();
             assert.strictEqual(instance.dynamic, 'basepatch');
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
             assert.strictEqual(instance.dynamic, 'base');
         });
 
@@ -512,7 +512,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert, false);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 set dynamic(value) {
                     this._super('patch:' + value);
                 },
@@ -524,7 +524,7 @@ QUnit.module('core', {}, function () {
             instance.dynamic = 'patch';
             assert.strictEqual(instance.dynamic, 'patch:patch');
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             instance.dynamic = 'base';
             assert.strictEqual(instance.dynamic, 'base');
@@ -535,7 +535,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert, false);
 
-            patch(BaseClass.prototype, "patch", {
+           _utils.patch(BaseClass.prototype, "patch", {
                 async asyncFn() {
                     const _super = this._super;
                     await Promise.resolve();
@@ -559,7 +559,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert, false);
 
-            patch(BaseClass.prototype, "patch1", {
+           _utils.patch(BaseClass.prototype, "patch1", {
                 async asyncFn() {
                     const _super = this._super;
                     await Promise.resolve();
@@ -568,7 +568,7 @@ QUnit.module('core', {}, function () {
                     assert.step(`patch1.${this.str}`);
                 },
             });
-            patch(BaseClass.prototype, "patch2", {
+           _utils.patch(BaseClass.prototype, "patch2", {
                 async asyncFn() {
                     const _super = this._super;
                     await Promise.resolve();
@@ -615,7 +615,7 @@ QUnit.module('core', {}, function () {
                 'extension.fn',
             ]);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -642,7 +642,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -700,7 +700,7 @@ QUnit.module('core', {}, function () {
                 'extension.fn',
             ]);
 
-            patch(Extension.prototype, 'patch', {
+           _utils.patch(Extension.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -727,7 +727,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -749,7 +749,7 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(Extension.prototype, 'patch', {
+           _utils.patch(Extension.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.extension.setup');
@@ -789,7 +789,7 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -810,7 +810,7 @@ QUnit.module('core', {}, function () {
                 'extension.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -837,7 +837,7 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(Extension.prototype, 'patch', {
+           _utils.patch(Extension.prototype, 'patch', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -858,7 +858,7 @@ QUnit.module('core', {}, function () {
                 'patch.fn',
             ]);
 
-            unpatch(Extension.prototype, 'patch');
+           _utils.unpatch(Extension.prototype, 'patch');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -874,7 +874,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch.BaseClass', {
+           _utils.patch(BaseClass.prototype, 'patch.BaseClass', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -896,7 +896,7 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(Extension.prototype, 'patch.Extension', {
+           _utils.patch(Extension.prototype, 'patch.Extension', {
                 setup() {
                     this._super();
                     assert.step('patch.extension.setup');
@@ -919,7 +919,7 @@ QUnit.module('core', {}, function () {
                 'patch.extension.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch.BaseClass');
+           _utils.unpatch(BaseClass.prototype, 'patch.BaseClass');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -931,7 +931,7 @@ QUnit.module('core', {}, function () {
                 'patch.extension.fn',
             ]);
 
-            unpatch(Extension.prototype, 'patch.Extension');
+           _utils.unpatch(Extension.prototype, 'patch.Extension');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -947,7 +947,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass.prototype, 'patch.BaseClass', {
+           _utils.patch(BaseClass.prototype, 'patch.BaseClass', {
                 setup() {
                     this._super();
                     assert.step('patch.setup');
@@ -969,7 +969,7 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(Extension.prototype, 'patch.Extension', {
+           _utils.patch(Extension.prototype, 'patch.Extension', {
                 setup() {
                     this._super();
                     assert.step('patch.extension.setup');
@@ -992,7 +992,7 @@ QUnit.module('core', {}, function () {
                 'patch.extension.fn',
             ]);
 
-            unpatch(Extension.prototype, 'patch.Extension');
+           _utils.unpatch(Extension.prototype, 'patch.Extension');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -1004,7 +1004,7 @@ QUnit.module('core', {}, function () {
                 'extension.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch.BaseClass');
+           _utils.unpatch(BaseClass.prototype, 'patch.BaseClass');
 
             (new Extension()).fn();
             assert.verifySteps([
@@ -1027,14 +1027,14 @@ QUnit.module('core', {}, function () {
                 }
             }
 
-            patch(BaseClass, 'patch.BaseClass', {
+           _utils.patch(BaseClass, 'patch.BaseClass', {
                 staticFn() {
                     this._super();
                     assert.step('patch.staticFn');
                 }
             });
 
-            patch(Extension, 'patch.Extension', {
+           _utils.patch(Extension, 'patch.Extension', {
                 staticFn() {
                     this._super();
                     assert.step('patch.extension.staticFn');
@@ -1049,7 +1049,7 @@ QUnit.module('core', {}, function () {
                 'patch.extension.staticFn',
             ]);
 
-            unpatch(BaseClass, 'patch.BaseClass');
+           _utils.unpatch(BaseClass, 'patch.BaseClass');
 
             Extension.staticFn();
             assert.verifySteps([
@@ -1058,7 +1058,7 @@ QUnit.module('core', {}, function () {
                 'patch.extension.staticFn',
             ]);
 
-            unpatch(Extension, 'patch.Extension');
+           _utils.unpatch(Extension, 'patch.Extension');
 
             Extension.staticFn();
             assert.verifySteps([
@@ -1072,7 +1072,7 @@ QUnit.module('core', {}, function () {
 
             const BaseClass = makeBaseClass(assert);
 
-            patch(BaseClass, 'patch.BaseClass', {
+           _utils.patch(BaseClass, 'patch.BaseClass', {
                 staticStr: BaseClass.staticStr + 'patch',
                 staticArr: [...BaseClass.staticArr, 'patch'],
                 staticObj: {...BaseClass.staticObj, patch: 'patch'},
@@ -1088,7 +1088,7 @@ QUnit.module('core', {}, function () {
             assert.deepEqual(Extension.staticObj,
                 { base: 'base', patch: 'patch', extension: 'extension' });
 
-            unpatch(BaseClass, 'patch.BaseClass');
+           _utils.unpatch(BaseClass, 'patch.BaseClass');
 
             // /!\ WARNING /!\
             // If inherit comes after the patch then extension will still have
@@ -1112,7 +1112,7 @@ QUnit.module('core', {}, function () {
             // /!\ WARNING /!\
             // If patch comes after the inherit then extension won't have
             // the patched data.
-            patch(BaseClass, 'patch.BaseClass', {
+           _utils.patch(BaseClass, 'patch.BaseClass', {
                 staticStr: BaseClass.staticStr + 'patch',
                 staticArr: [...BaseClass.staticArr, 'patch'],
                 staticObj: {...BaseClass.staticObj, patch: 'patch'},
@@ -1123,7 +1123,7 @@ QUnit.module('core', {}, function () {
             assert.deepEqual(Extension.staticObj,
                 { base: 'base', extension: 'extension' });
 
-            unpatch(BaseClass, 'patch.BaseClass');
+           _utils.unpatch(BaseClass, 'patch.BaseClass');
 
             assert.strictEqual(Extension.staticStr, 'baseextension');
             assert.deepEqual(Extension.staticArr, ['base', 'extension']);
@@ -1148,7 +1148,7 @@ QUnit.module('core', {}, function () {
 
             const instance = new Extension();
 
-            patch(BaseClass.prototype, 'patch', {
+           _utils.patch(BaseClass.prototype, 'patch', {
                 setup() {
                     this._super();
                     // will not be called
@@ -1169,7 +1169,7 @@ QUnit.module('core', {}, function () {
                 'extension.fn',
             ]);
 
-            unpatch(BaseClass.prototype, 'patch');
+           _utils.unpatch(BaseClass.prototype, 'patch');
 
             instance.fn();
             assert.verifySteps([
@@ -1190,7 +1190,7 @@ QUnit.module('core', {}, function () {
                 },
             };
 
-            patch(obj, "patch", {
+           _utils.patch(obj, "patch", {
                 var: obj.var + "patch",
                 fn() {
                     this._super(...arguments);
@@ -1203,7 +1203,7 @@ QUnit.module('core', {}, function () {
             obj.fn();
             assert.verifySteps([ "obj", "patch" ]);
 
-            unpatch(obj, "patch");
+           _utils.unpatch(obj, "patch");
 
             assert.strictEqual(obj.var, "obj");
 

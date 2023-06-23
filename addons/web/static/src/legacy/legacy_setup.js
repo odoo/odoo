@@ -10,9 +10,9 @@ import {
     makeLegacyDropdownService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
-import * as AbstractService from "web.AbstractService";
-import legacyEnv from "web.env";
-import * as session from "web.session";
+import AbstractService from "@web/legacy/js/core/abstract_service";
+import legacyEnv from "@web/legacy/js/env";
+import session from "web.session";
 import { templates } from "@web/core/assets";
 
 import { Component, whenReady } from "@odoo/owl";

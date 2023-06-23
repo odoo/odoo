@@ -1,7 +1,7 @@
 /** @odoo-module **/
 'use strict';
 
-import {qweb} from 'web.core';
+import {qweb} from "@web/legacy/js/services/core";
 import {descendants, preserveCursor} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 const rowSize = 50; // 50px.
 // Maximum number of rows that can be added when dragging a grid item.

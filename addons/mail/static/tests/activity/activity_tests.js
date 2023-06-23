@@ -9,14 +9,14 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { date_to_str } from "web.time";
+import { date_to_str } from "@web/legacy/js/core/time";
 import {
     mockTimeout,
     patchDate,
     patchWithCleanup,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { file } from "web.test_utils";
+import { file } from "@web/../tests/legacy/helpers/test_utils";
 
 const { inputFiles } = file;
 

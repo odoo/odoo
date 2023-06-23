@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import {Markup} from "web.utils";
-import publicWidget from "web.public.widget";
+import core from "@web/legacy/js/services/core";
+import { Markup } from "@web/legacy/js/core/utils";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { escape } from "@web/core/utils/strings";
 
 var qweb = core.qweb;

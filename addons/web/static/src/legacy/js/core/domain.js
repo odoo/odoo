@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.Domain **/
+/** @odoo-module **/
 
 import { intersection } from "@web/core/utils/arrays";
-import collections from "web.collections";
-import pyUtils from "web.py_utils";
+import collections from "@web/legacy/js/core/collections";
+import pyUtils from "@web/legacy/js/core/py_utils";
 var py = window.py; // look py.js
 
 const TRUE_LEAF = [1, '=', 1];

@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_profile.website_profile **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({

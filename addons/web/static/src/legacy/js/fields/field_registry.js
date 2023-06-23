@@ -1,6 +1,6 @@
-/** @odoo-module alias=web.field_registry **/
-    
-    import Registry from "web.Registry";
+/** @odoo-module **/
+
+    import Registry from "@web/legacy/js/core/registry";
 
     const { Component } = owl;
 

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import PortalSidebar from "portal.PortalSidebar";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import PortalSidebar from "@portal/js/portal_sidebar";
 import { uniqueId } from "@web/core/utils/functions";
 
 publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({

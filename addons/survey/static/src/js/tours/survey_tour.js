@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { _t } from 'web.core';
-import "web.legacy_tranlations_loaded";
-import { Markup } from 'web.utils';
+import { _t } from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
+import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     trigger: '.o_survey_simple_choice button[type=submit]',
     extra_trigger: '.js_question-wrapper span:contains("How frequently")',
     content: _t("Whenever you pick an answer, Odoo saves it for you."),
-    position: 'bottom', 
+    position: 'bottom',
 }, {
     trigger: '.o_survey_numerical_box button[type=submit]',
     extra_trigger: '.js_question-wrapper span:contains("How many")',

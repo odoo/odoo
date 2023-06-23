@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import portalChatter from "portal.chatter";
+import core from "@web/legacy/js/services/core";
+import PortalChatter from "@portal/js/portal_chatter";
 import { roundPrecision } from "@web/core/utils/numbers";
 
 var _t = core._t;
-var PortalChatter = portalChatter.PortalChatter;
 var qweb = core.qweb;
 
 /**
@@ -168,7 +167,7 @@ PortalChatter.include({
     /**
      * Default rating data for publisher comment qweb template
      * @private
-     * @param {Integer} messageIndex 
+     * @param {Integer} messageIndex
      */
     _newPublisherCommentData: function (messageIndex) {
         return {
@@ -179,12 +178,12 @@ PortalChatter.include({
             publisher_datetime: '',
             publisher_comment: '',
         };
-    }, 
+    },
 
      /**
      * preprocess the rating data comming from /website/rating/comment or the chatter_init
      * Can be also use to have new rating data for a new publisher comment
-     * @param {JSON} rawRating 
+     * @param {JSON} rawRating
      * @returns {JSON} the process rating data
      */
     _preprocessCommentData: function (rawRating, messageIndex) {
@@ -276,9 +275,9 @@ PortalChatter.include({
             return;
         }
         var messageIndex = $source.data("mes_index");
-        var data = {is_publisher: this.options['is_user_publisher']}; 
+        var data = {is_publisher: this.options['is_user_publisher']};
         data.rating = this._newPublisherCommentData(messageIndex);
-        
+
         var oldRating = this.messages[messageIndex].rating;
         data.rating.publisher_comment = oldRating.publisher_comment ? oldRating.publisher_comment : '';
         this._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_form", data)));
@@ -307,7 +306,7 @@ PortalChatter.include({
             self._getCommentButton($source).removeClass("d-none");
             self._getCommentContainer($source).empty();
         });
-    },  
+    },
 
      /**
      * @private
@@ -334,14 +333,14 @@ PortalChatter.include({
             if (self.messages[messageIndex].rating.publisher_comment !== '') {
                 // Remove the button comment if exist and render the comment
                 self._getCommentButton($source).addClass('d-none');
-                self._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", { 
+                self._getCommentContainer($source).html($(qweb.render("portal_rating.chatter_rating_publisher_comment", {
                     rating: self.messages[messageIndex].rating,
                     is_publisher: self.options.is_user_publisher
                 })));
             } else {
                 // Empty string or false considers as no comment
                 self._getCommentButton($source).removeClass("d-none");
-                self._getCommentContainer($source).empty();       
+                self._getCommentContainer($source).empty();
             }
         });
     },

@@ -1,6 +1,6 @@
-/** @odoo-module alias=survey.session_manage_test **/
+/** @odoo-module **/
 
-import SessionManager from "survey.session_manage";
+import SessionManager from "@survey/js/survey_session_manage";
 /**
  * Small override for test/tour purposes.
  */

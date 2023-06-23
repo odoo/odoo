@@ -1,6 +1,6 @@
-/** @odoo-module alias=survey.quick.access **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     selector: '.o_survey_quick_access',
@@ -23,7 +23,7 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
             // Init event listener
             if (!self.readonly) {
                 $(document).on('keypress', self._onKeyPress.bind(self));
-            }       
+            }
         });
     },
 

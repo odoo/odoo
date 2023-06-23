@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import {_lt} from "web.core";
-import snippetsEditor from "web_editor.snippet.editor";
+import {_lt} from "@web/legacy/js/services/core";
+import snippetsEditor from "@web_editor/js/editor/snippets.editor";
 
 export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.events, {

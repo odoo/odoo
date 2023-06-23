@@ -1,6 +1,6 @@
 /** @odoo-modules */
 
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     test: true,

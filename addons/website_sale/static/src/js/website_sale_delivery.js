@@ -1,11 +1,11 @@
-/** @odoo-module alias=website_sale_delivery.checkout **/
+/** @odoo-module **/
 
-import core from "web.core";
-import publicWidget from "web.public.widget";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 const _t = core._t;
 const qweb = core.qweb;
-import concurrency from "web.concurrency";
+import concurrency from "@web/legacy/js/core/concurrency";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import convertInline from '@web_editor/js/backend/convert_inline';
-import {getGridHtml, getTableHtml, getRegularGridHtml, getRegularTableHtml, getTdHtml, removeComments} from 'web_editor.test_utils';
+import {getGridHtml, getTableHtml, getRegularGridHtml, getRegularTableHtml, getTdHtml, removeComments} from '@web_editor/../tests/test_utils';
 
 const TEST_WIDTH = 800;
 const TEST_HEIGHT = 600;

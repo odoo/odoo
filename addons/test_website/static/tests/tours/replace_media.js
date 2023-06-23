@@ -2,7 +2,7 @@
 
 import { patch } from '@web/core/utils/patch';
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
 

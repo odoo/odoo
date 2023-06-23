@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import "website.s_website_form";  // force deps
-import publicWidget from 'web.public.widget';
+import "@website/snippets/s_website_form/000";  // force deps
+import publicWidget from '@web/legacy/js/public/public_widget';
 import { session } from "@web/session";
 
 publicWidget.registry.s_website_form.include({

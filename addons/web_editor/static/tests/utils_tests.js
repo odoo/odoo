@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import weUtils from 'web_editor.utils';
+import weUtils from '@web_editor/js/common/utils';
 
 QUnit.module('web_editor', {}, function () {
 QUnit.module('utils', {}, function () {

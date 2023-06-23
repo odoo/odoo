@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import websiteSaleTracking from "website_sale.tracking";
+import websiteSaleTracking from "@website_sale/js/website_sale_tracking";
 
 let itemId;
 

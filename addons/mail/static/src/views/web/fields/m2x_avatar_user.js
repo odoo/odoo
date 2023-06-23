@@ -1,15 +1,17 @@
 /* @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import core from "web.core";
-import fieldRegistry from "web.field_registry";
-import {
+import core from "@web/legacy/js/services/core";
+import fieldRegistry from "@web/legacy/js/fields/field_registry";
+import relationalField from "@web/legacy/js/fields/relational_fields";
+import session from "web.session";
+
+const {
     FieldMany2ManyTagsAvatar,
     KanbanMany2ManyTagsAvatar,
     ListMany2ManyTagsAvatar,
     Many2OneAvatar,
-} from "web.relational_fields";
-import session from "web.session";
+} = relationalField
 
 // This module defines extensions of the Many2OneAvatar and Many2ManyAvatar
 // widgets, which are integrated with the messaging system. They are designed

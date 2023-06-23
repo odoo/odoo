@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import fonts from 'wysiwyg.fonts';
+import fonts from '@web_editor/js/wysiwyg/fonts';
 import { SearchMedia } from './search_media';
 
 import { Component, useState } from "@odoo/owl";

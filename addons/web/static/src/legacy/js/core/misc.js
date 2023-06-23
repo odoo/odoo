@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.framework **/
+/** @odoo-module **/
 
-import core from "web.core";
-import ajax from "web.ajax";
-import Widget from "web.Widget";
+import core from "@web/legacy/js/services/core";
+import ajax from "@web/legacy/js/core/ajax";
+import Widget from "@web/legacy/js/core/widget";
 
 var _t = core._t;
 
@@ -75,7 +75,7 @@ function unblockAccessKeys() {
 
 var throbbers = [];
 
-function blockUI() {
+export function blockUI() {
     var tmp = $.blockUI.apply($, arguments);
     var throbber = new Throbber();
     throbbers.push(throbber);
@@ -85,7 +85,7 @@ function blockUI() {
     return tmp;
 }
 
-function unblockUI() {
+export function unblockUI() {
     throbbers.forEach((throbber) => {
         throbber.destroy();
     });

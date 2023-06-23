@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import {_t} from "web.core";
-import options from "web_editor.snippets.options";
-import "website.editor.snippets.options";
+import {_t} from "@web/legacy/js/services/core";
+import options from "@web_editor/js/editor/snippets.options";
+import "@website/js/editor/snippets.options";
 import { uniqueId } from "@web/core/utils/functions";
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';

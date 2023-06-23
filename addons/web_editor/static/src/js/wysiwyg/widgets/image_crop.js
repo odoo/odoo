@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "web_editor.image_processing";
+import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "@web_editor/js/editor/image_processing";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -10,7 +10,7 @@ import {
     onWillDestroy,
     onWillUpdateProps,
 } from "@odoo/owl";
-import { Markup }  from "web.utils";
+import { Markup } from '@web/legacy/js/core/utils';
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';

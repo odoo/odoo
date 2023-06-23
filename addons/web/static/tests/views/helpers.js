@@ -22,7 +22,7 @@ import { addLegacyMockEnvironment } from "../webclient/helpers";
 import { Component, useSubEnv, xml } from "@odoo/owl";
 
 import { mapLegacyEnvToWowlEnv } from "@web/legacy/utils";
-import makeTestEnvironment from "web.test_env";
+import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 
 const serviceRegistry = registry.category("services");
 

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import publicWidget from 'web.public.widget';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 const ShareWidget = publicWidget.Widget.extend({
     selector: '.s_share, .oe_share', // oe_share for compatibility

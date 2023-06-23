@@ -1,12 +1,12 @@
-/** @odoo-module alias=website_sale_stock.VariantMixin **/
+/** @odoo-module **/
 
-import {Markup} from "web.utils";
-import VariantMixin from "website_sale.SaleVariantMixin";
-import publicWidget from "web.public.widget";
-import core from "web.core";
+import { Markup } from "@web/legacy/js/core/utils";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import core from "@web/legacy/js/services/core";
 var QWeb = core.qweb;
 
-import "website_sale.website_sale";
+import "@website_sale/js/website_sale";
 
 /**
  * Addition to the variant_mixin._onChangeCombination

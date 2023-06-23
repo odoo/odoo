@@ -1,7 +1,7 @@
-/** @odoo-module alias=web.local_storage **/
+/** @odoo-module **/
 
-import RamStorage from "web.RamStorage";
-import mixins from "web.mixins";
+import RamStorage from "@web/legacy/js/core/ram_storage";
+import mixins from "@web/legacy/js/core/mixins";
 
 // use a fake localStorage in RAM if the native localStorage is unavailable
 // (e.g. private browsing in Safari)
@@ -14,7 +14,7 @@ try {
 
     /*
      * We create an intermediate object in order to triggered the storage on
-     * this object. the localStorage. This simplifies testing and usage as 
+     * this object. the localStorage. This simplifies testing and usage as
      * starages are commutable in services without change. Also, objects
      * that use storage do not have to know that events go through window,
      * it's not up to them to handle these cases.

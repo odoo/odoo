@@ -1,6 +1,6 @@
-/** @odoo-module alias=website.s_dynamic_snippet_options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
+import options from "@web_editor/js/editor/snippets.options";
 
 const dynamicSnippetOptions = options.Class.extend({
     /**

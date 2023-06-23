@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import rpc from "web.rpc";
+import rpc from "@web/legacy/js/core/rpc";
 import { registry } from "@web/core/registry";
-import tourUtils from "website_sale.tour_utils";
+import tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,

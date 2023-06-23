@@ -1,6 +1,6 @@
-/** @odoo-module alias=survey.timer **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------

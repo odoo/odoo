@@ -1,9 +1,9 @@
-/** @odoo-module alias=web.name_and_signature **/
+/** @odoo-module **/
 
-import core from "web.core";
-import config from "web.config";
-import utils from "web.utils";
-import Widget from "web.Widget";
+import core from "@web/legacy/js/services/core";
+import config from "@web/legacy/js/services/config";
+import utils from "@web/legacy/js/core/utils";
+import Widget from "@web/legacy/js/core/widget";
 import { debounce } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
@@ -14,7 +14,7 @@ import { pick } from "@web/core/utils/objects";
  * Alternatively the signature can also be generated automatically based on
  * the given name and a selected font, or loaded from an image file.
  */
-var NameAndSignature = Widget.extend({
+export var NameAndSignature = Widget.extend({
     template: 'web.sign_name_and_signature',
     events: {
         // name

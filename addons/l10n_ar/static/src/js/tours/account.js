@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
-import "account.tour";
+import "@account/js/tours/account";
 
 patch(registry.category("web_tour.tours").get("account_tour"), "patch_account_tour", {
     steps() {
@@ -22,6 +22,6 @@ patch(registry.category("web_tour.tours").get("account_tour"), "patch_account_to
             auto: true,
             in_modal: false,
         });
-        return filteredSteps; 
+        return filteredSteps;
     }
 });

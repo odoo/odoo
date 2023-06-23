@@ -1,13 +1,13 @@
-/** @odoo-module alias=website.s_website_form **/
-    
-    import core from "web.core";
-    import time from "web.time";
-    import {ReCaptcha} from "google_recaptcha.ReCaptchaV3";
+/** @odoo-module **/
+
+    import core from "@web/legacy/js/services/core";
+    import time from "@web/legacy/js/core/time";
+    import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import session from "web.session";
-    import ajax from "web.ajax";
-    import publicWidget from "web.public.widget";
-    import dom from "web.dom";
-    import concurrency from "web.concurrency";
+    import ajax from "@web/legacy/js/core/ajax";
+    import publicWidget from "@web/legacy/js/public/public_widget";
+    import dom from "@web/legacy/js/core/dom";
+    import concurrency from "@web/legacy/js/core/concurrency";
     import { sprintf } from "@web/core/utils/strings";
     import { debounce } from "@web/core/utils/timing";
 
@@ -167,7 +167,7 @@
                     if (name === 'email_to' && fieldEl.value
                             // The following value is the default value that
                             // is set if the form is edited in any way. (see the
-                            // website.form_editor_registry module in editor
+                            // @website/js/form_editor_registry module in editor
                             // assets bundle).
                             // TODO that value should probably never be forced
                             // unless explicitely manipulated by the user or on

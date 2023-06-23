@@ -1,6 +1,6 @@
-/** @odoo-module alias=web.rpc **/
+/** @odoo-module **/
 
-import ajax from "web.ajax";
+import ajax from "@web/legacy/js/core/ajax";
 
 const rpc = {
     /**
@@ -122,4 +122,5 @@ const rpc = {
     },
 };
 
+export const buildQuery = rpc.buildQuery
 export default rpc;

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import fonts from 'wysiwyg.fonts';
-import {generateHTMLId} from 'web_editor.utils';
-import options from 'web_editor.snippets.options';
-import {_t} from 'web.core';
+import fonts from '@web_editor/js/wysiwyg/fonts';
+import weUtils from '@web_editor/js/common/utils';
+import options from '@web_editor/js/editor/snippets.options';
+import {_t} from "@web/legacy/js/services/core";
 
 let dbSocialValues;
 let dbSocialValuesProm;
@@ -197,7 +197,7 @@ options.registry.SocialMedia = options.Class.extend({
                 listPosition++;
             }
             return {
-                id: generateHTMLId(),
+                id: weUtils.generateHTMLId(),
                 display_name: media ? dbSocialValues[`social_${media}`] : el.getAttribute('href'),
                 placeholder: `https://${encodeURIComponent(media) || 'example'}.com/yourPage`,
                 undeletable: !!media,
@@ -215,7 +215,7 @@ options.registry.SocialMedia = options.Class.extend({
                 const entryNotInDom = this.entriesNotInDom.find(entry => entry.media === media);
                 if (!entryNotInDom) {
                     this.entriesNotInDom.push({
-                        id: generateHTMLId(),
+                        id: weUtils.generateHTMLId(),
                         display_name: link,
                         placeholder: `https://${encodeURIComponent(media)}.com/yourPage`,
                         undeletable: true,

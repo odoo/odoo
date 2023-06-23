@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import session from "web.session";
-import ajax from "web.ajax";
-import core from "web.core";
+import ajax from "@web/legacy/js/core/ajax";
+import core from "@web/legacy/js/services/core";
 import { sprintf, escape } from "@web/core/utils/strings";
 import { whenReady } from "@odoo/owl";
 
@@ -44,7 +44,7 @@ whenReady(() => {
             else {
                 $('#div_blacklist').hide();
             }
-    
+
             var unsubscribed_list = $("input[name='unsubscribed_list']").val();
             if (unsubscribed_list){
                 $('#subscription_info').html(sprintf(
@@ -56,20 +56,20 @@ whenReady(() => {
                 $('#subscription_info').html(_t('You have been <strong>successfully unsubscribed</strong>.'));
             }
         });
-    
+
         $('#unsubscribe_form').on('submit', function (e) {
             e.preventDefault();
-    
+
             var checked_ids = [];
             $("input[type='checkbox']:checked").each(function (i){
                 checked_ids[i] = parseInt($(this).val());
             });
-    
+
             var unchecked_ids = [];
             $("input[type='checkbox']:not(:checked)").each(function (i){
                 unchecked_ids[i] = parseInt($(this).val());
             });
-    
+
             ajax.jsonRpc('/mailing/list/update', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
@@ -90,13 +90,13 @@ whenReady(() => {
                     $('#info_state').removeClass('alert-info').addClass('alert-warning');
                 });
         });
-    
+
         //  ==================
         //      Blacklist
         //  ==================
         $('#button_add_blacklist').click(function (e) {
             e.preventDefault();
-    
+
             ajax.jsonRpc('/mailing/blacklist/add', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
@@ -125,10 +125,10 @@ whenReady(() => {
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                 });
         });
-    
+
         $('#button_remove_blacklist').click(function (e) {
             e.preventDefault();
-    
+
             ajax.jsonRpc('/mailing/blacklist/remove', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
@@ -157,7 +157,7 @@ whenReady(() => {
                     $('#info_state').removeClass('alert-success').removeClass('alert-info').removeClass('alert-warning').addClass('alert-error');
                 });
         });
-    
+
         // ==================
         //      Feedback
         // ==================

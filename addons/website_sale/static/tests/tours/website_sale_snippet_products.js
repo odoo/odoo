@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import wTourUtils from 'website.tour_utils';
-import wSaleTourUtils from 'website_sale.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
+import wSaleTourUtils from '@website_sale/js/tours/tour_utils';
 
 const optionBlock = 'dynamic_snippet_products';
 const productsSnippet = {id: 's_dynamic_snippet_products', name: 'Products'};

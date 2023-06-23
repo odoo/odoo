@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { date_to_str } from "web.time";
+import { date_to_str } from "@web/legacy/js/core/time";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, "mail/models/res_users", {

@@ -19,7 +19,7 @@ import {
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 
 const patchDate = testUtils.mock.patchDate;

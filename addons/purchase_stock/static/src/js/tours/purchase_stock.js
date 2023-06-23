@@ -1,10 +1,10 @@
-/** @odoo-module alias=purchase_stock.purchase_steps **/
+/** @odoo-module **/
 
-import core from "web.core";
-import "web.legacy_tranlations_loaded";
+import core from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
 
 var _t = core._t;
-import PurchaseAdditionalTourSteps from "purchase.purchase_steps";
+import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 
 PurchaseAdditionalTourSteps.include({
 

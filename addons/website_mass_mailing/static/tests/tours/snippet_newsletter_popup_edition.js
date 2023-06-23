@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import wTourUtils from "website.tour_utils";
-import snippetNewsletterPopupUseTour from "website_mass_mailing.tour.snippet_newsletter_popup_use";
+import wTourUtils from "@website/js/tours/tour_utils";
+import snippetNewsletterPopupUseTour from "@website_mass_mailing/../tests/tours/snippet_newsletter_popup_use";
 
 wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     test: true,

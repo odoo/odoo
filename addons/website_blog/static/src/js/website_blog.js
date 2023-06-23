@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
-import core from "web.core";
-import dom from "web.dom";
-import publicWidget from "web.public.widget";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',

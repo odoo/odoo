@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.QWeb **/
+/** @odoo-module **/
 
 import { uniqueId } from "@web/core/utils/functions";
 import { range } from "@web/core/utils/numbers";
-import translation from "web.translation";
+import translation from "@web/legacy/js/core/translation";
 
 var _t = translation._t;
 

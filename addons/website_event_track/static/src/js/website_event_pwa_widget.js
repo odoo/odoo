@@ -1,5 +1,5 @@
-/** @odoo-module alias=website_event_track.website_event_pwa_widget **/
-    
+/** @odoo-module **/
+
     /*
      * The "deferredPrompt" Promise will resolve only if the "beforeinstallprompt" event
      * has been triggered. It allows to register this listener as soon as possible
@@ -15,8 +15,8 @@
         });
     });
 
-    import config from "web.config";
-    import publicWidget from "web.public.widget";
+    import config from "@web/legacy/js/services/config";
+    import publicWidget from "@web/legacy/js/public/public_widget";
 
     var PWAInstallBanner = publicWidget.Widget.extend({
         template: "pwa_install_banner",

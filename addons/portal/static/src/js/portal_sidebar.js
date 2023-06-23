@@ -1,7 +1,7 @@
-/** @odoo-module alias=portal.PortalSidebar **/
+/** @odoo-module **/
 
-import core from "web.core";
-import publicWidget from "web.public.widget";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import session from "web.session";
 import { sprintf } from "@web/core/utils/strings";
 import { deserializeDateTime } from "@web/core/l10n/dates";

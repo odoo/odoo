@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.OwlCompatibility **/
-    
+/** @odoo-module **/
+
     import { LegacyComponent } from "@web/legacy/legacy_component";
     import { templates } from "@web/core/assets";
 
@@ -86,7 +86,7 @@
      *         }
      *     }
      */
-    class ComponentAdapter extends LegacyComponent {
+    export class ComponentAdapter extends LegacyComponent {
         /**
          * Creates the template on-the-fly, depending on the type of Component
          * (legacy widget or Owl component).
@@ -277,7 +277,7 @@
     }
 
     const bodyRef = { get el() { return document.body } };
-    function standaloneAdapter(props = {}, ref = bodyRef) {
+    export function standaloneAdapter(props = {}, ref = bodyRef) {
         const env = owl.Component.env;
         const app = new App(null, {
             templates,
@@ -335,7 +335,7 @@
      *          },
      *      });
      */
-    const WidgetAdapterMixin = {
+    export const WidgetAdapterMixin = {
         /**
          * Calls on_attach_callback on each child ComponentWrapper, which will
          * call __callMounted on each sub component (recursively), to mark them
@@ -522,7 +522,7 @@
     }
     ProxyComponent.template = xml`<t t-component="props.Component" t-props="props.props"/>`;
 
-    class ComponentWrapper {
+    export class ComponentWrapper {
         constructor(parent, Component, props) {
             if (parent instanceof Component) {
                 throw new Error("ComponentWrapper must be used with a legacy Widget as parent");

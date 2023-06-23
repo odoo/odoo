@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
-import FormEditorRegistry from "website.form_editor_registry";
+import FormEditorRegistry from "@website/js/form_editor_registry";
 
 FormEditorRegistry.add('send_mail', {
     formFields: [{

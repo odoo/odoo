@@ -1,6 +1,6 @@
-/** @odoo-module alias=web.test_utils_dom **/
-    
-    import concurrency from "web.concurrency";
+/** @odoo-module **/
+
+import concurrency from "@web/legacy/js/core/concurrency";
 
     /**
      * DOM Test Utils
@@ -128,7 +128,7 @@
      * @param {boolean} [options.last=false] if true, clicks on the last element
      * @returns {Promise}
      */
-    async function click(el, options = {}) {
+    export async function click(el, options = {}) {
         let matches, target;
         let selectorMsg = "";
         if (typeof el === 'string') {
@@ -324,7 +324,7 @@
      * @param {Boolean} [fast=false] true if the trigger event have to wait for a single tick instead of waiting for the next animation frame
      * @returns {Promise}
      */
-    async function triggerEvent(el, eventType, eventAttrs = {}, fast = false) {
+    export async function triggerEvent(el, eventType, eventAttrs = {}, fast = false) {
         let matches;
         let selectorMsg = "";
         if (_isEventTarget(el)) {

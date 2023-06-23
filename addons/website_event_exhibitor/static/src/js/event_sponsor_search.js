@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event_exhibitor.event_sponsor_search **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
 
     selector: '.o_wesponsor_index',

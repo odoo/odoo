@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import utils from "web.utils";
+import utils from "@web/legacy/js/core/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
 QUnit.module('core', {}, function () {

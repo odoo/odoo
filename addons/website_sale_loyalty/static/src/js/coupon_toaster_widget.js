@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
+import publicWidget from '@web/legacy/js/public/public_widget';
 import {registry} from "@web/core/registry";
 
 const CouponToasterWidget = publicWidget.Widget.extend({

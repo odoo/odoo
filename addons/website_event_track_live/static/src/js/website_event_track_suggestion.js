@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_event_track_live.website_event_track_suggestion **/
+/** @odoo-module **/
 
-import { Widget } from "web.public.widget";
+import { PublicWidget } from "@web/legacy/js/public/public_widget";
 
-var WebsiteEventTrackSuggestion = Widget.extend({
+var WebsiteEventTrackSuggestion = PublicWidget.extend({
     template: 'website_event_track_live.website_event_track_suggestion',
     events: {
         'click .owevent_track_suggestion_next': '_onNextTrackClick',

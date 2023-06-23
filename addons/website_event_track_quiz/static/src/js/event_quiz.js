@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_event_track_quiz.event.quiz **/
+/** @odoo-module **/
 
 
-import publicWidget from "web.public.widget";
-import core from "web.core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import core from "@web/legacy/js/services/core";
 import session from "web.session";
 
 var QWeb = core.qweb;

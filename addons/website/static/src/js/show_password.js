@@ -1,4 +1,4 @@
-/** @odoo-module alias=website.show_password **/
+/** @odoo-module **/
 
 //
 // This file is meant to allow to switch the type of an input #password
@@ -7,7 +7,7 @@
 // On mouse up, we hide it again.
 //
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.ShowPassword = publicWidget.Widget.extend({
     selector: '#showPass',

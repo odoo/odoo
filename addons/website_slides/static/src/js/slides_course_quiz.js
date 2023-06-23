@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-    import publicWidget from 'web.public.widget';
-    import Dialog from 'web.Dialog';
-    import  { qweb as QWeb, _t } from 'web.core';
+    import publicWidget from '@web/legacy/js/public/public_widget';
+    import Dialog from '@web/legacy/js/core/dialog';
+    import  { qweb as QWeb, _t } from "@web/legacy/js/services/core";
     import session from 'web.session';
-    import { Markup } from 'web.utils';
+    import { Markup } from "@web/legacy/js/core/utils";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
@@ -304,7 +304,7 @@
         },
         /*
         * Toggle additional resource info box
-        * 
+        *
         * @private
         * @param {Boolean} show - Whether show or hide the information
         */

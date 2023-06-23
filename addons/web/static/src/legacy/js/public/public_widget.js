@@ -1,13 +1,13 @@
-/** @odoo-module alias=web.public.widget */
+/** @odoo-module */
 
 /**
  * Provides a way to start JS code for public contents.
  */
 
-import dom from 'web.dom';
-import core from 'web.core';
-import mixins from 'web.mixins';
-import ServicesMixin from 'web.ServicesMixin';
+import dom from '@web/legacy/js/core/dom';
+import core from "@web/legacy/js/services/core";
+import mixins from "@web/legacy/js/core/mixins";
+import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle } from '@web/core/assets';
 
 
@@ -73,7 +73,7 @@ import { loadBundle } from '@web/core/assets';
  * is loaded in the dom.
  * @see PublicWidget.selector
  */
-const PublicWidget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
+export const PublicWidget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,

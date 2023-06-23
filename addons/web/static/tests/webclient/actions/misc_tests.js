@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeTestEnv } from "../../helpers/mock_env";
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { click, getFixture, hushConsole, nextTick, patchWithCleanup } from "../../helpers/utils";
 import {
     createWebClient,

@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.Class **/
+/** @odoo-module **/
 /**
  * Improved John Resig's inheritance, based on:
  *

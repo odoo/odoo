@@ -1,9 +1,9 @@
 /** @odoo-module **/
 /* global AdyenCheckout */
-    
-    import core from "web.core";
-    import checkoutForm from "payment.checkout_form";
-    import manageForm from "payment.manage_form";
+
+    import core from "@web/legacy/js/services/core";
+    import checkoutForm from "@payment/js/checkout_form";
+    import manageForm from "@payment/js/manage_form";
 
     const _t = core._t;
 
@@ -115,7 +115,7 @@
         /**
          * Prepare the inline form of Adyen for direct payment.
          *
-         * @override method from payment.payment_form_mixin
+         * @override method from @payment/js/payment_form_mixin
          * @private
          * @param {string} code - The code of the selected payment option's provider
          * @param {number} paymentOptionId - The id of the selected payment option
@@ -195,7 +195,7 @@
         /**
          * Trigger the payment processing by submitting the drop-in.
          *
-         * @override method from payment.payment_form_mixin
+         * @override method from @payment/js/payment_form_mixin
          * @private
          * @param {string} provider - The provider of the payment option's provider
          * @param {number} paymentOptionId - The id of the payment option handling the transaction

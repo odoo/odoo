@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.commonEnv **/
-    
+/** @odoo-module **/
+
     /**
      * This file defines the common environment, which contains everything that
      * is needed in the env for both the backend and the frontend (Odoo
@@ -16,14 +16,15 @@
      * [1] https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
      */
 
-    import { jsonRpc } from "web.ajax";
-    import { device, isDebug } from "web.config";
-    import { bus } from "web.core";
-    import rpc from "web.rpc";
+    import { jsonRpc } from "@web/legacy/js/core/ajax";
+    import config from "@web/legacy/js/services/config";
+    import { bus } from "@web/legacy/js/services/core";
+    import rpc from "@web/legacy/js/core/rpc";
     import session from "web.session";
-    import { _t } from "web.translation";
-    import {getCookie, setCookie} from "web.utils.cookies";
+    import { _t } from "@web/legacy/js/core/translation";
+    import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 
+    const { device, isDebug } = config
     const browser = {
         clearInterval: window.clearInterval.bind(window),
         clearTimeout: window.clearTimeout.bind(window),

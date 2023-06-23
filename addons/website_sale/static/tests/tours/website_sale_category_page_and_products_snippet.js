@@ -1,6 +1,6 @@
 /** @odoo-modules */
 
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 import { registry } from "@web/core/registry";
 
 const PRODUCT_CATEGORY_ID = 2;

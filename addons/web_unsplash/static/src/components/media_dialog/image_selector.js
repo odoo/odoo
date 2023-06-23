@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 import { KeepLast } from "@web/core/utils/concurrency";
 import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
 import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';

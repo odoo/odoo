@@ -1,9 +1,9 @@
 /* @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import "web.legacy_tranlations_loaded";
+import "@web/legacy/translations_loaded";
 import { registry } from "@web/core/registry";
-import { Markup } from "web.utils";
+import { Markup } from "@web/legacy/js/core/utils";
 
 registry.category("web_tour.tours").add("mail_tour", {
     url: "/web#action=mail.action_discuss",

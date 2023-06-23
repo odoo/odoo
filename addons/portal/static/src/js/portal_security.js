@@ -1,8 +1,8 @@
-/** @odoo-module alias=portal.security **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import Dialog from "web.Dialog";
-import {_t, qweb} from "web.core";
+import publicWidget from '@web/legacy/js/public/public_widget';
+import Dialog from "@web/legacy/js/core/dialog";
+import {_t, qweb} from "@web/legacy/js/services/core";
 import session from "web.session";
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
@@ -110,7 +110,7 @@ publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
 });
 
 /**
- * Defining what happens when you click the "Log out from all devices" 
+ * Defining what happens when you click the "Log out from all devices"
  * on the "/my/security" page.
  */
 publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
@@ -167,7 +167,7 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
                             }
                         }, {
                             text: _t('Cancel'), close: true
-                        }] 
+                        }]
                     });
                     dialog.opened(() => {
                         const password_input = dialog.el.querySelector('[name="password"]');
@@ -201,7 +201,7 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
  * @param {Promise} wrapped promise to check for an identity check request
  * @returns {Promise} result of the original call
  */
-function handleCheckIdentity(rpc, wrapped) {
+export function handleCheckIdentity(rpc, wrapped) {
     return wrapped.then((r) => {
         if (!(r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
             return r;
@@ -260,7 +260,4 @@ function handleCheckIdentity(rpc, wrapped) {
             d.open();
         });
     });
-}
-export default {
-    handleCheckIdentity,
 }

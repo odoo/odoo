@@ -3,7 +3,7 @@
 import { BurgerMenu } from '@web/webclient/burger_menu/burger_menu';
 import { useService } from '@web/core/utils/hooks';
 import { registry } from "@web/core/registry";
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 

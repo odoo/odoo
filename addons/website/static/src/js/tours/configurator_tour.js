@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import wTourUtils from "website.tour_utils";
-import core from "web.core";
-import "web.legacy_tranlations_loaded";
+import wTourUtils from "@website/js/tours/tour_utils";
+import core from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
 const _t = core._t;
 
 let titleSelector = '#wrap > section:first-child';

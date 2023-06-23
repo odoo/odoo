@@ -11,7 +11,7 @@ import { editView } from "@web/views/debug_items";
 import { listView } from "@web/views/list/list_view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { errorService } from "../../../src/core/errors/error_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import {

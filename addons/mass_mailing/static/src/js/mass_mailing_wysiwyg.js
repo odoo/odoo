@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ComponentWrapper } from "web.OwlCompatibility";
+import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestElement } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Toolbar } from "@web_editor/js/editor/toolbar";

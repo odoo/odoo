@@ -1,9 +1,9 @@
 /** @odoo-module **/
 /* global YT */
 
-import publicWidget from "web.public.widget";
-import TrackSuggestionWidget from "website_event_track_live.website_event_track_suggestion";
-import ReplaySuggestionWidget from "website_event_track_live.website_event_track_replay_suggestion";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import TrackSuggestionWidget from "@website_event_track_live/js/website_event_track_suggestion";
+import ReplaySuggestionWidget from "@website_event_track_live/js/website_event_track_replay_suggestion";
 
 publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     selector: '.o_wevent_event_track_live',

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
     test: true,

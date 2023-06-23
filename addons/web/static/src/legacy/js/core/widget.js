@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.Widget **/
+/** @odoo-module **/
 
-import core from "web.core";
-import mixins from "web.mixins";
-import ServicesMixin from "web.ServicesMixin";
+import core from "@web/legacy/js/services/core";
+import mixins from "@web/legacy/js/core/mixins";
+import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle } from "@web/core/assets";
 
 
@@ -62,7 +62,7 @@ import { loadBundle } from "@web/core/assets";
  * That will kill the widget in a clean way and erase its content from the dom.
  */
 
-var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
+export var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,
