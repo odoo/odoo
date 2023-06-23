@@ -31,6 +31,26 @@ describe('Powerbox', () => {
                 },
             });
         });
+        it('should not filter the powerbox contents when collaborator type on two different blocks', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '/');
+                    await insertText(editor, 'heading');
+                    setSelection(editor.editable.firstChild, 1);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    // Mimick a collaboration scenario where another user types
+                    // random text, using `insert` as it won't trigger keyup.
+                    editor.execCommand('insert', 'random text');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    setSelection(editor.editable.lastChild, 9);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    await insertText(editor, '1');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    window.chai.expect(getCurrentCommandNames(editor.powerbox)).to.eql(['Heading 1']);
+                },
+            });
+        });
         it('should execute command and remove term and hot character on Enter', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab[]</p>',
@@ -120,6 +140,7 @@ describe('Powerbox', () => {
         });
         it('should execute command on press Enter', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             const powerbox = new Powerbox({
                 categories: [],
@@ -198,6 +219,7 @@ describe('Powerbox', () => {
         });
         it('should filter commands with filter text', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             editable.append(document.createTextNode('original text'));
             setSelection(editable.firstChild, 13);
@@ -236,6 +258,7 @@ describe('Powerbox', () => {
         });
         it('should close the Powerbox on remove last filter text with Backspace', async () => {
             const editable = document.createElement('div');
+            editable.classList.add('odoo-editor-editable');
             document.body.append(editable);
             editable.append(document.createTextNode('1'));
             setSelection(editable.firstChild, 13);
