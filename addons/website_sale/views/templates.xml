@@ -1567,11 +1567,11 @@
                         </div>
                         <div class="col-3 d-flex flex-column align-items-end gap-1">
                             <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                    t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
+                                    t-field="line.price_subtotal" style="white-space: nowrap;"
                                     t-options="{'widget': 'monetary', 'display_currency': currency_id}"
                                     class="fw-bold"/>
                             <span t-else=""
-                                    t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
+                                    t-field="line.price_total" style="white-space: nowrap;"
                                     t-options="{'widget': 'monetary', 'display_currency': currency_id}"
                                     class="fw-bold"/>
                         </div>
