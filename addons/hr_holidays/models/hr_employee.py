@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from pytz import timezone, UTC
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -301,13 +302,20 @@ class HrEmployee(models.Model):
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
+        user_tz = timezone(self.env.user.tz if self.env.user.tz else 'UTC')
         return list(map(lambda bh: {
             'id': -bh.id,
             'colorIndex': 0,
-            'end': datetime.datetime.combine(bh.date_to, datetime.datetime.max.time()).isoformat(),
+            'end': datetime.datetime.combine(
+                UTC.localize(bh.date_to).astimezone(user_tz).replace(tzinfo=None),
+                datetime.datetime.max.time()
+            ).isoformat(),
             'endType': "datetime",
             'isAllDay': True,
-            'start': datetime.datetime.combine(bh.date_from, datetime.datetime.min.time()).isoformat(),
+            'start': datetime.datetime.combine(
+                UTC.localize(bh.date_from).astimezone(user_tz).replace(tzinfo=None),
+                datetime.datetime.min.time()
+            ).isoformat(),
             'startType': "datetime",
             'title': bh.name,
         }, public_holidays))
