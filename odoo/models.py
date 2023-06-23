@@ -2930,6 +2930,7 @@ class BaseModel(metaclass=MetaModel):
                     related_sudo=False,
                     copy=field.copy,
                     readonly=field.readonly,
+                    manual=field.manual,
                 ))
 
     @api.model

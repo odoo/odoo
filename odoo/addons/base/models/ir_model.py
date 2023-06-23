@@ -762,7 +762,7 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
-        failed_dependencies = []
+        fields = []
         for rec in self:
             model = self.env.get(rec.model)
             if model is not None:
@@ -771,12 +771,16 @@ class IrModelFields(models.Model):
                 else:
                     # field hasn't been loaded (yet?)
                     continue
-                for dep in model._dependent_fields(field):
-                    if dep.manual:
-                        failed_dependencies.append((field, dep))
-                for inverse in model.pool.field_inverses[field]:
-                    if inverse.manual and inverse.type == 'one2many':
-                        failed_dependencies.append((field, inverse))
+                fields.append(field)
+
+        failed_dependencies = []
+        for field in fields:
+            for dep in model._dependent_fields(field):
+                if dep.manual and not dep in fields:
+                    failed_dependencies.append((field, dep))
+            for inverse in model.pool.field_inverses[field]:
+                if inverse.manual and inverse.type == 'one2many':
+                    failed_dependencies.append((field, inverse))
 
         uninstalling = self._context.get(MODULE_UNINSTALL_FLAG)
         if not uninstalling and failed_dependencies:
