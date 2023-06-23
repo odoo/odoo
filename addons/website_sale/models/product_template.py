@@ -27,6 +27,8 @@ class ProductTemplate(models.Model):
         'Description for the website', translate=html_translate,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
+    description_ecommerce = fields.Html("eCommerce Description", translate=html_translate,
+        sanitize_overridable=True, sanitize_attributes=False, sanitize_form=False)
     alternative_product_ids = fields.Many2many(
         'product.template', 'product_alternative_rel', 'src_id', 'dest_id', check_company=True,
         string='Alternative Products', help='Suggest alternatives to your customer (upsell strategy). '

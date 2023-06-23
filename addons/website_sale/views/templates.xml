@@ -1017,6 +1017,8 @@
                                 </a>
                             </t>
                             <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
+                            <div t-field="product.description_ecommerce" class="oe_structure"
+                                placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
