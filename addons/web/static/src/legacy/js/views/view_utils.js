@@ -43,7 +43,7 @@ var viewUtils = {
                 const [format, granularity] = groupedByField.type === 'date' ?
                     ["YYYY-MM-DD", 'day'] : ["YYYY-MM-DD HH:mm:ss", 'second'];
                 return group.range[groupByField] ?
-                    moment.utc(group.range[groupByField].to).subtract(1, granularity).format(format) : false;
+                    moment.utc(group.range[groupByField].to).subtract(1, granularity).locale('en').format(format) : false;
             default:
                 return false; // other field types are not handled
         }
