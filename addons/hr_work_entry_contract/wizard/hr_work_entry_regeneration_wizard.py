@@ -111,3 +111,4 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
         work_entries.write(write_vals)
         self.employee_ids.generate_work_entries(date_from, date_to, True)
+
