@@ -21,6 +21,10 @@ async function twoDeleteForward(editor) {
     await deleteForward(editor);
 }
 
+const getCurrentCommandNames = powerbox => {
+    return [...powerbox.el.querySelectorAll('.oe-commandbar-commandTitle')].map(c => c.innerText);
+}
+
 describe('Editor', () => {
     describe('init', () => {
         describe('No orphan inline elements compatibility mode', () => {
@@ -4185,6 +4189,36 @@ X[]
                 contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
                     '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
                     '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
+            });
+        });
+    });
+    describe('powerbox', () => {
+        it('should not filter the powerbox contents when collaborator type on different block node', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async (editor) => {
+                    await insertText(editor, '/');
+                    await insertText(editor, 'heading');
+                    const firstBlock = editor.editable.firstChild;
+                    const secondBlock = editor.editable.lastChild;
+                    await setTestSelection({
+                        anchorNode: firstBlock, anchorOffset: 1,
+                        focusNode: firstBlock, focusOffset: 1,
+                    }, editor.document);
+                    window.chai.expect(editor.commandBar._active).to.be.true;
+                    // Mimick a collaboration scenario where another user types
+                    // random text, using `insertText` as it won't trigger keyup.
+                    editor.execCommand('insertText', 'random text');
+                    window.chai.expect(editor.commandBar._active).to.be.true;
+                    await setTestSelection({
+                        anchorNode: secondBlock, anchorOffset: 9,
+                        focusNode: secondBlock, focusOffset: 9,
+                    }, editor.document);
+                    window.chai.expect(editor.commandBar._active).to.be.true;
+                    await insertText(editor, '1');
+                    window.chai.expect(editor.commandBar._active).to.be.true;
+                    window.chai.expect(getCurrentCommandNames(editor.commandBar)).to.eql(['Heading 1']);
+                },
             });
         });
     });
