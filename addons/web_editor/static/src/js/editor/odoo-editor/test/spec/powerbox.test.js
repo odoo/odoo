@@ -33,6 +33,26 @@ describe('Powerbox', () => {
                 },
             });
         });
+        it('should not filter the powerbox contents when collaborator type on two different blocks', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab</p><p>c[]d</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '/');
+                    await insertText(editor, 'heading');
+                    setSelection(editor.editable.firstChild, 1);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    // Mimick a collaboration scenario where another user types
+                    // random text, using `insert` as it won't trigger keyup.
+                    editor.execCommand('insert', 'random text');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    setSelection(editor.editable.lastChild, 9);
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    await insertText(editor, '1');
+                    window.chai.expect(editor.powerbox.isOpen).to.be.true;
+                    window.chai.expect(getCurrentCommandNames(editor.powerbox)).to.eql(['Heading 1']);
+                },
+            });
+        });
         it('should execute command and remove term and hot character on Enter', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab[]</p>',
