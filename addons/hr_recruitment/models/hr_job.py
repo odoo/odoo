@@ -225,6 +225,8 @@ class Job(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals['favorite_user_ids'] = vals.get('favorite_user_ids', []) + [(4, self.env.uid)]
+            if vals.get('alias_name'):
+                vals['alias_user_id'] = False
         jobs = super().create(vals_list)
         utm_linkedin = self.env.ref("utm.utm_source_linkedin", raise_if_not_found=False)
         if utm_linkedin:
