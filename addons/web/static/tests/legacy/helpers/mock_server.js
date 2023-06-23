@@ -1641,15 +1641,25 @@ var MockServer = Class.extend({
                             }
                         }
                         const from = type === "date"
-                            ? startDate.format("YYYY-MM-DD")
-                            : startDate.format("YYYY-MM-DD HH:mm:ss");
+                            ? startDate.locale('en').format("YYYY-MM-DD")
+                            : startDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
                         const to = type === "date"
+<<<<<<< HEAD
                             ? endDate.format("YYYY-MM-DD")
                             : endDate.format("YYYY-MM-DD HH:mm:ss");
                         // NOTE THAT the range and the domain computed here are not really accurate
                         // due to a the timezone not really taken into account.
                         // FYI, the non legacy version of the mock server handles this correctly.
                         group.__range[gbField] = { from, to };
+||||||| parent of 40d831a00d7 (temp)
+                            ? endDate.format("YYYY-MM-DD")
+                            : endDate.format("YYYY-MM-DD HH:mm:ss");
+                        group.__range[fieldName] = { from, to };
+=======
+                            ? endDate.locale('en').format("YYYY-MM-DD")
+                            : endDate.locale('en').format("YYYY-MM-DD HH:mm:ss");
+                        group.__range[fieldName] = { from, to };
+>>>>>>> 40d831a00d7 (temp)
                         group.__domain = [
                             [fieldName, ">=", from],
                             [fieldName, "<", to],

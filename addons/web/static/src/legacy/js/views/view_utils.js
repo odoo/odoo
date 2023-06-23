@@ -43,8 +43,16 @@ var viewUtils = {
             case 'datetime':
                 const [format, granularity] = groupedByField.type === 'date' ?
                     ["YYYY-MM-DD", 'day'] : ["YYYY-MM-DD HH:mm:ss", 'second'];
+<<<<<<< HEAD
                 return group.range[groupedBy] ?
                     moment.utc(group.range[groupedBy].to).subtract(1, granularity).format(format) : false;
+||||||| parent of 40d831a00d7 (temp)
+                return group.range[groupByField] ?
+                    moment.utc(group.range[groupByField].to).subtract(1, granularity).format(format) : false;
+=======
+                return group.range[groupByField] ?
+                    moment.utc(group.range[groupByField].to).subtract(1, granularity).locale('en').format(format) : false;
+>>>>>>> 40d831a00d7 (temp)
             default:
                 return false; // other field types are not handled
         }
