@@ -12,7 +12,7 @@
             </field>
             <field name="invoice_policy" position="after">
                 <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
-                <field name="service_tracking" required="1" attrs="{'invisible': [('type', '=', 'service'), ('sale_ok', '=', False)]}"/>
+                <field name="service_tracking" required="1" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('sale_ok', '=', False)]}"/>
                 <field name="project_id" context="{'default_allow_billable': True}" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
                 <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True}" attrs="{'invisible':[('service_tracking','not in',['task_in_project', 'project_only'])]}"/>
             </field>
