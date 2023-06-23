@@ -7,6 +7,7 @@
             <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="channel_type">livechat</field>
+            <field name="anonymous_name">Visitor</field>
             <field name="country_id" ref="base.be"/>
         </record>
         <record id="im_livechat.livechat_channel_session_10_member_admin" model="discuss.channel.member">

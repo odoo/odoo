@@ -10,7 +10,7 @@ import {
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId, onChange } from "@mail/utils/common/misc";
+import { assignDefined, createLocalId, onChange, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -692,6 +692,7 @@ export class ThreadService {
             }
             thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
             if (thread.model === "discuss.channel" && serverData.channel) {
+                nullifyClearCommands(serverData.channel);
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
             }
 

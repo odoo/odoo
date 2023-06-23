@@ -36,8 +36,8 @@ patch(Thread.prototype, "im_livechat", {
         if (!this.correspondent.is_public && this.correspondent.country) {
             return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
         }
-        if (this.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${this.anonymous_country.name})`;
+        if (this.channel?.anonymous_country) {
+            return `${this.getMemberName(this.correspondent)} (${this.channel.anonymous_country.name})`;
         }
         return this.getMemberName(this.correspondent);
     },
