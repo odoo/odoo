@@ -143,6 +143,8 @@ class Http(models.AbstractModel):
                             'id': comp.id,
                             'name': comp.name,
                             'sequence': comp.sequence,
+                            'child_ids': (comp.child_ids & user.company_ids).ids,
+                            'parent_id': comp.parent_id.id,
                         } for comp in user.company_ids
                     },
                 },

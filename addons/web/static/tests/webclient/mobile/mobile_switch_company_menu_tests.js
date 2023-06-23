@@ -44,9 +44,9 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         target = getFixture();
         patchWithCleanup(session.user_companies, {
             allowed_companies: {
-                1: { id: 1, name: "Hermit" },
-                2: { id: 2, name: "Herman's" },
-                3: { id: 3, name: "Heroes TM" },
+                1: { id: 1, name: "Hermit", parent_id: false, child_ids: [] },
+                2: { id: 2, name: "Herman's", parent_id: false, child_ids: [] },
+                3: { id: 3, name: "Heroes TM", parent_id: false, child_ids: [] },
             },
             current_company: 1,
         });
