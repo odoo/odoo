@@ -47,6 +47,8 @@ class TestSessionInfo(common.HttpCase):
                 'id': company.id,
                 'name': company.name,
                 'sequence': company.sequence,
+                'child_ids': company.child_ids.ids,
+                'parent_id': company.parent_id.id,
             } for company in self.companies
         }
         expected_user_companies = {

@@ -7,40 +7,60 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, reactive } from "@odoo/owl";
 
-export class SwitchCompanyMenu extends Component {
+const store = reactive({
+    companiesToToggle: [],
+    toggleTimer: null,
+});
+
+
+export class SwitchCompanyItem extends Component {
     setup() {
         this.companyService = useService("company");
-        this.currentCompany = this.companyService.currentCompany;
-        this.state = useState({ companiesToToggle: [] });
-    }
-
-    toggleCompany(companyId) {
-        this.state.companiesToToggle = symmetricalDifference(this.state.companiesToToggle, [
-            companyId,
-        ]);
-        browser.clearTimeout(this.toggleTimer);
-        this.toggleTimer = browser.setTimeout(() => {
-            this.companyService.setCompanies("toggle", ...this.state.companiesToToggle);
-        }, this.constructor.toggleDelay);
+        this.store = useState(store);
     }
 
     logIntoCompany(companyId) {
-        browser.clearTimeout(this.toggleTimer);
+        browser.clearTimeout(this.store.toggleTimer);
         this.companyService.setCompanies("loginto", companyId);
     }
 
     get selectedCompanies() {
         return symmetricalDifference(
             this.companyService.allowedCompanyIds,
-            this.state.companiesToToggle
+            this.store.companiesToToggle,
         );
+    }
+
+    toggleCompany(companyId) {
+        this.store.companiesToToggle = symmetricalDifference(this.store.companiesToToggle, [
+            companyId, ...this.companyService.getChildrenToToggle(companyId)
+        ]);
+        browser.clearTimeout(this.store.toggleTimer);
+        this.store.toggleTimer = browser.setTimeout(() => {
+            this.companyService.setCompanies("toggle", ...this.store.companiesToToggle);
+        }, this.constructor.toggleDelay);
+    }
+}
+SwitchCompanyItem.template = 'web.SwitchCompanyItem';
+SwitchCompanyItem.components = { DropdownItem, SwitchCompanyItem };
+SwitchCompanyItem.props = {
+    company: {},
+    level: {type: Number},
+};
+SwitchCompanyItem.toggleDelay = 1000;
+
+
+export class SwitchCompanyMenu extends Component {
+    setup() {
+        this.companyService = useService("company");
+        this.store = useState(store);
+        this.store.companiesToToggle = [];
     }
 }
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
-SwitchCompanyMenu.components = { Dropdown, DropdownItem };
-SwitchCompanyMenu.toggleDelay = 1000;
+SwitchCompanyMenu.components = { Dropdown, DropdownItem, SwitchCompanyItem };
 SwitchCompanyMenu.props = {};
 
 export const systrayItem = {

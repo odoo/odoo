@@ -5,12 +5,13 @@
     <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
         <t t-set-slot="toggler">
             <i class="fa fa-building d-lg-none"/>
-            <span class="oe_topbar_name d-none d-lg-block" t-esc="currentCompany.name"/>
+            <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
         </t>
-        <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company" t-key="company.id">
-            <t t-call="web.SwitchCompanyItem">
-                <t t-set="company" t-value="company" />
-            </t>
+        <t t-foreach="Object.values(companyService.availableCompanies)
+                      .filter((c) => !c.parent_id)
+                      .sort((c1, c2) => c1.sequence - c2.sequence)
+                     " t-as="company" t-key="company.id">
+            <SwitchCompanyItem company="company" level="0"/>
         </t>
     </Dropdown>
 </t>
@@ -18,18 +19,18 @@
 
 <t t-name="web.SwitchCompanyItem" owl="1">
     <DropdownItem class="'p-0 bg-white'">
-        <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)"/>
-        <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id"/>
-        <div class="d-flex" data-menu="company" t-att-data-company-id="company.id">
+        <t t-set="isCompanySelected" t-value="selectedCompanies.includes(props.company.id)"/>
+        <t t-set="isCurrent" t-value="props.company.id === companyService.currentCompany.id"/>
+        <div class="d-flex" data-menu="company" t-att-data-company-id="props.company.id">
             <div
                 role="menuitemcheckbox"
                 t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
-                t-att-aria-label="company.name"
-                t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + company.name + ' content.'"
+                t-att-aria-label="props.company.name"
+                t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + props.company.name + ' content.'"
                 tabindex="0"
                 class="border-end toggle_company"
                 t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
-                t-on-click.stop="() => this.toggleCompany(company.id)">
+                t-on-click.stop="() => this.toggleCompany(props.company.id)">
 
                 <span class="btn btn-light border-0 p-2">
                     <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
@@ -39,21 +40,25 @@
             <div
                 role="button"
                 t-att-aria-pressed="isCurrent ? 'true' : 'false'"
-                t-att-aria-label="'Switch to ' + company.name "
-                t-att-title="'Switch to ' + company.name "
+                t-att-aria-label="'Switch to ' + props.company.name "
+                t-att-title="'Switch to ' + props.company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary ms-1 me-2' : 'btn btn-light fw-normal border-0'"
-                t-on-click="() => this.logIntoCompany(company.id)">
+                t-att-class="isCurrent ? 'alert-primary' : 'btn btn-light fw-normal border-0'"
+                t-att-style="'margin-left:' + (props.level * 20) + 'px';"
+                t-on-click="() => this.logIntoCompany(props.company.id)">
 
                 <span
                     class='company_label pe-3'
-                    t-att-class="isCurrent ? 'text-900 fw-bold' : 'ms-1'">
-                    <t t-esc="company.name"/>
+                    t-att-class="isCurrent ? 'text-900 fw-bold' : ''">
+                    <t t-esc="props.company.name"/>
                 </span>
             </div>
         </div>
     </DropdownItem>
+    <t t-foreach="props.company.child_ids" t-as="child" t-key="child">
+        <SwitchCompanyItem company="companyService.getCompany(child)" level="props.level + 1"/>
+    </t>
 </t>
 
 </templates>
