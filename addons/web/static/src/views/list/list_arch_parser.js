@@ -174,7 +174,7 @@ export class ListArchParser extends XMLParser {
                 // that applies later on could be enough, even if the value is always true)
                 headerButtons = [...node.children]
                     .map((node) => ({
-                        ...processButton(node),
+                        ...this.processButton(node),
                         type: "button",
                         id: buttonId++,
                     }))
