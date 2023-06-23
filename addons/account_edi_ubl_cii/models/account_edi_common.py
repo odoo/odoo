@@ -61,6 +61,7 @@ EAS_MAPPING = {
     'HR': {'9934': 'vat'},
     'HU': {'9910': 'vat'},
     'IE': {'9935': 'vat'},
+    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
     'LI': {'9936': 'vat'},
     'LT': {'9937': 'vat'},
     'LU': {'9938': 'vat'},
