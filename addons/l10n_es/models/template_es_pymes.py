@@ -11,6 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': _('SMEs (2008)'),
             'parent': 'es_common',
+            'sequence': 0,
         }
 
     @template('es_pymes', 'res.company')
