@@ -81,7 +81,15 @@ var ColorpickerWidget = Widget.extend({
         // Need to be bound on all documents to work in all possible cases (we
         // have to be able to start dragging/moving from the colorpicker to
         // anywhere on the screen, crossing iframes).
-        this.$documents = $([window.top, ...Array.from(window.top.frames)].map(w => w.document));
+        this.$documents = $([window.top, ...Array.from(window.top.frames).filter(frame => {
+            try {
+                const document = frame.document;
+                return !!document;
+            } catch {
+                // We cannot access the document (cross origin).
+                return false;
+            }
+        })].map(w => w.document));
         this.throttleOnMouseMove = throttleForAnimation((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
