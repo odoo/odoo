@@ -154,7 +154,7 @@ class Channel(models.Model):
             outdated += current_members.filtered(lambda m: m.partner_id not in partners)
 
         if new_members:
-            self.env['discuss.channel.member'].create(new_members)
+            self.env['discuss.channel.member'].sudo().create(new_members)
         if outdated:
             outdated.sudo().unlink()
 
@@ -816,7 +816,7 @@ class Channel(models.Model):
                     )
                ORDER BY discuss_channel_member.id ASC
         """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
-        all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
+        all_needed_members = self.env['discuss.channel.member'].sudo().browse([m['id'] for m in self.env.cr.dictfetchall()])
         all_needed_members.partner_id.sudo().mail_partner_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])

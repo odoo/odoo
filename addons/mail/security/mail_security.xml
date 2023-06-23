@@ -41,34 +41,6 @@
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
-        <record id="ir_rule_discuss_channel_member_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: write its own entries</field>
-            <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
-            <field name="domain_force">[
-                '|',
-                    '&amp;',
-                        ('channel_id.channel_type', '!=', 'channel'),
-                        ('channel_id.is_member', '=', True),
-                    '&amp;',
-                        ('channel_id.channel_type', '=', 'channel'),
-                        '|',
-                            ('channel_id.group_public_id', '=', False),
-                            ('channel_id.group_public_id', 'in', [g.id for g in user.groups_id])]
-            </field>
-            <field name="perm_read" eval="False"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-
-        <record id="ir_rule_discuss_channel_member_group_system" model="ir.rule">
-            <field name="name">discuss.channel.member: admin can manipulate all entries</field>
-            <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-        </record>
-
         <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
             <field name="name">mail.notifications: group_user: write its own entries</field>
             <field name="model_id" ref="model_mail_notification"/>
