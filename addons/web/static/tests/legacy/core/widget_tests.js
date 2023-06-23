@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import AjaxService from "web.AjaxService";
-import core from "web.core";
-import Dialog from "web.Dialog";
-import QWeb from "web.QWeb";
-import Widget from "web.Widget";
-import testUtils from "web.test_utils";
+import AjaxService from "@web/legacy/js/services/ajax_service";
+import core from "@web/legacy/js/services/core";
+import Dialog from "@web/legacy/js/core/dialog";
+import QWeb from "@web/legacy/js/core/qweb";
+import Widget from "@web/legacy/js/core/widget";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 QUnit.module('core', {}, function () {
 

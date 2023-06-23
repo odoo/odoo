@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.time **/
+/** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
-import translation from "web.translation";
-import utils from "web.utils";
+import translation from "@web/legacy/js/core/translation";
+import utils from "@web/legacy/js/core/utils";
 
 var lpad = utils.lpad;
 var rpad = utils.rpad;
@@ -21,7 +21,7 @@ var _t = translation._t;
  * @param {Object} v
  * @returns {Object}
  */
-function date_to_utc (k, v) {
+export function date_to_utc (k, v) {
     var value = this[k];
     if (!(value instanceof Date)) { return v; }
 
@@ -31,14 +31,14 @@ function date_to_utc (k, v) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35.832').
- * 
+ *
  * The time zone is assumed to be UTC (standard for OpenERP 6.1)
  * and will be converted to the browser's time zone.
- * 
+ *
  * @param {String} str A string representing a datetime.
  * @returns {Date}
  */
-function str_to_datetime (str) {
+export function str_to_datetime (str) {
     if(!str) {
         return str;
     }
@@ -65,15 +65,15 @@ function str_to_datetime (str) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * date string format (exemple: '2011-12-01').
- * 
+ *
  * As a date is not subject to time zones, we assume it should be
  * represented as a Date javascript object at 00:00:00 in the
  * time zone of the browser.
- * 
+ *
  * @param {String} str A string representing a date.
  * @returns {Date}
  */
-function str_to_date (str) {
+export function str_to_date (str) {
     if(!str) {
         return str;
     }
@@ -95,15 +95,15 @@ function str_to_date (str) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * time string format (exemple: '15:12:35').
- * 
+ *
  * The OpenERP times are supposed to always be naive times. We assume it is
  * represented using a javascript Date with a date 1 of January 1970 and a
  * time corresponding to the meant time in the browser's time zone.
- * 
+ *
  * @param {String} str A string representing a time.
  * @returns {Date}
  */
-function str_to_time (str) {
+export function str_to_time (str) {
     if(!str) {
         return str;
     }
@@ -126,14 +126,14 @@ function str_to_time (str) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35').
- * 
+ *
  * The time zone of the Date object is assumed to be the one of the
  * browser and it will be converted to UTC (standard for OpenERP 6.1).
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a datetime.
  */
-function datetime_to_str (obj) {
+export function datetime_to_str (obj) {
     if (!obj) {
         return false;
     }
@@ -145,15 +145,15 @@ function datetime_to_str (obj) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * date string format (exemple: '2011-12-01').
- * 
+ *
  * As a date is not subject to time zones, we assume it should be
  * represented as a Date javascript object at 00:00:00 in the
  * time zone of the browser.
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a date.
  */
-function date_to_str (obj) {
+export function date_to_str (obj) {
     if (!obj) {
         return false;
     }
@@ -164,15 +164,15 @@ function date_to_str (obj) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * time string format (exemple: '15:12:35').
- * 
+ *
  * The OpenERP times are supposed to always be naive times. We assume it is
  * represented using a javascript Date with a date 1 of January 1970 and a
  * time corresponding to the meant time in the browser's time zone.
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a time.
  */
-function time_to_str (obj) {
+export function time_to_str (obj) {
     if (!obj) {
         return false;
     }
@@ -180,7 +180,7 @@ function time_to_str (obj) {
          + lpad(obj.getSeconds(),2);
 }
 
-function auto_str_to_date (value) {
+export function auto_str_to_date (value) {
     try {
         return str_to_datetime(value);
     } catch {}
@@ -193,7 +193,7 @@ function auto_str_to_date (value) {
     throw new Error(sprintf(_t("'%s' is not a correct date, datetime nor time"), value));
 }
 
-function auto_date_to_str (value, type) {
+export function auto_date_to_str (value, type) {
     switch(type) {
         case 'datetime':
             return datetime_to_str(value);
@@ -211,7 +211,7 @@ function auto_date_to_str (value, type) {
  *
  * @param {String} value original format
  */
-function strftime_to_moment_format (value) {
+export function strftime_to_moment_format (value) {
     if (_normalize_format_cache[value] === undefined) {
         var isletter = /[a-zA-Z]/,
             output = [],
@@ -273,21 +273,21 @@ Object.entries(normalize_format_table).forEach(([key, val]) => {
 /**
  * Get date format of the user's language
  */
-function getLangDateFormat() {
+export function getLangDateFormat() {
     return strftime_to_moment_format(_t.database.parameters.date_format);
 }
 
 /**
  * Get time format of the user's language
  */
-function getLangTimeFormat() {
+export function getLangTimeFormat() {
     return strftime_to_moment_format(_t.database.parameters.time_format);
 }
 
 /**
  * Get date time format of the user's language
  */
-function getLangDatetimeFormat() {
+export function getLangDatetimeFormat() {
     return strftime_to_moment_format(_t.database.parameters.date_format + " " + _t.database.parameters.time_format);
 }
 
@@ -295,7 +295,7 @@ const dateFormatWoZeroCache = {};
 /**
  * Get date format of the user's language - allows non padded
  */
-function getLangDateFormatWoZero() {
+export function getLangDateFormatWoZero() {
     const dateFormat = getLangDateFormat();
     if (!(dateFormat in dateFormatWoZeroCache)) {
         dateFormatWoZeroCache[dateFormat] = dateFormat
@@ -309,7 +309,7 @@ const timeFormatWoZeroCache = {};
 /**
  * Get time format of the user's language - allows non padded
  */
-function getLangTimeFormatWoZero() {
+export function getLangTimeFormatWoZero() {
     const timeFormat = getLangTimeFormat();
     if (!(timeFormat in timeFormatWoZeroCache)) {
         timeFormatWoZeroCache[timeFormat] = timeFormat

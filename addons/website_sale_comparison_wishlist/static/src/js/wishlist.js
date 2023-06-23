@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
-import 'website_sale_comparison.comparison';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import '@website_sale_comparison/js/website_sale_comparison';
 
 publicWidget.registry.ProductComparison.include({
     events: Object.assign({}, publicWidget.registry.ProductComparison.prototype.events, {

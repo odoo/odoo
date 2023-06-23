@@ -1,6 +1,6 @@
-/** @odoo-module alias=website.tour.form_editor **/
+/** @odoo-module **/
 
-    import wTourUtils from "website.tour_utils";
+    import wTourUtils from "@website/js/tours/tour_utils";
 
     // Visibility possible values:
     const VISIBLE = 'Always Visible';

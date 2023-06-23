@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.contentdisposition **/
+/** @odoo-module **/
 /*
 (The MIT License)
 

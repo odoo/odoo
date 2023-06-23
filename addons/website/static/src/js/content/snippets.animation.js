@@ -1,4 +1,4 @@
-/** @odoo-module alias=website.content.snippets.animation **/
+/** @odoo-module **/
 
 /**
  * Provides a way to start JS code for snippets' initialization and animations.
@@ -8,13 +8,13 @@ import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-import Class from "web.Class";
-import config from "web.config";
-import core from "web.core";
-import dom from "web.dom";
-import mixins from "web.mixins";
-import publicWidget from "web.public.widget";
-import wUtils from "website.utils";
+import Class from "@web/legacy/js/core/class";
+import config from "@web/legacy/js/services/config";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import mixins from "@web/legacy/js/core/mixins";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import wUtils from "@website/js/utils";
 
 var qweb = core.qweb;
 

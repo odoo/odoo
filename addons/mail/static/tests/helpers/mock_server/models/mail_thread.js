@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-import { datetime_to_str } from "web.time";
+import { datetime_to_str } from "@web/legacy/js/core/time";
 
 patch(MockServer.prototype, "mail/models/mail_thread", {
     async _performRPC(route, args) {

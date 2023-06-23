@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
-import {generateGMapLink, generateGMapIframe} from 'website.utils';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import {generateGMapLink, generateGMapIframe} from '@website/js/utils';
 
 publicWidget.registry.Map = publicWidget.Widget.extend({
     selector: '.s_map',

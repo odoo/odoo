@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import FormEditorRegistry from "website.form_editor_registry";
-import options from "web_editor.snippets.options";
-import Dialog from "web.Dialog";
-import dom from "web.dom";
-import {generateHTMLId} from "web_editor.utils";
-import "website.editor.snippets.options";
+import core from "@web/legacy/js/services/core";
+import FormEditorRegistry from "@website/js/form_editor_registry";
+import options from "@web_editor/js/editor/snippets.options";
+import Dialog from "@web/legacy/js/core/dialog";
+import dom from "@web/legacy/js/core/dom";
+import weUtils from "@web_editor/js/common/utils";
+import "@website/js/editor/snippets.options";
 import { sprintf } from "@web/core/utils/strings";
 import { unique } from "@web/core/utils/arrays";
 
@@ -161,7 +161,7 @@ const FormEditor = options.Class.extend({
      */
     _renderField: function (field, resetId = false) {
         if (!field.id) {
-            field.id = generateHTMLId();
+            field.id = weUtils.generateHTMLId();
         }
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();
@@ -358,7 +358,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             model: 'ir.model',
             method: 'get_compatible_form_models',
         });
-        
+
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
         currentActionName = this.activeForm.website_form_label;

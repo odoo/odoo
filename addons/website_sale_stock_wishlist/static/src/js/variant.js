@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import VariantMixin from "website_sale_stock.VariantMixin";
-import "website_sale.website_sale";
-import { qweb as QWeb } from "web.core";
+import VariantMixin from "@website_sale_stock/js/variant_mixin";
+import "@website_sale/js/website_sale";
+import { qweb as QWeb } from "@web/legacy/js/services/core";
 
 const oldChangeCombinationStock = VariantMixin._onChangeCombinationStock;
 /**

@@ -13,10 +13,10 @@ import {
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
-import core from "web.core";
-import field_utils from "web.field_utils";
+import core from "@web/legacy/js/services/core";
+import field_utils from "@web/legacy/js/fields/field_utils";
 import session from "web.session";
-import test_utils from "web.test_utils";
+import test_utils from "@web/../tests/legacy/helpers/test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { defaultLocalization } from "../../helpers/mock_services";
 import { patchDate, patchTimeZone, patchWithCleanup } from "../../helpers/utils";

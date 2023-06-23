@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-import wTourUtils from "website.tour_utils";
+import wTourUtils from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("test_hide_chat_window_on_preview", {
     test: true,

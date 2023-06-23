@@ -16,7 +16,7 @@ import {
     getAdjacentNextSiblings,
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { toInline } from 'web_editor.convertInline';
+import { toInline } from '@web_editor/js/backend/convert_inline';
 import { loadJS, getBundle } from '@web/core/assets';
 import {
     Component,

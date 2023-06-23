@@ -1,7 +1,7 @@
-/** @odoo-module alias=website.utils **/
+/** @odoo-module **/
 
 import { intersection } from "@web/core/utils/arrays";
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 
 const { qweb, _t } = core;
 
@@ -317,7 +317,7 @@ function sendRequest(route, params) {
  *      efficient in that second case.
  * @returns {Promise<string>} a base64 PNG (as result of a Promise)
  */
-async function svgToPNG(src) {
+export async function svgToPNG(src) {
     function checkImg(imgEl) {
         // Firefox does not support drawing SVG to canvas unless it has width
         // and height attributes set on the root <svg>.
@@ -390,7 +390,7 @@ async function svgToPNG(src) {
  *
  * @returns {HTMLIframeElement}
  */
-function generateGMapIframe() {
+export function generateGMapIframe() {
     const iframeEl = document.createElement('iframe');
     iframeEl.classList.add('s_map_embedded', 'o_not_editable');
     iframeEl.setAttribute('width', '100%');
@@ -409,7 +409,7 @@ function generateGMapIframe() {
  * @param {DOMStringMap} dataset
  * @returns {string} a Google Maps URL
  */
-function generateGMapLink(dataset) {
+export function generateGMapLink(dataset) {
     return 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
         + '&t=' + encodeURIComponent(dataset.mapType)
         + '&z=' + encodeURIComponent(dataset.mapZoom)

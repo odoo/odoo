@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
     import { debounce } from "@web/core/utils/timing";
-import checkoutForm from "payment.checkout_form";
-    import publicWidget from "web.public.widget";
+import checkoutForm from "@payment/js/checkout_form";
+    import publicWidget from "@web/legacy/js/public/public_widget";
 
     const websiteSalePaymentMixin = {
 
@@ -56,7 +56,7 @@ import checkoutForm from "payment.checkout_form";
         /**
          * Verify that the Terms and Condition checkbox is checked.
          *
-         * @override method from payment.payment_form_mixin
+         * @override method from @payment/js/payment_form_mixin
          * @private
          * @return {boolean} Whether the submit button can be enabled
          */

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../core/browser/browser";
-import AbstractStorageService from "web.AbstractStorageService";
+import AbstractStorageService from "@web/legacy/js/core/abstract_storage_service";
 import {
     ConnectionAbortedError,
     RPCError,

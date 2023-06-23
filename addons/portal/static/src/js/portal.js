@@ -1,6 +1,6 @@
-/** @odoo-module alias=portal.portal **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -49,7 +49,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.PortalHomeCounters = publicWidget.Widget.extend({
+export const PortalHomeCounters = publicWidget.Widget.extend({
     selector: '.o_portal_my_home',
 
     /**
@@ -112,6 +112,8 @@ publicWidget.registry.PortalHomeCounters = publicWidget.Widget.extend({
         });
     },
 });
+
+publicWidget.registry.PortalHomeCounters = PortalHomeCounters;
 
 publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     selector: '.o_portal_search_panel',

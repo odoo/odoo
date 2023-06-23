@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_mock **/
+/** @odoo-module **/
 
 /**
  * Mock Test Utils
@@ -9,16 +9,16 @@
  * testUtils file.
  */
 
-import AbstractStorageService from "web.AbstractStorageService";
-import AjaxService from "web.AjaxService";
-import basic_fields from "web.basic_fields";
-import Bus from "web.Bus";
-import config from "web.config";
-import core from "web.core";
-import dom from "web.dom";
-import makeTestEnvironment from "web.test_env";
-import MockServer from "web.MockServer";
-import RamStorage from "web.RamStorage";
+import AbstractStorageService from "@web/legacy/js/core/abstract_storage_service";
+import AjaxService from "@web/legacy/js/services/ajax_service";
+import basic_fields from "@web/legacy/js/fields/basic_fields";
+import Bus from "@web/legacy/js/core/bus";
+import config from "@web/legacy/js/services/config";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
+import MockServer from "@web/../tests/legacy/helpers/mock_server";
+import RamStorage from "@web/legacy/js/core/ram_storage";
 import session from "web.session";
 import { patchWithCleanup, patchDate } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";

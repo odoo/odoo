@@ -1,7 +1,7 @@
 /** @odoo-module **/
 /* global ace */
 
-import wTourUtils from "website.tour_utils";
+import wTourUtils from "@website/js/tours/tour_utils";
 
 var BROKEN_STEP = {
     // because saving a broken template opens a recovery page with no assets

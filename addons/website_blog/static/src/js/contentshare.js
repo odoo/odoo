@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
-import dom from "web.dom";
+import dom from "@web/legacy/js/core/dom";
 
 $.fn.share = function (options) {
     var option = $.extend($.fn.share.defaults, options);

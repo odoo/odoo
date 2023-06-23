@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.legacy_tranlations_loaded */
+/** @odoo-module */
 
 // this module is imported through its alias to ensure translations are loaded
 // before a module definition is executed, this will be insured by the odoo

@@ -1,6 +1,6 @@
-/** @odoo-module alias=web.test_env **/
-    
-    import Bus from "web.Bus";
+/** @odoo-module **/
+
+    import Bus from "@web/legacy/js/core/bus";
     import session from "web.session";
     import { makeTestEnvServices } from "@web/../tests/legacy/helpers/test_services";
     import { templates, setLoadXmlDefaultApp } from "@web/core/assets";

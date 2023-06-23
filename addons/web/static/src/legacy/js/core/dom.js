@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.dom **/
+/** @odoo-module **/
 
 /**
  * DOM Utility helpers
@@ -10,8 +10,8 @@
  */
 
 import { uniqueId } from "@web/core/utils/functions";
-import concurrency from "web.concurrency";
-import core from "web.core";
+import concurrency from "@web/legacy/js/core/concurrency";
+import core from "@web/legacy/js/services/core";
 var _t = core._t;
 
 /**

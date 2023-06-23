@@ -5,7 +5,7 @@ import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 import { Many2OneAvatarEmployee } from "@hr/js/m2x_avatar_employee";
-import { dom } from "web.test_utils";
+import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
 QUnit.module("M2XAvatarEmployee", {
     beforeEach() {

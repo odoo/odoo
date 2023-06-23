@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { _t } from 'web.core';
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
+import { _t } from "@web/legacy/js/services/core";
+import Dialog from '@web/legacy/js/core/dialog';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 var SlideEnrollDialog = Dialog.extend({
     template: 'slide.course.join.request',
@@ -42,7 +42,7 @@ var SlideEnrollDialog = Dialog.extend({
             self.close();
         });
     }
-    
+
 });
 
 publicWidget.registry.websiteSlidesEnroll = publicWidget.Widget.extend({
@@ -54,18 +54,18 @@ publicWidget.registry.websiteSlidesEnroll = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-    
+
     _openDialog: function (channelId) {
         new SlideEnrollDialog(this, {
             channelId: channelId,
             $element: this.$el.closest('.alert')
         }).open();
     },
-    
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    
+
     _onSendRequestClick: function (ev) {
         ev.preventDefault();
         this._openDialog($(ev.currentTarget).data('channelId'));

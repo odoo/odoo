@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
-import time from 'web.time';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import time from '@web/legacy/js/core/time';
 const { DateTime } = luxon;
 
 publicWidget.registry.websiteSlides = publicWidget.Widget.extend({

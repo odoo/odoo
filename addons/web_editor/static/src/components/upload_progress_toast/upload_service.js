@@ -2,7 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
-import { getDataURLFromFile } from 'web.utils';
+import utils from '@web/legacy/js/core/utils';
 
 import { reactive } from "@odoo/owl";
 
@@ -98,7 +98,7 @@ export const uploadService = {
                 // limited by bandwidth.
                 for (const sortedFile of sortedFiles) {
                     const file = progressToast.files[sortedFile.progressToastId];
-                    const dataURL = await getDataURLFromFile(sortedFile);
+                    const dataURL = await utils.getDataURLFromFile(sortedFile);
                     try {
                         const xhr = new XMLHttpRequest();
                         xhr.upload.addEventListener('progress', ev => {

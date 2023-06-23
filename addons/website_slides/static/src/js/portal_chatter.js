@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { _t } from 'web.core';
-import { PortalChatter } from 'portal.chatter';
+import { _t } from "@web/legacy/js/services/core";
+import PortalChatter from '@portal/js/portal_chatter';
 import { sprintf } from '@web/core/utils/strings';
 
 /**

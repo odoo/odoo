@@ -1,7 +1,7 @@
 
-/** @odoo-module alias=web.translation **/
+/** @odoo-module **/
 
-import Class from "web.Class";
+import Class from "@web/legacy/js/core/class";
 import { _lt } from "@web/core/l10n/translation";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
@@ -92,7 +92,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
  * @param {String} source string to translate
  * @returns {String} source translated into the current locale
  */
-var _t = new TranslationDataBase().build_translation_function();
+export var _t = new TranslationDataBase().build_translation_function();
 
 /** Setup jQuery timeago */
 /*

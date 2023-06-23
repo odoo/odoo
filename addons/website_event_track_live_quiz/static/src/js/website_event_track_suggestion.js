@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event_track_live_quiz.website_event_track_suggestion **/
+/** @odoo-module **/
 
-import WebsiteEventTrackSuggestion from "website_event_track_live.website_event_track_suggestion";
+import WebsiteEventTrackSuggestion from "@website_event_track_live/js/website_event_track_suggestion";
 
 var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
     events: Object.assign({}, WebsiteEventTrackSuggestion.prototype.events, {

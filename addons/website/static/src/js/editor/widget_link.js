@@ -4,7 +4,7 @@ import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 
-import wUtils from "website.utils";
+import wUtils from "@website/js/utils";
 import { debounce } from "@web/core/utils/timing";
 
 const LINK_DEBOUNCE = 1000;

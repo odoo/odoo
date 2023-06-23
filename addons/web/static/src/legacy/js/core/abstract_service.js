@@ -1,9 +1,9 @@
-/** @odoo-module alias=web.AbstractService **/
+/** @odoo-module **/
 
-import Class from "web.Class";
-import { serviceRegistry } from "web.core";
-import Mixins from "web.mixins";
-import ServicesMixin from "web.ServicesMixin";
+import Class from "@web/legacy/js/core/class";
+import { serviceRegistry } from "@web/legacy/js/services/core";
+import Mixins from "@web/legacy/js/core/mixins";
+import ServicesMixin from "@web/legacy/js/core/service_mixins";
 
 var AbstractService = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     dependencies: [],

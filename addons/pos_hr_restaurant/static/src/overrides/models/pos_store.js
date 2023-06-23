@@ -1,4 +1,4 @@
-/* @odoo-module alias=pos_restaurant_hr.chrome */
+/* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
 import "@pos_restaurant/overrides/models/pos_store";

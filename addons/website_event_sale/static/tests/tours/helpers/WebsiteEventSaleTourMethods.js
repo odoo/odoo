@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event_sale.tour.WebsiteEventSaleTourMethods **/
-    
-    function changePricelist(pricelistName) {
+/** @odoo-module **/
+
+    export function changePricelist(pricelistName) {
         return [
             {
                 content: "Go to page Shop",
@@ -50,7 +50,7 @@
             },
         ]
     }
-    function checkPriceCart(price) {
+    export function checkPriceCart(price) {
         return [
             {
                 content: "Go to page Cart",
@@ -63,7 +63,7 @@
             },
         ]
     }
-    const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceBeforeDiscount=false}) {
+    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceBeforeDiscount=false}) {
         const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountEvent(eventName, price, priceBeforeDiscount) : checkPriceEvent(eventName, price);
         return [
             ...changePricelist(pricelistName),

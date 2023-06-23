@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
     selector: '.o_donation_payment_form',

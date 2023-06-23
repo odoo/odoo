@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import wsTourUtils from 'website_sale.tour_utils';
-import wTourUtils from 'website.tour_utils';
+import wsTourUtils from '@website_sale/js/tours/tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 function editAddToCartSnippet() {
     return [

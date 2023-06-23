@@ -1,10 +1,10 @@
-/** @odoo-module alias=payment.manage_form **/
-    
-    import core from "web.core";
-    import publicWidget from "web.public.widget";
-    import Dialog from "web.Dialog";
+/** @odoo-module **/
 
-    import paymentFormMixin from "payment.payment_form_mixin";
+    import core from "@web/legacy/js/services/core";
+    import publicWidget from "@web/legacy/js/public/public_widget";
+    import Dialog from "@web/legacy/js/core/dialog";
+
+    import paymentFormMixin from "@payment/js/payment_form_mixin";
 import { debounce } from "@web/core/utils/timing";
 
     const _t = core._t;

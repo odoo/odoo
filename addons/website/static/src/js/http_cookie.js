@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import cookieUtils from 'web.utils.cookies';
+import cookieUtils from '@web/legacy/js/core/cookie_utils';
 
 const originFunc = cookieUtils.isAllowedCookie;
 cookieUtils.isAllowedCookie = (type) => {

@@ -2,9 +2,9 @@
 
 import { uniqueId } from '@web/core/utils/functions';
 import { sprintf } from '@web/core/utils/strings';
-import { _t } from 'web.core';
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
+import { _t } from "@web/legacy/js/services/core";
+import Dialog from '@web/legacy/js/core/dialog';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 var TagCourseDialog = Dialog.extend({
     template: 'website.slides.tag.add',
@@ -16,7 +16,7 @@ var TagCourseDialog = Dialog.extend({
     * @override
     * @param {Object} parent
     * @param {Object} options holding channelId
-    *      
+    *
     */
     init: function (parent, options) {
         options = Object.assign({
@@ -203,7 +203,7 @@ var TagCourseDialog = Dialog.extend({
     _formValidate: function ($form) {
         $form.addClass('was-validated');
         var result = $form[0].checkValidity();
-        
+
         var $tagInput = this.$('#tag_id');
         if ($tagInput.length !== 0){
             var $tagSelect2Container = $tagInput
@@ -240,7 +240,7 @@ var TagCourseDialog = Dialog.extend({
     _alertRemove: function () {
         this.$('.alert-warning').remove();
     },
-    
+
     /**
      * When the user IS NOT creating a new tag, this function hides the group tag field
      * and makes it not required. Since the select2 field makes an extra container, this

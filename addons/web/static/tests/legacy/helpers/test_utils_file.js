@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_file **/
+/** @odoo-module **/
 
 /**
  * FILE Test Utils
@@ -48,7 +48,7 @@ function _createFakeDataTransfer(files) {
  * @param {string} data.contentType
  * @returns {Promise<Object>} resolved with file created
  */
-function createFile(data) {
+export function createFile(data) {
     // Note: this is only supported by Chrome, and does not work in Incognito mode
     return new Promise(function (resolve, reject) {
         var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -121,7 +121,7 @@ function dropFiles($el, files) {
  * @param {Object[]} files must have been created beforehand
  *   @see testUtils.file.createFile
  */
-function inputFiles(el, files) {
+export function inputFiles(el, files) {
     // could not use _createFakeDataTransfer as el.files assignation will only
     // work with a real FileList object.
     const dataTransfer = new window.DataTransfer();

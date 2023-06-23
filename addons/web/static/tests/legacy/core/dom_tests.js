@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import dom from "web.dom";
-import testUtils from "web.test_utils";
+import dom from "@web/legacy/js/core/dom";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 /**
  * Create an autoresize text area with 'border-box' as box sizing rule.

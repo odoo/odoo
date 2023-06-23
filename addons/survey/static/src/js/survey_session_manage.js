@@ -1,11 +1,11 @@
-/** @odoo-module alias=survey.session_manage **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import SurveyPreloadImageMixin from "survey.preload_image_mixin";
-import SurveySessionChart from "survey.session_chart";
-import SurveySessionTextAnswers from "survey.session_text_answers";
-import SurveySessionLeaderBoard from "survey.session_leaderboard";
-import {_lt} from "web.core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
+import SurveySessionChart from "@survey/js/survey_session_chart";
+import SurveySessionTextAnswers from "@survey/js/survey_session_text_answers";
+import SurveySessionLeaderBoard from "@survey/js/survey_session_leaderboard";
+import {_lt} from "@web/legacy/js/services/core";
 
 const nextPageTooltips = {
     closingWords: _lt('End of Survey'),

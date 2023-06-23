@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_sale.s_dynamic_snippet_products **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import DynamicSnippetCarousel from "website.s_dynamic_snippet_carousel";
-import wSaleUtils from "website_sale.utils";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import DynamicSnippetCarousel from "@website/snippets/s_dynamic_snippet_carousel/000";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
@@ -127,8 +127,8 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
 
     /**
      * Event triggered by a click on the Add to cart button
-     * 
-     * @param {OdooEvent} ev 
+     *
+     * @param {OdooEvent} ev
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card');

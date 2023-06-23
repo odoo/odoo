@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import publicWidget from "web.public.widget";
-import "website.content.snippets.animation";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import "@website/js/content/snippets.animation";
 
 var qweb = core.qweb;
 

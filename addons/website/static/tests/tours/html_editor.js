@@ -1,7 +1,7 @@
 /** @odoo-module**/
 /* global ace */
 
-import wTourUtils from "website.tour_utils";
+import wTourUtils from "@website/js/tours/tour_utils";
 
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 // TODO: This part should be moved in a QUnit test
 const checkKanbanGroupBy = [{

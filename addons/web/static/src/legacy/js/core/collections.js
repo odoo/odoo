@@ -1,6 +1,6 @@
-/** @odoo-module alias=web.collections **/
-    
-    import Class from "web.Class";
+/** @odoo-module **/
+
+    import Class from "@web/legacy/js/core/class";
 
     /**
      * Allows to build a tree representation of a data.

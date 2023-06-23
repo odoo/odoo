@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils **/
+/** @odoo-module **/
 
     /**
      * Test Utils
@@ -7,11 +7,11 @@
      * environment as close as possible as a real environment.
      */
 
-    import testUtilsDom from "web.test_utils_dom";
-    import testUtilsFields from "web.test_utils_fields";
-    import testUtilsFile from "web.test_utils_file";
-    import testUtilsMock from "web.test_utils_mock";
-    import Widget from "web.Widget";
+    import testUtilsDom from "@web/../tests/legacy/helpers/test_utils_dom";
+    import testUtilsFields from "@web/../tests/legacy/helpers/test_utils_fields";
+    import testUtilsFile from "@web/../tests/legacy/helpers/test_utils_file";
+    import testUtilsMock from "@web/../tests/legacy/helpers/test_utils_mock";
+    import Widget from "@web/legacy/js/core/widget";
 
     function deprecated(fn, type) {
         return function () {
@@ -94,40 +94,48 @@
      *
      * @returns {Promise}
      */
-    async function nextTick() {
+    export async function nextTick() {
         return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
+    export const mock = {
+        addMockEnvironment: testUtilsMock.addMockEnvironment,
+        addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
+        intercept: testUtilsMock.intercept,
+        patch: testUtilsMock.patch,
+        patchDate: testUtilsMock.patchDate,
+        unpatch: testUtilsMock.unpatch,
+        getView: testUtilsMock.getView,
+    };
+
+    export const dom = {
+        dragAndDrop: testUtilsDom.dragAndDrop,
+        find: testUtilsDom.findItem,
+        click: testUtilsDom.click,
+        clickFirst: testUtilsDom.clickFirst,
+        triggerEvents: testUtilsDom.triggerEvents,
+        triggerEvent: testUtilsDom.triggerEvent,
+    };
+
+    export const fields = {
+        editInput: testUtilsFields.editInput,
+        editAndTrigger: testUtilsFields.editAndTrigger,
+        triggerKeydown: testUtilsFields.triggerKeydown,
+    };
+
+    export const file = {
+        createFile: testUtilsFile.createFile,
+        dragoverFile: testUtilsFile.dragoverFile,
+        dropFile: testUtilsFile.dropFile,
+        dropFiles: testUtilsFile.dropFiles,
+        inputFiles: testUtilsFile.inputFiles,
+    };
+
     export default {
-        mock: {
-            addMockEnvironment: testUtilsMock.addMockEnvironment,
-            addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
-            intercept: testUtilsMock.intercept,
-            patch: testUtilsMock.patch,
-            patchDate: testUtilsMock.patchDate,
-            unpatch: testUtilsMock.unpatch,
-            getView: testUtilsMock.getView,
-        },
-        dom: {
-            dragAndDrop: testUtilsDom.dragAndDrop,
-            find: testUtilsDom.findItem,
-            click: testUtilsDom.click,
-            clickFirst: testUtilsDom.clickFirst,
-            triggerEvents: testUtilsDom.triggerEvents,
-            triggerEvent: testUtilsDom.triggerEvent,
-        },
-        fields: {
-            editInput: testUtilsFields.editInput,
-            editAndTrigger: testUtilsFields.editAndTrigger,
-            triggerKeydown: testUtilsFields.triggerKeydown,
-        },
-        file: {
-            createFile: testUtilsFile.createFile,
-            dragoverFile: testUtilsFile.dragoverFile,
-            dropFile: testUtilsFile.dropFile,
-            dropFiles: testUtilsFile.dropFiles,
-            inputFiles: testUtilsFile.inputFiles,
-        },
+        mock,
+        dom,
+        fields,
+        file,
 
         createParent,
         makeTestPromise: makeTestPromise,

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import BoothRegistration from "website_event_booth.booth_registration";
+import BoothRegistration from "@website_event_booth/js/booth_register";
 
 /**
  * This class changes the displayed price after selecting the requested booths.

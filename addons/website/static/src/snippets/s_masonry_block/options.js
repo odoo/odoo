@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import options from 'web_editor.snippets.options';
+import options from '@web_editor/js/editor/snippets.options';
 
 options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
     /**

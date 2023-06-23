@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import ajax from 'web.ajax';
-import Dialog from 'web.Dialog';
-import OwlDialog from 'web.OwlDialog';
-import ServicesMixin from 'web.ServicesMixin';
-import VariantMixin from 'website_sale.SaleVariantMixin';
+import ajax from '@web/legacy/js/core/ajax';
+import Dialog from '@web/legacy/js/core/dialog';
+import OwlDialog from '@web/legacy/js/core/owl_dialog';
+import ServicesMixin from '@web/legacy/js/core/service_mixins';
+import VariantMixin from '@website_sale/js/sale_variant_mixin';
 import { uniqueId } from '@web/core/utils/functions';
 
 export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {

@@ -9,8 +9,9 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { format } from "web.field_utils";
+import fieldUtils from "@web/legacy/js/fields/field_utils";
 
+const format = fieldUtils.format
 const formatters = registry.category("formatters");
 
 patch(Message.prototype, "mail/core/web", {

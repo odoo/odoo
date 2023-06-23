@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_crm.tour **/
-    
+/** @odoo-module **/
+
     import { registry } from "@web/core/registry";
-    import wTourUtils from "website.tour_utils";
+    import wTourUtils from "@website/js/tours/tour_utils";
 
     wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
         test: true,

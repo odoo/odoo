@@ -1,11 +1,11 @@
-/** @odoo-module alias=website_sale_comparison.comparison **/
+/** @odoo-module **/
 
-import concurrency from "web.concurrency";
-import core from "web.core";
-import publicWidget from "web.public.widget";
-import {getCookie, setCookie} from "web.utils.cookies";
-import VariantMixin from "website_sale.SaleVariantMixin";
-import website_sale_utils from "website_sale.utils";
+import concurrency from "@web/legacy/js/core/concurrency";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
+import website_sale_utils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
 var qweb = core.qweb;

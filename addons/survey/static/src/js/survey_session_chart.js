@@ -1,7 +1,7 @@
-/** @odoo-module alias=survey.session_chart **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import SESSION_CHART_COLORS from "survey.session_colors";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
 
 publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
     init: function (parent, options) {
@@ -173,15 +173,15 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                  * Each value of the array represents a line of the label.
                  * So for this example above: it will be displayed as:
                  * "this is an examble<br/>of a label", breaking the label in 2 parts and put on 2 lines visually.
-                 * 
+                 *
                  * What we do here is rework the labels with our own algorithm to make them fit better in screen space
                  * based on breakpoints based on number of columns to display.
                  * So this example will become: ["this is an", "example of", "a label"] if we have a lot of labels to put in the chart.
                  * Which will be displayed as "this is an<br/>example of<br/>a label"
                  * Obviously, the more labels you have, the more columns, and less screen space is available.
-                 * 
+                 *
                  * We also adapt the font size based on the width available in the chart.
-                 * 
+                 *
                  * So we counterbalance multiple times:
                  * - Based on number of columns (i.e. number of survey.question.answer of your current survey.question),
                  *   we split the words of every labels to make them display on more rows.
@@ -189,8 +189,8 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                  *   we reduce the chart font to be able to fit more characters.
                  * - Based on the longest word present in the labels, we apply a certain ratio with the width of the chart
                  *   to get a more accurate font size for the space available.
-                 * 
-                 * @param {Object} chart 
+                 *
+                 * @param {Object} chart
                  */
                 beforeInit: function (chart) {
                     const nbrCol = chart.data.labels.length;

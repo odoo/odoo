@@ -1,9 +1,9 @@
-/** @odoo-module alias=portal.composer **/
+/** @odoo-module **/
 
 import { escape, sprintf } from "@web/core/utils/strings";
-import ajax from "web.ajax";
-import core from "web.core";
-import publicWidget from "web.public.widget";
+import ajax from "@web/legacy/js/core/ajax";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 var qweb = core.qweb;
 var _t = core._t;

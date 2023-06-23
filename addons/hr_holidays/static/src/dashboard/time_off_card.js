@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import Popover from "web.Popover";
+import Popover from "@web/legacy/js/core/popover";
 
 const { Component } = owl;
 

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import publicWidget from 'web.public.widget';
-import Dialog from 'web.Dialog';
-import { _t } from 'web.core';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import Dialog from '@web/legacy/js/core/dialog';
+import { _t } from "@web/legacy/js/services/core";
 
 var CategoryAddDialog = Dialog.extend({
     template: 'slides.category.add',

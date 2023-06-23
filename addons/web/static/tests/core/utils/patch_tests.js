@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch, unpatch } from "@web/core/utils/patch";
-import legacyUtils from "web.utils";
+import legacyUtils from "@web/legacy/js/core/utils";
 
 function makeBaseClass(assert, assertInSetup) {
     class BaseClass {

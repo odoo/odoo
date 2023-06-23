@@ -1,13 +1,13 @@
-/** @odoo-module alias=web_editor.test_utils **/
+/** @odoo-module **/
 
-import ajax from "web.ajax";
+import ajax from "@web/legacy/js/core/ajax";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import MockServerLegacy from "web.MockServer";
-import testUtils from "web.test_utils";
+import MockServerLegacy from "@web/../tests/legacy/helpers/mock_server";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import * as coreUtils from "@web/core/utils/patch";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
-import options from "web_editor.snippets.options";
+import options from "@web_editor/js/editor/snippets.options";
 import { range } from "@web/core/utils/numbers";
 import { TABLE_ATTRIBUTES, TABLE_STYLES } from '@web_editor/js/backend/convert_inline';
 
@@ -198,7 +198,7 @@ function unpatch() {
  * @param {object} data
  * @returns {object}
  */
-function wysiwygData(data) {
+export function wysiwygData(data) {
     return Object.assign({
         'ir.ui.view': {
             fields: {
@@ -718,7 +718,7 @@ const tableStylesString = Object.keys(TABLE_STYLES).map(key => `${key}: ${TABLE_
  * @param {Array<Array<Number|null>>} matrix
  * @returns {string}
  */
-function getGridHtml(matrix) {
+export function getGridHtml(matrix) {
     return (
         `<div class="container">` +
         matrix.map((row, iRow) => (
@@ -731,7 +731,7 @@ function getGridHtml(matrix) {
         `</div>`
     );
 }
-function getTdHtml(colspan, text, containerWidth) {
+export function getTdHtml(colspan, text, containerWidth) {
     return (
         `<td colspan="${colspan}"${
             containerWidth ? ' ' + `style="max-width: ${Math.round(containerWidth*colspan/12*100)/100}px;"`
@@ -763,7 +763,7 @@ function getTdHtml(colspan, text, containerWidth) {
  * @param {Number} [containerWidth]
  * @returns {string}
  */
-function getTableHtml(matrix, containerWidth) {
+export function getTableHtml(matrix, containerWidth) {
     return (
         `<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">` +
         matrix.map((row, iRow) => (
@@ -788,7 +788,7 @@ function getTableHtml(matrix, containerWidth) {
  * @param {Number|Number[]} nCols
  * @returns {string}
  */
-function getRegularGridHtml(nRows, nCols) {
+export function getRegularGridHtml(nRows, nCols) {
     const matrix = new Array(nRows).fill().map((_, iRow) => (
         new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill()
     ));
@@ -810,7 +810,7 @@ function getRegularGridHtml(nRows, nCols) {
  * @param {Number} containerWidth
  * @returns {string}
  */
-function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
+export function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
     const matrix = new Array(nRows).fill().map((_, iRow) => (
         new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill().map(() => ([
             Array.isArray(colspan) ? colspan[iRow] : colspan,
@@ -828,7 +828,7 @@ function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
  * @param {boolean} [removeMsoHide=true]
  * @returns {string}
  */
-function removeComments(html, removeMsoHide=true) {
+export function removeComments(html, removeMsoHide=true) {
     const cleanHtml = html.replace(/<!--(.*?)-->/g, '');
     if (removeMsoHide) {
         return cleanHtml.replaceAll(' class="mso-hide"', '').replace(/\s*mso-hide/g, '').replace(/mso-hide\s*/g, '');

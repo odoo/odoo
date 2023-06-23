@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import SurveyFormWidget from "survey.form";
+import SurveyFormWidget from "@survey/js/survey_form";
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */

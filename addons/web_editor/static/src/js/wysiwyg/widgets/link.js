@@ -1,7 +1,7 @@
-/** @odoo-module alias=wysiwyg.widgets.Link **/
+/** @odoo-module **/
 
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
-import {isColorGradient} from "web_editor.utils";
+import weUtils from "@web_editor/js/common/utils";
 import {
     Component,
     onWillStart,
@@ -137,8 +137,8 @@ export class Link extends Component {
             data.classes.includes(className)
         )) {
             this.$link.css('color', data.classes.includes(data.customTextColor) ? '' : data.customTextColor);
-            this.$link.css('background-color', data.classes.includes(data.customFill) || isColorGradient(data.customFill) ? '' : data.customFill);
-            this.$link.css('background-image', isColorGradient(data.customFill) ? data.customFill : '');
+            this.$link.css('background-color', data.classes.includes(data.customFill) || weUtils.isColorGradient(data.customFill) ? '' : data.customFill);
+            this.$link.css('background-image', weUtils.isColorGradient(data.customFill) ? data.customFill : '');
             this.$link.css('border-width', data.customBorderWidth);
             this.$link.css('border-style', data.customBorderStyle);
             this.$link.css('border-color', data.customBorder);

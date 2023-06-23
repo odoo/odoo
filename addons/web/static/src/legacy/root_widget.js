@@ -5,7 +5,7 @@
  */
 // need to wait for owl.Component.env to be set by web.legacySetup
 import "web.legacySetup";
-import { ComponentAdapter } from "web.OwlCompatibility";
+import { ComponentAdapter } from "@web/legacy/js/owl_compatibility";
 // for its method _trigger_up. We can't use a standalone adapter because it
 // attempt to call env.isDebug which is not defined in the tests when this
 // module is loaded.

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { debounce as debounceFn } from "@web/core/utils/timing";
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { localization as l10n } from "@web/core/l10n/localization";
-import { ComponentWrapper } from "web.OwlCompatibility";
+import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { intersperse, nbsp } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 

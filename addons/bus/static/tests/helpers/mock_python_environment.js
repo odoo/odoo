@@ -5,7 +5,7 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockServer } from "@web/../tests/helpers/mock_server";
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 
 const modelDefinitionsPromise = new Promise((resolve) => {
     QUnit.begin(() => resolve(getModelDefinitions()));

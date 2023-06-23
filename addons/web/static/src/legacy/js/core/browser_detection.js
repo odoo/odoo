@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.BrowserDetection **/
-    import Class from "web.Class";
+/** @odoo-module **/
+    import Class from "@web/legacy/js/core/class";
     import { isMacOS, isBrowserChrome } from "@web/core/browser/feature_detection";
 
     var BrowserDetection = Class.extend({

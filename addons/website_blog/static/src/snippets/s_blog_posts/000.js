@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_blog.s_blog_posts_frontend **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import DynamicSnippet from "website.s_dynamic_snippet";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import DynamicSnippet from "@website/snippets/s_dynamic_snippet/000";
 
 const DynamicSnippetBlogPosts = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_blog_posts',

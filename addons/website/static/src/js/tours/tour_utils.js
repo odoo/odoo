@@ -1,8 +1,8 @@
-/** @odoo-module alias=website.tour_utils **/
+/** @odoo-module **/
 
-import {_t} from "web.core";
-import "web.legacy_tranlations_loaded";
-import {Markup} from "web.utils";
+import {_t} from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
+import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 

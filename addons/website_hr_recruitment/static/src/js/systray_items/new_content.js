@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 
 patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
     setup() {

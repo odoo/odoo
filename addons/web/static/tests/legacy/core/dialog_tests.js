@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import Dialog from "web.Dialog";
-import testUtils from "web.test_utils";
-import Widget from "web.Widget";
+import Dialog from "@web/legacy/js/core/dialog";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import Widget from "@web/legacy/js/core/widget";
 
 var ESCAPE_KEY = $.Event("keyup", { which: 27 });
 

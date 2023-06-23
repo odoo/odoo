@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import {getCookie} from 'web.utils.cookies';
+import {getCookie} from '@web/legacy/js/core/cookie_utils';
 import { session } from '@web/session';
 
 document.addEventListener('DOMContentLoaded', () => {

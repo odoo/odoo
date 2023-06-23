@@ -3,7 +3,7 @@
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { editInput } from "@web/../tests/helpers/utils";
-import { file } from "web.test_utils";
+import { file } from "@web/../tests/legacy/helpers/test_utils";
 
 const { createFile } = file;
 

@@ -1,6 +1,6 @@
-/** @odoo-module alias=website_event_booth_exhibitor.booth_sponsor_details **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.boothSponsorDetails = publicWidget.Widget.extend({
     selector: '#o_wbooth_contact_details_form',

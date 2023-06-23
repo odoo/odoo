@@ -2,7 +2,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
-import localStorage from 'web.local_storage';
+import localStorage from '@web/legacy/js/core/local_storage';
 
 const { useEffect, useRef, Component, xml } = owl;
 

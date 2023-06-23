@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ajax from "web.ajax";
+import ajax from "@web/legacy/js/core/ajax";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('totportal_tour_setup', {

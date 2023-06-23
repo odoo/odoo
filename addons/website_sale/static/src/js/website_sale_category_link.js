@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import * as publicWidget from 'web.public.widget'
+import publicWidget from '@web/legacy/js/public/public_widget'
 
 publicWidget.registry.ProductCategoriesLinks = publicWidget.Widget.extend({
     selector: '.o_wsale_products_page',

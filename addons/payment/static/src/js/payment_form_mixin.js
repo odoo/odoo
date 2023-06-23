@@ -1,8 +1,8 @@
-/** @odoo-module alias=payment.payment_form_mixin **/
+/** @odoo-module **/
 
     import { escape, sprintf } from "@web/core/utils/strings";
-    import core from "web.core";
-    import Dialog from "web.Dialog";
+    import core from "@web/legacy/js/services/core";
+    import Dialog from "@web/legacy/js/core/dialog";
 
     const _t = core._t;
 

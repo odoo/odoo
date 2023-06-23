@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.RamStorage **/
+/** @odoo-module **/
 
 /**
  * This module defines an alternative of the Storage objects (localStorage,
@@ -6,8 +6,8 @@
  * are unavailable (e.g. in private browsing on Safari).
  */
 
-import Class from "web.Class";
-import mixins from "web.mixins";
+import Class from "@web/legacy/js/core/class";
+import mixins from "@web/legacy/js/core/mixins";
 
 
 var RamStorage = Class.extend(mixins.EventDispatcherMixin, {

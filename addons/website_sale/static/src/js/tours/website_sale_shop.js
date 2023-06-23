@@ -1,9 +1,9 @@
 /** @odoo-module **/
-    
-    import {_t} from "web.core";
-    import {Markup} from "web.utils";
-    import wTourUtils from "website.tour_utils";
-    import "web.legacy_tranlations_loaded";
+
+    import {_t} from "@web/legacy/js/services/core";
+    import { Markup } from "@web/legacy/js/core/utils";
+    import wTourUtils from "@website/js/tours/tour_utils";
+    import "@web/legacy/translations_loaded";
 
     wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',

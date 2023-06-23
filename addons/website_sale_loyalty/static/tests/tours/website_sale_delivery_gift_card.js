@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_sale_loyalty_giftcard.test **/
+/** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import wsTourUtils from "website_sale.tour_utils";
+import wsTourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         test: true,

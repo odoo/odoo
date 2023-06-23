@@ -1,6 +1,6 @@
-/** @odoo-module alias=hr.Many2OneAvatarEmployee **/
+/** @odoo-module **/
 
-import fieldRegistry from "web.field_registry";
+import fieldRegistry from "@web/legacy/js/fields/field_registry";
 
 import {
     Many2OneAvatarUser,

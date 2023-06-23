@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import PopupWidget from 'website.s_popup';
+import PopupWidget from '@website/snippets/s_popup/000';
 
 PopupWidget.include({
 

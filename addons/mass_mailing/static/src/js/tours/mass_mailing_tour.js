@@ -1,10 +1,10 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
     import { stepUtils } from "@web_tour/tour_service/tour_utils";
-    import {_t} from "web.core";
-    import "web.legacy_tranlations_loaded";
-    import {Markup} from "web.utils";
+    import {_t} from "@web/legacy/js/services/core";
+    import "@web/legacy/translations_loaded";
+    import { Markup } from "@web/legacy/js/core/utils";
     const { DateTime } = luxon;
 
     registry.category("web_tour.tours").add('mass_mailing_tour', {

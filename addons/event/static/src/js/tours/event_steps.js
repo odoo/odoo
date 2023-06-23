@@ -1,6 +1,6 @@
-/** @odoo-module alias=event.event_steps **/
+/** @odoo-module **/
 
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 
 var EventAdditionalTourSteps = core.Class.extend({
 

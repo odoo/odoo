@@ -1,5 +1,5 @@
-/** @odoo-module alias=website_event.ticket_details **/
-    import publicWidget from "web.public.widget";
+/** @odoo-module **/
+    import publicWidget from "@web/legacy/js/public/public_widget";
 
     publicWidget.registry.ticketDetailsWidget = publicWidget.Widget.extend({
         selector: '.o_wevent_js_ticket_details',

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 /* global google */
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
     selector: '.s_google_map',

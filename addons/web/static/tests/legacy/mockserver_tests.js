@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import MockServer from "web.MockServer";
+import MockServer from "@web/../tests/legacy/helpers/mock_server";
 
 QUnit.module("Legacy MockServer", {
     beforeEach() {

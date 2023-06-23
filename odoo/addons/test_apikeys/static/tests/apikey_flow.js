@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import ajax from "web.ajax";
+import ajax from "@web/legacy/js/core/ajax";
 
 registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,

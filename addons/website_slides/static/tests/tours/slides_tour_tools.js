@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import utils from 'web.utils';
+import utils from '@web/legacy/js/core/utils';
 
 /*
  * Constant

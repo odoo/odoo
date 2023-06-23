@@ -2,7 +2,7 @@
 
 import { WebsiteEditorComponent } from '@website/components/editor/editor';
 import { WebsiteTranslator } from '@website/components/translator/translator';
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 
 patch(WebsiteEditorComponent.prototype, 'website_slides_editor', {
     /**

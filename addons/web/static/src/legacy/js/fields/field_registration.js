@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import AbstractField from "web.AbstractField";
-import basic_fields from "web.basic_fields";
-import relational_fields from "web.relational_fields";
-import registry from "web.field_registry";
+import AbstractField from "@web/legacy/js/fields/abstract_field";
+import basic_fields from "@web/legacy/js/fields/basic_fields";
+import relational_fields from "@web/legacy/js/fields/relational_fields";
+import registry from "@web/legacy/js/fields/field_registry";
 
 // Basic fields
 registry

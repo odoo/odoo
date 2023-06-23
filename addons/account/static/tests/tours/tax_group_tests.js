@@ -1,4 +1,4 @@
-/** @odoo-module alias=account.tax.group.tour.tests */
+/** @odoo-module */
 "use strict";
 
 import { registry } from "@web/core/registry";

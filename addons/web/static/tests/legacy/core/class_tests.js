@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Class from "web.Class";
+import Class from "@web/legacy/js/core/class";
 
 QUnit.module('core', {}, function () {
 

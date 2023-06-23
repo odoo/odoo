@@ -1,4 +1,4 @@
-/** @odoo-module alias=mass_mailing.design_constants**/
+/** @odoo-module **/
 
 export const CSS_PREFIX = '.o_mail_wrapper';
 

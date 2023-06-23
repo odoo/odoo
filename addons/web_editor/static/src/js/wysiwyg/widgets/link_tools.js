@@ -2,13 +2,7 @@
 
 import { Link } from "./link";
 import { ColorPalette } from '@web_editor/js/wysiwyg/widgets/color_palette';
-import {
-    computeColorClasses,
-    getCSSVariableValue,
-    getColorClass,
-    getNumericAndUnit,
-    isColorGradient,
-} from "web_editor.utils";
+import weUtils from "@web_editor/js/common/utils";
 import {
     onWillUpdateProps,
     useState,
@@ -226,7 +220,7 @@ export class LinkTools extends Link {
         if (
             !textClass ||
             !colorPickerFg ||
-            !computeColorClasses(colorPickerFg, 'text-').includes(textClass)
+            !weUtils.computeColorClasses(colorPickerFg, 'text-').includes(textClass)
         ) {
             textClass = '';
         }
@@ -235,7 +229,7 @@ export class LinkTools extends Link {
         if (
             !fillClass ||
             !colorPickerBg ||
-            !computeColorClasses(colorPickerBg, 'bg-').includes(fillClass)
+            !weUtils.computeColorClasses(colorPickerBg, 'bg-').includes(fillClass)
         ) {
             fillClass = '';
         }
@@ -284,7 +278,7 @@ export class LinkTools extends Link {
             this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
-            const numberAndUnit = getNumericAndUnit(borderWidth);
+            const numberAndUnit = weUtils.getNumericAndUnit(borderWidth);
             this.$el.find('.link-custom-color-border input').val(numberAndUnit ? numberAndUnit[0] : "1");
             let borderStyle = this.linkEl.style['border-style'];
             if (!borderStyle || borderStyle === 'none') {
@@ -310,14 +304,14 @@ export class LinkTools extends Link {
         // Update selected color.
         const colorNames = this.colorpickers[cssProperty].colorNames;
         let color = this.linkEl.style[cssProperty];
-        const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
-        const colorClass = prefix && getColorClass(this.linkEl, colorNames, prefix);
+        const colorClasses = prefix ? weUtils.computeColorClasses(colorNames, prefix) : [];
+        const colorClass = prefix && weUtils.getColorClass(this.linkEl, colorNames, prefix);
         const isColorClass = colorClasses.includes(colorClass);
         if (isColorClass) {
             color = colorClass;
         } else if (cssProperty === 'background-color') {
             const gradientColor = this.linkEl.style['background-image'];
-            if (isColorGradient(gradientColor)) {
+            if (weUtils.isColorGradient(gradientColor)) {
                 color = gradientColor;
             }
         }
@@ -332,14 +326,14 @@ export class LinkTools extends Link {
 
         // Update preview.
         const $colorPreview = this.$el.find('.link-custom-color-' + (cssProperty === 'border-color' ? 'border' : cssProperty === 'color' ? 'text' : 'fill') + ' .o_we_color_preview');
-        const previewClasses = computeColorClasses(colorNames, 'bg-');
+        const previewClasses = weUtils.computeColorClasses(colorNames, 'bg-');
         $colorPreview[0].classList.remove(...previewClasses);
         if (isColorClass) {
             $colorPreview.css('background-color', `var(--we-cp-${color.replace(prefix, '')}`);
             $colorPreview.css('background-image', '');
         } else {
-            $colorPreview.css('background-color', isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);
-            $colorPreview.css('background-image', isColorGradient(color) ? color : '');
+            $colorPreview.css('background-color', weUtils.isColorGradient(color) ? 'rgba(0, 0, 0, 0)' : color);
+            $colorPreview.css('background-image', weUtils.isColorGradient(color) ? color : '');
         }
     }
 
@@ -375,13 +369,13 @@ export class LinkTools extends Link {
         const prefix = this.PREFIXES[cssProperty];
         let color = params.color;
         const colorNames = this.colorpickers[cssProperty].colorNames;
-        const colorClasses = prefix ? computeColorClasses(colorNames, prefix) : [];
+        const colorClasses = prefix ? weUtils.computeColorClasses(colorNames, prefix) : [];
         const colorClass = `${prefix}${color}`;
         if (colorClasses.includes(colorClass)) {
             color = colorClass;
         } else if (colorNames.includes(color)) {
             // Store as color value.
-            color = getCSSVariableValue(color);
+            color = weUtils.getCSSVariableValue(color);
         }
         this.customColors[cssProperty] = color;
         this.applyLinkToDom(this._getData());

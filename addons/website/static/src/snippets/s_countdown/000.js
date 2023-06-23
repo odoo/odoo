@@ -1,8 +1,8 @@
-/** @odoo-module alias=website.s_countdown **/
+/** @odoo-module **/
 
-import core from "web.core";
-import publicWidget from "web.public.widget";
-import weUtils from "web_editor.utils";
+import core from "@web/legacy/js/services/core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import weUtils from "@web_editor/js/common/utils";
 import { isCSSColor } from '@web/core/utils/colors';
 
 const qweb = core.qweb;

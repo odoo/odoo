@@ -1,7 +1,7 @@
-/** @odoo-module alias=website.s_dynamic_snippet_carousel_options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
-import s_dynamic_snippet_options from "website.s_dynamic_snippet_options";
+import options from "@web_editor/js/editor/snippets.options";
+import s_dynamic_snippet_options from "@website/snippets/s_dynamic_snippet/options";
 
 const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
 

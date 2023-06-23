@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 
 // TODO this whole patch actually seems unnecessary. The bug it solved seems
 // to stay solved if this is removed. To investigate.

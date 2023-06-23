@@ -1,6 +1,6 @@
-/** @odoo-module alias=website.s_popup_options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
+import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.SnippetPopup = options.Class.extend({
     /**
@@ -39,7 +39,7 @@ options.registry.SnippetPopup = options.Class.extend({
                     buttonEl: this._requestUserValueWidgets("onclick_opt")[0].el,
                 },
             });
-        } 
+        }
         return this._super(...arguments);
     },
     /**

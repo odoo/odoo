@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import FormEditorRegistry from "website.form_editor_registry";
+import FormEditorRegistry from "@website/js/form_editor_registry";
 
 FormEditorRegistry.add('create_customer', {
     formFields: [{

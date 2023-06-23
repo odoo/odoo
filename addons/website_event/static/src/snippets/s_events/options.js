@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import options from 'web_editor.snippets.options';
-import dynamicSnippetOptions from 'website.s_dynamic_snippet_options';
+import options from '@web_editor/js/editor/snippets.options';
+import dynamicSnippetOptions from '@website/snippets/s_dynamic_snippet/options';
 
 const dynamicSnippetEventOptions = dynamicSnippetOptions.extend({
     /**

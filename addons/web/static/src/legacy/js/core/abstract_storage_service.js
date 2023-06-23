@@ -1,11 +1,11 @@
-/** @odoo-module alias=web.AbstractStorageService **/
+/** @odoo-module **/
 
 /**
  * This module defines an abstraction for services that write into Storage
  * objects (e.g. localStorage or sessionStorage).
  */
 
-import AbstractService from "web.AbstractService";
+import AbstractService from "@web/legacy/js/core/abstract_service";
 
 var AbstractStorageService = AbstractService.extend({
     // the 'storage' attribute must be set by actual StorageServices extending

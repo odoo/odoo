@@ -1,6 +1,6 @@
-/** @odoo-module alias=purchase.purchase_steps **/
+/** @odoo-module **/
 
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 
 var PurchaseAdditionalTourSteps = core.Class.extend({
     _get_purchase_stock_steps: function () {

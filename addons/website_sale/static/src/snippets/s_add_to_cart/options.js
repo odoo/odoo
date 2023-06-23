@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import options from 'web_editor.snippets.options';
-import { _t } from 'web.core';
+import options from '@web_editor/js/editor/snippets.options';
+import { _t } from "@web/legacy/js/services/core";
 
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 

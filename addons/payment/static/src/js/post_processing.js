@@ -1,8 +1,8 @@
-/** @odoo-module alias=payment.post_processing **/
-    
-    import publicWidget from "web.public.widget";
-    import core from "web.core";
-    import {Markup} from "web.utils";
+/** @odoo-module **/
+
+    import publicWidget from "@web/legacy/js/public/public_widget";
+    import core from "@web/legacy/js/services/core";
+    import { Markup } from "@web/legacy/js/core/utils";
 
     var _t = core._t;
 
@@ -94,12 +94,12 @@
                 }
                 return nbTx;
             }
-                       
+
             /*
-            * When the server sends the list of monitored transactions, it tries to post-process 
-            * all the successful ones. If it succeeds or if the post-process has already been made, 
-            * the transaction is removed from the list of monitored transactions and won't be 
-            * included in the next response. We assume that successful and post-process 
+            * When the server sends the list of monitored transactions, it tries to post-process
+            * all the successful ones. If it succeeds or if the post-process has already been made,
+            * the transaction is removed from the list of monitored transactions and won't be
+            * included in the next response. We assume that successful and post-process
             * transactions should always prevail on others, regardless of their number or state.
             */
             if (render_values['tx_done'].length === 1 &&
