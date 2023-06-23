@@ -157,8 +157,6 @@ Featuring
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
-            'web/static/lib/underscore/underscore.js',
-            'web/static/lib/underscore.string/lib/underscore.string.js',
             'web/static/lib/moment/moment.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
@@ -205,7 +203,6 @@ Featuring
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/underscore.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',

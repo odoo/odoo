@@ -963,7 +963,7 @@ export class Orderline extends PosModel {
     _getProductTaxesAfterFiscalPosition() {
         const product = this.get_product();
         let taxesIds = this.tax_ids || product.taxes_id;
-        taxesIds = _.filter(taxesIds, (t) => t in this.pos.taxes_by_id);
+        taxesIds = taxesIds.filter((t) => t in this.pos.taxes_by_id);
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
     }
     get_all_prices(qty = this.get_quantity()) {
