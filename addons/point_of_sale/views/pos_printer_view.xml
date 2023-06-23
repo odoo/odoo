@@ -9,7 +9,7 @@
                         <field name="name" />
                         <field name="printer_type" widget="radio"/>
                         <field name="proxy_ip" attrs="{'invisible': [('printer_type', '!=', 'iot')]}"/>
-                        <field name="product_categories_ids" />
+                        <field name="product_categories_ids" widget="many2many_tags"/>
                     </group>
                 </sheet>
             </form>
