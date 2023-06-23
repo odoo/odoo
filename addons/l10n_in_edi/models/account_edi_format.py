@@ -70,6 +70,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_edi_xml_invoice_content(self, invoice):
         return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
+    @api.model
     def _l10n_in_edi_extract_digits(self, string):
         if not string:
             return string
@@ -237,8 +238,8 @@ class AccountEdiFormat(models.Model):
                 })
             return {invoice: {"success": True, "attachment": attachment}}
 
+    @api.model
     def _l10n_in_validate_partner(self, partner, is_company=False):
-        self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
             message.append(_("- Street required min 3 and max 100 characters"))

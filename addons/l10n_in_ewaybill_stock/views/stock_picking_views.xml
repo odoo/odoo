@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_ewaybill" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.ewaybill</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button string="Create e-Waybill" type="object" name="action_open_ewaybill_form" invisible="country_code != 'IN' or ewaybill_id != False or state != 'done'"/>
+            </xpath>
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
+                <field name="ewaybill_id" invisible="1" />
+                <field name="country_code" invisible="1"/>
+                <button name="action_open_ewaybill"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        type="object"
+                        invisible="ewaybill_id == False">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">e-Waybill</span>
+                        </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
