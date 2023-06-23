@@ -130,7 +130,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def format_and_process(self, template, email_from, to, subject='Frogs', cc='',
                            return_path='', extra='',  msg_id=False,
                            model=None, target_model='mail.test.gateway', target_field='name',
-                           **kwargs):
+                           with_user=None, **kwargs):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         if not msg_id:
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
@@ -140,7 +140,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
         # In real use case, fetched mail processing is executed with administrative right.
-        self.env['mail.thread'].sudo().message_process(model, mail)
+        self.env['mail.thread'].with_user(with_user or self.env.user).sudo().message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
