@@ -176,6 +176,9 @@ function applyBinaryOp(ast, context) {
                     throw NotSupportedError();
                 }
             }
+            if (left instanceof Array && right instanceof Array) {
+                return [...left, ...right]
+            }
 
             return left + right;
         }

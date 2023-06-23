@@ -164,6 +164,18 @@ def fix_import_export_id_paths(fieldname):
     return fixed_external_id.split('/')
 
 
+def to_company_ids(companies):
+    if isinstance(companies, BaseModel):
+        return companies.ids
+    elif isinstance(companies, (list, tuple)):
+        return companies
+    return [companies]
+
+
+def check_company_domain_parent_of(self, companies):
+    return ['|', ('company_id', '=', False), ('company_id', 'parent_of', to_company_ids(companies))]
+
+
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
@@ -3633,6 +3645,14 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
+    def _check_company_domain(self, companies):
+        """Domain to be used for company consistency between records regarding this model.
+
+        :param companies: the allowed companies for the related record
+        :type companies: BaseModel or list or tuple or int or unquote
+        """
+        return ['|', ('company_id', '=', False), ('company_id', 'in', to_company_ids(companies))]
+
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
 
@@ -3647,7 +3667,7 @@ class BaseModel(metaclass=MetaModel):
         User with main company A, having access to company A and B, could be
         assigned or linked to records in company B.
         """
-        if fnames is None:
+        if fnames is None or 'company_id' in fnames:
             fnames = self._fields
 
         regular_fields = []
@@ -3671,33 +3691,32 @@ class BaseModel(metaclass=MetaModel):
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
                 corecord = record.sudo()[name]
-                # Special case with `res.users` since an user can belong to multiple companies.
-                if corecord._name == 'res.users' and corecord.company_ids:
-                    if not (company <= corecord.company_ids):
+                if corecord:
+                    domain = corecord._check_company_domain(company)
+                    if domain and not corecord.filtered_domain(domain):
                         inconsistencies.append((record, name, corecord))
-                elif not (corecord.company_id <= company):
-                    inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
             #      `self.property_account_payable_id.company_id == self.env.company
             company = self.env.company
             for name in property_fields:
-                # Special case with `res.users` since an user can belong to multiple companies.
                 corecord = record.sudo()[name]
-                if corecord._name == 'res.users' and corecord.company_ids:
-                    if not (company <= corecord.company_ids):
+                if corecord:
+                    domain = corecord._check_company_domain(company)
+                    if domain and not corecord.filtered_domain(domain):
                         inconsistencies.append((record, name, corecord))
-                elif not (corecord.company_id <= company):
-                    inconsistencies.append((record, name, corecord))
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
             company_msg = _lt("- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
             record_msg = _lt("- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
+            root_company_msg = _lt("- Only a root company can be set on %(record)r. Currently set to %(company)r")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
                     msg, company = company_msg, record
+                elif record == corecords and name == 'company_id':
+                    msg, company = root_company_msg, record.company_id
                 else:
                     msg, company = record_msg, record.company_id
                 field = self.env['ir.model.fields']._get(self._name, name)
@@ -5713,7 +5732,14 @@ class BaseModel(metaclass=MetaModel):
             else:
                 (key, comparator, value) = leaf
                 if comparator in ('child_of', 'parent_of'):
-                    stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
+                    if key == 'company_id':  # avoid an explicit search
+                        value_companies = self.env['res.company'].browse(value)
+                        if comparator == 'child_of':
+                            stack.append({record.id for record in self if record.company_id.parent_ids & value_companies})
+                        else:
+                            stack.append({record.id for record in self if record.company_id & value_companies.parent_ids})
+                    else:
+                        stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
                     continue
 
                 if key.endswith('.id'):

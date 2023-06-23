@@ -69,8 +69,10 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
         cls.payment_provider_old_company_id = cls.payment_provider.company_id.id
         cls.payment_provider_old_journal_id = cls.payment_provider.journal_id.id
-        cls.payment_provider.company_id = cls.company.id
-        cls.payment_provider.journal_id = cls.company_data['default_journal_bank'].id
+        cls.payment_provider.write({
+            'company_id': cls.company.id,
+            'journal_id': cls.company_data['default_journal_bank'].id,
+        })
 
         cls.online_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Online payment',
