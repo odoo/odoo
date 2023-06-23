@@ -2208,7 +2208,7 @@ class AccountMove(models.Model):
         default = dict(default or {})
         if (fields.Date.to_date(default.get('date')) or self.date) <= self.company_id._get_user_fiscal_lock_date():
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
-        if self.move_type == 'entry':
+        if self.move_type == 'entry' and 'move_reverse_cancel' not in self._context:
             default['partner_id'] = False
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
