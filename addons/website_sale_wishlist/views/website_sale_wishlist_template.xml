@@ -25,11 +25,9 @@
 
     <template id="checkout_add_to_wishlist" inherit_id="website_sale.cart_lines" name="Add to wishlist Button" priority="24">
         <xpath expr="//button[hasclass('js_delete_product')]" position="after">
-            <t t-if="not line.product_id._is_in_wishlist()">
-                <span class="d-md-inline-block d-none">|</span>
-                <a class="d-md-inline-block d-none small o_add_wishlist" href="#" aria-label="Add to favorites" title="Add to wishlist" t-att-data-product-template-id="line.product_template_id.id" t-att-data-product-product-id="line.product_id.id">Add to wishlist</a>
-                <button type="button" role="button" class="d-inline-block d-md-none btn btn-light o_add_wishlist" title="Add to Wishlist" t-att-data-in-wishlist="line.product_id._is_in_wishlist()" t-att-data-product-template-id="line.product_template_id.id" t-att-data-product-product-id="line.product_id.id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
-            </t>
+            <span class="d-md-inline-block d-none">|</span>
+            <a class="d-md-inline-block d-none small o_add_wishlist" href="#" aria-label="Add to favorites" title="Add to wishlist" t-att-data-product-template-id="line.product_template_id.id" t-att-data-product-product-id="line.product_id.id">Add to wishlist</a>
+            <button type="button" role="button" class="d-inline-block d-md-none btn btn-light o_add_wishlist" title="Add to Wishlist" t-att-data-in-wishlist="line.product_id._is_in_wishlist()" t-att-data-product-template-id="line.product_template_id.id" t-att-data-product-product-id="line.product_id.id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
         </xpath>
     </template>
 
