@@ -30,6 +30,9 @@ from odoo.tools.lru import LRU
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
 
+# total dict capacity (as a power of 2)
+_CACHE_BASE = 14 # 16384
+_CACHE_SIZE = int((2**_CACHE_BASE - 64) * 2 / 3)
 
 class Registry(Mapping):
     """ Model registry for a particular database.
@@ -118,7 +121,7 @@ class Registry(Mapping):
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
-        self.__cache = LRU(8192)
+        self.__cache = LRU(_CACHE_SIZE)
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
