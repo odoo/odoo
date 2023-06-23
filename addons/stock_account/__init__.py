@@ -13,7 +13,6 @@ def _configure_journals(env):
         template_code = company.chart_template
         full_data = ChartTemplate._get_chart_template_data(template_code)
         data = {
-            'account.journal': ChartTemplate._get_stock_account_journal(template_code),
             'template_data': {
                 fname: value
                 for fname, value in full_data['template_data'].items()
@@ -26,5 +25,17 @@ def _configure_journals(env):
             }
         }
         template_data = data.pop('template_data')
+        journal = env['account.journal'].search([
+            ('code', '=', 'STJ'),
+            ('company_id', '=', company.id),
+            ('type', '=', 'general')], limit=1)
+        if journal:
+            env['ir.model.data']._update_xmlids([{
+                'xml_id': f"account.{company.id}_inventory_valuation",
+                'record': journal,
+                'noupdate': True,
+            }])
+        else:
+            data['account.journal'] = ChartTemplate._get_stock_account_journal(template_code)
         ChartTemplate._load_data(data)
         ChartTemplate._post_load_data(template_code, company, template_data)
