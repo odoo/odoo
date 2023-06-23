@@ -33,7 +33,7 @@ class Certificate(models.Model):
         :return tuple: private_key, certificate
         """
         self.ensure_one()
-        content, password = b64decode(self.with_context(bin_size=False).content), self.password.encode()
+        content, password = b64decode(self.with_context(bin_size=False).content), self.password.encode() if self.password else None
         private_key, certificate, *_dummy = pkcs12.load_key_and_certificates(content, password, backend=default_backend())
         return private_key, certificate
 
