@@ -16,6 +16,7 @@ class TestFrontendMobile(odoo.tests.HttpCase):
                 "name": "BarTest",
                 "module_pos_restaurant": True,
                 "self_order_view_mode": True,
+                "floor_ids": self.env["restaurant.floor"].search([]),
                 "self_order_table_mode": False,
             }
         )

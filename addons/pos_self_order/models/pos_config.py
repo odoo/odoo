@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from typing import Optional, List, Dict, Callable
+import uuid
 from werkzeug.urls import url_quote
 import base64
 
@@ -10,7 +11,6 @@ from odoo import api, fields, models, modules
 from odoo.tools import file_open, split_every
 
 from odoo.addons.pos_self_order.models.product_product import ProductProduct
-from odoo.addons.pos_self_order.models.pos_order import PosOrderLine
 
 
 class PosConfig(models.Model):
@@ -52,6 +52,27 @@ class PosConfig(models.Model):
         help="Name of the image to display on the self order screen",
         default=_self_order_default_image_name,
     )
+    access_token = fields.Char(
+        "Security Token",
+        copy=False,
+        required=True,
+        readonly=True,
+        default=lambda self: self._get_access_token(),
+    )
+
+    @staticmethod
+    def _get_access_token():
+        return uuid.uuid4().hex[:16]
+
+    def _update_access_token(self):
+        self.access_token = self._get_access_token()
+        self.floor_ids.table_ids._update_identifier()
+
+    @api.model
+    def _init_access_token(self):
+        pos_config_ids = self.env["pos.config"].search([])
+        for pos_config_id in pos_config_ids:
+            pos_config_id.access_token = self._get_access_token()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -68,13 +89,6 @@ class PosConfig(models.Model):
                 pos_config_id.self_order_view_mode = True
                 pos_config_id.self_order_table_mode = True
 
-                self.env['pos_self_order.custom_link'].create({
-                    'url': '/menu/%s/products' % pos_config_id.id,
-                    'name': 'View Menu',
-                    'pos_config_ids': pos_config_id,
-                    'style': 'primary',
-                })
-
         return pos_config_ids
 
     @api.depends("module_pos_restaurant")
@@ -90,16 +104,19 @@ class PosConfig(models.Model):
     def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
         base_route = f"/menu/{self.id}"
+        table_route = ""
+
         if not self.self_order_table_mode:
             return base_route
-        access_token = (
-            self.env["restaurant.table"]
-            .search(
-                [("active", "=", True), *(table_id and [("id", "=", table_id)] or [])], limit=1
-            )
-            .access_token
+
+        table = self.env["restaurant.table"].search(
+            [("active", "=", True), ("id", "=", table_id)], limit=1
         )
-        return f"{base_route}?at={access_token}"
+
+        if table:
+            table_route = f"&table_identifier={table.identifier}"
+
+        return f"{base_route}?access_token={self.access_token}{table_route}"
 
     def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()

@@ -15,7 +15,13 @@
                         <t t-esc="link.name"/>
                     </a>
                 </t>
-                <t t-if="selfOrder.table and selfOrder.self_order_mode === 'each'">
+                <a
+                    type="button"
+                    t-on-click="() => this.router.navigate('productList')"
+                    class="btn btn-primary py-3 my-2">
+                    View Menu
+                </a>
+                <t t-if="selfOrder.ordering and selfOrder.self_order_mode === 'each'">
                     <hr class="bg-500"/>
                     <a
                         type="button"

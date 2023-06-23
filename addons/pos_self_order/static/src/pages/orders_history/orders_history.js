@@ -32,7 +32,7 @@ export class OrdersHistory extends Component {
     }
 
     editOrder(order) {
-        if (this.selfOrder.self_order_mode === "meal" && order.state === "draft") {
+        if (order.state === "draft") {
             this.selfOrder.editedOrder = order;
             this.router.navigate("productList");
         } else {
