@@ -639,6 +639,7 @@ class AccountEdiFormat(models.Model):
                 'sequence': sequence,
                 'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
                 'price_unit': general_discount,
+                'tax_ids': [],  # without this, a tax is automatically added to the line
             })]
 
         elements = tree.xpath('.//Allegati')
