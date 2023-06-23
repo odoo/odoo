@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields, api, _
+from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError
 
 
@@ -68,7 +68,7 @@ class AccountPaymentRegister(models.TransientModel):
     withholding_ids = fields.One2many(
         'account.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute='_compute_withholdings', readonly=False, store=True)
-    total_amount = fields.Monetary(compute='_compute_total_amount', help="Total amount with withholdings")
+    # total_amount = fields.Monetary(compute='_compute_total_amount', help="Total amount with withholdings")
     net_amount = fields.Monetary(compute='_compute_net_amount', help="Net amount after withholdings")
 
     @api.depends('line_ids')
@@ -85,6 +85,12 @@ class AccountPaymentRegister(models.TransientModel):
         for rec in self:
             rec.net_amount = rec.amount - sum(rec.withholding_ids.mapped('amount'))
 
+    def _get_withholding_move_line_default_values(self):
+        return {
+            'partner_id': self.partner_id.id,
+            'currency_id': self.currency_id.id,
+        }
+
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
         payment_vals['amount'] = self.net_amount
@@ -94,21 +100,44 @@ class AccountPaymentRegister(models.TransientModel):
             self.company_id,
             self.payment_date,
         )
+        sign = 1
+        if self.partner_type == 'supplier':
+            sign = -1
+        for base_amount in list(set(self.withholding_ids.mapped('base_amount'))):
+            withholding_lines = self.withholding_ids.filtered(lambda x: x.base_amount == base_amount)
+            nice_base_label = ','.join(withholding_lines.mapped('name'))
+            account_id = self.company_id.transfer_account_id.id
+            base_amount = sign * base_amount
+            cc_base_amount = self.company_currency_id.round(base_amount * conversion_rate)
+            payment_vals['write_off_line_vals'].append({
+                **self._get_withholding_move_line_default_values(),
+                'name': 'Base Ret: ' + nice_base_label,
+                'tax_ids': [Command.set(withholding_lines.mapped('tax_id').ids)],
+                'account_id': account_id,
+                'balance': cc_base_amount,
+                'amount_currency': base_amount,
+            })
+            payment_vals['write_off_line_vals'].append({
+                **self._get_withholding_move_line_default_values(),  # Counterpart 0 operation
+                'name': 'Base Ret Cont: ' + nice_base_label,
+                'account_id': account_id,
+                'balance': -cc_base_amount,
+                'amount_currency': -base_amount,
+            })
+
         for line in self.withholding_ids:
             if line.name == '/':
                 raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
 
             dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
-
             balance = self.company_currency_id.round(line.amount * conversion_rate)
             payment_vals['write_off_line_vals'].append({
-                'name': line.tax_id.name,
-                'account_id': account_id,
-                'partner_id': self.partner_id.id,
-                'currency_id': self.currency_id.id,
-                'amount_currency': line.amount,
-                'balance': balance,
-                'tax_base_amount': line.base_amount,
-                'tax_repartition_line_id': tax_repartition_line_id,
+                    **self._get_withholding_move_line_default_values(),
+                    'name': line.tax_id.name,
+                    'account_id': account_id,
+                    'amount_currency': sign * line.amount,
+                    'balance': sign * balance,
+                    'tax_base_amount': sign * line.base_amount,
+                    'tax_repartition_line_id': tax_repartition_line_id,
             })
         return payment_vals
