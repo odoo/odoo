@@ -269,7 +269,7 @@ class ProductTemplate(models.Model):
                     company_id,
                     fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
-            prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
+            prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale and not product.attribute_line_ids
             combination_info.update(
                 base_unit_name=product.base_unit_name,
                 base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
