@@ -895,6 +895,7 @@ class expression(object):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
+            ids = [id for id in ids if id]  # ignore (left, 'parent_of', [False])
             if not ids:
                 return [FALSE_LEAF]
             left_model = left_model.with_context(active_test=False)
