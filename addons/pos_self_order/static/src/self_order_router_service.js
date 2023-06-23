@@ -22,6 +22,12 @@ export class SelfOrderRouter extends Reactive {
         });
     }
 
+    addTableIdentifier(table) {
+        const url = new URL(browser.location.href);
+        url.searchParams.append("table_identifier", table.identifier);
+        history.replaceState({}, "", url);
+    }
+
     back() {
         if (!this.historyPage.length) {
             // We use the browser history, so if the user arrives on a page with a back button from a link,
@@ -58,12 +64,21 @@ export class SelfOrderRouter extends Reactive {
         Object.assign(this.registeredRoutes, routes);
     }
 
+    // If the url isn't a valid URL, we assume it's a relative path
     customLink(link) {
-        const url = new URL(browser.location.href);
-        url.pathname = link.url;
+        let url = "";
 
-        history.pushState({}, "", url);
-        this.path = window.location.pathname;
+        try {
+            url = new URL(link.url);
+            window.open(url);
+        } catch {
+            url = new URL(browser.location.href);
+            url.pathname = link.url;
+
+            history.pushState({}, "", url);
+            this.path = window.location.pathname;
+            this.historyPage = this.path;
+        }
     }
 }
 

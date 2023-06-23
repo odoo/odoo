@@ -9,14 +9,13 @@
     "auto_install": ["pos_restaurant"],
     "demo": [
         "demo/pos_restaurant_demo.xml",
-        "demo/custom_link_data.xml",
     ],
     "data": [
         "security/ir.model.access.csv",
         "views/index.xml",
         "views/qr_code.xml",
         "views/custom_link_views.xml",
-        "data/restaurant_table_data.xml",
+        "data/init_access.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
         "data/pos_restaurant_data.xml",

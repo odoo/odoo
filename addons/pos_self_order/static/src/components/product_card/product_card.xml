@@ -11,7 +11,7 @@
                 <div class="d-flex flex-row">
                     <span
                         class="me-1 text-primary fw-bolder"
-                        t-if="quantityInCart and selfOrder.table"
+                        t-if="quantityInCart and selfOrder.ordering"
                         t-esc="`${quantityInCart}x`"
                         />
                     <span class="card-text small" t-esc="getTotalPriceString()" />
@@ -29,7 +29,7 @@
                 loading="lazy"
                 onerror="this.remove()"
                 />
-            <span t-if="quantityInCart and selfOrder.table" class="position-absolute top-0 start-0 h-100 border-start border-5 border-primary" />
+            <span t-if="quantityInCart and selfOrder.ordering" class="position-absolute top-0 start-0 h-100 border-start border-5 border-primary" />
         </div>
     </t>
 </templates>
