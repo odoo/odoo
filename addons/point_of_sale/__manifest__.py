@@ -131,7 +131,6 @@
 
             # FIXME POSREF legacy dependencies to remove
             'web/static/lib/moment/moment.js',
-            'web/static/lib/underscore/underscore.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/owl_dialog.js', # needed by barcode_scanner

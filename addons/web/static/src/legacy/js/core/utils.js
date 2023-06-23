@@ -602,7 +602,7 @@ const utils = {
      * @returns
      */
     into: function (object, path) {
-        if (!_(path).isArray()) {
+        if (!Array.isArray(path)) {
             path = path.split('.');
         }
         for (var i = 0; i < path.length; i++) {
