@@ -378,8 +378,11 @@
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
                 </group>
-                <field name="name" position="after">
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
+                <field name="detailed_type" position="before">
+                    <field name="product_tmpl_id" readonly="1" attrs="{'required': [('id', '!=', False)]}"
+                           groups="base.group_no_one"/>
+                    <field name="product_tmpl_id" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"
+                           groups="!base.group_no_one"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
