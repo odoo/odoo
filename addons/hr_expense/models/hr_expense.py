@@ -1335,7 +1335,7 @@ class HrExpenseSheet(models.Model):
         moves.action_post()
         self.activity_update()
 
-        return {move.expense_sheet_id.id: move for move in moves}
+        return moves
 
     def _do_reverse_moves(self):
         draft_moves = self.account_move_id.filtered(lambda _move: _move.state == 'draft')
