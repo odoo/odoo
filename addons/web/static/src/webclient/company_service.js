@@ -65,6 +65,23 @@ export const companyService = {
             get currentCompany() {
                 return availableCompanies[allowedCompanyIds[0]];
             },
+            getCompany(companyId) {
+                return availableCompanies[companyId];
+            },
+            getAllChildren(companyId) {
+                return [
+                    ...availableCompanies[companyId].child_ids,
+                    ...availableCompanies[companyId].child_ids.map((child) => this.getAllChildren(child))
+                ].flat()
+            },
+            getChildrenToToggle(companyId) {
+                const children = this.getAllChildren(companyId)
+                if ( allowedCompanyIds.includes(companyId) ) {
+                    return children.filter((id) => allowedCompanyIds.includes(id))
+                } else {
+                    return children.filter((id) => !allowedCompanyIds.includes(id))
+                }
+            },
             setCompanies(mode, ...companyIds) {
                 // compute next company ids
                 let nextCompanyIds;
@@ -72,14 +89,16 @@ export const companyService = {
                     nextCompanyIds = symmetricalDifference(allowedCompanyIds, companyIds);
                 } else if (mode === "loginto") {
                     const companyId = companyIds[0];
+                    const children = this.getAllChildren(companyId);
                     if (allowedCompanyIds.length === 1) {
                         // 1 enabled company: stay in single company mode
-                        nextCompanyIds = [companyId];
+                        nextCompanyIds = [companyId, ...children];
                     } else {
                         // multi company mode
                         nextCompanyIds = [
                             companyId,
-                            ...allowedCompanyIds.filter((id) => id !== companyId),
+                            ...children,
+                            ...allowedCompanyIds.filter((id) => id !== companyId && !children.includes(id)),
                         ];
                     }
                 }

@@ -38,9 +38,9 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
     hooks.beforeEach(() => {
         patchWithCleanup(session.user_companies, {
             allowed_companies: {
-                3: { id: 3, name: "Hermit", sequence: 1 },
-                2: { id: 2, name: "Herman's", sequence: 2 },
-                1: { id: 1, name: "Heroes TM", sequence: 3 },
+                3: { id: 3, name: "Hermit", sequence: 1, parent_id: false, child_ids: [] },
+                2: { id: 2, name: "Herman's", sequence: 2, parent_id: false, child_ids: [] },
+                1: { id: 1, name: "Heroes TM", sequence: 3, parent_id: false, child_ids: [] },
             },
             current_company: 3,
         });
@@ -98,12 +98,12 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-square-o", 2);
         assert.deepEqual(
             [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
-                (el) => el.ariaChecked
+                (el) => el.getAttribute('aria-checked')
             ),
             ["true", "false", "false"]
         );
         assert.deepEqual(
-            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.ariaPressed),
+            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.getAttribute('aria-pressed')),
             ["true", "false", "false"]
         );
 
@@ -118,12 +118,12 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-square-o", 1);
         assert.deepEqual(
             [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
-                (el) => el.ariaChecked
+                (el) => el.getAttribute('aria-checked')
             ),
             ["true", "true", "false"]
         );
         assert.deepEqual(
-            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.ariaPressed),
+            [...target.querySelectorAll("[data-company-id] .log_into")].map((el) => el.getAttribute('aria-pressed')),
             ["true", "false", "false"]
         );
         await prom;
