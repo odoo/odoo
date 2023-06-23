@@ -54,7 +54,6 @@ checkoutForm.include({
                     const $field = this.$('input[name="' + id + '"],select[name="' + id + '"]');
                     $field.addClass('is-invalid');
                     $field.popover({content: errorFields[id], trigger: 'hover', container: 'body', placement: 'top'});
-                    $field.data("bs.popover").config.content = errorFields[id];
                 }
                 this._displayError(
                     _t("Validation Error"),
