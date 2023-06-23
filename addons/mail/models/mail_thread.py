@@ -1157,6 +1157,9 @@ class MailThread(models.AbstractModel):
                 thread_id = thread.id
                 subtype_id = thread._creation_subtype().id
 
+            # switch to odoobot for all incoming message creation
+            # to have a priviledged archived user so real_author_id is correctly computed
+            thread_root = thread.with_user(self.env.ref('base.user_root'))
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure they are notified of a private answer
             parent_message = False
@@ -1176,13 +1179,13 @@ class MailThread(models.AbstractModel):
             for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
-            if thread._name == 'mail.thread':  # message with parent_id not linked to record
-                new_msg = thread.message_notify(**post_params)
+            if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
+                new_msg = thread_root.message_notify(**post_params)
             else:
                 # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
                 partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
-                thread = thread.with_context(mail_create_nosubscribe=not partner_from_found)
-                new_msg = thread.message_post(**post_params)
+                thread_root = thread_root.with_context(mail_create_nosubscribe=not partner_from_found)
+                new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
