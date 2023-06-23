@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.relational_fields **/
+/** @odoo-module **/
 
 /**
  * Relational Fields
@@ -12,14 +12,14 @@
  * the corresponding record(s), or alter some of their fields.
  */
 
-import AbstractField from "web.AbstractField";
-import concurrency from "web.concurrency";
-import core from "web.core";
-import Dialog from "web.Dialog";
-import dom from "web.dom";
+import AbstractField from "@web/legacy/js/fields/abstract_field";
+import concurrency from "@web/legacy/js/core/concurrency";
+import core from "@web/legacy/js/services/core";
+import Dialog from "@web/legacy/js/core/dialog";
+import dom from "@web/legacy/js/core/dom";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import Domain from "web.Domain";
+import Domain from "@web/legacy/js/core/domain";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy } from "@web/core/utils/arrays";

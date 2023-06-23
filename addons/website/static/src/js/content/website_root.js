@@ -1,12 +1,12 @@
-/** @odoo-module alias=website.root */
+/** @odoo-module */
 
 import { loadJS } from "@web/core/assets";
-import { _t } from 'web.core';
-import KeyboardNavigationMixin from 'web.KeyboardNavigationMixin';
-import {Markup} from 'web.utils';
+import { _t } from "@web/legacy/js/services/core";
+import KeyboardNavigationMixin from '@web/legacy/frontend/keyboard_navigation_mixin';
+import { Markup } from '@web/legacy/js/core/utils';
 import session from 'web.session';
-import publicRootData from 'web.public.root';
-import "web.zoomodoo";
+import publicRootData from '@web/legacy/js/public/public_root';
+import "@web/legacy/js/libs/zoomodoo";
 import { pick } from "@web/core/utils/objects";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {

@@ -15,7 +15,8 @@ export async function requireLegacyModule(moduleName, loadCallback = () => {}) {
         await loadCallback();
         await odoo.ready(moduleName);
     }
-    return odoo.__DEBUG__.services[moduleName];
+    const mod = odoo.__DEBUG__.services[moduleName]
+    return mod[Symbol.for('default')] || mod;
 }
 
 export async function requireWysiwygLegacyModule(moduleName) {

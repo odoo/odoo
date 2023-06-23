@@ -1,7 +1,7 @@
-/** @odoo-module alias=survey.print **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import dom from "web.dom";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import dom from "@web/legacy/js/core/dom";
 
 publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
     selector: '.o_survey_print',

@@ -5,7 +5,7 @@ import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 import { serializeDate } from "@web/core/l10n/dates";
 
-import testUtils from "web.test_utils";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 import {
     editInput,

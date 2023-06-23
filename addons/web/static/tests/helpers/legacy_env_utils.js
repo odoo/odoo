@@ -5,8 +5,8 @@ import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { makeLegacyDialogMappingService } from "@web/legacy/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import core from "web.core";
-import makeTestEnvironment from "web.test_env";
+import core from "@web/legacy/js/services/core";
+import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 import { registerCleanup } from "./cleanup";
 import { makeTestEnv } from "./mock_env";
 

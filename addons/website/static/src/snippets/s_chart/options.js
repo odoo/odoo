@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import options from "web_editor.snippets.options";
-import weUtils from "web_editor.utils";
+import core from "@web/legacy/js/services/core";
+import options from "@web_editor/js/editor/snippets.options";
+import weUtils from "@web_editor/js/common/utils";
 import { isCSSColor } from '@web/core/utils/colors';
 
 var _t = core._t;

@@ -1,4 +1,4 @@
-/** @odoo-module alias=web_editor.utils **/
+/** @odoo-module **/
 
 import {
     normalizeCSSColor,

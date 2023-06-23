@@ -1,5 +1,5 @@
-/** @odoo-module alias=web.OwlDialog **/
-    
+/** @odoo-module **/
+
     const { useRef, onMounted, onWillUnmount } = owl;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',

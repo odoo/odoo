@@ -1,6 +1,6 @@
 /** @odoo-module **/
-import FieldRegistry from 'web.field_registry';
-import basic_fields from 'web.basic_fields';
+import FieldRegistry from '@web/legacy/js/fields/field_registry';
+import basic_fields from '@web/legacy/js/fields/basic_fields';
 
 var FieldFloat = basic_fields.FieldFloat;
 

@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { createFile, inputFiles } from "web.test_utils_file";
+import { createFile, inputFiles } from "@web/../tests/legacy/helpers/test_utils_file";
 
 registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_tour.js", {
     test: true,

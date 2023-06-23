@@ -1,6 +1,7 @@
-/** @odoo-module alias=web.Registry **/
-    
-    import { sortBy } from "web.utils";
+/** @odoo-module **/
+
+
+    import { sortBy } from "@web/legacy/js/core/utils";
 
     /**
      * The registry is really pretty much only a mapping from some keys to some

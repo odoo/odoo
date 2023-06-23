@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import Dialog from "web.Dialog";
-import options from "web_editor.snippets.options";
+import core from "@web/legacy/js/services/core";
+import Dialog from "@web/legacy/js/core/dialog";
+import options from "@web_editor/js/editor/snippets.options";
 
 const qweb = core.qweb;
 var _t = core._t;

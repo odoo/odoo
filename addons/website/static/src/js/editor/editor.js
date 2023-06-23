@@ -3,7 +3,7 @@
 import { LinkDialog } from "@web_editor/js/wysiwyg/widgets/link_dialog";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import wUtils from 'website.utils';
+import wUtils from "@website/js/utils";
 
 patch(LinkDialog.prototype, "editor.js", {
     setup() {

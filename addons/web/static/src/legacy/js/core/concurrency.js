@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.concurrency **/
+/** @odoo-module **/
 
 /**
  * Concurrency Utils
@@ -14,9 +14,9 @@
  * we solved some concurrency issues, when we noticed that a pattern emerged.
  */
 
-import Class from "web.Class";
+import Class from "@web/legacy/js/core/class";
 
-export default {
+const concurrency = {
     /**
      * Returns a promise resolved after 'wait' milliseconds
      *
@@ -318,3 +318,7 @@ export default {
         });
     }
 };
+
+export const delay = concurrency.delay
+export const DropPrevious = concurrency.DropPrevious
+export default concurrency;

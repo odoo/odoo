@@ -3,7 +3,7 @@
 import session from "web.session";
 import { Colorpicker } from "@web/core/colorpicker/colorpicker";
 import customColors from "@web_editor/js/editor/custom_colors";
-import weUtils from "web_editor.utils";
+import weUtils from "@web_editor/js/common/utils";
 import {
     isCSSColor,
     normalizeCSSColor,

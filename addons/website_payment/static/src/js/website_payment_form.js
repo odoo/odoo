@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core, { _t } from 'web.core';
-import checkoutForm from 'payment.checkout_form';
+import core, { _t } from "@web/legacy/js/services/core";
+import checkoutForm from '@payment/js/checkout_form';
 import { sprintf } from '@web/core/utils/strings';
 
 checkoutForm.include({
@@ -22,9 +22,9 @@ checkoutForm.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Perform some validations for donations before performing payment 
+     * Perform some validations for donations before performing payment
      *
-     * @override method from payment.payment_form_mixin
+     * @override method from @payment/js/payment_form_mixin
      * @private
      * @param {string} code - The code of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
@@ -67,7 +67,7 @@ checkoutForm.include({
     /**
      * Add params used by the donation snippet to the transaction route params.
      *
-     * @override method from payment.payment_form_mixin
+     * @override method from @payment/js/payment_form_mixin
      * @private
      * @param {string} code - The code of the selected payment option's provider
      * @param {number} paymentOptionId - The id of the selected payment option

@@ -1,9 +1,9 @@
-/** @odoo-module alias=web.Dialog **/
+/** @odoo-module **/
 
-import core from "web.core";
-import dom from "web.dom";
-import Widget from "web.Widget";
-import OwlDialog from "web.OwlDialog";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import Widget from "@web/legacy/js/core/widget";
+import OwlDialog from "@web/legacy/js/core/owl_dialog";
 
 var QWeb = core.qweb;
 var _t = core._t;

@@ -1,13 +1,13 @@
-/** @odoo-module alias=google_recaptcha.ReCaptchaV3 **/
+/** @odoo-module **/
 
-import Class from "web.Class";
-import core from "web.core";
+import Class from "@web/legacy/js/core/class";
+import core from "@web/legacy/js/services/core";
 import { session } from "@web/session";
 import { loadJS } from "@web/core/assets";
 
 const _t = core._t;
 
-const ReCaptcha = Class.extend({
+export const ReCaptcha = Class.extend({
     /**
      * @override
      */

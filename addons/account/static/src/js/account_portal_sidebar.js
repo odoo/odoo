@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import dom from "web.dom";
-import publicWidget from "web.public.widget";
-import PortalSidebar from "portal.PortalSidebar";
-import utils from "web.utils";
+import dom from "@web/legacy/js/core/dom";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import PortalSidebar from "@portal/js/portal_sidebar";
+import utils from "@web/legacy/js/core/utils";
 
 publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_invoice_sidebar',

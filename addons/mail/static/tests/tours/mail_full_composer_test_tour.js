@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { createFile, inputFiles } from "web.test_utils_file";
+import { createFile, inputFiles } from "@web/../tests/legacy/helpers/test_utils_file";
 
 /**
  * This tour depends on data created by python test in charge of launching it.

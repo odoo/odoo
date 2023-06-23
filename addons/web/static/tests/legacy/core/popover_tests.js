@@ -1,8 +1,8 @@
 /** @odoo-module **/
-    
-    import makeTestEnvironment from "web.test_env";
-    import Popover from "web.Popover";
-    import testUtils from "web.test_utils";
+
+    import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
+    import Popover from "@web/legacy/js/core/popover";
+    import testUtils from "@web/../tests/legacy/helpers/test_utils";
     import { click, getFixture, mount } from "@web/../tests/helpers/utils";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 

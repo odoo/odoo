@@ -2,11 +2,11 @@
 
 import { uniqueId } from '@web/core/utils/functions';
 import { sprintf } from '@web/core/utils/strings';
-import {_t, qweb as QWeb} from 'web.core';
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
-import utils from 'web.utils';
-import wUtils from 'website.utils';
+import {_t, qweb as QWeb} from "@web/legacy/js/services/core";
+import Dialog from '@web/legacy/js/core/dialog';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import utils from '@web/legacy/js/core/utils';
+import wUtils from '@website/js/utils';
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',

@@ -1,7 +1,7 @@
 
 /** @odoo-module **/
 
-// These colors are already normalized as per normalizeCSSColor in web.Colorpicker
+// These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export default [
     ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF'],
     ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],

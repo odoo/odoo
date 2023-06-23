@@ -1,8 +1,8 @@
-/** @odoo-module alias=payment.checkout_form **/
-    
-    import publicWidget from "web.public.widget";
+/** @odoo-module **/
 
-    import paymentFormMixin from "payment.payment_form_mixin";
+    import publicWidget from "@web/legacy/js/public/public_widget";
+
+    import paymentFormMixin from "@payment/js/payment_form_mixin";
     import { debounce } from "@web/core/utils/timing";
 
     publicWidget.registry.PaymentCheckoutForm = publicWidget.Widget.extend(paymentFormMixin, {

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import wTourUtils from "website.tour_utils";
+import wTourUtils from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
-import { patch, unpatch } from "web.utils";
+import { patch, unpatch } from '@web/legacy/js/core/utils';
 
 let patchWithError = false;
 const patchMediaDialog = () => patch(FileSelectorControlPanel.prototype, 'test_website.mock_image_widgets', {

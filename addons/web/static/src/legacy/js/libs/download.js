@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.download **/
+/** @odoo-module **/
 /*
 MIT License
 

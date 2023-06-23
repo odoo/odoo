@@ -1,10 +1,10 @@
-/** @odoo-module alias=portal.chatter **/
+/** @odoo-module **/
 
-import core from "web.core";
-import dom from "web.dom";
-import publicWidget from "web.public.widget";
-import portalComposer from "portal.composer";
-import {Markup} from "web.utils";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import portalComposer from "@portal/js/portal_composer";
+import { Markup } from "@web/legacy/js/core/utils";
 import { range } from "@web/core/utils/numbers";
 
 var qweb = core.qweb;
@@ -337,6 +337,4 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
     },
 });
 
-export default {
-    PortalChatter: PortalChatter,
-};
+export default PortalChatter

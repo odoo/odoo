@@ -2,7 +2,7 @@
 
 import { Messaging } from "@mail/core/common/messaging_service";
 
-import { patch } from "web.utils";
+import { patch } from '@web/legacy/js/core/utils';
 
 patch(Messaging.prototype, "hr", {
     setup(...args) {

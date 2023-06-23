@@ -179,7 +179,7 @@ QUnit.module('Crm Fill Temporal Service', {
 
 }, function () {
     /**
-     * Since mock_server does not support fill_temporal, 
+     * Since mock_server does not support fill_temporal,
      * we only check the domain and the context sent to the read_group, as well
      * as the end value of the FillTemporal Service after the read_group (which should have been updated in the model)
      */
@@ -221,7 +221,7 @@ QUnit.module('Crm Fill Temporal Service', {
     });
 
     /**
-     * Since mock_server does not support fill_temporal, 
+     * Since mock_server does not support fill_temporal,
      * we only check the domain and the context sent to the read_group, as well
      * as the end value of the FillTemporal Service after the read_group (which should have been updated in the model)
      */

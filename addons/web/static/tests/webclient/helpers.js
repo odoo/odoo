@@ -18,10 +18,10 @@ import { effectService } from "@web/core/effects/effect_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
-import AbstractService from "web.AbstractService";
-import basicFields from "web.basic_fields";
-import core from "web.core";
-import makeTestEnvironment from "web.test_env";
+import AbstractService from "@web/legacy/js/core/abstract_service";
+import basicFields from "@web/legacy/js/fields/basic_fields";
+import core from "@web/legacy/js/services/core";
+import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
@@ -40,13 +40,13 @@ import {
     patchWithCleanup,
 } from "../helpers/utils";
 import session from "web.session";
-import LegacyMockServer from "web.MockServer";
-import Widget from "web.Widget";
+import LegacyMockServer from "@web/../tests/legacy/helpers/mock_server";
+import Widget from "@web/legacy/js/core/widget";
 import { uiService } from "@web/core/ui/ui_service";
 import { commandService } from "@web/core/commands/command_service";
 import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, xml } from "@odoo/owl";

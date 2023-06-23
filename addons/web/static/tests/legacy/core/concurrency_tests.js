@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import concurrency from "web.concurrency";
-import testUtils from "web.test_utils";
+import concurrency from "@web/legacy/js/core/concurrency";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 var makeTestPromise = testUtils.makeTestPromise;
 var makeTestPromiseWithAssert = testUtils.makeTestPromiseWithAssert;

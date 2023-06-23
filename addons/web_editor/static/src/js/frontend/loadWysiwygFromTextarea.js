@@ -16,7 +16,7 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         currentOptions.value = '<p><br></p>';
     }
 
-    const { ComponentWrapper } = await requireLegacyModule('web.OwlCompatibility')
+    const { ComponentWrapper } = await requireLegacyModule('@web/legacy/js/owl_compatibility')
     const { Wysiwyg } = await requireLegacyModule('@web_editor/js/wysiwyg/wysiwyg', async () => {
         const bundle = await getBundle('web_editor.assets_wysiwyg');
         await loadBundle(bundle);

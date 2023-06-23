@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import concurrency from 'web.concurrency';
-import utils from 'web.utils';
-import weUtils from 'web_editor.utils';
-import {_lt} from 'web.core';
-import {svgToPNG} from 'website.utils';
+import concurrency from '@web/legacy/js/core/concurrency';
+import utils from '@web/legacy/js/core/utils';
+import weUtils from '@web_editor/js/common/utils';
+import {_lt} from "@web/legacy/js/services/core";
+import {svgToPNG} from '@website/js/utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { mixCssColors } from '@web/core/utils/colors';

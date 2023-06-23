@@ -3,7 +3,7 @@
 import { patch } from '@web/core/utils/patch';
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
-import { date_to_str } from 'web.time';
+import { date_to_str } from '@web/legacy/js/core/time';
 
 patch(MockServer.prototype, 'project_todo/controller/project_todo', {
     //--------------------------------------------------------------------------

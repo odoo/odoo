@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_sale_stock.website_sale**/
+/** @odoo-module **/
 
-import { WebsiteSale } from 'website_sale.website_sale';
-import { is_email } from 'web.utils';
+import { WebsiteSale } from '@website_sale/js/website_sale';
+import { is_email } from '@web/legacy/js/core/utils';
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {

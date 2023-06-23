@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 // TODO: Remove following steps once fix of task-3212519 is done.
 // Those steps are preventing a race condition to happen in the meantime: when

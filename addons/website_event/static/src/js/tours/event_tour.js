@@ -1,10 +1,10 @@
-/** @odoo-module alias=website_event.event_steps **/
+/** @odoo-module **/
 
-import {_t} from "web.core";
-import "web.legacy_tranlations_loaded";
-import {Markup} from "web.utils";
+import {_t} from "@web/legacy/js/services/core";
+import "@web/legacy/translations_loaded";
+import { Markup } from "@web/legacy/js/core/utils";
 
-import EventAdditionalTourSteps from "event.event_steps";
+import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 EventAdditionalTourSteps.include({
 

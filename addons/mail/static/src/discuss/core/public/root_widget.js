@@ -9,6 +9,6 @@ import "@mail/discuss/core/public/boot";
 
 import { Component } from "@odoo/owl";
 
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 
 export default standaloneAdapter({ Component });

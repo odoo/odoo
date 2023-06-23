@@ -1,6 +1,6 @@
 /** @odoo-module **/
-    
-    import FinalSteps from "website_event_booth_exhibitor.tour_steps";
+
+    import FinalSteps from "@website_event_booth_exhibitor/../tests/tours/website_event_booth_exhibitor_steps";
 
     FinalSteps.include({
 

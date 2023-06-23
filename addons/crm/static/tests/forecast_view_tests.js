@@ -9,7 +9,7 @@ import {
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { mock } from "web.test_utils";
+import { mock } from "@web/../tests/legacy/helpers/test_utils";
 import { browser } from "@web/core/browser/browser";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 

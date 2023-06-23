@@ -25,7 +25,7 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { file } from "web.test_utils";
+import { file } from "@web/../tests/legacy/helpers/test_utils";
 
 const { inputFiles } = file;
 

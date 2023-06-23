@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.zoomodoo **/
+/** @odoo-module **/
 
 /**
     This code has been more that widely inspired by easyZoom library.
@@ -165,7 +165,7 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
             }
         }
 
-        // Prevents the flyout to overflow 
+        // Prevents the flyout to overflow
         if(left + this.$flyout.width() > $(document).width()) {
             this.$flyout.css('width',  $(document).width() - left + 'px');
         } else if(left === 0) { // Limit the max width if displayed on the left

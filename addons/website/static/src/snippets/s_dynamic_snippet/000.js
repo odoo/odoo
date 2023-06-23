@@ -1,9 +1,9 @@
-/** @odoo-module alias=website.s_dynamic_snippet **/
+/** @odoo-module **/
 
-import core from "web.core";
-import config from "web.config";
-import publicWidget from "web.public.widget";
-import {Markup} from "web.utils";
+import core from "@web/legacy/js/services/core";
+import config from "@web/legacy/js/services/config";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import { Markup } from "@web/legacy/js/core/utils";
 import { uniqueId } from "@web/core/utils/functions";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
@@ -235,7 +235,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * Called when the size has reached a new bootstrap breakpoint.
      *
      * @private
-     * @param {number} size as Integer @see web.config.device.SIZES
+     * @param {number} size as Integer @see @web/legacy/js/services/config.device.SIZES
      */
     _onSizeChanged: function (size) {
         if (this.isDesplayedAsMobile !== config.device.isMobile) {

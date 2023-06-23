@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import portalComposer from "portal.composer";
+import core from "@web/legacy/js/services/core";
+import portalComposer from "@portal/js/portal_composer";
 
 var _t = core._t;
 
@@ -67,7 +67,7 @@ PortalComposer.include({
             }
 
             // set the default value to trigger the display of star widget and update the hidden input value.
-            self.set("star_value", self.options.default_rating_value); 
+            self.set("star_value", self.options.default_rating_value);
             self.$input.val(self.options.default_rating_value);
         });
     },

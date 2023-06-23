@@ -1,4 +1,4 @@
-/** @odoo-module alias=survey.preload_image_mixin **/
+/** @odoo-module **/
 
 
 export default {

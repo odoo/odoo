@@ -1,15 +1,15 @@
-/** @odoo-module alias=web_editor.snippet.editor **/
+/** @odoo-module **/
 
-import concurrency from "web.concurrency";
-import core from "web.core";
-import Dialog from "web.Dialog";
-import dom from "web.dom";
-import {Markup, confine} from "web.utils";
-import Widget from "web.Widget";
-import options from "web_editor.snippets.options";
-import { ColorPalette } from '@web_editor/js/wysiwyg/widgets/color_palette';
-import SmoothScrollOnDrag from "web.smooth_scroll_on_drag";
-import {getCSSVariableValue} from "web_editor.utils";
+import concurrency from "@web/legacy/js/core/concurrency";
+import core from "@web/legacy/js/services/core";
+import Dialog from "@web/legacy/js/core/dialog";
+import dom from "@web/legacy/js/core/dom";
+import { Markup, confine } from "@web/legacy/js/core/utils";
+import Widget from "@web/legacy/js/core/widget";
+import options from "@web_editor/js/editor/snippets.options";
+import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
+import SmoothScrollOnDrag from "@web/legacy/js/core/smooth_scroll_on_drag";
+import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { sprintf, escape } from "@web/core/utils/strings";
 const QWeb = core.qweb;
@@ -18,7 +18,7 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy, unique } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
-import { ComponentWrapper } from "web.OwlCompatibility";
+import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
@@ -3271,7 +3271,7 @@ var SnippetsMenu = Widget.extend({
                         colorCustomizedURL.searchParams.forEach((value, key) => {
                             const match = key.match(/^c([1-5])$/);
                             if (match) {
-                                colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
+                                colorCustomizedURL.searchParams.set(key, weUtils.getCSSVariableValue(`o-color-${match[1]}`));
                             }
                         });
                         dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;

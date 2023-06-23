@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.basic_fields **/
+/** @odoo-module **/
 
 /**
  * This module contains most of the basic (meaning: non relational) field
@@ -6,15 +6,15 @@
  * BasicView, so, they can work with the records obtained from a BasicModel.
  */
 
-import AbstractField from "web.AbstractField";
-import core from "web.core";
-import datepicker from "web.datepicker";
-import dom from "web.dom";
-import framework from "web.framework";
-import py_utils from "web.py_utils";
+import AbstractField from "@web/legacy/js/fields/abstract_field";
+import core from "@web/legacy/js/services/core";
+import datepicker from "@web/legacy/js/widgets/date_picker";
+import dom from "@web/legacy/js/core/dom";
+import framework from "@web/legacy/js/core/misc";
+import py_utils from "@web/legacy/js/core/py_utils";
 import session from "web.session";
-import field_utils from "web.field_utils";
-import utils from "web.utils";
+import field_utils from "@web/legacy/js/fields/field_utils";
+import utils from "@web/legacy/js/core/utils";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
@@ -1626,7 +1626,7 @@ var AbstractFieldBinary = AbstractField.extend({
     },
 });
 
-var FieldBinaryFile = AbstractFieldBinary.extend({
+export var FieldBinaryFile = AbstractFieldBinary.extend({
     description: _lt("File"),
     template: 'FieldBinaryFile',
     events: Object.assign({}, AbstractFieldBinary.prototype.events, {

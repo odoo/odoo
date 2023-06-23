@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import testUtils from "web.test_utils";
-import Widget from "web.Widget";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import Widget from "@web/legacy/js/core/widget";
 
 QUnit.module('core', {}, function () {
 

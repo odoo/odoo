@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_event_meet.website_event_create_room_button **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import core from "web.core";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import core from "@web/legacy/js/services/core";
 const QWeb = core.qweb;
 
 publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({

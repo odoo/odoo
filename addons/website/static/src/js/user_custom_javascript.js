@@ -7,8 +7,8 @@
 // world !' message in a popup:
 //
 /*
-import Dialog from 'web.Dialog';
-import publicWidget from 'web.public.widget';
+import Dialog from '@web/legacy/js/core/dialog';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.HelloWorldPopup = publicWidget.Widget.extend({
     selector: '#wrapwrap',

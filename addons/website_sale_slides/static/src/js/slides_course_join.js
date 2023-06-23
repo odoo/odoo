@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_sale_slides.course.join.widget **/
+/** @odoo-module **/
 
 import CourseJoin from "@website_slides/js/slides_course_join";
-import wUtils from "website.utils";
+import wUtils from "@website/js/utils";
 
 const CourseJoinWidget = CourseJoin.courseJoinWidget;
 

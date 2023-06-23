@@ -1,7 +1,7 @@
 /** @odoo-module **/
-    
-    import makeTestEnvironment from "web.test_env";
-    import testUtils from "web.test_utils";
+
+    import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
+    import testUtils from "@web/../tests/legacy/helpers/test_utils";
     import { destroy, getFixture, mount } from "@web/../tests/helpers/utils";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 

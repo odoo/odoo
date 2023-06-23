@@ -10,7 +10,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { mapLegacyEnvToWowlEnv } from "@web/legacy/utils";
-import * as legacyEnv from "web.env";
+import legacyEnv from "@web/legacy/js/env";
 
 Component.env = legacyEnv;
 

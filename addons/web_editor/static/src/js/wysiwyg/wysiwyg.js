@@ -14,7 +14,7 @@ import { AltDialog } from '@web_editor/js/wysiwyg/widgets/alt_dialog';
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
-import weUtils from "web_editor.utils";
+import weUtils from "@web_editor/js/common/utils";
 import { isSelectionInSelectors } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
@@ -1234,7 +1234,7 @@ export class Wysiwyg extends Component {
             $odooFields.each((i, field) => {
                 const observer = new MutationObserver((mutations) => {
                     mutations = this.odooEditor.filterMutationRecords(mutations);
-                    mutations = mutations.filter(rec => 
+                    mutations = mutations.filter(rec =>
                         !(rec.type === "attributes" && (rec.attributeName.startsWith("data-oe-t")))
                     );
                     if (!mutations.length) {
@@ -1713,7 +1713,7 @@ export class Wysiwyg extends Component {
      */
     async _createSnippetsMenuInstance(options={}) {
         const snippetsEditor = await requireWysiwygLegacyModule('@web_editor/js/editor/snippets.editor');
-        const { SnippetsMenu } = snippetsEditor[Symbol.for("default")];
+        const { SnippetsMenu } = snippetsEditor;
         return new SnippetsMenu(this, Object.assign({
             wysiwyg: this,
             selectorEditableArea: '.o_editable',

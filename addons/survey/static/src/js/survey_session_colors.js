@@ -1,4 +1,4 @@
-/** @odoo-module alias=survey.session_colors **/
+/** @odoo-module **/
 
 /**
  * Small tool that returns common colors for survey session widgets.

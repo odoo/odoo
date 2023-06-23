@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import dom from 'web.dom';
-import publicWidget from 'web.public.widget';
+import dom from '@web/legacy/js/core/dom';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.login = publicWidget.Widget.extend({
     selector: '.oe_login_form',

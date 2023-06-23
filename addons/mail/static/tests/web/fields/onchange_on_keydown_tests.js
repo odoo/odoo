@@ -2,7 +2,7 @@
 
 import { nextTick } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { dom } from "web.test_utils";
+import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
 let serverData;
 

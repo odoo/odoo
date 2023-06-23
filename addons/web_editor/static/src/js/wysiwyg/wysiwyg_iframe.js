@@ -221,17 +221,17 @@ function getWysiwygIframeContent(params) {
                 return window.top.odoo.__DEBUG__.services['web.session'];
             });
 
-            odoo.define('root.widget', ['web.Widget'], function (require) {
+            odoo.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
                 'use strict';
-                var Widget = require('web.Widget');
+                var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];
                 var widget = new Widget();
                 widget.appendTo(document.body);
                 return widget;
             });
 
-            odoo.define('web.core.top', ['web.core'], function (require) {
-                var core = require('web.core');
-                core.qweb.templates = window.top.odoo.__DEBUG__.services['web.core'].qweb.templates;
+            odoo.define('web.core.top', ['@web/legacy/js/services/core'], function (require) {
+                var core = require('@web/legacy/js/services/core')[Symbol.for("default")];
+                core.qweb.templates = window.top.odoo.__DEBUG__.services['@web/legacy/js/services/core'].qweb.templates;
             });
         </script>
     </head>

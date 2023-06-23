@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import {ComponentAdapter} from 'web.OwlCompatibility';
+import {ComponentAdapter} from '@web/legacy/js/owl_compatibility';
 import {useService} from '@web/core/utils/hooks';
-import AceEditor from 'web_editor.ace';
+import AceEditor from '@web_editor/js/common/ace';
 
 const {Component} = owl;
 

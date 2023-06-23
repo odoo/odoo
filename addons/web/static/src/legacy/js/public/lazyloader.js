@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.public.lazyloader **/
+/** @odoo-module **/
 
 var blockEvents = ['submit', 'click'];
 var blockFunction = function (ev) {

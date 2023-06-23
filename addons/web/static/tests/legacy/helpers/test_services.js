@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { buildQuery } from 'web.rpc';
+import { buildQuery } from '@web/legacy/js/core/rpc';
 
 const testEnvServices = {
     getCookie() {},

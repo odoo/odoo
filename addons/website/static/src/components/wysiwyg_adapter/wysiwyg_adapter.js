@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import legacyEnv from 'web.commonEnv';
+import legacyEnv from '@web/legacy/js/common_env';
 
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
-import { setEditableWindow } from 'web_editor.utils';
+import weUtils from '@web_editor/js/common/utils';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -106,7 +106,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             // Set utils functions' editable window to the current iframe's window.
             // This allows those function to access the correct styles definitions,
             // document element, etc.
-            setEditableWindow(this.websiteService.contentWindow);
+            weUtils.setEditableWindow(this.websiteService.contentWindow);
             this.switchableRelatedViews = Promise.resolve(switchableRelatedViews);
         });
 
@@ -139,7 +139,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             if (this.dummyWidgetEl) {
                 this.dummyWidgetEl.remove();
                 document.body.classList.remove('editor_has_dummy_snippets');
-                setEditableWindow(window);
+                weUtils.setEditableWindow(window);
             }
         });
     }
@@ -324,10 +324,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // It would also survive (multi) website switch, not fetching the values
         // from the accessed website.
         const mod = await requireWysiwygLegacyModule('@website/snippets/s_social_media/options');
-        mod[Symbol.for('default')].clearDbSocialValuesCache();
+        mod.clearDbSocialValuesCache();
 
         const formOptionsMod = await requireWysiwygLegacyModule('@website/snippets/s_website_form/options');
-        formOptionsMod[Symbol.for('default')].clearAllFormsInfo();
+        formOptionsMod.clearAllFormsInfo();
 
         this._restoreMegaMenus();
         return super.destroy(...arguments);
@@ -849,7 +849,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     async _createSnippetsMenuInstance(options = {}) {
         const snippetsEditor = await requireWysiwygLegacyModule('@website/js/editor/snippets.editor');
-        const { SnippetsMenu } = snippetsEditor[Symbol.for("default")];
+        const { SnippetsMenu } = snippetsEditor;
         return new SnippetsMenu(this, Object.assign({
             wysiwyg: this,
             selectorEditableArea: '.o_editable',

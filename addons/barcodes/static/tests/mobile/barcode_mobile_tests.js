@@ -1,10 +1,10 @@
 /** @odoo-module **/
-    
+
     import {barcodeService} from "@barcodes/barcode_service";
     import {barcodeRemapperService} from "@barcodes/js/barcode_events";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { registry } from "@web/core/registry";
-    import testUtils from "web.test_utils";
+    import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
     const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
     const isMobileChrome = barcodeService.isMobileChrome;
@@ -24,7 +24,7 @@
             keyCode: keycode,
         });
     }
-    
+
     QUnit.module('Barcodes', {
         before() {
             barcodeService.maxTimeBetweenKeysInMs = 0;
@@ -81,7 +81,7 @@
                 $element = $form.find('input[name=' + keepFocusedElements[i] + ']');
                 $element.focus();
                 triggerKeyDown('c', $element[0]);
-    
+
                 assert.strictEqual(document.activeElement, $element[0],
                     "input " + keepFocusedElements[i] + " should keep focus");
             }

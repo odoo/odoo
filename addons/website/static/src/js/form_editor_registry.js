@@ -1,5 +1,5 @@
-/** @odoo-module alias=website.form_editor_registry **/
+/** @odoo-module **/
 
-import Registry from "web.Registry";
+import Registry from "@web/legacy/js/core/registry";
 
 export default new Registry();

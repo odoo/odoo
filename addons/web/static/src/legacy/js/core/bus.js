@@ -1,7 +1,7 @@
-/** @odoo-module alias=web.Bus **/
+/** @odoo-module **/
 
-import Class from "web.Class";
-import mixins from "web.mixins";
+import Class from "@web/legacy/js/core/class";
+import mixins from "@web/legacy/js/core/mixins";
 
 /**
  * Event Bus used to bind events scoped in the current instance

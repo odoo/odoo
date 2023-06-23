@@ -1,9 +1,9 @@
-/** @odoo-module alias=website_sale.s_dynamic_snippet_products_options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
-import s_dynamic_snippet_carousel_options from "website.s_dynamic_snippet_carousel_options";
+import options from "@web_editor/js/editor/snippets.options";
+import s_dynamic_snippet_carousel_options from "@website/snippets/s_dynamic_snippet_carousel/options";
 
-import wUtils from "website.utils";
+import wUtils from "@website/js/utils";
 
 const alternativeSnippetRemovedOptions = [
     'filter_opt', 'product_category_opt', 'product_tag_opt', 'product_names_opt',

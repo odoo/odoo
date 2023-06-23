@@ -1,7 +1,7 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
-    import tourUtils from "website_sale.tour_utils";
+    import tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add("shop_custom_attribute_value", {
         url: "/shop?search=Customizable Desk",

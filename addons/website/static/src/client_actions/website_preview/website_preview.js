@@ -3,7 +3,7 @@
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { useService, useBus } from '@web/core/utils/hooks';
-import core from 'web.core';
+import core from "@web/legacy/js/services/core";
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
@@ -13,8 +13,8 @@ import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { sprintf } from "@web/core/utils/strings";
-import wUtils from 'website.utils';
-import config from "web.config";
+import wUtils from '@website/js/utils';
+import config from "@web/legacy/js/services/config";
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -111,7 +111,7 @@ export class WebsitePreview extends Component {
                 this.websiteService.showLoader({ showTips: true });
             }
         }, () => [this.props.action.context.params]);
-        
+
         useEffect(() => {
             this.websiteContext.showAceEditor = false;
         }, () => [

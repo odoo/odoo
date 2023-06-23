@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {Markup} from "web.utils";
+import { Markup } from "@web/legacy/js/core/utils";
 
 var qwebPath = '/web/static/lib/qweb/';
 import {hushConsole} from "@web/../tests/helpers/utils";

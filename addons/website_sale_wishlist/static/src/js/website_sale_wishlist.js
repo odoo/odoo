@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_sale_wishlist.wishlist **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import wSaleUtils from "website_sale.utils";
-import VariantMixin from "website_sale.SaleVariantMixin";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered

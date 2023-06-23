@@ -1,6 +1,6 @@
-/** @odoo-module alias=wysiwyg.fonts **/
+/** @odoo-module **/
 
-export default {
+export const fonts = {
     /**
      * Retrieves all the CSS rules which match the given parser (Regex).
      *
@@ -98,3 +98,5 @@ export default {
         }
     },
 };
+
+export default fonts;

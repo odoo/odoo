@@ -1,8 +1,8 @@
-/** @odoo-module alias=mass_mailing.s_rating_options **/
+/** @odoo-module **/
 
-import { ComponentWrapper } from "web.OwlCompatibility";
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
-import options from "web_editor.snippets.options";
+import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.Rating = options.Class.extend({
     /**

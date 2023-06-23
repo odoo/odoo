@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { MEDIAS_BREAKPOINTS, SIZES, utils } from "@web/core/ui/ui_service";
-import config from "web.config";
+import config from "@web/legacy/js/services/config";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 /**

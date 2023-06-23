@@ -4,7 +4,7 @@ import { registry } from '@web/core/registry';
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
-import Domain from 'web.Domain';
+import Domain from '@web/legacy/js/core/domain';
 
 const { useState, useEffect } = owl;
 
@@ -149,7 +149,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
     }
 }
 FieldMany2OneMailingFilter.template = 'mass_mailing.MailingFilter';
-FieldMany2OneMailingFilter.components = { 
+FieldMany2OneMailingFilter.components = {
     ...Many2OneField.components,
     MailingFilterDropdown,
 };

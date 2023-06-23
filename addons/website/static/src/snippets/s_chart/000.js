@@ -1,7 +1,7 @@
-/** @odoo-module alias=website.s_chart **/
+/** @odoo-module **/
 
-import publicWidget from "web.public.widget";
-import weUtils from "web_editor.utils";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import weUtils from "@web_editor/js/common/utils";
 
 const ChartWidget = publicWidget.Widget.extend({
     selector: '.s_chart',

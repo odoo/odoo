@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import core from "@web/legacy/js/services/core";
 var QWeb = core.qweb;
 import Fullscreen from "@website_slides/js/slides_course_fullscreen_player";
 

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import rpc from "web.rpc";
+import rpc from "@web/legacy/js/core/rpc";
 
 QUnit.module('core', {}, function () {
 

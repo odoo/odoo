@@ -1,13 +1,13 @@
-/** @odoo-module alias=website_event_track_live.website_event_track_replay_suggestion **/
+/** @odoo-module **/
 
-import { Widget } from "web.public.widget";
+import { PublicWidget } from "@web/legacy/js/public/public_widget";
 
 /**
  * The widget will have the responsibility to manage the interactions between the
  * Youtube player and the cover containing a replay button. This widget will
  * be used when no suggestion can be found in order to hide the Youtube suggestions.
  */
-var WebsiteEventReplaySuggestion = Widget.extend({
+var WebsiteEventReplaySuggestion = PublicWidget.extend({
     template: 'website_event_track_live.website_event_track_replay_suggestion',
     events: {
         'click .owevent_track_suggestion_replay': '_onReplayClick'

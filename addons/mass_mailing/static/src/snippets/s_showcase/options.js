@@ -1,6 +1,6 @@
-/** @odoo-module alias=mass_mailing.s_showcase_options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
+import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.Showcase = options.Class.extend({
     /**

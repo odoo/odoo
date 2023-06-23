@@ -1,19 +1,19 @@
-/** @odoo-module alias=website_sale.website_sale **/
+/** @odoo-module **/
 
-import core from "web.core";
-import config from "web.config";
-import publicWidget from "web.public.widget";
-import VariantMixin from "website_sale.VariantMixin";
-import wSaleUtils from "website_sale.utils";
+import core from "@web/legacy/js/services/core";
+import config from "@web/legacy/js/services/config";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import VariantMixin from "@website_sale/js/variant_mixin";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
-import "web.zoomodoo";
-import {extraMenuUpdateCallbacks} from "website.content.menu";
-import dom from "web.dom";
-import { ComponentWrapper } from "web.OwlCompatibility";
+import "@web/legacy/js/libs/zoomodoo";
+import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
+import dom from "@web/legacy/js/core/dom";
+import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { ProductImageViewerWrapper } from "@website_sale/js/components/website_sale_image_viewer";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 
-publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
+export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
@@ -751,6 +751,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         };
     },
 });
+
+publicWidget.registry.WebsiteSale = WebsiteSale
 
 publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     selector: '.oe_website_sale',

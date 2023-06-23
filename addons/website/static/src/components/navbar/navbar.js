@@ -3,7 +3,7 @@
 import { NavBar } from '@web/webclient/navbar/navbar';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { registry } from "@web/core/registry";
-import { patch } from 'web.utils';
+import { patch } from '@web/legacy/js/core/utils';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 const { useEffect } = owl;

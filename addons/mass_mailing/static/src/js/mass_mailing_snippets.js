@@ -1,14 +1,14 @@
-/** @odoo-module alias=mass_mailing.snippets.options **/
+/** @odoo-module **/
 
-import options from "web_editor.snippets.options";
+import options from "@web_editor/js/editor/snippets.options";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
-import weUtils from "web_editor.utils";
+import weUtils from "@web_editor/js/common/utils";
 import {
     CSS_PREFIX, BTN_SIZE_STYLES,
     DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, FONT_FAMILIES,
     getFontName, normalizeFontFamily, initializeDesignTabCss,
     transformFontFamilySelector,
-} from "mass_mailing.design_constants";
+} from "@mass_mailing/js/mass_mailing_design_constants";
 import { isCSSColor, normalizeCSSColor } from "@web/core/utils/colors";
 
 

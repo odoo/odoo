@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
-import wTourUtils from 'website.tour_utils';
+import wTourUtils from '@website/js/tours/tour_utils';
 
 /**
  * Global use case:

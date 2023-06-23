@@ -1,12 +1,12 @@
-/** @odoo-module alias=web_editor.ace **/
+/** @odoo-module **/
 
-import config from "web.config";
-import concurrency from "web.concurrency";
-import core from "web.core";
-import dom from "web.dom";
-import Dialog from "web.Dialog";
-import Widget from "web.Widget";
-import localStorage from "web.local_storage";
+import config from "@web/legacy/js/services/config";
+import concurrency from "@web/legacy/js/core/concurrency";
+import core from "@web/legacy/js/services/core";
+import dom from "@web/legacy/js/core/dom";
+import Dialog from "@web/legacy/js/core/dialog";
+import Widget from "@web/legacy/js/core/widget";
+import localStorage from "@web/legacy/js/core/local_storage";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";

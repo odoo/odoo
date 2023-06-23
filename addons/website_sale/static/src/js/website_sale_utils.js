@@ -1,8 +1,8 @@
-/** @odoo-module alias=website_sale.utils **/
+/** @odoo-module **/
 
-import wUtils from "website.utils";
+import wUtils from "@website/js/utils";
 
-const cartHandlerMixin = {
+export const cartHandlerMixin = {
     getRedirectOption() {
         const html = document.documentElement;
         this.stayOnPageOption = html.dataset.add2cartRedirect === '1';

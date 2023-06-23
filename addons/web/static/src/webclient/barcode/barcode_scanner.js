@@ -2,8 +2,8 @@
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
-import Dialog from "web.OwlDialog";
-import { delay } from "web.concurrency";
+import Dialog from "@web/legacy/js/core/owl_dialog";
+import { delay } from "@web/legacy/js/core/concurrency";
 import { loadJS, templates } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";

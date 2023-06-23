@@ -1,8 +1,8 @@
 /** @odoo-module **/
-    
-    import core from "web.core";
-    import wTourUtils from "website.tour_utils";
-    import "web.legacy_tranlations_loaded";
+
+    import core from "@web/legacy/js/services/core";
+    import wTourUtils from "@website/js/tours/tour_utils";
+    import "@web/legacy/translations_loaded";
 
     var _t = core._t;
 

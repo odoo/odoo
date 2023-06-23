@@ -3,18 +3,19 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { initializeDesignTabCss } from "mass_mailing.design_constants";
-import { toInline, getCSSRules } from "web_editor.convertInline";
+import { initializeDesignTabCss } from "@mass_mailing/js/mass_mailing_design_constants";
+import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
 import { getBundle, loadBundle, loadJS } from "@web/core/assets";
-import { qweb } from 'web.core';
+import { qweb } from "@web/legacy/js/services/core";
 import { useService } from "@web/core/utils/hooks";
-import { buildQuery } from "web.rpc";
+import { buildQuery } from "@web/legacy/js/core/rpc";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
-import { device } from 'web.config';
+import config from '@web/legacy/js/services/config';
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 
+const { device } = config
 const {
     onWillStart,
     useSubEnv,

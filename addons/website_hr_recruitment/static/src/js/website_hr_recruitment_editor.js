@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
-import FormEditorRegistry from "website.form_editor_registry";
+import core from "@web/legacy/js/services/core";
+import FormEditorRegistry from "@website/js/form_editor_registry";
 
 var _t = core._t;
 

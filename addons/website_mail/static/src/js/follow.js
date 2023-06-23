@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.js_follow)',

@@ -1,7 +1,7 @@
-/** @odoo-module alias=website_event_track_quiz.event_leaderboard **/
+/** @odoo-module **/
 
 
-import publicWidget from "web.public.widget";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.EventLeaderboard = publicWidget.Widget.extend({
     selector: '.o_wevent_quiz_leaderboard',

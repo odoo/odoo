@@ -1,4 +1,4 @@
-/** @odoo-module alias=web_editor.convertInline */
+/** @odoo-module */
 'use strict';
 
 import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
@@ -662,7 +662,7 @@ function enforceImagesResponsivity(editable) {
  *                                   specificity: number;}>
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
-async function toInline($editable, cssRules, $iframe) {
+export async function toInline($editable, cssRules, $iframe) {
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
@@ -802,7 +802,7 @@ function flattenBackgroundImages(editable) {
  */
 function fontToImg($editable) {
     const editable = $editable.get(0);
-    const fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
+    const { fonts } = odoo.__DEBUG__.services["@web_editor/js/wysiwyg/fonts"];
 
     for (const font of editable.querySelectorAll('.fa')) {
         let icon, content;
@@ -1025,7 +1025,7 @@ function formatTables($editable) {
  *                            style: {[styleName]: string};
  *                            specificity: number;}>
  */
-function getCSSRules(doc) {
+export function getCSSRules(doc) {
     const cssRules = [];
     for (const sheet of doc.styleSheets) {
         // try...catch because browser may not able to enumerate rules for cross-domain sheets

@@ -2,8 +2,8 @@
 
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { patch } from "@web/core/utils/patch";
-import fieldUtils from "web.field_utils";
-import { getLangTimeFormat } from "web.time";
+import fieldUtils from "@web/legacy/js/fields/field_utils";
+import time from "@web/legacy/js/core/time";
 
 patch(ActivityMenu.prototype, "calendar", {
     async fetchSystrayActivities() {
@@ -16,7 +16,7 @@ patch(ActivityMenu.prototype, "calendar", {
                             fieldUtils.parse.datetime(meeting.start, false, { isUTC: true })
                         )
                             .local()
-                            .format(getLangTimeFormat());
+                            .format(time.getLangTimeFormat());
                     }
                 }
             }

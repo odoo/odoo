@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Domain from "web.Domain";
+import Domain from "@web/legacy/js/core/domain";
 
 QUnit.module('core', {}, function () {
 

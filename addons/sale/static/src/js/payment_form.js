@@ -1,7 +1,7 @@
 /** @odoo-module **/
-    
-    import checkoutForm from "payment.checkout_form";
-    import manageForm from "payment.manage_form";
+
+    import checkoutForm from "@payment/js/checkout_form";
+    import manageForm from "@payment/js/manage_form";
 
     const salePaymentMixin = {
 
@@ -12,7 +12,7 @@
         /**
          * Add `sale_order_id` to the transaction route params if it is provided.
          *
-         * @override method from payment.payment_form_mixin
+         * @override method from @payment/js/payment_form_mixin
          * @private
          * @param {string} code - The code of the selected payment option's provider
          * @param {number} paymentOptionId - The id of the selected payment option

@@ -5,7 +5,7 @@
  */
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import "website_sale.tour";
+import "@website_sale/../tests/tours/website_sale_buy";
 
 patch(registry.category("web_tour.tours").get("shop_buy_product"), "patch_shop_buy_product", {
     steps() {
@@ -15,6 +15,6 @@ patch(registry.category("web_tour.tours").get("shop_buy_product"), "patch_shop_b
             content: "click in modal on 'Proceed to checkout' button",
             trigger: 'button:contains("Proceed to Checkout")',
         });
-        return originalSteps; 
+        return originalSteps;
     },
 });

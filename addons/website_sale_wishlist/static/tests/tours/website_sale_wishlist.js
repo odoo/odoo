@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import rpc from "web.rpc";
+import rpc from "@web/legacy/js/core/rpc";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('shop_wishlist', {

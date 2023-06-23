@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import publicWidget from 'web.public.widget';
+import publicWidget from '@web/legacy/js/public/public_widget';
 
 export const SurveyImageZoomer = publicWidget.Widget.extend({
     template: 'survey.survey_image_zoomer',
