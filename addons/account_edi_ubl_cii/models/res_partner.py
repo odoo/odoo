@@ -21,6 +21,7 @@ class ResPartner(models.Model):
         compute='_compute_ubl_cii_format',
         store=True,
         readonly=False,
+        recursive=True,
     )
     peppol_endpoint = fields.Char(
         string="Peppol Endpoint",
@@ -121,10 +122,12 @@ class ResPartner(models.Model):
         ]
     )
 
-    @api.depends('country_code')
+    @api.depends('country_code', 'parent_id.ubl_cii_format')
     def _compute_ubl_cii_format(self):
         for partner in self:
-            if partner.country_code == 'DE':
+            if partner.parent_id:
+                partner.ubl_cii_format = partner.parent_id.ubl_cii_format
+            elif partner.country_code == 'DE':
                 partner.ubl_cii_format = 'xrechnung'
             elif partner.country_code in ('AU', 'NZ'):
                 partner.ubl_cii_format = 'ubl_a_nz'
