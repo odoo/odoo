@@ -104,15 +104,15 @@ class TestItEdiImport(TestItEdi):
             <xpath expr="//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento" position="inside">
                 <ScontoMaggiorazione>
                     <Tipo>SC</Tipo>
-                    <Importo>10</Importo>
+                    <Importo>2</Importo>
                 </ScontoMaggiorazione>
             </xpath>
         """
 
         self._assert_import_invoice('IT01234567890_FPR01.xml', [{
             'invoice_date': fields.Date.from_string('2014-12-18'),
-            'amount_untaxed': -5.0,
-            'amount_tax': -1.1,
+            'amount_untaxed': 3.0,
+            'amount_tax': 1.1,
             'invoice_line_ids': [
                 {
                     'quantity': 5.0,
@@ -122,7 +122,7 @@ class TestItEdiImport(TestItEdi):
                 {
                     'quantity': 1.0,
                     'name': 'SCONTO',
-                    'price_unit': -10,
+                    'price_unit': -2,
                 }
             ],
         }], applied_xml)
