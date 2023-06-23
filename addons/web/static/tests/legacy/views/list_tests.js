@@ -12901,6 +12901,54 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: check iso-language used to default date context when groupby applied', async function (assert) {
+        assert.expect(4);
+
+        const originalLocale = moment.locale();
+        var numberMap = {'١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9', '٠': '0'};
+        var symbolMap = {'1': '١', '2': '٢', '3': '٣', '4': '٤', '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩', '0': '٠'};
+        moment.defineLocale('ar_001', {
+            preparse: function (string) {
+                return string.replace(/\u200f/g, '').replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
+                    return numberMap[match];
+                }).replace(/،/g, ',');
+            },
+            postformat: function (string) {
+                return string.replace(/\d/g, function (match) {
+                    return symbolMap[match];
+                }).replace(/,/g, '،');
+            },
+        });
+
+        var list = await createView({
+            View: ListView,
+            debug: 1,
+            data: this.data,
+            model: 'foo',
+            arch: '<tree editable="bottom"><field name="date"/></tree>',
+            groupBy: ['date:day'],
+            mockRPC(route, args) {
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.model, 'foo');
+                    assert.strictEqual(args.args[0].date, '2017-01-25');
+                }
+                return this._super.call(this, ...arguments);
+            }
+        });
+
+        await testUtils.dom.click(list.$('.o_group_name:eq(0)'));
+        await testUtils.dom.click(list.$('.o_add_record_row a'));
+        await testUtils.dom.click($('.o_list_button_save'));
+
+        moment.locale(originalLocale);
+        moment.updateLocale('ar_001', null);
+
+        list.destroy();
+
+        assert.verifySteps(['create']);
+    });
+
 });
 
 });
