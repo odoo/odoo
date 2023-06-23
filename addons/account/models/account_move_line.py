@@ -1151,7 +1151,7 @@ class AccountMoveLine(models.Model):
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
-    @api.constrains('account_id', 'journal_id')
+    @api.constrains('account_id', 'journal_id', 'currency_id')
     def _check_constrains_account_id_journal_id(self):
         for line in self.filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
             account = line.account_id
