@@ -6,7 +6,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['de'],
     'author': 'openbig.org (http://www.openbig.org)',
-    'version': '1.1',
+    'version': '2.0',
     'website': 'https://www.odoo.com/documentation/saas-16.3/applications/finance/fiscal_localizations/germany.html',
     'category': 'Accounting/Localizations',
     'description': """
