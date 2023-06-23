@@ -58,7 +58,7 @@ class IrModule(models.Model):
 
             module.account_templates = {
                 code: templ(self.env, code, **vals)
-                for code, vals in templates.items()
+                for code, vals in sorted(templates.items(), key=lambda kv: kv[1]['sequence'])
             }
 
     def write(self, vals):
@@ -67,8 +67,7 @@ class IrModule(models.Model):
         super().write(vals)
         is_installed = len(self) == 1 and self.state == 'installed'
         if not was_installed and is_installed and not self.env.company.chart_template and self.account_templates:
-            templates_by_seq = sorted(self.account_templates.items(), key=lambda kv: kv[1]['sequence'])
-            self.env.registry._auto_install_template = next(iter(templates_by_seq))[0]
+            self.env.registry._auto_install_template = next(iter(self.account_templates))
 
     def _load_module_terms(self, modules, langs, overwrite=False):
         super()._load_module_terms(modules, langs, overwrite)
