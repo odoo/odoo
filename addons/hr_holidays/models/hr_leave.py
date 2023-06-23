@@ -163,7 +163,8 @@ class HolidaysRequest(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict",
         tracking=True, compute_sudo=False)
-    employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
+    employee_company_id = fields.Many2one(related='employee_id.company_id', string="Employee Company", readonly=True, store=True)
+    company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=True, store=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
@@ -495,6 +496,14 @@ class HolidaysRequest(models.Model):
                 holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id)['days']
             else:
                 holiday.number_of_days = 0
+
+    @api.depends('employee_company_id', 'mode_company_id')
+    def _compute_company_id(self):
+        for holiday in self:
+            holiday.company_id = holiday.employee_company_id \
+                or holiday.mode_company_id \
+                or holiday.department_id.company_id \
+                or self.env.company
 
     @api.depends('tz')
     @api.depends_context('uid')
