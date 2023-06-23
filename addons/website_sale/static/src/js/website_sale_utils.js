@@ -109,9 +109,11 @@ function updateCartNavBar(data) {
 
     // Show the notification about the cart
     let divToast = document.getElementById('cart_toast_container');
-    divToast.innerHTML = data['website_sale.cart_toast'];
-    var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
-    toast.show();
+    if (divToast) {
+        divToast.innerHTML = data['website_sale.cart_toast'];
+        var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
+        toast.show();
+    }
 }
 
 /**
