@@ -1953,13 +1953,13 @@ const Wysiwyg = Widget.extend({
                 if (!this.showTooltip || $target.attr('title') !== undefined) {
                     return;
                 }
-                this.odooEditor.observerUnactive();
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
+                    this.odooEditor.observerUnactive();
                     $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                    this.odooEditor.observerActive();
                     this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
                 });
-                this.odooEditor.observerActive();
             }, 400));
         }
         // Hide button groups that have no visible buttons.
