@@ -561,3 +561,35 @@ class TestEmailMessage(TransactionCase):
         self.assertEqual(msg_on_the_wire.count('MIME-Version: 1.0'), 3,
             "There should be 3 headers MIME-Version: one on the enveloppe, "
             "one on the html part, one on the text part")
+
+    def test_comment_malformed(self):
+        html = '''<!-- malformed-close --!> <img src='x' onerror='alert(1)'></img> --> comment <!-- normal comment --> --> out of context balise --!>'''
+        html_result = html_sanitize(html)
+        self.assertNotIn('alert(1)', html_result)
+
+    def test_multiline(self):
+        payload = """
+            <div> <!--
+                multi line comment
+                --!> </div> <script> alert(1) </script> -->
+        """
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+    def test_abrupt_close(self):
+        payload = """<!--> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+        payload = """<!---> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+    def test_abrut_malformed(self):
+        payload = """<!--!> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)
+
+        payload = """<!---!> <script> alert(1) </script> -->"""
+        html_result = html_sanitize(payload)
+        self.assertNotIn('alert(1)', html_result)

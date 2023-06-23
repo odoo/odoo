@@ -227,6 +227,9 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.cash_journal.loss_account_id = self.account
         current_session.set_cashbox_pos(0, None)
 
+        # 2 step delivery method
+        self.warehouse.delivery_steps = 'pick_ship'
+
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company.id,
@@ -267,6 +270,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
+        self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
         current_session.picking_ids.move_ids_without_package.quantity_done = 1
         current_session.picking_ids.button_validate()
 
@@ -277,13 +281,20 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
         aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
 
+        self.assertEqual(len(aml_output), 3, "There should be 3 output account move lines")
+        # 2 moves in POS journal (Pos order + manual entry at delivery)
+        self.assertEqual(aml_output[:2].move_id.journal_id, self.pos_config.journal_id)
+        # 1 move in stock journal (delivery from stock layers)
+        self.assertEqual(aml_output[2].move_id.journal_id, self.category.property_stock_journal)
         #Check the lines created after the picking validation
-        self.assertEqual(aml_output[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        #Check the lines created by the PoS session
+        self.assertEqual(aml_output[0].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[2].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[2].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        #Check the lines created by the PoS session
+        self.assertEqual(aml_output[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")

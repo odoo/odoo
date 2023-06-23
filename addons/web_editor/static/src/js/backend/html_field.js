@@ -734,10 +734,10 @@ function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 
-// Ensure all external links are opened in a new tab.
+// Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {
-    for (const externalLink of container.querySelectorAll(`a:not([href^="${location.origin}"]):not([href^="/"])`)) {
-        externalLink.setAttribute('target', '_blank');
-        externalLink.setAttribute('rel', 'noreferrer');
+    for (const link of container.querySelectorAll('a')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noreferrer');
     }
 }

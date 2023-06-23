@@ -280,6 +280,13 @@ export function customErrorMessage(assertLocation, value, expected) {
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
+/**
+ * Return whether the device is in mobile view or not
+ */
+export function _isMobile(){
+    return matchMedia('(max-width: 767px)').matches;
+}
+
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     hasMobileTest = false;
     isMobileTest = options.isMobile;
@@ -629,5 +636,24 @@ export function triggerEvent(
     currentElement.dispatchEvent(ev);
     return ev;
 }
+
+// Mock an paste event and send it to the editor.
+async function pasteData (editor, text, type) {
+    var mockEvent = {
+        dataType: 'text/plain',
+        data: text,
+        clipboardData: {
+            getData: (datatype) => type === datatype ? text : null,
+            files: [],
+            items: [],
+        },
+        preventDefault: () => { },
+    };
+    await editor._onPaste(mockEvent);
+};
+
+export const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
+export const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
+export const pasteOdooEditorHtml = async (editor, html) => pasteData(editor, html, 'text/odoo-editor');
 
 export class BasicEditor extends OdooEditor {}

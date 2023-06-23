@@ -60,6 +60,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hei,<br><br>\n"
+"                Olet pyytänyt päästä postituslistalle <strong t-out=\"object.name or ''\"></strong>.\n"
+"               <br><br>\n"
+"                Vahvistaaksesi, käy seuraavassa linkissä: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"               <br><br>\n"
+"                Jos tämä oli virhe tai et pyytänyt tätä toimintoa, jätä tämä viesti huomiotta.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -74,6 +83,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hei,<br><br>\n"
+"                Olet pyytänyt tulla poistetuksi postituslistalta <strong t-out=\"object.name or ''\"></strong>.\n"
+"               <br><br>\n"
+"                Vahvistaaksesi sen, käy seuraavassa linkissä: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"               <br><br>\n"
+"                Jos tämä oli virhe tai et pyytänyt tätä toimenpidettä, jätä tämä viesti huomiotta.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -85,6 +103,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hei <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Ohessa on postituslistan {{ object.mail_group_id.name }} ohjeet.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
