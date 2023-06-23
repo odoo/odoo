@@ -530,12 +530,8 @@ class HrEmployeePrivate(models.Model):
 
     def _get_unusual_days(self, date_from, date_to=None):
         # Checking the calendar directly allows to not grey out the leaves taken
-        # by the employee
-        # Prevents a traceback when loading calendar views and no employee is linked to the user.
-        if not self:
-            return {}
-        self.ensure_one()
-        return self.resource_calendar_id._get_unusual_days(
+        # by the employee or fallback to the company calendar
+        return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
             datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
