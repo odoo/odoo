@@ -22,9 +22,6 @@ export class ProductCard extends Component {
         }, 0);
     }
 
-    // FIXME: we need to verify the product name for future attribute variants
-    // in case of variants, we need to show the main product screen with "add" btn
-    // if the user select the same variant as an existing orderline, we merge it.
     clickOnProduct() {
         const product = this.props.product;
         if (!this.canOpenProductMainView(product)) {

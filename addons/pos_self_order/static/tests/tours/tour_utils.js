@@ -2,6 +2,13 @@
 
 export const PosSelf = {
     check: {
+        tablePopupIsShown: () => {
+            return {
+                content: `Check if the select table popup is shown`,
+                trigger: `body:has(.o_self-popup-table)`,
+                run: () => {},
+            };
+        },
         isNotification: (text) => {
             return {
                 content: `Check if there is a notification with ${text}`,
@@ -92,6 +99,13 @@ export const PosSelf = {
                 trigger: `.btn:contains('${buttonName}')`,
             };
         },
+        selectTable(table) {
+            return {
+                content: `Select ${table.name} with value ${table.id}`,
+                trigger: `.o_self-popup-table select:has(option[value='${table.id}'])`,
+                run: `text ${table}`,
+            };
+        },
         addProduct: (name, quantity = 1, description, attributes) => {
             return [
                 {
@@ -139,7 +153,7 @@ const attributeHelper = (attributes = { radio: {}, select: {}, color: {} }) => {
 
     if (attributes.select.value) {
         attributesSteps.push({
-            content: `Select radio ${attributes.select.name} with value ${attributes.select.value}`,
+            content: `Select ${attributes.select.name} with value ${attributes.select.value}`,
             trigger: `.o_self_order_main_options div:contains('${attributes.select.name}') ~ select:has(option[value='${attributes.select.value}'])`,
             run: `text ${attributes.select.value}`,
         });

@@ -23,45 +23,35 @@ class RestaurantFloor(models.Model):
 class RestaurantTable(models.Model):
     _inherit = "restaurant.table"
 
-    access_token = fields.Char(
+    identifier = fields.Char(
         "Security Token",
         copy=False,
         required=True,
         readonly=True,
-        default=lambda self: self._get_access_token(),
+        default=lambda self: self._get_identifier(),
     )
-
-    @staticmethod
-    def _get_access_token():
-        return uuid.uuid4().hex[:8]
 
     def _get_self_order_data(self) -> Dict:
         self.ensure_one()
-        return self.read(["name", "access_token"])[0]
+        return self.read(["name", "identifier"])[0]
 
     def _get_data_for_qr_codes_page(self, url: Callable[[Optional[int]], str]) -> List[Dict]:
         return [
             {
-                "access_token": table.access_token,
-                "id": table.id,
-                "name": table.name,
-                "url": url(table.id),
+                'identifier': table.identifier,
+                'id': table.id,
+                'name': table.name,
+                'url': url(table.id),
             }
             for table in self
         ]
 
+    @staticmethod
+    def _get_identifier():
+        return uuid.uuid4().hex[:8]
+
     @api.model
-    def _update_access_token(self):
-        """
-        We define a new access token field in this file.
-        There might already be databases that have restaurant.table records.
-        They will now also get an access token each; the problem is that
-        because of the way `default` values work, all those tables that
-        exist in the db will get the same access token.
-        This method will be ran at the moment the pos_self_order module
-        is installed and will thus make sure that every record has a
-        different access token.
-        """
+    def _update_identifier(self):
         tables = self.env["restaurant.table"].search([])
         for table in tables:
-            table.access_token = self._get_access_token()
+            table.identifier = self._get_identifier()

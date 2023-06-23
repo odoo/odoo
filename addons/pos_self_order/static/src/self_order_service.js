@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { effect } from "@web/core/utils/reactive";
 import { Order } from "./models/order";
 import { Product } from "./models/product";
+import { Line } from "./models/line";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { batched } from "@point_of_sale/utils";
 
@@ -27,6 +28,7 @@ export class SelfOrder {
         this.orders = [];
         this.editedOrder = null;
         this.productByIds = {};
+        this.ordering = false;
         this.priceLoading = false;
         this.currentProduct = 0;
         this.lastEditedProductId = null;
@@ -51,6 +53,8 @@ export class SelfOrder {
                 ),
                 { type: "warning" }
             );
+        } else {
+            this.ordering = true;
         }
 
         if (this.self_order_mode !== "qr_code") {
@@ -100,9 +104,7 @@ export class SelfOrder {
             return this.editedOrder;
         }
 
-        const existingOrder = this.orders.find(
-            (o) => (this.self_order_mode === "each" && !o.access_token) || o.state === "draft"
-        );
+        const existingOrder = this.orders.find((o) => o.state === "draft");
 
         if (!existingOrder) {
             const newOrder = new Order({
@@ -124,20 +126,18 @@ export class SelfOrder {
 
     async sendDraftOrderToServer() {
         try {
-            let order = {};
+            const rpcUrl = this.currentOrder.isAlreadySent
+                ? "/pos-self-order/update-existing-order"
+                : "/pos-self-order/process-new-order";
 
-            if (this.currentOrder.isAlreadySent) {
-                order = await this.rpc(`/pos-self-order/update-existing-order`, {
-                    order: this.currentOrder,
-                });
-            } else {
-                order = await this.rpc(`/pos-self-order/process-new-order`, {
-                    order: this.currentOrder,
-                    table_access_token: this?.table?.access_token,
-                });
-            }
+            const order = await this.rpc(rpcUrl, {
+                order: this.currentOrder,
+                access_token: this.access_token,
+                table_identifier: this.table ? this.table.identifier : null,
+            });
 
-            this.editedOrder = Object.assign(this.editedOrder, order);
+            this.editedOrder.access_token = order.access_token;
+            this.updateOrdersFromServer([order], [this.access_token]);
             this.editedOrder.computelastChangesSent();
 
             if (this.self_order_mode === "each") {
@@ -145,10 +145,11 @@ export class SelfOrder {
             }
 
             this.notification.add(_t("Your order has been placed!"), { type: "success" });
+
+            return order;
         } catch (error) {
             this.handleErrorNotification(error, [this.editedOrder.access_token]);
-        } finally {
-            this.router.navigate("default");
+            return false;
         }
     }
 
@@ -161,41 +162,43 @@ export class SelfOrder {
 
         try {
             const orders = await this.rpc(`/pos-self-order/get-orders/`, {
-                access_tokens: accessTokens,
+                order_access_tokens: accessTokens,
             });
 
-            const ordersToRecreate = {};
-            for (const order of this.orders.filter((o) => o.access_token)) {
-                ordersToRecreate[order.access_token] = {
-                    lastChangesSent: order.lastChangesSent,
-                    lines: order.lines.filter((l) => !l.id),
-                };
-            }
-
-            for (const index in this.orders) {
-                if (this.orders[index].access_token) {
-                    this.orders.splice(index, 1);
-                }
-            }
-
-            this.orders.push(
-                ...orders.map((o) => {
-                    const data = ordersToRecreate[o.access_token] || {};
-                    const newOrder = new Order({
-                        ...o,
-                        lastChangesSent: data.lastChangesSent ?? {},
-                    });
-                    newOrder.lines.push(...(data.lines ?? []));
-                    return newOrder;
-                })
-            );
-
+            this.updateOrdersFromServer(orders, accessTokens);
             this.editedOrder = null;
         } catch (error) {
             this.handleErrorNotification(
                 error,
                 this.orders.map((order) => order.access_token)
             );
+        }
+    }
+
+    updateOrdersFromServer(orders, localAccessToken) {
+        //FIXME, if the user refresh the page with not sent, we will lost this data.
+        const accessTokensFromServer = orders.map((order) => order.access_token);
+
+        for (const idx in this.orders) {
+            const order = this.orders[idx];
+
+            if (order.access_token) {
+                const orderFromServer = orders.find((o) => o.access_token === order.access_token);
+
+                if (orderFromServer) {
+                    this.orders[idx] = Object.assign(this.orders[idx], orderFromServer);
+                    this.orders[idx].lines = orderFromServer.lines.map((l) => new Line(l));
+                }
+            }
+        }
+
+        for (const index in this.orders) {
+            if (
+                !accessTokensFromServer.includes(this.orders[index].access_token) &&
+                localAccessToken.includes(this.orders[index].access_token)
+            ) {
+                this.orders.splice(index, 1);
+            }
         }
     }
 
@@ -209,7 +212,7 @@ export class SelfOrder {
 
             const taxes = await this.rpc(`/pos-self-order/get-orders-taxes/`, {
                 order: this.currentOrder,
-                pos_config_id: this.pos_config_id,
+                access_token: this.access_token,
             });
 
             for (const line of this.currentOrder.lines) {
@@ -229,12 +232,15 @@ export class SelfOrder {
 
     handleErrorNotification(error, accessToken = []) {
         let message = _t("An error has occurred");
+        let cleanOrders = false;
 
         if (error instanceof RPCError) {
             if (error.data.name === "werkzeug.exceptions.Unauthorized") {
                 message = _t("You're not authorized to perform this action");
+                cleanOrders = true;
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders wasn't found on the server");
+                cleanOrders = true;
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");
@@ -244,7 +250,7 @@ export class SelfOrder {
             type: "danger",
         });
 
-        if (accessToken) {
+        if (accessToken && cleanOrders) {
             this.editedOrder = null;
 
             for (const index in this.orders) {

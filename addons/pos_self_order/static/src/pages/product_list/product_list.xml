@@ -70,7 +70,7 @@
             but if there are no products (for example if you search for something that does not exist), the button
             would be at the top of the page )
             -->
-            <div t-if="selfOrder.table and selfOrder.currentOrder.totalQuantity" class="d-flex flex-column align-items-center w-100 p-3 fixed-bottom">
+            <div t-if="selfOrder.ordering and selfOrder.currentOrder.totalQuantity" class="d-flex flex-column align-items-center w-100 p-3 fixed-bottom">
                 <t t-set="order" t-value="selfOrder.currentOrder"/>
                 <button t-on-click="() => this.router.navigate('cart')" class="o_self_order_main_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
                     <div class="d-flex align-items-center justify-content-between mx-2">

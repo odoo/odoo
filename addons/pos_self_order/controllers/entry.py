@@ -7,7 +7,6 @@ from odoo import http
 from odoo.http import request
 
 from odoo.addons.pos_self_order.controllers.utils import (
-    get_pos_config_sudo,
     get_any_pos_config_sudo,
     get_table_sudo,
 )
@@ -23,39 +22,31 @@ class PosQRMenuController(http.Controller):
     to the server, using client side routing.
     """
 
-    @http.route("/menu", auth="public")
-    def pos_self_order_redirect(self):
-        return request.redirect(f"/menu/{get_any_pos_config_sudo().id}")
-
     @http.route(
             [
+                "/menu/",
                 "/menu/<config_id>",
                 "/menu/<config_id>/<path:subpath>"
             ],
-        auth="public",
-        website=True,
-        sitemap=True,
+        auth="public", website=True, sitemap=True,
     )
-    def pos_self_order_start(self, config_id: str, at=None):
-        """
-        The user gets this route from the QR code that they scan at the table
-        :param config_id: the name of the pos config: can be the id or the slugified name of the pos config. (e.g. "3" or "bar-3")
-        :param at: the access token of the table; we call this argument "at" because
-            it will be displayed in the url ( as a query param ), and "at" is more user friendly than "access_token"
-            the user is allowed to order only if this "at" matches the access token of a table
-        :param product_id: the id of the product that the user wants to see the details of;
-            we never actually use this argument in this function ( it will be read by the client side router ),
-            but we still have it here, because otherwise we get a Warning in the logs
-        :return: the rendered template
-        """
-        config_sudo = get_pos_config_sudo(config_id)
-        table_sudo = get_table_sudo(access_token=at)
+    def pos_self_order_start(self, config_id=None, access_token=None, table_identifier=None):
+        if config_id.isnumeric():
+            pos_config_sudo = request.env["pos.config"].sudo().search([
+                ("id", "=", config_id),
+                ('access_token', '=', access_token)], limit=1)
+
         self_order_mode = 'qr_code'
         table_infos = False
+        pos_config_access_token = False
 
-        if config_sudo.has_active_session and config_sudo.self_order_table_mode and table_sudo:
-            table_infos = table_sudo._get_self_order_data()
-            self_order_mode = config_sudo.self_order_pay_after
+        if pos_config_sudo and pos_config_sudo.has_active_session and pos_config_sudo.self_order_table_mode:
+            self_order_mode = pos_config_sudo.self_order_pay_after
+            pos_config_access_token = pos_config_sudo.access_token
+            table_sudo = get_table_sudo(identifier=table_identifier)
+            table_infos = table_sudo._get_self_order_data() if table_sudo else False
+        else:
+            pos_config_sudo = get_any_pos_config_sudo()
 
         return request.render(
             'pos_self_order.index',
@@ -66,10 +57,11 @@ class PosQRMenuController(http.Controller):
                     'pos_self_order_data': {
                         'self_order_mode': self_order_mode,
                         'table': table_infos,
-                        **config_sudo._get_self_order_data(),
+                        'access_token': pos_config_access_token,
+                        **pos_config_sudo._get_self_order_data(),
                     },
                 }
-            },
+            }
         )
 
     @http.route(
@@ -109,7 +101,7 @@ class PosQRMenuController(http.Controller):
         :return: the bg image
         :rtype: binary
         """
-        pos_config_sudo = get_pos_config_sudo(pos_config_id)
+        pos_config_sudo = request.env["pos.config"].sudo().browse(pos_config_id)
 
         if not pos_config_sudo.self_order_image:
             raise werkzeug.exceptions.NotFound()
