@@ -41,6 +41,7 @@ class IrModule(models.Model):
                         fct._l10n_template[0]: {
                             'name': fct(ChartTemplate).get('name'),
                             'parent': fct(ChartTemplate).get('parent'),
+                            'sequence': fct(ChartTemplate).get('sequence', 1),
                             'country': fct(ChartTemplate).get('country', ''),
                             'visible': fct(ChartTemplate).get('visible', True),
                             'installed': module.state == "installed",
@@ -53,7 +54,7 @@ class IrModule(models.Model):
 
             module.account_templates = {
                 code: templ(self.env, code, **vals)
-                for code, vals in templates.items()
+                for code, vals in sorted(templates.items(), key=lambda kv: kv[1]['sequence'])
             }
 
     def write(self, vals):
