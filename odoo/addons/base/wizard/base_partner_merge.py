@@ -296,6 +296,7 @@ class MergePartnerAutomatic(models.TransientModel):
             extra_checks = False
 
         Partner = self.env['res.partner']
+        Users = self.env['res.users']
         partner_ids = Partner.browse(partner_ids).exists()
         if len(partner_ids) < 2:
             return
@@ -309,6 +310,10 @@ class MergePartnerAutomatic(models.TransientModel):
             child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
         if partner_ids & child_ids:
             raise UserError(_("You cannot merge a contact with one of his parent."))
+
+        # check if the list of partners to merge are linked to more than one user
+        if Users.with_context(active_test=False).search_count([('partner_id', 'in', partner_ids.ids)]) > 1:
+            raise UserError(_("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
@@ -333,6 +338,17 @@ class MergePartnerAutomatic(models.TransientModel):
                 'company_id': dst_partner.company_id.id
             })
 
+        self._merge_internal(src_partners, dst_partner)
+
+    def _merge_internal(self, src_partners, dst_partner):
+        """ Internal method for merging src_partners into dst_partner.
+
+            It is not meant to be called directly but can be overridden
+            to perform task before and/or after the merge.
+
+            :param src_partners : recordset of source res.partner
+            :param dst_partner : record of destination res.partner
+        """
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)

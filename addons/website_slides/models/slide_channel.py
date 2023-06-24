@@ -46,7 +46,13 @@ class ChannelUsersRelation(models.Model):
         )
     ]
 
-    def _recompute_completion(self):
+    def _recompute_completion(self, update_karma=True):
+        """ Recompute the completion.
+
+        :param bool update_karma: whether to update the karma or not
+            Example of use-case: when merging partner, we do not want the karma
+            to be updated while recomputing the completion of the merged partner.
+        """
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -74,11 +80,11 @@ class ChannelUsersRelation(models.Model):
                 uncompleted_records += record
 
         if completed_records:
-            completed_records._set_as_completed(completed=True)
+            completed_records._set_as_completed(completed=True, update_karma=update_karma)
             completed_records._send_completed_mail()
 
         if uncompleted_records:
-            uncompleted_records._set_as_completed(completed=False)
+            uncompleted_records._set_as_completed(completed=False, update_karma=update_karma)
 
     def unlink(self):
         """
@@ -97,13 +103,19 @@ class ChannelUsersRelation(models.Model):
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super(ChannelUsersRelation, self).unlink()
 
-    def _set_as_completed(self, completed=True):
+    def _set_as_completed(self, completed=True, update_karma=True):
         """ Set record as completed and compute karma gains
 
         :param completed:
             True if we make the slide as completed
             False if we remove user completion
+        :param bool update_karma: whether to update the karma or not
         """
+        if not update_karma:
+            for record in self:
+                record.completed = completed
+            return
+
         partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
         for record in self:
             record.completed = completed
