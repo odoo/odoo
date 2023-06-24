@@ -49,6 +49,7 @@
 # danielkowalczyk007, 2023
 # Lukasz Brzyski, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński, 2023
 # 
 msgid ""
 msgstr ""
@@ -56,7 +57,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13759,6 +13760,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -13818,8 +13828,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
-"Jednostka miary (UoM) '%s', którą wybrałeś dla produktu '%s', jest niezgodna"
-" z jego kategorią : %s."
+"Jednostka miary (JM) '%s', którą wybrałeś dla produktu '%s', jest niezgodna "
+"z jego kategorią : %s."
 
 #. module: account
 #. odoo-python

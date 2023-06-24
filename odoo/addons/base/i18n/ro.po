@@ -9087,6 +9087,13 @@ msgid "Compute"
 msgstr "Calculează"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -16638,7 +16645,7 @@ msgid ""
 "create one: %(error_message)s"
 msgstr ""
 "Nu s-a găsit nicio înregistrare de potrivire pentru %(field_type)s "
-"'%(value)s' în câmpul '%%' (câmp) și a apărut următoarea eroare când am "
+"'%(value)s' în câmpul '%%(field)s' și a apărut următoarea eroare când am "
 "încercat să creăm una: %(error_message)s"
 
 #. module: base
@@ -25746,6 +25753,12 @@ msgstr "Nu poți dezactiva utilizatorii care sunt acum conectați în sistem"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
