@@ -32,8 +32,8 @@
 # Martin Trigaux, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3732,6 +3732,14 @@ msgstr "Myöhästyy tai myöhästyy määräajasta ja suunnitellusta päivästä
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Onko määrä muokattavissa"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr "Varattua määrää ei saa tuoda. Sitä on käytettävä suoraan."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8113,6 +8121,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Tämän tuotteen yritystä ei voi vaihtaa niin kauan kuin sitä on varastossa "
+"toiselle yritykselle kuuluvana."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8522,7 +8532,7 @@ msgstr "Mittayksiköt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9629,11 +9639,3 @@ msgstr ""
 #, python-format
 msgid "Global Visibility Days"
 msgstr "Yleiset näkyvyyspäivät"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""

@@ -13,7 +13,7 @@
 # marcescu, 2022
 # oscaryuu, 2022
 # Luis D Lafaurie, 2022
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2022
+# Daniel Blanco <daniel@blancomartin.cl>, 2022
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2022
@@ -7452,7 +7452,7 @@ msgstr "Widget de créditos y débitos de factura pendientes"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Nombre del socio a mostrar en la factura."
+msgstr "Nombre de la empresa a mostrar en la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -15929,6 +15929,12 @@ msgid "Warning for %s"
 msgstr "Advertencia para %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "Advertencia en la factura"
@@ -16761,6 +16767,12 @@ msgid ""
 msgstr ""
 "Debes definir una 'cuenta de transferencia interna' en el diario de su caja "
 "registradora."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

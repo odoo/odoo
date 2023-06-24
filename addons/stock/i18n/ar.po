@@ -3703,6 +3703,14 @@ msgid "Is quantity done editable"
 msgstr "هل الكميات المنتهية قابلة للتعديل "
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr "لا يُسمح باستيراد الكميات المحجوزة. عليك استخدام الكمية بشكل مباشر. "
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -8034,6 +8042,7 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"لا يمكن تغيير شركة المنتج طالما أنه توجد حركات مخزون منتمية إلى شركة أخرى. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9540,11 +9549,3 @@ msgstr ""
 #, python-format
 msgid "Global Visibility Days"
 msgstr "أيام الظهور العالمي "
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""

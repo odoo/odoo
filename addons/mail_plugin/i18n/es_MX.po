@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -413,7 +413,7 @@ msgstr "Sector"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Invalid URL"
-msgstr "URL inválida"
+msgstr "URL no válida"
 
 #. module: mail_plugin
 #. openerp-web
@@ -577,7 +577,7 @@ msgstr "URL de servidor Odoo"
 #. module: mail_plugin
 #: model:ir.model.constraint,message:mail_plugin.constraint_res_partner_iap_unique_partner_id
 msgid "Only one partner IAP is allowed for one partner"
-msgstr "Solo se permite un IAP de partner para un partner"
+msgstr "Solo se permite una compra dentro de la aplicación por contacto"
 
 #. module: mail_plugin
 #. openerp-web
@@ -595,7 +595,9 @@ msgstr ""
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Our IAP server is down, please come back later."
-msgstr "Nuestro servidor de IAP se calló, vuelva más tarde."
+msgstr ""
+"Nuestro servidor de compras dentro de la aplicación no está disponible, "
+"vuelva más tarde."
 
 #. module: mail_plugin
 #. openerp-web
@@ -661,7 +663,7 @@ msgstr "Ingresos"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Save in Odoo"
-msgstr "Guardar en odoo"
+msgstr "Guardar en Odoo"
 
 #. module: mail_plugin
 #. openerp-web
@@ -718,13 +720,13 @@ msgstr "Buscar contacto en Odoo..."
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Something bad happened. Please, try again later."
-msgstr "Pasó algo malo, inténtelo de nuevo más tarde."
+msgstr "Algo salió mal, inténtelo de nuevo más tarde."
 
 #. module: mail_plugin
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "The partner already has a company related to him"
-msgstr "Este partner ya está relacionado a una empresa"
+msgstr "Este contacto ya está relacionado a una empresa"
 
 #. module: mail_plugin
 #. openerp-web
@@ -754,7 +756,7 @@ msgstr ""
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "This partner does not exist"
-msgstr "Este partner no existe"
+msgstr "Este contacto no existe"
 
 #. module: mail_plugin
 #. openerp-web
@@ -776,8 +778,7 @@ msgid ""
 "bigger then the maximum size of %(size)sMB per each attachment."
 msgstr ""
 "Advertencia: No se pudieron obtener los archivos adjuntos %(attachments)s ya"
-" que el tamaño es más grande que el tamaño máximo de %(size)s MB por archivo"
-" adjunto."
+" que el tamaño supera el tamaño máximo de %(size)s MB por archivo adjunto."
 
 #. module: mail_plugin
 #. openerp-web
@@ -817,4 +818,4 @@ msgstr "¿Acceder a su base de datos de Odoo?"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "employees"
-msgstr "employees"
+msgstr "empleados"
