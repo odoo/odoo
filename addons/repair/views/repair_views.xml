@@ -368,8 +368,11 @@
             </field>
         </record>
 
-        <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
-            web_icon="repair,static/description/icon.png"/>
+        <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
+                  web_icon="repair,static/description/icon.png"/>
+
+        <menuitem id="repair_order_menu" name="Orders" action="action_repair_order_tree" groups="stock.group_stock_user"
+                  parent="menu_repair_order"/>
 
         <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager"/>
 

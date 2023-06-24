@@ -471,8 +471,15 @@
         id="mail_menu_calendar"
         name="Calendar"
         sequence="10"
-        action="action_calendar_event"
         web_icon="calendar,static/description/icon.png"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="calendar_event_menu"
+        name="Calendar"
+        sequence="10"
+        action="action_calendar_event"
+        parent="mail_menu_calendar"
         groups="base.group_user"/>
 
     <menuitem
