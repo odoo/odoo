@@ -86,6 +86,9 @@
         <field name="res_model">purchase.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="context" eval="{
+                'search_default_orders': 1,
+                'search_default_filter_date_approve': 1}"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Purchase Analysis
