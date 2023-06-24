@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import Query
 from odoo.tools.translate import _
 
 from dateutil.relativedelta import relativedelta
+
+import odoo.addons.hr_recruitment.models.utils as utils
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -289,7 +289,13 @@ class Applicant(models.Model):
             if vals.get('user_id'):
                 vals['date_open'] = fields.Datetime.now()
             if vals.get('email_from'):
-                vals['email_from'] = vals['email_from'].strip()
+                if self.env.context.get('from_job_website'):
+                    vals['email_from'] = self.env.context.get('parsed_email')
+                    if self.env.context.get('website_fields'):
+                        for field in self.env.context.get('website_fields'):
+                            vals[field] = self.env.context.get('website_fields')[field]
+                else:
+                    vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
@@ -517,13 +523,31 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
+
         val = msg.get('from').split('<')[0]
-        defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
-            'partner_id': msg.get('author_id', False),
-        }
+
+        msg_from = msg.get('from')
+        job_website = next((value for key, value in utils.JOB_POSTING_SERVICE_MAILS.items() if key in msg_from), None)
+
+        if job_website:
+            parsed_defaults = utils.JOB_OFFER_PARSERS[job_website](msg)
+            if parsed_defaults["success_parse"]:
+                context = dict(self.env.context)
+                defaults = {
+                    'name': parsed_defaults['name'],
+                    'partner_name': parsed_defaults['partner_name'],
+                }
+                context['from_job_website'] = True
+                context['parsed_email'] = parsed_defaults["applicant_email_from"]
+                context['website_fields'] = parsed_defaults["website_fields"]
+                self = self.with_context(context)
+        else:
+            defaults = {
+                'name': msg.get('subject') or _("No Subject"),
+                'partner_name': val,
+                'email_from': msg.get('from'),
+                'partner_id': msg.get('author_id', False),
+            }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if stage and stage.id:
