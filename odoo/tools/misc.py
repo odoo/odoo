@@ -17,6 +17,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -139,7 +140,7 @@ def exec_pg_command_pipe(name, *args):
 #file_path_root = os.getcwd()
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
+def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None, env=None):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
@@ -152,11 +153,15 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
     @param subdir subdirectory
     @param pathinfo if True returns tuple (fileobject, filepath)
     @param filter_ext: optional list of supported extensions (without leading dot)
+    @param env: optional environment, required for a file path within a temporary directory
+        created using `file_open_temporary_directory()`
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
     adps = odoo.addons.__path__
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    if env and hasattr(env.all, '__file_open_tmp_paths'):
+        adps = adps + list(env.all.__file_open_tmp_paths)
 
     basename = name
 
@@ -173,7 +178,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
         else:
             # It is outside the OpenERP root: skip zipfile lookup.
             base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext,
+                         env=env)
 
     if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
@@ -191,18 +197,20 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
         for adp in adps:
             try:
                 return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+                                 pathinfo=pathinfo, basename=basename, filter_ext=filter_ext, env=env)
             except IOError:
                 pass
 
     # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext, env=env)
 
 
-def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None):
+def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None, env=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     paths = odoo.addons.__path__ + [config['root_path']]
+    if env and hasattr(env.all, '__file_open_tmp_paths'):
+        paths += env.all.__file_open_tmp_paths
     for addons_path in paths:
         addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
         if name.startswith(addons_path):
@@ -257,6 +265,35 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None):
     if name.endswith('.rml'):
         raise IOError('Report %r does not exist or has been deleted' % basename)
     raise IOError('File not found: %s' % basename)
+
+
+@contextmanager
+def file_open_temporary_directory(env):
+    """Create and return a temporary directory added to the directories `file_open` is allowed to read from.
+
+    `file_open` will be allowed to open files within the temporary directory
+    only for environments of the same transaction than `env`.
+    Meaning, other transactions/requests from other users or even other databases
+    won't be allowed to open files from this directory.
+
+    Examples::
+
+        >>> with odoo.tools.file_open_temporary_directory(self.env) as module_dir:
+        ...    with zipfile.ZipFile('foo.zip', 'r') as z:
+        ...        z.extract('foo/__manifest__.py', module_dir)
+        ...    with odoo.tools.file_open('foo/__manifest__.py', env=self.env) as f:
+        ...        manifest = f.read()
+
+    :param env: environment for which the temporary directory is created.
+    :return: the absolute path to the created temporary directory
+    """
+    assert not hasattr(env.all, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
+    with tempfile.TemporaryDirectory() as module_dir:
+        try:
+            env.all.__file_open_tmp_paths = (module_dir,)
+            yield module_dir
+        finally:
+            del env.all.__file_open_tmp_paths
 
 
 #----------------------------------------------------------
