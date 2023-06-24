@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -53,6 +53,7 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
@@ -61,7 +62,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "다음으로 인증"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
@@ -76,6 +77,7 @@ msgid "Config Settings"
 msgstr "설정 구성"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -84,6 +86,7 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -112,6 +115,7 @@ msgid "Incoming Mail Server"
 msgstr "수신 메일 서버"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -137,6 +141,7 @@ msgid "Microsoft Outlook Mixin"
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
@@ -180,18 +185,31 @@ msgid "Outlook Refresh Token"
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
 msgstr "Outlook 자격 증명을 구성하십시오."
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -205,6 +223,7 @@ msgid "Read More"
 msgstr "더 읽기"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
@@ -241,6 +260,7 @@ msgid "The URL to generate the authorization code from Outlook"
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -249,6 +269,7 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."

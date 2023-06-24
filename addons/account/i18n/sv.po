@@ -32,7 +32,7 @@
 # Martin Trigaux, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Lasse Larsson, 2023
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Lasse Larsson, 2023\n"
+"Last-Translator: Lasse L, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13655,6 +13655,15 @@ msgstr ""
 "%(date_field)s (%(date)s) matchar inte sekvensnumret för den relaterade %(model)s (%(sequence)s)\n"
 "Du kommer att behöva rensa %(model)s’s %(sequence_field)s för att fortsätta.\n"
 "Genom att göra så, kanske du vill omorganisera dina poster för att upprätthålla en kontinuerlig datum-baserad sekvens."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
 
 #. module: account
 #. odoo-python
