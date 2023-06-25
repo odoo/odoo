@@ -3,9 +3,9 @@
 # 	* project_todo
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,6 +113,9 @@ msgid ""
 "        During the conversion of a to-do to a task, you will be able to add or remove assignees to control who has access to the created task. Note that its visibility will also depend on the visibility settings of the project you are assigning it to.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Tijdens de conversie van een to-do in een tak, kan je toegewezen personen toevoegen of verwijderen om te controleren wie toegang heeft tot de gemaakte taak. Houd er rekening mee dat de zichtbaarheid ook afhangt van de zichtbaarheidsinstellingen van het project waaraan je het toewijst.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -129,6 +132,17 @@ msgid ""
 "        Similarly, private tasks created in the Project app will also appear in your to-dos.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dolijsten zijn nu zoals \n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">privé-taken</font>\n"
+"        </span>\n"
+"        en worden opgelijst in de Project-App onder \n"
+"        <span>\n"
+"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">Mijn Taken</font>.\n"
+"        </span>\n"
+"        Op dezelfde manier, privé-taken aangemaakt in de Project-App worden opgelijst in je To-dolijsten.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -141,6 +155,13 @@ msgid ""
 "        field above to share this to-do with other users.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dolijsten, zoals privé-taken, zijn enkel toegankelijk voor de gebruikers die gespecifieerd worden als toegewezen personen. Je kan het veld\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">Toegewezen personen</font>\n"
+"        </span>\n"
+"        hierboven gebruiken om deze takenlijst met andere gebruikers te delen.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -149,6 +170,9 @@ msgid ""
 "        Use it to manage your urgent work, take notes on the go, and create tasks based on them. \n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Gebruik het om je dringend werk te beheren, om gaandeweg notities te nemen en taken te maken. \n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -161,6 +185,13 @@ msgid ""
 "        pop-up from the action menu of the to-do.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Je kan je to-dolijsten omzetten in taken et ze toewijzen aan een project. Om dit je doen, ga je naar het pop-upvenster\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">Omzetten naar taak</font>\n"
+"        </span>\n"
+"        van het actiemenu van de to-dolijst.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -192,6 +223,9 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Je kan met deze privé-to-dolijst rommelen.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">Klaar om het uit te proberen?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -223,14 +257,14 @@ msgstr "Soort activiteit"
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "Add a To-do"
-msgstr ""
+msgstr "Een To-do toevoegen"
 
 #. module: project_todo
 #. odoo-javascript
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "AddTodo"
-msgstr ""
+msgstr "To-do toevoegen"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -247,17 +281,17 @@ msgstr "Toegewezen aan"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By assigned tags"
-msgstr ""
+msgstr "Per toegewezen labels"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By personal stages"
-msgstr ""
+msgstr "Per persoonlijke fases"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Choose tags from the selected project"
-msgstr ""
+msgstr "Kies labels van het geselecteerde project"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -281,7 +315,7 @@ msgstr "Omzetten naar taak"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Create a task"
-msgstr ""
+msgstr "Een taak maken"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_kanban
@@ -306,7 +340,7 @@ msgstr "Groepeer op"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Hey"
-msgstr ""
+msgstr "Hoi"
 
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
@@ -314,6 +348,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
+"Houd je werk georganiseerd door memo's en to-dolijsten te gebruiken. \n"
+"Je to-dotaken zijn standaard privé, maar je kan kiezen om die te delen met andere mensen door ze toe te voegen als toegewezen personen."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -331,12 +367,12 @@ msgstr "Markeren als gereed"
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
 msgid "No to-do found. Let's create one!"
-msgstr ""
+msgstr "Geen to-do gevonden. Laten we er één maken!"
 
 #. module: project_todo
 #: model:res.groups,name:project_todo.group_onboarding_todo
 msgid "Onboarding todo already generated for those users"
-msgstr ""
+msgstr "Onboarding to-do reeds gegenereerd voor deze gebruikers"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -354,7 +390,7 @@ msgstr "Herinnering"
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.xml:0
 #, python-format
 msgid "Reminder to..."
-msgstr ""
+msgstr "Herinnering om..."
 
 #. module: project_todo
 #. odoo-javascript
@@ -366,7 +402,7 @@ msgstr "OPSLAAN"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Select an existing project"
-msgstr ""
+msgstr "Selecteer een bestaand project"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -399,14 +435,14 @@ msgstr "To-do"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "To-do Title"
-msgstr ""
+msgstr "Titel to-do"
 
 #. module: project_todo
 #: model:ir.actions.act_window,name:project_todo.project_task_action_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_activity
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_tree
 msgid "To-dos"
-msgstr ""
+msgstr "To-dolijsten"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -416,7 +452,7 @@ msgstr "Activiteiten van vandaag"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Todos"
-msgstr ""
+msgstr "To-dolijsten"
 
 #. module: project_todo
 #. odoo-javascript
@@ -425,19 +461,19 @@ msgstr ""
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
 msgid "Untitled to-do"
-msgstr ""
+msgstr "Naamloze to-dolijst"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Using the editor"
-msgstr ""
+msgstr "De editor gebruiken"
 
 #. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #, python-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "Welkom %s!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -452,6 +488,8 @@ msgid ""
 "Your to-do has been successfully added to your tasks and scheduled for "
 "completion."
 msgstr ""
+"Je to-dolijst werd succesvol toegevoegd aan je taken en gepland om afgewerkt"
+" te worden."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -461,7 +499,7 @@ msgstr "bijv. Uitnodigingen versturen"
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "menu To-dolijsten laden"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -469,3 +507,5 @@ msgid ""
 "👋 <br/>\n"
 "    Welcome to the To-do app!"
 msgstr ""
+"👋 <br/>\n"
+"    Welkom bij de To-do app!"

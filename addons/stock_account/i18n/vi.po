@@ -74,7 +74,7 @@ msgstr "<b>Thiết lập các tài khoản nhập/xuất khác trên các</b>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Định giá</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -168,7 +168,7 @@ msgstr "Tự động"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr ""
+msgstr "Kế toán kho tự động"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -281,7 +281,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 msgid "Country Code"
-msgstr "Mã Quốc gia"
+msgstr "Mã quốc gia"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -391,7 +391,7 @@ msgstr "ID"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Incoming"
-msgstr "Nhập về"
+msgstr "Đang nhập"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -462,7 +462,7 @@ msgstr "Liên kết với"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Số lô & sê-ri sẽ xuất hiện trên hóa đơn"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -525,7 +525,7 @@ msgstr "Thông tin khác"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Outgoing"
-msgstr "Xuất đi"
+msgstr "Đang xuất"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -662,7 +662,7 @@ msgstr ""
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr ""
+msgstr "Kế toán kho tự động"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -721,12 +721,12 @@ msgstr "Tài khoản định giá tồn kho"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Tài khoản định giá tồn kho (Nhập về)"
+msgstr "Tài khoản định giá tồn kho (Đang nhập)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Tài khoản định giá tồn kho (Xuất đi)"
+msgstr "Tài khoản định giá tồn kho (Đang xuất)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -884,7 +884,7 @@ msgstr "Đơn vị tính"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr "Cập nhật số lượng trên Đơn bán/mua hàng"
+msgstr "Cập nhật số lượng trên đơn bán/mua hàng"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -897,9 +897,9 @@ msgid ""
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
 "trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được di chuyển từ một vị trí nội bộ sang "
-"vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. Việc "
-"này không ảnh hưởng tới vị trí nội bộ."
+" để giữ giá trị của những sản phẩm được dịch chuyển từ một vị trí nội bộ "
+"sang vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. "
+"Việc này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -912,9 +912,9 @@ msgid ""
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
 "trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được di chuyển ra khỏi vị trí này và vào "
-"một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm."
-" Việc này không ảnh hưởng tới vị trí nội bộ."
+" để giữ giá trị của những sản phẩm được dịch chuyển ra khỏi vị trí này và "
+"vào một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản "
+"phẩm. Việc này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -999,7 +999,7 @@ msgid ""
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
 "Khi thực hiện định giá tồn kho tự động, đây là Sổ nhật ký kế toán, trong đó "
-"các bút toán sẽ được tự động ghi sổ dịch chuyển tồn kho được xử lý."
+"các bút toán sẽ được tự động ghi sổ khi dịch chuyển tồn kho được xử lý."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation

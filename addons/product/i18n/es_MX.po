@@ -9,9 +9,9 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # Iron Graterol, 2023
-# Aimée Mendoza Sánchez, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,7 @@ msgstr "%s (copia)"
 #, python-format
 msgid "%s: end date (%s) should be greater than start date (%s)"
 msgstr ""
+"%s : la fecha de finalización (%s) debe posterior a la fecha de inicio (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
@@ -167,6 +168,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Precios adicionales\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Precio adicional\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -373,7 +380,7 @@ msgid ""
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
 "Permite gestionar diferentes precios basados en reglas por categoría de clientes.\n"
-"                Ejemplo: 10% para los minoristas, promoción de 5 EUR en este producto, etc."
+"                Ejemplo: 10% para los minoristas, promoción de $100 en este producto, etc."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -505,7 +512,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Código(s) de barras ya asignados:\n"
+"Código(s) de barras ya asignado(s):\n"
 "\n"
 "%s"
 
@@ -517,6 +524,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Precio base para el cálculo.\n"
+"Precio de venta: El precio base será el precio de venta.\n"
+"Precio de coste: El precio base será el precio de coste.\n"
+"Otra lista de precios: Cálculo del precio base de acuerdo con otra lista de precios."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -1220,8 +1231,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
-"Aquí puede establecer un índice de color HTML específico (por ejemplo, # "
-"ff0000) para mostrar el color si el tipo de atributo es 'Color'."
+"Aquí puede establecer un índice de color HTML específico (por ejemplo, "
+"#ff0000) para mostrar el color si el tipo de atributo es 'Color'."
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
@@ -1739,7 +1750,7 @@ msgid ""
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "En el producto %(product)s no puede transformar el atributo "
-"%(attribute_src)s al atributo %(attribute_dest)s."
+"%(attribute_src)s en el atributo %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1785,7 +1796,7 @@ msgstr "Píldoras"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr "Ingresa un número entero positivo"
+msgstr "Ingrese un número entero positivo"
 
 #. module: product
 #. odoo-python
@@ -2232,7 +2243,7 @@ msgstr "Productos: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr "Promociones, cupones, tarjeta de regalo y programa de fidelidad"
+msgstr "Promociones, cupones, tarjeta de regalo y programa de lealtad"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2544,7 +2555,7 @@ msgstr "Etiquetas"
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
 msgstr ""
-"Las etiquetas se usan para buscar el producto para un teme específico."
+"Las etiquetas se usan para buscar el producto para un tema específico."
 
 #. module: product
 #. odoo-python
@@ -2587,7 +2598,7 @@ msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
 msgstr ""
-"El precio calculado se expresa en la unidad de medida por defecto del "
+"El precio calculado se expresa en la unidad de medida predeterminada del "
 "producto."
 
 #. module: product
@@ -2934,22 +2945,22 @@ msgstr "Imagen de la variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr "Variant Image 1024"
+msgstr "Imagen de variante 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr "Variant Image 128"
+msgstr "Imagen de variante 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr "Variant Image 256"
+msgstr "Imagen de variante 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr "Variant Image 512"
+msgstr "Imagen de variante 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3132,7 +3143,7 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
-"La precisión decimal que está indicando es menos precisa que la unidad de medida:\n"
+"La precisión decimal que está indicando es menos exacta que la unidad de medida:\n"
 "%s\n"
 "Esto puede hacer que los cálculos no sean consistentes.\n"
 "Aumente el redondeo de esas unidades de medida, o los dígitos de esta precisión decimal."
@@ -3159,7 +3170,7 @@ msgstr ""
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
 msgstr ""
-"No se puede asignar la lista de precios principal como Otra lista de precios"
+"No se puede asignar la lista de precios principal como otra lista de precios"
 " en el artículo de lista de precios."
 
 #. module: product
@@ -3203,7 +3214,7 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
-"No puede cambiar el valor del valor %(value)s establecido en el "
+"No puede cambiar la cuantía del valor %(value)s establecido en el "
 "producto%(product)s."
 
 #. module: product

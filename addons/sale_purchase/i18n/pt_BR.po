@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Layna Nascimento, 2023
+# Kevilyn Rosa, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Kevilyn Rosa, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,9 +92,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"Se marcado, cada vez que você vende este produto através de um PV, uma SdC é"
-" criada automaticamente para comprar o produto. Dica: não se esqueça de "
-"colocar um fornecedor no produto."
+"Se marcado, cada vez que você vender este produto através de um pedido de "
+"venda, uma solicitação de cotação (RFQ) será criada automaticamente para "
+"comprar o produto. Dica: não esqueça de definir um fornecedor no produto."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -103,12 +104,12 @@ msgstr "Ações manuais podem ser necessárias."
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr "Número de Pedidos de Compra Gerados"
+msgstr "Número de pedidos de compra gerados"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
 msgid "Number of Source Sale"
-msgstr "Número da Fonte de Venda"
+msgstr "Número da venda de origem"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
@@ -147,12 +148,13 @@ msgstr "Produto"
 #: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid "Product that is not a service can not create RFQ."
-msgstr "Produto que não é um serviço não pode criar SDC."
+msgstr ""
+"Um produto que não é um serviço não pode criar uma solicitação de cotação."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Pedido de Compra"
+msgstr "Pedido de compra"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
@@ -162,14 +164,14 @@ msgstr "Alerta de pedido de compra"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Linha de Pedido de Compra"
+msgstr "Linha do pedido de compra"
 
 #. module: sale_purchase
 #. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr "Pedidos de Compra gerado a partir de %s"
+msgstr "Pedido de compra gerado a partir de %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -188,7 +190,7 @@ msgstr "Recompra"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
 msgid "Sale Order"
-msgstr "Pedido de Venda"
+msgstr "Pedido de venda"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order
@@ -198,7 +200,7 @@ msgstr "Pedido de venda"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Cancelar Pedido de Vendas"
+msgstr "Cancelar pedido de vendas"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
@@ -210,7 +212,7 @@ msgstr "Linha do pedido de vendas"
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
-msgstr "Pedidos de Venda Fontes %s"
+msgstr "Pedidos de venda de origem %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase

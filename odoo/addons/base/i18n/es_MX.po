@@ -12,6 +12,7 @@
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Kevin Harrings <kha@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:28+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Kevin Harrings <kha@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -598,8 +599,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Este módulo permite que el cajero le de rápidamente un descuento al cliente \n"
-"basado en porcentaje.\n"
+"Este módulo permite que el cajero le dé rápidamente un descuento basado en porcentaje \n"
+"al cliente.\n"
 "\n"
 
 #. module: base
@@ -696,6 +697,9 @@ msgid ""
 "        Accounting reports for Dominican Republic\n"
 "    "
 msgstr ""
+"\n"
+"        Reportes contables para República Dominicana\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -900,6 +904,9 @@ msgid ""
 "        Addon for the POS App that allows customers to view the menu on their smartphone.\n"
 "        "
 msgstr ""
+"\n"
+"        Complemento para la aplicación de Punto de Venta que permite a los clientes ver el menú en su teléfono inteligente.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -952,6 +959,9 @@ msgid ""
 "        Automatic accounting for MRP\n"
 "    "
 msgstr ""
+"\n"
+"        Contabilidad automática para MRP\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -1035,6 +1045,9 @@ msgid ""
 "        Bridge module addings support for EMV Merchant-Presented QR-code generation for Payment System.\n"
 "    "
 msgstr ""
+"\n"
+"        Módulo puente que agrega soporte para la generación de códigos QR presentados por el comerciante para el sistema de pago EMV.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_quality
@@ -1289,6 +1302,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        Menú E-Faktur (Indonesia)\n"
+"        Formato: 010.000-16.00000001\n"
+"        * 2 (dua) dígitos pertama adalah Kode Transaksi\n"
+"        * 1 (satu) dígito berikutnya adalah Kode Status\n"
+"        * 3 (tiga) dígitos berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) dígitos pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) dígitos berikutnya adalah Nomor Urut\n"
+"\n"
+"        Para poder exportar facturas de clientes como e-Faktur,\n"
+"        necesita poner los rangos de números que le asignó\n"
+"        el gobierno en Contabilidad> Clientes> e-Faktur\n"
+"\n"
+"        Cuando valide una factura, donde el socio tiene el campo del \n"
+"         ID PKP, se asignará un número de impuesto a esa factura.\n"
+"        Posteriormente, puede filtrar las facturas que queden por exportar en la\n"
+"        lista de facturas y haga clic en Acción> Descargar e-Faktur para descargar\n"
+"        el csv y súbalo en el sitio del gobierno.\n"
+"\n"
+"        Puede sustituir una factura que ya envió por otra al indicar\n"
+"        cuál es la factura reemplazada y cuál la nueva y puede restablecer una factura\n"
+"        que aún no ha enviado al gobierno para reutilizar su número.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1359,6 +1395,12 @@ msgid ""
 "        For more information about the SEPA standards: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genere órdenes de pago según lo recomendado por la norma SEPA, gracias a los mensajes pain.001. Las versiones compatibles con pain (países) son pain.001.001.03 (genérico), pain.001.001.03.ch.02 (Suiza) y pain.001.003.03 (Alemania). El archivo XML generado se puede cargar en su banco.\n"
+"\n"
+"        Este módulo sigue las pautas de implementación emitidas por el Consejo Europeo de Pagos.\n"
+"        Para obtener más información sobre los estándares SEPA: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -1486,6 +1528,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        Módulo para importar los archivos estándar de FEC (Documento de Escrituras Contables, por su sigla en francés), útil para importar el historial de contabilidad.\n"
+"        Los archivos FEC son los reportes de contabilidad estándar que los negocios franceses deben enviar a las autoridades tributarias.\n"
+"        Este módulo permite importar cuentas, diarios, parnerts y los movimientos de estos archivos.\n"
+"        Solo se implementa el formato CSV de FEC.\n"
+"        'utf-8', 'utf-8-sig' y 'iso8859_15' son las únicas codificaciones permitidas.\n"
+"        Se permiten varios delimitadores : ';' o '|' o ',' o '\t'.\n"
+"\n"
+"        Especificación técnica oficial (fr)\n"
+"        https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"        Herramienta de prueba FEC de las autoridades tributarias.\n"
+"        https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz
@@ -1836,6 +1893,9 @@ msgid ""
 "        This module is used to send/receive documents with PEPPOL\n"
 "        "
 msgstr ""
+"\n"
+"        Este módulo se utiliza para enviar/recibir documentos con PEPPOL\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -1972,7 +2032,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"       Auto-completar los datos de la empresa del contacto\n"
+"       Autocompletar los datos de la empresa del contacto\n"
 "    "
 
 #. module: base
@@ -2027,6 +2087,19 @@ msgid ""
 "    - the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 "    "
 msgstr ""
+"\n"
+"    Añadir una pestaña adicional en el proceso de pago de la página web/comercio electrónico con los campos mexicanos:\n"
+"    \n"
+"    - l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"    - l10n_mx_edi_fiscal_regime (res.partner)\n"
+"    - l10n_mx_edi_usage (sale.order/account.move)\n"
+"    - l10n_mx_edi_no_tax_breakdown (res.partner)\n"
+"    \n"
+"    La pestaña adicional solo aparecerá si:\n"
+"    \n"
+"    - la empresa vinculada al sitio web es mexicana\n"
+"    - la opción 'facturación_automática' está habilitada en la configuración del sitio web (\"generar automáticamente la factura cuando se confirme el pago en línea\")\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2088,7 +2161,7 @@ msgid ""
 msgstr ""
 "\n"
 "    Configura dispositivos IoT para usarlos en ciertos \n"
-"    pasos para tomar medidas, fotos...\n"
+"    pasos para tomar medidas, fotos, etc.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -2339,6 +2412,18 @@ msgid ""
 "    the SII.\n"
 "    "
 msgstr ""
+"\n"
+"    La guía de despacho se necesita como prueba\n"
+"    de que está enviando bienes entre A y B.\n"
+"    \n"
+"    Se puede configurar en el contacto si se necesitan los precios\n"
+"    en la guía de despacho y si necesitan provenir de la orden de venta\n"
+"    o del producto en sí.\n"
+"    \n"
+"    Podrá crear la guía de despacho solo cuando se valide la orden \n"
+"    de entrega. Después seguirán los mismos pasos que las facturas, pues se enviarán\n"
+"    al SII.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_facturae
@@ -2351,6 +2436,13 @@ msgid ""
 "    for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
 "    "
 msgstr ""
+"\n"
+"    Este módulo crea el archivo Facturae necesario para enviar la información de facturas a las Administraciones Generales del Estado.\n"
+"    Permite la exportación y firma de archivos Facturae.\n"
+"    La versión actual de Facturae compatible es la 3.2.1.\n"
+"    \n"
+"    Para más información, visite https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -2469,6 +2561,10 @@ msgid ""
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format\n"
 "    "
 msgstr ""
+"\n"
+"- Registrarse como participante de PEPPOL\n"
+"- Enviar y recibir documentos a través de la red PEPPOL en formato Peppol BIS Billing 3.0\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -2482,6 +2578,14 @@ msgid ""
 "- the portal security settings page if the user is not internal.\n"
 "    "
 msgstr ""
+"\n"
+"A2F invitación por correo\n"
+"===============\n"
+"Permita que los usuarios puedan invitar a otros usuarios a usar la autenticación de dos factores\n"
+"mediante un correo que se enviará al usuario deseado. Este correo los redirigirá a:\n"
+"- los ajustes de seguridad del usuario si el usuario es interno.\n"
+"- los ajustes de seguridad de la página del portal si el usuario no es interno. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail_enforce
@@ -3039,6 +3143,10 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
+"\n"
+"Reportes contables  de Algeria\n"
+"================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3184,6 +3292,11 @@ msgid ""
 "This module has been built with the help of Caudigef.\n"
 "    "
 msgstr ""
+"\n"
+"Informes contables para Marruecos.\n"
+"\n"
+"Este módulo ha sido creado con la ayuda de Caudigef.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -3333,6 +3446,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Agregue un nuevo modelo denominado \"Tipo de identificación\" que amplíe la funcionalidad del campo de Número de Identificación Fiscal (NIF) del contacto y permita que el usuario identifique (eventualmente una factura) a los contactos no solo con su Número de Identificación fiscal (NIF) sino con otros tipos de identificaciones como documento nacional , pasaporte, identificación extranjera, etc. Con este módulo instalado, verá ahora en la vista de formulario de contactos dos campos:\n"
+"\n"
+"* Tipo de identificación\n"
+"* Número de identificación\n"
+"\n"
+"Este comportamiento es un requisito común para algunos países latinoamericanos como Argentina y Chile. Si su localización tiene estos requisitos, entonces debe depender de este módulo y definir en su módulo de localización los tipos de identificación que se utilizan en su país. En general, este tipo de identificaciones son definidas por las autoridades gubernamentales que regulan las operaciones fiscales, por ejemplo:\n"
+"\n"
+"* AFIP en Argentina define el DNI, CUIT (Número de Identificación Fiscal (NIF) para entidades legales), CUIL (Número de Identificación Fiscal (NIF) para personas naturales), y otros 80 tipos de identificación válidos.\n"
+"\n"
+"Cada identificación contiene esta información:\n"
+"\n"
+"* nombre: nombre corto de la identificación\n"
+"* descripción: podría ser el mismo nombre corto o un nombre largo\n"
+"* id_pais(country_id): el país al que pertenece esta identificación\n"
+"* es_identificacionFiscal(is_vat): identifica este registro como el Número de Identificación Fiscal (NIF) correspondiente para el país específico.\n"
+"* secuencia: nos permite ordenar los tipos de identificación según los más utilizados.\n"
+"* activo: podemos activar / desactivar identificaciones para que sea más fácil para nuestros clientes\n"
+"\n"
+"Con el fin de hacer que este módulo sea compatible con entornos de empresas múltiples donde tenemos compañías que no necesitan/no admiten este requisito, hemos agregado tipos de identificación genéricos y reglas genéricas para administrar la información de contacto y hacerla transparente para el usuario cuando solo use el Número de Identificación Fiscal (NIF) como lo conocíamos anteriormente.\n"
+"\n"
+"Identificaciones genéricas:\n"
+"\n"
+"* identificación Fiscal: la identificación fiscal o el Número de Identificación Fiscal (NIF), de forma predeterminada, se seleccionará como tipo de identificación, por lo que el usuario solo tendrá que agregar el número de identificación fiscal relacionado.\n"
+"* Pasaporte\n"
+"* Identificación extranjera (documento nacional extranjero)\n"
+"\n"
+"Reglas al crear un nuevo contacto: solo veremos los tipos de identificación que son significativos, teniendo en cuenta estas reglas:\n"
+"\n"
+"* Si el contacto no tiene establecida la dirección del país: mostrará los tipos de identificación genéricos más los definidos en el país de la compañía relacionada del contacto (si el contacto no tiene una compañía específica, mostrará los tipos de identificación relacionados con la compañía de usuario actual)\n"
+"\n"
+"* Si el contacto tiene la dirección del país: mostrará los tipos de identificación genéricos más los definidos para el país del contacto.\n"
+"\n"
+"Al crear una nueva empresa, se establecerá en el contacto relacionado siempre el tipo de identificación es_identificacionFiscal(is_vat) del país relacionado.\n"
+"\n"
+"Todos los tipos de identificación definidos se pueden revisar y activar / desactivar en el menú \"Contactos / Configuración / Tipo de identificación\".\n"
+"\n"
+"Este módulo es compatible con el módulo base_vat para poder validar los Números de Identificación Fiscal (NIF) para cada país que tenga o no la posibilidad de administrar múltiples tipos de identificación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -3661,6 +3812,10 @@ msgid ""
 "==================================================================================================\n"
 "This module allows the computation of the 'Vendor Bills', 'Other Costs' and 'Other Revenues' section for the project profitability, in the project update view.\n"
 msgstr ""
+"\n"
+"Permite el cálculo de algunas secciones para la rentabilidad del proyecto\n"
+"==================================================================================================\n"
+"Este módulo permite el cálculo de las secciones 'Facturas de proveedores', 'Otros costos' y 'Otros ingresos' para la rentabilidad del proyecto, en la vista de actualización del proyecto.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -4064,6 +4219,43 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Declaraciones automáticas DIMONA\n"
+"=============================\n"
+"\n"
+"Requisitos previos:\n"
+"--------------\n"
+"\n"
+"- Necesita un certificado digital conforme al gobierno belga, este lo entrega Global\n"
+"  Sign. Consulte: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genere archivos de certificado desde su certificado SSL (archivo .pfx) que se necesitan para crear\n"
+"  un usuario técnico (archivo .cer) y para la autenticación remota para el archivo ONSS (.pem), En un sistema\n"
+"  UNIX puede usar los siguientes comandos:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Antes de poder usar el servicio web de seguridad social REST, debe crear una cuenta\n"
+"  para usted o para su cliente y configurar la seguridad. (El procedimiento está\n"
+"  disponible en https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Gestión de la cuenta del usuario: siga el procedimiento https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Cree un usuario técnico: su cliente ahora debe crear un usuario técnico en el servicio en línea\n"
+"    de gestión en línea. Siga este procedimiento: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Active un canal de servicio web: Una vez que se creó el usuario técnico, su cliente debe\n"
+"    activar el canal del serivicio web en el gestor de acceso. El siguiente manual explica los\n"
+"    paos a seguir para activar el canal: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Al final del procedimiento, debe recibir un \"ONSS Expeditor Number\", puede\n"
+"    codificarlo en los ajustes de nómina con el archivo .pem y la contraseña relacionada, si la hay\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -4286,6 +4478,54 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "    "
 msgstr ""
+"\n"
+"Reglas de nómina belgas.\n"
+"======================\n"
+"\n"
+"    * Detalles de los empleados\n"
+"    * Contratos de los empleados\n"
+"    * Pasaporte basado en contratos\n"
+"    * Préstamos/deducciones\n"
+"    * Posibilidad de configurar el sueldo básico/bruto/neto\n"
+"    * Payslip del empleado\n"
+"    * Registro mensual de nómina\n"
+"    * Integración con gestión de permisos\n"
+"    * Sueldo Maj, ONSS, retención de impuestos, asignación provisional por hijo, etc.\n"
+"\n"
+"Firma automática DmfA\n"
+"\n"
+"========================\n"
+"\n"
+"Requisitos previos:\n"
+"--------------\n"
+"\n"
+"- Necesita un certificado digital conforme al Gobierno belga, este lo entrega Global\n"
+"Sign. Consulte: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genere archivos de certificado desde su certificado SSL (archivo .pfx) que se necesitan para crear\n"
+"  un usuario técnico (archivo .cer) y para autenticación remota para el archivo ONSS (.pem), En un sistema UNIX \n"
+"  puede usar los siguientes comandos:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- Antes de poder usar el servicio web de seguridad social REST, debe crear una cuenta\n"
+"  para usted o para su ciiente y configurar la seguridad. (El procedimiento está\n"
+"disponible en https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Crear un usuario técnico + Activar un canal SFTP: Ahora su cliente debe crear un usuario técnico en el servicio en línea\n"
+"    de gestión de acceso. Siga el siguiente procedimiento: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Configure el Protocolo de Transferencia de Archivos Segura (SFTP) para su cliente: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Al final del procedimiento, debería haber recibido un \"Número de Expedidor ONSS\", que puede\n"
+"     ingresar en la configuración de nómina, junto con el archivo .pem y la contraseña relacionada, si corresponde.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -5063,6 +5303,24 @@ msgid ""
 "invoice line to export in the FatturaPA XML.\n"
 "    "
 msgstr ""
+"\n"
+"Documento di Trasporto (DDT)\n"
+"\n"
+"Siempre que se transfieran bienes entre A y B el DDT sirve\n"
+"como legitimación p. ej. si en algún momento la policía lo detiene. \n"
+"\n"
+"Cuando quiera imprimir una recolección saliente en una empresa italiana,\n"
+"lo que se imprimirá será el DDT. Es como una nota\n"
+"de entrega, pero también contiene el valor del producto\n"
+"la razón de transporte, el transportista,... todo esto lo hace un DDT. \n"
+"\n"
+"También usamos una secuencia separada para el DDT, ya que el nombre\n"
+"no puede tener separaciones y solo se debe aplicar cuando se envíen los bienes.\n"
+"\n"
+"Cuando las facturas están relacionadas a su orden de venta y la orden de venta está relacionada \n"
+"a la entrega, el sistema calculará automáticamente los DDT para cada \n"
+"línea de factura para exportarlo en el FatturaPA XML.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_hr_payroll
@@ -5433,6 +5691,11 @@ msgid ""
 "We should also consider that there may be users without the inventory application installed and keep a less\n"
 "complex logic.\n"
 msgstr ""
+"\n"
+"Incluso cuando la cantidad de paquetes parece ser inherente solo a la manera en que se distribuyen las existencias, necesitamos un campo para esto \n"
+"en la factura ya que esa información también podría depender de la declaración DUS.\n"
+"También debemos considerar que puede haber usuarios que no tengan la aplicación Inventario instalada y mantienen una lógica \n"
+"menos compleja.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -5900,6 +6163,36 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Este módulo agrega características para la localización ecuatoriana, que\n"
+"representa los requerimientos mínimos para operar un negocio en Ecuador en conformidad\n"
+"con los organismos reguladores como la autoridad fiscal de Ecuador (SRI) y la \n"
+"Super Intendencia de Compañías\n"
+"-\n"
+"\n"
+"Siga los siguientes pasos de configuración:\n"
+"1. Vaya a su empresa y configura su país como Ecuador\n"
+"2. Instale el módulo de facturación o el de contabilidad, todo se hará automáticamente\n"
+"\n"
+"Detalles importantes:\n"
+"* El plan de cuentas ecuatoriano se instalará automáticamente, todo se basa en el ejemplo proporcionado por la Super Intendencia de Compañías\n"
+"* También se instalará la lista de impuestos (incluyendo las retenciones), puede desactivar los impuestos que su empresa no usa\n"
+"* Asimismo, se instalarán los tipos de documentos, listas de bancos locales, listas de estados locales, etc.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"Datos técnicos:\n"
+"* Plan de cuentas basado en la recomendación de Super Cías\n"
+"* Impuestos, comprobantes de impuestos y grupos de impuestos de Ecuado\n"
+"* Posiciones fiscales ecuatorianas\n"
+"* Tipos de documento (hay alrededor de 41 tipos de documentos de compra en Ecuador)\n"
+"*Tipos de identificación\n"
+"* Bancos de Ecuador\n"
+"* Contactos: Consumidor Final, SRI, IESS y también validación de IVA básicos\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -8184,6 +8477,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Propósito del modulo:\n"
+"======================\n"
+"\n"
+"Como parte de los requisitos SII (requisitos legales en Chile), \n"
+"a partir de marzo 2021 las transacciones de boletas se deben enviar al SII como \n"
+"flujo de trabajo electrónico usando un servicio web diferente que el que usó para las facturas electrónicas. \n"
+"Antes no era necesario enviar las boletas al SII, solo un reporte diario.\n"
+"\n"
+"El requisito de enviar el \"Libro de ventas diarias\"\n"
+"(antes \"reporte de consumo de folios\" o RCOF) se eliminó desde el \n"
+"1 de agosto 2022. Por eso se eliminó de esta versión de Odoo.\n"
+"\n"
+"Diferencias entre el flujo de trabajo de las boletas electrónicas y el de la facturación electrónica:\n"
+"=========================================================================\n"
+"\n"
+"Estos flujos de trabajo tienen diferencias importantes que nos llevaron a realizar este PR con cambios específicos.\n"
+"Estas son las diferencias:\n"
+"\n"
+"* El mecanismo para enviar información de las boletas electrónicas necesita de servidores dedicados, a diferencia de aquellos usados al recibir facturas electrónicas (\"Palena\" para un entorno de producción - palena.sii.cl y \"Maullin\" para un entorno de prueba - maullin.sii.cl).\n"
+"* Los servicios de autenticación que solicitan el estado de una entrega y el estado de un documento serán diferentes.\n"
+"* Token de autenticación obtenido\n"
+"* El esquema XML para enviar boletas electrónicas se actualizó con la incorporación de nuevas etiquetas\n"
+"* La validación del diagnóstico de boletas electrónicas se entregará a a través de un servicio web \"REST\" que tiene como entrada el identificador de envío de la entrega. Las facturas electrónicas continuarán recibiendo los diagnóstivos a través de correo electrónico.\n"
+"* El identificador de envío asociado a las boletas electrónicas será de 15 dígitos (las facturas electrónicas son de 10)\n"
+"\n"
+"Puntos importantes de la guía del SII:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -8340,7 +8662,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Venda boletos para eventos a través de la aplicación de comercio electrónico."
+"Venda boletos para eventos a través de la aplicación Comercio electrónico."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_booth_sale
@@ -8361,7 +8683,7 @@ msgid ""
 "=============================\n"
 msgstr ""
 "\n"
-"Envíe el resumen de KPI periódicamente\n"
+"Envíe el resumen de los KPI periódicamente\n"
 "=============================\n"
 
 #. module: base
@@ -8510,6 +8832,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Plan de contabilidad y localización de Eslovaquia: Plan de cuentas 2020, tasas de IVA básicas +  \n"
+"posiciones fiscales.\n"
+"\n"
+"Tento modul definuje:\n"
+"• Slovenskú účtovú osnovu za rok 2020\n"
+"\n"
+"• Základné sadzby pre DPH z predaja a nákupu\n"
+"\n"
+"• Základné fiškálne pozície pre slovenskú legislatívu\n"
+"\n"
+" \n"
+"Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.\n"
+"    \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -8632,6 +8969,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Localización suiza\n"
+"==================\n"
+"Este módulo define un plan de cuentas para Suiza (PME/KMU suiza de 2015). También define impuestos, habilita la generación de ISR y la QR-bill al imprimir una factura o enviarla por correo.\n"
+"\n"
+"Se generará un ISR si especifica la información que necesita:\n"
+"    - La cuenta bancaria que espera que se pague debe estar configurada y tener una referencia postal válida.\n"
+"    - Su factura debe tener una cuenta bancaria asignada para recibir su pago\n"
+"      (esto se puede usar manualmente, pero un valor se asigna de manera automática si tiene una cuenta bancaria definida).\n"
+"    - Debe haber definido las referencias postales de su banco.\n"
+"    - Su factura debe ser en EUR o en CHF (ya que los ISR no aceptan otras divisas)\n"
+"\n"
+"Se generará una QR-bill si\n"
+"    - El partner que está definido en su factura tiene una dirección completa (calle, ciudad, código postal y país) en Suiza\n"
+"    - Seleccionó la opción para generar un código QR suizo en la facturación (se hace automáticamente)\n"
+"    - Un número de cuenta correcto/QR IBAN está definido en su diario bancario\n"
+"    - (al usar un QR-IBAN): la referencia de pago de la factura es un QR de referencia\n"
+"\n"
+"El ISR y la QR-bill se generan automáticamente si cumple con estos criterios.\n"
+"\n"
+"Funciona de esta manera:\n"
+"    - Al imprimir su factura se descargarán tres archivos automáticamente: la factura, su ISR y la QR-bill\n"
+"    - De clic en el botón de \"enviar por correo\" para adjuntar tres archivos al borrador de su correo: la factura, el ISR y la QR-bill.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -8880,6 +9241,18 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Este es un módulo de Odoo para gestionar la contabilidad en Finlandia.\n"
+"============================================================\n"
+"\n"
+"Después de instalar este módulo tendrá acceso a:\n"
+"    * Plan de cuentas de Finlandia\n"
+"    * Posiciones fiscales\n"
+"    * Tipos de referencias de pago en las facturas (referencia estándar de Finlandia y referencia financiera de Finlandia (RF))\n"
+"    * Formato de la referencia de Finlandia para órdenes de venta\n"
+"\n"
+"Configure el tipo de referencia de pago del diario de ventas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -8971,6 +9344,37 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo base para gestionar el plan de cuentas para Bélgica en Odoo\n"
+"=============================================================================\n"
+"\n"
+"Después de instalar este módulo, se lanza el asistente de configuración para contabilidad.\n"
+"    * Existen plantillas que pueden ser útiles para generar los planes de cuentas.\n"
+"    * En ese asistente en particular, se le preguntará para dar el nombre de la empresa,\n"
+"      la plantilla contable a utilizar, el número de dígitos a generar, el código para su cuentas\n"
+"      bancarias y la moneda para crear diarios.\n"
+"\n"
+"Entonces, se genera una copia pura del plan contable.\n"
+"\n"
+"Estos son los asistentes provistos para este módulo:\n"
+"--------------------------------------------------\n"
+"    * IVA de empresas: enliste las empresas con su IVA correspondiente e importes facturados.\n"
+"       Prepara un formato de archivo XML.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas de Bélgica / IVA de empresas\n"
+"\n"
+"     * Declaración de IVA periódica: Prepara un archivo XML para la declaración del IVA de\n"
+"       la empresa principal del usuario actualmente conectado.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas de Bélgica / Declaración de IVA periódico\n"
+"\n"
+"     * Listado anual de clientes sometidos a IVA: Prepara un archivo XML para la\n"
+"       declaración de la empresa principal del usuario actualmente registrado en base al\n"
+"       año fiscal.\n"
+"      \n"
+"         ** Ruta de acceso: ** Contabilidad / Informes / Informes / Declaraciones jurídicas belgas / Listado anual de clientes  sometidos a IVA\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -9100,6 +9504,10 @@ msgid ""
 "\n"
 "This module has been built with the help of Caudigef.\n"
 msgstr ""
+"\n"
+"Este es el módulo base para gestionar el plan de cuentas contables para Marruecos.\n"
+"\n"
+"Este módulo ha sido creado con la ayuda de Caudigef.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9551,6 +9959,14 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo agrega características genéricas para registrar una base de datos de Odoo en el proxy responsable por recibir la información (por medio de peticiones de servicios web).\n"
+"- Un edi_proxy_user tine una identificación única en un formato específico (por ejemplo, l10n_it_edi, peppol) que \n"
+"permite identificarlo al recibir un documento que se dirige a él. Se vincula con una empresa específica en una base\n"
+"de datos de Odoo.\n"
+"- Las características de cifrado permite decodificar toda la información del usuario al recibirlo de un proxy.\n"
+"- La autenticación ofrece un nivel adicional de seguridad para evitar la personificación en caso de que alguien obtenga acceso a la date de baso de un usuario.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -9808,6 +10224,18 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite imprimir sus pagos en cheques preimpresos.\n"
+"Puede configurar la salida (diseño, talones, formato de papel, etc.) en la configuración de la empresa y gestionar la\n"
+"numeración de los cheques (si usa cheques preimpresos sin números) en la configuración del diario.\n"
+"Conforme a la Asociación Canadiense de Pago (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Formatos compatibles\n"
+"-----------------\n"
+"- Cheque en la parte superior: estándar de Quicke\n"
+"- Cheque en el medio: estándar de Peachtre\n"
+"- Cheque en la parte inferior: estándar de ADP\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -10040,6 +10468,11 @@ msgid ""
 "Install this if you are using the Point of Sale app in Germany.\n"
 "\n"
 msgstr ""
+"\n"
+"Este módulo cumple con los requisitos técnicos de la nueva regulación de Alemania con el Sistema de Seguridad Técnica utilizando una solución basada en la nube con Fiskaly.\n"
+"\n"
+"Instálelo si utiliza la aplicación de Punto de venta en Alemania\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_res_cert
@@ -11374,7 +11807,7 @@ msgstr "# Reglas de registro"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "#{alt}"
-msgstr ""
+msgstr "#{alt}"
 
 #. module: base
 #. odoo-python
@@ -12205,22 +12638,22 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "<span class=\"o_stat_text\">Activate and Translate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Activar y traducir</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Add to the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Agregar al menú 'Imprimir'</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Qweb Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vistas Qweb</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Remove from the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Eliminar del menú 'Imprimir'</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -12433,7 +12866,7 @@ msgstr "<strong>C</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies:</strong>"
-msgstr ""
+msgstr "<strong>Dependencias:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12474,7 +12907,7 @@ msgstr "<strong>Etiqueta</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Menú:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12507,7 +12940,7 @@ msgstr "<strong>R</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports:</strong>"
-msgstr ""
+msgstr "<strong>Reportes:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12558,7 +12991,7 @@ msgstr "<strong>U</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View:</strong>"
-msgstr ""
+msgstr "<strong>Vista:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -25683,7 +26116,7 @@ msgstr "Marruecos - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_reports
 msgid "Morocco - Accounting Reports"
-msgstr ""
+msgstr "Francia - Reportes contables"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_hr_payroll
@@ -25718,7 +26151,7 @@ msgstr "Sr."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_accountant
 msgid "Mrp Accounting"
-msgstr ""
+msgstr "Contabilidad del MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -27376,6 +27809,115 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Punto de venta de Odoo\n"
+"-----------------------------\n"
+"\n"
+"El <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Punto de venta</a>\n"
+"de Odoo introduce una interfaz extremadamente estética que no requiere instalación y que funciona\n"
+"en hardwares modernos tanto en línea como sin conexión a internet.\n"
+"\n"
+"Gracias a que está completamente integrado con el inventario de la empresa y con contabilidad, tendrá estadísticas\n"
+"en tiempo real y habrá consolidación entre todas las tiendas sin tener que pasar por el problema de\n"
+"integrar varias aplicaciones.\n"
+"\n"
+"Trabaje con el hardware que ya tiene\n"
+"---------------------------------------\n"
+"\n"
+"### En su navegador \n"
+"\n"
+"El PdV de Odoo es una aplicación que funciona en cualquier dispositivo que pueda mostrar\n"
+"sitios web y no tendrá que instalar nada.\n"
+"\n"
+"### ¿Pantalla táctil o teclado?\n"
+"\n"
+"El Punto de venta funciona perfectamente en cualquier dispositivo táctil, ya sea\n"
+"tabletas multitáctiles como un iPad o terminales de pantalla táctil resistiva\n"
+"sin teclado.\n"
+"\n"
+"### Básculas e impresoras\n"
+"\n"
+"Los escáneres de código de barras y las impresoras son compatibles de inmediato, sin que tenga que\n"
+"configurarlas. Las básculas, cajas y otros periféricos se pueden usar con el proxy\n"
+"de la API.\n"
+"\n"
+"En línea y fuera de línea\n"
+"------------------\n"
+"\n"
+"### El PdV siempre será confiable, incluso si su conexión no lo es\n"
+"\n"
+"Muestre nuevas tiendas solamente con la conexión a internet: **sin instalación, sin\n"
+"hardware específico requerido**. Funciona en cualquier **iPad, tableta PC, laptop** o \n"
+"una máquina de PdV industrial.\n"
+"\n"
+"Aunque se requiere una conexión a internet para iniciar el Punto de venta, este se mantendrá\n"
+"funcionando incluso si se desconecta por completo.\n"
+"\n"
+"\n"
+"Una interfaz extremadamente limpia\n"
+"----------------------------\n"
+"\n"
+"### Simple y hermosa\n"
+"\n"
+"Despídase de los softwares de PdV feos y anticuados. Disfrute la interfaz web de Odoo\n"
+"que está diseñada para vendedores modernos.\n"
+"\n"
+"### Diseñado para la productividad\n"
+"\n"
+"Ya sea para un restaurante o una tienda, puede activar múltiples órdenes\n"
+"en paralelo para que no haga esperar a sus clientes.\n"
+"\n"
+"### Una búsqueda increíblemente rápida\n"
+"\n"
+"Escanee productos, navegue por categorías jerárquicas u obtenga información rápida\n"
+"acerca de los productos con un filtro increíblemente rápido en todos sus productos.\n"
+"\n"
+"Gestión de inventarios integrada\n"
+"-------------------------------\n"
+"\n"
+"Consolide a todos sus equipos de venta en tiempo real: tiendas, comercio electrónico, equipos\n"
+"de venta. Tendrá control en tiempo real de su inventario y un pronóstico preciso para gestionar\n"
+"adquisiciones.\n"
+"\n"
+"Tendrá un sistema de gestión de almacén al alcance de sus manos: obtenga información acerca\n"
+"de las disponibilidades de los productos, activación de solicitudes de adquisiciones, etc.\n"
+"\n"
+"Brinde servicio al cliente dentro de la tienda\n"
+"----------------------------------\n"
+"\n"
+"Integre servicios para clientes dentro de la tienda para que sus clientes tengan una experiencia\n"
+"excelente. Gestione reparaciones, monitoree garantías, de seguimiento a reclamos de los clientes, planee\n"
+"órdenes de entrega, etc.\n"
+"\n"
+"Integración de facturación y contabilidad\n"
+"----------------------------------\n"
+"\n"
+"Produzca facturas de clientes en solo unos clics. Controle ventas y efectivo en tiempo\n"
+"real y use las herramientas de reportes de Odoo para tomar decisiones más inteligentes y mejorar\n"
+"la eficacia de su tienda.\n"
+"\n"
+"Ya no tendrá que integrar softwares: publique todas sus operaciones\n"
+"de venta e inventario en su libro mayor general automáticamente.\n"
+"\n"
+"Unifique la información de todas las tiendas\n"
+"------------------------------\n"
+"\n"
+"Obtenga nuevos productos, estrategias de fijación de precios y promociones que automáticamente se aplican a\n"
+"tiendas seleccionadas. Trabaje en una base de datos de clientes unificada. No necesita una base de datos\n"
+"con interfaz compleja para dirigir una estrategia global en todas sus tiendas.\n"
+"\n"
+"Con el backend de Odoo tendrá un sistema que es perfecto para\n"
+"tiendas pequeñas o multinacionales.\n"
+"\n"
+"Conozca a sus clientes - tanto dentro como fuera de la tienda\n"
+"--------------------------------------\n"
+"\n"
+"Las marcas exitosas integran todas las relaciones de sus clientes a través de\n"
+"todos sus canales para desarrollar un perfil de cliente preciso. También así se podrá comunicar con clientes\n"
+"cuando tomen decisiones de compra, ya sea en línea o en la tienda física.\n"
+"\n"
+"Con Odoo tendrá una vista de 360°, incluyendo ventas intracanales,\n"
+"interacción con el historial, perfiles y más.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -28768,7 +29310,7 @@ msgstr "Organice y planee sus proyectos"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_todo
 msgid "Organize your work with memos and to-do lists"
-msgstr ""
+msgstr "Organice su trabajo con notas y listas de tareas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -28996,7 +29538,7 @@ msgstr "PdV para restaurante - Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order
 msgid "POS Self Order"
-msgstr ""
+msgstr "Autopedido del PdV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -29443,7 +29985,7 @@ msgstr "Localización de las nóminas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -29613,7 +30155,7 @@ msgstr "Pantalla de preparación del PdV"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
 msgid "PoS Preparation Display Restaurant"
-msgstr ""
+msgstr "Pantalla de preparación del PdV para restaurantes"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -29986,7 +30528,7 @@ msgstr "Proyecto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account
 msgid "Project - Account"
-msgstr ""
+msgstr "Proyecto - Cuenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sms
@@ -31653,7 +32195,7 @@ msgstr "Margen de existencias y ventas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
 msgid "Sale Subscriptions Stock"
-msgstr ""
+msgstr "Ventas de suscripciones en stock"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_stock
@@ -31670,6 +32212,19 @@ msgid ""
 "- Invoice delivered recurring product at the end of invoicing period\n"
 "- Report planned delivery for active subscriptions\n"
 msgstr ""
+"Ventas de suscripciones en stock\n"
+"\n"
+"Venta de suscripción en stock es un módulo puente entre sale_subscription y\n"
+"sale_stock.  El propósito de este módulo es permitir\n"
+"al usuario crear una orden de venta de suscripción con un producto almacenable que resultará en\n"
+"una orden de entrega recurrente y la facturación de esos productos.\n"
+"Características:\n"
+"- Permite la creación de productos almacenables recurrentes\n"
+"- Crea en automático una orden de entrega para el producto\n"
+"- Factura el producto recurrente entregado al final del período de\n"
+"facturación\n"
+"- Informa sobre las entregas planificadas para las suscripciones\n"
+"activas\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -32859,7 +33414,7 @@ msgstr "España - Informes contables (PGCE 2008)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_facturae
 msgid "Spain - Facturae EDI"
-msgstr ""
+msgstr "España - Facturae EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -33037,7 +33592,7 @@ msgstr "Tablero de hojas de cálculo para Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale
 msgid "Spreadsheet dashboard for eCommerce"
-msgstr ""
+msgstr "Panel de control de hojas de cálculo para comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale_slides
@@ -33109,7 +33664,7 @@ msgstr "Tablero de hojas de cálculo para Existencias"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale_subscription
 msgid "Spreadsheet dashboard for subscriptions"
-msgstr ""
+msgstr "Panel de control de hojas de cálculo para suscripciones"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_hr_timesheet
@@ -35331,7 +35886,7 @@ msgstr "Para devolver una acción, asigne: <code>action = {...}</code>"
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "Por hacer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -36448,7 +37003,7 @@ msgstr "Los usuarios de este grupo heredan automáticamente esos grupos"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uses_default_logo
 msgid "Uses Default Logo"
-msgstr ""
+msgstr "Usa el logotipo predeterminado"
 
 #. module: base
 #. odoo-python
@@ -37779,7 +38334,7 @@ msgstr "account"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "account_qr_code_emv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
@@ -38251,7 +38806,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account
 msgid "project profitability items computation"
-msgstr ""
+msgstr "Cálculo de elementos de rentabilidad del proyecto"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties

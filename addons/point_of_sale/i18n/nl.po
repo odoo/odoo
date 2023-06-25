@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -175,6 +175,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Bewerk"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Hoe prijzen inclusief BTW te beheren"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1373,7 +1374,7 @@ msgstr "Eindverschil in %s (%s)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Closing note"
-msgstr ""
+msgstr "Afsluitingsnotitie"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1623,7 +1624,7 @@ msgstr "Maak een nieuwe productvariant aan"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Create new products"
-msgstr ""
+msgstr "Nieuwe producten maken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -1778,7 +1779,7 @@ msgstr "Klant vereist"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CustomerFacingDisplayButton.xml:0
 #, python-format
 msgid "Customer Screen"
-msgstr ""
+msgstr "Klantscherm"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1840,7 +1841,7 @@ msgstr "Dagelijks rapport"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Daily Sale"
-msgstr ""
+msgstr "Dagelijkse verkopen"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
@@ -2250,6 +2251,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Elke orderprinter heeft een IP adres dat voor elke IoT Box/Hardware\n"
+"de proxy aangeeft waar de printer kan worden gevonden, met een lijst van productcategorieën. \n"
+"Een orderprinter drukt alleen updates voor producten die behoren tot één van\n"
+"zijn categorieën."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2565,7 +2570,7 @@ msgstr "Genereer een code op de kassabon"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Generate demo data"
-msgstr ""
+msgstr "Genereer demogegevens"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3163,7 +3168,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Wijziging laatste keukenscherm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
@@ -3238,7 +3243,7 @@ msgstr "Regel nr."
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Laad productmenu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3585,6 +3590,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
+"Geen barcodenomenclaturen zijn geconfigureerd. Dit kan worden gewijzigd in "
+"de configuratie-instellingen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3911,7 +3918,7 @@ msgstr "Kasgeld opening"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Opening note"
-msgstr ""
+msgstr "Openingsnotitie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -3997,6 +4004,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "            order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Orderprinters worden gebruikt door restaurants en bars om updates\n"
+"van bestellingen af te drukken in de keuken/bar wanneer de ober de bestelling update."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -4546,7 +4555,7 @@ msgstr "Kies een relatie voor deze verkoop."
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Please reload this page once products have been created"
-msgstr ""
+msgstr "Herlaad deze pagina als producten zijn aangemaakt"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4726,7 +4735,7 @@ msgstr "Kassa betalingen"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
 msgid "Point of Sale Printer"
-msgstr ""
+msgstr "Kassaprinter"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -4880,7 +4889,7 @@ msgstr "Keukenscherm"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
-msgstr ""
+msgstr "Printers keukenscherm"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5204,7 +5213,7 @@ msgstr "IP adres proxy"
 #: code:addons/point_of_sale/models/pos_printer.py:0
 #, python-format
 msgid "Proxy IP cannot be empty."
-msgstr ""
+msgstr "IP proxy mag niet leeg zijn."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7379,7 +7388,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/barcode_reader_service.js:0
 #, python-format
 msgid "Unable to parse barcode"
-msgstr ""
+msgstr "Kon barcode niet parseren"
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -10,8 +10,8 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Kevin Harrings <kha@odoo.com>, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr " REEMBOLSO"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr " Utilizar una impresora conectada a la IoT Box"
+msgstr " Utilizar una impresora conectada a la caja IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -180,6 +180,8 @@ msgstr "<i class=\"fa fa-pencil\"/>Editar"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Cómo gestionar precios con impuestos "
+"incluidos"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1632,7 +1634,7 @@ msgstr "Crear una nueva variante de producto"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Create new products"
-msgstr ""
+msgstr "Crear nuevos productos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -1787,7 +1789,7 @@ msgstr "Se requiere el cliente"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CustomerFacingDisplayButton.xml:0
 #, python-format
 msgid "Customer Screen"
-msgstr ""
+msgstr "Pantalla del cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1849,7 +1851,7 @@ msgstr "Reporte diario"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Daily Sale"
-msgstr ""
+msgstr "Venta diaria"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
@@ -2261,6 +2263,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
+"Cada impresora de órdenes tiene una dirección IP que define el proxy\n"
+"                de la caja IoT/Hardware en el que se puede encontrar la impresora, así como una lista de categorías de producto.\n"
+"               Una impresora de órdenes solo imprimirá actualizaciones para productos que pertenezcan\n"
+"                a una de sus categorías."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2576,7 +2582,7 @@ msgstr "Generar un código en el ticket"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Generate demo data"
-msgstr ""
+msgstr "Generar datos de demostración"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3176,7 +3182,7 @@ msgstr "Última actualización el"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Último cambio de preparación"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
@@ -3252,7 +3258,7 @@ msgstr "Número de línea"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Cargar menú del producto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3601,6 +3607,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
+"No se ha configurado ninguna nomenclatura de códigos de barras, puede "
+"cambiarla en los ajustes de configuración."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3925,7 +3933,7 @@ msgstr "Efectivo de apertura"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Opening note"
-msgstr ""
+msgstr "Nota de apertura"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -4011,6 +4019,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "            order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Los restaurantes y bares utilizan las impresoras de órdenes para imprimir\n"
+"                las actualizaciones de las comandas en la cocina o bar cuando el mesero actualice la comanda."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -4563,7 +4573,7 @@ msgstr "Por favor, indique un partner para la venta."
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Please reload this page once products have been created"
-msgstr ""
+msgstr "Vuelva a cargar esta página una vez que haya creado los productos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4897,7 +4907,7 @@ msgstr "Pantalla de preparación"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
-msgstr ""
+msgstr "Impresoras de preparación"
 
 #. module: point_of_sale
 #. odoo-javascript
