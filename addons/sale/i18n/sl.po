@@ -851,6 +851,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Možnost, da izbereš tip paketa v naročilih in vsiliš količino, ki je "
+"mnogokratnik števila enot na paket."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -886,6 +888,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Glede na nastavitev izdelka, se lahko dostavljena količina samodejno izračuna:\n"
+"-ročno: količina je nastavljena ročno na knjižbi\n"
+"-iz stroškov: količina je vsota količin iz knjiženih stroškov\n"
+"-iz časovnice: količina je vsota ur, zabeleženih na nalogah, povezanih s to knjižbo prodaje\n"
+"-iz premikov zalog: količina prihaja iz potrjenih komisioniranj\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -1024,6 +1031,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Dodaj popuste ročno h knjižbam naročila ali prikaži popuste, izračunane iz "
+"cenikov (možnost aktiviranja v nastavitvah cenika)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1031,6 +1040,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Ali si prepričan, da želiš razveljaviti potrjeno transakcijo? Tega opravila "
+"ni mogoče povrniti."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1810,6 +1821,8 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
+"Stroške in prejete račune lahko zaračunamo kupcu. S to možnostjo je lahko "
+"potrjen strošek zaračunan kupcu po nabavni ali prodajni ceni."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -1876,7 +1889,7 @@ msgstr "Sledilci (partnerji)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font izjemna ikona npr. fa-tasks"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -1895,6 +1908,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"V tem poročilu lahko pregledaš znesek, ki je zaračunan kupcu. Iskalno orodje"
+" lahko uporabiš tudi za personalizacijo poročil o računih in tako se ta "
+"analiza ujema s tvojimi potrebami."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2140,6 +2156,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Zaračunaj prihodke za tekoči mesec. To je znesek, ki ga je prodajni kanal "
+"zaračunal v tem mesecu. Uporablja se za izračun napredka razmerja trenutnih "
+"in ciljnih prihodkov na pogledu preglednice."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -2255,7 +2274,7 @@ msgstr "Pretečeno"
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
-msgstr ""
+msgstr "Velja, če knjižba naročila prihaja iz stroška ali iz prejetega računa"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2264,12 +2283,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Prepovedano je spreminjati naslednja polja v zaklenjenem naročilu:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Naročila ni dovoljeno potrditi v naslednjih stopnjah: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2424,6 +2445,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"- Ročno nastavi količine na naročilu: račun, ki temelji na ročno vneseni količini, brez ustvarjanja stroškovnega nosilca.\n"
+"- Časovnice na pogodbi: račun, ki temelji na porabljenih urah na povezanih časovnicah.\n"
+"- Ustvari nalogo in sledi uram: ustvari nalogo iz potrjevanja naročila in sledi delovnim uram."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -2789,6 +2813,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Naročena količina: Zaračunaj količine, ki jih je kupec naročil.\n"
+"Dostavljena količina: Zaračunaj količine, dostavljene kupcu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -3650,6 +3676,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Pošiljanje e-pošte je uporabno, če moraš deliti specifične informacije ali "
+"vsebino o izdelku (navodila, pravila, povezave, predstavnost itd.). Ustvari "
+"in nastavi predlogo e-pošte v podrobnostih izdelka (v zavihku Prodaja)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3798,17 +3827,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Stanje koraka zaporedja potrjevanja uvajanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Stanje koraka vzorčne ponudbe uvajanja"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Stanje nadzorne plošče uvajanja prodaje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3877,7 +3906,7 @@ msgstr "Davki"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "Davki, ki se uporabljajo za pologe"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
@@ -3922,6 +3951,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Naročilo %s, povezano s stroškovnim nosilcem %s, je preklicano. Stroška ni "
+"mogoče zabeležiti za preklicano naročilo."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3931,6 +3962,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Naročilo %s, povezano s stroškovnim nosilcem %s, je trenutno zaklenjeno. "
+"Stroška ni mogoče zabeležiti v zaklenjeno naročilo. Prosimo, ustvari novo "
+"naročilo povezano s tem stroškovnim nosilcem."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3939,6 +3973,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Naročilo %s, povezano s stroškovnim nosilcem %s, mora biti potrjeno pred "
+"zapisovanjem stroškov."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -3981,6 +4017,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Marža se izračuna kot vsota prodajnih cen izdelkov minus strošek, določen na"
+" obrazcu izdelka."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4075,6 +4113,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Ta privzeta vrednost se uporabi na vseh novo ustvarjenih izdelkih. To lahko "
+"spremeniš v obrazcu podrobnosti izdelka."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
@@ -4459,6 +4499,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Poslane ponudbe ali potrjenega naročila ni mogoče izbrisati. Najprej je "
+"potreben preklic."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4484,6 +4526,8 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Tukaj lahko nastaviš tip komunikacije, ki bo prikazan na naročilih. "
+"Sporočilo bo kupcu poslano, ob izbiri plačilnega sredstva."
 
 #. module: sale
 #: code:addons/sale/models/product_product.py:0
@@ -4534,7 +4578,7 @@ msgstr "Vaše naročilo je podpisano."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Tvoje naročilo ni v stanju ki omogoča zavrnitev."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

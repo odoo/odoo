@@ -3,13 +3,13 @@
 # 	* base
 # 
 # Translators:
-# Martin Trigaux, 2020
 # sharkutz <sharkutz4life@yahoo.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11159,6 +11159,12 @@ msgid "Compute"
 msgstr "Calculează"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr ""
@@ -16446,6 +16452,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametrul  'group by' e invalid"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19118,7 +19130,7 @@ msgid ""
 "create one: %(error_message)s"
 msgstr ""
 "Nu s-a găsit nicio înregistrare de potrivire pentru %(field_type)s "
-"'%(value)s' în câmpul '%%' (câmp) și a apărut următoarea eroare când am "
+"'%(value)s' în câmpul '%%(field)s' și a apărut următoarea eroare când am "
 "încercat să creăm una: %(error_message)s"
 
 #. module: base

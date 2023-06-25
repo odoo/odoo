@@ -3296,6 +3296,14 @@ msgid "Is quantity done editable"
 msgstr "Onko määrä muokattavissa"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr "Varattua määrää ei saa tuoda. Sitä on käytettävä suoraan."
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -6978,6 +6986,16 @@ msgstr ""
 " yrityksen omistamia määriä."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Tämän tuotteen yritystä ei voi vaihtaa niin kauan kuin sitä on varastossa "
+"toiselle yritykselle kuuluvana."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7353,7 +7371,7 @@ msgstr "Mittayksiköt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8362,12 +8380,4 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""
