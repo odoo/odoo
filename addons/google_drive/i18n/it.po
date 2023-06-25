@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
 "PO-Revision-Date: 2022-06-17 09:50+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,12 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"<b>Per creare un nuovo filtro:</b><br/>\n"
+"                                - Andare al documento Odoo da filtrare. Per esempio, andare nelle opportunità e cercare in ufficio vendite.<br/>\n"
+"                                - Nella vista di \"ricerca\" selezionare l'opzione \"Salva filtro corrente\" e inserire il nome (Es.: Ufficio vendite)<br/>\n"
+"                                - Se viene selezionato \"Condividere con tutti gli utenti\", nelle opzioni \"Altro\" comparirà il collegamento al documento Google nelle opportunità dell'ufficio vendite di tutti gli utenti.<br/>\n"
+"                                - Se non viene selezionato \"Condividere con tutti gli utenti\", nelle opzioni \"Altro\" non comparirà il collegamento al documento Google nelle opportunità dell'ufficio vendite degli altri utenti.<br/>\n"
+"                                - Se il filtro non viene specificato, nell'opzione \"Altro\" comparirà il collegamento al documento Google per tutte le opportunità di tutti gli utenti."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -342,6 +349,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"Il nome del documento in allegato può utilizzare dati fissi o variabili. In Google Drive, per distinguere tra\n"
+"                                documenti utilizzare parole e campi fissi. Se nel caso precedente, ad esempio, nel campo nome di Google Drive viene scritto\n"
+"                                Deco_Addict_%(name)s_Vendite, il documento in Google Drive e nell'allegato Odoo verrà chiamato\n"
+"                                \"Deco_Addict_SO0001_Vendite\"."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -367,6 +378,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "This module will stop working after the 3rd October 2022 due to"
 msgstr ""
+"Questo modulo smetterà di funzionare dopo il 3 ottobre 2022 a causa di"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
@@ -376,7 +388,7 @@ msgstr "URI"
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "changes in Google Authentication API"
-msgstr ""
+msgstr "modifiche nelle API di autenticazione Google"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
