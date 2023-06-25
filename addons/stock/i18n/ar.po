@@ -3297,6 +3297,14 @@ msgid "Is quantity done editable"
 msgstr "هل الكميات قابلة للتعديل"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr "لا يُسمح باستيراد الكميات المحجوزة. عليك استخدام الكمية بشكل مباشر. "
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -6941,6 +6949,15 @@ msgstr ""
 "لا يمكن تغيير شركة المنتج طالما أنه توجد كميات منه منتمية إلى شركة أخرى. "
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"لا يمكن تغيير شركة المنتج طالما أنه توجد حركات مخزون منتمية إلى شركة أخرى. "
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8314,12 +8331,4 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""

@@ -13,7 +13,6 @@
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Friederike Fasterling-Nesselbosch, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
@@ -47,14 +46,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s a %(time_start)s a\n"
-" %(date_end)s a %(time_end)s (%(timezone)s)"
+"Dal %(date_start)s alle %(time_start)s fino al\n"
+" %(date_end)s alle %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s a (%(start)s a %(end)s) (%(timezone)s)"
+msgstr "%(day)s (dalle %(start)s alle %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -151,8 +150,8 @@ msgstr ""
 "    % set colors = ctx.get('colors', {})\n"
 "    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
 "    <p>\n"
-"        Ciao ${object.common_name},<br/><br/>\n"
-"        ${object.event_id.user_id.partner_id.name} ti ha invitato all'incontro ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
+"        Buongiorno ${object.common_name},<br/><br/>\n"
+"        ${object.event_id.user_id.partner_id.name} ti ha invitato all'incontro ${object.event_id.name} di ${object.event_id.user_id.company_id.name}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        % set target = 'recurrence' if recurrent else 'meeting'\n"
@@ -161,7 +160,7 @@ msgstr ""
 "        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Rifiuta</a>\n"
 "        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
-"            Mostra</a>\n"
+"            Visualizza</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
 "        % if not recurrent:\n"
@@ -193,7 +192,7 @@ msgstr ""
 "                    <li>Descrizione: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if recurrent:\n"
-"                    <li>When: ${object.recurrence_id.name}</li>\n"
+"                    <li>Quando: ${object.recurrence_id.name}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
 "                    <li>Durata: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
@@ -644,7 +643,7 @@ msgstr "Disponibilità"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
-msgstr "Evento di base"
+msgstr "Evento base"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -717,8 +716,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Scegli cosa fare con altri eventi nella ricorrenza. L'aggiornamento di tutti"
-" gli eventi non è permesso quando le date o l'ora vengono modificate"
+"Scegliere cosa fare con altri eventi nella ricorrenza. Quando vengono "
+"modificate le date o gli orari non è consentito aggiornare tutti gli eventi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -926,7 +925,7 @@ msgstr "Data fine"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Tipologia chiusura"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1247,6 +1246,8 @@ msgstr "Incontro"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
+"L'incontro \"%(name)s\" inizia il \"%(start_datetime)s\" e termina il "
+"\"%(end_datetime)s\""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1689,7 +1690,7 @@ msgstr "Etichette"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "Tentativo"
+msgstr "Incerto"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
@@ -1857,6 +1858,9 @@ msgid ""
 "Updating All Events is not allowed when dates or time is modified. You can "
 "only update one particular event and following events."
 msgstr ""
+"Quando vengono modificate le date e gli orari non è consentito aggiornare "
+"tutti gli eventi. È possibile solo l'aggiornamento di un evento specifico e "
+"di quelli successivi."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -1918,7 +1922,7 @@ msgstr "Scegliere almeno un giorno della settimana"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "day %s"
-msgstr "giorno %s"
+msgstr "il giorno %s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
