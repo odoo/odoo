@@ -3,22 +3,34 @@
 # 	* website_event_questions
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Sarah Park, 2023
+# Martin Trigaux, 2023
+# JH CHOI <hwangtog@gmail.com>, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 11:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_2
+msgid "A friend"
+msgstr "친구"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_1
+msgid "Allergies"
+msgstr "알레르기"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__name
@@ -44,22 +56,39 @@ msgstr "답변"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "주문당 한 번만 요청"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "참석자 답안"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_1
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_1
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_1
+msgid "Blog Post"
+msgstr "블로그 게시물"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "예약자"
 
 #. module: website_event_questions
 #: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "등록이 완료된 후 답변을 다시 살펴보세요."
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_1
+msgid "Commercials"
+msgstr "광고"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_0
+msgid "Consumers"
+msgstr "소비자"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
@@ -97,7 +126,7 @@ msgstr "행사 질문"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "행사 질의 응답"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -112,7 +141,7 @@ msgstr "행사 등록 답변"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
 msgid "Event Template"
-msgstr ""
+msgstr "행사 서식"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -123,6 +152,19 @@ msgstr "행사 유형"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
 msgstr "일반적인 질문"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_7_question_1
+msgid "How did you hear about us ?"
+msgstr ""
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_2
+#: model:event.question,title:website_event_questions.event_1_question_0
+#: model:event.question,title:website_event_questions.event_5_question_0
+#: model:event.question,title:website_event_questions.event_type_data_sports_question_0
+msgid "How did you learn about this event?"
+msgstr "이 행사에 대해 어떻게 알게 되셨나요?"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
@@ -138,6 +180,7 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"True인 경우 이 질문은 한 번만 표시되며 모든 참석자에게 전달됩니다. 그렇지 않은 경우 예약한 모든 참석자에게 질문이 표시됩니다."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
@@ -157,7 +200,7 @@ msgstr "최근 갱신 일자"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
 msgid "Mandatory"
-msgstr ""
+msgstr "필수"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_mandatory_answer
@@ -165,15 +208,35 @@ msgid "Mandatory Answer"
 msgstr "필수 응답"
 
 #. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_0_question_0
+msgid "Meal Type"
+msgstr "식사 유형"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_0
+msgid "Mixed"
+msgstr "혼합함"
+
+#. module: website_event_questions
 #: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "아직 답변이 없습니다!"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
 msgid "Once per Order"
-msgstr ""
+msgstr "주문당 한 번"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_0
+msgid "Our website"
+msgstr "웹사이트"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_2
+msgid "Pastafarian"
+msgstr "파스타페리안"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__question_id
@@ -206,20 +269,37 @@ msgid "Questions"
 msgstr "질문"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_2
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_2
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_2
+msgid "Radio Ad"
+msgstr "라디오 광고"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__registration_id
 msgid "Registration"
 msgstr "등록하기"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_2
+msgid "Research"
+msgstr "연구"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_1
+msgid "Sales"
+msgstr "판매"
+
+#. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "선택된 답변"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "선택된 답변"
 
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
@@ -231,6 +311,13 @@ msgstr "선택"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "순서"
+
+#. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_1_question_0_answer_0
+#: model:event.question.answer,name:website_event_questions.event_5_question_0_answer_0
+#: model:event.question.answer,name:website_event_questions.event_type_data_sports_question_0_answer_0
+msgid "Social Media"
+msgstr "소셜미디어"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
@@ -250,7 +337,7 @@ msgstr "제안된 답변"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "텍스트 입력"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
@@ -260,7 +347,7 @@ msgstr "답변글"
 #. module: website_event_questions
 #: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "제안된 값이나 텍스트 값이 있어야 합니다."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
@@ -274,12 +361,27 @@ msgid "Type"
 msgstr "유형"
 
 #. module: website_event_questions
+#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_1
+msgid "Vegetarian"
+msgstr "채식"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_5_question_1
+msgid "What's your Hockey level?"
+msgstr "하키 실력이 어느정도 되나요?"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_7_question_0
+msgid "Which field are you working in"
+msgstr "현재 일하고 있는 "
+
+#. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "이미 답변이 작성된 질문의 유형은 변경할 수 없습니다!"
 
 #. module: website_event_questions
 #. odoo-python
@@ -287,7 +389,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgstr "참석자가 이미 답변한 질문은 삭제할 수 없습니다."
 
 #. module: website_event_questions
 #. odoo-python
@@ -295,10 +397,10 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "참석자가 이미 선택한 답안은 삭제할 수 없습니다."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "예: \"식단에 제한 사항이 있으신가요?\""

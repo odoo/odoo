@@ -3,15 +3,15 @@
 # 	* website_event_exhibitor
 # 
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2023
 # Martin Trigaux, 2023
+# Friederike Fasterling-Nesselbosch, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 11:25+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -30,8 +30,8 @@ msgid ""
 ")\n"
 "                    to meet them !"
 msgstr ""
-")\n"
-"                    um sie zu treffen !"
+"),\n"
+"                    um sie zu treffen!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -105,7 +105,21 @@ msgid ""
 " us!"
 msgstr ""
 "<span>Hoppla! Dieser Raum ist voll</span><br/>Kommen Sie später wieder, um "
-"mit uns zu sprechen!"
+"mit uns zu chatten!"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_2
+msgid ""
+"A non-profit international educational and scientific\n"
+"                    organisation, hosting three departments (aeronautics and\n"
+"                    aerospace, environmental and applied fluid dynamics, and\n"
+"                    turbomachinery and propulsion)."
+msgstr ""
+"Eine internationale Bildungs- und Wissenschaftsorganisation\n"
+"                     ohne Erwerbszweck mit drei Abteilungen\n"
+"                    (Luft- und Raumfahrt, Umwelt- und angewandte Strömungsdynamik sowie\n"
+"                    Turbomaschinen und Antriebe)."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -145,7 +159,7 @@ msgstr "Symbol des Aktivitätstyps"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "Add some exhibitors to get started !"
-msgstr "Fügen Sie einige Aussteller hinzu um loszulegen!"
+msgstr "Fügen Sie einige Aussteller hinzu, um loszulegen!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_country
@@ -162,6 +176,20 @@ msgstr "Alle Level"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 msgid "Archived"
 msgstr "Archiviert"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_1
+msgid "As a team, we are happy to contribute to this event."
+msgstr ""
+"Wir als Team freuen uns, einen Beitrag zu dieser Veranstaltung leisten zu "
+"können."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_attachment_count
@@ -192,7 +220,7 @@ msgstr "Kann veröffentlichen"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__chat_room_id
 msgid "Chat Room"
-msgstr "Chat Raum"
+msgstr "Chatraum"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
@@ -200,6 +228,18 @@ msgstr "Chat Raum"
 #, python-format
 msgid "Come back between"
 msgstr "Kommen Sie wieder zwischen"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_1
+msgid "Come see us live, we hope to meet you !"
+msgstr "Besuchen Sie uns live, wir würden uns freuen, Sie kennenzulernen!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -230,7 +270,7 @@ msgstr "Einen Sponsor/Aussteller erstellen"
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
 msgid "Create a Sponsor Level"
-msgstr "Erstellen Sie ein Sponsor-Level"
+msgstr "Ein Sponsorlevel erstellen"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
@@ -245,10 +285,58 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Customer Relationship Management"
+msgstr "Customer Relationship Management"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid ""
+"Deco Addict designs, develops, integrates and supports HR and Supply\n"
+"                Chain processes in order to make our customers more productive,\n"
+"                responsive and profitable."
+msgstr ""
+"Deco Addict entwirft, entwickelt, integriert und unterstützt Prozesse für das Personalwesen und\n"
+"                die Lieferkette, um unsere Kunden produktiver,\n"
+"                reaktionsschneller und profitabler zu machen."
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid ""
+"Deco Addict integrates ERP for Global Companies and supports PME\n"
+"                with Open Sources software to manage their businesses. Our\n"
+"                consultants are experts in the following areas:"
+msgstr ""
+"Deco Addict integriert ERP für globale Unternehmen und unterstützt PME\n"
+"                mit Open-Source-Software bei der Verwaltung ihrer Geschäfte. Unsere \n"
+"                Berater sind Experten in den folgenden Bereichen:"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_description
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Description"
 msgstr "Beschreibung"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_1
+msgid "Discover more"
+msgstr "Mehr entdecken"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__display_name
@@ -341,7 +429,7 @@ msgstr "Aussteller"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
 msgid "Exhibitors Menu Item"
-msgstr "Aussteller Menüpunkt"
+msgstr "Menüpunkt für Aussteller"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu_ids
@@ -352,12 +440,12 @@ msgstr "Aussteller-Menü"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_type_icon
@@ -379,6 +467,18 @@ msgstr "Gold"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 msgid "Group By"
 msgstr "Gruppieren nach"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_1
+msgid "Happy to be Sponsor"
+msgstr "Glücklich, Sponsor zu sein"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__has_message
@@ -426,12 +526,20 @@ msgstr "Bild 256"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_image_url
 msgid "Image URL"
-msgstr "Bild URL"
+msgstr "Bild-URL"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Inventory and Warehouse management"
+msgstr "Lager und Bestandsverwaltung"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__is_published
@@ -439,9 +547,49 @@ msgid "Is Published"
 msgstr "Ist veröffentlicht"
 
 #. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_2
+msgid ""
+"It provides post-graduate education in fluid dynamics\n"
+"                    (research master in fluid dynamics, former \"Diploma\n"
+"                    Course\", doctoral program, stagiaire program and lecture\n"
+"                    series) and encourages \"training in research through\n"
+"                    research\"."
+msgstr ""
+"Sie bietet eine weiterführende Ausbildung in Strömungsdynamik\n"
+"                    (Forschungsmaster in Strömungsdynamik, vorher „Diplomkurs“, Doktorandenprogramm, Praktikumsprogramm und\n"
+"                    Doktorandenprogramm, Praktikumsprogramm und\n"
+"                    Lesungen) und fördert die „Ausbildung in der Forschung durch\n"
+"                    Forschung“."
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_2
+msgid ""
+"It undertakes and promotes research in the field of fluid\n"
+"                    dynamics. It possesses about fifty different wind tunnels,\n"
+"                    turbomachinery and other specialized test facilities, some\n"
+"                    of which are unique or the largest in the world. Extensive\n"
+"                    research on experimental, computational and theoretical\n"
+"                    aspects of gas and liquid flows is carried out under the\n"
+"                    direction of the faculty and research engineers, sponsored\n"
+"                    mainly by governmental and international agencies as well\n"
+"                    as industries."
+msgstr ""
+"Sie betreibt und fördert die Forschung auf dem Gebiet der Strömungsdynamik.\n"
+"                    Sie verfügt über etwa fünfzig verschiedene Windkanäle,\n"
+"                    Turbomaschinen und andere spezialisierte Testeinrichtungen, von denen einige\n"
+"                    einzigartig oder die größten der Welt sind. Unter der Leitung\n"
+"                    des Lehrkörpers und der Forschungsingenieure werden umfangreiche\n"
+"                    Forschungsarbeiten zu experimentellen, rechnerischen und theoretischen Aspekten\n"
+"                    von Gas- und Flüssigkeitsströmungen durchgeführt,\n"
+"                    die hauptsächlich von staatlichen und internationalen Stellen sowie von\n"
+"                    der Industrie gefördert werden."
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Jitsi Name"
-msgstr "Jitsi Name"
+msgstr "Jitsi-Name"
 
 #. module: website_event_exhibitor
 #. odoo-javascript
@@ -502,6 +650,14 @@ msgstr "Logo"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Hauptanhang"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Materials Management"
+msgstr "Materialmanagement"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_max_capacity
@@ -622,6 +778,24 @@ msgid "Opening hour"
 msgstr "Öffnungszeiten"
 
 #. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid ""
+"Our experts invent, imagine and develop solutions which meet\n"
+"                your business requirements. They build a new technical\n"
+"                environment for your company, but they always take the already\n"
+"                installed IT software into account. That is why Idealis\n"
+"                Consulting delivers excellence in HR and SC Management."
+msgstr ""
+"Unsere Experten erfinden, erdenken und entwickeln Lösungen,\n"
+"                 die Ihren Ihre geschäftlichen Anforderungen erfüllen. Sie bauen eine neue technische\n"
+"                Umgebung für Ihr Unternehmen, aber sie berücksichtigen dabei immer die bereits bereits\n"
+"                 installierte IT-Software. Deshalb ist Idealis\n"
+"                Consulting hervorragende Leistungen im Bereich HR- und Zeitplanmanagement."
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_participant_count
 msgid "Participant count"
 msgstr "Anzahl Teilnehmer"
@@ -635,7 +809,15 @@ msgstr "Partner"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_max_participant_reached
 msgid "Peak participants"
-msgstr "Standanmeldung fehlgeschlagen."
+msgstr "Maximale Teilnehmerzahl."
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Personnel Administration"
+msgstr "Personalverwaltung"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_phone
@@ -663,6 +845,14 @@ msgid "Register"
 msgstr "Anmelden"
 
 #. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Reporting"
+msgstr "Berichtswesen"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_user_id
 msgid "Responsible User"
 msgstr "Verantwortlicher Benutzer"
@@ -680,12 +870,20 @@ msgstr "Raum ist voll"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_name
 msgid "Room Name"
-msgstr "Raum Name"
+msgstr "Raumname"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS-Zustellungsfehler"
+
+#. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Sales and Distribution"
+msgstr "Verkauf und Vertrieb"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sequence
@@ -767,7 +965,7 @@ msgstr "Sponsorenwebsite"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_kanban
 msgid "Sponsor image"
-msgstr "Sponsor Bild"
+msgstr "Sponsorenbild"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_ids
@@ -810,6 +1008,14 @@ msgstr ""
 "Geplant: anstehende Aktivitäten."
 
 #. module: website_event_exhibitor
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
+msgid "Talent Management"
+msgstr "Talentmanagement"
+
+#. module: website_event_exhibitor
 #. odoo-python
 #: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
 #, python-format
@@ -839,7 +1045,7 @@ msgstr "Zeitzone"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
 msgid "Top Bar Filter"
-msgstr "Filter Obere Leiste"
+msgstr "Obere Filterleiste"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_exception_decoration
@@ -859,7 +1065,7 @@ msgstr "Auf der aktuellen Website sichtbar"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "We did not find any exhibitor matching your"
-msgstr "Wir haben keinen Aussteller gefunden, der passt zu Ihrem"
+msgstr "Wir haben keinen Aussteller gefunden, der zu Ihrer Suche"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -898,7 +1104,7 @@ msgstr "Innerhalb der Öffnungszeiten"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
 msgid "a few seconds"
-msgstr "einige Sekunden"
+msgstr "einigen Sekunden"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -953,7 +1159,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "search."
-msgstr "Suche."
+msgstr "passt."
 
 #. module: website_event_exhibitor
 #. odoo-javascript

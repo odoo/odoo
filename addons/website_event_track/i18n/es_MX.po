@@ -5,16 +5,17 @@
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:43+0000\n"
+"POT-Creation-Date: 2023-05-25 12:31+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,13 +28,13 @@ msgstr ""
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "\"Events App Name\" field is required."
-msgstr "El campo \"Nombre de la aplicación de eventos\" es obligatorio."
+msgstr "El campo \"Nombre de la aplicación Eventos\" es obligatorio."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
 msgid "# Wishlisted"
-msgstr "# en la lista de deseos"
+msgstr "número en la lista de deseos"
 
 #. module: website_event_track
 #. odoo-python
@@ -122,20 +123,20 @@ msgstr "<b>Introducción de la plática</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
 "    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br/>\n"
+"    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -432,9 +433,9 @@ msgid ""
 "As key track cannot be un-favorited, this field store the partner choice to "
 "remove the reminder for key tracks."
 msgstr ""
-"Como la grabación principal no se puede quitar de la lista de favoritos, "
-"este campo mantiene la elección del partner de eliminar el recordatorio para"
-" las grabaciones principales."
+"Como la grabación principal no se puede quitar de la lista de deseos, este "
+"campo mantiene la elección del partner de eliminar el recordatorio para las "
+"grabaciones principales."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -942,13 +943,13 @@ msgstr "Evento: Confirmación de grabación"
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr "Nombre de la aplicación de eventos"
+msgstr "Nombre de la aplicación Eventos"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Events PWA"
 msgstr ""
-"Eventos de la PWA (aplicación web progresiva, por sus siglas en inglés)"
+"Eventos de la PWA (Aplicación Web Progresiva, por sus siglas en inglés)"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -997,7 +998,7 @@ msgstr "Seguidores"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
@@ -1093,7 +1094,7 @@ msgstr "¿Cómo puede nuestro equipo ponerse en contacto con usted?"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
 msgid "How to build your marketing strategy within a competitive environment"
-msgstr "Cómo construir su estrategia de marketing en un entorno competitivo."
+msgstr "Cómo construir su estrategia de marketing en un entorno competitivo"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -1279,7 +1280,7 @@ msgstr "¿Está activado el recordatorio?"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
 msgid "Is Track Done"
-msgstr "¿Ya acabo la grabación?"
+msgstr "¿Ya acabó la grabación?"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
@@ -1394,7 +1395,7 @@ msgstr "Entre menos muebles, mejor"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
 msgid "Life at Home Around the World: William’s Story"
-msgstr "Life at Home Around the World: William’s Story"
+msgstr "La vida de casa alrededor del mundo: La historia de William"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -1404,7 +1405,7 @@ msgid ""
 msgstr ""
 "Enlace a las preguntas y respuestas disponibles aquí. Ha llegado el momento "
 "de ocultar esas viejas paredes de ladrillo. ¡Me encantan los proyectos "
-"sencillos y de transformación como este! :)-"
+"sencillos y de transformación como este! :)"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1507,7 +1508,7 @@ msgstr "Diseño minimalista pero efectivo"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr "Minutos antes de que comience el CTA"
+msgstr "Minutos antes de que comience la CTA"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
@@ -1570,7 +1571,7 @@ msgstr "Nueva grabación"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de avtividades."
+msgstr "Siguiente evento en el calendario de actividades"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
@@ -1614,7 +1615,7 @@ msgstr "No se encontró la grabación"
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
 msgid "Note that colorless tags won't be available on the website."
 msgstr ""
-"Tome en cuenta que las etiquetas sin color no estarán disponibles desde el "
+"Tenga en cuenta que las etiquetas sin color no estarán disponibles desde el "
 "sitio web."
 
 #. module: website_event_track
@@ -1650,7 +1651,7 @@ msgstr "Nuestro último día juntos"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
@@ -2563,8 +2564,8 @@ msgid ""
 "Who will give this talk? We will show this to attendees to showcase your "
 "talk."
 msgstr ""
-"¿Quién dará esta plática? Se lo mostraremos a los asistentes para que puedan"
-" ver su plática."
+"¿Quién será el ponente? Se lo mostraremos a los asistentes para que puedan "
+"ver su plática."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2

@@ -211,9 +211,9 @@ msgid ""
 "                                zeroes."
 msgstr ""
 "Muster können auch festlegen, wie numerische Werte, wie Gewicht und Preis\n"
-"                                als Barcode geschlüsselt werden. Diese werden eingeleitet durch <code>{NNN}</code> wobei die N's\n"
-"                                wo die Ziffern geschlüsselt stehen. Floats werden auch unterstützt \n"
-"                                Nachkommastellen werden als D's, wie in <code>{NNNDD}</code> dargestellt. In diesen Fällen\n"
+"                                als Barcode verschlüsselt werden. Diese werden eingeleitet durch <code>{NNN}</code> wobei die Ns\n"
+"                                bestimmen, wo die Ziffern geschlüsselt stehen. Gleitkommazahlen werden auch unterstützt \n"
+"                                mit Nachkommastellen, die als Ds dargestellt, wie in <code>{NNNDD}</code>. In diesen Fällen\n"
 "                                <i>muss</i> das Barcode-Feld oder die entsprechenden Datensätze diese Stellen als \n"
 "                                Nullen ausweisen."
 
@@ -230,7 +230,7 @@ msgstr "Regeln"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Sequenz"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -272,7 +272,7 @@ msgid ""
 "contain N's followed by D's."
 msgstr ""
 "Es gibt einen Syntaxfehler im Barcode-Muster %(pattern)s: geschweifte "
-"Klammern können nur N's gefolgt von D's enthalten."
+"Klammern können nur Ns gefolgt von Ds enthalten."
 
 #. module: barcodes
 #. odoo-python
@@ -306,7 +306,7 @@ msgid ""
 msgstr ""
 "UPC-Codes können in EAN durch voranstellen einer Null konvertiert werden. "
 "Diese Einstellung legt fest, ob diese Umwandlung automatisch, in die eine "
-"oder andere Richtung, erfolgen soll, wenn nach Regel Übereinstimmung der "
+"oder andere Richtung, erfolgen soll, wenn nach Regelübereinstimmung der "
 "jeweils anderen Kodierung gesucht wird."
 
 #. module: barcodes

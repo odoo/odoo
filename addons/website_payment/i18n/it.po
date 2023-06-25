@@ -5,13 +5,14 @@
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Alessandro Uffreduzzi, 2023
 # Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 12:31+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
 "Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -67,6 +68,11 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>Metodo di Pagamento:</b>"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Nazione...</option>"
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
@@ -114,7 +120,7 @@ msgstr "Aggiungi una descrizione"
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add new pre-filled option"
-msgstr ""
+msgstr "Aggiungi nuova opzione precompilata"
 
 #. module: website_payment
 #. odoo-javascript
@@ -156,12 +162,12 @@ msgstr "Impostazioni di configurazione"
 #: code:addons/website_payment/models/res_config_settings.py:0
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "Configura %s"
 
 #. module: website_payment
 #: model:ir.actions.server,name:website_payment.action_stripe_connect_account
 msgid "Connect to Stripe"
-msgstr ""
+msgstr "Collegati a Stripe"
 
 #. module: website_payment
 #. odoo-javascript
@@ -186,11 +192,6 @@ msgstr ""
 #, python-format
 msgid "Country is required."
 msgstr "Paese è obbligatorio."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Nazione..."
 
 #. module: website_payment
 #. odoo-javascript
@@ -299,7 +300,7 @@ msgstr "Campo '%s' è mandatorio"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "Etichetta primo fornitore"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -315,7 +316,7 @@ msgstr "È donazione"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "È un paese supportato da Stripe"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -379,7 +380,7 @@ msgstr "Un anno di scuola superiore."
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "Diverso da Paypal"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -410,14 +411,13 @@ msgstr "Pagamenti"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__module_payment_paypal
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Paypal - Express Checkout"
-msgstr ""
+msgstr "Paypal-Pagamento rapido"
 
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "Solo Paypal"
 
 #. module: website_payment
 #. odoo-javascript
@@ -481,11 +481,8 @@ msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most credit & debit cards like Visa, Mastercard, Maestro, etc."
-msgstr ""
+"Stripe non è disponibile nella tua nazione, ti preghiamo di utilizzare un "
+"altro metodo di pagamento."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -523,7 +520,7 @@ msgstr "Errore di validazione"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "Mostra alternative"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -545,7 +542,7 @@ msgstr "Sito web"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "Sito web: donazione"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout

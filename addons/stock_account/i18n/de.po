@@ -69,7 +69,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr "<b>Bestimmen Sie andere Eingabe-/Ausgabekonten für bestimmte</b>"
+msgstr "<b>Bestimmen Sie andere Eingangs-/Ausgangskonten für bestimmte</b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -99,7 +99,7 @@ msgstr "Kontobuchung"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Einstellungen Lagerbuchhaltung"
+msgstr "Buchhaltungseigenschaften für den Bestand"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
@@ -111,7 +111,7 @@ msgstr "Buchungsdatum"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr "Buchungen"
+msgstr "Buchungseinträge"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -153,7 +153,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
 msgid "Analytic Account Line"
-msgstr "Kostenstellenposten"
+msgstr "Kostenstellenbuchung"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -252,7 +252,8 @@ msgstr "Kalkulationsverfahren"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr "Änderung der Kostenrechnung für Produktkategorie %s:  von %s zu %s. "
+msgstr ""
+"Änderung des Kalkulationsverfahren für Produktkategorie %s: von %s zu %s. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -354,8 +355,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
-"Aufgrund einer Änderung der Produktkategorie (von %s zu %s) hat sich die "
-"Kostenrechnung für die Produktvorlage %s von %s zu %s geändert."
+"Aufgrund einer Änderung der Produktkategorie (von %s zu %s) hat sich das "
+"Kalkulationsverfahren für die Produktvorlage %s von %s zu %s geändert."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -569,7 +570,7 @@ msgstr "Menge"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr "Menge der Bestandsbewertungsebene"
+msgstr "BBE-Menge"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -579,7 +580,7 @@ msgstr "Mengen"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason"
-msgstr "Begründung"
+msgstr "Grund"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -594,7 +595,7 @@ msgstr "Referenz"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr "Verwandtes Produkt"
+msgstr "Zugehöriges Produkte"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -652,12 +653,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "Konto Wareneingang"
+msgstr "Bestand Eingangskonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr "Lager Journal"
+msgstr "Bestandsjournal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -671,12 +672,12 @@ msgstr "Lagerbuchung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
-msgstr "Warenversand Konto"
+msgstr "Bestand Ausgangskonto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr "Verlauf Bestandsmenge"
+msgstr "Historie der Bestandsmenge"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
@@ -701,17 +702,17 @@ msgstr "Bestandsbewertung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Bestandskonto"
+msgstr "Bestandsbewertungskonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Lagerbewertungskonto (Eingehend)"
+msgstr "Bestandsbewertungskonto (Eingehend)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Lagerbewertungskonto (Ausgehend)"
+msgstr "Bestandsbewertungskonto (Ausgehend)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -781,7 +782,7 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
-"Die Bewegungszeilen sind nicht in einem einheitlichen Zustand: einige gehen "
+"Die Buchungszeilen sind nicht in einem einheitlichen Zustand: einige gehen "
 "im Unternehmen ein und andere gehen aus."
 
 #. module: stock_account
@@ -793,9 +794,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"Die Buchungszeilen weisen keinen konsistenten Status auf: Sie führen einen "
-"konzerninternen Vorgang in einem einzelnen Schritt aus, während sie das "
-"konzerninterne Umschlagslager durchlaufen müssten."
+"Die Buchungszeilen sind nicht in einem einheitlichen Zustand: Sie führen "
+"einen unternehmensinternen Vorgang in einem einzelnen Schritt aus, während "
+"sie das unternehmensinterne Umschlagslager durchlaufen müssten."
 
 #. module: stock_account
 #. odoo-python
@@ -805,8 +806,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Die Buchungszeilen weisen keinen konsistenten Status auf: Sie spiegeln nicht"
-" dasselbe Ursprungs- oder Zielunternehmen wider."
+"Die Buchungszeilen sind nicht in einem einheitlichen Zustand: Sie spiegeln "
+"nicht dasselbe Herkunfts- oder Zielunternehmen wider."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -850,7 +851,7 @@ msgid ""
 " Order/Purchase Order"
 msgstr ""
 "Auslösen einer Minderung der gelieferten/erhaltenen Menge im zugehörigen "
-"Verkaufsauftrag/Bestellung"
+"Verkaufs-/Einkaufsauftrag"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -918,12 +919,12 @@ msgstr "Bewertung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr "Bewertung Währung"
+msgstr "Währung der Bewertung"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Valuation Report"
-msgstr "Bewertung Bericht"
+msgstr "Bewertungsbericht"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -951,7 +952,7 @@ msgstr "Vorrätiger Wert:"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr "Value Svl"
+msgstr "BBE-Wert"
 
 #. module: stock_account
 #. odoo-python
@@ -1032,7 +1033,7 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
-"Sie haben für Ihre Produktkategorie kein Eingabebewertungskonto definiert. "
+"Sie haben für Ihre Produktkategorie kein Eingangsbewertungskonto definiert. "
 "Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account
@@ -1068,8 +1069,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
-"Sie haben keine Lagerbewertung auf Ihrer Produktkategorie. Sie müssen eine "
-"vor der Bearbeitung dieses Vorgangs definieren."
+"Sie haben keine Lagerbewertungskonto auf Ihrer Produktkategorie. Sie müssen "
+"eines definieren, bevor Sie diesen Vorgang ausführen können."
 
 #. module: stock_account
 #. odoo-python

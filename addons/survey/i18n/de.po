@@ -898,8 +898,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Alle Fragen vom Typ „Ist eine bewertete Frage = Wahr“ und „Fragetyp: Datum“ "
-"erfordern eine Antwort"
+"Alle Fragen vom Typ „Ist eine bewertete Frage = Wahr“ und „Fragetyp: "
+"Datum/Zeit“ erfordern eine Antwort"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_conditional_questions_have_triggering_question
@@ -1576,7 +1576,7 @@ msgstr "Korrekte Datumsangabe für diese Frage."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_datetime
 msgid "Correct datetime answer"
-msgstr "Richtige datetime-Antwort"
+msgstr "Richtige Datum/Zeit-Antwort"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_numerical_box
@@ -1721,7 +1721,7 @@ msgstr "Datum/Zeit"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr "Datetime-Antwort"
+msgstr "Datum/Zeit-Antwort"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
@@ -4521,7 +4521,7 @@ msgstr "Die aktuelle Frage der Umfragesitzung."
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "The date you selected is greater than the maximum date: "
-msgstr "Das von Ihnen gewählte Datum ist größer als das maximale Datum"
+msgstr "Das von Ihnen gewählte Datum liegt über dem maximalen Datum:"
 
 #. module: survey
 #. odoo-javascript
@@ -4842,7 +4842,7 @@ msgstr "Titel"
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "To join:"
-msgstr "Beitreten:"
+msgstr "Beizutreten:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -5396,6 +5396,16 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+"Sie können keine Fragen aus Umfragen „%(survey_names)s“ löschen, während "
+"Live-Sitzungen laufen."
+
+#. module: survey
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""

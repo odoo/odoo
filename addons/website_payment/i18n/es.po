@@ -5,14 +5,15 @@
 # Translators:
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 12:31+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +65,11 @@ msgstr "<b>Identificador de pago:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Payment Method:</b>"
 msgstr "<b>Método de pago:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">País...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -185,11 +191,6 @@ msgstr ""
 #, python-format
 msgid "Country is required."
 msgstr "Se requiere un país."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "País..."
 
 #. module: website_payment
 #. odoo-javascript
@@ -409,7 +410,6 @@ msgstr "Pagos"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__module_payment_paypal
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Paypal - Express Checkout"
 msgstr ""
 
@@ -479,11 +479,6 @@ msgstr "Paso"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most credit & debit cards like Visa, Mastercard, Maestro, etc."
 msgstr ""
 
 #. module: website_payment

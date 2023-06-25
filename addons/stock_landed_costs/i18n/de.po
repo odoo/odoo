@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
-msgstr " gerade ausverkauft"
+msgstr " bereits ausverkauft"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -55,7 +55,7 @@ msgstr "Konto"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
-msgstr "Finanz-Journal"
+msgstr "Konto Journal"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
@@ -90,12 +90,12 @@ msgstr "Zusätzliche Kosten"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Zusätzliche Beschaffungskosten"
+msgstr "Zusätzliche Einstandskosten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
 msgid "Apply On"
-msgstr "Anzuwenden auf"
+msgstr "Anwenden auf"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
@@ -185,8 +185,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
-"Kosten- und Anpassungslinien stimmen nicht überein. Sie sollten vielleicht "
-"die Grundkosten neu berechnen."
+"Kosten- und Anpassungszeilen stimmen nicht überein. Sie sollten vielleicht "
+"die Einstandskosten neu berechnen."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -366,7 +366,7 @@ msgstr "Ist Follower"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr "Wareneinstandspreiszeile"
+msgstr "Ist Einstandskostenzeile"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -538,7 +538,7 @@ msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Nur Einstandskosten im Entwurf können geprüft werden"
+msgstr "Nur Einstandskosten im Entwurf können validiert werden"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
@@ -548,7 +548,7 @@ msgstr "Ursprünglicher Wert"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr "Liefervorgang"
+msgstr "Kommissionierung"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -639,7 +639,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Einlagerungskosten"
+msgstr "Bestand Einstandskosten"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
@@ -692,7 +692,7 @@ msgid ""
 "landed costs to reverse them"
 msgstr ""
 "Validierte Einstandskosten können nicht mehr gelöscht werden, aber man "
-"könnte negative Einstandskosten erzeugen, um sie in der Summe zu löschen."
+"könnte negative Einstandskosten erzeugen, um sie zu stornieren."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -743,9 +743,8 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"Sie können keine Wareneinstandspreise auf %s anwenden. Wareneinstandspreise "
-"können nur für Produkte mit FIFO- oder Durchschnittskostenmethode angewendet"
-" werden."
+"Sie können keine Einstandskosten auf %s anwenden. Einstandskosten können nur"
+" für Produkte mit FIFO- oder Durchschnittskostenmethode angewendet werden."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -755,6 +754,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
-"Sie können die Produktart nicht ändern oder die Option "
-"\"Wareneinstandspreis\" deaktivieren, da das Produkt in einer "
-"Kontobewegungszeile verwendet wird."
+"Sie können die Produktart nicht ändern oder die Einstandskostenoption "
+"deaktivieren, da das Produkt in einer Kontobuchungszeile verwendet wird."

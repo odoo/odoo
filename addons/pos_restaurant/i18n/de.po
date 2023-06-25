@@ -29,7 +29,7 @@ msgstr " Einen an der IoT-Box angeschlossenen Drucker benutzen"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr "<strong>Name der Etage: </strong>"
+msgstr "<strong>Raumname: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -42,7 +42,7 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"Ein Restaurant-Plan repräsentiert den Platz, wo Kunden bedient werden, hier "
+"Ein Restaurantraum repräsentiert den Platz, wo Kunden bedient werden, hier "
 "können Sie die Tische festlegen und positionieren."
 
 #. module: pos_restaurant
@@ -69,7 +69,7 @@ msgstr "Interne Notiz hinzufügen"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr "Einen neuen Restaurant-Stock hinzufügen"
+msgstr "Einen neuen Restaurantraum hinzufügen"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -94,7 +94,7 @@ msgstr "Schaltfläche hinzufügen"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr "Fügen Sie Auftragszeilen interne Notizen für die Küche hinzu"
+msgstr "Fügen Sie Bestellzeilen interne Notizen für die Küche hinzu"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -131,12 +131,12 @@ msgstr "Erlauben Sie benutzerdefinierte interne Notizen auf Bestellzeilen."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr "Druck des Kassenbons vor Zahlung erlauben"
+msgstr "Erlauben Sie es, Kassenbons vor Zahlung zu drucken"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr "Lässt den Rechnungsdruck vor der Zahlung zu."
+msgstr "Ermöglicht den Rechnungsdruck vor der Zahlung zu."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -148,12 +148,12 @@ msgstr "Betrag"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
 msgid "An internal identification of a table"
-msgstr "Interne Identifikation des Tisches"
+msgstr "Eine Interne Kennung eines Tischs"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
 msgid "An internal identification of the printer"
-msgstr "Eine interne Druckeridentifikation"
+msgstr "Eine Interne Kennung eines Druckers"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -187,7 +187,7 @@ msgstr "Zurück"
 #: code:addons/pos_restaurant/static/src/xml/ChromeWidgets/BackToFloorButton.xml:0
 #, python-format
 msgid "Back to floor"
-msgstr "Zurück zum Stockwerk"
+msgstr "Zurück zum Raum"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
@@ -232,7 +232,7 @@ msgstr "Rechnungsteilung"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr "Gesperrte Aktion"
+msgstr "Blockierte Aktion"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -339,7 +339,7 @@ msgstr "Löschen"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Design floors and assign orders to tables"
-msgstr "Sähle entwerfen und Bestellungen an Tischen zuweisen"
+msgstr "Entwerfen Sie Räume und weisen Sie Tischen Bestellungen zu"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -377,7 +377,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr "Frühzeitiger Quittungsdruck"
+msgstr "Frühzeitiger Bondruck"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -397,45 +397,45 @@ msgstr "Ermöglicht eine Rechnungsaufteilung im Kassensystem."
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
-msgstr "Der Druck der Auftragsänderung ist fehlgeschlagen"
+msgstr "Der Druck der Bestelländerung ist fehlgeschlagen"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
 msgid "Floor"
-msgstr "Gang"
+msgstr "Raum"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
 msgid "Floor Name"
-msgstr "Bezeichnung der Ebene"
+msgstr "Raumname"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr "Tischplan"
+msgstr "Lagepläne"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr "Sahl: %s - PoS Config: %s \n"
+msgstr "Raum: %s - Kassenkonfig.: %s \n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors"
-msgstr "Ebenen"
+msgstr "Räume"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
 msgid "Floors & Tables"
-msgstr "Sähle & Tische"
+msgstr "Räume & Tische"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr "Lage- & Tischplan"
+msgstr "Raum- & Tischplan"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -448,8 +448,8 @@ msgstr "Speisen"
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
 msgstr ""
-"Der Einfachheit halber stellen wir die folgenden Berechnungen für die "
-"Gratifikation zur Verfügung:"
+"Der Einfachheit halber stellen wir Ihnen die folgenden Berechnungen für "
+"Trinkgelder zur Verfügung:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -528,7 +528,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml:0
 #, python-format
 msgid "Internal Note"
-msgstr "Interne Mitteilung"
+msgstr "Interne Notiz"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
@@ -589,7 +589,7 @@ msgstr "Letzter gedruckte Status des Auftrags"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Light grey"
-msgstr "Hell Grau"
+msgstr "Hellgrau"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -727,7 +727,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
 msgid "POS Printer"
-msgstr "POS Printer"
+msgstr "Kassendrucker"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -776,7 +776,7 @@ msgstr "Kassenverkäufe"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Kassensystem-Zahlungen"
+msgstr "Kassenzahlungen"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -811,7 +811,7 @@ msgstr "Kassensystem ist Tischverwaltung"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr "Pos Trinkgeld nach Zahlung einstellen"
+msgstr "Kasse Trinkgeld nach Zahlung einstellen"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -902,7 +902,7 @@ msgstr "Rot"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Removing a table cannot be undone"
-msgstr "Einen Tisch zu entfernen, kann nicht rückgängig gemacht werden."
+msgstr "Die Entfernung eines Tischs kann nicht rückgängig gemacht werden."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -928,14 +928,14 @@ msgstr "Restaurant & Bar"
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr "Restaurantplan"
+msgstr "Restaurantraum"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr "Restaurant Pläne"
+msgstr "Restauranträume"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
@@ -970,7 +970,7 @@ msgstr "Zahlung stornieren"
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
 msgid "Round"
-msgstr "Kreis"
+msgstr "Rund"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1034,7 +1034,7 @@ msgstr "Signatur"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr "Zeile überspringen, wenn Ticket an Küchendrucker gesendet wird."
+msgstr "Zeile überspringen, wenn Bon an Küchendrucker gesendet wird."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1064,7 +1064,7 @@ msgstr "Viereck"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Square Shape"
-msgstr "Eckig"
+msgstr "Viereckig"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1146,7 +1146,7 @@ msgstr "Die Bestellungen konnte nicht geladen werden, weil Sie offline sind"
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr "Die Restaurantebenen, die von diesem Kassensystem bedient werden."
+msgstr "Die Restauranträume, die von diesem Kassensystem bedient werden."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -1190,7 +1190,7 @@ msgstr "Die Tischbreite in Pixel"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr "Dieser Plan hat keine Tische, verwenden Sie die"
+msgstr "Dieser Raum hat keine Tische, verwenden Sie die"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1231,7 +1231,7 @@ msgstr "Trinkgeld:"
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Tipping"
-msgstr "Trinkgelder"
+msgstr "Trinkgeld geben"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1274,7 +1274,7 @@ msgstr "UUID"
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "VAT:"
-msgstr "USt.-ID"
+msgstr "MwSt.:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
@@ -1301,7 +1301,7 @@ msgstr "Breite"
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "With a"
-msgstr "mit"
+msgstr "Mit einem"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1328,8 +1328,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"Es kann kein Sahl, der in einer PoS Sitzung benutzt wird, gelöscht werden. "
-"Sitzung muss erst geschlossen werden: \n"
+"Es kann kein Raum, der in einer Kassensitzung benutzt wird, gelöscht werden."
+" Sitzung muss erst geschlossen werden: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1377,7 +1377,7 @@ msgstr "am Tisch"
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""
-"Schaltfläche in der Toolbar zur Bearbeitung, um neue Tische zu erstellen"
+"-Schaltfläche in der Bearbeitungssymbolleiste, um neue Tische zu erstellen"
 
 #. module: pos_restaurant
 #. odoo-javascript

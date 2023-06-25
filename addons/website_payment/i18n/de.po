@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 12:31+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -67,6 +67,11 @@ msgstr "<b>Zahlungs-ID:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Payment Method:</b>"
 msgstr "<b>Zahlungsmethode:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Land ...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -188,11 +193,6 @@ msgstr ""
 #, python-format
 msgid "Country is required."
 msgstr "Land ist erforderlich."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Land ..."
 
 #. module: website_payment
 #. odoo-javascript
@@ -412,7 +412,6 @@ msgstr "Zahlungen"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__module_payment_paypal
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Paypal - Express Checkout"
 msgstr "Paypal - Express-Kassiervorgang"
 
@@ -485,13 +484,6 @@ msgid ""
 msgstr ""
 "Stripe Connect ist in Ihrem Land nicht verfügbar. Bitte verwenden Sie einen "
 "anderen Zahlungsanbieter."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most credit & debit cards like Visa, Mastercard, Maestro, etc."
-msgstr ""
-"Unterstützung der meisten Kredit- & Debitkarten wie Visa, Mastercard, "
-"Maestro etc."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form

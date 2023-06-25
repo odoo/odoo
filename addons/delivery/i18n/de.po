@@ -76,8 +76,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"text-success\">Produktions</span>\n"
-"                             <span class=\"o_stat_text\">umfeld</span>"
+"<span class=\"text-success\">Produktions-</span>\n"
+"                             <span class=\"o_stat_text\">umgebung</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -99,7 +99,7 @@ msgstr "<span>Versandgewicht: </span>"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>Spediteur:</strong>"
+msgstr "<strong>Frachtführer:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -137,7 +137,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number:</strong>"
-msgstr "<strong>Sendungsverfolgungsnr.:</strong>"
+msgstr "<strong>Sendungsnummer:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -215,7 +215,7 @@ msgstr "Archiviert"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "Verfügbare Spediteure"
+msgstr "Verfügbare Frachtführer"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -230,7 +230,7 @@ msgstr "Schüttgewicht"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr "Kann eine Rückgabe generieren"
+msgstr "Kann Retoure generieren"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -261,17 +261,17 @@ msgstr "Frachtführer"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "Versandcode"
+msgstr "Versandcode des Frachtführers"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr "Transporteur Beschreibung"
+msgstr "Beschreibung des Frachtführers"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr "Transporteur Name"
+msgstr "Name des Frachtführers"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -283,7 +283,7 @@ msgstr "Unternehmen"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
-msgstr "Zustand"
+msgstr "Bedingung"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -425,7 +425,7 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "                which zips it is available to."
 msgstr ""
-"Zustellungs-Präfixe werden den Zustellern zugewiesen, um einzuschränken\n"
+"Lieferungspräfixe werden den Zustellern zugewiesen, um einzuschränken,\n"
 "für welche Postleitzahlen sie verfügbar sind."
 
 #. module: delivery
@@ -517,7 +517,7 @@ msgstr "Geschätzte Kosten"
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
 "Tragen Sie hier einen Wert ein, wenn Sie die Rechnung auf Basis der "
-"Ausgangslieferung schreiben möchten."
+"Kommissionierung schreiben möchten."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -605,7 +605,7 @@ msgstr "Weitere Anbieter installieren"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr "Versicherung Prozensatz"
+msgstr "Versicherungsprozensatz"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -684,7 +684,7 @@ msgstr "Marge des Preises"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr "Max. Wert"
+msgstr "Maximalwert"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -709,7 +709,7 @@ msgstr "Keine Frachtführerintegration"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Für diese Bestellung existiert keine Preisregel. Die Versandkosten können "
+"Für diesen Auftrag existiert keine Preisregel. Die Versandkosten können "
 "nicht berechnet werden."
 
 #. module: delivery
@@ -871,8 +871,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
-"Die Herkunftsregeln bestimmen, woher die Waren stammen, d.h. nicht, woher sie verschifft wurden, sondern wo sie produziert oder hergestellt wurden.\n"
-"Der 'Ursprung' ist somit die 'wirtschaftliche Nationalität' der im Handel befindlichen Waren."
+"Die Herkunftsregeln bestimmen, woher die Waren stammen, d. h. nicht, woher sie versandt wurden, sondern wo sie produziert oder hergestellt wurden.\n"
+"Der „Ursprung“ ist somit die 'wirtschaftliche Nationalität' der im Handel befindlichen Waren."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -932,7 +932,7 @@ msgid ""
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
 "Sendung an den Spediteur übergeben %(carrier_name)s für den Versand mit "
-"Trackingnummer %(ref)s<br/>Kosten: %(price).2f %(currency)s"
+"Sendungsnummer %(ref)s<br/>Kosten: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -1216,7 +1216,7 @@ msgstr "Variabel"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
-msgstr "Variabl. Faktor"
+msgstr "Variabler Faktor"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume

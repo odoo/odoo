@@ -367,7 +367,7 @@ msgstr "<strong>Fertiges Produkt:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Is a Blocking Reason? </strong>"
-msgstr "<strong>Ist Sperrgrund? </strong>"
+msgstr "<strong>Ist Blockierungsgrund? </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -627,7 +627,7 @@ msgstr "Erlaubt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr "Reservierte Produktion erlaubt"
+msgstr "Reservierung der Produktion erlaubt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
@@ -785,11 +785,12 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"Durchschnittliche Vorlaufzeit in Tagen für die Fertigung dieses Produkts. Im"
-" Falle einer mehrstufigen Stückliste werden die Vorlaufzeiten der Fertigung "
-"der Komponenten addiert. Falls das Produkt an einen Unterauftragnehmer "
-"vergeben wird, kann dies zur Bestimmung des Datums verwendet werden, an dem "
-"die Komponenten an den Unterauftragnehmer gesendet werden sollen."
+"Durchschnittliche Durchlaufzeit in Tagen für die Fertigung dieses Produkts. "
+"Im Falle einer mehrstufigen Stückliste werden die Vorlaufzeiten der "
+"Fertigung der Komponenten addiert. Falls das Produkt an einen "
+"Unterauftragnehmer vergeben wird, kann dies zur Bestimmung des Datums "
+"verwendet werden, an dem die Komponenten an den Unterauftragnehmer gesendet "
+"werden sollen."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -934,14 +935,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Sperren"
+msgstr "Blockieren"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block Workcenter"
-msgstr "Arbeitsplatz sperren"
+msgstr "Arbeitsplatz blockieren"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__strict
@@ -949,29 +950,29 @@ msgstr "Arbeitsplatz sperren"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter__working_state__blocked
 msgid "Blocked"
-msgstr "Gesperrt"
+msgstr "Blockiert"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__blocked_by_workorder_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Blocked By"
-msgstr "Gesperrt von"
+msgstr "Blockiert durch"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked Time"
-msgstr "Sperrzeit"
+msgstr "Blockierte Zeit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hours over the last month"
-msgstr "Gesperrte Stunden im letzten Monat"
+msgstr "Blockierte Stunden im letzten Monat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
-msgstr "Sperrgrund"
+msgstr "Blockierungsgrund"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
@@ -1287,7 +1288,7 @@ msgstr ""
 "Berechnen Sie die Tage, die benötigt werden, um alle Komponenten von der "
 "Stückliste zu beschaffen, indem Sie die Komponenten und/oder Unterbaugruppen"
 " entweder kaufen oder herstellen.                                       "
-"Beachten Sie auch, dass die Vorlaufzeiten für die Einkaufsicherheit "
+"Beachten Sie auch, dass die Sicherheitsvorlaufzeiten für Einkäufe "
 "gegebenenfalls hinzugefügt werden."
 
 #. module: mrp
@@ -1714,7 +1715,7 @@ msgstr ""
 "  * Erlaubt: erlaubt für alle Benutzer in der Fertigung.\n"
 "  * Erlaubt mit Warnung: erlaubt für alle Benutzer in der Fertigung mit Zusammenfassung der Verbrauchsdifferenzen beim Abschluss des Fertigungsauftrags.\n"
 "  Beachten Sie, dass im Falle der Komponente Manueller Verbrauch, bei der der Verbrauch ausschließlich manuell erfasst wird, gegebenenfalls auch Verbrauchswarnungen ausgegeben werden.\n"
-"  * Gesperrt: nur ein Vorgesetzter kann einen Fertigungsauftrag schließen, wenn der Stücklistenverbrauch nicht eingehalten wird."
+"  * Blockiert: nur ein Vorgesetzter kann einen Fertigungsauftrag schließen, wenn der Stücklistenverbrauch nicht eingehalten wird."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2462,12 +2463,12 @@ msgstr "Ist gesperrt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
 msgid "Is a Blocking Reason"
-msgstr "Ist ein Sperrgrund"
+msgstr "Ist ein Blockierungsgrund"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr "Ist ein Sperrgrund?"
+msgstr "Ist ein Blockierungsgrund?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__public
@@ -2484,7 +2485,7 @@ msgstr "Arbeitet der aktuelle Benutzer"
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
-msgstr "Er wurde bereits entsperrt."
+msgstr "Er wurde bereits entblockiert."
 
 #. module: mrp
 #. odoo-python
@@ -2844,7 +2845,7 @@ msgstr "Fertigungsregel"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
-msgstr "Sicherheitsvorlaufzeit der Fertigung"
+msgstr "Sicherheitsdurchlaufzeit für die Fertigung"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -2854,7 +2855,7 @@ msgstr "Produkt anfertigen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid "Manufacture to Resupply"
-msgstr "Herstellung zur Nachlieferung"
+msgstr "Zur Nachlieferung fertigen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
@@ -2902,7 +2903,7 @@ msgstr "Fertigungsprognose"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 #, python-format
 msgid "Manufacturing Lead Time"
-msgstr "Durchlaufzeit der Fertigung"
+msgstr "Fertigungsdurchlaufzeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -3008,7 +3009,7 @@ msgstr "Massenproduktion"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
 msgid "Master Production Schedule"
-msgstr "Hauptproduktionszeitplan"
+msgstr "Produktionszeitplan (MPS)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3206,7 +3207,7 @@ msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
 "Derzeit kein Arbeitsauftrag in Bearbeitung. Klicken Sie hier, um den "
-"Arbeitsplatz als gesperrt zu markieren."
+"Arbeitsplatz als blockiert zu markieren."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__0
@@ -3492,7 +3493,7 @@ msgstr "Gesamtanlageneffiktivität, basierend auf letztem Monat"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr "Gesamtanlageneffiktivität: keine Arbeits- oder Sperrzeit"
+msgstr "Gesamtanlageneffiktivität: keine Arbeitszeit oder blockierte Zeit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -4247,7 +4248,7 @@ msgstr "Verantwortlicher Benutzer"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Resupply lead time."
-msgstr "Vorlaufzeit für neue Lieferung."
+msgstr "Vorlaufzeit für Beschaffung."
 
 #. module: mrp
 #. odoo-javascript
@@ -4392,7 +4393,7 @@ msgstr "Suche nach MRP-Arbeitsplatz"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr "Sicherheitsvorlaufzeit"
+msgstr "Sicherheitsdurchlaufzeit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -5441,7 +5442,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Unblock"
-msgstr "Entsperren"
+msgstr "Entblockieren"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
@@ -6023,7 +6024,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr ""
-"Arbeitsaufträge in Bearbeitung. Klicken Sie, um den Arbeitsplatz zu sperren."
+"Arbeitsaufträge in Bearbeitung. Klicken Sie, um den Arbeitsplatz zu "
+"blockieren."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
@@ -6072,7 +6074,7 @@ msgstr "Arbeitsplatzstatus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "Arbeitsplatz gesperrt. Klicken Sie, um ihn zu entsperren."
+msgstr "Arbeitsplatz blockiert. Klicken Sie, um ihn zu entblockieren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -6263,7 +6265,7 @@ msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
 msgstr ""
-"Sie können nicht die Funktion \"Auf Variante anwenden\" verwenden und "
+"Sie können nicht die Funktion „Auf Variante anwenden“ verwenden und "
 "gleichzeitig eine Stückliste für eine bestimmte Variante erstellen."
 
 #. module: mrp

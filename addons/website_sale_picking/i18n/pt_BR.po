@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +27,12 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Seu pedido foi salvo.</i> Venha até a loja para pagar por seus produtos"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">(Coleta no local) </span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -39,12 +42,12 @@ msgstr "Configurações"
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Modo personalizado"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Personalize os locais de retirada"
 
 #. module: website_sale_picking
 #. odoo-javascript
@@ -54,46 +57,48 @@ msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"Se achar que se trata de um erro, entre em contato com o administrador do "
+"site."
 
 #. module: website_sale_picking
 #. odoo-javascript
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
-msgstr ""
+msgstr "Não foi possível encontrar uma opção de pagamento adequada."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
-msgstr ""
+msgstr "No local"
 
 #. module: website_sale_picking
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Coleta no local"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
-msgstr ""
+msgstr "Pagar na loja ao retirar o produto"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Provedor de serviços de pagamento"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_res_config_settings__picking_site_ids
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Picking sites"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Retirada na loja"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -103,14 +108,14 @@ msgstr "Fornecedor"
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_delivery_carrier
 msgid "Shipping Methods"
-msgstr "Métodos de Envios"
+msgstr "Métodos de envio"
 
 #. module: website_sale_picking
 #. odoo-python
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr ""
+msgstr "O local de picking e o depósito devem compartilhar a mesma empresa"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
@@ -120,14 +125,14 @@ msgstr "Armazém"
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_website
 msgid "Website"
-msgstr "Website"
+msgstr "Site"
 
 #. module: website_sale_picking
 #. odoo-python
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
+msgstr "Você não pode pagar no local se a entrega não for no local"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -147,4 +152,4 @@ msgstr "Seu pagamento foi processado com sucesso. Obrigado!"
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Retirada no local] Minha loja 1"

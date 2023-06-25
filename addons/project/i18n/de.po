@@ -170,7 +170,7 @@ msgstr "(fällig"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr "(letztes Projekt-Update),"
+msgstr "(letztes Projektaktualisierung),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -622,7 +622,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Blocking</span>"
-msgstr "<span class=\"o_stat_text\">Sperren</span>"
+msgstr "<span class=\"o_stat_text\">Blockieren</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -643,7 +643,7 @@ msgstr "<span class=\"o_stat_text\">Aufgaben</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr "<span class=\"o_stat_text\">mit Serie</span>"
+msgstr "<span class=\"o_stat_text\">in Wiederholung</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1226,7 +1226,7 @@ msgid ""
 msgstr ""
 "Ändern Sie den Kanban-Status automatisch, wenn der Kunde auf die Rückmeldung für diese Phase antwortet.\n"
 "* Positives Feedback des Kunden aktualisieren den Kanban-Status auf „Bereit für die neue Phase“ (grüner Punkt).\n"
-"* Neutrales oder negatives Feedback setzt den Kanban-Status auf „Gesperrt“ (roter Punkt).\n"
+"* Neutrales oder negatives Feedback setzt den Kanban-Status auf „Blockiert“ (roter Punkt).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1283,13 +1283,13 @@ msgstr "Saldo"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Billed"
-msgstr "Fakturiert"
+msgstr "Abgerechnet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
 msgid "Block"
-msgstr "Sperren"
+msgstr "Blockieren"
 
 #. module: project
 #. odoo-python
@@ -1316,13 +1316,13 @@ msgstr "Sperren"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Blocked"
-msgstr "Gesperrt"
+msgstr "Blockiert"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr "Abhängig von"
+msgstr "Blockiert durch"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2027,7 +2027,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
-msgstr "Ausgeliefert"
+msgstr "Geliefert"
 
 #. module: project
 #. odoo-python
@@ -2375,12 +2375,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Followed"
-msgstr "Abonniert"
+msgstr "Verfolgt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr "Verfolgte Aktualisierungen"
+msgstr "Verfolgte Updates"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -2755,8 +2755,8 @@ msgid ""
 "Tracker module is installed)."
 msgstr ""
 "Interne E-Mail-Adresse des Projekts. Eingehende E-Mails werden automatisch "
-"mit den Aufgaben synchronisiert (oder optional eskaliert, wenn das "
-"Eskalationsverfolgungsmodul installiert ist)."
+"mit den Aufgaben synchronisiert (oder optional Tickets, wenn das Modul zur "
+"Ticketverfolgung installiert ist)."
 
 #. module: project
 #. odoo-javascript
@@ -2871,7 +2871,7 @@ msgstr "Ist ein Unternehmen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "Version"
+msgstr "Tichetversion"
 
 #. module: project
 #. odoo-javascript
@@ -2930,7 +2930,7 @@ msgstr "Juni"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Erläuterung zu gesperrtem Kanban "
+msgstr "Erläuterung zu blockiertem Kanban "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
@@ -3283,7 +3283,7 @@ msgstr "Meilensteine"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr "Mischen"
+msgstr "Mixing"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -3570,7 +3570,7 @@ msgstr "Keine Aufgabe gefunden. Erstellen Sie eine!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr "Keine Updates gefunden. Erstellen Sie eins!"
+msgstr "Keine Aktualisierungen gefunden. Erstellen Sie eine!"
 
 #. module: project
 #. odoo-python
@@ -3582,7 +3582,7 @@ msgstr "Keine"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Not Blocked"
-msgstr "Nicht gesperrt"
+msgstr "Nicht blockiert"
 
 #. module: project
 #. odoo-python
@@ -3776,7 +3776,7 @@ msgstr "Der Ausgabename %r wird zweimal verwendet."
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Aufgaben mit Verzug"
+msgstr "Aufgaben im Verzug"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -3978,7 +3978,7 @@ msgstr "Zurück"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize Tasks by using the"
-msgstr "Priorisieren Sie Aufgaben, durch Verwendung des Symbols"
+msgstr "Priorisieren Sie Aufgaben, durch Verwendung von"
 
 #. module: project
 #. odoo-python
@@ -4161,13 +4161,13 @@ msgstr "Projektaufgaben"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr "Projekt-Update"
+msgstr "Projektaktualisierung"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr "Projekt-Updates"
+msgstr "Projektaktualisierungen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -4317,7 +4317,7 @@ msgstr "E-Mail-Vorlage für Bewertung"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr "Bewertungsintervall"
+msgstr "Bewertungshäufigkeit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
@@ -4342,7 +4342,7 @@ msgstr "Bewertung letzter Wert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr "Bewertungsanfragefrist"
+msgstr "Frist für Bewertungsanfrage"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4460,7 +4460,7 @@ msgstr "Wiederholung"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr "Serien-Update"
+msgstr "Wiederholungsaktualisierung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -4512,7 +4512,7 @@ msgstr "Renovierungen"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_day
 msgid "Repeat Day"
-msgstr "Wdh. Tag"
+msgstr "Tag der Wiederholung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
@@ -4524,7 +4524,7 @@ msgstr "Wiederholen alle"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_month
 msgid "Repeat Month"
-msgstr "Wdh. Monat"
+msgstr "Monat der Wiederholung"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4592,7 +4592,7 @@ msgstr "Berichtswesen"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr "Nachforschen"
+msgstr "Recherche"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_research_development
@@ -4702,7 +4702,7 @@ msgstr "Projekt suchen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr "Update suchen"
+msgstr "Aktualisierung suchen"
 
 #. module: project
 #. odoo-python
@@ -4716,7 +4716,7 @@ msgstr "Alle durchsuchen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Suche zugewiesene Personen"
+msgstr "Suchen in Zugewiesen an"
 
 #. module: project
 #. odoo-python
@@ -4832,8 +4832,8 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
-"Einstellen der Projektphasen, um die Kunden zu informieren, wenn ein Projekt"
-" diese Phase erreicht"
+"Stellen Sie sie auf Projektphasen ein, um die Kunden zu informieren, wenn "
+"ein Projekt diese Phase erreicht"
 
 #. module: project
 #. odoo-javascript
@@ -4951,7 +4951,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Sprint Backlog"
+msgstr "Sprint im Rückstand"
 
 #. module: project
 #. odoo-javascript
@@ -5173,7 +5173,7 @@ msgstr "Aufgabenaktivitäten"
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Aufgabe gesperrt"
+msgstr "Aufgabe blockiert"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -5267,7 +5267,7 @@ msgstr "Aufgabenbezeichnung ..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Aufgabe gesperrt"
+msgstr "Aufgabe blockiert"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5283,14 +5283,14 @@ msgstr "Aufgabe in Bearbeitung"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
-"Aufgabe in Bearbeitung. Klicken Sie, um zu sperren oder als erledigt zu "
+"Aufgabe in Bearbeitung. Klicken Sie, um zu blockieren oder als erledigt zu "
 "markieren."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
-"Aufgabe ist gesperrt. Klicken Sie hier, um die Sperre aufzuheben oder  als "
+"Aufgabe ist blockiert. Klicken Sie hier, um die Sperre aufzuheben oder als "
 "erledigt zu markieren."
 
 #. module: project
@@ -5583,7 +5583,7 @@ msgstr "Diese und folgende Aufgaben"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
-"Dieser Schritt ist abgeschlossen. Klicken Sie, um zu sperren oder in "
+"Dieser Schritt ist abgeschlossen. Klicken Sie, um zu blockieren oder in "
 "Bearbeitung zu setzen."
 
 #. module: project
@@ -6193,7 +6193,7 @@ msgstr "Sie wurden zugewiesen für %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr "Sie wurden hinzugefügt zu "
+msgstr "Ihnen wurde folgende Aufgabe zugewiesen:"
 
 #. module: project
 #. odoo-python

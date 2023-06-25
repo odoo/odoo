@@ -767,7 +767,7 @@ msgstr "Autovervollständigung"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 #: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_vendor_bill_id
 msgid "Auto-complete"
-msgstr "Automatische Vervollständigung"
+msgstr "Automatisch vervollständigen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
@@ -1208,7 +1208,7 @@ msgstr "Erledigt"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
-msgstr "Doppelte Freigabe Bestellwert"
+msgstr "Betrag der doppelten Validierung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1300,7 +1300,7 @@ msgstr "Anstehende Aktivitäten"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "Aktivieren Sie 2 Freigaben zur Bestätigung einer Bestellung"
+msgstr "Aktivieren Sie 2 Genehmigungen zur Bestätigung eines Einkaufsauftrags"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1510,7 +1510,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr "Freigabestufen"
+msgstr "Genehmigungsstufen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
@@ -1600,13 +1600,13 @@ msgstr "Nachricht mit Zustellungsfehler"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr "Nachricht bei Einkaufsauftrag"
+msgstr "Nachricht für Einkaufsauftrag"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "Nachricht bei Einkaufsauftragsposition"
+msgstr "Nachricht für Einkaufsauftragsposition"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
@@ -1622,7 +1622,7 @@ msgstr "Mindestmenge"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr "Mindestbestellwert, ab dem eine doppelte Freigabe erforderlich ist"
+msgstr "Mindestbestellwert, ab dem eine doppelte Validierung erforderlich ist"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
@@ -1682,7 +1682,7 @@ msgstr "Name"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "Name, TIN, Email, oder Referenz"
+msgstr "Name, Steuer-IdNr., E-Mail oder Referenz"
 
 #. module: purchase
 #. odoo-python
@@ -2029,7 +2029,7 @@ msgstr "Produkte"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr "Eine doppelte Bestellfreigabe ermöglichen"
+msgstr "Einen doppelten Validierungsmechanismus für Einkäufe ermöglichen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
@@ -2080,7 +2080,7 @@ msgstr "Kaufhistorie für %s"
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
-msgstr "Durchschnittliche Lieferzeit"
+msgstr "Vorlaufzeit für Einkäufe"
 
 #. module: purchase
 #. odoo-python
@@ -2209,12 +2209,12 @@ msgstr "Kaufwarnungen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that have been invoiced."
-msgstr "Fakturierte Bestellungen."
+msgstr "Abgrechnete Einkaufsaufträge."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Bestellungen mit nicht abgerechneten Positionen."
+msgstr "Einkaufsaufträge mit nicht abgerechneten Positionen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2284,7 +2284,7 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"Weisen Sie eine Anschrift zu, wenn Sie direkt vom Lieferanten an den Kunden "
+"Fügen Sie eine Adresse ein, wenn Sie direkt vom Lieferanten an den Kunden "
 "liefern möchten. Ansonsten lassen Sie das Feld leer, um zunächst selbst "
 "beliefert zu werden."
 
@@ -2311,7 +2311,7 @@ msgstr "Abzurechnende Menge"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "Mengen, die von Lieferanten in Rechnung gestellt werden"
+msgstr "Vom Lieferanten abgerechnete Mengen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2434,7 +2434,7 @@ msgstr "Empfang bestätigt"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Record a new vendor bill"
-msgstr "Neue Eingangsrechnung eintragen."
+msgstr "Eine neue Lieferantenrechnung erfassen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -2503,8 +2503,7 @@ msgstr "Angebotsanfrage #"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
-"Ab einem gewissen Bestellwert muss ein Manager die Bestellung bestätigen"
+msgstr "Ab einem gewissen Betrag muss ein Manager den Auftrag genehmigen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -2550,7 +2549,7 @@ msgstr "Geplantes Datum"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
-msgstr "Suche Bestellung"
+msgstr "Einkaufsauftrag suchen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
@@ -2631,7 +2630,7 @@ msgstr "Erinnerung senden"
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
 msgstr ""
-"Versenden Sie eine automatische Erinnerungs-E-Mail um die Lieferung zu "
+"Versenden Sie eine automatische Erinnerungs-E-Mail, um die Lieferung zu "
 "bestätigen."
 
 #. module: purchase
@@ -2738,7 +2737,7 @@ msgstr "Zwischensumme"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Billed"
-msgstr "Summe der fakturierten Menge"
+msgstr "Summe der abgerechneten Menge"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
@@ -2795,7 +2794,7 @@ msgstr "Steuern"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "Technisches Feld für UX Zwecke."
+msgstr "Technisches Feld für Benutzererlebniszwecke."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -2990,7 +2989,7 @@ msgstr "Gesamtmenge"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total Untaxed amount"
-msgstr "Unbesteuerter Betrag insgesamt"
+msgstr "Unbesteuerter Gesamtbetrag"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3061,7 +3060,7 @@ msgstr "Maßeinheiten"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Maßeinheit Kategorien"
+msgstr "Maßeinheitskategorien"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
@@ -3115,7 +3114,7 @@ msgstr "Benutzer"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr "Rastereinträge für Varianten"
+msgstr "Rastereintrag für Varianten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -3257,13 +3256,14 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"Achten Sie beim Anlegen einer Bestellung auf die <i>Pünktlichkeitsrate</i> "
-"des Lieferanten, also den Prozentsatz der pünktlich versandten Produkte. "
-"Wenn dieser zu niedrig ist, aktivieren Sie <i>automatische Mahnungen</i>. "
-"Einige Tage vor dem fälligen Versand sendet Odoo dem Verkäufer eine E-Mail, "
-"um ihn um eine Bestätigung der Versanddaten zu bitten und Sie im Falle von "
-"Verzögerungen auf dem Laufenden zu halten. Um die Leistungsstatistik des "
-"Verkäufers zu erhalten, klicken Sie auf die OTD-Rate. "
+"Achten Sie beim Anlegen eines Einkaufsauftrags auf die "
+"<i>Pünktlichkeitsrate</i> des Lieferanten, also den Prozentsatz der "
+"pünktlich versandten Produkte. Wenn dieser zu niedrig ist, aktivieren Sie "
+"<i>automatische Mahnungen</i>. Einige Tage vor dem fälligen Versand sendet "
+"Odoo dem Verkäufer eine E-Mail, um ihn um eine Bestätigung der Versanddaten "
+"zu bitten und Sie im Falle von Verzögerungen auf dem Laufenden zu halten. Um"
+" die Leistungsstatistik des Verkäufers zu erhalten, klicken Sie auf die OTD-"
+"Rate. "
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3273,19 +3273,19 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
-"Wenn Sie eine Bestellung per E-Mail senden, bittet Odoo den Verkäufer, den "
-"Empfang der Bestellung zu bestätigen. Wenn der Verkäufer die Bestellung "
+"Wenn Sie einen Einkaufsauftrag per E-Mail senden, bittet Odoo den Verkäufer,"
+" den Empfang des Auftrags zu bestätigen. Wenn der Verkäufer den Auftrag "
 "durch Klicken auf eine Schaltfläche in der E-Mail bestätigt, werden die "
-"Informationen auf der Bestellung hinzugefügt. Verwenden Sie Filter, um "
-"Bestellungen zu verfolgen, die nicht bestätigt wurden. "
+"Informationen auf dem Einkaufsauftrag hinzugefügt. Verwenden Sie Filter, um "
+"Aufträge zu verfolgen, die nicht bestätigt wurden."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Sie finden einen Anbieter anhand seines Namens, seiner TIN, seiner E-Mail-"
-"Adresse oder seiner internen Referenz."
+"Sie finden einen Anbieter anhand seines Namens, seiner Steuer-IdNr., seiner "
+"E-Mail-Adresse oder seiner internen Referenz."
 
 #. module: purchase
 #. odoo-python

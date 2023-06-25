@@ -1024,7 +1024,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Stellen Sie Zeiterfassungen für Kundendienst-Tickets in Rechnung.\n"
+"        Stellen Sie Zeiterfassungen für Kundendiensttickets in Rechnung.\n"
 "    "
 
 #. module: base
@@ -1237,7 +1237,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Wandeln Sie Kundendienst-Tickets in Außendienstaufgaben um.\n"
+"        Wandeln Sie Kundendiensttickets in Außendienstaufgaben um.\n"
 "    "
 
 #. module: base
@@ -3277,12 +3277,12 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"Fügen Sie ein neues Modell namens „Identifikationsart“ hinzu, das die Funktionalität des Umsatzsteuerfeldes im Partner erweitert und es dem Benutzer ermöglicht, sich nicht nur mit seiner Steuer-ID (MwSt.), sondern auch mit anderen Arten von Identifikationen wie nationalen Dokumenten, Pässen, ausländischen IDs usw. zu identifizieren (eventuell eine Rechnung). Wenn dieses Modul installiert ist, sehen Sie jetzt in der Partnerformularansicht zwei Felder:\n"
+"Fügen Sie ein neues Modell mit dem Namen „Identifikationsart“ hinzu, das die Funktionalität des Umsatzsteuerfeldes im Partner erweitert und es dem Benutzer ermöglicht, sich nicht nur mit seiner Steuer-ID (MwSt.), sondern auch mit anderen Arten von Identifikationen wie nationalen Dokumenten, Pässen, ausländischen IDs usw. zu identifizieren (eventuell eine Rechnung). Wenn dieses Modul installiert ist, sehen Sie jetzt in der Partnerformularansicht zwei Felder:\n"
 "\n"
-"* Art der Identifizierung\n"
+"* Identifikationsart\n"
 "* Identifikationsnummer\n"
 "\n"
-"Dieses Verhalten ist eine allgemeine Anforderung für einige Latam-Länder wie Argentinien und Chile. Wenn Ihre Lokalisierung diese Anforderungen erfüllt, müssen Sie sich auf dieses Modul verlassen und in Ihrem Lokalisierungsmodul die in Ihrem Land verwendeten Identifikationsarten definieren. Im Allgemeinen werden diese Identifikationsarten von den Regierungsbehörden definiert, die die fiskalischen Vorgänge regeln. Zum Beispiel:\n"
+"Dieses Verhalten ist eine allgemeine Anforderung für einige Latam-Länder wie Argentinien und Chile. Wenn Ihre Lokalisierung diese Anforderungen erfüllt, müssen Sie sich auf dieses Modul verlassen und in Ihrem Lokalisierungsmodul die in Ihrem Land verwendeten Identifikationsarten definieren. Im Allgemeinen werden diese Identifikationsarten von den Regierungsbehörden definiert, die die steuerliche Vorgänge regeln. Zum Beispiel:\n"
 "\n"
 "* AFIP in Argentinien definiert DNI, CUIT (Mehrwertsteuer für juristische Personen), CUIL (Mehrwertsteuer für natürliche Personen) und weitere 80 gültige Identifikationsarten.\n"
 "\n"
@@ -3295,25 +3295,25 @@ msgstr ""
 "* Reihenfolge: Sortieren Sie die Identifikationsarten nach den am häufigsten verwendeten.\n"
 "* aktiv: wir können die Identifikationen aktivieren/deaktivieren, um es unseren Kunden leichter zu machen\n"
 "\n"
-"Um dieses Modul für Multi-Unternehmens-Umgebungen kompatibel zu machen, in denen wir Unternehmen haben, die diese Anforderung nicht benötigen/unterstützen, haben wir generische Identifikationstypen und generische Regeln hinzugefügt, um die Kontaktinformationen zu verwalten und sie für den Benutzer transparent zu machen, wenn nur die Mehrwertsteuer, wie wir sie früher kannten, verwendet wird.\n"
+"Um dieses Modul für Mehrfirmenumgebungen kompatibel zu machen, in denen wir Unternehmen haben, die diese Anforderung nicht benötigen/unterstützen, haben wir generische Identifikationsarten und generische Regeln hinzugefügt, um die Kontaktinformationen zu verwalten und sie für den Benutzer transparent zu machen, wenn nur die Mehrwertsteuer, wie wir sie früher kannten, verwendet wird.\n"
 "\n"
 "Generische Identifikationen:\n"
 "\n"
-"* MwSt.: Die Steueridentifikations- oder MwSt.-Nummer wird standardmäßig als Identifikationstyp ausgewählt, so dass der Benutzer nur die zugehörige Umsatzsteuer-Identifikationsnummer hinzufügen muss.\n"
+"* MwSt.: Die Steuer-IdNr. oder Ust.-IdNr wird standardmäßig als Identifikationsart ausgewählt, sodass der Benutzer nur die zugehörige Umsatzsteuer-Identifikationsnummer hinzufügen muss.\n"
 "* Reisepass\n"
 "* Ausländische ID (Ausländisches Dokument)\n"
 "\n"
 "Regeln beim Anlegen eines neuen Partners: Wir sehen nur die Identifikationsarten, die unter Berücksichtigung dieser Regeln sinnvoll sind:\n"
 "\n"
-"* Wenn der Partner keine Länderadresse eingestellt hat: Zeigt die generischen Identifikationsarten plus die im Land der zugehörigen Firma des Partners definierten Identifikationsarten an (Wenn der Partner keine spezifische Firma hat, werden die Identifikationsarten angezeigt, die mit der aktuellen Benutzerfirma verbunden sind)\n"
+"* Wenn der Partner keine Länderadresse eingestellt hat: Zeigt die generischen Identifikationsarten plus die im Land des zugehörigen Unternehmens des Partners definierten Identifikationsarten an (Wenn der Partner kein spezifisches Unternehmen hat, werden die Identifikationsarten angezeigt, die mit dem aktuellen Benutzerunternehmen verbunden sind)\n"
 "\n"
 "* Wenn der Partner eine Länderadresse hat: zeigt die generischen Identifikationsarten plus die für das Land des Partners definierten.\n"
 "\n"
-"Beim Anlegen einer neuen Firma wird dem zugehörigen Partner immer die zugehörige Länderidentifikationsart is_vat zugewiesen.\n"
+"Beim Anlegen eines neuen Unternehmens wird dem zugehörigen Partner immer die zugehörige Länderidentifikationsart is_vat zugewiesen.\n"
 "\n"
-"Alle definierten Identifikationsarten können im Menü \"Kontakte / Konfiguration / Identifikationsart\" überprüft und aktiviert/deaktiviert werden.\n"
+"Alle definierten Identifikationsarten können im Menü „Kontakte / Konfiguration / Identifikationsart“ überprüft und aktiviert/deaktiviert werden.\n"
 "\n"
-"Dieses Modul ist mit dem Modul base_vat kompatibel, um die MwSt.-Nummern für jedes Land zu validieren, das die Möglichkeit hat, mehrere Identifikationstypen zu verwalten oder nicht.\n"
+"Dieses Modul ist mit dem Modul base_vat kompatibel, um die Ust.-IdNr. für jedes Land zu validieren, das die Möglichkeit hat, mehrere Identifikationsarten zu verwalten oder nicht.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -3977,12 +3977,12 @@ msgstr ""
 "\n"
 "Steuerpflichtige Zahlungen - Jahresbericht (TPAR) für Australien\n"
 "\n"
-"Der Jahresbericht für steuerpflichtige Zahlungen (TPAR) ermöglicht:\n"
+"Der Jahresbericht für steuerpflichtige Zahlungen (TPAR) ermöglicht es:\n"
 "\n"
-"- Zahlungen an Auftragnehmer (oder Unterauftragnehmer) für Dienstleistungen, oder\n"
-"- Zuschüsse, die von staatlichen Stellen an ABN-Inhaber gezahlt werden\n"
+"• Zahlungen an Auftragnehmer (oder Unterauftragnehmer) für Dienstleistungen, oder\n"
+"• Zuschüsse, die von staatlichen Stellen an ABN-Inhaber gezahlt werden,\n"
 "\n"
-"gemeldet werden, wenn dies im Rahmen des Taxable Payments Reporting System (TPRS) und der Taxable Government Grants and Payments reporting measure erforderlich ist.\n"
+"zu melden, wenn dies im Rahmen des Taxable Payments Reporting System (TPRS) und der Taxable Government Grants and Payments reporting measure erforderlich ist.\n"
 "\n"
 "Der TPAR ist bis zum 28. August eines jeden Jahres fällig.\n"
 "\n"
@@ -3991,7 +3991,7 @@ msgstr ""
 "Weitere Informationen darüber, wer verpflichtet ist, einen Jahresbericht über steuerpflichtige Zahlungen einzureichen, finden Sie unter\n"
 "https://softwaredevelopers.ato.gov.au/tprs\n"
 "\n"
-"Der Jahresbericht muss dem Kommissar spätestens am 28. August nach Ende des Haushaltsjahres vorgelegt werden. Auf Wunsch können die Berichte auch in kürzeren Abständen eingereicht werden.\n"
+"Der Jahresbericht muss dem Beauftragten spätestens am 28. August nach Ende des Haushaltsjahres vorgelegt werden. Auf Wunsch können die Berichte auch in kürzeren Abständen eingereicht werden.\n"
 "\n"
 "Der Bericht verwendet die Steuerkennzeichen ``Dienstleistung`` und ``Steuerabzug``, um geeignete Journalposten zu finden. Diese werden anhand der Steuerpositionen und des richtigen Produkttyps (Dienstleistungen) festgelegt."
 
@@ -4056,7 +4056,7 @@ msgstr ""
 "\n"
 "  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
 "\n"
-"- Bevor Sie den REST-Webservice für soziale Sicherung nutzen können, müssen Sie eigenes Konto\n"
+"- Bevor Sie den REST-Webservice für soziale Sicherung nutzen können, müssen Sie ein eigenes Konto\n"
 "  und eins für Ihren Kunden erstellen und die Sicherheit konfigurieren. (Das gesamte Verfahren ist\n"
 "  zu finden unter: https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
 "\n"
@@ -4801,7 +4801,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Gutschriften aus Kundendienst-Tickets erstellen\n"
+"Gutschriften aus Kundendiensttickets erstellen\n"
 "    "
 
 #. module: base
@@ -4872,14 +4872,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Erstellen Sie tolle Umfragen und visualisieren Sie die Antworten\n"
+"Tolle Umfragen erstellen und Antworten visualisieren\n"
 "========================================================\n"
 "\n"
-"Sie hängt von den Antworten oder Bewertungen einiger Fragen durch verschiedene Nutzer ab.\n"
+"Sie hängt von den Antworten oder Bewertungen einiger Fragen durch verschiedene Benutzer ab.\n"
 "Eine Umfrage kann aus mehreren Seiten bestehen. Jede Seite kann mehrere Fragen enthalten und\n"
 "jede Frage kann mehrere Antworten enthalten. Verschiedene Benutzer können verschiedene\n"
 "Antworten auf eine Frage geben und die Umfrage wird entsprechend durchgeführt. Die Partner erhalten außerdem\n"
-"Mails mit persönlichen Token für die Einladung zur Umfrage geschickt.\n"
+"Mails mit persönlichen Token für die Einladung zur Umfrage.\n"
 "    "
 
 #. module: base
@@ -4890,7 +4890,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Erstellen Sie einen Stand für Ihr Lieblingsevent."
+"Erstellen Sie einen Stand für Ihre Lieblingsveranstaltung."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_loyalty
@@ -4939,7 +4939,7 @@ msgid ""
 "this event.\n"
 msgstr ""
 "\n"
-"Veranstaltungsanmeldung durch Auftrag. ======================================\n"
+"Veranstaltungsanmeldung durch Verkaufsauftrag. ======================================\n"
 "\n"
 "Dieses Modul ermöglicht eine automatisierte Registrierung durch die Anbindung an den Verkaufsprozess, inklusive der Aktivierung der Abrechnungsfunktionalität für Veranstaltungen.\n"
 "\n"
@@ -5116,7 +5116,7 @@ msgstr ""
 "\n"
 "Wenn Sie eine ausgehende Kommissionierung in einem italienischen Unternehmen drucken wollen, \n"
 "wird stattdessen ein DDT gedruckt. Er ist wie der Lieferschein, enthält aber auch den Wert des Produkts, \n"
-"den Transportgrund, den Spediteur, ... Das macht ihn zu einem DDT.  \n"
+"den Transportgrund, den Spediteur ... Das macht ihn zu einem DDT.  \n"
 "\n"
 "Für den DDT wird eine eine eigene Sequenz verwendet, denn die Nummer darf keine \n"
 "keine Lücken aufweisen und darf und sollte erst zum Zeitpunkt des Versands der Waren angebracht werden.\n"
@@ -5314,7 +5314,7 @@ msgstr ""
 "==========================\n"
 "\n"
 "Ab dem 1. Juli 2021 müssen sich EU-Unternehmen, die innerhalb der EU Waren im Wert von über 10 000 EUR an Käufer in einem anderen EU-Mitgliedstaat verkaufen, im Mitgliedstaat des Käufers registrieren lassen und dort die Mehrwertsteuer entrichten.\n"
-"Unterhalb dieses neuen EU-weiten Schwellenwerts können Sie auf Ihre grenzüberschreitenden Verkäufe weiterhin die inländischen Vorschriften für die Mehrwertsteuer anwenden. Um die Anwendung dieser EU-Richtlinie zu vereinfachen, ermöglicht das One Stop Shop (OSS)-Registrierungssystem den Unternehmen, eine einzige Steuererklärung abzugeben.\n"
+"Unterhalb dieses neuen EU-weiten Schwellenwerts können Sie auf Ihre grenzüberschreitenden Verkäufe weiterhin die inländischen Vorschriften für die Mehrwertsteuer anwenden. Um die Anwendung dieser EU-Richtlinie zu vereinfachen, ermöglicht das One-Stop-Shop-(OSS)-Registrierungssystem den Unternehmen, eine einzige Steuererklärung abzugeben.\n"
 "\n"
 "Dieses Modul macht es möglich, indem es bei der Erstellung der erforderlichen EU-Steuerpositionen und Steuern hilft, um die erforderlichen Steuern automatisch anzuwenden und zu erfassen.\n"
 "\n"
@@ -5512,7 +5512,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Erweiterung zum Versenden von Follow-up-Dokumenten per Post\n"
+"Erweiterung zum Versenden von Mahndokumenten per Post\n"
 "    "
 
 #. module: base
@@ -5694,16 +5694,16 @@ msgstr ""
 "    * Ausfuhrnachweis - Webservice\n"
 "    * Elektronischer Steuerbeleg - Webservice\n"
 "\n"
-"Wenn Sie in den elektronischen Journalen eine Rechnung validieren, wird diese sowohl in Odoo als auch bei der AFIP validiert.. Diese Validierung erfolgt\n"
+"Wenn Sie in den elektronischen Journalen eine Rechnung validieren, wird diese sowohl in Odoo als auch bei der AFIP validiert. Diese Validierung erfolgt\n"
 "in dem Moment, in dem wir von der AFIP den Status „genehmigt/genehmigt mit Beobachtung/abgelehnt“ erhalten. Wenn die Rechnung von der\n"
 "AFIP abgelehnt wird, wird diese nicht im System gebucht und eine Pop-up-Nachricht wird mit den erhaltenen Fehlerdetails (Gründe der Ablehnung)\n"
 "und einem HINWEIS zum möglichen Problem angezeigt.\n"
 "\n"
-"Odoo and AFIP. Zur Überprüfung und Fehlersuche haben wir auch ein Menü „Rechnung in AFIP einsehen“ hinzugefügt, mit dem wir die zuvor an AFIP gesendeten Rechnungen\n"
+"Zur Überprüfung und Fehlersuche haben wir auch ein Menü „Rechnung in AFIP einsehen“ hinzugefügt, mit dem wir die zuvor an AFIP gesendeten Rechnungen\n"
 "und die zuletzt verwendete Nummer einsehen können, um eventuelle Probleme bei der Synchronisierung der Sequenzen zwischen Odoo und AFIP zu lösen.\n"
 "\n"
 "    ANMERKUNG: Von der Formularansicht des Journals aus können wir eine Synchronisierung zwischen den Odoo-Sequenzen zu jedem der Dokumenttypen\n"
-"    in mit den zuletzt in AFIP registrierten Nummern.\n"
+"    in mit den zuletzt in AFIP registrierten Nummern durchführen.\n"
 "\n"
 "Bei den Lieferantenrechnungen haben wir eine Funktion hinzugefügt, die in den Buchhaltungseinstellungen konfiguriert werden kann,\n"
 "um Lieferantenrechnungen in AFIP zu überprüfen, um zu sehen, ob die Lieferantenrechnungen echt sind (weitere Informationen finden Sie in der Beschreibung der Einstellung).\n"
@@ -5715,19 +5715,19 @@ msgstr ""
 "    1.1. Den AFIP-Webservicesmodus konfigurieren:\n"
 "\n"
 "    * Testumgebung zum Verwendung von Demo-Zertifikaten, die verwendet werden, um den Vorgang zu testen, und NICHT, um echte\n"
-"      Rechnungne an die AFIP zu senden. Sie dient nur zum Testen. Sie ist bereits für Demo-Vorgänge vordefiniert und Sie müssen sie nicht konfigurieren\n"
+"      Rechnungen an die AFIP zu senden. Sie dient nur zum Testen. Sie ist bereits für Demo-Vorgänge vordefiniert und Sie müssen sie nicht konfigurieren\n"
 "      (in der AFIP oft als Homologationsumgebung bezeichnet).\n"
 "    * Produktionsumgebung, um echte Zertifikate und legale Rechnungen für die AFIP zu erstellen.\n"
 "\n"
 "    1.2. Ihr AFIP-Zertifikat konfigurieren: Wenn Sie sich in einem Demo-Vorgang befinden, ist dieser Wert standardmäßig eingestellt. Wenn Sie\n"
 "         sich in einem Produktionsvorgang befinden, müssen Sie nur Ihr AFIP-Zertifikat hochladen.\n"
 "\n"
-"    1.3. Optional können Sie festlegen, ob Sie Lieferantenrechnungen in AFIP prüfen können möchten.\n"
+"    1.3. Optional können Sie festlegen, ob Sie Lieferantenrechnungen in AFIP prüfen möchten.\n"
 "\n"
 "2. Erstellen Sie Verkaufsjournale, die jedes Ihrer AFIP-Kassensysteme (verfügbar im AFIP-Portal) repräsentieren, die Sie in Odoo verwenden möchten.\n"
 "\n"
 "    2.1. Die Verwendung des Dokumente-Felds ist standardmäßig eingestellt, bitte ändern Sie dies nicht.\n"
-"    2.2. Das AFIP-Kassensystem für eines der elektronischen festlegen.\n"
+"    2.2. Das AFIP-Kassensystem für ein elektronisches festlegen.\n"
 "\n"
 "        * Elektronische Rechnung - Webservice'\n"
 "        * Elektronischer Steuerbeleg - Webservice'\n"
@@ -5742,7 +5742,7 @@ msgstr ""
 "Technisch\n"
 "---------\n"
 "\n"
-"Die implementierten Webservices sind die am weitesten verbreiteten::\n"
+"Die implementierten Webservices sind die am weitesten verbreiteten:\n"
 "\n"
 "* wsfev1 - „Factura Electrónica“ (Elektronische Rechnung)\n"
 "* wsbfev1 - „Bono Fiscal Electrónico“ (Elektronischer Steuerbeleg)\n"
@@ -5781,9 +5781,9 @@ msgstr ""
 "\n"
 "In einigen Ländern Lateinamerikas, darunter Argentinien und Chile, werden einige Buchhaltungstransaktionen wie Ein- und Ausgangsrechnungen nach einem von den staatlichen Finanzbehörden definierten Dokumententyp klassifiziert (in Argentinien Fall AFIP, Chile Fall SII).\n"
 "\n"
-"Dieses Modul soll um Lokalisierungen erweitert werden, um diese Dokumententypen zu verwalten und ist eine wesentliche Information, die in den gedruckten Berichten angezeigt werden muss und die leicht identifiziert werden muss, sowohl innerhalb des Satzes der Rechnungen als auch der Kontobewegungen.\n"
+"Dieses Modul soll um Lokalisierungen erweitert werden, um diese Dokumententypen zu verwalten und bietet wesentliche Informationen, die in den gedruckten Berichten angezeigt werden und leicht identifiziert sein müssen, sowohl innerhalb des Satzes der Rechnungen als auch der Kontobewegungen.\n"
 "\n"
-"Jeder Dokumenttyp hat seine eigenen Regeln und Sequenznummer, letztere ist mit der Rechnungsnummer und der Journalsequenz integriert, um für den Benutzer der Lokalisierung einfach zu sein. Um diese Dokumenttypen zu unterstützen oder nicht, hat das Journal eine neue Option, die es ermöglicht, das Dokument zu verwenden oder nicht.\n"
+"Jeder Dokumenttyp hat seine eigenen Regeln und Sequenznummern, letztere ist mit der Rechnungsnummer und der Journalsequenz integriert, um für den Benutzer der Lokalisierung einfach zu sein. Um diese Dokumenttypen zu unterstützen oder nicht, hat das Journal eine neue Option, die es ermöglicht, das Dokument zu verwenden oder nicht.\n"
 "\n"
 "Technisch\n"
 "---------\n"
@@ -5791,7 +5791,7 @@ msgstr ""
 "Wenn Ihre Lokalisierung diese Logik benötigt, müssen Sie dieses Modul als Abhängigkeit hinzufügen und in Ihrem Lokalisierungsmodul erweitern:\n"
 "\n"
 "* die Methode _localization_use_documents() des Unternehmens erweitern.\n"
-"* die Daten der Dokumentarten erstellen, die für das jeweilige Land existieren. Die Dokumentart hat ein Länderfeld\n"
+"* die Daten der Dokumenttypen erstellen, die für das jeweilige Land existieren. Der Dokumenttypt hat ein Länderfeld\n"
 "\n"
 "\n"
 
@@ -5971,7 +5971,7 @@ msgstr ""
 "Highlights:\n"
 "* Der ecuadorianische Kontenplan wird automatisch installiert, basierend auf dem von Super Intendencia de Compañías bereitgestellten Beispiel.\n"
 "* Liste der Steuern (einschließlich Einbehaltungen) wird ebenfalls installiert, Sie können die Steuern, die Ihr Unternehmen nicht verwendet, abschalten\n"
-"* Steuerposition, Dokumenttypen, Liste der lokalen Banken, Liste der lokalen Staaten usw. werden ebenfalls installiert.\n"
+"* Steuerposition, Dokumenttypen, Liste der lokalen Banken, Liste der lokalen Provinzen usw. werden ebenfalls installiert.\n"
 "\n"
 "Technisch\n"
 "---------\n"
@@ -5993,7 +5993,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"GCC POS Lokalisierung\n"
+"GKR-Kassensystem-Lokalisierung\n"
 "=======================================================\n"
 "    "
 
@@ -6082,7 +6082,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Gutscheine aus Kundendienst-Tickets generieren\n"
+"Gutscheine aus Kundendiensttickets generieren\n"
 "    "
 
 #. module: base
@@ -6105,8 +6105,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Erstellen Sie kurze Links mit Analytics Trackern (UTM), um Ihre Seiten über Marketingkampagnen freizugeben.\n"
-"Diese Tracker können in Google Analytics verwendet werden, um Klicks und Besucher zu verfolgen, oder in Odoo-Berichten, um die Effizienz dieser Kampagnen in Bezug auf die Führungsgeneration, damit verbundene Einnahmen (Verkaufsaufträge), Einstellung usw. zu analysieren.\n"
+"Erstellen Sie kurze Links mit Analytics-Trackern (UTM), um Ihre Seiten über Marketingkampagnen freizugeben.\n"
+"Diese Tracker können in Google Analytics verwendet werden, um Klicks und Besucher zu verfolgen, oder in Odoo-Berichten, um die Effizienz dieser Kampagnen in Bezug auf die Leadgenerierung, damit verbundene Einnahmen (Verkaufsaufträge), Einstellung usw. zu analysieren.\n"
 "    "
 
 #. module: base
@@ -6480,16 +6480,16 @@ msgid ""
 "  "
 msgstr ""
 "\n"
-"Indian Accounting: Chart of Account.\n"
+"Indische Buchhaltung: Kontenplan.\n"
 "====================================\n"
 "\n"
-"Indian accounting chart and localization.\n"
+"Indischer Kontenplan und Lokalisierung.\n"
 "\n"
-"Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n"
+"Odoo ermöglicht die Verwaltung der indischen Buchhaltung durch die Bereitstellung von zwei Formaten von Kontenplänen, nämlich dem indischen Kontenplan - Standard und dem indischen Kontenplan - Schedule VI.\n"
 "\n"
-"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
-"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
-"Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+"Hinweis: Schedule VI wurde vom MCA überarbeitet und gilt für alle Bilanzen, die nach dem\n"
+"31. März 2011 erstellt wurden. Das Format hat die früheren zwei Optionen für das Format der Bilanz abgeschafft.\n"
+"Jetzt ist nur noch das vertikale Format zulässig, das von Odoo unterstützt wird.\n"
 "  "
 
 #. module: base
@@ -6513,18 +6513,18 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Indien – Personalabrechnungs- und Gehaltsregeln.\n"
+"Indisch – Personalabrechnungs- und Gehaltsregeln.\n"
 "============================\n"
 "\n"
 "    - Konfiguration von hr_payroll für die indische Lokalisierung\n"
 "    - Alle Beitragsregeln für die indische Personalabrechnung.\n"
-"    * Neuer Mitarbeiter-Lohnabrechnungsbericht\n"
+"    * Neuer Mitarbeiter-Gehaltsabrechnungsbericht\n"
 "    * Mitarbeiter-Vertragsdaten\n"
-"    * Konfiguration des Grundlohns/Brutto-/Netto-Gehalts\n"
-"    * Mitarbeiter-Lohnabrechnung\n"
-"    * Zuschlägen/Abzüge\n"
+"    * Konfiguration des Grundl-/Brutto-/Netto-Gehalts\n"
+"    * Mitarbeiter-Gehaltsabrechnung\n"
+"    * Zuschüsse/Abzüge\n"
 "    * Integration in die Urlaubsverwaltung\n"
-"    * Medizinische Zuschläge, Reisekosten, Kindergeld, …\n"
+"    * Medizinische Zuschüsse, Reisekosten, Kindergeld …\n"
 "    - Lohnabrechnungsberatung und -bericht\n"
 "    - Jahresgehalt pro Kopf und nach Mitarbeiterbericht\n"
 "    "
@@ -6674,7 +6674,7 @@ msgstr ""
 "\n"
 "    * Mitarbeiterdetails\n"
 "    * Arbeitsverträge\n"
-"    * Zuschläge/Abzüge\n"
+"    * Zuschüsse/Abzüge\n"
 "    * Konfiguration des Grund-/Brutto-/Nettogehalts\n"
 "    * Lohn-/Gehaltsabrechnung für Mitarbeiter\n"
 "    * Integration mit Urlaubsverwaltung\n"
@@ -6890,7 +6890,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Verwaltung von Produktrückgaben aus Kundendienst-Tickets\n"
+"Verwaltung von Produktrückgaben aus Kundendiensttickets\n"
 "    "
 
 #. module: base
@@ -7072,7 +7072,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Verwalten Sie den Nachverkauf der Produkte über Kundendienst-Tickets.\n"
+"Verwalten Sie den Kundendienst nach Verkauf von Produkte über Kundendiensttickets.\n"
 "    "
 
 #. module: base
@@ -7115,17 +7115,17 @@ msgstr ""
 "Verwaltung von Urlaubsanträgen und -ansprüchen\n"
 "=====================================\n"
 "\n"
-"Diese Anwendung kontrolliert den Abwesenheitsplan Ihres Unternehmens. Es ermöglicht den Mitarbeitern, Urlaub zu beantragen. Anschließend können Manager Abwesenheitsanträge prüfen und genehmigen oder ablehnen. Auf diese Weise können Sie die Gesamtzeitplanung für das Unternehmen oder die Abteilung steuern.\n"
+"Diese Anwendung kontrolliert den Abwesenheitsplan Ihres Unternehmens. Es ermöglicht den Mitarbeitern, Abwesenheiten zu beantragen. Anschließend können Manager Abwesenheitsanträge prüfen und genehmigen oder ablehnen. Auf diese Weise können Sie die Gesamtzeitplanung für das Unternehmen oder die Abteilung steuern.\n"
 "\n"
-"Sie können mehrere Arten von Freizeit (Krankheit, bezahlte Tage,....) einstellen und die Freizeit einem Mitarbeiter oder einer Abteilung über die Freizeitverrechnung schnell zuordnen. Ein Mitarbeiter kann auch durch eine neue Freizeitverrechnung weitere freie Tage beantragen. Es erhöht die Gesamtzahl der verfügbaren Tage für diesen Freizeittyp (wenn der Antrag angenommen wird).\n"
+"Sie können mehrere Arten von Abwesenheiten (Krankheit, bezahlte Tage ....) einstellen und die Abwesenheit einem Mitarbeiter oder einer Abteilung über die Urlaubsansprüche schnell zuordnen. Ein Mitarbeiter kann auch durch eine neuen Antrag auf Urlaubsanspruch weitere freie Tage beantragen. Es erhöht die Gesamtzahl der verfügbaren Tage für diese Abwesenheitsart (wenn der Antrag angenommen wird).\n"
 "\n"
-"Sie können die Freizeit auf verschiedene Weise verfolgen, indem Sie die Berichte verfolgen:\n"
+"Sie können die Abwesenheit auf verschiedene Weise verfolgen, indem Sie die Berichte verfolgen:\n"
 "\n"
-"* Zusammenfassung der Freizeit\n"
-"* Freizeit nach Abteilungen\n"
-"* Freizeitanalyse\n"
+"* Zusammenfassung der Abwesenheiten\n"
+"* Abwesenheit nach Abteilungen\n"
+"* Abwesenheitsanalyse\n"
 "\n"
-"Eine Synchronisation mit einer internen Agenda (Meetings des CRM-Moduls) ist ebenfalls möglich, um automatisch eine Besprechung zu erstellen, wenn ein Urlaubsantrag angenommen wird, indem eine Art von Besprechung im Freizeittyp eingerichtet wird.\n"
+"Eine Synchronisation mit einer internen Agenda (Meetings des CRM-Moduls) ist ebenfalls möglich, um automatisch eine Besprechung zu erstellen, wenn ein Abwesenheitsantrag akzeptiert wird, indem eine Art von Besprechung in der Abwesenheitsart eingerichtet wird.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_slides
@@ -7197,7 +7197,7 @@ msgid ""
 "procure.\n"
 msgstr ""
 "\n"
-"Verwaltung von Fertigungsplanung\n"
+"Produktionszeitplan (MPS)\n"
 "==========================\n"
 "\n"
 "Manchmal müssen Sie Einkaufsaufträge für Komponenten von Fertigungsaufträgen erstellen, die erst später erfasst werden, oder für Einkaufsaufträge, bei denen Ihnen erst später die Einkaufsaufträge vorliegen. Die Lösung besteht darin, Ihre Verkaufsprognosen vorherzusagen und auf dieser Grundlage bereits einige Fertigungsaufträge oder Einkaufsaufträge zu erstellen.\n"
@@ -7442,10 +7442,10 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Modul zum Importieren von CSV-Bankauszügen.\n"
+"Modul zum Importieren von CSV-Kontoauszügen.\n"
 "======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von CSV-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von CSV-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Bank und Bargeld\\Bankauszüge geparst und gespeichert.\n"
 "\n"
 "Wichtiger Hinweis\n"
 "---------------------------------------------\n"
@@ -7470,7 +7470,7 @@ msgstr ""
 "Modul zum Import von OFX-Kontoauszügen.\n"
 "=======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren OFX-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Kontoauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren OFX-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Bank und Bargeld\\Kontoauszüge geparst und gespeichert.\n"
 "\n"
 "Kontoauszüge, die eine Untermenge der OFX-Informationen enthalten, können generiert werden (nur bei Transaktionspositionen, die für die Erstellung von Finanzbuchhaltungsdateien erforderlich sind)."
 
@@ -7490,10 +7490,10 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Modul zum Import von QIF-Bankauszügen.\n"
+"Modul zum Import von QIF-Kontoauszügen.\n"
 "======================================\n"
 "\n"
-"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren QIF-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Liquide Mittel\\Bankauszüge geparst und gespeichert.\n"
+"Dieses Modul ermöglicht Ihnen den Import von maschinell lesbaren QIF-Dateien in Odoo: Sie werden in einem vom Menschen lesbaren Format unter Buchhaltung\\Bank und Bargeldl\\Kontoauszüge geparst und gespeichert.\n"
 "\n"
 "Wichtiger Hinweis\n"
 "---------------------------------------------\n"
@@ -7792,7 +7792,7 @@ msgstr ""
 "* die Verwendung von aufgeschobenen oder elektronischen Schecks ermöglichen\n"
 "  * Drucken ist deaktiviert\n"
 "  * Schecknummer wird manuell vom Benutzer eingestellt\n"
-"* ein optionales „Scheckeinlösedatumb für vordatierte Schecks (aufgeschobene Zahlungen) hinzufügen\n"
+"* ein optionales „Scheckeinlösedatum“ für vordatierte Schecks (aufgeschobene Zahlungen) hinzufügen\n"
 "* ein Menü zur Verfolgung eigener Schecks hinzufügen\n"
 "\n"
 "Verwaltung von Schecks von Dritten\n"
@@ -8225,7 +8225,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Reparatur von Produkten aus Kundendienst-Tickets\n"
+"Reparatur von Produkten aus Kundendiensttickets\n"
 "    "
 
 #. module: base
@@ -9235,12 +9235,12 @@ msgid ""
 "    - a few other adaptations"
 msgstr ""
 "\n"
-"This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:\n"
+"Dies ist die neueste Odoo-Lokalisierung für UK, die notwendig ist, um Odoo Buchhaltung für britische KMUs zu betreiben mit:\n"
 "=================================================================================================\n"
-"    - a CT600-ready chart of accounts\n"
-"    - VAT100-ready tax structure\n"
-"    - InfoLogic UK counties listing\n"
-"    - a few other adaptations"
+"- einem CT600-kompatiblen Kontenplan\n"
+"- VAT100-fähiger Steuerstruktur\n"
+"- InfoLogic-UK-Länderliste\n"
+"- einige andere Anpassungen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_il
@@ -9483,15 +9483,15 @@ msgid ""
 "    - Trobz\n"
 msgstr ""
 "\n"
-"This is the module to manage the accounting chart for Vietnam in Odoo.\n"
+"Dies ist das Modul zur Verwaltung des Kontenplans für Vietnam in Odoo.\n"
 "=========================================================================\n"
 "\n"
-"This module applies to companies based in Vietnamese Accounting Standard (VAS)\n"
-"with Chart of account under Circular No. 200/2014/TT-BTC\n"
+"Dieses Modul gilt für Unternehmen, die nach dem vietnamesischen Rechnungslegungsstandard (VAS)\n"
+"mit Kontenplan gemäß Rundschreiben Nr. 200/2014/TT-BTC\n"
 "\n"
-"**Credits:**\n"
-"    - General Solutions.\n"
-"    - Trobz\n"
+"**Vorteile:**\n"
+"- Allgemeine Lösungen.\n"
+"- Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_restaurant
@@ -9655,9 +9655,9 @@ msgid ""
 msgstr ""
 "\n"
 "Dieses Modul fügt den benötigten Basiscode für ein vollständig integriertes Kundenportal hinzu.\n"
-"Es enthält die Basis-Controllerklasse und Basisvorlagen. Business-Add-ons fügen ihre spezifischen Vorlagen und Controller hinzu, um das Kundenportal zu erweitern.\n"
+"Es enthält die Basis-Controller-Klasse und Basisvorlagen. Business-Add-ons fügen ihre spezifischen Vorlagen und Controller hinzu, um das Kundenportal zu erweitern.\n"
 "\n"
-"Dieses Modul enthält den meisten Code aus odoo v10 website_portal. Zweck dieses Moduls ist es, das Anzeigen des Kundenportals ohne Abhängigkeit zu den Websiten-Ausgabe- und -Anpassungskapazitäten zu ermöglichen."
+"Dieses Modul enthält den meisten Code aus odoo v10 website_portal. Zweck dieses Moduls ist es, das Anzeigen des Kundenportals ohne Abhängigkeit zu den Bearbeitungs- und -Anpassungskapazitäten für Websites zu ermöglichen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -9685,11 +9685,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Diese Anwendung fügt die Gewinnmarge dem Verkaufsauftrag hinzu\n"
+"Diese Anwendung fügt dem Verkaufsauftrag die Gewinnmarge hinzu\n"
 "======================================================\n"
 "\n"
-"Dies gibt die Ertragskraft an durch die Berechnung der Differenz zwischen dem Verkaufspreis\n"
-"und Herstellungspreis.\n"
+"Dies gibt die Rentabilität durch die Berechnung der Differenz zwischen dem Verkaufspreis\n"
+"und Herstellungspreis an.\n"
 "    "
 
 #. module: base
@@ -9894,7 +9894,7 @@ msgid ""
 msgstr ""
 "\n"
 "Dieses Modul ermöglicht es Ihnen, Ihre Zahlungen auf vorgedruckten Schecks zu drucken.\n"
-"Sie können die Ausgabe (Layout, Stichleitungen, Papierformat usw.) in den Unternehmenseinstellungen konfigurieren und die\n"
+"Sie können die Ausgabe (Layout, Kontrollabschnitte, Papierformat usw.) in den Unternehmenseinstellungen konfigurieren und die\n"
 "Schecknummerierung (wenn Sie vorgedruckte Schecks ohne Nummern verwenden) in den Journaleinstellungen verwalten.\n"
 "Gemäß der Canadian Payment Association (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
 "\n"
@@ -9925,7 +9925,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Dieses Modul ermöglicht es, Händler/Partner auf Ihrer Website zu veröffentlichen und eingehende Leads/Opportunities an sie weiterzuleiten.\n"
+"Dieses Modul ermöglicht es, Händler/Partner auf Ihrer Website zu veröffentlichen und eingehende Leads/Verkaufschancen an sie weiterzuleiten.\n"
 "\n"
 "\n"
 "**Partner veröffentlichen**\n"
@@ -9934,9 +9934,9 @@ msgstr ""
 "\n"
 "**Leads weiterleiten**\n"
 "\n"
-"Die Weiterleitung von Leads kann für einen oder mehrere Leads auf einmal erfolgen. Die Aktion ist im Abschnitt *Zugeordneter Partner* der Lead-/Opportunity-Formularansicht und im Menü *Aktion* der Listenansicht verfügbar.\n"
+"Die Weiterleitung von Leads kann für einen oder mehrere Leads auf einmal erfolgen. Die Aktion ist im Abschnitt *Zugeordneter Partner* der Formularansicht des Leads/der Verkaufschance und im Menü *Aktion* der Listenansicht verfügbar.\n"
 "\n"
-"Die automatische Zuordnung ergibt sich aus der Gewichtung der Partnerstufen und der Geolokalisierung. Partner erhalten Leads, die sich in ihrer Umgebung befinden."
+"Die automatische Zuordnung ergibt sich aus der Gewichtung der Partnerlevel und der Geolokalisierung. Partner erhalten Leads, die sich in ihrer Umgebung befinden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subonctracting_landed_costs
@@ -10147,7 +10147,7 @@ msgid ""
 msgstr ""
 "\n"
 "Dieses Modul bietet die technischen Voraussetzungen für die neue deutsche Verordnung bezüglich des Restaurants.\n"
-"Installieren Sie dies, wenn Sie die Point of Sale App für Restaurants in Deutschland verwenden.\n"
+"Installieren Sie dies, wenn Sie die Kassensystem-App für Restaurants in Deutschland verwenden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -10694,7 +10694,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Vereinigte Arabische Emirate Regeln für Gehaltsabrechnung und Dienstzeitende.\n"
+"Vereinigte Arabische Emirate Regeln für Personalabrechnung und Dienstzeitende.\n"
 "======================================================="
 
 #. module: base
@@ -10917,9 +10917,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Lagerverwaltungs-Buchhaltungs-Modul\n"
+"Modul für Lagerverwaltungs und Buchhaltung\n"
 "================================\n"
-"Dieses Modul stellt die Verbindung zwischen dem \"Lager\" und dem \"Buchhaltungs\"-Modul her und ermöglicht es Ihnen, Ihre Lagerbuchungen zu bewerten.\n"
+"Dieses Modul stellt die Verbindung zwischen dem ¢„Lager“- und dem „Buchhaltungs“-Modul her und ermöglicht es Ihnen, Ihre Lagerbuchungen zu bewerten.\n"
 "\n"
 "Haupteigenschaften\n"
 "-----------------------\n"
@@ -11771,7 +11771,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr "- domain ="
+msgstr "- Domain ="
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12129,7 +12129,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
-msgstr "<span class=\"text-white text-uppercase\">Gefahren Zone</span>"
+msgstr "<span class=\"text-white text-uppercase\">Gefahrenzone</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -12176,7 +12176,7 @@ msgstr "<span>, </span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Directory</span>"
-msgstr "<span>Verzeichnis</span>"
+msgstr "<span>Directory</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -12528,18 +12528,18 @@ msgstr ""
 "\n"
 "* Beginnen Sie, indem Sie spezifische Produkte erstellen, die Ihre verschiedenen Einstandskosten so wie Fracht, Versicherung oder Zölle anzeigen.\n"
 "\n"
-"Gehen Sie zu Bestand -> Konfiguration -> Wareneinstandspreise. Wareneinstandspreise sind\n"
+"Gehen Sie zu Lager -> Konfiguration -> Einstandkostenarten. Einstandskosten sind\n"
 "nur für Produkte möglich, die in Echtzeitbewertung mit realer\n"
-"Preiskalkulationsmethode. Die Kalkulationsmethode ist in der Produktkategorie konfiguriert.\n"
+"Preiskalkulationsmethode konfiguriert sind. Die Kalkulationsmethode ist in der Produktkategorie konfiguriert.\n"
 "\n"
 ".. figure:: static/description/product_landed_cost.png\n"
 "\n"
-"* Klicken Sie auf die Schaltfläche Berechnen, um zu sehen, wie die Wareneinstandspreise auf die \n"
-" Picking-Linien aufgeteilt werden.\n"
+"* Klicken Sie auf die Schaltfläche „Berechnen“, um zu sehen, wie die Einstandskosten auf die \n"
+" Kommissionierungszeilen aufgeteilt werden.\n"
 "\n"
 ".. figure:: static/description/compute_landed_cost.png\n"
 "\n"
-"* Um die Zuordnung der Wareneinstandspreise zu bestätigen, klicken Sie auf die Schaltfläche Validieren.\n"
+"* Um die Zuordnung der Einstandskosten zu bestätigen, klicken Sie auf die Schaltfläche „Validieren“.\n"
 "\n"
 ".. figure:: static/description/validate_landed_cost.png\n"
 "\n"
@@ -12930,7 +12930,7 @@ msgstr "Zugriff"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr "Zugriffskontrolle"
+msgstr "Zugriffskontrollen"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -13199,26 +13199,26 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
-"Accounting chart for Netherlands\n"
+"Kontenplan für die Niederlande\n"
 "================================\n"
 "\n"
-"This module is specially made to manage the accounting functionality\n"
-"according to the Dutch best practice.\n"
+"Dieses Modul wurde speziell für die Verwaltung der Buchhaltungsfunktionen\n"
+"gemäß den niederländischen bewährten Verfahren entwickelt.\n"
 "\n"
-"This module contains the Dutch Chart of Accounts and the VAT schema.\n"
-"This schema is made for the most common Companies and therefore suitable\n"
-"to be used for almost every Company.\n"
+"Dieses Modul enthält den niederländischen Kontenplan und das MwSt.-Schema.\n"
+"Dieses Schema wurde für die gängigsten Unternehmen erstellt und eignet sich daher\n"
+"für fast jedes Unternehmen.\n"
 "\n"
-"The VAT accounts are linked promptly to generate the required reports. Examples\n"
-"of this reports intercommunitaire transactions.\n"
+"Die MwSt.-Konten werden sofort verknüpft, um die erforderlichen Berichte zu erstellen. Beispiele\n"
+"für diese Berichte sind interkommunale Transaktionen.\n"
 "\n"
-"After installation of this module the configuration will be activated.\n"
-"Select the Chart of Accounts named \"Netherlands - Accounting\".\n"
+"Nach der Installation dieses Moduls wird die Konfiguration aktiviert.\n"
+"Wählen Sie den Kontenplan mit dem Namen „Niederlande - Buchhaltung“.\n"
 "\n"
-"Hereafter entering the name of the Company, total digits of Chart of Accounts,\n"
-"Bank Account Number and the default Currency.\n"
+"Danach geben Sie den Namen des Unternehmens, die Gesamtzahl der Stellen des Kontenplans,\n"
+"Bankkontonummer und die Standardwährung ein.\n"
 "\n"
-"Note: total digits configured by default are 6.\n"
+"Hinweis: Die Gesamtzahl der Ziffern ist standardmäßig auf 6 eingestellt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_reports
@@ -13395,7 +13395,7 @@ msgstr "Anzahl aktiver Sprachen"
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
-msgstr "Nächste Nummer"
+msgstr "Tatsächliche nächste Nummer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -13412,8 +13412,8 @@ msgstr "Sprachen hinzufügen"
 #: model:ir.module.module,summary:base.module_data_merge_helpdesk
 msgid "Add Merge action in contextual menu of helpdesk ticket model."
 msgstr ""
-"Hinzufügen der Zusammenführungsaktion im Kontextmenü des Kundendienst-"
-"Ticket-Modells."
+"Hinzufügen der Zusammenführungsaktion im Kontextmenü des Modells für "
+"Kundendiensttickets."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_project
@@ -13482,7 +13482,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr "Hinzufügen von Einnahmen-Ausgaben-Funktionalität für Berichte"
+msgstr "Hinzufügen der Ist-Versteuerungsfunktionalität für Berichte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -13597,7 +13597,7 @@ msgstr "Unterstützung von Stapeltransfers in der Barcodeansicht hinzufügen"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
 msgid "Add variants to Sales Order through a grid entry."
-msgstr "Varianten über einen Gittereintrag zum Verkaufsauftrag hinzufügen"
+msgstr "Varianten über einen Rastereintrag zum Verkaufsauftrag hinzufügen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -14288,7 +14288,7 @@ msgstr "Kostenrechnung in der Fertigung"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
 msgid "Analytic cost of employee work in manufacturing"
-msgstr "Analytische Kosten der Arbeitnehmerarbeit in der Fertigung"
+msgstr "Kostenstellenkosten der Mitarbeiterarbeit in der Fertigung"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -14346,7 +14346,7 @@ msgstr "Anwendung"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
-msgstr "Begriffe"
+msgstr "Anwendungsbegriffe"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_onboarding_company_form
@@ -14412,7 +14412,7 @@ msgstr "Termine"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
 msgid "Appraisal - Skills"
-msgstr "Beurteilung - Fähigkeiten"
+msgstr "Mitarbeiterbeurteilung - Kompetenzen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
@@ -14483,7 +14483,7 @@ msgstr "Arch Blob"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
 msgid "Arch Filename"
-msgstr "Arch Dateiname"
+msgstr "Arch-Dateiname"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
@@ -17005,7 +17005,7 @@ msgstr "Kontaktformular"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact Name"
-msgstr "Ansprechpartner"
+msgstr "Name des Kontakts"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
@@ -17116,7 +17116,7 @@ msgstr "Tickets von/zu Leads umwandeln"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
 msgid "Convert emails to Helpdesk Tickets."
-msgstr "E-Mails in Kundendienst-Tickets umwandeln."
+msgstr "E-Mails in Kundendiensttickets umwandeln."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_40
@@ -19751,7 +19751,7 @@ msgstr "Ausführung"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__executive
 msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
-msgstr "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
+msgstr "Executive 4   7,5 x 10 Zoll, 190,5 x 254 mm"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__group_expand
@@ -22386,8 +22386,8 @@ msgid ""
 "Implements the registered cash system, adhering to guidelines by FPS "
 "Finance."
 msgstr ""
-"Implementiert das registrierte Bargeldsystem, entsprechend den Richtlinien "
-"von FPS Finance."
+"Implementiert das Registrierkassensystem, entsprechend den Richtlinien vom "
+"FÖD Finanzen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -22882,7 +22882,7 @@ msgstr "Interaktion zwischen Regeln"
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
-msgstr "Konzerninterne Regeln für VA/EA/RG"
+msgstr "Unternehmensübergreifende Regeln für VA/EA/RG"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
@@ -23893,7 +23893,7 @@ msgstr "Links-nach-Rechts"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__legal
 msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
-msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
+msgstr "Legal    3   8,5 x 14 Zoll, 215,9 x 355,6 mm"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -24653,8 +24653,8 @@ msgstr "Kompetenzen Ihrer Mitarbeiter verwalten"
 #: model:ir.module.module,summary:base.module_hr_appraisal_skills
 msgid "Manage skills of your employees during an appraisal process"
 msgstr ""
-"Berücksichtigung der Fähigkeiten Ihrer Mitarbeiter während eines "
-"Beurteilungsprozesses"
+"Verwaltung der Kompetenzen Ihrer Mitarbeiter während eines "
+"Beurteilungsverfahrens"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
@@ -24723,7 +24723,7 @@ msgstr "Verwaltung Ihrer Dokumente zur Unterzeichnung von Verträgen"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll
 msgid "Manage your employee payroll records"
-msgstr "Personalabrechnungs-Datensätze verwalten"
+msgstr "Verwaltung von Personalabrechnungseinträgen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
@@ -24900,7 +24900,7 @@ msgstr "Massenversand von SMS bei Verkaufsaufträgen"
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
 #: model:ir.module.module,summary:base.module_mrp_mps
 msgid "Master Production Schedule"
-msgstr "Master Produktionszeitplan"
+msgstr "Produktionszeitplan (MPS)"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -25218,7 +25218,7 @@ msgstr "Minuten"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Misc"
-msgstr "Diverse"
+msgstr "Sonstige"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -25624,7 +25624,7 @@ msgstr "Fr."
 #: model:res.groups,name:base.group_multi_company
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Multi Companies"
-msgstr "Multi-Company"
+msgstr "Mehrere Unternehmen"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
@@ -25682,7 +25682,7 @@ msgstr "NACHA-Zahlungen"
 #. module: base
 #: model:res.country,vat_label:base.co model:res.country,vat_label:base.gt
 msgid "NIT"
-msgstr "NIT"
+msgstr "Negative Einkommensteuer"
 
 #. module: base
 #: model:res.country,vat_label:base.id
@@ -26325,7 +26325,7 @@ msgstr ""
 "\n"
 "Drücken Sie sich mit der Blogging-Plattform von Odoo für Unternehmen aus. Schreiben Sie\n"
 "Blogbeiträge, interagieren Sie mit Besuchern, übersetzen Sie Inhalte und moderieren Sie\n"
-"Social Streams.\n"
+"Social-Media-Streams.\n"
 "\n"
 "Lassen Sie Ihre Blogbeiträge mit wenigen Klicks effizient in Google referenzieren und in mehrere Sprachen übersetzen,\n"
 "in nur wenigen Klicks.\n"
@@ -26333,10 +26333,10 @@ msgstr ""
 "Schöne Blogbeiträge schreiben\n"
 "--------------------------\n"
 "\n"
-"Drag & Drop praktischer *'Bausteine'* zur Erstellung schöner Blogbeiträge\n"
-"die Bilder, Videos, Call-to-Actions, Zitate, Banner etc. perfekt integrieren.\n"
+"Drag & Drop praktischer *„Bausteine“* zur Erstellung schöner Blogbeiträge,\n"
+"die Bilder, Videos, Handlungsaufforderungen, Zitate, Banner etc. perfekt integrieren.\n"
 "\n"
-"Mit unserem einzigartigen *Inline-Editing* -Ansatz müssen Sie kein Designer sein, um\n"
+"Mit unserem einzigartigen *Inline-Editing*-Ansatz müssen Sie kein Designer sein, um\n"
 "ansprechende, gut aussehende Inhalte zu erstellen. Jeder Blogbeitrag sieht aus, als wäre er\n"
 "von einem professionellen Designer entworfen.\n"
 "\n"
@@ -26344,12 +26344,12 @@ msgstr ""
 "--------------------------------------\n"
 "\n"
 "Lassen Sie Ihre Blogbeiträge mühelos in mehrere Sprachen übersetzen. Unsere\n"
-"On-Demand\"-Funktion ermöglicht Ihnen die Arbeit mit professionellen\n"
-"Übersetzern, die alle Ihre Änderungen automatisch übersetzen. (\\$0,05 pro Wort)\n"
+"„Nach Bedarf\"-Funktion ermöglicht Ihnen die Arbeit mit professionellen\n"
+"Übersetzern, die alle Ihre Änderungen automatisch übersetzen. (\\0,05 $ pro Wort)\n"
 "Die übersetzten Versionen werden anschließend automatisch aktualisiert\n"
 "(nach ca. 32 Stunden).\n"
 "\n"
-"Interagieren Sie mit Ihren Besuchern\n"
+"Mit Ihren Besuchern interagieren\n"
 "-------------------------\n"
 "\n"
 "Die integrierte Livechat-Funktion ermöglicht es Ihnen, in Echtzeit mit Ihren Besuchern zu chatten, um Feedback zu Ihren aktuellen Beiträgen oder Inspiration für neue Post zu erhalten.\n"
@@ -26360,37 +26360,37 @@ msgstr ""
 "Kundenbindung aufbauen\n"
 "---------------------\n"
 "\n"
-"Die *Follow*-Schaltfläche ermöglicht es den Besuchern, Ihre Blog-Posts mit einem Klick per\n"
+"Die *Folgen*-Schaltfläche ermöglicht es den Besuchern, Ihre Blogbeiträge mit einem Klick per\n"
 "per E-Mail zu erhalten, ohne dass sie sich registrieren müssen. Mit Icons für soziale Medien können\n"
 "Besucher Ihre besten Blogbeiträge ganz einfach teilen.\n"
 "\n"
-"Google Analytics Integration\n"
+"Google-Analytics-Integration\n"
 "----------------------------\n"
 "\n"
-"Verschaffen Sie sich einen klaren Überblick über Ihren Sales Funnel. Die Google Analytics-Tracker von Odoo\n"
-"sind standardmäßig so konfiguriert, dass sie alle Arten von Ereignissen im Zusammenhang mit Warenkörben, Call-to-Actions, etc. verfolgen\n"
+"Verschaffen Sie sich einen klaren Überblick über Ihren Verkaufstrichter. Die Google-Analytics-Tracker von Odoo\n"
+"sind standardmäßig so konfiguriert, dass sie alle Arten von Ereignissen im Zusammenhang mit Warenkörben, Handlungsaufforderungen etc. verfolgen\n"
 "\n"
 "Da die Marketing-Tools von Odoo (Massenmailings, Kampagnen usw.) auch mit\n"
 "Google Analytics verknüpft sind, erhalten Sie eine 360°-Sicht auf Ihr Unternehmen.\n"
 "\n"
-" Blog Posts mit SEO-Optimierung\n"
+"Blogbeiträge mit SEO-Optimierung\n"
 "------------------------\n"
 "\n"
 "Die SEO-Tools sind sofort einsatzbereit und müssen nicht konfiguriert werden. Odoo schlägt\n"
 "Schlüsselwörter für Ihre Titel entsprechend den meistgesuchten Begriffen von Google vor, Google\n"
-"Analytics verfolgt die Aktivitäten Ihrer Besucher, Sitemaps werden automatisch erstellt\n"
-"um eine schnelle Indizierung durch Google zu gewärleisten usw.\n"
+"Analytics verfolgt die Aktivitäten Ihrer Besucher, Sitemaps werden automatisch erstellt,\n"
+"um eine schnelle Indizierung durch Google zu gewährleisten usw.\n"
 "\n"
 "Das System erstellt sogar automatisch strukturierte Inhalte, um Ihre\n"
 "Produkte und Veranstaltungen effektiv in Google zu bewerben.\n"
 "\n"
-"Designer-freundliche Themes\n"
+"Designer-freundliche Designmotive\n"
 "------------------------\n"
 "\n"
-"Themes sind großartig und einfach zu gestalten. Sie brauchen nicht zu programmieren, um neue Seiten,\n"
-"Themes oder Bausteine zu erstellen. Wir verwenden eine saubere HTML-Struktur, ein\n"
+"Designmotive sind großartig und einfach zu gestalten. Sie brauchen nicht zu programmieren, um neue Seiten,\n"
+"Designmotive oder Bausteine zu erstellen. Wir verwenden eine saubere HTML-Struktur, ein\n"
 "[bootstrap](http://getbootstrap.com/) CSS und unsere Modularisierung erlaubt es Ihnen, Ihre\n"
-"Themes einfach zu verwalten.\n"
+"Designmotive einfach zu verwalten.\n"
 "\n"
 "Durch den Bausteinansatz bleibt die Website auch dann noch sauber, wenn die Endbenutzer\n"
 "beginnen, neue Inhalte zu erstellen.\n"
@@ -26403,7 +26403,7 @@ msgstr ""
 "So können Sie Ihren Veröffentlichungsprozess nach Ihren Bedürfnissen organisieren.\n"
 "\n"
 "Andere Zugriffsrechte beziehen sich auf Geschäftsobjekte (Produkte, Personen, Ereignisse,\n"
-"usw.) und folgen direkt der Standard-Zugriffsrechteverwaltung von Odoo, so dass Sie\n"
+"usw.) und folgen direkt der Standard-Zugriffsrechteverwaltung von Odoo, sodass Sie\n"
 "nicht zweimal konfigurieren müssen.\n"
 
 #. module: base
@@ -28229,7 +28229,7 @@ msgstr "Oman"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
 msgid "On Delete"
-msgstr "Beim Entfernen"
+msgstr "On Delete"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__multi
@@ -28240,7 +28240,7 @@ msgstr "Für mehrfache Dokumente"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__on_delete
 msgid "On delete property for many2one fields"
-msgstr "Abhängigkeiten many2one Felder"
+msgstr "On-delete-Eigenschaft für many2one-Felder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_picking
@@ -28297,8 +28297,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
-"One2Many-Felder können nicht in die Synchronisierung von „commercial_fields“"
-" oder „address fields“ mit einbezogen werden. "
+"One2Many-Felder können nicht in die Synchronisierung von `commercial_fields`"
+" oder `address fields` mit einbezogen werden. "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
@@ -28915,7 +28915,7 @@ msgstr "Andere OSI-zugelassene Lizenz"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_proprietary
 msgid "Other Proprietary"
-msgstr "Proprietär"
+msgstr "Andere Proprietäre"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
@@ -28985,7 +28985,7 @@ msgstr "Outlook-Unterstützung für Postein-/-ausgangsserver"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
 msgid "Output DPI"
-msgstr "Output DPI"
+msgstr "DPI-Auflösung"
 
 #. module: base
 #. odoo-python
@@ -29798,7 +29798,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__portrait
 msgid "Portrait"
-msgstr "Hochformat"
+msgstr "Portrait"
 
 #. module: base
 #: model:res.country,name:base.pt
@@ -29852,7 +29852,7 @@ msgstr "Präfix"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__prefix
 msgid "Prefix value of the record for the sequence"
-msgstr "Präfixwert des Datensatzes für Sequenz"
+msgstr "Präfixwert des Datensatzes für die Sequenz"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
@@ -30526,7 +30526,7 @@ msgstr "Einkaufsmatrix"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr "Einkaufsaufträge, Quittungen, Lieferantenrechnungen für das Lager"
+msgstr "Einkaufsaufträge, Belege, Lieferantenrechnungen für das Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition_sale
@@ -31123,7 +31123,7 @@ msgstr "Aus dem „Drucken“-Menü entfernen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related to this report"
-msgstr "Entfernen Sie die kontextbezogene Aktion zu diesem Bericht"
+msgstr "Entfernen Sie die kontextuelle Aktion zu diesem Bericht"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -33887,7 +33887,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_test_discuss_full
 msgid "Test of Discuss with all possible overrides installed."
-msgstr "Test von Discuss mit allen möglichen Übersteuerungen installiert."
+msgstr "Test von Dialog mit allen möglichen Überschreibungen installiert."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
@@ -33966,7 +33966,8 @@ msgstr "Die „%s“-Aktion kann nicht als Startaktion gewählt werden."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
-msgstr "Die Aktion \"App Switcher\" kann nicht als Home-Aktion ausgewählt werden."
+msgstr ""
+"Die Aktion „App Switcher“ kann nicht als Startaktion ausgewählt werden."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -34001,10 +34002,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
-"Das Trennzeichenformat sollte [,n] entsprechen mit 0 < n, beginnend bei "
-"Einer-Stelle. -1 beendet die Trennung. Z. B. [3,2,-1] bei 106500 entspricht "
-"1,06,500; [1,2,-1] würde dann 106,50,0 ergeben; [3] wird 106,500 daraus "
-"erstellen. Vorausgesetzt ',' sei jeweils der Tausender-Trenner."
+"Das Format des Trennzeichens sollte [,n] entsprechen, wobei 0 < n :mit der "
+"Einerstelle beginnt. -1 beendet die Trennung. z. B. [3,2,-1] stellt 106500 "
+"als 1,06,500 dar; [1,2,-1] stellt 106,50,0 dar;[3] stellt 106,500 dar. "
+"Jeweils mit „,“ als Tausendertrennzeichen versehen."
 
 #. module: base
 #. odoo-python
@@ -34016,10 +34017,10 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
-"Das Trennzeichenformat sollte [,n] entsprechen mit 0 < n, beginnend bei "
-"Einer-Stelle. -1 beendet die Trennung. Z. B. [3,2,-1] bei 106500 entspricht "
-"1,06,500; [1,2,-1] würde dann 106,50,0 ergeben; [3] wird 106,500 daraus "
-"erstellen. Vorausgesetzt ',' sei jeweils der Tausender-Trenner."
+"Das Format des Trennzeichens sollte [,n] entsprechen, wobei 0 < n :mit der "
+"Einerstelle beginnt. -1 beendet die Trennung. z. B. [3,2,-1] stellt 106500 "
+"als 1,06,500 dar;[1,2,-1] stellt 106,50,0 dar;[3] stellt 106,500 dar. "
+"Jeweils mit dem Tausendertrennzeichen versehen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -34043,8 +34044,8 @@ msgstr "Der URL-Code der Sprache muss eindeutig sein!"
 #: model:ir.model.fields,help:base.field_res_partner_category__active
 msgid "The active field allows you to hide the category without removing it."
 msgstr ""
-"Das \"Aktiv\" Feld erlaubt das Verstecken der Kategorie ohne diese zu "
-"löschen."
+"Das aktive Feld erlaubt das Verstecken der Kategorie, ohne diese zu "
+"entfernen."
 
 #. module: base
 #. odoo-python
@@ -34494,7 +34495,7 @@ msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
 msgstr ""
-"Das Verzeichnis zum Hauptreport (je nach Reportart) oder NULL, wenn der "
+"Der Pfad zur Hauptberichtsdatei (je nach Berichtsart) oder leer, wenn der "
 "Inhalt in einem anderen Feld steht"
 
 #. module: base
@@ -35107,8 +35108,8 @@ msgid ""
 "This module contains tests related to various social features\n"
 "and social-related sub modules. It will test interactions between all those modules."
 msgstr ""
-"Dieses Modul enthält Tests, die sich auf verschiedene soziale Funktionen\n"
-"und sozialbezogene Untermodule beziehen. Es testet die Interaktionen zwischen all diesen Modulen."
+"Dieses Modul enthält Tests, die sich auf verschiedene Social-Media-Funktionen\n"
+"und Social-Media-bezogene Untermodule beziehen. Es testet die Interaktionen zwischen all diesen Modulen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -35477,7 +35478,7 @@ msgstr "Verfolgt Async"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_sync
 msgid "Traces Sync"
-msgstr "Verfolgt Synchronisierung"
+msgstr "Verfolgt Sync"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
@@ -35825,7 +35826,7 @@ msgstr "UTM und Massenmailing bei Verkaufsaufträgen"
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
 msgid "UTM and post on sale orders"
-msgstr "UTM and post on sale orders"
+msgstr "UTM und Beitrag auf Verkaufsaufträgen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
@@ -36597,17 +36598,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_binary
 msgid "Value Binary"
-msgstr "Binärwert"
+msgstr "Wert Binär"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_datetime
 msgid "Value Datetime"
-msgstr "Datums-/Zeit-Wert"
+msgstr "Wert Zeit/Datum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_float
 msgid "Value Float"
-msgstr "Gleitkommazahlwert"
+msgstr "Wert Gleitkommazahl"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_integer
@@ -36623,12 +36624,12 @@ msgstr "Wertzuordnung"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_reference
 msgid "Value Reference"
-msgstr "Referenzwert"
+msgstr "Wert Referenz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_text
 msgid "Value Text"
-msgstr "Textwert"
+msgstr "Wert Text"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
@@ -36725,7 +36726,7 @@ msgstr "Ansicht „%(name)s“ ist privat"
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
-msgstr "Aufbau des Ansichts-Formulars"
+msgstr "Ansichtsarchitektur"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
@@ -36757,7 +36758,7 @@ msgstr "Berichte anzeigen und erstellen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr "Abgeleitete Ansicht"
+msgstr "Vererbungsmodus für Ansicht"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
@@ -36957,12 +36958,12 @@ msgstr "Web Grid Tests: Leistungen und Tests speziell für die Gitteransicht"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
 msgid "Web Icon File"
-msgstr "Web Icon Datei"
+msgstr "Web-Icon-Datei"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon_data
 msgid "Web Icon Image"
-msgstr "Web Icon Grafik"
+msgstr "Web-Icon-Bild"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_http_routing
@@ -37201,8 +37202,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
-"Wenn Teilmengen pro Zeitraum verwendet werden, können Sie die Variablen mit dem Präfix \n"
-"'range_' versehen, um den Beginn der Zeitspann zu verwenden anstatt des aktuellen Datums, z. B. %(range_year)s anstelle von %(year)s."
+"Wenn Teilsequenzen pro Zeitraum verwendet werden, können Sie die Variablen mit dem Präfix \n"
+"„range_“ versehen, um den Beginn der Zeitspanne zu verwenden anstatt des aktuellen Datums, z. B. %(range_year)s anstelle von %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -37217,7 +37218,8 @@ msgstr "Ob der Wert in der Datenbank gespeichert wird."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required
 msgid "Whether this dependency blocks automatic installation of the dependent"
-msgstr "Ob diese Abhängigkeit die automatische Installation der abhängigen"
+msgstr ""
+"Ob diese Abhängigkeit die automatische Installation der abhängigen blockiert"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__translate
@@ -37238,7 +37240,7 @@ msgid ""
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
 "Bei der Zuweisung einer Sequenznummer an einen Datensatz stellt die "
-"Implementierung der \"lückenlosen\" Sequenz sicher, dass jede vorherige "
+"Implementierung der „lückenlosen“ Sequenz sicher, dass jede vorherige "
 "Sequenznummer bereits zugewiesen wurde. Obwohl diese Sequenzimplementierung "
 "keine Sequenznummer bei der Zuweisung überspringt, kann es dennoch zu Lücken"
 " in der Sequenz kommen, wenn Datensätze gelöscht werden. Die lückenlose "
@@ -37350,7 +37352,7 @@ msgstr "Arbeitsblattvorlage für die Planung einer Aktion"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "Schreibrechte"
+msgstr "Schreibzugriff"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -37377,7 +37379,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Write down your key"
-msgstr "Notieren Sie Ihre Schlüssel"
+msgstr "Notieren Sie Ihren Schlüssel"
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -37413,8 +37415,8 @@ msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Sie sind nicht berechtigt „%(document_kind)s“ (%(document_model)s) "
-"Datensätze zu erstellen."
+"Sie sind nicht berechtigt „%(document_kind)s“-Datensätze "
+"(%(document_model)s) zu erstellen."
 
 #. module: base
 #. odoo-python
@@ -37424,8 +37426,8 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Sie dürfen '%(document_kind)s' (%(document_model)s) Datzensätze nicht "
-"löschen."
+"Sie sind nicht berechtigt „%(document_kind)s“-Datensätze "
+"(%(document_model)s) zu löschen."
 
 #. module: base
 #. odoo-python
@@ -37435,8 +37437,8 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Sie dürfen '%(document_kind)s' (%(document_model)s) Datensätze nicht "
-"verändern."
+"Sie sind nicht berechtigt „%(document_kind)s“-Datensätze "
+"(%(document_model)s) zu bearbeiten."
 
 #. module: base
 #. odoo-python
@@ -37467,7 +37469,7 @@ msgid ""
 "link to your file."
 msgstr ""
 "Sie können entweder eine Datei von Ihrem Rechner hochladen oder einen "
-"Internetlink per \"copy/paste\" einfügen."
+"Internetlink per „kopieren/einfügen“ einfügen."
 
 #. module: base
 #. odoo-python
@@ -37669,7 +37671,7 @@ msgstr "Sie können die bevorzugte Sprache des Benutzers nicht löschen."
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr ""
-"Sie können ein Ansprechpartner nicht mit dessen Unternehmen zusammenfassen."
+"Sie können den Kontakt nicht mit einem seiner übergeordneten zusammenführen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -37867,7 +37869,7 @@ msgstr "bei"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
 msgid "binary"
-msgstr "Binär"
+msgstr "binär"
 
 #. module: base
 #. odoo-python
@@ -37899,7 +37901,7 @@ msgstr "Zeichen"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__choose
 msgid "choose"
-msgstr "Bitte wählen Sie ..."
+msgstr "wählen"
 
 #. module: base
 #. odoo-python
@@ -37938,7 +37940,7 @@ msgstr "Dokumentation"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done
 msgid "done"
-msgstr "abgeschlossen"
+msgstr "erledigt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -38096,7 +38098,7 @@ msgstr "E-Learning"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
-msgstr "expenses"
+msgstr "Spesen"
 
 #. module: base
 #. odoo-python
@@ -38124,7 +38126,7 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
-"for record in self:\n"
+"für Datensatz in self:\n"
 "        record['size'] = len(record.name)"
 
 #. module: base
@@ -38139,12 +38141,12 @@ msgstr "verboten für Gruppen %s"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
-msgstr "format() must be given exactly one %char format specifier"
+msgstr "format() muss genau einen %char-Formatbezeichner erhalten"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__get
 msgid "get"
-msgstr "get"
+msgstr "erhalten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -38239,7 +38241,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr "minute"
+msgstr "Minute"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -38280,7 +38282,7 @@ msgstr "o_onboarding_confetti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr "an"
+msgstr "auf"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many
@@ -38290,7 +38292,7 @@ msgstr "one2many"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
-msgstr "payroll"
+msgstr "Personalabrechnung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
