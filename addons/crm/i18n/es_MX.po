@@ -7,8 +7,9 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -379,8 +380,8 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hola <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
-"                            Reciba la bienvenida a <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t>.\n"
-"                            ¡Es un placer conocerle! Ahora que está abordo, descubrirá lo que <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t> tiene para ofrecer. Me llamo <t t-out=\"object.user_id.name or ''\">Marc Demo</t>  le ayudaré a aprovechar Odoo al máximo. ¿Podemos agendar una demostración pronto?<br>\n"
+"                            Le damos la bienvenida a <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t>.\n"
+"                            ¡Es un placer conocerle! Ahora que está con nosotros, descubrirá lo que <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t> tiene para ofrecer. Me llamo <t t-out=\"object.user_id.name or ''\">Marc Demo</t>  le ayudaré a aprovechar Odoo al máximo. ¿Podemos agendar una demostración pronto?<br>\n"
 "                            ¡Siéntase libre de contactarme en cualquier momento!<br><br>\n"
 "                            Saludos,<br>\n"
 "                            <t t-if=\"object.user_id\">\n"
@@ -441,12 +442,11 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
-"Un gran consejo para impulsar sus ventas eficazmente es siempre definir un "
-"siguiente paso en cada oportunidad. Para gestionar actividades en curso, "
-"haga clic en cualquier estado de la barra de progreso para filtrar "
-"oportunidades según el estado de su siguiente actividad. Haga clic en el "
-"área gris de la barra de progreso para ver todas las oportunidades que no "
-"tienen siguiente actividad."
+"Un gran consejo para impulsar sus ventas es siempre definir un siguiente "
+"paso en cada oportunidad. Para gestionar actividades en curso, haga clic en "
+"cualquier estado de la barra de progreso para filtrar oportunidades según el"
+" estado de su siguiente actividad. Haga clic en el área gris de la barra de "
+"progreso para ver todas las oportunidades que no tienen siguiente actividad."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -911,7 +911,7 @@ msgstr "Fecha de cierre"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Los leads cerrados/muertos no pueden convertirse en oportunidades."
+msgstr "Los leads cerrados o nulos no pueden convertirse en oportunidades."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -974,7 +974,8 @@ msgstr "Configure un dominio personalizado"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr "Felicidades, ¡mucha suerte al atrapar peces gordos! :)"
+msgstr ""
+"¡Felicidades! Este tipo de oportunidades no se ven diario, mucha suerte. :)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -1218,12 +1219,12 @@ msgstr "CRM: pronóstico"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr "Crm: mi flujo"
+msgstr "CRM: mi flujo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_currency
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
@@ -1270,7 +1271,7 @@ msgstr "Días"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
 msgid "Days to Assign"
-msgstr "Días a asignar"
+msgstr "Días por asignar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
@@ -1848,8 +1849,8 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "Indica si el número de teléfono de la lista negra es un número fijo. Sirve "
-"para distinguir qué número está en la lista negra             cuando hay un "
-"campo de celular y otro de teléfono fijo en un modelo."
+"para distinguir qué número está en la lista negra cuando hay un campo de "
+"celular y otro de teléfono fijo en un modelo."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2134,8 +2135,8 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"El análisis de leads le permite verificar diversa información referente al "
-"CRM como el tratamiento de retrasos o el número de leads por estado. Puede "
+"El análisis de leads le permite verificar la información referente al CRM "
+"como el tratamiento de retrasos o el número de leads por estado. Puede "
 "ordenar sus leads por diferentes grupos para tener un análisis preciso."
 
 #. module: crm
@@ -2371,7 +2372,7 @@ msgstr "Marketing:"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Media"
+msgstr "Medio"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2624,7 +2625,7 @@ msgstr "¡No se encontró información!"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "¡Todavía no hay datos!"
 
 #. module: crm
 #. odoo-python
@@ -2932,7 +2933,7 @@ msgstr "Ingresos por oportunidades vencidas"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Overdue Opportunity"
-msgstr "Oportunidad vencidas"
+msgstr "Oportunidad vencida"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
@@ -3675,7 +3676,7 @@ msgid ""
 msgstr ""
 "El propietario de los registros creados al recibir correos electrónicos en "
 "este seudónimo. Si el campo no está establecido, el sistema tratará de "
-"encontrar el propietario adecuado basado en la dirección del emisor (De), o "
+"encontrar al propietario adecuado basado en la dirección del emisor (De), o "
 "usará la cuenta de administrador si no se encuentra un usuario para esa "
 "dirección."
 
@@ -4206,18 +4207,18 @@ msgstr "C.P."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr "Por ejemplo, Negociación"
+msgstr "Por ejemplo, negociación"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. Product Pricing"
-msgstr "Por ejemplo, Precios de productos"
+msgstr "Por ejemplo, precios de productos"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "e.g. Too expensive"
-msgstr "Por ejemplo, Muy caro"
+msgstr "Por ejemplo, muy caro"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

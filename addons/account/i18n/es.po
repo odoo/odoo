@@ -26,8 +26,8 @@
 # Sonia Viciana, 2023
 # Gelo, 2023
 # Iran Villalobos López, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Jolien De Paepe, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,13 +83,6 @@ msgstr ""
 "     - Porcentaje del precio impuesto incluido: El monto del impuesto es una división del precio:\n"
 "         Por ejemplo, 180 / (1 - 10%) = 200 (sin precio incluido)\n"
 "         Por ejemplo, 200 * (1-10%) =  180  (precio incluido)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr "La %(lock_type)s fecha de bloqueo se fija en %(lock_date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -7608,7 +7601,7 @@ msgstr "Widget de créditos y débitos de factura pendientes"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Nombre del socio a mostrar en la factura."
+msgstr "Nombre de la empresa a mostrar en la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -14940,6 +14933,11 @@ msgid "Upload"
 msgstr "Subir"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -15287,6 +15285,12 @@ msgstr "Advertencia"
 #, python-format
 msgid "Warning for %s"
 msgstr "Advertencia para %s"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16200,6 +16204,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

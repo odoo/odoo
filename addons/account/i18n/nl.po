@@ -70,13 +70,6 @@ msgstr ""
 "        "
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " De %(lock_type)s blokkeerdatum is ingesteld op %(lock_date)s."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# Afgeletterde inkoopfacturen"
@@ -15005,6 +14998,11 @@ msgid "Upload"
 msgstr "Upload"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr "Upload facturen"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -15355,6 +15353,12 @@ msgstr "Waarschuwing"
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr "Waarschuwing voor kasafrondingsmethode: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16278,6 +16282,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr "Je moet een winstrekening bepalen (naargelang het bedrijf)"
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

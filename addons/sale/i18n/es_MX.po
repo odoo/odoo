@@ -7,8 +7,8 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Kevin Harrings <kha@odoo.com>, 2023
-# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
+# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -590,7 +590,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "<i class=\"fa fa-comment\"/> Comentarios"
+msgstr "<i class=\"fa fa-comment\"/> Retroalimentación"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -831,7 +831,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Fecha del pedido:</strong>"
+msgstr "<strong>Fecha de la orden:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -846,7 +846,7 @@ msgstr "<strong>Vendedor:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr "<strong>Dirección de entrega:</strong>"
+msgstr "<strong>Dirección de envío:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -871,7 +871,7 @@ msgstr "<strong>¡Gracias!</strong><br/>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr "<strong>¡Esta oferta ya venció!</strong>"
+msgstr "<strong>Esta oferta ya expiró.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -896,8 +896,8 @@ msgid ""
 " quantity)."
 msgstr ""
 "Se emite una factura estándar con todas las líneas de orden listas para la "
-"facturación, de acuerdo con su política de facturación (basada en la "
-"cantidad pedida o entregada)."
+"facturación, de acuerdo con su política de facturación (según la cantidad "
+"pedida o entregada)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -906,8 +906,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. La aplicación Inventario debe estar instalada.\n"
-"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación Inventario.\n"
+"Un producto consumible es un producto para el que no gestiona las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: sale
@@ -1203,12 +1203,12 @@ msgstr "Nombre del banco"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr "Basado en el ID del cliente"
+msgstr "Según el ID del cliente"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr "Basado en el documento de referencia"
+msgstr "Según el documento de referencia"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1251,7 +1251,7 @@ msgstr "Puede editar el cuerpo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr "Puede editar producto"
+msgstr "Puede editar el producto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1332,7 +1332,8 @@ msgstr "Seleccione cómo confirmar las cotizaciones"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr "Haga clic aquí para añadir algún producto o servicio a su cotización."
+msgstr ""
+"Haga clic aquí para agregar algún producto o servicio a su cotización."
 
 #. module: sale
 #. odoo-javascript
@@ -1455,9 +1456,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversión entre las unidades de medidas sólo pueden ocurrir si "
-"pertenecen a la misma categoría. La conversión se basará en los ratios "
-"establecidos."
+"La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
+" a la misma categoría. La conversión se basará en las proporciones "
+"establecidas."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
@@ -1659,7 +1660,7 @@ msgstr "Personalice sus cotizaciones y órdenes."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "Conector DHL Express"
+msgstr "Conector de DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2074,7 +2075,7 @@ msgstr "Seguidores"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -2342,8 +2343,8 @@ msgstr "Estado de la factura"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
-"Factura después de la entrega, basada en las cantidades entregadas, no en "
-"las órdenes."
+"Factura después de la entrega, según las cantidades entregadas, no en las "
+"órdenes."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2631,7 +2632,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Establezca manualmente las cantidades en la orden: factura basada en la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
+"Establezca las cantidades en la orden de forma manual: factura basada en la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
 "Hojas de horas en el contrato: factura basada en las horas registradas en la hoja de horas correspondiente.\n"
 "Cree una tarea y haga un seguimiento de las horas: Cree una tarea en la validación de la orden de venta y haga un seguimiento de las horas de trabajo."
 
@@ -2745,7 +2746,7 @@ msgstr "Siguiente evento en el calendario de actividades."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Siguiente plazo de actividad"
+msgstr "Siguiente fecha límite de la actividad"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
@@ -3048,13 +3049,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr "Cantidades pedidas"
+msgstr "Cantidades ordenadas"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: model:ir.ui.menu,name:sale.sale_order_menu
 msgid "Orders"
-msgstr "Pedidos"
+msgstr "Órdenes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
@@ -3097,7 +3098,7 @@ msgstr "Cantidad de embalaje"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Advertencia de crédito del partner"
+msgstr "Advertencia de crédito del contacto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3338,7 +3339,7 @@ msgstr "Cantidad facturada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Cant. pedida"
+msgstr "Cantidad ordenada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -3385,7 +3386,7 @@ msgstr "Cantidad:"
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #, python-format
 msgid "Quotation"
-msgstr "Presupuesto"
+msgstr "Cotización"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3396,7 +3397,7 @@ msgstr "Número de cotización"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "Cotización / Orden"
+msgstr "Cotización/orden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -3488,7 +3489,7 @@ msgstr "Cotizaciones y ventas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3510,8 +3511,7 @@ msgstr "Destinatarios"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
-"Volver a calcular todos los precios basándose en esta lista de precios"
+msgstr "Volver a calcular todos los precios según esta lista de precios"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3917,10 +3917,10 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"advertencia\" se notificará a los usuarios con el "
-"mensaje, si selecciona \"mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
+"Si selecciona la opción \"advertencia\" se enviará una notificación a los "
+"usuarios. En cambio, si selecciona \"mensaje de bloqueo\" se enviará una "
+"excepción con el mensaje y se bloqueará el flujo. Debe escribir el mensaje "
+"en el siguiente campo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3991,7 +3991,8 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr "Se envía automáticamente a los clientes cuando se cancela una orden"
+msgstr ""
+"Se envía de forma automática a los clientes cuando se cancela una orden"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4170,10 +4171,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Estado basado en actividades\n"
+"Estado según las actividades\n"
 "Vencida: ya pasó la fecha límite\n"
 "Hoy: hoy es la fecha de la actividad\n"
-"Planeada: futuras actividades."
+"Planeada: actividades en un plazo a futuro."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
@@ -4240,7 +4241,7 @@ msgstr "Impuestos no incluidos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr "(impuestos incluidos)"
+msgstr "Impuestos incluidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4336,7 +4337,7 @@ msgid ""
 "SO linked to this Analytic Account."
 msgstr ""
 "La orden de venta %s vinculada a la cuenta analítica %s se encuentra "
-"bloqueada. No se puede registrar un gasto en una orden bloqueada. Cree una "
+"bloqueada. No puede registrar un gasto en una orden bloqueada, cree una "
 "nueva orden vinculada a esta cuenta analítica."
 
 #. module: sale
@@ -4400,7 +4401,7 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"La factura se genera automáticamente y está disponible en el portal del cliente cuando el proveedor de pago confirma la transacción.\n"
+"La factura se genera de forma automática y está disponible en el portal del cliente cuando el proveedor de pago confirma la transacción.\n"
 "La factura se marca como pagada y el pago se registra en el diario de pagos definido en la configuración del proveedor de pago.\n"
 "Se aconseja usar esta opción si emite la factura final al realizar la orden y no después de la entrega."
 
@@ -4514,7 +4515,7 @@ msgstr ""
 "\n"
 "Los motivos de este comportamiento pueden ser:\n"
 "- Debe entregar sus productos antes de facturarlos.\n"
-"- Debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\" y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades pedidas\". Para Servicios, debe modificar la política de facturación de servicios a \"Prepagado\"."
+"- Debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\" y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades ordenadas\". Para servicios, debe modificar la política de facturación de servicios a \"Prepagado\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4522,8 +4523,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"Este valor predeterminado se aplica a cualquier producto nuevo creado. Esto "
-"se puede cambiar en el formulario de detalles del producto."
+"Este valor predeterminado se aplica a cualquier producto nuevo creado, se "
+"puede cambiar en el formulario de detalles del producto."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -4640,8 +4641,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
-"Esto actualizará todos los precios unitarios basándose en la lista de "
-"precios actualmente establecida."
+"Esto actualizará todos los precios unitarios según la lista de precios "
+"actualmente establecida."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4967,8 +4968,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
-"No puede eliminar una cotización enviada o una orden de venta confirmada. "
-"Debe cancelarla primero."
+"No puede eliminar una cotización enviada o una orden de venta confirmada, "
+"primero debe cancelarla."
 
 #. module: sale
 #. odoo-python
@@ -5021,8 +5022,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No se puede cambiar el tipo de una línea de orden de venta. En su lugar, "
-"debe eliminar la línea actual y crear una nueva con el tipo adecuado."
+"No puede cambiar el tipo de una línea de orden de venta. En su lugar, debe "
+"eliminar la línea actual y crear una nueva con el tipo adecuado."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

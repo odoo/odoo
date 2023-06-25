@@ -5,10 +5,10 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Fernanda Alvarez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:15+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,8 +115,8 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr ""
-"Agregue una acción contextual en el modelo relacionado para abrir un "
-"compositor de SMS con esta plantilla"
+"Agregue una acción contextual en el modelo relacionado para abrir un editor "
+"de SMS con esta plantilla"
 
 #. module: sms
 #. odoo-javascript
@@ -153,12 +153,12 @@ msgstr "En la lista negra"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "El teléfono de la lista negra es un celular"
+msgstr "El teléfono en la lista negra es un celular"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "El teléfono de la lista negra es un teléfono fijo"
+msgstr "El teléfono en la lista negra es un teléfono"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -221,9 +221,9 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
-"Elija el método de envío por SMS:\n"
+"Seleccione el método de envío por SMS:\n"
 "SMS: SMS masivos\n"
-"Publicar como mensaje: documento de inicio de sesión\n"
+"Publicar como mensaje: registrar en documento\n"
 "Publicar como nota: SMS masivos con archivos"
 
 #. module: sms
@@ -386,7 +386,7 @@ msgstr "Seguidores"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: sms
 #. odoo-python
@@ -789,7 +789,7 @@ msgstr "Poner en la cola"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -825,7 +825,7 @@ msgstr "Destinatarios (Números)"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
-msgstr "Destinatarios (partners)"
+msgstr "Destinatarios (contactos)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
@@ -1113,7 +1113,7 @@ msgstr "Fallos de envío "
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
 msgid "Sending SMS can only be done on a mail.thread or a transient model"
-msgstr "Solo se puede enviar SMS en una mail.thread o un modelo transitorio"
+msgstr "Solo se puede enviar SMS en mail.thread o un modelo transitorio"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -1266,7 +1266,7 @@ msgstr ""
 "Tipo de acción del servidor. Estos son los valores disponibles:\n"
 "- 'Ejecutar código Python': un bloque de código Python que se ejecutará\n"
 "- 'Crear un registro nuevo': crear un registro nuevo con valores nuevos\n"
-"- 'Actualizar registro': Actualizar los valores de un registro\n"
+"- 'Actualizar registro': actualizar los valores de un registro\n"
 "- 'Ejecutar varias acciones': definir una acción que active muchas otras acciones\n"
 "- 'Enviar correo electrónico': publicar un mensaje, una nota o enviar un correo (Conversaciones)\n"
 "- 'Agregar seguidores': agregar seguidores a un registro (Conversaciones)\n"

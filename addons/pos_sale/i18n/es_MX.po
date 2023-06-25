@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -125,19 +126,19 @@ msgstr ""
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Pago inicial (PdV)"
+msgstr "Anticipo (PdV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr "Detalles del pago inicial"
+msgstr "Detalles del anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Down Payment Product"
-msgstr "Producto de pago inicial"
+msgstr "Producto de anticipo"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -167,7 +168,7 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
-"Parece que no configuró un producto de pago inicial en su punto de venta.\n"
+"Parece que no configuró un producto de anticipo en su punto de venta.\n"
 "                   Puede ir a la configuración de su punto de venta para elegir uno."
 
 #. module: pos_sale
@@ -222,7 +223,7 @@ msgstr "No"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr "No hay producto de pago inicial"
+msgstr "No hay producto de anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -278,7 +279,7 @@ msgstr "Órdenes del punto de venta"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sesión de Punto de venta"
+msgstr "Sesión de punto de venta"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -315,7 +316,7 @@ msgstr "Productos no disponibles en el PdV"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Quotation"
-msgstr "Presupuesto"
+msgstr "Cotización"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -359,7 +360,7 @@ msgstr "Ventas"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Reporte del análisis de ventas"
+msgstr "Reporte de análisis de ventas"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -499,13 +500,13 @@ msgstr ""
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr "Este producto se aplicará cuando se haga el pago inicial"
+msgstr "Este producto se aplicará cuando se haga el anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr "Este producto se usará como pago inicial en una orden de venta."
+msgstr "Este producto se usará como anticipo en una orden de venta."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -561,5 +562,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
-"Trató de realizar un cargo de pago inicial por %s pero solo restan %s por "
-"pagar, se aplicará %s a la línea de orden de compra."
+"Trató de realizar un cargo de anticipo por %s pero solo restan %s por pagar,"
+" se aplicará %s a la línea de orden de compra."

@@ -6,8 +6,8 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,9 +142,9 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece de forma manual en la línea.\n"
-"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
+"Según la configuración del producto, se puede calcular de forma automática la cantidad enviada:\n"
+"  - Manual: la cantidad se establece de forma manual en la línea\n"
+"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
@@ -209,7 +209,7 @@ msgstr "Se debe completar al menos una línea."
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid "Based on Timesheets"
-msgstr "Con base en las hojas de horas"
+msgstr "Según las hojas de horas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__allow_billable
@@ -335,17 +335,17 @@ msgstr "Crear factura"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr "Cree una factura desde un proyecto"
+msgstr "Crear factura desde el proyecto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr "Cree una línea de orden de venta desde un proyecto"
+msgstr "Crear una línea de orden de venta desde un proyecto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr "Cree una orden de venta desde un proyecto"
+msgstr "Crear una orden de venta desde un proyecto"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -634,7 +634,7 @@ msgstr "El costo se modifica manualmente"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr "¿El mapa del proyecto está vacío?"
+msgstr "El mapa del proyecto está vacío"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
@@ -690,7 +690,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Establezca manualmente las cantidades en la orden: factura basada en la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
+"Establezca las cantidades en la orden de forma manual: factura basada en la cantidad ingresada de forma manual, sin crear una cuenta analítica.\n"
 "Hojas de horas en el contrato: factura basada en las horas registradas en la hoja de horas correspondiente.\n"
 "Cree una tarea y haga un seguimiento de las horas: Cree una tarea en la validación de la orden de venta y haga un seguimiento de las horas de trabajo."
 
@@ -700,10 +700,13 @@ msgid "Margin"
 msgstr "Margen"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "Materiales"
 
@@ -740,12 +743,12 @@ msgstr "No se encontraron actividades"
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid "No activities found. Let's start a new one!"
-msgstr "Sin actividades disponibles, ¡creemos una nueva!"
+msgstr "No cuenta con actividades disponibles, ¡creemos una!"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -803,7 +806,7 @@ msgid ""
 "distinction."
 msgstr ""
 "Solo se facturarán las hojas de horas que aún no se hayan facturado (y "
-"validadas, si es el caso) de este periodo. Si no se indica el periodo, se "
+"validado, si es el caso) de este periodo. Si no se indica el periodo, se "
 "facturarán todas las hojas de horas que todavía no se hayan facturado (y "
 "validado, en su caso) sin distinción alguna."
 
@@ -817,7 +820,7 @@ msgstr "Operación no permitida"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
 msgid "Order Reference"
-msgstr "Referencia del pedido"
+msgstr "Referencia de la orden"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1185,7 +1188,7 @@ msgstr "Tareas"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Análisis tareas"
+msgstr "Análisis de las tareas"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1198,7 +1201,7 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
-"Se requiere el producto %s para la aplicación Hoja de horas y no se puede "
+"Se requiere el producto %s para la aplicación Hojas de horas y no se puede "
 "archivar ni eliminar."
 
 #. module: sale_timesheet
@@ -1290,7 +1293,7 @@ msgid ""
 "                                Quotation Templates."
 msgstr ""
 "Este es un <strong>ejemplo de una plantilla de cotización</strong>. Debe\n"
-"                                personalizarla según sus necesidades desde la aplicación de <i>Ventas</i>,\n"
+"                                personalizarla según sus necesidades desde la aplicación <i>Ventas</i>,\n"
 "                                con el menú: Configuración /\n"
 "                                Plantillas de cotización."
 
@@ -1518,7 +1521,7 @@ msgid ""
 " customers."
 msgstr ""
 "Lleve el seguimiento de las horas que dedica por proyecto todos los días y "
-"factura este tiempo a sus clientes."
+"facture este tiempo a sus clientes."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1587,9 +1590,9 @@ msgid ""
 msgstr ""
 "Puede <strong>elegir una descripción por producto</strong>. Odoo creará\n"
 "                        una cotización de forma automática con las descripciones\n"
-"                        de todos los productos de la propuesta. La tabla de contenidos\n"
+"                        de todos los productos de la propuesta. El índice \n"
 "                        de la izquierda se genera de forma automática con los estilos\n"
-"                        que haya usado en la descripción (encabezado 1, encabezado 2,...)"
+"                        que haya usado en la descripción (título 1, título 2,...)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1633,7 +1636,7 @@ msgstr "No se pueden modificar las hojas de horas que ya están facturadas."
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "No puede eliminar una hoja de horas que ya se ha facturado."
+msgstr "No puede eliminar una hoja de horas que ya se facturó."
 
 #. module: sale_timesheet
 #. odoo-python

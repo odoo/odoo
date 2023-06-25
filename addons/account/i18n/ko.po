@@ -6,8 +6,8 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2023
 # Linkup <link-up@naver.com>, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,13 +64,6 @@ msgstr ""
 "        예 : 180 / (1 - 10%) = 200 (가격에 미포함)\n"
 "        예 : 200 * (1 - 10%) = 180 (가격에 포함)\n"
 "        "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr "%(lock_type)s 잠금 날짜는 %(lock_date)s 로 설정됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -2355,14 +2348,14 @@ msgstr "금액:"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr "대차대조표에 계상되지 않은 계정은 조정할 수 없습니다"
+msgstr "재무상태표에 계상되지 않은 계정은 조정할 수 없습니다"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not have taxes"
-msgstr "대차대조표에 계상되지 않은 계정에 세금을 매길 수 없습니다"
+msgstr "재무상태표에 계상되지 않은 계정에 세금을 매길 수 없습니다"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
@@ -2383,7 +2376,7 @@ msgstr ""
 "계정은 회사가 각종 차변 및 대변 거래를 등록할 수 있게 해주는\n"
 "                일종의 장부입니다.\n"
 "                회사는 주로 2가지로 연간 계정을 나타내는데\n"
-"                대차대조표와 손익 계산서입니다.\n"
+"                재무상태표와 손익 계산서입니다.\n"
 "                회사의 연간 계정은 법적으로\n"
 "                일정 정보를 공개해야 합니다."
 
@@ -2778,7 +2771,7 @@ msgstr "잔액"
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #, python-format
 msgid "Balance Sheet"
-msgstr "대차대조표"
+msgstr "재무상태표"
 
 #. module: account
 #. odoo-python
@@ -8294,7 +8287,7 @@ msgstr "명세"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
-msgstr "\"대차대조표에 계상되지 않는\" 계정의 내역은 조정할 수 없습니다."
+msgstr "\"재무상태표에 계상되지 않는\" 계정의 내역은 조정할 수 없습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -9371,7 +9364,7 @@ msgstr "기초 잔액"
 #. module: account
 #: model:ir.model,name:account.model_account_financial_year_op
 msgid "Opening Balance of Financial Year"
-msgstr "회계연도 대차대조표 개시"
+msgstr "회계연도 기초 잔액"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
@@ -14487,6 +14480,11 @@ msgid "Upload"
 msgstr "업로드"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -14824,6 +14822,12 @@ msgstr "경고"
 #, python-format
 msgid "Warning for %s"
 msgstr "%s에 대한 경고"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15551,7 +15555,7 @@ msgstr "더 이상 사용되지 않는 계정을 사용할 수 없습니다."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
-msgstr "대차대조표에 기입하지 않는 계정의 내역에 세금을 사용할 수 없습니다"
+msgstr "재무상태표에 기입하지 않는 계정의 내역에 세금을 사용할 수 없습니다"
 
 #. module: account
 #. odoo-python
@@ -15631,6 +15635,12 @@ msgstr "회계 항목에서 환율 차이와 관련한 기장을 자동으로 �
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

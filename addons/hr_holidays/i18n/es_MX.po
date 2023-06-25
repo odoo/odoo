@@ -7,8 +7,9 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +89,7 @@ msgstr "%(employee_name)s - De %(date_from)s a %(date_to)s - %(state)s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(holiday_name)s has been refused."
-msgstr "%(holiday_name)s han sido denegadas"
+msgstr "Se denegaron %(holiday_name)s. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -97,7 +98,7 @@ msgstr "%(holiday_name)s han sido denegadas"
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
-"%(leave_name)s han sido denegadas con la siguiente justificación: <br/> "
+"Se denegaron %(leave_name)s con la siguiente justificación: <br/> "
 "%(reason)s."
 
 #. module: hr_holidays
@@ -1460,11 +1461,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_ids
 msgid ""
-"Choose the Time Off Officer who will be notified to approve allocation or "
-"Time Off request"
+"Choose the Time Off Officers who will be notified to approve allocation or "
+"Time Off Request. If empty, nobody will be notified"
 msgstr ""
-"Elija al encargado de tiempo personal que recibirá notificación para aprobar"
-" asignaciones o solicitudes de tiempo personal"
+"Elija a los encargados de tiempo personal que recibirán notificación para "
+"aprobar asignaciones o solicitudes de tiempo personal. En caso de que nadie "
+"sea asignado, no se enviará una notificación."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2071,7 +2073,7 @@ msgstr "Tiempo personal grupal"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
 msgid "HR Approval"
-msgstr "Autorización por RR. HH."
+msgstr "Autorización de RR. HH."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -2734,7 +2736,7 @@ msgstr "No se necesita validación"
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 #, python-format
 msgid "None"
-msgstr "Ninguna\\v"
+msgstr "Ninguno"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
@@ -2834,7 +2836,7 @@ msgstr "Ausente hasta"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Off Today"
-msgstr "Con permiso hoy"
+msgstr "Ausente hoy"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -3169,8 +3171,8 @@ msgstr "Tiempo de trabajo de recursos"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
-msgid "Responsible Time Off Officer"
-msgstr "Encargado de tiempo personal responsable"
+msgid "Notified Time Off Officer"
+msgstr "Encargado de tiempo personal notificado"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id

@@ -4,12 +4,12 @@
 # 
 # Translators:
 # 陕西_jack, 2023
-# Emily Jia <eji@odoo.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # digitalliuzg8888, 2023
 # Martin Trigaux, 2023
 # 稀饭~~ <wangwhai@qq.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2023\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5332,6 +5332,14 @@ msgstr "从会话%s反转订单%s的 POS 关闭条目%s"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "撤销：%s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "向终端发送撤销请求"
@@ -6377,6 +6385,13 @@ msgstr ""
 "请联系您的经理以接受结算差价。"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique!"
 msgstr ""
@@ -7382,13 +7397,6 @@ msgstr ""
 #, python-format
 msgid "You can go to"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "您只能使用一种现金付款方式。"
 
 #. module: point_of_sale
 #. odoo-python

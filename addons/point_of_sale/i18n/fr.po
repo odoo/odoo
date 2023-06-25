@@ -172,7 +172,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Éditer"
+msgstr "<i class=\"fa fa-pencil\"/> Modifier"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2242,7 +2242,7 @@ msgstr "Retracer les erreurs de téléchargement"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Edit"
-msgstr "Éditer"
+msgstr "Modifier"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5473,6 +5473,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Extourne de : %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Demande d'extourne envoyée au terminal"
@@ -6562,6 +6570,13 @@ msgstr ""
 "L'écart maximum autorisé s'élève à %s.\n"
 "\n"
 "                        Veuillez contacter votre manager pour accepter l'écart à la fermeture."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "Le nom des pièces/billets doit être un nombre."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7680,13 +7695,6 @@ msgstr "Allez à"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Vous ne pouvez qu'avoir un seul mode de paiement en espèces."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid ""
@@ -7696,8 +7704,8 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas créer une commande PdV depuis l'interface du backend ou "
 "annuler la liste de prix ou créer une commande PdV dans un test python avec "
-"l'outil Formulaire ou éditer la vue formulaire dans studio s'il n'y a aucune"
-" commande PdV"
+"l'outil Formulaire ou modifier la vue formulaire dans studio s'il n'y a "
+"aucune commande PdV"
 
 #. module: point_of_sale
 #. odoo-python

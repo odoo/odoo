@@ -68,8 +68,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
 "[('support_partial_capture', '!=', 'full_only')]}\" title=\"Certaines des "
-"transactions que vous voulez saisir ne peuvent être saisies que dans leur "
-"intégralité. Traitez les transactions individuellement pour saisir un "
+"transactions que vous voulez saisir ne peuvent être capturées que dans leur "
+"intégralité. Traitez les transactions individuellement pour capturer un "
 "montant partiel.\"/>"
 
 #. module: payment
@@ -129,9 +129,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>Avertissement !</strong> Une saisie partielle est en attente. Veuillez patienter\n"
+"<strong>Avertissement !</strong> Une capture partielle est en attente. Veuillez patienter\n"
 "                    jusqu'à ce qu'elle soit traitée. Vérifiez la configuration de votre fournisseur de paiement si\n"
-"                    la saisie est toujours en attente après quelques minutes."
+"                    la capture est toujours en attente après quelques minutes."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -139,7 +139,7 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
-"<strong>Avertissement !</strong> Vous ne pouvez pas saisir un montant négatif ou un montant supérieur\n"
+"<strong>Avertissement !</strong> Vous ne pouvez pas capturer un montant négatif ou un montant supérieur\n"
 "                    à"
 
 #. module: payment
@@ -282,7 +282,7 @@ msgstr "Autoriser l'enregistrement des modes de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr "Déjà saisi"
+msgstr "Déjà capturé"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
@@ -293,7 +293,7 @@ msgstr "Déjà annulé"
 #: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr "Services de paiement Amazon"
+msgstr "Amazon Payment Services"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -310,7 +310,7 @@ msgstr "Montant maximum"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr "Montant à saisir"
+msgstr "Montant à capturer"
 
 #. module: payment
 #. odoo-javascript
@@ -411,7 +411,7 @@ msgstr "Rappel effectué"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Hash de rappel"
+msgstr "Hachage de rappel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -454,17 +454,17 @@ msgstr "Opérations annulées"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr "Saisir"
+msgstr "Capturer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Saisir le montant manuellement"
+msgstr "Capturer le montant manuellement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "Saisir la transaction"
+msgstr "Capturer la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -473,7 +473,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Saisissez le montant depuis Odoo quand la livraison est effectuée.\n"
+"Capturez le montant depuis Odoo quand la livraison est effectuée.\n"
 "Utilisez-le si vous voulez débiter les cartes de vos clients uniquement quand\n"
 "vous êtes sûr de pouvoir leur livrer la marchandise."
 
@@ -988,7 +988,7 @@ msgstr "Erreur interne du serveur"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr "Le montant à saisir est-il valide ?"
+msgstr "Le montant à capturer est-il valide ?"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1074,7 +1074,7 @@ msgstr "Manuelle"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "Saisie manuelle prise en charge"
+msgstr "Capture manuelle prise en charge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1084,7 +1084,7 @@ msgstr "Montant maximum"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr "Saisie maximale autorisée"
+msgstr "Capture maximale autorisée"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1289,7 +1289,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr "Assistant de saisie de paiement"
+msgstr "Assistant de capture de paiement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1678,9 +1678,9 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
-"Certaines des transactions que vous voulez saisir ne peuvent être saisies "
-"que dans leur intégralité. Traitez les transactions individuellement pour "
-"saisir un montant partiel."
+"Certaines des transactions que vous voulez capturer ne peuvent être "
+"capturées que dans leur intégralité. Traitez les transactions "
+"individuellement pour capturer un montant partiel."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1715,7 +1715,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr "Prendre en charge la saisie partielle"
+msgstr "Prendre en charge la capture partielle"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1747,7 +1747,8 @@ msgstr "Le jeton d'accès n'est pas valide."
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr "Le montant à saisir doit être positif et ne peut être supérieur à %s."
+msgstr ""
+"Le montant à capturer doit être positif et ne peut être supérieur à %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -2060,7 +2061,7 @@ msgid ""
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
 "Cette transaction a été confirmée à la suite du traitement de ses "
-"transactions de saisie partielle et d'annulation partielle (%(provider)s)."
+"transactions de capture partielle et d'annulation partielle (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2231,7 +2232,8 @@ msgstr ""
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
 msgstr ""
-"Si le fournisseur de chaque transaction prend en charge la saisie partielle."
+"Si le fournisseur de chaque transaction prend en charge la capture "
+"partielle."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done

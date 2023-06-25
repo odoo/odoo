@@ -2648,6 +2648,13 @@ msgstr ""
 "للمنتج. "
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "يجب أن تكون طريقة التقريب إلى قيمة موجبة فقط لا غير. "
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
@@ -3198,6 +3205,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"لا يمكنك حذف القيمة %(value)s لأنها مستخدَمة في المنتجات التالية: \n"
+"%(products)s\n"
+"إذا كانت القيمة مرتبطة بمنتج في الماضي، لن تكون قادراً على حذفها. "
 
 #. module: product
 #. odoo-python
@@ -3227,7 +3237,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+msgstr "لا يمكنك حذف القيمة %s لأنها مستخدَمة في بعض المنتجات. "
 
 #. module: product
 #. odoo-python

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Monika Motyczyńska <m.monia@op.pl>, 2023
-# przemekjaroc, 2023
 # IT WEDOO, 2023
 # Anita Kosobucka, 2023
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2023
@@ -49,6 +48,7 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Lukasz Brzyski, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński, 2023
 # 
 msgid ""
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,13 +104,6 @@ msgstr ""
 "- Procent ceny wliczony w cenę: Kwota podatku jest podziałem ceny:\n"
 "np. 180 / (1 - 10%) = 200 (bez ceny wliczonej)\n"
 "np. 200 * (1 - 10%) = 180 (cena wliczona)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " Typ blokady %(lock_type)s jest ustawiony na dzień  %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -12313,7 +12306,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_stock_valuation
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Wycena zapasów"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14828,6 +14821,11 @@ msgid "Upload"
 msgstr "Prześlij"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -15178,6 +15176,12 @@ msgstr "Ostrzeżenie"
 #, python-format
 msgid "Warning for %s"
 msgstr "Ostrzeżenie do %s"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16086,6 +16090,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
