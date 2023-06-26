@@ -54,7 +54,7 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         for attendance in self:
-            if attendance.check_out and attendance.check_in:
+            if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
                 resource = attendance.employee_id.resource_id
                 tz = timezone(calendar.tz)
