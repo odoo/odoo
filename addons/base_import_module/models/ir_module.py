@@ -224,7 +224,7 @@ class IrModule(models.Model):
                         if self._import_module(mod_name, path, force=force):
                             success.append(mod_name)
                     except Exception as e:
-                        _logger.exception('Error while importing module')
+                        _logger.warning('Error while importing module %r: %s', mod_name, e)
                         errors[mod_name] = exception_to_unicode(e)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
