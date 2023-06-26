@@ -32,10 +32,3 @@ class SurveyUserInput(models.Model):
                 'display_type': 'certification',
                 'survey_id': survey.id
             })
-
-
-class ResumeLine(models.Model):
-    _inherit = 'hr.resume.line'
-
-    display_type = fields.Selection(selection_add=[('certification', 'Certification')])
-    survey_id = fields.Many2one('survey.survey', string='Certification', readonly=True)

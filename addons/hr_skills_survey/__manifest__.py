@@ -17,6 +17,7 @@ This module adds certification to resume for employees.
     'data': [
         'views/hr_templates.xml',
         'data/hr_resume_data.xml',
+        'views/hr_employee_certification_views.xml',
     ],
     'auto_install': True,
     'assets': {
@@ -24,5 +25,8 @@ This module adds certification to resume for employees.
             'hr_skills_survey/static/src/xml/**/*',
         ],
     },
+    'demo': [
+        'data/hr_resume_demo.xml',
+    ],
     'license': 'LGPL-3',
 }
