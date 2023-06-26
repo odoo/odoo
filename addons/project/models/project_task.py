@@ -397,11 +397,6 @@ class Task(models.Model):
         if self.state != '04_waiting_normal':
             self.state = '01_in_progress'
 
-    @api.depends('state')
-    def _compute_is_closed(self):
-        for task in self:
-            task.is_closed = task.state in CLOSED_STATES
-
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
 
