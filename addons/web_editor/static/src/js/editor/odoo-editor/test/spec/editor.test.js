@@ -3423,6 +3423,15 @@ X[]
                 contentAfter: `<p>a&nbsp;[]</p>`,
             });
         });
+        it('should transform the space node preceded by a styled element to &nbsp;', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><strong>ab</strong> [cd]</p>`,
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: `<p><strong>ab</strong>&nbsp;x[]</p>`,
+            });
+        });
     });
 
     describe('insertParagraphBreak', () => {
