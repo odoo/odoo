@@ -19,15 +19,11 @@ import {
 import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 
 import { EventBus, toRaw } from "@odoo/owl";
-import { toDomain, toTree } from "@web/core/domain_tree";
-import { extractPathsFromDomain } from "@web/core/domain_selector/utils";
+import { toDomain, toTree, formatValue, normalizeValue } from "@web/core/domain_tree";
+import { createVirtualOperators, extractPathsFromDomain } from "@web/core/domain_selector/utils";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
-import {
-    DomainValueExpr,
-    getLeafOperatorInfo,
-    getValue,
-} from "@web/core/domain_selector/domain_selector_nodes";
 import { _t } from "@web/core/l10n/translation";
+import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
 
 const { DateTime } = luxon;
 
@@ -174,7 +170,7 @@ function simplifyTree(tree, isRoot = true) {
     for (const child of processedChildren) {
         if (
             child.type === "connector" ||
-            [0, 1].includes(child.path) ||
+            typeof child.path !== "string" ||
             !["=", "in"].includes(child.operator)
         ) {
             children.push(child);
@@ -193,20 +189,17 @@ function simplifyTree(tree, isRoot = true) {
         const value = [];
         for (const child of childrenByPath[path]) {
             if (child.operator === "=") {
-                value.push(child.valueAST);
+                value.push(child.value);
             } else {
-                value.push(...child.valueAST.value);
+                value.push(...child.value);
             }
         }
         children.push({
             type: "condition",
             negate: false,
             operator: "in",
-            path,
-            valueAST: {
-                type: 4,
-                value,
-            },
+            path: path,
+            value: normalizeValue(value),
         });
     }
     if (children.length === 1 && !isRoot) {
@@ -217,19 +210,15 @@ function simplifyTree(tree, isRoot = true) {
 
 /**
  * @param {Tree} tree
- * @param {Object} pathsInfo
+ * @param {Function} getDescription
+ * @param {boolean} [isSubExpression=true]
  * @returns {string}
  */
-export function getDomainTreeDescription(
-    tree,
-    pathFieldDefs,
-    pathDescriptions,
-    isSubExpression = true
-) {
+export function getDomainTreeDescription(tree, getDescription, isSubExpression = true) {
     if (tree.type === "connector") {
         // we assume that the domain tree is normalized (--> there is at least two children)
         const childDescriptions = tree.children.map((c) =>
-            getDomainTreeDescription(c, pathFieldDefs, pathDescriptions)
+            getDomainTreeDescription(c, getDescription)
         );
         const separator = tree.value === "&" ? _t("and") : _t("or");
         let description = childDescriptions.join(` ${separator} `);
@@ -242,46 +231,28 @@ export function getDomainTreeDescription(
         return description;
     }
 
-    const { path, valueAST } = tree;
-    const fieldDef = pathFieldDefs[path];
-    const operatorInfo = getLeafOperatorInfo(tree, fieldDef);
+    const { path, operator, value } = tree;
+    const operatorInfo = getOperatorInfo(operator);
 
-    let description = pathDescriptions[path];
-    if (valueAST.type === 2 /** boolean */) {
-        const value = valueAST.value;
+    let description = getDescription(path);
+    if (typeof value === "boolean") {
         description += ` is`;
-        if (
-            value
-                ? ["is_not", "not_equal"].includes(operatorInfo.key)
-                : ["is", "equal"].includes(operatorInfo.key)
-        ) {
+        if (value ? ["is_not", "!="].includes(operator) : ["is", "="].includes(operator)) {
             description += ` not`;
         }
         description += ` set`;
     } else {
-        const value = getValue(valueAST);
         description += ` ${operatorInfo.label} `;
         const values = Array.isArray(value) ? value : [value];
-        const formatValue = (value) => {
-            if (typeof value === "string") {
-                return value;
-            } else if (value instanceof DomainValueExpr) {
-                return value.expr;
-            } else if (Array.isArray(value)) {
-                return `[${value.map((v) => formatValue(v)).join(", ")}]`;
-            } else {
-                return value;
-            }
-        };
         let join;
         let addParenthesis;
-        switch (operatorInfo.key) {
+        switch (operator) {
             case "between":
                 join = _t("and");
                 addParenthesis = false;
                 break;
             case "in":
-            case "not_in":
+            case "not in":
                 join = ",";
                 addParenthesis = true;
                 break;
@@ -289,7 +260,7 @@ export function getDomainTreeDescription(
                 join = _t("or");
                 addParenthesis = values.length > 1;
         }
-        const jointedValues = values.map((val) => formatValue(val)).join(` ${join} `);
+        const jointedValues = values.map((val) => String(val)).join(` ${join} `);
         description += addParenthesis ? `( ${jointedValues} )` : jointedValues;
     }
     return description;
@@ -308,15 +279,18 @@ export function useGetDomainTreeDescription(fieldService) {
         for (const path of paths) {
             promises.push(
                 loadPathDescription(resModel, path).then(({ displayNames }) => {
-                    pathDescriptions[path] = displayNames.join(" 🠒 ");
+                    pathDescriptions[formatValue(path)] = displayNames.join(" 🠒 ");
                 }),
                 loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                    pathFieldDefs[path] = fieldDef;
+                    pathFieldDefs[formatValue(path)] = fieldDef;
                 })
             );
         }
         await Promise.all(promises);
-        return getDomainTreeDescription(tree, pathFieldDefs, pathDescriptions, false);
+        const getFieldDef = (path) => pathFieldDefs[formatValue(path)];
+        const getDescription = (path) => pathDescriptions[formatValue(path)];
+        const treeWithVirtualOperators = createVirtualOperators(tree, getFieldDef);
+        return getDomainTreeDescription(treeWithVirtualOperators, getDescription, false);
     };
 }
 
