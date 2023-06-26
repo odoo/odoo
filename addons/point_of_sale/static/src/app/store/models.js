@@ -138,7 +138,7 @@ export class Product extends PosModel {
     }
     async getAddProductOptions(code) {
         let price_extra = 0.0;
-        let draftPackLotLines, weight, description, packLotLinesToEdit;
+        let draftPackLotLines, weight, description, packLotLinesToEdit, attribute_value_ids;
         let quantity = 1;
         let comboLines = [];
 
@@ -161,6 +161,7 @@ export class Product extends PosModel {
 
             if (confirmed) {
                 description = payload.selected_attributes.join(", ");
+                attribute_value_ids = payload.attribute_value_ids;
                 price_extra += payload.price_extra;
                 quantity = payload.quantity;
             } else {
@@ -262,6 +263,7 @@ export class Product extends PosModel {
             description,
             price_extra,
             comboLines,
+            attribute_value_ids,
         };
     }
     isPricelistItemUsable(item, date) {
@@ -425,6 +427,7 @@ export class Orderline extends PosModel {
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.set_description(json.description);
+        this.attribute_value_ids = json.attribute_value_ids || [];
         this.set_price_extra(json.price_extra);
         this.set_full_product_name(json.full_product_name);
         this.id = json.server_id || json.id || orderline_id++;
@@ -784,6 +787,7 @@ export class Orderline extends PosModel {
             id: this.id,
             pack_lot_ids: pack_lot_ids,
             description: this.description,
+            attribute_value_ids: this.attribute_value_ids,
             full_product_name: this.get_full_product_name(),
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
@@ -2155,6 +2159,7 @@ export class Order extends PosModel {
 
         if (options.description !== undefined) {
             orderline.description += options.description;
+            orderline.attribute_value_ids = options.attribute_value_ids;
         }
 
         if (options.extras !== undefined) {
