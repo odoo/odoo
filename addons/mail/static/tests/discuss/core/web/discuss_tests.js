@@ -144,6 +144,24 @@ QUnit.test("can create a group chat conversation", async (assert) => {
     assert.containsNone($, ".o-mail-Message");
 });
 
+QUnit.test("should create DM chat when adding self and another user", async (assert) => {
+    const pyEnv = await startServer();
+    const partner_id = pyEnv["res.partner"].create([{ name: "Mario", im_status: "online" }]);
+    pyEnv["res.users"].create({ partner_id });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsNone($, ".o-mail-DiscussCategoryItem");
+    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await insertText(".o-discuss-ChannelSelector input", "Mi"); // Mitchell Admin
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await insertText(".o-discuss-ChannelSelector input", "Mario");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
+        key: "Enter",
+    });
+    assert.strictEqual($(".o-mail-DiscussCategoryItem:contains(Mario)").text(), "Mario");
+});
+
 QUnit.test("chat search should display no result when no matches found", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
