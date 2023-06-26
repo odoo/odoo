@@ -64,7 +64,6 @@ class configmanager:
             'csv_internal_sep': ',',
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
-            'root_path': None,
             'websocket_keep_alive_timeout': 3600,
             'websocket_rate_limit_burst': 10,
             'websocket_rate_limit_delay': 0.2,
@@ -72,7 +71,7 @@ class configmanager:
 
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
-            'publisher_warranty_url', 'load_language', 'root_path',
+            'publisher_warranty_url', 'load_language',
             'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface',
         ])
 
@@ -540,13 +539,12 @@ class configmanager:
         die(',' in (self.options.get('db_name') or '') and (opt.init or opt.update),
             "Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
 
-        self.options['root_path'] = self._normalize(os.path.join(os.path.dirname(__file__), '..'))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
-            base_addons = os.path.join(self.options['root_path'], 'addons')
+            base_addons = os.path.join(self.root_path, 'addons')
             if os.path.exists(base_addons):
                 default_addons.append(base_addons)
-            main_addons = os.path.abspath(os.path.join(self.options['root_path'], '../addons'))
+            main_addons = os.path.abspath(os.path.join(self.root_path, '../addons'))
             if os.path.exists(main_addons):
                 default_addons.append(main_addons)
             self.options['addons_path'] = ','.join(default_addons)
@@ -685,6 +683,8 @@ class configmanager:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
+                if name == 'root_path':
+                    continue
                 if value=='True' or value=='true':
                     value = True
                 if value=='False' or value=='false':
@@ -743,6 +743,10 @@ class configmanager:
 
     def __getitem__(self, key):
         return self.options[key]
+
+    @property
+    def root_path(self):
+        return self._normalize(os.path.join(os.path.dirname(__file__), '..'))
 
     @property
     def addons_data_dir(self):

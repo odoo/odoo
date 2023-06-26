@@ -466,7 +466,7 @@ def exp_list_lang():
 
 def exp_list_countries():
     list_countries = []
-    root = ET.parse(os.path.join(odoo.tools.config['root_path'], 'addons/base/data/res_country_data.xml')).getroot()
+    root = ET.parse(os.path.join(odoo.tools.config.root_path, 'addons/base/data/res_country_data.xml')).getroot()
     for country in root.find('data').findall('record[@model="res.country"]'):
         name = country.find('field[@name="name"]').text
         code = country.find('field[@name="code"]').text
