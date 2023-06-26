@@ -18,7 +18,7 @@
         ],
     },
     'external_dependencies': {
-        'python': ['pycrypto', 'paytmchecksum'],
+        'python': ['pycryptodomex', 'paytmchecksum'],
     },
     'license': 'LGPL-3',
 }
