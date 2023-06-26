@@ -8,8 +8,8 @@ from odoo.tools.config import configmanager, _get_default_datadir
 
 
 IS_POSIX = 'workers' in odoo.tools.config.options
-ROOT_PATH = odoo.tools.config.options['root_path'].removesuffix('/odoo')
 EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
+PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 
 
 class TestConfigManager(TransactionCase):
@@ -38,7 +38,6 @@ class TestConfigManager(TransactionCase):
             'csv_internal_sep': ',',
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
-            'root_path': f'{ROOT_PATH}/odoo',
             'websocket_rate_limit_burst': 10,
             'websocket_rate_limit_delay': 0.2,
             'websocket_keep_alive_timeout': 3600,
@@ -52,7 +51,7 @@ class TestConfigManager(TransactionCase):
             'demo': {},
             'import_partial': '',
             'pidfile': '',
-            'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
+            'addons_path': f'{PROJECT_PATH}/odoo/addons,{PROJECT_PATH}/addons',
             'upgrade_path': '',
             'server_wide_modules': 'base,web',
             'data_dir': _get_default_datadir(),
@@ -156,7 +155,6 @@ class TestConfigManager(TransactionCase):
             'csv_internal_sep': '@',
             'publisher_warranty_url': 'http://example.com',  # blacklist for save, read from the config file
             'reportgz': True,
-            'root_path': f'{ROOT_PATH}/odoo',  # blacklist for save, ignored from the config file
             'websocket_rate_limit_burst': '1',
             'websocket_rate_limit_delay': '2',
             'websocket_keep_alive_timeout': '600',
@@ -280,7 +278,7 @@ class TestConfigManager(TransactionCase):
                   file_open('base/tests/config/save_posix.conf', env=self.env) as save_file):
                 config_content = config_file.read().rstrip()
                 save_content = save_file.read().format(
-                    root_path=ROOT_PATH,
+                    project_path=PROJECT_PATH,
                     homedir=self.config._normalize('~'),
                     empty_dict=r'{}',
                 )
@@ -343,7 +341,7 @@ class TestConfigManager(TransactionCase):
             'without_demo': False,
 
             # options that are not taken from the file (also in 14.0)
-            'addons_path': f'{ROOT_PATH}/odoo/addons,{ROOT_PATH}/addons',
+            'addons_path': f'{PROJECT_PATH}/odoo/addons,{PROJECT_PATH}/addons',
             'config': None,
             'data_dir': _get_default_datadir(),
             'dev_mode': [],
@@ -353,7 +351,6 @@ class TestConfigManager(TransactionCase):
             'save': None,
             'shell_interface': None,
             'stop_after_init': False,
-            'root_path': f'{ROOT_PATH}/odoo',
             'translate_in': '',
             'translate_out': '',
 

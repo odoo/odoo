@@ -656,7 +656,7 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
 
 def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
-    schema = os.path.join(config['root_path'], 'import_xml.rng')
+    schema = os.path.join(config.root_path, 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))
     try:
         relaxng.assert_(doc)
