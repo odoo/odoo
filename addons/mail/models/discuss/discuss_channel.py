@@ -1107,6 +1107,7 @@ class Channel(models.Model):
             :returns: channel_info of the created channel
             :rtype: dict
         """
+        partners_to = set(partners_to)
         channel = self.create({
             'channel_member_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
             'channel_type': 'group',
