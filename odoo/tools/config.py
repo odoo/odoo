@@ -88,7 +88,7 @@ class configmanager:
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
 
-        self.misc = {}
+        self.misc = {}  # deprecated since 17.0
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
@@ -646,6 +646,7 @@ class configmanager:
             for sec in p.sections():
                 if sec == 'options':
                     continue
+                self._warn("""Since 17.0, defining "misc" sections in the configuration file is deprecated, please use ir.config_parameter or your own configuration file instead""", DeprecationWarning, stacklevel=2)
                 self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
                     if value=='True' or value=='true':
@@ -707,6 +708,7 @@ class configmanager:
         return self.options.pop(key, default)
 
     def get_misc(self, sect, key, default=None):
+        self._warn("Since 17.0, config.get_misc() is deprecated, please use ir.config_parameter or your own configuration file instead", DeprecationWarning, stacklevel=2)
         return self.misc.get(sect,{}).get(key, default)
 
     def __setitem__(self, key, value):
