@@ -842,7 +842,7 @@
                                           attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>
                                     <field name="invoice_payment_term_id"
                                            context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}"
-                                           placeholder="Terms"
+                                           placeholder="Payment Terms"
                                            options="{'no_quick_create':True}"/>
                                 </div>
 
