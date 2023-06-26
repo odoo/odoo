@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from markupsafe import escape
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 from odoo.tools.misc import frozendict
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    expense_sheet_id = fields.One2many('hr.expense.sheet', 'account_move_id')
+    expense_sheet_id = fields.Many2one('hr.expense.sheet', ondelete='set null', copy=False)
 
     def action_open_expense_report(self):
         self.ensure_one()
@@ -23,16 +22,6 @@ class AccountMove(models.Model):
             'res_model': 'hr.expense.sheet',
             'res_id': self.expense_sheet_id.id
         }
-
-    # Behave exactly like a receipt for everything except the display
-    # This enables the synchronisation of payment terms, and sets the taxes and accounts based on the product
-    def is_purchase_document(self, include_receipts=False):
-        return bool(include_receipts and self.sudo().expense_sheet_id) or super().is_purchase_document(include_receipts)
-
-    def is_entry(self):
-        if self.expense_sheet_id:
-            return False
-        return super().is_entry()
 
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
     def _check_journal_move_type(self):
@@ -67,7 +56,13 @@ class AccountMove(models.Model):
                 }
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        if self.expense_sheet_id:
-            self.expense_sheet_id = False
-            self.ref = False # else, when restarting the expense flow we get duplicate issue on vendor.bill
+        own_expense_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
+        own_expense_moves.write({'expense_sheet_id': False, 'ref': False})
+        # else, when restarting the expense flow we get duplicate issue on vendor.bill
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def unlink(self):
+        # EXTENDS account
+        if self.expense_sheet_id and self.expense_sheet_id.account_move_ids - self:  # If not all the payments are to be deleted
+            raise UserError(_("You cannot delete only some entries linked to an expense report. All entries must be deleted at the same time."))
+        return super().unlink()

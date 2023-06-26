@@ -621,6 +621,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="product_ids" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="employee_id" widget="many2one_avatar_user"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
@@ -662,10 +663,11 @@
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                 <field name="company_id" invisible="1"/>
-                <field name="account_move_id" invisible="1"/>
+                <field name="account_move_ids" invisible="1"/>
                 <field name="payment_state" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
                 <header>
                     <button name="action_submit_sheet"
                             string="Submit to Manager"
@@ -693,7 +695,11 @@
                             data-hotkey="w"
                             class="oe_highlight o_expense_sheet_pay"
                             context="{'dont_redirect_to_payments': True}"
-                            attrs="{'invisible': ['|', ('payment_state', 'in', ('paid', 'in_payment')), ('state', 'not in', ('post', 'done'))]}"
+                            attrs="{'invisible': [
+                                '|', ('payment_mode', '=', 'company_account'),
+                                     '|', ('state', 'not in', ('post', 'done')),
+                                          ('payment_state', 'in', ('paid', 'in_payment')),
+                            ]}"
                             groups="account.group_account_invoice"/>
                     <button name="action_refuse_expense_sheets"
                             string="Refuse"
@@ -720,13 +726,14 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_account_move"
+                        <button name="action_open_account_moves"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
                             type="object"
-                            attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('account_move_id', '=', False)]}"
+                            attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('nb_account_move', '=', 0)]}"
                             groups="account.group_account_invoice">
                             <div class="o_stat_info">
+                                <field name="nb_account_move" class="o_stat_value"/>
                                 <span class="o_stat_text">Journal Entry</span>
                             </div>
                         </button>
@@ -773,7 +780,7 @@
                                     widget="many2many"
                                     mode="tree,kanban"
                                     domain="[
-                                        ('state', '=', 'reported'),
+                                        ('sheet_id', '=', False),
                                         ('employee_id', '=', employee_id),
                                         ('company_id', '=', company_id),
                                         ('payment_mode', '=?', payment_mode),

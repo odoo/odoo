@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import escape
+
 from odoo import models, _
 from odoo.exceptions import UserError
+
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
@@ -27,7 +28,7 @@ class AccountPayment(models.Model):
             # Context is not enough, as we want to be able to delete
             # and update those entries later on.
             return
-        return super()._synchronize_from_moves(changed_fields)
+        super()._synchronize_from_moves(changed_fields)
 
     def _synchronize_to_moves(self, changed_fields):
         # EXTENDS account
@@ -41,3 +42,9 @@ class AccountPayment(models.Model):
         if self.move_id.expense_sheet_id:
             return escape(_("Payment created for: %s")) % self.move_id.expense_sheet_id._get_html_link()
         return super()._creation_message()
+
+    def unlink(self):
+        # EXTENDS account
+        if self.expense_sheet_id and self.expense_sheet_id.account_move_ids.payment_ids - self:  # If not all the payments are to be deleted
+            raise UserError(_("You cannot delete only some payments linked to an expense report. All payments must be deleted at the same time."))
+        return super().unlink()
