@@ -447,11 +447,13 @@
         t-on-keydown="onKeydown"
         t-on-mousewheel.stop=""
         t-on-input="onInput"
+        t-on-mousedown="onMousedown"
         t-on-click="onClick"
         t-on-keyup="onKeyup"
         t-on-paste.stop=""
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
+        t-on-dblclick="onDblClick"
       />
 
       <div
@@ -879,25 +881,32 @@
   </t>
 
   <t t-name="o-spreadsheet-FontSizeEditor" owl="1">
-    <div class="o-dropdown o-font-size-editor" t-ref="FontSizeEditor">
-      <input
-        type="number"
-        min="1"
-        max="400"
-        class="o-font-size bg-transparent border-0 ps-1"
-        t-on-keydown="onInputKeydown"
-        t-on-click.stop=""
-        t-on-focus.stop="onInputFocused"
-        t-att-value="currentFontSize"
-        t-on-change="setSizeFromInput"
-        t-ref="inputFontSize"
-      />
-      <div title="Font Size" t-on-click="() => this.toggleFontList()">
-        <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+    <div class="o-dropdown" t-ref="FontSizeEditor">
+      <div
+        class=" o-font-size-editor d-flex align-items-center"
+        t-att-class="props.class"
+        title="Font Size"
+        t-on-click="this.toggleFontList">
+        <input
+          type="number"
+          min="1"
+          max="400"
+          class="o-font-size bg-transparent border-0"
+          t-on-keydown="onInputKeydown"
+          t-on-click.stop=""
+          t-on-focus.stop="onInputFocused"
+          t-att-value="currentFontSize"
+          t-on-change="setSizeFromInput"
+          t-ref="inputFontSize"
+        />
+        <span>
+          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+        </span>
       </div>
       <div
         class="o-dropdown-content o-text-options"
         t-if="dropdown.isOpen"
+        t-on-click.stop=""
         t-att-style="props.dropdownStyle">
         <t t-foreach="fontSizes" t-as="fontSize" t-key="fontSize">
           <div
@@ -2377,7 +2386,7 @@
         <div class="o-section-title">Title</div>
         <input
           type="text"
-          t-att-value="env._t(props.definition.title)"
+          t-model="state.title"
           t-on-change="updateTitle"
           class="o-input o-optional"
           placeholder="New Chart"
@@ -2448,7 +2457,7 @@
         <div class="o-section-title">Title</div>
         <input
           type="text"
-          t-att-value="env._t(props.definition.title)"
+          t-model="state.title"
           t-on-change="updateTitle"
           class="o-input o-optional"
           placeholder="New Chart"
@@ -2642,7 +2651,7 @@
         <div class="o-section-title">Title</div>
         <input
           type="text"
-          t-att-value="env._t(props.definition.title)"
+          t-model="state.title"
           t-on-change="updateTitle"
           class="o-input o-optional"
           placeholder="New Chart"
@@ -2758,7 +2767,7 @@
         <div class="o-section-title">Title</div>
         <input
           type="text"
-          t-att-value="props.definition.title"
+          t-model="state.title"
           t-on-change="updateTitle"
           class="o-input o-optional"
           placeholder="New Chart"
@@ -2908,7 +2917,7 @@
         <div class="o-section-title">Title</div>
         <input
           type="text"
-          t-att-value="env._t(props.definition.title)"
+          t-model="state.title"
           t-on-change="updateTitle"
           class="o-input o-optional"
           placeholder="New Chart"
@@ -3748,9 +3757,11 @@
             />
 
             <div class="o-divider"/>
-
-            <FontSizeEditor onToggle="() => this.onClick()" dropdownStyle="this.dropdownStyle"/>
-
+            <FontSizeEditor
+              class="'o-hoverable-button'"
+              onToggle.bind="this.onClick"
+              dropdownStyle="this.dropdownStyle"
+            />
             <div class="o-divider"/>
 
             <ActionButton action="FORMAT.formatBold" class="'o-hoverable-button'"/>
@@ -3871,7 +3882,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.4';
-  __info__.date = '2023-06-12T14:15:15.398Z';
-  __info__.hash = '251a52e';
+  __info__.version = '16.4.0-alpha.5';
+  __info__.date = '2023-06-26T14:47:35.461Z';
+  __info__.hash = '3b0b6f1';
 -->
