@@ -627,7 +627,7 @@ class IrQWeb(models.AbstractModel):
 
             try:
                 compiled = compile(code, f"<{ref}>", 'exec')
-                globals_dict = self._prepare_globals()
+                globals_dict = self.__prepare_globals()
                 globals_dict['__builtins__'] = globals_dict # So that unknown/unsafe builtins are never added.
                 unsafe_eval(compiled, globals_dict)
                 return globals_dict['generate_functions'](), def_name
@@ -895,7 +895,7 @@ class IrQWeb(models.AbstractModel):
             context['is_t_cache_disabled'] = True
         return self.with_context(**context)
 
-    def _prepare_globals(self):
+    def __prepare_globals(self):
         """ Prepare the global context that will sent to eval the qweb
         generated code.
         """
