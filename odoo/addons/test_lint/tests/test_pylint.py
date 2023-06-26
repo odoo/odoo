@@ -60,10 +60,10 @@ class TestPyLint(TransactionCase):
         if tools.parse_version(getattr(pylint, '__version__', '0.0.1')) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)
 
-        paths = [tools.config['root_path']]
+        paths = [tools.config.root_path]
         for module in get_modules():
             module_path = get_module_path(module)
-            if not module_path.startswith(join(tools.config['root_path'], 'addons')):
+            if not module_path.startswith(join(tools.config.root_path, 'addons')):
                 paths.append(module_path)
 
         options = [
