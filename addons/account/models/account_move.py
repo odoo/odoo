@@ -1428,31 +1428,55 @@ class AccountMove(models.Model):
                            move.company_id.account_use_credit_limit
             if show_warning:
                 move.partner_credit_warning = self._build_credit_warning_message(
-                    move, move.partner_credit, move.tax_totals['amount_total'] > 0.0)
+                    move,
+                    current_amount=move.tax_totals['amount_total'],
+                    exclude_current=True,
+                )
 
     @api.depends('partner_id')
     def _compute_partner_credit(self):
         for move in self:
             move.partner_credit = move.partner_id.commercial_partner_id.credit
 
-    def _build_credit_warning_message(self, record, updated_credit, include):
+    def _build_credit_warning_message(self, record, current_amount=0.0, exclude_current=False):
         """ Build the warning message that will be displayed in a yellow banner on top of the current record
             if the partner exceeds a credit limit (set on the company or the partner itself).
             :param record:                  The record where the warning will appear (Invoice, Sales Order...).
-            :param updated_credit (float):  The partner's updated credit limit including the current record.
-            :param include (bool):          Whether the current record's amount is included in the warning message.
+            :param current_amount (float):  The partner's outstanding credit amount from the current document.
+            :param exclude_current (bool):  Whether to exclude `current_amount` from the credit to invoice.
             :return (str):                  The warning message to be showed.
         """
         partner_id = record.partner_id.commercial_partner_id
-        if not partner_id.credit_limit or updated_credit <= partner_id.credit_limit:
+        credit_to_invoice = max(partner_id.credit_to_invoice - (current_amount if exclude_current else 0), 0)
+        total_credit = partner_id.credit + credit_to_invoice + current_amount
+        if not partner_id.credit_limit or total_credit <= partner_id.credit_limit:
             return ''
-        msg = _('%s has reached its Credit Limit of: %s\nTotal amount due',
-                partner_id.name,
-                formatLang(self.env, partner_id.credit_limit, currency_obj=record.company_id.currency_id))
-        if include:
-            msg += _(' (including this document)')
-        msg += ': %s' % formatLang(self.env, updated_credit, currency_obj=record.company_id.currency_id)
-        return msg
+        msg = _(
+            '%(partner_name)s has reached its credit limit of: %(credit_limit)s',
+            partner_name=partner_id.name,
+            credit_limit=formatLang(self.env, partner_id.credit_limit, currency_obj=record.company_id.currency_id)
+        )
+        total_credit_formatted = formatLang(self.env, total_credit, currency_obj=record.company_id.currency_id)
+        if credit_to_invoice > 0 and current_amount > 0:
+            return msg + '\n' + _(
+                'Total amount due (including sales orders and this document): %(total_credit)s',
+                total_credit=total_credit_formatted
+            )
+        elif credit_to_invoice > 0:
+            return msg + '\n' + _(
+                'Total amount due (including sales orders): %(total_credit)s',
+                total_credit=total_credit_formatted
+            )
+        elif current_amount > 0:
+            return msg + '\n' + _(
+                'Total amount due (including this document): %(total_credit)s',
+                total_credit=total_credit_formatted
+            )
+        else:
+            return msg + '\n' + _(
+                'Total amount due: %(total_credit)s',
+                total_credit=total_credit_formatted
+            )
 
     @api.depends('journal_id.type', 'company_id')
     def _compute_quick_edit_mode(self):
