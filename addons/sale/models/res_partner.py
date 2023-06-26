@@ -55,13 +55,14 @@ class ResPartner(models.Model):
         action["domain"] = [("partner_id", "in", all_child.ids)]
         return action
 
-    def _credit_debit_get(self):
-        super()._credit_debit_get()
+    def _compute_credit_to_invoice(self):
+        # EXTENDS 'account'
+        super()._compute_credit_to_invoice()
         domain = [('partner_id', 'in', self.ids), ('state', 'in', ['sale', 'done'])]
         group = self.env['sale.order'].read_group(domain, ['amount_to_invoice'], ['partner_id'])
         for res in group:
             partner = self.browse(res['partner_id'][0])
-            partner.credit += res['amount_to_invoice']
+            partner.credit_to_invoice += res['amount_to_invoice']
 
     def unlink(self):
         # Unlink draft/cancelled SO so that the partner can be removed from database

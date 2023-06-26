@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.2\n"
+"Project-Id-Version: Odoo Server saas~16.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:07+0000\n"
-"PO-Revision-Date: 2023-03-23 09:07+0000\n"
+"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"PO-Revision-Date: 2023-07-04 14:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr ""
 
 #. module: account
@@ -154,15 +161,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"%s has reached its Credit Limit of : %s\n"
-"Total amount due "
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
@@ -203,13 +201,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "(included)."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "(including this document) "
 msgstr ""
 
 #. module: account
@@ -13761,6 +13752,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"Total amount due (including sales orders and this document): "
+"%(total_credit)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Total amount due (including sales orders): %(total_credit)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Total amount due (including this document): %(total_credit)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Total amount due: %(total_credit)s"
 msgstr ""
 
 #. module: account
