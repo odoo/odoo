@@ -18,6 +18,8 @@ from passlib.context import CryptContext
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'])
 
+_dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
+
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
 
@@ -359,6 +361,31 @@ class configmanager(object):
         # generate default config
         self._parse_config()
 
+    _log_entries = []   # helpers for log() and warn(), accumulate messages
+    _warn_entries = []  # until logging is configured and the entries flushed
+
+    @classmethod
+    def _log(cls, loglevel, message, *args, **kwargs):
+        # is replaced by logger.log once logging is ready
+        cls._log_entries.append((loglevel, message, args, kwargs))
+
+    @classmethod
+    def _warn(cls, message, *args, **kwargs):
+        # is replaced by warnings.warn once logging is ready
+        cls._warn_entries.append((message, args, kwargs))
+
+    @classmethod
+    def _flush_log_and_warn_entries(cls):
+        for loglevel, message, args, kwargs in cls._log_entries:
+            _dangerous_logger.log(loglevel, message, *args, **kwargs)
+        del cls._log_entries
+        cls._log = _dangerous_logger.log
+
+        for message, args, kwargs in cls._warn_entries:
+            warnings.warn(message, *args, **kwargs)
+        del cls._warn_entries
+        cls._warn = warnings.warn
+
     def parse_config(self, args=None):
         """ Parse the configuration file (if any) and the command-line
         arguments.
@@ -376,7 +403,7 @@ class configmanager(object):
         """
         opt = self._parse_config(args)
         odoo.netsvc.init_logger()
-        self._warn_deprecated_options()
+        self._flush_log_and_warn_entries()
         odoo.modules.module.initialize_sys_path()
         return opt
 
@@ -538,6 +565,13 @@ class configmanager(object):
 
         self.options['test_enable'] = bool(self.options['test_tags'])
 
+        if self.options['longpolling_port']:
+            self._warn(
+                "The longpolling-port is a deprecated alias to "
+                "the gevent-port option, please use the latter.",
+                DeprecationWarning)
+            self.options['gevent_port'] = self.options.pop('longpolling_port')
+
         if opt.save:
             self.save()
 
@@ -551,14 +585,6 @@ class configmanager(object):
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
         return opt
-
-    def _warn_deprecated_options(self):
-        if self.options['longpolling_port']:
-            warnings.warn(
-                "The longpolling-port is a deprecated alias to "
-                "the gevent-port option, please use the latter.",
-                DeprecationWarning)
-            self.options['gevent_port'] = self.options.pop('longpolling_port')
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
