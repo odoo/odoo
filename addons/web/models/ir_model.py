@@ -44,5 +44,11 @@ class IrModel(models.Model):
         Return the list of models the current user has access to, with their
         corresponding display name.
         """
-        accessible_models = [model for model in self.pool.keys() if self._check_model_access(model)]
+        accessible_models = [
+            model for model in self.pool.keys()
+            if model in self.env and
+            not self.env[model]._abstract and
+            not self.env[model]._transient and
+            self._check_model_access(model)
+        ]
         return self._display_name_for(accessible_models)
