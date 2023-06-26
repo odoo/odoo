@@ -738,9 +738,6 @@ class configmanager:
     def get(self, key, default=None):
         return self.options.get(key, default)
 
-    def pop(self, key, default=None):
-        return self.options.pop(key, default)
-
     def __setitem__(self, key, value):
         self.options[key] = value
         if key in self.options and isinstance(self.options[key], str) and \
