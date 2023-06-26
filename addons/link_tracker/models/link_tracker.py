@@ -11,8 +11,7 @@ from werkzeug import urls
 from odoo import tools, models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-
-URL_MAX_SIZE = 10 * 1024 * 1024
+from odoo.addons.mail.tools import link_preview
 
 
 class LinkTracker(models.Model):
@@ -112,22 +111,10 @@ class LinkTracker(models.Model):
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
-        try:
-            head = requests.head(url, allow_redirects=True, timeout=5)
-            if (
-                    int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
-                    or
-                    'text/html' not in head.headers.get('Content-Type', 'text/html')
-            ):
-                return url
-            # HTML parser can work with a part of page, so ask server to limit downloading to 50 KB
-            page = requests.get(url, timeout=5, headers={"range": "bytes=0-50000"})
-            p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
-            title = p.find('.//title').text
-        except:
-            title = url
-
-        return title
+        preview = link_preview.get_link_preview_from_url(url)
+        if preview and preview.get('og_title'):
+            return preview['og_title']
+        return url
 
     @api.constrains('url', 'campaign_id', 'medium_id', 'source_id')
     def _check_unicity(self):
