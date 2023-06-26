@@ -613,7 +613,7 @@ class IrQWeb(models.AbstractModel):
         try:
             # noinspection PyBroadException
             compiled = compile(code, f'<{def_name}>', 'exec')
-            globals_dict = self._prepare_globals()
+            globals_dict = self.__prepare_globals()
             globals_dict['__builtins__'] = globals_dict # So that unknown/unsafe builtins are never added.
             unsafe_eval(compiled, globals_dict)
             compiled_fn = globals_dict[def_name]
@@ -745,7 +745,7 @@ class IrQWeb(models.AbstractModel):
             values['request'] = request
         return values
 
-    def _prepare_globals(self):
+    def __prepare_globals(self):
         """ Prepare the global context that will sent to eval the qweb
         generated code.
         """
