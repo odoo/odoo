@@ -160,8 +160,8 @@ class TestConfigManager(TransactionCase):
             'websocket_keep_alive_timeout': '600',
 
             # common
-            'config': '/foo/bar/config',  # blacklist for save, read from the config file
-            'save': True,  # blacklist for save, read from the config file
+            'config': None,
+            'save': None,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
             'without_demo': True,
