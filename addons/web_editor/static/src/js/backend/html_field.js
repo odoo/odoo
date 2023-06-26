@@ -325,6 +325,7 @@ export class HtmlField extends Component {
     async startWysiwyg(wysiwyg) {
         this.wysiwyg = wysiwyg;
         await this.wysiwyg.startEdition();
+        wysiwyg.$editable[0].classList.add("odoo-editor-qweb");
 
         if (this.props.codeview) {
             const $codeviewButtonToolbar = $(`
