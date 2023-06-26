@@ -868,6 +868,7 @@ class expression(object):
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
                 return [FALSE_LEAF]
+            left_model = left_model.with_context(active_test=False)
             if left_model._parent_store:
                 domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
@@ -896,6 +897,7 @@ class expression(object):
                 (when available), or as an expanded [(left,in,parent_ids)] """
             if not ids:
                 return [FALSE_LEAF]
+            left_model = left_model.with_context(active_test=False)
             if left_model._parent_store:
                 parent_ids = [
                     int(label)

@@ -265,10 +265,10 @@ class TestHttpStatic(TestHttpStaticCommon):
         )
 
     def test_static16_public_access_rights(self):
-        public_user = self.env.ref('base.public_user')
+        default_user = self.env.ref('base.default_user')
 
         with self.subTest('model access rights'):
-            res = self.url_open(f'/web/content/res.users/{public_user.id}/image_128')
+            res = self.url_open(f'/web/content/res.users/{default_user.id}/image_128')
             self.assertEqual(res.status_code, 404)
 
         with self.subTest('attachment + field access rights'):
