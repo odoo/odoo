@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
@@ -129,18 +129,18 @@ export function parseAccountingDate(dateRange) {
 }
 
 const ODOO_FIN_ARGS = () => [
-    arg("account_codes (string)", _t("The prefix of the accounts.")),
+    arg("account_codes (string)", _lt("The prefix of the accounts.")),
     arg(
         "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        _lt(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
-    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
-    arg("include_unposted (boolean, default=FALSE)", _t("Set to TRUE to include unposted entries.")),
+    arg("offset (number, default=0)", _lt("Year offset applied to date_range.")),
+    arg("company_id (number, optional)", _lt("The company to target (Advanced).")),
+    arg("include_unposted (boolean, default=FALSE)", _lt("Set to TRUE to include unposted entries.")),
 ];
 
 functionRegistry.add("ODOO.CREDIT", {
-    description: _t("Get the total credit for the specified account(s) and period."),
+    description: _lt("Get the total credit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -174,7 +174,7 @@ functionRegistry.add("ODOO.CREDIT", {
 });
 
 functionRegistry.add("ODOO.DEBIT", {
-    description: _t("Get the total debit for the specified account(s) and period."),
+    description: _lt("Get the total debit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -208,7 +208,7 @@ functionRegistry.add("ODOO.DEBIT", {
 });
 
 functionRegistry.add("ODOO.BALANCE", {
-    description: _t("Get the total balance for the specified account(s) and period."),
+    description: _lt("Get the total balance for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -251,10 +251,10 @@ functionRegistry.add("ODOO.BALANCE", {
 });
 
 functionRegistry.add("ODOO.FISCALYEAR.START", {
-    description: _t("Returns the starting date of the fiscal year encompassing the provided date."),
+    description: _lt("Returns the starting date of the fiscal year encompassing the provided date."),
     args: [
-        arg("date (date)", _t("Reference date.")),
-        arg("company_id (number, optional)", _t("The company.")),
+        arg("date (date)", _lt("Reference date.")),
+        arg("company_id (number, optional)", _lt("The company.")),
     ],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
@@ -268,10 +268,10 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
 });
 
 functionRegistry.add("ODOO.FISCALYEAR.END", {
-    description: _t("Returns the ending date of the fiscal year encompassing the provided date."),
+    description: _lt("Returns the ending date of the fiscal year encompassing the provided date."),
     args: [
-        arg("date (date)", _t("Reference date.")),
-        arg("company_id (number, optional)", _t("The company.")),
+        arg("date (date)", _lt("Reference date.")),
+        arg("company_id (number, optional)", _lt("The company.")),
     ],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
@@ -285,8 +285,8 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
 });
 
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
-    description: _t("Returns the account ids of a given group."),
-    args: [arg("type (string)", _t("Account type."))],
+    description: _lt("Returns the account ids of a given group."),
+    args: [arg("type (string)", _lt("Account type."))],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
     compute: function (accountType) {
