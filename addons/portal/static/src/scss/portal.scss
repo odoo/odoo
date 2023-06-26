@@ -351,6 +351,9 @@ img, .media_iframe_video, .o_image {
 
     address {
         span[itemprop="name"] {
+            @include text-truncate;
+            display: block;
+            max-width: 14rem;
             margin-bottom: 0.3em;
         }
 
@@ -373,6 +376,10 @@ img, .media_iframe_video, .o_image {
                 }
             }
         }
+    }
+
+    .o_portal_my_details span[itemprop="name"] {
+        max-width: 16rem;
     }
 
     .o_my_sidebar div[itemprop="address"] > div {
