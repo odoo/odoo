@@ -21,14 +21,16 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
+
 class _OdooOption(optparse.Option):
     config = None  # must be overriden
+
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
         self.cli_loadable = attrs.pop('cli_loadable', True)
         self.file_loadable = attrs.pop('file_loadable', True)
         self.file_exportable = attrs.pop('file_exportable', self.file_loadable)
-        super(_OdooOption, self).__init__(*opts, **attrs)
+        super().__init__(*opts, **attrs)
         if self.file_exportable and not self.file_loadable:
             e = (f"it makes no sense that the option {self} can be exported "
                   "to the config file but not loaded from the config file")
@@ -36,16 +38,21 @@ class _OdooOption(optparse.Option):
         if self.dest and self.dest not in self.config.options_index:
             self.config.options_index[self.dest] = self
 
+
 class _FileOnlyOption(_OdooOption):
     def __init__(self, **attrs):
         super().__init__(**attrs, cli_loadable=False, help=optparse.SUPPRESS_HELP)
+
     def _check_opt_strings(self, opts):
         if opts:
             raise TypeError("No option can be supplied")
+
     def _set_opt_strings(self, opts):
         return
 
 DEFAULT_LOG_HANDLER = ':INFO'
+
+
 def _get_default_datadir():
     home = os.path.expanduser('~')
     if os.path.isdir(home):
@@ -57,6 +64,7 @@ def _get_default_datadir():
             func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
     return func(appname=release.product_name, appauthor=release.author)
+
 
 def _deduplicate_loggers(loggers):
     """ Avoid saving multiple logging levels for the same loggers to a save
@@ -70,6 +78,7 @@ def _deduplicate_loggers(loggers):
         '{}:{}'.format(logger, level)
         for logger, level in dict(it.split(':') for it in loggers).items()
     )
+
 
 class configmanager:
     def __init__(self):
@@ -486,17 +495,11 @@ class configmanager:
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
             self.options['server_wide_modules'] = 'base,web'
 
-        # if defined do not take the configfile value even if the defined value is None
-        keys = ['gevent_port', 'http_interface', 'http_port', 'http_enable', 'x_sendfile',
-                'db_name', 'db_user', 'db_password', 'db_host', 'db_replica_host', 'db_sslmode',
-                'db_port', 'db_replica_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
-                'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
-                'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path',
-                'syslog', 'without_demo', 'screencasts', 'screenshots',
-                'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
-                'shell_interface',
+        keys = [
+            option_name for option_name, option
+            in self.options_index.items()
+            if option.cli_loadable and option.file_loadable
+            if option.action != 'append'
         ]
 
         for arg in keys:
@@ -511,37 +514,6 @@ class configmanager:
         if isinstance(self.options['log_handler'], str):
             self.options['log_handler'] = self.options['log_handler'].split(',')
         self.options['log_handler'].extend(opt.log_handler)
-
-        # if defined but None take the configfile value
-        keys = [
-            'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'without_demo', 'http_enable', 'syslog',
-            'list_db', 'proxy_mode',
-            'test_file', 'test_tags',
-            'osv_memory_count_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
-            'data_dir',
-            'server_wide_modules',
-        ]
-
-        posix_keys = [
-            'workers',
-            'limit_memory_hard', 'limit_memory_hard_gevent', 'limit_memory_soft', 'limit_memory_soft_gevent',
-            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
-        ]
-
-        if os.name == 'posix':
-            keys += posix_keys
-        else:
-            self.options.update(dict.fromkeys(posix_keys, None))
-
-        # Copy the command-line arguments...
-        for arg in keys:
-            if getattr(opt, arg) is not None:
-                self.options[arg] = getattr(opt, arg)
-            # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
-                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         die(bool(self.options['syslog']) and bool(self.options['logfile']),
             "the syslog and logfile options are exclusive")
@@ -588,9 +560,6 @@ class configmanager:
 
         dev_split = [s.strip() for s in opt.dev_mode.split(',')] if opt.dev_mode else []
         self.options['dev_mode'] = dev_split + (['reload', 'qweb', 'xml'] if 'all' in dev_split else [])
-
-        if opt.pg_path:
-            self.options['pg_path'] = opt.pg_path
 
         self.options['test_enable'] = bool(self.options['test_tags'])
 
