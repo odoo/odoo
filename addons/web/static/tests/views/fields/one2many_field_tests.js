@@ -13337,4 +13337,145 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("forget command for nested x2manys in form, not in list", async function (assert) {
+        assert.expect(8);
+
+        serverData.models.partner.records[0].p = [1, 2];
+        serverData.models.partner.records[1].turtles = [2];
+        serverData.models.partner.onchanges = {
+            int_field: function (obj) {
+                obj.p = [
+                    [
+                        1,
+                        1,
+                        {
+                            foo: "new foo value (1)",
+                            turtles: [
+                                [
+                                    1,
+                                    2,
+                                    {
+                                        turtle_foo: "new turtle foo value (1)",
+                                        partner_ids: [[3, 4]],
+                                    },
+                                ],
+                            ],
+                        },
+                    ],
+                    [
+                        1,
+                        2,
+                        {
+                            foo: "new foo value (2)",
+                            turtles: [
+                                [
+                                    1,
+                                    2,
+                                    {
+                                        turtle_foo: "new turtle foo value (2)",
+                                        partner_ids: [[3, 2]],
+                                    },
+                                ],
+                            ],
+                        },
+                    ],
+                ];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="int_field"/>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                            <form>
+                                <field name="turtles">
+                                    <tree editable="bottom">
+                                        <field name="turtle_foo"/>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                    </tree>
+                                </field>
+                            </form>
+                        </field>
+                    </group>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                        int_field: 16,
+                        p: [
+                            [
+                                1,
+                                1,
+                                {
+                                    foo: "new foo value (1)",
+                                    turtles: [
+                                        [
+                                            1,
+                                            2,
+                                            {
+                                                turtle_foo: "new turtle foo value (1)",
+                                                partner_ids: [[3, 4]],
+                                            },
+                                        ],
+                                    ],
+                                },
+                            ],
+                            [
+                                1,
+                                2,
+                                {
+                                    foo: "new foo value (2)",
+                                    turtles: [
+                                        [
+                                            1,
+                                            2,
+                                            {
+                                                turtle_foo: "new turtle foo value (2)",
+                                                partner_ids: [[3, 2]],
+                                            },
+                                        ],
+                                    ],
+                                },
+                            ],
+                        ],
+                    });
+                }
+            },
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector("[name=int_field] input").value, "10");
+
+        // trigger the onchange
+        await editInput(target, "[name=int_field] input", "16");
+        assert.strictEqual(target.querySelector("[name=foo]").innerText, "new foo value (1)");
+        assert.strictEqual(target.querySelectorAll("[name=foo]")[1].innerText, "new foo value (2)");
+
+        // open the second x2many record
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector("td"));
+        assert.containsOnce(target.querySelector(".o_dialog"), ".o_data_row");
+        assert.strictEqual(
+            target.querySelector(".o_dialog .o_data_cell[name=turtle_foo]").innerText,
+            "new turtle foo value (2)"
+        );
+        assert.containsOnce(
+            target.querySelector(".o_dialog .o_data_cell[name=partner_ids]"),
+            ".o_tag"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_dialog .o_data_cell[name=partner_ids] .o_tag").innerText,
+            "aaa"
+        );
+
+        await clickSave(target.querySelector(".o_dialog"));
+        await clickSave(target);
+    });
 });
