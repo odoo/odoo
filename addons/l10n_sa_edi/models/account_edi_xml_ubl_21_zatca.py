@@ -108,7 +108,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
     def _get_invoice_payment_means_vals_list(self, invoice):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         res = super()._get_invoice_payment_means_vals_list(invoice)
-        res[0]['payment_means_code'] = PAYMENT_MEANS_CODE[self._l10n_sa_get_payment_means_code(invoice)]
+        res[0]['payment_means_code'] = PAYMENT_MEANS_CODE.get(self._l10n_sa_get_payment_means_code(invoice), PAYMENT_MEANS_CODE['unknown'])
         res[0]['payment_means_code_attrs'] = {'listID': 'UN/ECE 4461'}
         res[0]['adjustment_reason'] = invoice.ref
         return res
