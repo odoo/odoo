@@ -25,9 +25,19 @@ class _OdooOption(optparse.Option):
     config = None  # must be overriden
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
+        self.cli_loadable = attrs.pop('cli_loadable', True)
         super(_OdooOption, self).__init__(*opts, **attrs)
         if self.dest and self.dest not in self.config.options_index:
             self.config.options_index[self.dest] = self
+
+class _FileOnlyOption(_OdooOption):
+    def __init__(self, **attrs):
+        super().__init__(**attrs, cli_loadable=False, help=optparse.SUPPRESS_HELP)
+    def _check_opt_strings(self, opts):
+        if opts:
+            raise TypeError("No option can be supplied")
+    def _set_opt_strings(self, opts):
+        return
 
 DEFAULT_LOG_HANDLER = ':INFO'
 def _get_default_datadir():
@@ -57,17 +67,7 @@ def _deduplicate_loggers(loggers):
 
 class configmanager:
     def __init__(self):
-        # Options not exposed on the command line. Command line options will be added
-        # from optparse's parser.
-        self.options = {
-            'admin_passwd': 'admin',
-            'csv_internal_sep': ',',
-            'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
-            'reportgz': False,
-            'websocket_keep_alive_timeout': 3600,
-            'websocket_rate_limit_burst': 10,
-            'websocket_rate_limit_delay': 0.2,
-        }
+        self.options = {}
 
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
@@ -89,9 +89,18 @@ class configmanager:
 
     def _build_cli(self):
         OdooOption = type('OdooOption', (_OdooOption,), {'config': self})
+        FileOnlyOption = type('FileOnlyOption', (_FileOnlyOption, OdooOption), {})
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version, option_class=OdooOption)
+
+        parser.add_option(FileOnlyOption(dest='admin_passwd', my_default='admin'))
+        parser.add_option(FileOnlyOption(dest='csv_internal_sep', my_default=','))
+        parser.add_option(FileOnlyOption(dest='publisher_warranty_url', my_default='http://services.odoo.com/publisher-warranty/'))
+        parser.add_option(FileOnlyOption(dest='reportgz', action='store_true', my_default=False))
+        parser.add_option(FileOnlyOption(dest='websocket_keep_alive_timeout', type='int', my_default=3600))
+        parser.add_option(FileOnlyOption(dest='websocket_rate_limit_burst', type='int', my_default=10))
+        parser.add_option(FileOnlyOption(dest='websocket_rate_limit_delay', type='float', my_default=0.2))
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
@@ -426,6 +435,11 @@ class configmanager:
 
         # Ensures no illegitimate argument is silently discarded (avoids insidious "hyphen to dash" problem)
         die(args, "unrecognized parameters: '%s'" % " ".join(args))
+
+        # Even if they are not exposed on the CLI, cli un-loadable variables still show up in the opt, remove them
+        for option_name in list(vars(opt).keys()):
+            if not self.options_index[option_name].cli_loadable:
+                delattr(opt, option_name)  # hence list(...) above
 
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
