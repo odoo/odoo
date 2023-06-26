@@ -19,6 +19,7 @@ const {
     onWillStart,
     useSubEnv,
     onWillUpdateProps,
+    onWillUnmount,
     status,
 } = owl;
 
@@ -41,6 +42,12 @@ export class MassMailingHtmlField extends HtmlField {
                 this._hideIrrelevantTemplates();
             }
         });
+
+        onWillUnmount(() => {
+            if (this.wysiwyg && this.wysiwyg.$editable) {
+                this.commitChanges({ urgent: true });
+            }
+        });
     }
 
     get wysiwygOptions() {
@@ -51,10 +58,7 @@ export class MassMailingHtmlField extends HtmlField {
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
             toolbarTemplate: 'mass_mailing.web_editor_toolbar',
-            onWysiwygBlur: () => {
-                this.commitChanges();
-                this.wysiwyg.odooEditor.toolbarHide();
-            },
+            onWysiwygBlur: () => {},
             ...this.props.wysiwygOptions,
         };
     }
@@ -82,9 +86,9 @@ export class MassMailingHtmlField extends HtmlField {
         popover.style.left = leftPosition + 'px';
     }
 
-    async commitChanges() {
+    async commitChanges({ urgent } = {}) {
         if (this.props.readonly || !this.isRendered) {
-            return super.commitChanges();
+            return super.commitChanges({ urgent });
         }
         if (!this._isDirty()) {
             // In case there is still a pending change while committing the
@@ -104,7 +108,7 @@ export class MassMailingHtmlField extends HtmlField {
             await this.wysiwyg.cleanForSave();
             await this.wysiwyg.saveModifiedImages(this.$content);
 
-            await super.commitChanges();
+            await super.commitChanges({ urgent });
 
             const $editorEnable = $editable.closest('.editor_enable');
             $editorEnable.removeClass('editor_enable');
