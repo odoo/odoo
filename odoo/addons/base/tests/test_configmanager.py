@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import odoo
 from odoo.tests import TransactionCase
@@ -8,14 +9,23 @@ from odoo.tools.config import configmanager, _get_default_datadir
 
 IS_POSIX = 'workers' in odoo.tools.config.options
 ROOT_PATH = odoo.tools.config.options['root_path'].removesuffix('/odoo')
+EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
 
 
 class TestConfigManager(TransactionCase):
     maxDiff = None
 
-    def test_01_default_config(self):
-        config = configmanager(fname=file_path('base/tests/config/empty.conf'))
+    def setUp(self):
+        super().setUp()
+        patcher = patch.dict('os.environ', {'ODOO_RC': EMPTY_CONFIG_PATH})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.config = configmanager()
 
+    def test_00_setUp(self):
+        self.assertEqual(self.config.rcfile, EMPTY_CONFIG_PATH)
+
+    def test_01_default_config(self):
         default_values = {
             # options not exposed on the command line
             'admin_passwd': 'admin',
@@ -131,8 +141,7 @@ class TestConfigManager(TransactionCase):
                 }
             )
 
-        config._parse_config()
-        self.assertEqual(config.options, default_values, "Options don't match")
+        self.assertEqual(self.config.options, default_values, "Options don't match")
 
     def test_02_default_config_file(self):
         values = {
@@ -251,26 +260,22 @@ class TestConfigManager(TransactionCase):
             )
 
         config_path = file_path('base/tests/config/non_default.conf')
-        config = configmanager(fname=config_path)
-        self.assertEqual(config.rcfile, config_path, "Config file path doesn't match")
-
-        config._parse_config()
-        self.assertEqual(config.options, values, "Options don't match")
-        self.assertEqual(config.rcfile, config_path)
-        self.assertNotEqual(config.rcfile, config['config'])  # funny
+        self.config._parse_config(['-c', config_path])
+        self.assertEqual(self.config.options, values, "Options don't match")
+        self.assertEqual(self.config.rcfile, config_path)
+        self.assertNotEqual(self.config.rcfile, self.config['config'])  # funny
 
     @unittest.skipIf(not IS_POSIX, 'this test is POSIX only')
     def test_03_save_default_options(self):
         with file_open_temporary_directory(self.env) as temp_dir:
             config_path = f'{temp_dir}/save.conf'
-            config = configmanager(fname=config_path)
-            config._parse_config(['--config', config_path, '--save'])
+            self.config._parse_config(['--config', config_path, '--save'])
             with (file_open(config_path, env=self.env) as config_file,
                   file_open('base/tests/config/save_posix.conf', env=self.env) as save_file):
                 config_content = config_file.read().rstrip()
                 save_content = save_file.read().format(
                     root_path=ROOT_PATH,
-                    homedir=config._normalize('~'),
+                    homedir=self.config._normalize('~'),
                     empty_dict=r'{}',
                 )
                 self.assertEqual(config_content.splitlines(), save_content.splitlines())
@@ -278,8 +283,6 @@ class TestConfigManager(TransactionCase):
     def test_04_odoo16_config_file(self):
         # test that loading the Odoo 16.0 generated default config works
         # with a modern version
-        config = configmanager(fname=file_path('base/tests/config/16.0.conf'))
-
         assert_options = {
             # options taken from the configuration file
             'admin_passwd': 'admin',
@@ -378,10 +381,11 @@ class TestConfigManager(TransactionCase):
                 }
             )
 
-        config._parse_config()
+        config_path = file_path('base/tests/config/16.0.conf')
+        self.config._parse_config(['--config', config_path])
         with self.assertNoLogs('py.warnings'):
-            config._warn_deprecated_options()
-        self.assertEqual(config.options, assert_options, "Options don't match")
+            self.config._warn_deprecated_options()
+        self.assertEqual(self.config.options, assert_options, "Options don't match")
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""

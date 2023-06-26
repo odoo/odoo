@@ -64,14 +64,8 @@ def _deduplicate_loggers(loggers):
         for logger, level in dict(it.split(':') for it in loggers).items()
     )
 
-class configmanager(object):
-    def __init__(self, fname=None):
-        """Constructor.
-
-        :param fname: a shortcut allowing to instantiate :class:`configmanager`
-                      from Python code without resorting to environment
-                      variable
-        """
+class configmanager:
+    def __init__(self):
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
@@ -95,7 +89,6 @@ class configmanager(object):
         self.casts = {}
 
         self.misc = {}
-        self.config_file = fname
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
@@ -477,7 +470,7 @@ class configmanager(object):
                 rcfilepath = old_rcfilepath
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config or os.environ.get('ODOO_RC') or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            opt.config or os.environ.get('ODOO_RC') or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
