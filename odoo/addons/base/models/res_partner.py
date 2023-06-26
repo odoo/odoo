@@ -196,7 +196,7 @@ class Partner(models.Model):
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
@@ -889,16 +889,6 @@ class Partner(models.Model):
             create_values['email'] = email
         partner = self.create(create_values)
         return partner.id, partner.display_name
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
-        always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
-        # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(domain) == 1 and len(domain[0]) == 3 and domain[0][:2] == ('parent_id', 'in') \
-                and domain[0][2] != [False]:
-            self = self.with_context(active_test=False)
-        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.model
     @api.returns('self', lambda value: value.id)
