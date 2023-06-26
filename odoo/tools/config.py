@@ -21,22 +21,13 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
-class MyOption (optparse.Option, object):
-    """ optparse Option with two additional attributes.
-
-    The list of command line options (getopt.Option) is used to create the
-    list of the configuration file options. When reading the file, and then
-    reading the command line arguments, we don't want optparse.parse results
-    to override the configuration file values. But if we provide default
-    values to optparse, optparse will return them and we can't know if they
-    were really provided by the user or not. A solution is to not use
-    optparse's default attribute, but use a custom one (that will be copied
-    to create the default values of the configuration file).
-
-    """
+class _OdooOption(optparse.Option):
+    config = None  # must be overriden
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
-        super(MyOption, self).__init__(*opts, **attrs)
+        super(_OdooOption, self).__init__(*opts, **attrs)
+        if self.dest and self.dest not in self.config.options_index:
+            self.config.options_index[self.dest] = self
 
 DEFAULT_LOG_HANDLER = ':INFO'
 def _get_default_datadir():
@@ -86,15 +77,22 @@ class configmanager:
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
-        self.casts = {}
+        self.options_index = {}
+        self.casts = self.options_index  # deprecated
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
+        self.parser = self._build_cli()
+        self._load_default_options()
+        self._parse_config()
+
+    def _build_cli(self):
+        OdooOption = type('OdooOption', (_OdooOption,), {'config': self})
 
         version = "%s %s" % (release.description, release.version)
-        self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
+        parser = optparse.OptionParser(version=version, option_class=OdooOption)
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
@@ -352,15 +350,13 @@ class configmanager:
                              type="int")
             parser.add_option_group(group)
 
-        # Copy all optparse options (i.e. MyOption) into self.options.
-        for group in parser.option_groups:
-            for option in group.option_list:
-                if option.dest not in self.options:
-                    self.options[option.dest] = option.my_default
-                    self.casts[option.dest] = option
+        return parser
 
-        # generate default config
-        self._parse_config()
+    def _load_default_options(self):
+        self.options.update({
+            option_name: option.my_default
+            for option_name, option in self.options_index.items()
+        })
 
     _log_entries = []   # helpers for log() and warn(), accumulate messages
     _warn_entries = []  # until logging is configured and the entries flushed
