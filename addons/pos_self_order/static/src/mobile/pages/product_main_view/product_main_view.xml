@@ -29,17 +29,20 @@
                         t-key="attribute.id">
                         <div class="mb-3">
                             <div class="attribute_name py-1 fs-5 fw-bold" t-esc="attribute.name"/>
+                            <!-- FIXME: here we are changing the attribute ids to strings because of a bug in t-model
+                            Once t-model gets fixed, remove the following line -->
+                            <t t-set="attribute" t-value="getAttributeWithStringIds(attribute)"/>
                             <t t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'">
                                 <t t-foreach="attribute.values" t-as="value" t-key="value.id">
                                     <div class="d-flex align-items-center justify-content-between py-2">
                                         <input
                                             type="radio"
                                             class="form-check-input my-1 me-2"
-                                            t-att-name="attribute.id"
-                                            t-att-value="value.name"
+                                            t-att-name="value.name"
+                                            t-att-value="value.id"
                                             t-attf-id="{{ attribute.id }}_{{ value.id }}"
-                                            t-model="state.selectedVariants[attribute.name]"
                                             t-att-disabled="disableAttributes"
+                                            t-model="state.selectedVariants[attribute.id]"
                                             />
                                         <span class="flex-grow-1">
                                             <t t-esc="value.name"/>
@@ -51,8 +54,8 @@
                                 </t>
                             </t>
                             <select t-elif="attribute.display_type === 'select'" class="configurator_select form-select"
-                                t-model="state.selectedVariants[attribute.name]">
-                                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name" t-att-disabled="disableAttributes">
+                                t-model="state.selectedVariants[attribute.id]">
+                                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-name="value.name" t-att-value="value.id" t-att-disabled="disableAttributes">
                                     <t t-esc="value.name"/>
                                     <t t-if="value.price_extra.list_price">
                                         + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
@@ -68,11 +71,11 @@
                                             <input
                                                 type="radio"
                                                 class="form-check-input my-1 me-2"
-                                                t-att-name="attribute.id"
-                                                t-att-value="value.name"
+                                                t-att-name="attribute.name"
+                                                t-att-value="value.id"
                                                 t-attf-id="{{ attribute.id }}_{{ value.id }}"
-                                                t-model="state.selectedVariants[attribute.name]"
                                                 t-att-disabled="disableAttributes"
+                                                t-model="state.selectedVariants[attribute.id]"
                                                 />
                                         </label>
                                         <span class="flex-grow-1">

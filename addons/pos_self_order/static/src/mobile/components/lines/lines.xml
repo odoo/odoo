@@ -29,10 +29,10 @@
                         </div>
                         <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small break-line">
                             <i class="fa fa-pencil-square-o" aria-hidden="true" />
-                            <span t-esc="line.customer_note" class="ms-1" />
+                            <span t-esc="line.customer_note" class="customer_note ms-1" />
                         </div>
                     </div>
-                    <span t-attf-class="card-text small"
+                    <span t-attf-class="card-text line_price small"
                         t-esc="selfOrder.formatMonetary(getPrice(line))"/>
                 </div>
             </div>
