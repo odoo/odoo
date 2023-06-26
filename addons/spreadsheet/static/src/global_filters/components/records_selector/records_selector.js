@@ -23,7 +23,6 @@ export class RecordsSelector extends Component {
         return this.props.resIds.map((id) => ({
             text: this.displayNames[id],
             onDelete: () => this.removeRecord(id),
-            displayBadge: true,
         }));
     }
 

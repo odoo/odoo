@@ -5,12 +5,9 @@ import { Component } from "@odoo/owl";
 export class TagsList extends Component {
     static template = "web.TagsList";
     static defaultProps = {
-        displayBadge: true,
         displayText: true,
     };
     static props = {
-        className: { type: String, optional: true },
-        displayBadge: { type: Boolean, optional: true },
         displayText: { type: Boolean, optional: true },
         itemsVisible: { type: Number, optional: true },
         tags: { type: Object },
