@@ -708,12 +708,20 @@
         return computeTextLinesHeight(fontSize, numberOfLines) + 2 * PADDING_AUTORESIZE_VERTICAL;
     }
     function computeTextWidth(context, text, style) {
-        context.save();
-        context.font = computeTextFont(style);
-        const textWidth = context.measureText(text).width;
-        context.restore();
-        return textWidth;
+        const font = computeTextFont(style);
+        if (!textWidthCache[font]) {
+            textWidthCache[font] = {};
+        }
+        if (textWidthCache[font][text] === undefined) {
+            context.save();
+            context.font = font;
+            const textWidth = context.measureText(text).width;
+            context.restore();
+            textWidthCache[font][text] = textWidth;
+        }
+        return textWidthCache[font][text];
     }
+    const textWidthCache = {};
     function fontSizeInPixels(fontSize) {
         return Math.round((fontSize * 96) / 72);
     }
@@ -29128,7 +29136,14 @@
                     this.history.update("tables", filterTables);
                     break;
                 case "DUPLICATE_SHEET":
-                    this.history.update("tables", cmd.sheetIdTo, deepCopy(this.tables[cmd.sheetId]));
+                    const tables = {};
+                    for (const filterTable of Object.values(this.tables[cmd.sheetId] || {})) {
+                        if (filterTable) {
+                            const newFilterTable = deepCopy(filterTable);
+                            tables[newFilterTable.id] = newFilterTable;
+                        }
+                    }
+                    this.history.update("tables", cmd.sheetIdTo, tables);
                     break;
                 case "ADD_COLUMNS_ROWS":
                     this.onAddColumnsRows(cmd);
@@ -32705,6 +32720,7 @@
         }
         exportForExcel(data) {
             for (const sheetData of data.sheets) {
+                const sheetId = sheetData.id;
                 for (const tableData of sheetData.filterTables) {
                     const tableZone = toZone(tableData.range);
                     const filters = [];
@@ -32720,20 +32736,20 @@
                         if (!filter)
                             continue;
                         const valuesInFilterZone = filter.filteredZone
-                            ? positions(filter.filteredZone)
-                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
-                                .filter((cell) => cell.type !== CellValueType.empty)
-                                .map((cell) => cell.formattedValue)
+                            ? positions(filter.filteredZone).map((position) => this.getters.getEvaluatedCell({ sheetId, ...position }).formattedValue)
                             : [];
-                        // In xlsx, filtered values = values that are displayed, not values that are hidden
-                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
-                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
-                        // In xlsx, filter header should ALWAYS be a string and should be unique
-                        const headerPosition = {
-                            col: filter.col,
-                            row: filter.zoneWithHeaders.top,
-                            sheetId: sheetData.id,
-                        };
+                        if (filteredValues.length) {
+                            const xlsxDisplayedValues = valuesInFilterZone
+                                .filter((val) => val)
+                                .filter((val) => !filteredValues.includes(val));
+                            filters.push({
+                                colId: i,
+                                displayedValues: [...new Set(xlsxDisplayedValues)],
+                                displayBlanks: !filteredValues.includes("") && valuesInFilterZone.some((val) => !val),
+                            });
+                        }
+                        // In xlsx, filter header should ALWAYS be a string and should be unique in the table
+                        const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top, sheetId };
                         const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
                         const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
                         headerNames.push(headerName);
@@ -35762,14 +35778,14 @@
      * This plugin handles this internal state.
      */
     class SelectionInputsManagerPlugin extends UIPlugin {
+        get currentInput() {
+            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
+        }
         constructor(config) {
             super(config);
             this.config = config;
             this.inputs = {};
             this.focusedInputId = null;
-        }
-        get currentInput() {
-            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -40846,11 +40862,9 @@
         onComposerContentFocused: Function,
     };
 
-    // -----------------------------------------------------------------------------
-    // TopBar
-    // -----------------------------------------------------------------------------
     css /* scss */ `
   .o-font-size-editor {
+    height: calc(100% - 4px);
     input.o-font-size {
       height: 20px;
       width: 23px;
@@ -40928,6 +40942,7 @@
     FontSizeEditor.props = {
         onToggle: Function,
         dropdownStyle: String,
+        class: String,
     };
 
     const FORMATS = [
@@ -44371,15 +44386,10 @@
   `;
     }
     function addFilterColumns(table) {
-        const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
-            const filter = table.filters[i];
-            if (!filter || !filter.filteredValues.length) {
-                continue;
-            }
+        for (const filter of table.filters) {
             const colXml = escapeXml /*xml*/ `
-      <filterColumn ${formatAttributes([["colId", i]])}>
+      <filterColumn ${formatAttributes([["colId", filter.colId]])}>
         ${addFilter(filter)}
       </filterColumn>
       `;
@@ -44388,9 +44398,10 @@
         return columns;
     }
     function addFilter(filter) {
-        const filterValues = filter.filteredValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterValues = filter.displayedValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterAttributes = filter.displayBlanks ? [["blank", 1]] : [];
         return escapeXml /*xml*/ `
-  <filters>
+  <filters ${formatAttributes(filterAttributes)}>
       ${joinXmlNodes(filterValues)}
   </filters>
 `;
@@ -45367,9 +45378,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.9';
-    __info__.date = '2023-06-12T14:13:13.260Z';
-    __info__.hash = '37e2719';
+    __info__.version = '16.2.10';
+    __info__.date = '2023-06-26T14:46:13.265Z';
+    __info__.hash = '1d3f47c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
