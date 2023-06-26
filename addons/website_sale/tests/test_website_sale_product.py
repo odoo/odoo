@@ -18,7 +18,10 @@ class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
             "With no pricelist context, the contextual price should be the computer list price."
         )
 
-        pricelist = self.env['product.pricelist'].create({'name': 'Base Pricelist'})
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Base Pricelist',
+            'sequence': 4,
+        })
 
         # make sure the pricelist has a 10% discount
         self.env['product.pricelist.item'].create({
