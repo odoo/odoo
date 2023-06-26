@@ -422,7 +422,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             env, graph, status, perform_checks=update_module,
             report=report, models_to_check=models_to_check)
 
-        load_lang = tools.config.pop('load_language')
+        load_lang = tools.config.options.pop('load_language', None)
         if load_lang or update_module:
             # some base models are used below, so make sure they are set up
             registry.setup_models(cr)
