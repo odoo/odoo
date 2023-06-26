@@ -297,7 +297,15 @@ export class Record extends DataPoint {
     }
 
     _applyValues(values) {
-        Object.assign(this._values, this._parseServerValues(values));
+        const newValues = this._parseServerValues(values);
+        Object.assign(this._values, newValues);
+        for (const fieldName in newValues) {
+            if (fieldName in this._changes) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    this._changes[fieldName] = newValues[fieldName];
+                }
+            }
+        }
         Object.assign(this.data, this._values, this._changes);
         this._setTextValues(Object.assign({}, values, this._changes));
         this._setEvalContext();

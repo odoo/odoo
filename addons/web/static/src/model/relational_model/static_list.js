@@ -262,6 +262,11 @@ export class StaticList extends DataPoint {
                     }
                 }
                 record._applyValues(data);
+                const commands = this._unknownRecordCommands[record.resId];
+                delete this._unknownRecordCommands[record.resId];
+                if (commands) {
+                    this._applyCommands(commands);
+                }
                 record._addSavePoint();
             } else {
                 // case 2: the record is a new record
@@ -506,7 +511,20 @@ export class StaticList extends DataPoint {
                         // records for the current page)
                         this._unknownRecordCommands[command[1]].push(command);
                     } else {
-                        record._applyChanges(record._parseServerValues(command[2], record.data));
+                        const changes = {};
+                        for (const fieldName in command[2]) {
+                            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                                if (record.activeFields[fieldName].invisible) {
+                                    if (!(command[1] in this._unknownRecordCommands)) {
+                                        this._unknownRecordCommands[command[1]] = [];
+                                    }
+                                    this._unknownRecordCommands[command[1]].push(command);
+                                    continue;
+                                }
+                            }
+                            changes[fieldName] = command[2][fieldName];
+                        }
+                        record._applyChanges(record._parseServerValues(changes, record.data));
                     }
                     break;
                 }
