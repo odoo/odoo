@@ -354,6 +354,11 @@ class ResPartner(models.Model):
         remaining.debit = False
         remaining.credit = False
 
+    @api.depends_context('company')
+    def _compute_credit_to_invoice(self):
+        # To be overridden in Sales
+        self.credit_to_invoice = False
+
     def _asset_difference_search(self, account_type, operator, operand):
         if operator not in ('<', '=', '>', '>=', '<='):
             return []
@@ -463,6 +468,10 @@ class ResPartner(models.Model):
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.",
         groups='account.group_account_invoice,account.group_account_readonly')
+    credit_to_invoice = fields.Monetary(
+        compute='_compute_credit_to_invoice',
+        groups='account.group_account_invoice,account.group_account_readonly'
+    )
     credit_limit = fields.Float(
         string='Credit Limit', help='Credit limit specific to this partner.',
         groups='account.group_account_invoice,account.group_account_readonly',
