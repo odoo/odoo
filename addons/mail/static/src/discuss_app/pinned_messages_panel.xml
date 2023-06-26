@@ -2,8 +2,9 @@
 <templates xml:space="preserve">
     <t t-name="mail.PinnedMessagesPanel" owl="1">
         <div class="o-mail-PinnedMessagesPanel overflow-auto d-flex flex-column flex-shrink-0 bg-view position-relative" t-att-class="{
-            'flex-grow-1': env.inChatWindow,
+            'flex-grow-1': env.inChatWindow or (store.isSmall and store.inPublicPage),
             'border-start': !env.inChatWindow,
+            'px-2 py-1': store.isSmall and store.inPublicPage,
         }">
             <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700">
                 Pinned messages

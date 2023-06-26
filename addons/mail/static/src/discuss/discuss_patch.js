@@ -42,4 +42,14 @@ patch(Discuss.prototype, "discuss", {
         this.state.activeMode =
             this.state.activeMode === this.MODES.SETTINGS ? this.MODES.NONE : this.MODES.SETTINGS;
     },
+    channelMemberListClassNames() {
+        return this.store.isSmall && this.store.inPublicPage ?
+            'o-mail-Discuss-channelMemberList flex-grow-1 px-2 py-1 border-start' :
+            'o-mail-Discuss-channelMemberList flex-shrink-0 border-start';
+    },
+    messageCallSettingsClassNames() {
+        return this.store.isSmall && this.store.inPublicPage ?
+            'o-mail-Discuss-callSettings flex-grow-1 px-2 py-1 border-start' :
+            'o-mail-Discuss-callSettings flex-shrink-0 border-start';
+    },
 });

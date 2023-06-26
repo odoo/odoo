@@ -13,8 +13,8 @@
             </button>
         </xpath>
         <xpath expr="//PinnedMessagesPanel" position="after">
-            <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start'"/>
-            <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
+            <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="channelMemberListClassNames()"/>
+            <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="messageCallSettingsClassNames()"/>
         </xpath>
     </t>
 </templates>
