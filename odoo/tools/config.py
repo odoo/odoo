@@ -88,8 +88,6 @@ class configmanager:
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
 
-        self.misc = {}
-
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
@@ -695,17 +693,6 @@ class configmanager:
                 if value=='False' or value=='false':
                     value = False
                 self.options[name] = value
-            #parse the other sections, as well
-            for sec in p.sections():
-                if sec == 'options':
-                    continue
-                self.misc.setdefault(sec, {})
-                for (name, value) in p.items(sec):
-                    if value=='True' or value=='true':
-                        value = True
-                    if value=='False' or value=='false':
-                        value = False
-                    self.misc[sec][name] = value
         except IOError:
             pass
         except ConfigParser.NoSectionError:
@@ -733,11 +720,6 @@ class configmanager:
             else:
                 p.set('options', opt, self.options[opt])
 
-        for sec in sorted(self.misc):
-            p.add_section(sec)
-            for opt in sorted(self.misc[sec]):
-                p.set(sec,opt,self.misc[sec][opt])
-
         # try to create the directories and write the file
         try:
             if not rc_exists and not os.path.exists(os.path.dirname(self.rcfile)):
@@ -758,9 +740,6 @@ class configmanager:
 
     def pop(self, key, default=None):
         return self.options.pop(key, default)
-
-    def get_misc(self, sect, key, default=None):
-        return self.misc.get(sect,{}).get(key, default)
 
     def __setitem__(self, key, value):
         self.options[key] = value
