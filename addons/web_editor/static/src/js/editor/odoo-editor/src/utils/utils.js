@@ -2557,7 +2557,8 @@ export function enforceWhitespace(el, offset, direction, rule) {
         if (
             spaceVisibility &&
             !foundVisibleSpaceTextNode &&
-            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK
+            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK &&
+            getState(...leftPos(spaceNode), DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
         ) {
             spaceVisibility = false;
         }
