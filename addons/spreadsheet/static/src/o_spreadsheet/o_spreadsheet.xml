@@ -734,25 +734,32 @@
   </t>
 
   <t t-name="o-spreadsheet-FontSizeEditor" owl="1">
-    <div class="o-dropdown o-font-size-editor" t-ref="FontSizeEditor">
-      <input
-        type="number"
-        min="1"
-        max="400"
-        class="o-font-size bg-transparent border-0"
-        t-on-keydown="onInputKeydown"
-        t-on-click.stop=""
-        t-on-focus.stop="onInputFocused"
-        t-att-value="currentFontSize"
-        t-on-change="setSizeFromInput"
-        t-ref="inputFontSize"
-      />
-      <span title="Font Size" t-on-click="() => this.toggleFontList()">
-        <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
-      </span>
+    <div class="o-dropdown" t-ref="FontSizeEditor">
+      <div
+        class=" o-font-size-editor"
+        t-att-class="props.class"
+        title="Font Size"
+        t-on-click="this.toggleFontList">
+        <input
+          type="number"
+          min="1"
+          max="400"
+          class="o-font-size bg-transparent border-0"
+          t-on-keydown="onInputKeydown"
+          t-on-click.stop=""
+          t-on-focus.stop="onInputFocused"
+          t-att-value="currentFontSize"
+          t-on-change="setSizeFromInput"
+          t-ref="inputFontSize"
+        />
+        <span>
+          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+        </span>
+      </div>
       <div
         class="o-dropdown-content o-text-options"
         t-if="dropdown.isOpen"
+        t-on-click.stop=""
         t-att-style="props.dropdownStyle">
         <t t-foreach="fontSizes" t-as="fontSize" t-key="fontSize">
           <div
@@ -3243,7 +3250,11 @@
               </div>
             </div>
             <div class="o-divider"/>
-            <FontSizeEditor onToggle="() => this.onClick()" dropdownStyle="this.dropdownStyle"/>
+            <FontSizeEditor
+              class="'o-tool'"
+              onToggle.bind="this.onClick"
+              dropdownStyle="this.dropdownStyle"
+            />
             <div class="o-divider"/>
             <div
               class="o-tool"
@@ -3505,7 +3516,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.2.9';
-  __info__.date = '2023-06-12T14:13:17.156Z';
-  __info__.hash = '37e2719';
+  __info__.version = '16.2.10';
+  __info__.date = '2023-06-26T14:46:16.076Z';
+  __info__.hash = '1d3f47c';
 -->
