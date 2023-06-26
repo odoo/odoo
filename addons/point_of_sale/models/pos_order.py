@@ -1173,6 +1173,7 @@ class PosOrderLine(models.Model):
     skip_change = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
+    attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Selected Attributes")
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
     price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,

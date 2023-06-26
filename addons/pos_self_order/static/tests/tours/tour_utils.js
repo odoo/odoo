@@ -1,5 +1,19 @@
 /** @odoo-module */
 
+/**
+ * @typedef {object} TourStep
+ * @property {string} content
+ * @property {string} trigger
+ * @property {boolean?} isCheck
+ */
+
+/**
+ * @typedef {object} Attribute
+ * @property {string} type
+ * @property {string} name
+ * @property {string} value
+ */
+
 export const PosSelf = {
     check: {
         tablePopupIsShown: () => {
@@ -37,11 +51,23 @@ export const PosSelf = {
                 run: () => {},
             };
         },
-        isOrderline: (name, price, description = "", attributes = "") => {
+        isOrderline: (name, price, description = "", attributes = "", click = false) => {
+            let trigger = `.o_self_order_item_card:has(.o_self_product_name:contains("${name}"))`;
+            if (description) {
+                trigger += `:has(span.customer_note:contains("${description}"))`;
+            }
+            if (price) {
+                trigger += `:has(span.line_price:contains("${price}"))`;
+            }
+            if (attributes) {
+                trigger += `:has(span:contains("${attributes}"))`;
+            }
             return {
-                content: `Verify is there an orderline with ${name} and ${price} and ${description}`,
-                trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}"))`,
-                run: () => {},
+                content: `${
+                    (click && "Click") || "Check"
+                } orderline with ${name} and ${price} and ${description}`,
+                trigger: trigger,
+                isCheck: !click,
             };
         },
         isNotOrderline: (name, price, description = "", attributes = "") => {
@@ -85,6 +111,7 @@ export const PosSelf = {
                 run: () => {},
             };
         },
+        attributes: (attributes) => attributes.map((attribute) => attributeHelper(attribute, true)),
     },
     action: {
         cancelOrder: () => {
@@ -118,7 +145,7 @@ export const PosSelf = {
                 run: `text ${table}`,
             };
         },
-        addProduct: (name, quantity = 1, description, attributes) => {
+        addProduct: (name, quantity = 1, description, attributes = []) => {
             return [
                 {
                     content: `Click on product '${name}'`,
@@ -126,7 +153,8 @@ export const PosSelf = {
                 },
                 ...quantityHelper(quantity),
                 descriptionHelper(description),
-                ...attributeHelper(attributes),
+                ...attributes.map((attribute) => attributeHelper(attribute)),
+
                 {
                     content: `Click on 'Add' button`,
                     trigger: `.o_self_order_main_button:contains('Add')`,
@@ -135,10 +163,7 @@ export const PosSelf = {
         },
         editSentOrderline: (name, price, description, addQuantity = 0) => {
             return [
-                {
-                    content: `Click on orderline ${name}, price ${price} and description ${description}`,
-                    trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span.card-text:contains("${price}"))`,
-                },
+                clickOrderline(name, price, description),
                 ...quantityHelper(addQuantity),
                 {
                     content: `Click on 'Add' button`,
@@ -146,49 +171,55 @@ export const PosSelf = {
                 },
             ];
         },
-        editOrderline: (name, price, description, addQuantity = 0, newDescription, newAtr) => {
+        clickOrderline: clickOrderline,
+
+        editOrderline: (name, price, description, addQuantity = 0, newDescription) => {
             return [
-                {
-                    content: `Click on orderline ${name}, price ${price} and description ${description}`,
-                    trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span.card-text:contains("${price}"))`,
-                },
+                clickOrderline(name, price, description),
                 ...quantityHelper(addQuantity),
                 descriptionHelper(newDescription),
-                ...attributeHelper(newAtr),
                 {
                     content: `Click on 'Add' button`,
                     trigger: `.o_self_order_main_button`,
                 },
             ];
         },
+        selectAttributes: (attributes) => attributes.map((attribute) => attributeHelper(attribute)),
     },
 };
 
+/**
 // This function is used to generate the steps to add attributes to a product.
 // Missing the color function, but I didn't have example for the moment see in the future.
-const attributeHelper = (attributes = { radio: {}, select: {}, color: {} }) => {
-    const attributesSteps = [];
-
-    if (attributes.radio.value) {
-        attributesSteps.push({
-            content: `Select radio ${attributes.radio.name} with value ${attributes.radio.value}`,
-            trigger: `.o_self_order_main_options div:contains('${attributes.radio.name}') ~ div input[value='${attributes.radio.value}']`,
-        });
+ * @param {Attribute} attribute
+ * @param {boolean} [isCheck=false]
+ * @returns {TourStep}
+ */
+function attributeHelper(attribute, isCheck = false) {
+    const content = `${isCheck ? "Check" : "Select"} ${attribute.name} with value ${
+        attribute.value
+    }`;
+    const attributeDiv = `.o_self_order_main_options div:contains('${attribute.name}')`;
+    if (attribute.type === "radio") {
+        const radioInput = `${attributeDiv} ~ div input[name='${attribute.value}']`;
+        return {
+            content,
+            trigger: radioInput + (isCheck ? ":checked" : ""),
+            isCheck,
+        };
+    } else if (attribute.type === "select") {
+        const selectInput = `${attributeDiv} ~ select:has(option[name='${attribute.value}'])`;
+        const selectInputSelected = `${selectInput.slice(0, -1)}[selected])`;
+        return {
+            content,
+            trigger: isCheck ? selectInputSelected : selectInput,
+            run: isCheck ? () => {} : `text ${attribute.value}`,
+        };
     }
-
-    if (attributes.select.value) {
-        attributesSteps.push({
-            content: `Select ${attributes.select.name} with value ${attributes.select.value}`,
-            trigger: `.o_self_order_main_options div:contains('${attributes.select.name}') ~ select:has(option[value='${attributes.select.value}'])`,
-            run: `text ${attributes.select.value}`,
-        });
-    }
-
-    return attributesSteps;
-};
+}
 
 // This function is used to generate the steps to add a description to a product.
-const descriptionHelper = (description = "") => {
+export const descriptionHelper = (description = "") => {
     return {
         content: `Add description ${description}`,
         trigger: `.o_self_order_main_options textarea`,
@@ -215,6 +246,8 @@ const quantityHelper = (quantity, el) => {
             });
         }
     }
-
     return increaseQuantity;
 };
+function clickOrderline(name, price, description) {
+    return PosSelf.check.isOrderline(name, price, description, false, true);
+}
