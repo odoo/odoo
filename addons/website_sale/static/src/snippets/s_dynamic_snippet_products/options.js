@@ -43,6 +43,16 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     //--------------------------------------------------------------------------
 
     /**
+     *
+     * @override
+     */
+    async _fetchDynamicFilters() {
+        await this._super(...arguments);
+        const productFilterCount = Object.keys(this.dynamicFilters).length;
+        this._defaultFilterId = this.dynamicFilters[productFilterCount].id;
+    },
+
+    /**
      * @private
      * @override
      */
