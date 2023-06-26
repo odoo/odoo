@@ -3099,7 +3099,7 @@ msgstr "Vorgang nicht unterstützt."
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Organizer"
-msgstr "Termine und Notizen"
+msgstr "Organisator"
 
 #. module: event
 #: model:event.event,subtitle:event.event_7
@@ -3701,6 +3701,14 @@ msgid ""
 msgstr ""
 "Das Enddatum kann nicht vor dem Startdatum liegen. Bitte überprüfen Sie das "
 "Ticket %(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
 
 #. module: event
 #. odoo-python

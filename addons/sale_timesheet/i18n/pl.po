@@ -22,6 +22,7 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Natalia Gros <nag@odoo.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-15 10:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +127,7 @@ msgstr "<strong>Faktury:</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr "<strong>Zlecenie sprzedaży:</strong>"
+msgstr "<strong>Zamówienie sprzedaży:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -309,7 +310,7 @@ msgstr "Anuluj"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr "Wybierz zlecenie sprzedaży do zafakturowania"
+msgstr "Wybierz zamówienie sprzedaży do zafakturowania"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
@@ -376,18 +377,18 @@ msgstr "Utwórz SO z projektu"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr "Utwórz zlecenie sprzedaży (SO)"
+msgstr "Utwórz zamówienie sprzedaży (SO)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr "Utwórz zlecenie sprzedaży z projektu"
+msgstr "Utwórz zamówienie sprzedaży z projektu"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Create a Sales Order"
-msgstr "Utwórz zlecenie sprzedaży"
+msgstr "Utwórz zamówienie sprzedaży"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -764,12 +765,12 @@ msgstr "Brak faktur"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
-msgstr "Brak zlecenia sprzedaży"
+msgstr "Brak zamówienia sprzedaży"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order Item"
-msgstr "Brak pozycji zlecenia sprzedaży"
+msgstr "Brak pozycji zamówienia sprzedaży"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
@@ -919,8 +920,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
-"Produkt pozycji zlecenia sprzedaży. Musi być usługą fakturowaną na podstawie"
-" arkuszy czasu pracy na zadaniach."
+"Produkt pozycji zamówienia sprzedaży. Musi być usługą fakturowaną na "
+"podstawie arkuszy czasu pracy na zadaniach."
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -965,7 +966,7 @@ msgstr "Aktualizacja projektu"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr "Projekt, dla którego tworzymy zlecenie sprzedaży"
+msgstr "Projekt, dla którego tworzymy zamówienie sprzedaży"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
@@ -1035,7 +1036,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr "Konto analityczne zleceń sprzedaży"
+msgstr "Konto analityczne zamówień sprzedaży"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1094,8 +1095,8 @@ msgid ""
 "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
-"Pozycja zlecenia sprzedaży, która zostanie domyślnie wybrana na arkuszach czasu pracy odpowiedniego pracownika. Pomija pozycję zlecenia sprzedaży zdefiniowaną w projekcie i zadaniu, a w razie potrzeby można ją zmodyfikować przy każdym wpisie w arkuszu czasu pracy. Innymi słowy, definiuje stawkę, według której rozliczany jest czas pracownika, na przykład na podstawie jego wiedzy specjalistycznej, umiejętności lub doświadczenia.\n"
-"Jeśli chcesz rozliczyć tę samą usługę według innej stawki, musisz utworzyć dwie oddzielne pozycje zlecenia sprzedaży, ponieważ każda pozycja zlecenia sprzedaży może mieć tylko jedną cenę jednostkową na raz.\n"
+"Pozycja zlecenia sprzedaży, która zostanie domyślnie wybrana na arkuszach czasu pracy odpowiedniego pracownika. Pomija pozycję zamówienia sprzedaży zdefiniowaną w projekcie i zadaniu, a w razie potrzeby można ją zmodyfikować przy każdym wpisie w arkuszu czasu pracy. Innymi słowy, definiuje stawkę, według której rozliczany jest czas pracownika, na przykład na podstawie jego wiedzy specjalistycznej, umiejętności lub doświadczenia.\n"
+"Jeśli chcesz rozliczyć tę samą usługę według innej stawki, musisz utworzyć dwie oddzielne pozycje zlecenia sprzedaży, ponieważ każda pozycja zamówienia sprzedaży może mieć tylko jedną cenę jednostkową na raz.\n"
 "Możesz również zdefiniować godzinowy koszt firmowy swoich pracowników dla ich arkuszy czasu pracy w tym projekcie. Spowoduje to pominięcie kosztu arkusza czasu pracy ustawionego dla pracownika."
 
 #. module: sale_timesheet
@@ -1106,7 +1107,7 @@ msgid ""
 "entry to be non-billable."
 msgstr ""
 "Pozycja zamówienia, do której zostanie dodany czas spędzony w celu "
-"zafakturowania klienta. Usuń pozycję zlecenia sprzedaży, aby wpis w "
+"zafakturowania klienta. Usuń pozycję zamówienia sprzedaży, aby wpis w "
 "ewidencji karty pracy nie podlegał fakturowaniu."
 
 #. module: sale_timesheet
@@ -1126,14 +1127,14 @@ msgstr "Wyszukiwanie w fakturze"
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr "Wyszukiwanie w zleceniu sprzedaży"
+msgstr "Wyszukiwanie w zamówieniu sprzedaży"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr "Wyszukiwanie w pozycji zlecenia sprzedaży"
+msgstr "Wyszukiwanie w pozycji zamówienia sprzedaży"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1185,7 +1186,7 @@ msgid ""
 msgstr ""
 "Usługa, która będzie domyślnie używana podczas fakturowania czasu spędzonego"
 " na zadaniu. Można ją modyfikować indywidualnie dla każdego zadania, "
-"wybierając konkretną pozycję zlecenia sprzedaży."
+"wybierając konkretną pozycję zamówienia sprzedaży."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1243,7 +1244,7 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Nie można utworzyć zlecenia sprzedaży, ponieważ nie wprowadzono niektórych pracowników, którzy wprowadzili arkusze czasu pracy w tym projekcie. Wymień wszystkich odpowiednich pracowników przed utworzeniem zlecenia sprzedaży.\n"
+"Nie można utworzyć zamówienia sprzedaży, ponieważ nie wprowadzono niektórych pracowników, którzy wprowadzili arkusze czasu pracy w tym projekcie. Wymień wszystkich odpowiednich pracowników przed utworzeniem zamówienia sprzedaży.\n"
 "Brakujący pracownik(i): %s"
 
 #. module: sale_timesheet
@@ -1256,14 +1257,14 @@ msgstr "Koszt projektu wynosi obecnie"
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr "Projekt ma już zlecenie sprzedaży."
+msgstr "Projekt ma już zamówienie sprzedaży."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr "Projekt jest już powiązany z pozycją zlecenia sprzedaży"
+msgstr "Projekt jest już powiązany z pozycją zamówienia sprzedaży"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1273,15 +1274,15 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"Zlecenie sprzedaży nie może zostać utworzone, ponieważ niektóre arkusze "
-"czasu pracy tego projektu są już powiązane z innym zleceniem sprzedaży."
+"Zamówienie sprzedaży nie może zostać utworzone, ponieważ niektóre arkusze "
+"czasu pracy tego projektu są już powiązane z innym zamówieniem sprzedaży."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr "Wybrane zlecenie sprzedaży powinno zawierać coś do zafakturowania."
+msgstr "Wybrane zamówienie sprzedaży powinno zawierać coś do zafakturowania."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1516,7 +1517,7 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
-"Całkowita kwota do zafakturowania na zleceniu sprzedaży, w tym wszystkie "
+"Całkowita kwota do zafakturowania na zamówieniu sprzedaży, w tym wszystkie "
 "pozycje (usługi, towary, wydatki, ...)"
 
 #. module: sale_timesheet
@@ -1528,8 +1529,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
-"Całkowity zarejestrowany czas trwania, wyrażony w kodowaniu UoM i "
-"zaokrąglony do jednostki"
+"Całkowity zarejestrowany czas trwania, wyrażony w kodowaniu JM i zaokrąglony"
+" do jednostki"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1561,7 +1562,7 @@ msgstr "Cena jednostkowa"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr "Cena jednostkowa pozycji zlecenia sprzedaży."
+msgstr "Cena jednostkowa pozycji zamówienia sprzedaży."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1639,7 +1640,7 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
-"Nie można powiązać projektu podlegającego rozliczeniu z pozycją zlecenia "
+"Nie można powiązać projektu podlegającego rozliczeniu z pozycją zamówienia "
 "sprzedaży, która pochodzi z wydatku lub rachunku dostawcy."
 
 #. module: sale_timesheet
@@ -1650,7 +1651,7 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
-"Nie można powiązać projektu podlegającego rozliczeniu z pozycją zlecenia "
+"Nie można powiązać projektu podlegającego rozliczeniu z pozycją zamówienia "
 "sprzedaży, która nie jest usługą."
 
 #. module: sale_timesheet

@@ -1033,9 +1033,7 @@ msgstr "<span title=\"Latest Statement\">Остання виписка</span>"
 msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
-msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">Несплачені "
-"платежі/квитанції</span>"
+msgstr "<span title=\"Outstanding Payments/Receipts\">Кошти до виплати</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -3207,7 +3205,7 @@ msgstr "Банківські виписки"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
-msgstr "Тимчасовий банківський рахунок"
+msgstr "Кошти до з'ясування"
 
 #. module: account
 #. odoo-python
@@ -3719,7 +3717,7 @@ msgstr "Рахунок витрат готівкових різниць"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Gain"
-msgstr "Прибуток грошових різниць"
+msgstr "Доходи від різниці по касі"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
@@ -3732,14 +3730,14 @@ msgstr "Рахунок доходу грошових різниць"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Difference Loss"
-msgstr "Витрати грошових різниць"
+msgstr "Втрати від різниці по касі"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
-msgstr "Знижка готівкою"
+msgstr "Доходи від знижки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -3751,7 +3749,7 @@ msgstr "Рахунок знижки готівкою"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Loss"
-msgstr "Витрати готівкової знижки"
+msgstr "Втрати від знижки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -9060,7 +9058,7 @@ msgstr "Ліквідність"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Liquidity Transfer"
-msgstr "Передача ліквідності"
+msgstr "Транзитний рахунок"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__tax_template_ids
@@ -13833,6 +13831,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -15798,7 +15805,7 @@ msgstr "Завантажити"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "Завантажити рахунки"
 
 #. module: account
 #. odoo-python

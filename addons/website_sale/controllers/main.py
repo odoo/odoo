@@ -940,12 +940,30 @@ class WebsiteSale(http.Controller):
         error = dict()
         error_message = []
 
-        # prevent name change if invoices exist
         if data.get('partner_id'):
-            partner = request.env['res.partner'].browse(int(data['partner_id']))
-            if partner.exists() and partner.sudo().name and not partner.sudo().can_edit_vat() and 'name' in data and (data['name'] or False) != (partner.sudo().name or False):
+            partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
+            name_change = partner_su and 'name' in data and data['name'] != partner_su.name
+            email_change = partner_su and 'email' in data and data['email'] != partner_su.email
+
+            # Prevent changing the partner name if invoices have been issued.
+            if name_change and not partner_su.can_edit_vat():
                 error['name'] = 'error'
-                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+                error_message.append(_(
+                    "Changing your name is not allowed once invoices have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+
+            # Prevent change the partner name or email if it is an internal user.
+            if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
+                error.update({
+                    'name': 'error' if name_change else None,
+                    'email': 'error' if email_change else None,
+                })
+                error_message.append(_(
+                    "If you are ordering for an external person, please place your order via the"
+                    " backend. If you wish to change your name or email address, please do so in"
+                    " the account settings or contact your administrator."
+                ))
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
@@ -1763,19 +1781,34 @@ class CustomerPortal(portal.CustomerPortal):
         for line in sale_order.order_line:
             if line.display_type:
                 continue
+            if line._is_delivery():
+                continue
+            combination = line.product_id.product_template_attribute_value_ids | line.product_no_variant_attribute_value_ids
             res = {
                 'product_template_id': line.product_id.product_tmpl_id.id,
                 'product_id': line.product_id.id,
+                'combination': combination.ids,
+                'no_variant_attribute_values': [
+                    { # Same input format as provided by product configurator
+                        'value': ptav.id,
+                    } for ptav in line.product_no_variant_attribute_value_ids
+                ],
+                'product_custom_attribute_values': [
+                    { # Same input format as provided by product configurator
+                        'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
+                        'custom_value': pcav.custom_value,
+                    } for pcav in line.product_custom_attribute_value_ids
+                ],
                 'type': line.product_id.type,
-                'name': line.product_id.name,
-                'description_sale': line.product_id.description_sale,
+                'name': line.name_short,
+                'description_sale': line.product_id.description_sale or '' + line._get_sale_order_line_multiline_description_variants(),
                 'qty': line.product_uom_qty,
                 'add_to_cart_allowed': line.with_user(request.env.user).sudo()._is_reorder_allowed(),
                 'has_image': bool(line.product_id.image_128),
             }
             if res['add_to_cart_allowed']:
                 res['combinationInfo'] = line.product_id.product_tmpl_id.with_context(**self._sale_reorder_get_line_context())\
-                    ._get_combination_info([], res['product_id'], res['qty'], pricelist)
+                    ._get_combination_info(combination, res['product_id'], res['qty'], pricelist)
             else:
                 res['combinationInfo'] = {}
             result['products'].append(res)
