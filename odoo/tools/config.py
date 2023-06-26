@@ -26,6 +26,7 @@ class _OdooOption(optparse.Option):
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
         self.cli_loadable = attrs.pop('cli_loadable', True)
+        self.file_exportable = attrs.pop('file_exportable', True)
         super(_OdooOption, self).__init__(*opts, **attrs)
         if self.dest and self.dest not in self.config.options_index:
             self.config.options_index[self.dest] = self
@@ -69,12 +70,6 @@ class configmanager:
     def __init__(self):
         self.options = {}
 
-        # Not exposed in the configuration file.
-        self.blacklist_for_save = set([
-            'publisher_warranty_url', 'load_language',
-            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface',
-        ])
-
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.options_index = {}
         self.casts = self.options_index  # deprecated
@@ -96,7 +91,7 @@ class configmanager:
 
         parser.add_option(FileOnlyOption(dest='admin_passwd', my_default='admin'))
         parser.add_option(FileOnlyOption(dest='csv_internal_sep', my_default=','))
-        parser.add_option(FileOnlyOption(dest='publisher_warranty_url', my_default='http://services.odoo.com/publisher-warranty/'))
+        parser.add_option(FileOnlyOption(dest='publisher_warranty_url', my_default='http://services.odoo.com/publisher-warranty/', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='reportgz', action='store_true', my_default=False))
         parser.add_option(FileOnlyOption(dest='websocket_keep_alive_timeout', type='int', my_default=3600))
         parser.add_option(FileOnlyOption(dest='websocket_rate_limit_burst', type='int', my_default=10))
@@ -104,17 +99,19 @@ class configmanager:
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
-        group.add_option("-c", "--config", dest="config", help="specify alternate config file")
-        group.add_option("-s", "--save", action="store_true", dest="save", default=False,
-                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
-        group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
-        group.add_option("-u", "--update", dest="update",
-                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
+        group.add_option("-c", "--config", dest="config", file_exportable=False,
+                         help="specify alternate config file")
+        group.add_option("-s", "--save", action="store_true", dest="save", default=False, file_exportable=False,
+                         help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
+        group.add_option("-i", "--init", dest="init", file_exportable=False,
+                         help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
+        group.add_option("-u", "--update", dest="update", file_exportable=False,
+                         help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
-                          help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
-                          my_default=False)
+                         help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
+                         my_default=False)
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
-                        help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
+                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
@@ -239,6 +236,7 @@ class configmanager:
                          help='specify the SSL private key used for authentication')
         parser.add_option_group(group)
 
+        # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", my_default=False,
                          help="specify the database name")
@@ -266,25 +264,27 @@ class configmanager:
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
+        # i18n Group
         group = optparse.OptionGroup(parser, "Internationalisation options",
             "Use these options to translate Odoo to another language. "
             "See i18n section of the user manual. Option '-d' is mandatory. "
             "Option '-l' is mandatory in case of importation"
             )
-        group.add_option('--load-language', dest="load_language",
+        group.add_option('--load-language', dest="load_language", file_exportable=False,
                          help="specifies the languages for the translations you want to be loaded")
-        group.add_option('-l', "--language", dest="language",
+        group.add_option('-l', "--language", dest="language", file_exportable=False,
                          help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-        group.add_option("--i18n-export", dest="translate_out",
+        group.add_option("--i18n-export", dest="translate_out", file_exportable=False,
                          help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
-        group.add_option("--i18n-import", dest="translate_in",
+        group.add_option("--i18n-import", dest="translate_in", file_exportable=False,
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False,
+        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
         group.add_option("--modules", dest="translate_modules",
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
+        # Security Group
         security = optparse.OptionGroup(parser, 'Security-related options')
         security.add_option('--no-database-list', action="store_false", dest='list_db', my_default=True,
                             help="Disable the ability to obtain or view the list of databases. "
@@ -294,14 +294,14 @@ class configmanager:
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--dev', dest='dev_mode', type="string",
+        group.add_option('--dev', dest='dev_mode', type="string", file_exportable=False,
                          help="Enable developer mode. Param: List of options separated by comma. "
                               "Options : all, reload, qweb, xml")
-        group.add_option('--shell-interface', dest='shell_interface', type="string",
+        group.add_option('--shell-interface', dest='shell_interface', type="string", file_exportable=False,
                          help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
                               "[ipython|ptpython|bpython|python]")
-        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
-                          help="stop the server after its initialization")
+        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False,
+                         help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=0,
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. By default there is no limit.",
@@ -718,11 +718,10 @@ class configmanager:
         if not p.has_section('options'):
             p.add_section('options')
         for opt in sorted(self.options):
+            option = self.options_index.get(opt)
             if keys is not None and opt not in keys:
                 continue
-            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
-                continue
-            if opt in self.blacklist_for_save:
+            if opt == 'version' or (option and not option.file_exportable):
                 continue
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
