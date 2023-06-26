@@ -10,7 +10,9 @@
                 'ms-2 ps-4': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }"
         >
-            <div class="d-flex flex-grow-1 flex-wrap mx-1" role="menu">
+            <div class="d-flex flex-grow-1 flex-wrap mx-1" t-att-class="{
+                'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
+            }" role="menu">
                 <div t-foreach="imagesAttachments" t-as="attachment" t-key="attachment.id" t-att-aria-label="attachment.filename"
                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1"
                     t-att-title="attachment.name"
@@ -43,7 +45,9 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-grow-1 flex-wrap mt-1 mx-1">
+            <div class="d-flex flex-grow-1 flex-wrap mt-1 mx-1" t-att-class="{
+                'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
+            }">
                 <div t-foreach="nonImagesAttachments" t-as="attachment" t-key="attachment.id"
                     class="o-mail-AttachmentCard d-flex rounded bg-300 mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
