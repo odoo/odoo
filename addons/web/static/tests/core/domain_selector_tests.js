@@ -31,6 +31,11 @@ import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 let serverData;
 let target;
 
+function getSelectedOperator(el, index = 0) {
+    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
+    return select.options[select.selectedIndex].label;
+}
+
 async function mountComponent(Component, params = {}) {
     const env = await makeTestEnv({ serverData, mockRPC: params.mockRPC });
     await mount(MainComponentsContainer, target, { env });
@@ -257,7 +262,7 @@ QUnit.module("Components", (hooks) => {
             "Invalid field chain"
         );
         assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
 
         await click(target, ".o_model_field_selector");
@@ -279,22 +284,19 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
         assert.containsNone(target, ".o_model_field_selector_warning");
         assert.containsN(target, ".o_domain_leaf_operator_select option", 8 + 1);
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf_operator_select").value,
-            "!!!!=!!!!"
-        );
+        assert.strictEqual(getSelectedOperator(target), `"!!!!=!!!!"`);
         assert.containsNone(
             target,
             ".o_domain_leaf_value_input",
             "do not show editor if operator is invalid"
         );
 
-        await editSelect(target, ".o_domain_leaf_operator_select", "equal");
+        await editSelect(target, ".o_domain_leaf_operator_select", "=");
 
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
         assert.containsNone(target, ".o_model_field_selector_warning");
         assert.containsN(target, ".o_domain_leaf_operator_select option", 8);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
     });
 
@@ -329,17 +331,14 @@ QUnit.module("Components", (hooks) => {
         });
 
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.containsNone(target, ".o_ds_value_cell input");
         assert.containsOnce(target, ".o_ds_expr_value");
         assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
 
-        await editSelect(target, ".o_domain_leaf_operator_select", "less_than");
+        await editSelect(target, ".o_domain_leaf_operator_select", "<");
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf_operator_select").value,
-            "less_than"
-        );
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "<");
         assert.containsNone(target, ".o_ds_value_cell input");
         assert.containsOnce(target, ".o_ds_expr_value");
         assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
@@ -465,10 +464,7 @@ QUnit.module("Components", (hooks) => {
                 target.querySelector(".o_model_field_selector_chain_part").innerText,
                 "1"
             );
-            assert.strictEqual(
-                target.querySelector(".o_domain_leaf_operator_select").value,
-                "equal"
-            ); // option "="
+            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
 
             newDomain = `[(0, "=", 1)]`;
@@ -490,10 +486,7 @@ QUnit.module("Components", (hooks) => {
                 target.querySelector(".o_model_field_selector_chain_part").innerText,
                 "0"
             );
-            assert.strictEqual(
-                target.querySelector(".o_domain_leaf_operator_select").value,
-                "equal"
-            ); // option "="
+            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
         }
     );
@@ -507,14 +500,12 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("operator fallback (edit mode)", async (assert) => {
-        OPERATOR_DESCRIPTIONS.push({
-            key: "test",
+        OPERATOR_DESCRIPTIONS.test = {
             label: "test",
-            symbol: "test",
             valueMode: "none",
-        });
+        };
         registerCleanup(() => {
-            OPERATOR_DESCRIPTIONS.pop();
+            delete OPERATOR_DESCRIPTIONS.test;
         });
 
         await makeDomainSelector({ domain: "[['foo', 'test', 'kikou']]" });
@@ -553,15 +544,15 @@ QUnit.module("Components", (hooks) => {
             target.querySelector(".o_model_field_selector_chain_part").innerText,
             "State"
         );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "set"); // option "!="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "set");
 
-        await editSelect(target, ".o_domain_leaf_operator_select", "equal");
+        await editSelect(target, ".o_domain_leaf_operator_select", "=");
 
         assert.strictEqual(
             target.querySelector(".o_model_field_selector_chain_part").innerText,
             "State"
         );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal"); // option "="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `"abc"`);
     });
 
@@ -633,11 +624,11 @@ QUnit.module("Components", (hooks) => {
             target.querySelector(".o_model_field_selector_chain_part").innerText,
             `Json Field`
         );
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal"); // option "="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `hey`);
 
         await editSelect(target, ".o_domain_leaf_operator_select", "ilike");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "ilike"); // option "ilike"
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "ilike");
     });
 
     QUnit.test("parse -1", async (assert) => {
@@ -790,7 +781,7 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "a");
         assert.containsOnce(target, ".o_model_field_selector_warning");
         assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, `[("a", "=", "")]`);
     });
@@ -839,7 +830,7 @@ QUnit.module("Components", (hooks) => {
         assert.containsN(target, ".o_domain_leaf", 2);
         assert.strictEqual(
             target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
-            "equal"
+            "="
         );
         assert.strictEqual(
             target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
@@ -865,7 +856,7 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
                 .value,
-            "equal"
+            "="
         );
         assert.containsN(target, ".o_datetime_input", 2);
     });
@@ -886,7 +877,7 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
                 .value,
-            "equal"
+            "="
         );
         assert.containsN(target, ".o_datetime_input", 2);
     });
@@ -1231,7 +1222,7 @@ QUnit.module("Components", (hooks) => {
             [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
                 (e) => e.value
             ),
-            ["equal", "not_equal", "set", "not_set"]
+            ["=", "!=", "set", "not_set"]
         );
 
         await openModelFieldSelectorPopover(target);
@@ -1249,7 +1240,7 @@ QUnit.module("Components", (hooks) => {
             [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
                 (e) => e.value
             ),
-            ["equal", "not_equal", "set", "not_set"]
+            ["=", "!=", "set", "not_set"]
         );
     });
 
@@ -1353,5 +1344,57 @@ QUnit.module("Components", (hooks) => {
             "b",
         ]);
         assert.verifySteps([`[("foo", "in", ["a", "b"])]`]);
+    });
+
+    QUnit.test("display of an unknown operator (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            resModel: "partner",
+            domain: `[("foo", "hop", "a")]`,
+            readonly: true,
+        });
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo "hop" "a"`);
+
+        await parent.set(`[("foo", hop, "a")]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo hop "a"`);
+    });
+
+    QUnit.test("display of an unknown operator (edit)", async (assert) => {
+        const parent = await makeDomainSelector({
+            resModel: "partner",
+            domain: `[("foo", "hop", "a")]`,
+        });
+        assert.strictEqual(getSelectedOperator(target), `"hop"`);
+
+        await parent.set(`[("foo", hop, "a")]`);
+        assert.strictEqual(getSelectedOperator(target), `hop`);
+    });
+
+    QUnit.test("display of negation of an unknown operator (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            resModel: "partner",
+            domain: `["!", ("foo", "hop", "a")]`,
+            readonly: true,
+        });
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not "hop" "a"`);
+
+        await parent.set(`["!", ("foo", hop, "a")]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not hop "a"`);
+    });
+
+    QUnit.test("display of an operator without negation defined (readonly)", async (assert) => {
+        await makeDomainSelector({
+            resModel: "partner",
+            domain: `["!", ("foo", "=?", "a")]`,
+            readonly: true,
+        });
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not =? "a"`);
+    });
+
+    QUnit.test("display of an operator without negation defined (edit)", async (assert) => {
+        await makeDomainSelector({
+            resModel: "partner",
+            domain: `["!", ("foo", "=?", "a")]`,
+        });
+        assert.strictEqual(getSelectedOperator(target), `not =?`);
     });
 });
