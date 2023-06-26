@@ -730,9 +730,10 @@ class AccountChartTemplate(models.AbstractModel):
 
             account_id = [rep_line['account_id'] for _command, _id, rep_line in tax_template['repartition_line_ids'] if rep_line.get('account_id')]
             if account_id:
-                local_account = self.env['account.account'].browse(account_id[0])
+                local_account = self.env['account.account'].browse(existing_accounts[account_id[0]])
                 existing_accounts[account_xml_id] = create_foreign_tax_account(local_account, _("Cash basis transition account")).id
                 continue
+            existing_accounts[account_xml_id] = None
 
         # Assign the account based on the map
         for field, account_name in field_and_names:
