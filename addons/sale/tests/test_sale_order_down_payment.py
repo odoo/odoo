@@ -432,13 +432,15 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             })]
         })
 
-        # Check that partner_a's credit is 0.0.
+        # Check that partner_a's credit and credit_to_invoice is 0.0.
         self.assertEqual(self.partner_a.credit, 0.0)
+        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
 
-        # Make sure partner_a's credit includes the newly confirmed SO.
+        # Make sure partner_a's credit_to_invoice includes the newly confirmed SO.
         sale_order.action_confirm()
-        self.partner_a.invalidate_recordset(['credit'])
-        self.assertEqual(self.partner_a.credit, 1000.0)
+        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
+        self.assertEqual(self.partner_a.credit, 0.0)
+        self.assertEqual(self.partner_a.credit_to_invoice, 1000.0)
 
         # Create a 50% down payment invoice.
         self.env['sale.advance.payment.inv'].with_context({
@@ -465,7 +467,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         invoice.invoice_line_ids.quantity = 3
         self.assertEqual(
             invoice.partner_credit_warning,
-            "partner_a has reached its Credit Limit of: $\xa01,000.00\n"
+            "partner_a has reached its credit limit of: $\xa01,000.00\n"
             "Total amount due (including this document): $\xa01,500.00"
         )
 
