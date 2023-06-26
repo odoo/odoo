@@ -136,7 +136,7 @@
                         <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="medium_id"/>
-                        <field name="availability"/>
+                        <field name="availability" placeholder="Directly Available"/>
                         <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <group string="Job">
@@ -232,6 +232,8 @@
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
                 <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
+                <separator/>
+                <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),('availability','=', False)]"/>
                 <separator/>
                 <filter string="Creation Date" name="filter_create" date="create_date"/>
                 <filter string="Last Stage Update" name="filter_date_last_stage_update" date="date_last_stage_update"/>
