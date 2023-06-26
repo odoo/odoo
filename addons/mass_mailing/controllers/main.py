@@ -130,12 +130,15 @@ class MassMailController(http.Controller):
 
     @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
     def full_url_redirect(self, code, mailing_trace_id, **post):
+        # import pdb; pdb.set_trace()
+
         request.env['link.tracker.click'].sudo().add_click(
             code,
             ip=request.httprequest.remote_addr,
             country_code=request.geoip.country_code,
             mailing_trace_id=mailing_trace_id
         )
+        # import pdb; pdb.set_trace()
         redirect_url = request.env['link.tracker'].get_url_from_code(code)
         if not redirect_url:
             raise NotFound()

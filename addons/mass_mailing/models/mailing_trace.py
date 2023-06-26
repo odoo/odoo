@@ -150,6 +150,8 @@ class MailingTrace(models.Model):
         return traces
 
     def set_clicked(self, domain=None):
+        # import pdb; pdb.set_trace()
+
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'links_click_datetime': fields.Datetime.now()})
         return traces

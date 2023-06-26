@@ -34,7 +34,7 @@ class LinkTrackerClick(models.Model):
     @api.model
     def add_click(self, code, **route_values):
         click = super(LinkTrackerClick, self).add_click(code, **route_values)
-
+        # import pdb; pdb.set_trace()
         if click and click.mailing_trace_id:
             click.mailing_trace_id.set_opened()
             click.mailing_trace_id.set_clicked()
