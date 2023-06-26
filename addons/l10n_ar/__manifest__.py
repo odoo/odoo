@@ -119,6 +119,7 @@ Master Data:
         'demo/account_supplier_invoice_demo.xml',
         'demo/account_supplier_refund_demo.xml',
     ],
+    'post_init_hook': 'post_init_hook',
     'installable': True,
     'auto_install': False,
     'application': False,
