@@ -60,6 +60,7 @@ import {
     prepareUpdate,
     splitTextNode,
     boundariesOut,
+    rightLeafOnlyNotBlockPath,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1569,7 +1570,11 @@ export class OdooEditor extends EventTarget {
             fillEmpty(closestBlock(start));
         }
         fillEmpty(closestBlock(range.endContainer));
-        const joinWith = range.endContainer;
+        let joinWith = range.endContainer;
+        const rightLeaf = rightLeafOnlyNotBlockPath(joinWith).next().value;
+        if (rightLeaf && rightLeaf.nodeValue === ' ') {
+            joinWith = rightLeaf;
+        }
         // Rejoin blocks that extractContents may have split in two.
         while (
             doJoin &&
