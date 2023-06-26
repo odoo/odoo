@@ -170,7 +170,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                         $toSelect.prop('selected', true);
                     }
                 });
-                this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
+                this._changeAttribute(['.css_attribute_color', '.o_variant_pills', '.o_variant_img_pills']);
             }
         }
     },

@@ -45,6 +45,7 @@
                                 <field name="display_type" invisible="1"/>
                                 <field name="is_custom" groups="product.group_product_variant"/>
                                 <field name="html_color" attrs="{'column_invisible': [('parent.display_type', '!=', 'color')]}" widget="color"/>
+                                <field name="image_1920" widget='image' class="oe_avatar text-start float-none" options="{'preview_image': 'image_128'}" attrs="{'column_invisible': [('parent.display_type', 'not in', ['color', 'pills_with_images'])]}"/>
                             </tree>
                         </field>
                     </page>

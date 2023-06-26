@@ -552,7 +552,7 @@ class WebsiteSale(http.Controller):
         """
         if (
             not request.env.user.has_group('website.group_website_restricted_editor')
-            or image_res_model not in ['product.product', 'product.template', 'product.image']
+            or image_res_model not in ['product.product', 'product.template', 'product.image', 'product.attribute.value']
         ):
             raise NotFound()
 
@@ -561,6 +561,8 @@ class WebsiteSale(http.Controller):
             request.env['product.product'].browse(image_res_id).write({'image_1920': False})
         elif image_res_model == 'product.template':
             request.env['product.template'].browse(image_res_id).write({'image_1920': False})
+        elif image_res_model == 'product.attribute.value':
+            request.env['product.attribute.value'].browse(image_res_id).write({'image_1920': False})
         else:
             request.env['product.image'].browse(image_res_id).unlink()
 

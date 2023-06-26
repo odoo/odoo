@@ -197,6 +197,21 @@ label.css_attribute_color.css_not_available {
             background-color: map-get($grays, '200');
         }
     }
+
+    .o_variant_img_pills {
+        min-width: 110px;
+        min-height: 127px;
+        cursor: default;
+
+        &.btn.active {
+            background-color: map-get($theme-colors, 'primary');
+        }
+        &:not(.active) {
+            color: map-get($grays, '600');
+            background-color: $white;
+            border: 1px solid map-get($grays, '600');
+        }
+    }
 }
 
 .o_product_configurator {

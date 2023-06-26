@@ -380,7 +380,7 @@ var VariantMixin = {
             combinationData.parent_exclusions = parentExclusions;
         }
         $parent
-            .find('option, input, label, .o_variant_pills')
+            .find('option, input, label, .o_variant_pills, .o_variant_img_pills')
             .removeClass('css_not_available')
             .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
@@ -501,7 +501,7 @@ var VariantMixin = {
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
         $input.addClass('css_not_available');
         $input.closest('label').addClass('css_not_available');
-        $input.closest('.o_variant_pills').addClass('css_not_available');
+        $input.closest('.o_variant_pills, .o_variant_img_pills').addClass('css_not_available');
 
         if (excludedBy && attributeNames) {
             var $target = $input.is('option') ? $input : $input.closest('label').add($input);

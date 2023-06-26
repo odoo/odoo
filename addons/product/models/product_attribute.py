@@ -29,6 +29,7 @@ class ProductAttribute(models.Model):
         selection=[
             ('radio', 'Radio'),
             ('pills', 'Pills'),
+            ('pills_with_images', 'Pills with Images'),
             ('select', 'Select'),
             ('color', 'Color'),
         ],
