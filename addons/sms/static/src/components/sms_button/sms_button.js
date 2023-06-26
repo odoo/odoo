@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, status } from "@odoo/owl";
 
 export class SendSMSButton extends Component {
     static template = "sms.SendSMSButton";
@@ -34,6 +34,9 @@ export class SendSMSButton extends Component {
             },
             {
                 onClose: () => {
+                    if (status(this) === "destroyed") {
+                        return;
+                    }
                     this.props.record.load();
                 },
             }
