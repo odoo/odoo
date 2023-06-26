@@ -122,18 +122,11 @@ export class ChannelSelector extends Component {
 
     async onValidate() {
         if (this.props.category.id === "chats") {
-            const selectedPartners = this.state.selectedPartners;
-            if (selectedPartners.length === 0) {
+            const selectedPartnerIds = this.state.selectedPartners;
+            if (selectedPartnerIds.length === 0) {
                 return;
             }
-            if (selectedPartners.length === 1) {
-                await this.threadService
-                    .joinChat(selectedPartners[0])
-                    .then((chat) => this.threadService.open(chat, this.env.inChatWindow));
-            } else {
-                const partners_to = [...new Set([this.store.self.id, ...selectedPartners])];
-                await this.threadService.createGroupChat({ partners_to });
-            }
+            await this.threadService.startChat(selectedPartnerIds, this.env.inChatWindow);
         }
         if (this.props.onValidate) {
             this.props.onValidate();
