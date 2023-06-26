@@ -688,11 +688,13 @@ export class PosDB {
      * @param {object} order object.
      */
     set_order_to_remove_from_server(order) {
-        if (order.server_id !== undefined) {
-            var to_remove = this.load("unpaid_orders_to_remove", []);
-            to_remove.push(order.server_id);
-            this.save("unpaid_orders_to_remove", to_remove);
+        if (order.server_id === undefined) {
+            return;
         }
+        const to_remove = new Set(
+            [this.load("unpaid_orders_to_remove", []), order.server_id].flat()
+        );
+        this.save("unpaid_orders_to_remove", [...to_remove]);
     }
     /**
      * Get a list of server_ids of orders to be removed.
