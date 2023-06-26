@@ -1462,10 +1462,7 @@ QUnit.module("Search", (hooks) => {
             target.querySelector(".o_model_field_selector_value").innerText,
             "Birthday"
         );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf_operator_select").value,
-            "greater_equal"
-        );
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, ">=");
         assert.strictEqual(target.querySelector(".o_ds_expr_value").innerText, "context_today()");
         assert.notOk(target.querySelector(".modal footer button").disabled);
 
@@ -1476,7 +1473,7 @@ QUnit.module("Search", (hooks) => {
         await click(target, ".modal .o_domain_add_first_node_button");
         assert.containsOnce(target, ".o_domain_leaf");
         assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "ID");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
         assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "1");
 
         await click(target.querySelector(".modal footer button"));

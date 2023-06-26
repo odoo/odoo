@@ -4,7 +4,7 @@
     <t t-name="web.DomainSelector.Editor" owl="1">
         <t t-if="isExprValue">
             <div class="o_ds_expr_value o_input d-flex align-items-center p-0" data-tooltip="Expressions can not be edited">
-                <span class="ms-2" t-esc="props.value.expr" />
+                <span class="ms-2" t-esc="props.value" />
                 <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Expression" />
                 <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.onExprRemove()">
                     <i class="fa fa-times" />
@@ -13,6 +13,21 @@
         </t>
         <t t-else="">
             <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
+        </t>
+    </t>
+
+    <t t-name="web.DomainSelector.PathEditor" owl="1">
+        <t t-if="isSupportedPath">
+            <t t-component="component" isDebugMode="props.isDebugMode" readonly="props.readonly" resModel="props.resModel" path="props.path" update="props.update"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex align-items-center p-0">
+                <span class="ms-2" t-esc="stringifiedPath" />
+                <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Path not supported" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="onClear">
+                    <i class="fa fa-times" />
+                </button>
+            </div>
         </t>
     </t>
 
