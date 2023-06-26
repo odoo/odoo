@@ -426,10 +426,6 @@ class Http(models.AbstractModel):
         # is not restricted by the website module.
         return result
 
-    @api.model
-    def _verify_request_recaptcha_token(self, action):
-        return True
-
 
 class ModelConverter(ir_http.ModelConverter):
 
