@@ -96,7 +96,8 @@ export class SelectMenu extends Component {
             }
             if (
                 this.props.choices.length !== nextProps.choices.length ||
-                this.props.groups.length !== nextProps.groups.length
+                this.props.groups.length !== nextProps.groups.length ||
+                JSON.stringify(this.props.groups) !== JSON.stringify(nextProps.groups)
             ) {
                 const groups = [{ choices: nextProps.choices }, ...nextProps.groups];
                 this.filterOptions(this.state.searchValue, groups);
