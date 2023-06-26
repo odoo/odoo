@@ -705,6 +705,7 @@ class configmanager:
         return self.options.get(key, default)
 
     def pop(self, key, default=None):
+        self._warn("Since 17.0, config.pop is deprecated, please refrain from modifying the configuration at runtime", DeprecationWarning, stacklevel=2)
         return self.options.pop(key, default)
 
     def get_misc(self, sect, key, default=None):
