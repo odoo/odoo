@@ -32,7 +32,7 @@ class Http(models.AbstractModel):
         """
         res = super()._verify_request_recaptcha_token(action)
 
-        if not res:
+        if not res:  # check result of google_recaptcha
             return res
 
         ip_addr = request.httprequest.remote_addr
