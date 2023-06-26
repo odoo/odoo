@@ -579,6 +579,7 @@ class Project(models.Model):
         action['context'] = {
             'default_project_id': self.id,
             'delete': False,
+            'search_default_open_tasks': True,
             'active_id_chatter': self.id,
         }
         action['display_name'] = self.name
