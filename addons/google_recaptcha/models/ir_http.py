@@ -36,11 +36,6 @@ class Http(models.AbstractModel):
             If no recaptcha private key is set the recaptcha verification
             is considered inactive and this method will return True.
         """
-        res = super()._verify_request_recaptcha_token(action)
-
-        if not res:
-            return res
-
         ip_addr = request.httprequest.remote_addr
         token = request.params.pop('recaptcha_token_response', False)
         recaptcha_result = request.env['ir.http']._verify_recaptcha_token(ip_addr, token, action)
