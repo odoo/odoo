@@ -847,7 +847,10 @@ class Partner(models.Model):
                 }
 
     def _get_contact_name(self, partner, name):
-        return "%s, %s" % (partner.commercial_company_name or partner.sudo().parent_id.name, name)
+        company_name = partner.commercial_company_name or partner.sudo().parent_id.name
+        if not name:
+            return company_name
+        return "%s, %s" % (company_name, name)
 
     def _get_name(self):
         """ Utility method to allow name_get to be overrided without re-browse the partner """
@@ -855,7 +858,7 @@ class Partner(models.Model):
         name = partner.name or ''
 
         if partner.company_name or partner.parent_id:
-            if not name and partner.type in ['invoice', 'delivery', 'other']:
+            if not name and partner.type in ['invoice', 'delivery', 'other'] and not self._context.get("no_address_type"):
                 types = dict(self._fields['type']._description_selection(self.env))
                 name = types[partner.type]
             if not partner.is_company:
