@@ -557,7 +557,7 @@ class AccountEdiFormat(models.Model):
             "username": company.sudo().l10n_in_edi_ewaybill_username,
             "gstin": company.vat,
         })
-        if company.sudo().l10n_in_edi_production_env:
+        if company.sudo().l10n_in_edi_env == 'production':
             default_endpoint = DEFAULT_IAP_ENDPOINT
         else:
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT

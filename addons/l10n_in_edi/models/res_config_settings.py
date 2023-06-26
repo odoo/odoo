@@ -10,9 +10,9 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_in_edi_username = fields.Char("Indian EDI username", related="company_id.l10n_in_edi_username", readonly=False)
     l10n_in_edi_password = fields.Char("Indian EDI password", related="company_id.l10n_in_edi_password", readonly=False)
-    l10n_in_edi_production_env = fields.Boolean(
-        string="Indian EDI Testing Environment",
-        related="company_id.l10n_in_edi_production_env",
+    l10n_in_edi_env = fields.Selection(
+        string="Indian EDI Environment",
+        related="company_id.l10n_in_edi_env",
         readonly=False
     )
 
@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
           }
 
     def l10n_in_edi_buy_iap(self):
-        if not self.l10n_in_edi_production_env:
+        if not self.l10n_in_edi_env == 'production':
             raise UserError(_("You must enable production environment to buy credits"))
         return {
             'type': 'ir.actions.act_url',
