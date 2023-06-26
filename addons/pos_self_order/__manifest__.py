@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "POS Self Order",
+    'version': '1.0.1',
     "summary": """
         Addon for the POS App that allows customers to view the menu on their smartphone.
         """,

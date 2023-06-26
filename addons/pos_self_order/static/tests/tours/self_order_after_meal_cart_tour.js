@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { PosSelf } from "./tour_utils";
+import { PosSelf, descriptionHelper } from "./tour_utils";
 
 registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
     test: true,
@@ -77,23 +77,34 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.action.clickBack(),
 
         // Here we check that the product attributes are correctly selected.
-        ...PosSelf.action.addProduct("Desk Organizer", 1, "kidding", {
-            radio: { name: "Size", value: "M" },
-            select: { name: "Fabric", value: "Leather" },
-        }),
-        ...PosSelf.action.addProduct("Desk Organizer", 2, "okkk", {
-            radio: { name: "Size", value: "L" },
-            select: { name: "Fabric", value: "Custom" },
-        }),
+        ...PosSelf.action.addProduct("Desk Organizer", 1, "kidding", [
+            { type: "radio", name: "Size", value: "M" },
+            { type: "select", name: "Fabric", value: "Leather" },
+        ]),
+        ...PosSelf.action.addProduct("Desk Organizer", 2, "okkk", [
+            { type: "radio", name: "Size", value: "L" },
+            { type: "select", name: "Fabric", value: "Custom" },
+        ]),
         PosSelf.action.clickPrimaryBtn("Review"),
         PosSelf.check.isOrderline("Desk Organizer", "5.87", "kidding", "M, Leather"),
         PosSelf.check.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
 
+        PosSelf.action.clickOrderline("Desk Organizer", "5.87", "kidding"),
+        ...PosSelf.check.attributes([
+            { type: "radio", name: "Size", value: "M" },
+            { type: "select", name: "Fabric", value: "Leather" },
+        ]),
         // Check if we can edit the product attributes, and if the changes are made to the orderline
-        ...PosSelf.action.editOrderline("Desk Organizer", "5.87", "kidding", 0, "dav", {
-            radio: { name: "Size", value: "S" },
-            select: { name: "Fabric", value: "Custom" },
-        }),
+        ...PosSelf.action.selectAttributes([
+            { type: "radio", name: "Size", value: "S" },
+            { type: "select", name: "Fabric", value: "Custom" },
+        ]),
+        descriptionHelper("dav"),
+        {
+            content: `Click on 'Add' button`,
+            trigger: `.o_self_order_main_button`,
+        },
+
         PosSelf.check.isOrderline("Desk Organizer", "5.87", "dav", "S, Custom"),
         PosSelf.check.isOrderline("Desk Organizer", "11.73", "okkk", "L, Custom"),
         PosSelf.action.clickPrimaryBtn("Order"),

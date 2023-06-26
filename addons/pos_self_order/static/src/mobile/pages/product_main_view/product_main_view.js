@@ -29,7 +29,6 @@ export class ProductMainView extends Component {
         this.state = useState({
             qty: 1,
             customer_note: "",
-            selectedVariants: [],
             cartQty: 0,
             selectedCombos: Object.fromEntries(
                 this.product.pos_combo_ids?.map?.((id) => [
@@ -37,6 +36,9 @@ export class ProductMainView extends Component {
                     this.selfOrder.comboByIds[id].combo_line_ids[0].id,
                 ]) || []
             ),
+            /** this will be an object that will have the attribute id as key and the value id as value
+             *  ex: selectedVariants: {4: 9, 5: 11} */
+            selectedVariants: {},
         });
 
         onWillUnmount(() => {
@@ -44,6 +46,13 @@ export class ProductMainView extends Component {
         });
 
         this.initState();
+    }
+    getAttributeWithStringIds(attribute) {
+        const values = attribute.values.map((value) => ({
+            ...value,
+            id: value.id.toString(),
+        }));
+        return { ...attribute, values };
     }
 
     get disableAttributes() {
@@ -66,24 +75,26 @@ export class ProductMainView extends Component {
                 this.state.selectedVariants = editedLine.selected_attributes;
             }
         } else {
-            this.state.selectedVariants = this.product.attributes.reduce((acc, curr) => {
-                acc[curr.name] = curr.values[0].name;
-                return acc;
-            }, {});
+            this.state.selectedVariants = Object.fromEntries(
+                this.product.attributes.map((att) => [att.id, att.values[0].id.toString()])
+            );
         }
 
         return 0;
     }
 
     get fullProductName() {
-        const productAttributeString = Object.values(this.state.selectedVariants).join(", ");
-        let name = `${this.product.name}`;
-
-        if (productAttributeString) {
-            name += ` (${productAttributeString})`;
+        if (!this.product.attributes.length) {
+            return this.product.name;
         }
 
-        return name;
+        const findAttribute = (id) => this.product.attributes.find((attr) => attr.id == id);
+        const findValue = (attr, id) => attr.values.find((value) => value.id == id);
+        const productAttributeString = Object.entries(this.state.selectedVariants)
+            .map(([attrId, valueId]) => findValue(findAttribute(attrId), valueId).name)
+            .join(", ");
+
+        return `${this.product.name} (${productAttributeString})`;
     }
 
     changeQuantity(increase) {
