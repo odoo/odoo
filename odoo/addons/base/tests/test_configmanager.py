@@ -23,15 +23,40 @@ class TestConfigManager(TransactionCase):
         self.config = configmanager()
 
     def parse_reset(self, args=None):
-        with patch.dict(self.config.options, {}):
+        with (
+            patch.dict(self.config._runtime_options, {}),
+            patch.dict(self.config._cli_options, {}),
+            patch.dict(self.config._file_options, {}),
+            patch.dict(self.config._default_options, {}),
+        ):
             cli = self.config._parse_config(args)
             return cli, dict(self.config.options)
+
+    def assertConfigEqual(self, truth):
+        try:
+            self.assertEqual(dict(self.config.options), truth)
+        except AssertionError as exc1:
+            for k in set(self.config.options).intersection(truth):
+                try:
+                    self.assertEqual(self.config.options[k], truth[k], f"{k!r} doesn't match")
+                except AssertionError as exc2:
+                    if hasattr(Exception, 'add_note'):  # 3.11
+                        exc2.add_note(str(self.config._get_sources(k)))
+                        raise exc2 from exc1
+                    raise AssertionError(f"{exc2.args[0]}\n{self.config._get_sources(k)}") from exc1
+            if missing := set(self.config.options).difference(truth):
+                e = "missing from the test dict: " + ', '.join(missing)
+                raise AssertionError(e) from exc1
+            if missing := set(truth).difference(self.config.options):
+                e = "missing from the configuration: " + ', '.join(missing)
+                raise AssertionError(e) from exc1
+            raise
 
     def test_00_setUp(self):
         self.assertEqual(self.config.rcfile, EMPTY_CONFIG_PATH)
 
     def test_01_default_config(self):
-        self.assertDictEqual(self.config.options, {
+        self.assertConfigEqual({
             # options not exposed on the command line
             'admin_passwd': 'admin',
             'bin_path': '',
@@ -150,7 +175,7 @@ class TestConfigManager(TransactionCase):
         self.config._parse_config(['-c', config_path])
         self.assertEqual(self.config.rcfile, config_path)
         self.assertEqual(self.config.rcfile, self.config['config'])
-        self.assertDictEqual(self.config.options, {
+        self.assertConfigEqual({
             # options not exposed on the command line
             'admin_passwd': 'Tigrou007',
             'bin_path': '',
@@ -287,7 +312,7 @@ class TestConfigManager(TransactionCase):
             self.config._parse_config(['--config', config_path])
         with self.assertNoLogs('py.warnings'):
             self.config._warn_deprecated_options()
-        self.assertDictEqual(self.config.options, {
+        self.assertConfigEqual({
             # options taken from the configuration file
             'admin_passwd': 'admin',
             'config': config_path,
@@ -409,7 +434,7 @@ class TestConfigManager(TransactionCase):
         with file_open('base/tests/config/cli') as file:
             self.config._parse_config(file.read().split())
 
-        values = {
+        self.assertConfigEqual({
             # options not exposed on the command line
             'admin_passwd': 'admin',
             'bin_path': '',
@@ -458,7 +483,6 @@ class TestConfigManager(TransactionCase):
             'logfile': '/tmp/odoo.log',
             'syslog': False,
             'log_handler': [
-                ':INFO',
                 'odoo.tools.config:DEBUG',
                 ':WARNING',
                 'odoo.http:DEBUG',
@@ -514,24 +538,18 @@ class TestConfigManager(TransactionCase):
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',
-        }
-
-        if IS_POSIX:
-            # multiprocessing
-            values.update(
-                {
-                    'workers': 92,
-                    'limit_memory_soft': 1048576,
-                    'limit_memory_soft_gevent': 1048577,
-                    'limit_memory_hard': 1048578,
-                    'limit_memory_hard_gevent': 1048579,
-                    'limit_time_cpu': 60,
-                    'limit_time_real': 61,
-                    'limit_time_real_cron': 62,
-                    'limit_request': 100,
-                }
-            )
-        self.assertEqual(self.config.options, values)
+            **({
+                'workers': 92,
+                'limit_memory_soft': 1048576,
+                'limit_memory_soft_gevent': 1048577,
+                'limit_memory_hard': 1048578,
+                'limit_memory_hard_gevent': 1048579,
+                'limit_time_cpu': 60,
+                'limit_time_real': 61,
+                'limit_time_real_cron': 62,
+                'limit_request': 100,
+            } if IS_POSIX else {})
+        })
 
     @patch('optparse.OptionParser.error')
     def test_06_syslog_logfile_exclusive_cli(self, error):
