@@ -353,10 +353,13 @@ class Partner(models.Model):
 
         name = self.name or ''
         if self.company_name or self.parent_id:
-            if not name and self.type in displayed_types:
+            if not name and self.type in displayed_types and not self.env.context.get("no_address_type"):
                 name = type_description[self.type]
-            if not self.is_company:
-                name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
+            company_name = self.commercial_company_name or self.sudo().parent_id.name
+            if not name:
+                name = company_name
+            elif not self.is_company:
+                name = f"{company_name}, {name}"
         return name.strip()
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
@@ -853,8 +856,9 @@ class Partner(models.Model):
                 }
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
-    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang', 'no_address_type')
     def _compute_display_name(self):
+        breakpoint()
         for partner in self:
             name = partner.with_context(lang=self.env.lang)._get_complete_name()
             if partner._context.get('show_address'):
