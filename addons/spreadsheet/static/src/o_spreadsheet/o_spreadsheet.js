@@ -751,12 +751,20 @@
         return computeTextLinesHeight(fontSize, numberOfLines) + 2 * PADDING_AUTORESIZE_VERTICAL;
     }
     function computeTextWidth(context, text, style) {
-        context.save();
-        context.font = computeTextFont(style);
-        const textWidth = context.measureText(text).width;
-        context.restore();
-        return textWidth;
+        const font = computeTextFont(style);
+        if (!textWidthCache[font]) {
+            textWidthCache[font] = {};
+        }
+        if (textWidthCache[font][text] === undefined) {
+            context.save();
+            context.font = font;
+            const textWidth = context.measureText(text).width;
+            context.restore();
+            textWidthCache[font][text] = textWidth;
+        }
+        return textWidthCache[font][text];
     }
+    const textWidthCache = {};
     function fontSizeInPixels(fontSize) {
         return Math.round((fontSize * 96) / 72);
     }
@@ -1064,10 +1072,17 @@
     function toLowerCase(str) {
         return str ? str.toLowerCase() : "";
     }
-    function transpose2dArray(matrix) {
+    function transpose2dArray(matrix, callback = (val) => val) {
         if (!matrix.length)
-            return matrix;
-        return matrix[0].map((_, i) => matrix.map((row) => row[i]));
+            return [];
+        const transposed = Array(matrix[0].length);
+        for (let i = 0; i < matrix[0].length; i++) {
+            transposed[i] = Array(matrix.length);
+            for (let j = 0; j < matrix.length; j++) {
+                transposed[i][j] = callback(matrix[j][i]);
+            }
+        }
+        return transposed;
     }
     /**
      * Equivalent to "\s" in regexp, minus the new lines characters
@@ -3705,6 +3720,290 @@
         return undefined;
     }
 
+    var CellValueType;
+    (function (CellValueType) {
+        CellValueType["boolean"] = "boolean";
+        CellValueType["number"] = "number";
+        CellValueType["text"] = "text";
+        CellValueType["empty"] = "empty";
+        CellValueType["error"] = "error";
+    })(CellValueType || (CellValueType = {}));
+
+    var ClipboardMIMEType;
+    (function (ClipboardMIMEType) {
+        ClipboardMIMEType["PlainText"] = "text/plain";
+        ClipboardMIMEType["Html"] = "text/html";
+    })(ClipboardMIMEType || (ClipboardMIMEType = {}));
+
+    function isSheetDependent(cmd) {
+        return "sheetId" in cmd;
+    }
+    function isGridDependent(cmd) {
+        return "dimension" in cmd && "sheetId" in cmd;
+    }
+    function isTargetDependent(cmd) {
+        return "target" in cmd && "sheetId" in cmd;
+    }
+    function isRangeDependant(cmd) {
+        return "ranges" in cmd;
+    }
+    function isPositionDependent(cmd) {
+        return "col" in cmd && "row" in cmd && "sheetId" in cmd;
+    }
+    const invalidateEvaluationCommands = new Set([
+        "RENAME_SHEET",
+        "DELETE_SHEET",
+        "CREATE_SHEET",
+        "ADD_COLUMNS_ROWS",
+        "REMOVE_COLUMNS_ROWS",
+        "UNDO",
+        "REDO",
+        "ADD_MERGE",
+    ]);
+    const invalidateDependenciesCommands = new Set([
+        ...invalidateEvaluationCommands,
+        "MOVE_RANGES",
+    ]);
+    const invalidateCFEvaluationCommands = new Set([
+        ...invalidateEvaluationCommands,
+        "DUPLICATE_SHEET",
+        "EVALUATE_CELLS",
+        "ADD_CONDITIONAL_FORMAT",
+        "REMOVE_CONDITIONAL_FORMAT",
+        "MOVE_CONDITIONAL_FORMAT",
+    ]);
+    const readonlyAllowedCommands = new Set([
+        "START",
+        "ACTIVATE_SHEET",
+        "COPY",
+        "PREPARE_SELECTION_INPUT_EXPANSION",
+        "STOP_SELECTION_INPUT",
+        "RESIZE_SHEETVIEW",
+        "SET_VIEWPORT_OFFSET",
+        "SELECT_SEARCH_NEXT_MATCH",
+        "SELECT_SEARCH_PREVIOUS_MATCH",
+        "REFRESH_SEARCH",
+        "UPDATE_SEARCH",
+        "CLEAR_SEARCH",
+        "EVALUATE_CELLS",
+        "SET_CURRENT_CONTENT",
+        "SET_FORMULA_VISIBILITY",
+        "OPEN_CELL_POPOVER",
+        "CLOSE_CELL_POPOVER",
+        "UPDATE_FILTER",
+    ]);
+    const coreTypes = new Set([
+        /** CELLS */
+        "UPDATE_CELL",
+        "UPDATE_CELL_POSITION",
+        "CLEAR_CELL",
+        "DELETE_CONTENT",
+        /** GRID SHAPE */
+        "ADD_COLUMNS_ROWS",
+        "REMOVE_COLUMNS_ROWS",
+        "RESIZE_COLUMNS_ROWS",
+        "HIDE_COLUMNS_ROWS",
+        "UNHIDE_COLUMNS_ROWS",
+        "SET_GRID_LINES_VISIBILITY",
+        "UNFREEZE_COLUMNS",
+        "UNFREEZE_ROWS",
+        "FREEZE_COLUMNS",
+        "FREEZE_ROWS",
+        "UNFREEZE_COLUMNS_ROWS",
+        /** MERGE */
+        "ADD_MERGE",
+        "REMOVE_MERGE",
+        /** SHEETS MANIPULATION */
+        "CREATE_SHEET",
+        "DELETE_SHEET",
+        "DUPLICATE_SHEET",
+        "MOVE_SHEET",
+        "RENAME_SHEET",
+        "HIDE_SHEET",
+        "SHOW_SHEET",
+        /** RANGES MANIPULATION */
+        "MOVE_RANGES",
+        /** CONDITIONAL FORMAT */
+        "ADD_CONDITIONAL_FORMAT",
+        "REMOVE_CONDITIONAL_FORMAT",
+        "MOVE_CONDITIONAL_FORMAT",
+        /** FIGURES */
+        "CREATE_FIGURE",
+        "DELETE_FIGURE",
+        "UPDATE_FIGURE",
+        /** FORMATTING */
+        "SET_FORMATTING",
+        "CLEAR_FORMATTING",
+        "SET_BORDER",
+        "SET_ZONE_BORDERS",
+        /** CHART */
+        "CREATE_CHART",
+        "UPDATE_CHART",
+        /** FILTERS */
+        "CREATE_FILTER_TABLE",
+        "REMOVE_FILTER_TABLE",
+        /** IMAGE */
+        "CREATE_IMAGE",
+    ]);
+    function isCoreCommand(cmd) {
+        return coreTypes.has(cmd.type);
+    }
+    function canExecuteInReadonly(cmd) {
+        return readonlyAllowedCommands.has(cmd.type);
+    }
+    /**
+     * Holds the result of a command dispatch.
+     * The command may have been successfully dispatched or cancelled
+     * for one or more reasons.
+     */
+    class DispatchResult {
+        reasons;
+        constructor(results = []) {
+            if (!Array.isArray(results)) {
+                results = [results];
+            }
+            results = [...new Set(results)];
+            this.reasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
+        }
+        /**
+         * Static helper which returns a successful DispatchResult
+         */
+        static get Success() {
+            return new DispatchResult();
+        }
+        get isSuccessful() {
+            return this.reasons.length === 0;
+        }
+        /**
+         * Check if the dispatch has been cancelled because of
+         * the given reason.
+         */
+        isCancelledBecause(reason) {
+            return this.reasons.includes(reason);
+        }
+    }
+    exports.CommandResult = void 0;
+    (function (CommandResult) {
+        CommandResult[CommandResult["Success"] = 0] = "Success";
+        CommandResult[CommandResult["CancelledForUnknownReason"] = 1] = "CancelledForUnknownReason";
+        CommandResult[CommandResult["WillRemoveExistingMerge"] = 2] = "WillRemoveExistingMerge";
+        CommandResult[CommandResult["MergeIsDestructive"] = 3] = "MergeIsDestructive";
+        CommandResult[CommandResult["CellIsMerged"] = 4] = "CellIsMerged";
+        CommandResult[CommandResult["InvalidTarget"] = 5] = "InvalidTarget";
+        CommandResult[CommandResult["EmptyUndoStack"] = 6] = "EmptyUndoStack";
+        CommandResult[CommandResult["EmptyRedoStack"] = 7] = "EmptyRedoStack";
+        CommandResult[CommandResult["NotEnoughElements"] = 8] = "NotEnoughElements";
+        CommandResult[CommandResult["NotEnoughSheets"] = 9] = "NotEnoughSheets";
+        CommandResult[CommandResult["MissingSheetName"] = 10] = "MissingSheetName";
+        CommandResult[CommandResult["UnchangedSheetName"] = 11] = "UnchangedSheetName";
+        CommandResult[CommandResult["DuplicatedSheetName"] = 12] = "DuplicatedSheetName";
+        CommandResult[CommandResult["DuplicatedSheetId"] = 13] = "DuplicatedSheetId";
+        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 14] = "ForbiddenCharactersInSheetName";
+        CommandResult[CommandResult["WrongSheetMove"] = 15] = "WrongSheetMove";
+        CommandResult[CommandResult["WrongSheetPosition"] = 16] = "WrongSheetPosition";
+        CommandResult[CommandResult["InvalidAnchorZone"] = 17] = "InvalidAnchorZone";
+        CommandResult[CommandResult["SelectionOutOfBound"] = 18] = "SelectionOutOfBound";
+        CommandResult[CommandResult["TargetOutOfSheet"] = 19] = "TargetOutOfSheet";
+        CommandResult[CommandResult["WrongCutSelection"] = 20] = "WrongCutSelection";
+        CommandResult[CommandResult["WrongPasteSelection"] = 21] = "WrongPasteSelection";
+        CommandResult[CommandResult["WrongPasteOption"] = 22] = "WrongPasteOption";
+        CommandResult[CommandResult["WrongFigurePasteOption"] = 23] = "WrongFigurePasteOption";
+        CommandResult[CommandResult["EmptyClipboard"] = 24] = "EmptyClipboard";
+        CommandResult[CommandResult["EmptyRange"] = 25] = "EmptyRange";
+        CommandResult[CommandResult["InvalidRange"] = 26] = "InvalidRange";
+        CommandResult[CommandResult["InvalidZones"] = 27] = "InvalidZones";
+        CommandResult[CommandResult["InvalidSheetId"] = 28] = "InvalidSheetId";
+        CommandResult[CommandResult["InvalidFigureId"] = 29] = "InvalidFigureId";
+        CommandResult[CommandResult["InputAlreadyFocused"] = 30] = "InputAlreadyFocused";
+        CommandResult[CommandResult["MaximumRangesReached"] = 31] = "MaximumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 32] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 33] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 34] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 35] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 36] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 37] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 38] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 39] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 40] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 41] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 42] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 43] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 44] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 45] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 46] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 47] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 48] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 49] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 50] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 51] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 52] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 53] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 54] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 55] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 56] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 57] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 58] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 59] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 60] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 61] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 62] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 63] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 64] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 65] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 66] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 67] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 68] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 69] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 70] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 71] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 72] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 73] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 74] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 75] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 76] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 77] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 78] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 79] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 80] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 81] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 82] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 83] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 84] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 85] = "DuplicatedChartId";
+        CommandResult[CommandResult["ChartDoesNotExist"] = 86] = "ChartDoesNotExist";
+        CommandResult[CommandResult["InvalidHeaderIndex"] = 87] = "InvalidHeaderIndex";
+        CommandResult[CommandResult["InvalidQuantity"] = 88] = "InvalidQuantity";
+        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 89] = "MoreThanOneColumnSelected";
+        CommandResult[CommandResult["EmptySplitSeparator"] = 90] = "EmptySplitSeparator";
+        CommandResult[CommandResult["SplitWillOverwriteContent"] = 91] = "SplitWillOverwriteContent";
+        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 92] = "NoSplitSeparatorInSelection";
+        CommandResult[CommandResult["NoActiveSheet"] = 93] = "NoActiveSheet";
+    })(exports.CommandResult || (exports.CommandResult = {}));
+
+    const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
+    function isMatrix(x) {
+        return Array.isArray(x) && Array.isArray(x[0]);
+    }
+    var DIRECTION;
+    (function (DIRECTION) {
+        DIRECTION["UP"] = "up";
+        DIRECTION["DOWN"] = "down";
+        DIRECTION["LEFT"] = "left";
+        DIRECTION["RIGHT"] = "right";
+    })(DIRECTION || (DIRECTION = {}));
+
+    var LAYERS;
+    (function (LAYERS) {
+        LAYERS[LAYERS["Background"] = 0] = "Background";
+        LAYERS[LAYERS["Highlights"] = 1] = "Highlights";
+        LAYERS[LAYERS["Clipboard"] = 2] = "Clipboard";
+        LAYERS[LAYERS["Search"] = 3] = "Search";
+        LAYERS[LAYERS["Chart"] = 4] = "Chart";
+        LAYERS[LAYERS["Autofill"] = 5] = "Autofill";
+        LAYERS[LAYERS["Selection"] = 6] = "Selection";
+        LAYERS[LAYERS["Headers"] = 7] = "Headers";
+    })(LAYERS || (LAYERS = {}));
+
     // HELPERS
     const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
     function assert(condition, message) {
@@ -3745,6 +4044,9 @@
             throw new Error(expectNumberValueError(value));
         }
         return toNumber(value);
+    }
+    function toInteger(value) {
+        return Math.trunc(toNumber(value));
     }
     function strictToInteger(value) {
         return Math.trunc(strictToNumber(value));
@@ -3848,16 +4150,25 @@
     // -----------------------------------------------------------------------------
     // REDUCE FUNCTIONS
     // -----------------------------------------------------------------------------
-    function reduceArgs(args, cellCb, dataCb, initialValue) {
+    function reduceArgs(args, cellCb, dataCb, initialValue, dir = "rowFirst") {
         let val = initialValue;
         for (let arg of args) {
             if (Array.isArray(arg)) {
                 // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        val = cellCb(val, arg[x][y]);
+                const numberOfCols = arg.length;
+                const numberOfRows = arg[0].length;
+                if (dir === "rowFirst") {
+                    for (let row = 0; row < numberOfRows; row++) {
+                        for (let col = 0; col < numberOfCols; col++) {
+                            val = cellCb(val, arg[col][row]);
+                        }
+                    }
+                }
+                else {
+                    for (let col = 0; col < numberOfCols; col++) {
+                        for (let row = 0; row < numberOfRows; row++) {
+                            val = cellCb(val, arg[col][row]);
+                        }
                     }
                 }
             }
@@ -3868,8 +4179,8 @@
         }
         return val;
     }
-    function reduceAny(args, cb, initialValue) {
-        return reduceArgs(args, cb, cb, initialValue);
+    function reduceAny(args, cb, initialValue, dir = "rowFirst") {
+        return reduceArgs(args, cb, cb, initialValue, dir);
     }
     function reduceNumbers(args, cb, initialValue) {
         return reduceArgs(args, (acc, ArgValue) => {
@@ -4247,289 +4558,56 @@
         }
         return typeOrder;
     }
-
-    var CellValueType;
-    (function (CellValueType) {
-        CellValueType["boolean"] = "boolean";
-        CellValueType["number"] = "number";
-        CellValueType["text"] = "text";
-        CellValueType["empty"] = "empty";
-        CellValueType["error"] = "error";
-    })(CellValueType || (CellValueType = {}));
-
-    var ClipboardMIMEType;
-    (function (ClipboardMIMEType) {
-        ClipboardMIMEType["PlainText"] = "text/plain";
-        ClipboardMIMEType["Html"] = "text/html";
-    })(ClipboardMIMEType || (ClipboardMIMEType = {}));
-
-    function isSheetDependent(cmd) {
-        return "sheetId" in cmd;
+    function matrixMap(matrix, fn) {
+        let result = new Array(matrix.length);
+        for (let i = 0; i < matrix.length; i++) {
+            result[i] = new Array(matrix[i].length);
+            for (let j = 0; j < matrix[i].length; j++) {
+                result[i][j] = fn(matrix[i][j]);
+            }
+        }
+        return result;
     }
-    function isGridDependent(cmd) {
-        return "dimension" in cmd && "sheetId" in cmd;
+    function toCellValueMatrix(values) {
+        return matrixMap(values, toCellValue);
     }
-    function isTargetDependent(cmd) {
-        return "target" in cmd && "sheetId" in cmd;
+    function toCellValue(value) {
+        if (value === null || value === undefined)
+            return 0;
+        if (typeof value === "number")
+            return value;
+        if (typeof value === "string")
+            return value;
+        if (typeof value === "boolean")
+            return value;
+        return String(value);
     }
-    function isRangeDependant(cmd) {
-        return "ranges" in cmd;
-    }
-    function isPositionDependent(cmd) {
-        return "col" in cmd && "row" in cmd && "sheetId" in cmd;
-    }
-    const invalidateEvaluationCommands = new Set([
-        "RENAME_SHEET",
-        "DELETE_SHEET",
-        "CREATE_SHEET",
-        "ADD_COLUMNS_ROWS",
-        "REMOVE_COLUMNS_ROWS",
-        "UNDO",
-        "REDO",
-        "ADD_MERGE",
-    ]);
-    const invalidateDependenciesCommands = new Set([
-        ...invalidateEvaluationCommands,
-        "MOVE_RANGES",
-    ]);
-    const invalidateCFEvaluationCommands = new Set([
-        ...invalidateEvaluationCommands,
-        "DUPLICATE_SHEET",
-        "EVALUATE_CELLS",
-        "ADD_CONDITIONAL_FORMAT",
-        "REMOVE_CONDITIONAL_FORMAT",
-        "MOVE_CONDITIONAL_FORMAT",
-    ]);
-    const readonlyAllowedCommands = new Set([
-        "START",
-        "ACTIVATE_SHEET",
-        "COPY",
-        "PREPARE_SELECTION_INPUT_EXPANSION",
-        "STOP_SELECTION_INPUT",
-        "RESIZE_SHEETVIEW",
-        "SET_VIEWPORT_OFFSET",
-        "SELECT_SEARCH_NEXT_MATCH",
-        "SELECT_SEARCH_PREVIOUS_MATCH",
-        "REFRESH_SEARCH",
-        "UPDATE_SEARCH",
-        "CLEAR_SEARCH",
-        "EVALUATE_CELLS",
-        "SET_CURRENT_CONTENT",
-        "SET_FORMULA_VISIBILITY",
-        "OPEN_CELL_POPOVER",
-        "CLOSE_CELL_POPOVER",
-        "UPDATE_FILTER",
-    ]);
-    const coreTypes = new Set([
-        /** CELLS */
-        "UPDATE_CELL",
-        "UPDATE_CELL_POSITION",
-        "CLEAR_CELL",
-        "DELETE_CONTENT",
-        /** GRID SHAPE */
-        "ADD_COLUMNS_ROWS",
-        "REMOVE_COLUMNS_ROWS",
-        "RESIZE_COLUMNS_ROWS",
-        "HIDE_COLUMNS_ROWS",
-        "UNHIDE_COLUMNS_ROWS",
-        "SET_GRID_LINES_VISIBILITY",
-        "UNFREEZE_COLUMNS",
-        "UNFREEZE_ROWS",
-        "FREEZE_COLUMNS",
-        "FREEZE_ROWS",
-        "UNFREEZE_COLUMNS_ROWS",
-        /** MERGE */
-        "ADD_MERGE",
-        "REMOVE_MERGE",
-        /** SHEETS MANIPULATION */
-        "CREATE_SHEET",
-        "DELETE_SHEET",
-        "DUPLICATE_SHEET",
-        "MOVE_SHEET",
-        "RENAME_SHEET",
-        "HIDE_SHEET",
-        "SHOW_SHEET",
-        /** RANGES MANIPULATION */
-        "MOVE_RANGES",
-        /** CONDITIONAL FORMAT */
-        "ADD_CONDITIONAL_FORMAT",
-        "REMOVE_CONDITIONAL_FORMAT",
-        "MOVE_CONDITIONAL_FORMAT",
-        /** FIGURES */
-        "CREATE_FIGURE",
-        "DELETE_FIGURE",
-        "UPDATE_FIGURE",
-        /** FORMATTING */
-        "SET_FORMATTING",
-        "CLEAR_FORMATTING",
-        "SET_BORDER",
-        "SET_ZONE_BORDERS",
-        /** CHART */
-        "CREATE_CHART",
-        "UPDATE_CHART",
-        /** FILTERS */
-        "CREATE_FILTER_TABLE",
-        "REMOVE_FILTER_TABLE",
-        /** IMAGE */
-        "CREATE_IMAGE",
-    ]);
-    function isCoreCommand(cmd) {
-        return coreTypes.has(cmd.type);
-    }
-    function canExecuteInReadonly(cmd) {
-        return readonlyAllowedCommands.has(cmd.type);
+    function toMatrixArgValue(values) {
+        if (isMatrix(values))
+            return values;
+        return [[values === null ? 0 : values]];
     }
     /**
-     * Holds the result of a command dispatch.
-     * The command may have been successfully dispatched or cancelled
-     * for one or more reasons.
+     * Flatten an array of items, where each item can be a single value or a 2D array, and apply the
+     * callback to each element.
+     *
+     * The 2D array are flattened row first.
      */
-    class DispatchResult {
-        reasons;
-        constructor(results = []) {
-            if (!Array.isArray(results)) {
-                results = [results];
+    function flattenRowFirst(items, callback) {
+        const flattened = [];
+        for (const item of items) {
+            if (!Array.isArray(item)) {
+                flattened.push(callback(item));
+                continue;
             }
-            results = [...new Set(results)];
-            this.reasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
+            for (let row = 0; row < item[0].length; row++) {
+                for (let col = 0; col < item.length; col++) {
+                    flattened.push(callback(item[col][row]));
+                }
+            }
         }
-        /**
-         * Static helper which returns a successful DispatchResult
-         */
-        static get Success() {
-            return new DispatchResult();
-        }
-        get isSuccessful() {
-            return this.reasons.length === 0;
-        }
-        /**
-         * Check if the dispatch has been cancelled because of
-         * the given reason.
-         */
-        isCancelledBecause(reason) {
-            return this.reasons.includes(reason);
-        }
+        return flattened;
     }
-    exports.CommandResult = void 0;
-    (function (CommandResult) {
-        CommandResult[CommandResult["Success"] = 0] = "Success";
-        CommandResult[CommandResult["CancelledForUnknownReason"] = 1] = "CancelledForUnknownReason";
-        CommandResult[CommandResult["WillRemoveExistingMerge"] = 2] = "WillRemoveExistingMerge";
-        CommandResult[CommandResult["MergeIsDestructive"] = 3] = "MergeIsDestructive";
-        CommandResult[CommandResult["CellIsMerged"] = 4] = "CellIsMerged";
-        CommandResult[CommandResult["InvalidTarget"] = 5] = "InvalidTarget";
-        CommandResult[CommandResult["EmptyUndoStack"] = 6] = "EmptyUndoStack";
-        CommandResult[CommandResult["EmptyRedoStack"] = 7] = "EmptyRedoStack";
-        CommandResult[CommandResult["NotEnoughElements"] = 8] = "NotEnoughElements";
-        CommandResult[CommandResult["NotEnoughSheets"] = 9] = "NotEnoughSheets";
-        CommandResult[CommandResult["MissingSheetName"] = 10] = "MissingSheetName";
-        CommandResult[CommandResult["DuplicatedSheetName"] = 11] = "DuplicatedSheetName";
-        CommandResult[CommandResult["DuplicatedSheetId"] = 12] = "DuplicatedSheetId";
-        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 13] = "ForbiddenCharactersInSheetName";
-        CommandResult[CommandResult["WrongSheetMove"] = 14] = "WrongSheetMove";
-        CommandResult[CommandResult["WrongSheetPosition"] = 15] = "WrongSheetPosition";
-        CommandResult[CommandResult["InvalidAnchorZone"] = 16] = "InvalidAnchorZone";
-        CommandResult[CommandResult["SelectionOutOfBound"] = 17] = "SelectionOutOfBound";
-        CommandResult[CommandResult["TargetOutOfSheet"] = 18] = "TargetOutOfSheet";
-        CommandResult[CommandResult["WrongCutSelection"] = 19] = "WrongCutSelection";
-        CommandResult[CommandResult["WrongPasteSelection"] = 20] = "WrongPasteSelection";
-        CommandResult[CommandResult["WrongPasteOption"] = 21] = "WrongPasteOption";
-        CommandResult[CommandResult["WrongFigurePasteOption"] = 22] = "WrongFigurePasteOption";
-        CommandResult[CommandResult["EmptyClipboard"] = 23] = "EmptyClipboard";
-        CommandResult[CommandResult["EmptyRange"] = 24] = "EmptyRange";
-        CommandResult[CommandResult["InvalidRange"] = 25] = "InvalidRange";
-        CommandResult[CommandResult["InvalidZones"] = 26] = "InvalidZones";
-        CommandResult[CommandResult["InvalidSheetId"] = 27] = "InvalidSheetId";
-        CommandResult[CommandResult["InvalidFigureId"] = 28] = "InvalidFigureId";
-        CommandResult[CommandResult["InputAlreadyFocused"] = 29] = "InputAlreadyFocused";
-        CommandResult[CommandResult["MaximumRangesReached"] = 30] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 31] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 32] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 33] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 34] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 35] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 36] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 37] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 38] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 39] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 40] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 41] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 42] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 43] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 44] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 45] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 46] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 47] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 48] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 49] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 50] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 51] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 52] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 53] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 54] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 55] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 56] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 57] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 58] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 59] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 60] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 61] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 62] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 63] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 64] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 65] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 66] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 67] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 68] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 69] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 70] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 71] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 72] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 73] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 74] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 75] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 76] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 77] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 78] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 79] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 80] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
-        CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
-        CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
-        CommandResult[CommandResult["DuplicatedChartId"] = 84] = "DuplicatedChartId";
-        CommandResult[CommandResult["ChartDoesNotExist"] = 85] = "ChartDoesNotExist";
-        CommandResult[CommandResult["InvalidHeaderIndex"] = 86] = "InvalidHeaderIndex";
-        CommandResult[CommandResult["InvalidQuantity"] = 87] = "InvalidQuantity";
-        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 88] = "MoreThanOneColumnSelected";
-        CommandResult[CommandResult["EmptySplitSeparator"] = 89] = "EmptySplitSeparator";
-        CommandResult[CommandResult["SplitWillOverwriteContent"] = 90] = "SplitWillOverwriteContent";
-        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
-        CommandResult[CommandResult["NoActiveSheet"] = 92] = "NoActiveSheet";
-    })(exports.CommandResult || (exports.CommandResult = {}));
-
-    const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
-    function isMatrix(x) {
-        return Array.isArray(x) && Array.isArray(x[0]);
-    }
-    var DIRECTION;
-    (function (DIRECTION) {
-        DIRECTION["UP"] = "up";
-        DIRECTION["DOWN"] = "down";
-        DIRECTION["LEFT"] = "left";
-        DIRECTION["RIGHT"] = "right";
-    })(DIRECTION || (DIRECTION = {}));
-
-    var LAYERS;
-    (function (LAYERS) {
-        LAYERS[LAYERS["Background"] = 0] = "Background";
-        LAYERS[LAYERS["Highlights"] = 1] = "Highlights";
-        LAYERS[LAYERS["Clipboard"] = 2] = "Clipboard";
-        LAYERS[LAYERS["Search"] = 3] = "Search";
-        LAYERS[LAYERS["Chart"] = 4] = "Chart";
-        LAYERS[LAYERS["Autofill"] = 5] = "Autofill";
-        LAYERS[LAYERS["Selection"] = 6] = "Selection";
-        LAYERS[LAYERS["Headers"] = 7] = "Headers";
-    })(LAYERS || (LAYERS = {}));
 
     function evaluateLiteral(content, format) {
         return createEvaluatedCell(parseLiteral(content || ""), format);
@@ -5110,10 +5188,10 @@
             this.state.selectedValue = value.string;
         }
         selectAll() {
-            this.state.values.forEach((value) => (value.checked = true));
+            this.displayedValues.forEach((value) => (value.checked = true));
         }
         clearAll() {
-            this.state.values.forEach((value) => (value.checked = false));
+            this.displayedValues.forEach((value) => (value.checked = false));
         }
         get filterTable() {
             const sheetId = this.env.model.getters.getActiveSheetId();
@@ -6576,11 +6654,11 @@
         if (definition.dataSets) {
             const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
             if (invalidRanges) {
-                return 32 /* CommandResult.InvalidDataSet */;
+                return 33 /* CommandResult.InvalidDataSet */;
             }
             const zones = definition.dataSets.map(toUnboundedZone);
             if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 32 /* CommandResult.InvalidDataSet */;
+                return 33 /* CommandResult.InvalidDataSet */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -6589,7 +6667,7 @@
         if (definition.labelRange) {
             const invalidLabels = !rangeReference.test(definition.labelRange || "");
             if (invalidLabels) {
-                return 33 /* CommandResult.InvalidLabelRange */;
+                return 34 /* CommandResult.InvalidLabelRange */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -6675,24 +6753,24 @@
 
     const CfTerms = {
         Errors: {
-            [25 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [51 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [52 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [53 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [54 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [55 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [56 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [57 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [47 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [50 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [49 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [48 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [58 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [60 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [59 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [61 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [62 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [24 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            [26 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [52 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [53 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [54 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [55 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [56 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [57 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [58 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [48 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [51 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [50 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [49 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [59 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [61 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [60 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [62 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [63 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [25 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
             Unexpected: _lt("The rule is invalid for an unknown reason"),
         },
         ColorScale: _lt("Color scale"),
@@ -6719,20 +6797,20 @@
         Errors: {
             Unexpected: _lt("The chart definition is invalid for an unknown reason"),
             // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [32 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [33 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            [33 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [34 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
             // SCORECARD CHART ERRORS
-            [34 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [35 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            [35 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [36 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
             // GAUGE CHART ERRORS
-            [36 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [37 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [38 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [39 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [40 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [42 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [43 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+            [37 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [38 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [39 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [40 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [41 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [43 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [44 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
     };
     const CustomCurrencyTerms = {
@@ -6742,9 +6820,9 @@
     const SplitToColumnsTerms = {
         Errors: {
             Unexpected: _lt("Cannot split the selection for an unknown reason"),
-            [91 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
-            [88 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
-            [90 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
+            [92 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
+            [89 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
+            [91 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
         },
     };
 
@@ -7148,7 +7226,7 @@
 
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 36 /* CommandResult.InvalidGaugeDataRange */
+            ? 37 /* CommandResult.InvalidGaugeDataRange */
             : 0 /* CommandResult.Success */;
     }
     function checkRangeLimits(check, batchValidations) {
@@ -7180,7 +7258,7 @@
     function checkRangeMinBiggerThanRangeMax(definition) {
         if (definition.sectionRule) {
             if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+                return 42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7189,9 +7267,9 @@
         if (value === "") {
             switch (valueName) {
                 case "rangeMin":
-                    return 37 /* CommandResult.EmptyGaugeRangeMin */;
+                    return 38 /* CommandResult.EmptyGaugeRangeMin */;
                 case "rangeMax":
-                    return 39 /* CommandResult.EmptyGaugeRangeMax */;
+                    return 40 /* CommandResult.EmptyGaugeRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7200,13 +7278,13 @@
         if (isNaN(value)) {
             switch (valueName) {
                 case "rangeMin":
-                    return 38 /* CommandResult.GaugeRangeMinNaN */;
+                    return 39 /* CommandResult.GaugeRangeMinNaN */;
                 case "rangeMax":
-                    return 40 /* CommandResult.GaugeRangeMaxNaN */;
+                    return 41 /* CommandResult.GaugeRangeMaxNaN */;
                 case "lowerInflectionPointValue":
-                    return 42 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                    return 43 /* CommandResult.GaugeLowerInflectionPointNaN */;
                 case "upperInflectionPointValue":
-                    return 43 /* CommandResult.GaugeUpperInflectionPointNaN */;
+                    return 44 /* CommandResult.GaugeUpperInflectionPointNaN */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -7982,12 +8060,12 @@
 
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 34 /* CommandResult.InvalidScorecardKeyValue */
+            ? 35 /* CommandResult.InvalidScorecardKeyValue */
             : 0 /* CommandResult.Success */;
     }
     function checkBaseline(definition) {
         return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 35 /* CommandResult.InvalidScorecardBaseline */
+            ? 36 /* CommandResult.InvalidScorecardBaseline */
             : 0 /* CommandResult.Success */;
     }
     class ScorecardChart extends AbstractChart {
@@ -8487,13 +8565,22 @@
         ];
     }
 
+    function interactiveCut(env) {
+        const result = env.model.dispatch("CUT");
+        if (!result.isSuccessful) {
+            if (result.isCancelledBecause(20 /* CommandResult.WrongCutSelection */)) {
+                env.raiseError(_lt("This operation is not allowed with multiple selections."));
+            }
+        }
+    }
+
     const AddMergeInteractiveContent = {
         MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
         MergeInFilter: _lt("You can't merge cells inside of an existing filter."),
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
+        if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddMergeInteractiveContent.MergeInFilter);
         }
         else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
@@ -8501,6 +8588,37 @@
                 env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
             });
         }
+    }
+
+    const PasteInteractiveContent = {
+        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
+        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
+        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
+        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
+    };
+    function handlePasteResult(env, result) {
+        if (!result.isSuccessful) {
+            if (result.reasons.includes(21 /* CommandResult.WrongPasteSelection */)) {
+                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
+            }
+            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
+                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
+            }
+            else if (result.reasons.includes(23 /* CommandResult.WrongFigurePasteOption */)) {
+                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
+            }
+            else if (result.reasons.includes(76 /* CommandResult.FrozenPaneOverlap */)) {
+                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
+            }
+        }
+    }
+    function interactivePaste(env, target, pasteOption) {
+        const result = env.model.dispatch("PASTE", { target, pasteOption });
+        handlePasteResult(env, result);
+    }
+    function interactivePasteFromOS(env, target, text, pasteOption) {
+        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text, pasteOption });
+        handlePasteResult(env, result);
     }
 
     /**
@@ -8650,186 +8768,9 @@
         };
     }
 
-    const SORT_TYPES = [
-        CellValueType.number,
-        CellValueType.error,
-        CellValueType.text,
-        CellValueType.boolean,
-    ];
-    function sortCells(cells, sortDirection, emptyCellAsZero) {
-        const cellsWithIndex = cells.map((cell, index) => ({
-            index,
-            type: cell.type,
-            value: cell.value,
-        }));
-        let emptyCells = cellsWithIndex.filter((x) => x.type === CellValueType.empty);
-        let nonEmptyCells = cellsWithIndex.filter((x) => x.type !== CellValueType.empty);
-        if (emptyCellAsZero) {
-            nonEmptyCells.push(...emptyCells.map((emptyCell) => ({ ...emptyCell, type: CellValueType.number, value: 0 })));
-            emptyCells = [];
-        }
-        const inverse = sortDirection === "descending" ? -1 : 1;
-        return nonEmptyCells
-            .sort((left, right) => {
-            let typeOrder = SORT_TYPES.indexOf(left.type) - SORT_TYPES.indexOf(right.type);
-            if (typeOrder === 0) {
-                if (left.type === CellValueType.text || left.type === CellValueType.error) {
-                    typeOrder = left.value.localeCompare(right.value);
-                }
-                else
-                    typeOrder = left.value - right.value;
-            }
-            return inverse * typeOrder;
-        })
-            .concat(emptyCells);
-    }
-    function interactiveSortSelection(env, sheetId, anchor, zone, sortDirection) {
-        let result = DispatchResult.Success;
-        //several columns => bypass the contiguity check
-        let multiColumns = zone.right > zone.left;
-        if (env.model.getters.doesIntersectMerge(sheetId, zone)) {
-            multiColumns = false;
-            let table;
-            for (let row = zone.top; row <= zone.bottom; row++) {
-                table = [];
-                for (let col = zone.left; col <= zone.right; col++) {
-                    let merge = env.model.getters.getMerge({ sheetId, col, row });
-                    if (merge && !table.includes(merge.id.toString())) {
-                        table.push(merge.id.toString());
-                    }
-                }
-                if (table.length >= 2) {
-                    multiColumns = true;
-                    break;
-                }
-            }
-        }
-        const { col, row } = anchor;
-        if (multiColumns) {
-            result = env.model.dispatch("SORT_CELLS", { sheetId, col, row, zone, sortDirection });
-        }
-        else {
-            // check contiguity
-            const contiguousZone = env.model.getters.getContiguousZone(sheetId, zone);
-            if (isEqual(contiguousZone, zone)) {
-                // merge as it is
-                result = env.model.dispatch("SORT_CELLS", {
-                    sheetId,
-                    col,
-                    row,
-                    zone,
-                    sortDirection,
-                });
-            }
-            else {
-                env.askConfirmation(_lt("We found data next to your selection. Since this data was not selected, it will not be sorted. Do you want to extend your selection?"), () => {
-                    zone = contiguousZone;
-                    result = env.model.dispatch("SORT_CELLS", {
-                        sheetId,
-                        col,
-                        row,
-                        zone,
-                        sortDirection,
-                    });
-                }, () => {
-                    result = env.model.dispatch("SORT_CELLS", {
-                        sheetId,
-                        col,
-                        row,
-                        zone,
-                        sortDirection,
-                    });
-                });
-            }
-        }
-        if (result.isCancelledBecause(63 /* CommandResult.InvalidSortZone */)) {
-            const { col, row } = anchor;
-            env.model.selection.selectZone({ cell: { col, row }, zone });
-            env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
-        }
-    }
-
-    function interactiveCut(env) {
-        const result = env.model.dispatch("CUT");
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
-                env.raiseError(_lt("This operation is not allowed with multiple selections."));
-            }
-        }
-    }
-
-    const AddFilterInteractiveContent = {
-        filterOverlap: _lt("You cannot create overlapping filters."),
-        nonContinuousTargets: _lt("A filter can only be created on a continuous selection."),
-        mergeInFilter: _lt("You can't create a filter over a range that contains a merge."),
-    };
-    function interactiveAddFilter(env, sheetId, target) {
-        const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(78 /* CommandResult.FilterOverlap */)) {
-            env.raiseError(AddFilterInteractiveContent.filterOverlap);
-        }
-        else if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
-            env.raiseError(AddFilterInteractiveContent.mergeInFilter);
-        }
-        else if (result.isCancelledBecause(81 /* CommandResult.NonContinuousTargets */)) {
-            env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
-        }
-    }
-
-    const PasteInteractiveContent = {
-        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
-        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
-        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
-        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
-    };
-    function handlePasteResult(env, result) {
-        if (!result.isSuccessful) {
-            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
-                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
-            }
-            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
-                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
-            }
-            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
-                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
-            }
-            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
-                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
-            }
-        }
-    }
-    function interactivePaste(env, target, pasteOption) {
-        const result = env.model.dispatch("PASTE", { target, pasteOption });
-        handlePasteResult(env, result);
-    }
-    function interactivePasteFromOS(env, target, text) {
-        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
-        handlePasteResult(env, result);
-    }
-
     //------------------------------------------------------------------------------
     // Helpers
     //------------------------------------------------------------------------------
-    function getColumnsNumber(env) {
-        const activeCols = env.model.getters.getActiveCols();
-        if (activeCols.size) {
-            return activeCols.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            return zone.right - zone.left + 1;
-        }
-    }
-    function getRowsNumber(env) {
-        const activeRows = env.model.getters.getActiveRows();
-        if (activeRows.size) {
-            return activeRows.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            return zone.bottom - zone.top + 1;
-        }
-    }
     function setFormatter(env, format) {
         env.model.dispatch("SET_FORMATTING", {
             sheetId: env.model.getters.getActiveSheetId(),
@@ -8847,16 +8788,6 @@
     //------------------------------------------------------------------------------
     // Simple actions
     //------------------------------------------------------------------------------
-    const UNDO_ACTION = (env) => env.model.dispatch("REQUEST_UNDO");
-    const REDO_ACTION = (env) => env.model.dispatch("REQUEST_REDO");
-    const COPY_ACTION = async (env) => {
-        env.model.dispatch("COPY");
-        await env.clipboard.write(env.model.getters.getClipboardContent());
-    };
-    const CUT_ACTION = async (env) => {
-        interactiveCut(env);
-        await env.clipboard.write(env.model.getters.getClipboardContent());
-    };
     const PASTE_ACTION = async (env) => paste$1(env);
     const PASTE_VALUE_ACTION = async (env) => paste$1(env, "onlyValue");
     async function paste$1(env, pasteOption) {
@@ -8866,10 +8797,13 @@
             case "ok":
                 const target = env.model.getters.getSelectedZones();
                 if (osClipboard && osClipboard.content !== spreadsheetClipboard) {
-                    interactivePasteFromOS(env, target, osClipboard.content);
+                    interactivePasteFromOS(env, target, osClipboard.content, pasteOption);
                 }
                 else {
                     interactivePaste(env, target, pasteOption);
+                }
+                if (env.model.getters.isCutOperation() && pasteOption !== "onlyValue") {
+                    await env.clipboard.write({ [ClipboardMIMEType.PlainText]: "" });
                 }
                 break;
             case "notImplemented":
@@ -8880,22 +8814,7 @@
                 break;
         }
     }
-    const PASTE_FORMAT_ACTION = (env) => interactivePaste(env, env.model.getters.getSelectedZones(), "onlyFormat");
-    const DELETE_CONTENT_ACTION = (env) => env.model.dispatch("DELETE_CONTENT", {
-        sheetId: env.model.getters.getActiveSheetId(),
-        target: env.model.getters.getSelectedZones(),
-    });
-    const SET_FORMULA_VISIBILITY_ACTION = (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() });
-    const SET_GRID_LINES_VISIBILITY_ACTION = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
-            sheetId,
-            areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
-        });
-    };
-    const IS_NOT_CUT_OPERATION = (env) => {
-        return !env.model.getters.isCutOperation();
-    };
+    const PASTE_FORMAT_ACTION = (env) => paste$1(env, "onlyFormat");
     //------------------------------------------------------------------------------
     // Grid manipulations
     //------------------------------------------------------------------------------
@@ -9037,48 +8956,6 @@
         const selectedCols = env.model.getters.getElementsFromSelection("COL");
         return env.model.getters.canRemoveHeaders(sheetId, "COL", selectedCols);
     };
-    const INSERT_CELL_SHIFT_DOWN = (env) => {
-        const zone = env.model.getters.getSelectedZone();
-        const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "ROW" });
-        handlePasteResult(env, result);
-    };
-    const INSERT_CELL_SHIFT_RIGHT = (env) => {
-        const zone = env.model.getters.getSelectedZone();
-        const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "COL" });
-        handlePasteResult(env, result);
-    };
-    const DELETE_CELL_SHIFT_UP = (env) => {
-        const zone = env.model.getters.getSelectedZone();
-        const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "ROW" });
-        handlePasteResult(env, result);
-    };
-    const DELETE_CELL_SHIFT_LEFT = (env) => {
-        const zone = env.model.getters.getSelectedZone();
-        const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "COL" });
-        handlePasteResult(env, result);
-    };
-    const MENU_INSERT_ROWS_NAME = (env) => {
-        const number = getRowsNumber(env);
-        return number === 1 ? _lt("Insert row") : _lt("Insert %s rows", number.toString());
-    };
-    const MENU_INSERT_ROWS_BEFORE_NAME = (env) => {
-        const number = getRowsNumber(env);
-        if (number === 1) {
-            return _lt("Row above");
-        }
-        return _lt("%s Rows above", number.toString());
-    };
-    const ROW_INSERT_ROWS_BEFORE_NAME = (env) => {
-        const number = getRowsNumber(env);
-        return number === 1 ? _lt("Insert row above") : _lt("Insert %s rows above", number.toString());
-    };
-    const CELL_INSERT_ROWS_BEFORE_NAME = (env) => {
-        const number = getRowsNumber(env);
-        if (number === 1) {
-            return _lt("Insert row");
-        }
-        return _lt("Insert %s rows", number.toString());
-    };
     const INSERT_ROWS_BEFORE_ACTION = (env) => {
         const activeRows = env.model.getters.getActiveRows();
         let row;
@@ -9099,17 +8976,6 @@
             quantity,
             dimension: "ROW",
         });
-    };
-    const MENU_INSERT_ROWS_AFTER_NAME = (env) => {
-        const number = getRowsNumber(env);
-        if (number === 1) {
-            return _lt("Row below");
-        }
-        return _lt("%s Rows below", number.toString());
-    };
-    const ROW_INSERT_ROWS_AFTER_NAME = (env) => {
-        const number = getRowsNumber(env);
-        return number === 1 ? _lt("Insert row below") : _lt("Insert %s rows below", number.toString());
     };
     const INSERT_ROWS_AFTER_ACTION = (env) => {
         const activeRows = env.model.getters.getActiveRows();
@@ -9132,30 +8998,6 @@
             dimension: "ROW",
         });
     };
-    const MENU_INSERT_COLUMNS_BEFORE_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        if (number === 1) {
-            return _lt("Column left");
-        }
-        return _lt("%s Columns left", number.toString());
-    };
-    const MENU_INSERT_COLUMNS_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        return number === 1 ? _lt("Insert column") : _lt("Insert %s columns", number.toString());
-    };
-    const COLUMN_INSERT_COLUMNS_BEFORE_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        return number === 1
-            ? _lt("Insert column left")
-            : _lt("Insert %s columns left", number.toString());
-    };
-    const CELL_INSERT_COLUMNS_BEFORE_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        if (number === 1) {
-            return _lt("Insert column");
-        }
-        return _lt("Insert %s columns", number.toString());
-    };
     const INSERT_COLUMNS_BEFORE_ACTION = (env) => {
         const activeCols = env.model.getters.getActiveCols();
         let column;
@@ -9176,19 +9018,6 @@
             base: column,
             quantity,
         });
-    };
-    const MENU_INSERT_COLUMNS_AFTER_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        if (number === 1) {
-            return _lt("Column right");
-        }
-        return _lt("%s Columns right", number.toString());
-    };
-    const COLUMN_INSERT_COLUMNS_AFTER_NAME = (env) => {
-        const number = getColumnsNumber(env);
-        return number === 1
-            ? _lt("Insert column right")
-            : _lt("Insert %s columns right", number.toString());
     };
     const INSERT_COLUMNS_AFTER_ACTION = (env) => {
         const activeCols = env.model.getters.getActiveCols();
@@ -9225,30 +9054,6 @@
             return _lt("Hide columns");
         }
     };
-    const HIDE_COLUMNS_ACTION = (env) => {
-        const columns = env.model.getters.getElementsFromSelection("COL");
-        env.model.dispatch("HIDE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "COL",
-            elements: columns,
-        });
-    };
-    const UNHIDE_ALL_COLUMNS_ACTION = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-            sheetId,
-            dimension: "COL",
-            elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
-        });
-    };
-    const UNHIDE_COLUMNS_ACTION = (env) => {
-        const columns = env.model.getters.getElementsFromSelection("COL");
-        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "COL",
-            elements: columns,
-        });
-    };
     const HIDE_ROWS_NAME = (env) => {
         const rows = env.model.getters.getElementsFromSelection("ROW");
         let first = rows[0];
@@ -9262,40 +9067,6 @@
         else {
             return _lt("Hide rows");
         }
-    };
-    const HIDE_ROWS_ACTION = (env) => {
-        const rows = env.model.getters.getElementsFromSelection("ROW");
-        env.model.dispatch("HIDE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "ROW",
-            elements: rows,
-        });
-    };
-    const UNHIDE_ALL_ROWS_ACTION = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-            sheetId,
-            dimension: "ROW",
-            elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
-        });
-    };
-    const UNHIDE_ROWS_ACTION = (env) => {
-        const columns = env.model.getters.getElementsFromSelection("ROW");
-        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "ROW",
-            elements: columns,
-        });
-    };
-    //------------------------------------------------------------------------------
-    // Sheets
-    //------------------------------------------------------------------------------
-    const CREATE_SHEET_ACTION = (env) => {
-        const activeSheetId = env.model.getters.getActiveSheetId();
-        const position = env.model.getters.getSheetIds().indexOf(activeSheetId) + 1;
-        const sheetId = env.model.uuidGenerator.uuidv4();
-        env.model.dispatch("CREATE_SHEET", { sheetId, position });
-        env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
     };
     //------------------------------------------------------------------------------
     // Charts
@@ -9355,36 +9126,12 @@
     //------------------------------------------------------------------------------
     // Style/Format
     //------------------------------------------------------------------------------
-    const FORMAT_AUTOMATIC_ACTION = (env) => setFormatter(env, "");
-    const FORMAT_NUMBER_ACTION = (env) => setFormatter(env, "#,##0.00");
     const FORMAT_PERCENT_ACTION = (env) => setFormatter(env, "0.00%");
-    const FORMAT_CURRENCY_ACTION = (env) => setFormatter(env, "[$$]#,##0.00");
-    const FORMAT_CURRENCY_ROUNDED_ACTION = (env) => setFormatter(env, "[$$]#,##0");
-    const FORMAT_DATE_ACTION = (env) => setFormatter(env, "m/d/yyyy");
-    const FORMAT_TIME_ACTION = (env) => setFormatter(env, "hh:mm:ss a");
-    const FORMAT_DATE_TIME_ACTION = (env) => setFormatter(env, "m/d/yyyy hh:mm:ss");
-    const FORMAT_DURATION_ACTION = (env) => setFormatter(env, "hhhh:mm:ss");
-    const FORMAT_BOLD_ACTION = (env) => setStyle(env, { bold: !env.model.getters.getCurrentStyle().bold });
-    const FORMAT_ITALIC_ACTION = (env) => setStyle(env, { italic: !env.model.getters.getCurrentStyle().italic });
-    const FORMAT_STRIKETHROUGH_ACTION = (env) => setStyle(env, { strikethrough: !env.model.getters.getCurrentStyle().strikethrough });
-    const FORMAT_UNDERLINE_ACTION = (env) => setStyle(env, { underline: !env.model.getters.getCurrentStyle().underline });
-    const FORMAT_CLEARFORMAT_ACTION = (env) => {
-        env.model.dispatch("CLEAR_FORMATTING", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-        });
-    };
     //------------------------------------------------------------------------------
     // Side panel
     //------------------------------------------------------------------------------
     const OPEN_CF_SIDEPANEL_ACTION = (env) => {
         env.openSidePanel("ConditionalFormatting", { selection: env.model.getters.getSelectedZones() });
-    };
-    const OPEN_FAR_SIDEPANEL_ACTION = (env) => {
-        env.openSidePanel("FindAndReplace", {});
-    };
-    const OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION = (env) => {
-        env.openSidePanel("CustomCurrency", {});
     };
     const INSERT_LINK = (env) => {
         let { col, row } = env.model.getters.getActivePosition();
@@ -9393,40 +9140,14 @@
     //------------------------------------------------------------------------------
     // Filters action
     //------------------------------------------------------------------------------
-    const FILTERS_CREATE_FILTER_TABLE = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selection = env.model.getters.getSelection().zones;
-        interactiveAddFilter(env, sheetId, selection);
-    };
-    const FILTERS_REMOVE_FILTER_TABLE = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        env.model.dispatch("REMOVE_FILTER_TABLE", {
-            sheetId,
-            target: env.model.getters.getSelectedZones(),
-        });
-    };
     const SELECTION_CONTAINS_FILTER = (env) => {
         const sheetId = env.model.getters.getActiveSheetId();
         const selectedZones = env.model.getters.getSelectedZones();
         return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
     };
-    const SELECTION_IS_CONTINUOUS = (env) => {
-        const selectedZones = env.model.getters.getSelectedZones();
-        return areZonesContinuous(...selectedZones);
-    };
     //------------------------------------------------------------------------------
     // Sorting action
     //------------------------------------------------------------------------------
-    const SORT_CELLS_ASCENDING = (env) => {
-        const { anchor, zones } = env.model.getters.getSelection();
-        const sheetId = env.model.getters.getActiveSheetId();
-        interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "ascending");
-    };
-    const SORT_CELLS_DESCENDING = (env) => {
-        const { anchor, zones } = env.model.getters.getSelection();
-        const sheetId = env.model.getters.getActiveSheetId();
-        interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "descending");
-    };
     const IS_ONLY_ONE_RANGE = (env) => {
         return env.model.getters.getSelectedZones().length === 1;
     };
@@ -9434,14 +9155,14 @@
     const undo = {
         name: _lt("Undo"),
         description: "Ctrl+Z",
-        execute: UNDO_ACTION,
+        execute: (env) => env.model.dispatch("REQUEST_UNDO"),
         isEnabled: (env) => env.model.getters.canUndo(),
         icon: "o-spreadsheet-Icon.UNDO",
     };
     const redo = {
         name: _lt("Redo"),
         description: "Ctrl+Y",
-        execute: REDO_ACTION,
+        execute: (env) => env.model.dispatch("REQUEST_REDO"),
         isEnabled: (env) => env.model.getters.canRedo(),
         icon: "o-spreadsheet-Icon.REDO",
     };
@@ -9449,13 +9170,19 @@
         name: _lt("Copy"),
         description: "Ctrl+C",
         isReadonlyAllowed: true,
-        execute: COPY_ACTION,
+        execute: async (env) => {
+            env.model.dispatch("COPY");
+            await env.clipboard.write(env.model.getters.getClipboardContent());
+        },
         icon: "o-spreadsheet-Icon.COPY",
     };
     const cut = {
         name: _lt("Cut"),
         description: "Ctrl+X",
-        execute: CUT_ACTION,
+        execute: async (env) => {
+            interactiveCut(env);
+            await env.clipboard.write(env.model.getters.getClipboardContent());
+        },
         icon: "o-spreadsheet-Icon.CUT",
     };
     const paste = {
@@ -9466,7 +9193,9 @@
     };
     const pasteSpecial = {
         name: _lt("Paste special"),
-        isVisible: IS_NOT_CUT_OPERATION,
+        isVisible: (env) => {
+            return !env.model.getters.isCutOperation();
+        },
         icon: "o-spreadsheet-Icon.PASTE",
     };
     const pasteSpecialValue = {
@@ -9482,12 +9211,17 @@
         name: _lt("Find and replace"),
         description: "Ctrl+H",
         isReadonlyAllowed: true,
-        execute: OPEN_FAR_SIDEPANEL_ACTION,
+        execute: (env) => {
+            env.openSidePanel("FindAndReplace", {});
+        },
         icon: "o-spreadsheet-Icon.FIND_AND_REPLACE",
     };
     const deleteValues = {
         name: _lt("Delete values"),
-        execute: DELETE_CONTENT_ACTION,
+        execute: (env) => env.model.dispatch("DELETE_CONTENT", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+        }),
     };
     const deleteRows = {
         name: REMOVE_ROWS_NAME,
@@ -9521,11 +9255,19 @@
     };
     const deleteCellShiftUp = {
         name: _lt("Delete cell and shift up"),
-        execute: DELETE_CELL_SHIFT_UP,
+        execute: (env) => {
+            const zone = env.model.getters.getSelectedZone();
+            const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "ROW" });
+            handlePasteResult(env, result);
+        },
     };
     const deleteCellShiftLeft = {
         name: _lt("Delete cell and shift left"),
-        execute: DELETE_CELL_SHIFT_LEFT,
+        execute: (env) => {
+            const zone = env.model.getters.getSelectedZone();
+            const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "COL" });
+            handlePasteResult(env, result);
+        },
     };
     const mergeCells = {
         name: _lt("Merge cells"),
@@ -9610,9 +9352,9 @@
         "META",
     ];
     function arg(definition, description = "") {
-        return makeArg(`${definition} ${description}`);
+        return makeArg(definition, description);
     }
-    function makeArg(str) {
+    function makeArg(str, description) {
         let parts = str.match(ARG_REGEXP);
         let name = parts[1].trim();
         let types = [];
@@ -9642,7 +9384,6 @@
                 defaultValue = param.trim().slice(8);
             }
         }
-        let description = parts[3].trim();
         const result = {
             name,
             description,
@@ -9755,6 +9496,740 @@
             previousArgDefault = current.default;
         }
     }
+
+    function assertSingleColOrRow(errorStr, arg) {
+        assert(() => arg.length === 1 || arg[0].length === 1, errorStr);
+    }
+    function assertSameDimensions(errorStr, ...args) {
+        if (args.every(isMatrix)) {
+            const cols = args[0].length;
+            const rows = args[0][0].length;
+            for (const arg of args) {
+                assert(() => arg.length === cols && arg[0].length === rows, errorStr);
+            }
+            return;
+        }
+        if (args.some((arg) => Array.isArray(arg) && (arg.length !== 1 || arg[0].length !== 1))) {
+            throw new Error(errorStr);
+        }
+    }
+    function assertPositive(errorStr, arg) {
+        assert(() => arg > 0, errorStr);
+    }
+    function assertSquareMatrix(errorStr, arg) {
+        assert(() => arg.length === arg[0].length, errorStr);
+    }
+    function isNumberMatrix(arg) {
+        return arg.every((row) => row.every((val) => typeof val === "number"));
+    }
+
+    function getUnitMatrix(n) {
+        const matrix = Array(n);
+        for (let i = 0; i < n; i++) {
+            matrix[i] = Array(n).fill(0);
+            matrix[i][i] = 1;
+        }
+        return matrix;
+    }
+    /**
+     * Invert a matrix and compute its determinant using Gaussian Elimination.
+     *
+     * The Matrix should be a square matrix, and should be indexed [col][row] instead of the
+     * standard mathematical indexing [row][col].
+     */
+    function invertMatrix(M) {
+        // Use Gaussian Elimination to calculate the inverse:
+        // (1) 'augment' the matrix (left) by the identity (on the right)
+        // (2) Turn the matrix on the left into the identity using elementary row operations
+        // (3) The matrix on the right becomes the inverse (was the identity matrix)
+        //
+        // There are 3 elementary row operations:
+        // (a) Swap 2 rows. This multiply the determinant by -1.
+        // (b) Multiply a row by a scalar. This multiply the determinant by that scalar.
+        // (c) Add to a row a multiple of another row. This does not change the determinant.
+        if (M.length !== M[0].length) {
+            throw new Error(`Function [[FUNCTION_NAME]] invert matrix error, only square matrices are invertible`);
+        }
+        let determinant = 1;
+        const dim = M.length;
+        const I = getUnitMatrix(dim);
+        const C = M.map((row) => row.slice());
+        // Perform elementary row operations
+        for (let pivot = 0; pivot < dim; pivot++) {
+            let diagonalElement = C[pivot][pivot];
+            // if we have a 0 on the diagonal we'll need to swap with a lower row
+            if (diagonalElement == 0) {
+                //look through every row below the i'th row
+                for (let row = pivot + 1; row < dim; row++) {
+                    //if the ii'th row has a non-0 in the i'th col, swap it with that row
+                    if (C[pivot][row] != 0) {
+                        swapMatrixRows(C, pivot, row);
+                        swapMatrixRows(I, pivot, row);
+                        determinant *= -1;
+                        break;
+                    }
+                }
+                diagonalElement = C[pivot][pivot];
+                //if it's still 0, matrix isn't invertible
+                if (diagonalElement === 0) {
+                    return { determinant: 0 };
+                }
+            }
+            // Scale this row down by e (so we have a 1 on the diagonal)
+            for (let col = 0; col < dim; col++) {
+                C[col][pivot] = C[col][pivot] / diagonalElement;
+                I[col][pivot] = I[col][pivot] / diagonalElement;
+            }
+            determinant *= diagonalElement;
+            // Subtract a multiple of the current row from ALL of
+            // the other rows so that there will be 0's in this column in the
+            // rows above and below this one
+            for (let row = 0; row < dim; row++) {
+                if (row == pivot) {
+                    continue;
+                }
+                // We want to change this element to 0
+                const e = C[pivot][row];
+                // Subtract (the row above(or below) scaled by e) from (the
+                // current row) but start at the i'th column and assume all the
+                // stuff left of diagonal is 0 (which it should be if we made this
+                // algorithm correctly)
+                for (let col = 0; col < dim; col++) {
+                    C[col][row] -= e * C[col][pivot];
+                    I[col][row] -= e * I[col][pivot];
+                }
+            }
+        }
+        // We've done all operations, C should be the identity matrix I should be the inverse
+        return { inverted: I, determinant };
+    }
+    function swapMatrixRows(matrix, row1, row2) {
+        for (let i = 0; i < matrix.length; i++) {
+            const tmp = matrix[i][row1];
+            matrix[i][row1] = matrix[i][row2];
+            matrix[i][row2] = tmp;
+        }
+    }
+    /**
+     * Matrix multiplication of 2 matrices.
+     * ex: matrix1 : n x l, matrix2 : m x n => result : m x l
+     *
+     * Note: we use indexing [col][row] instead of the standard mathematical notation [row][col]
+     */
+    function multiplyMatrices(matrix1, matrix2) {
+        if (matrix1.length !== matrix2[0].length) {
+            throw new Error(_lt("Cannot multiply matrices : incompatible matrices size."));
+        }
+        const rowsM1 = matrix1[0].length;
+        const colsM2 = matrix2.length;
+        const n = matrix1.length;
+        const result = Array(colsM2);
+        for (let col = 0; col < colsM2; col++) {
+            result[col] = Array(rowsM1);
+            for (let row = 0; row < rowsM1; row++) {
+                let sum = 0;
+                for (let k = 0; k < n; k++) {
+                    sum += matrix1[k][row] * matrix2[col][k];
+                }
+                result[col][row] = sum;
+            }
+        }
+        return result;
+    }
+
+    // -----------------------------------------------------------------------------
+    // ARRAY_CONSTRAIN
+    // -----------------------------------------------------------------------------
+    const ARRAY_CONSTRAIN = {
+        description: _lt("Returns a result array constrained to a specific width and height."),
+        args: [
+            arg("input_range (any, range<any>)", _lt("The range to constrain.")),
+            arg("rows (number)", _lt("The number of rows in the constrained array.")),
+            arg("columns (number)", _lt("The number of columns in the constrained array.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (array, rows, columns) {
+            const _array = toMatrixArgValue(array);
+            const _rowsArg = toInteger(rows);
+            const _columnsArg = toInteger(columns);
+            assertPositive(_lt("The rows argument (%s) must be strictly positive.", _rowsArg.toString()), _rowsArg);
+            assertPositive(_lt("The columns argument (%s) must be strictly positive.", _rowsArg.toString()), _columnsArg);
+            const _rows = Math.min(_rowsArg, _array[0].length);
+            const _columns = Math.min(_columnsArg, _array.length);
+            const result = Array(_columns);
+            for (let col = 0; col < _columns; col++) {
+                result[col] = Array(_rows);
+                for (let row = 0; row < _rows; row++) {
+                    result[col][row] = toCellValue(_array[col][row]);
+                }
+            }
+            return result;
+        },
+        isExported: false,
+    };
+    // -----------------------------------------------------------------------------
+    // CHOOSECOLS
+    // -----------------------------------------------------------------------------
+    const CHOOSECOLS = {
+        description: _lt("Creates a new array from the selected columns in the existing range."),
+        args: [
+            arg("array (any, range<any>)", _lt("The array that contains the columns to be returned.")),
+            arg("col_num (number, range<number>)", _lt("The first column index of the columns to be returned.")),
+            arg("col_num2 (number, range<number>, repeating)", _lt("The columns indexes of the columns to be returned.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (array, ...columns) {
+            const _array = toMatrixArgValue(array);
+            const _columns = flattenRowFirst(columns, toInteger);
+            assert(() => _columns.every((col) => col > 0 && col <= _array.length), _lt("The columns arguments must be between 1 and %s (got %s).", _array.length.toString(), (_columns.find((col) => col <= 0 || col > _array.length) || 0).toString()));
+            const result = Array(_columns.length);
+            for (let i = 0; i < _columns.length; i++) {
+                const colIndex = _columns[i] - 1; // -1 because columns arguments are 1-indexed
+                result[i] = _array[colIndex];
+            }
+            return toCellValueMatrix(result);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // CHOOSEROWS
+    // -----------------------------------------------------------------------------
+    const CHOOSEROWS = {
+        description: _lt("Creates a new array from the selected rows in the existing range."),
+        args: [
+            arg("array (any, range<any>)", _lt("The array that contains the rows to be returned.")),
+            arg("row_num (number, range<number>)", _lt("The first row index of the rows to be returned.")),
+            arg("row_num2 (number, range<number>, repeating)", _lt("The rows indexes of the rows to be returned.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (array, ...rows) {
+            const _array = toMatrixArgValue(array);
+            const _rows = flattenRowFirst(rows, toInteger);
+            assert(() => _rows.every((row) => row > 0 && row <= _array[0].length), _lt("The rows arguments must be between 1 and %s (got %s).", _array[0].length.toString(), (_rows.find((row) => row <= 0 || row > _array[0].length) || 0).toString()));
+            const result = Array(_array.length);
+            for (let col = 0; col < _array.length; col++) {
+                result[col] = Array(_rows.length);
+                for (let row = 0; row < _rows.length; row++) {
+                    const rowIndex = _rows[row] - 1; // -1 because rows arguments are 1-indexed
+                    result[col][row] = toCellValue(_array[col][rowIndex]);
+                }
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // EXPAND
+    // -----------------------------------------------------------------------------
+    const EXPAND = {
+        description: _lt("Expands or pads an array to specified row and column dimensions."),
+        args: [
+            arg("array (any, range<any>)", _lt("The array to expand.")),
+            arg("rows (number)", _lt("The number of rows in the expanded array. If missing, rows will not be expanded.")),
+            arg("columns (number, optional)", _lt("The number of columns in the expanded array. If missing, columns will not be expanded.")),
+            arg("pad_with (any, default=0)", _lt("The value with which to pad.")), // @compatibility: on Excel, pad with #N/A
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (array, rows, columns, padWith = 0) {
+            const _array = toMatrixArgValue(array);
+            const _rows = toInteger(rows);
+            const _columns = columns !== undefined ? toInteger(columns) : _array.length;
+            const _padWith = padWith !== undefined && padWith !== null ? padWith : 0; // TODO : Replace with #N/A errors once it's supported
+            assert(() => _rows >= _array[0].length, _lt("The rows arguments (%s) must be greater or equal than the number of rows of the array.", _rows.toString()));
+            assert(() => _columns >= _array.length, _lt("The columns arguments (%s) must be greater or equal than the number of columns of the array.", _columns.toString()));
+            const result = [];
+            for (let col = 0; col < _columns; col++) {
+                result[col] = [];
+                for (let row = 0; row < _rows; row++) {
+                    if (col >= _array.length || row >= _array[col].length) {
+                        result[col][row] = _padWith;
+                    }
+                    else {
+                        result[col][row] = _array[col][row] ?? 0;
+                    }
+                }
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // FLATTEN
+    // -----------------------------------------------------------------------------
+    const FLATTEN = {
+        description: _lt("Flattens all the values from one or more ranges into a single column."),
+        args: [
+            arg("range (any, range<any>)", _lt("The first range to flatten.")),
+            arg("range2 (any, range<any>, repeating)", _lt("Additional ranges to flatten.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        compute: function (...ranges) {
+            return [flattenRowFirst(ranges, toCellValue)];
+        },
+        isExported: false,
+    };
+    // -----------------------------------------------------------------------------
+    // FREQUENCY
+    // -----------------------------------------------------------------------------
+    const FREQUENCY = {
+        description: _lt("Calculates the frequency distribution of a range."),
+        args: [
+            arg("data (range<number>)", _lt("The array of ranges containing the values to be counted.")),
+            arg("classes (number, range<number>)", _lt("The range containing the set of classes.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        compute: function (data, classes) {
+            const _data = flattenRowFirst([data], (val) => val).filter((val) => typeof val === "number");
+            const _classes = flattenRowFirst([classes], (val) => val).filter((val) => typeof val === "number");
+            /**
+             * Returns the frequency distribution of the data in the classes, ie. the number of elements in the range
+             * between each classes.
+             *
+             * For example:
+             * - data = [1, 3, 2, 5, 4]
+             * - classes = [3, 5, 1]
+             *
+             * The result will be:
+             * - 2 ==> number of elements 1 > el >= 3
+             * - 2 ==> number of elements 3 > el >= 5
+             * - 1 ==> number of elements <= 1
+             * - 0 ==> number of elements > 5
+             *
+             * @compatibility: GSheet sort the input classes. We do the implemntation of Excel, where we kee the classes unsorted.
+             */
+            const sortedClasses = _classes
+                .map((value, index) => ({ initialIndex: index, value, count: 0 }))
+                .sort((a, b) => a.value - b.value);
+            sortedClasses.push({ initialIndex: sortedClasses.length, value: Infinity, count: 0 });
+            const sortedData = _data.sort((a, b) => a - b);
+            let index = 0;
+            for (const val of sortedData) {
+                while (val > sortedClasses[index].value && index < sortedClasses.length - 1) {
+                    index++;
+                }
+                sortedClasses[index].count++;
+            }
+            const result = sortedClasses
+                .sort((a, b) => a.initialIndex - b.initialIndex)
+                .map((val) => val.count);
+            return [result];
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // HSTACK
+    // -----------------------------------------------------------------------------
+    const HSTACK = {
+        description: _lt("Appends ranges horizontally and in sequence to return a larger array."),
+        args: [
+            arg("range1 (any, range<any>)", _lt("The first range to be appended.")),
+            arg("range2 (any, range<any>, repeating)", _lt("Additional ranges to add to range1.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (...ranges) {
+            const _ranges = ranges.map((range) => toMatrixArgValue(range));
+            const nRows = Math.max(..._ranges.map((range) => range[0].length));
+            const colArray = [];
+            for (const range of _ranges) {
+                for (const col of range) {
+                    //TODO: fill with #N/A for unavailable values instead of zeroes
+                    const paddedCol = Array(nRows).fill(0);
+                    for (let i = 0; i < col.length; i++) {
+                        paddedCol[i] = toCellValue(col[i]);
+                    }
+                    colArray.push(paddedCol);
+                }
+            }
+            return colArray;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // MDETERM
+    // -----------------------------------------------------------------------------
+    const MDETERM = {
+        description: _lt("Returns the matrix determinant of a square matrix."),
+        args: [
+            arg("square_matrix (number, range<number>)", _lt("An range with an equal number of rows and columns representing a matrix whose determinant will be calculated.")),
+        ],
+        returns: ["NUMBER"],
+        compute: function (matrix) {
+            const _matrix = toMatrixArgValue(matrix);
+            assertSquareMatrix(_lt("The argument square_matrix must have the same number of columns and rows."), _matrix);
+            if (!isNumberMatrix(_matrix)) {
+                throw new Error(_lt("The argument square_matrix must be a matrix of numbers."));
+            }
+            const { determinant } = invertMatrix(_matrix);
+            return determinant;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // MINVERSE
+    // -----------------------------------------------------------------------------
+    const MINVERSE = {
+        description: _lt("Returns the multiplicative inverse of a square matrix."),
+        args: [
+            arg("square_matrix (number, range<number>)", _lt("An range with an equal number of rows and columns representing a matrix whose multiplicative inverse will be calculated.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        compute: function (matrix) {
+            const _matrix = toMatrixArgValue(matrix);
+            assertSquareMatrix(_lt("The argument square_matrix must have the same number of columns and rows."), _matrix);
+            if (!isNumberMatrix(_matrix)) {
+                throw new Error(_lt("The argument square_matrix must be a matrix of numbers."));
+            }
+            const { inverted } = invertMatrix(_matrix);
+            if (!inverted) {
+                throw new Error(_lt("The matrix is not invertible."));
+            }
+            return inverted;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // MMULT
+    // -----------------------------------------------------------------------------
+    const MMULT = {
+        description: _lt("Calculates the matrix product of two matrices."),
+        args: [
+            arg("matrix1 (number, range<number>)", _lt("The first matrix in the matrix multiplication operation.")),
+            arg("matrix2 (number, range<number>)", _lt("The second matrix in the matrix multiplication operation.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        compute: function (matrix1, matrix2) {
+            const _matrix1 = toMatrixArgValue(matrix1);
+            const _matrix2 = toMatrixArgValue(matrix2);
+            assert(() => _matrix1.length === _matrix2[0].length, _lt("In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be equal to the \
+        number of rows of the second matrix (%s).", _matrix1.length.toString(), _matrix2[0].length.toString()));
+            if (!isNumberMatrix(_matrix1) || !isNumberMatrix(_matrix2)) {
+                throw new Error(_lt("The arguments matrix1 and matrix2 must be matrices of numbers."));
+            }
+            return multiplyMatrices(_matrix1, _matrix2);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SUMPRODUCT
+    // -----------------------------------------------------------------------------
+    const SUMPRODUCT = {
+        description: _lt("Calculates the sum of the products of corresponding entries in equal-sized ranges."),
+        args: [
+            arg("range1 (number, range<number>)", _lt("The first range whose entries will be multiplied with corresponding entries in the other ranges.")),
+            arg("range2 (number, range<number>, repeating)", _lt("The other range whose entries will be multiplied with corresponding entries in the other ranges.")),
+        ],
+        returns: ["NUMBER"],
+        compute: function (...args) {
+            assertSameDimensions(_lt("All the ranges must have the same dimensions."), ...args);
+            const _args = args.map(toMatrixArgValue);
+            let result = 0;
+            for (let i = 0; i < _args[0].length; i++) {
+                for (let j = 0; j < _args[0][i].length; j++) {
+                    if (!_args.every((range) => typeof range[i][j] === "number")) {
+                        continue;
+                    }
+                    let product = 1;
+                    for (const range of _args) {
+                        product *= toNumber(range[i][j]);
+                    }
+                    result += product;
+                }
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SUMX2MY2
+    // -----------------------------------------------------------------------------
+    /**
+     * Return the sum of the callback applied to each pair of values in the two arrays.
+     *
+     * Ignore the pairs X,Y where one of the value isn't a number. Throw an error if no pair of numbers is found.
+     */
+    function getSumXAndY(arrayX, arrayY, cb) {
+        assertSameDimensions("The arguments array_x and array_y must have the same dimensions.", arrayX, arrayY);
+        const _arrayX = toMatrixArgValue(arrayX);
+        const _arrayY = toMatrixArgValue(arrayY);
+        let validPairFound = false;
+        let result = 0;
+        for (const i in _arrayX) {
+            for (const j in _arrayX[i]) {
+                const arrayXValue = _arrayX[i][j];
+                const arrayYValue = _arrayY[i][j];
+                if (typeof arrayXValue !== "number" || typeof arrayYValue !== "number") {
+                    continue;
+                }
+                validPairFound = true;
+                result += cb(arrayXValue, arrayYValue);
+            }
+        }
+        if (!validPairFound) {
+            throw new Error("The arguments array_x and array_y must contain at least one pair of numbers.");
+        }
+        return result;
+    }
+    const SUMX2MY2 = {
+        description: _lt("Calculates the sum of the difference of the squares of the values in two array."),
+        args: [
+            arg("array_x (number, range<number>)", _lt("The array or range of values whose squares will be reduced by the squares of corresponding entries in array_y and added together.")),
+            arg("array_y (number, range<number>)", _lt("The array or range of values whose squares will be subtracted from the squares of corresponding entries in array_x and added together.")),
+        ],
+        returns: ["NUMBER"],
+        compute: function (arrayX, arrayY) {
+            return getSumXAndY(arrayX, arrayY, (x, y) => x ** 2 - y ** 2);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SUMX2PY2
+    // -----------------------------------------------------------------------------
+    const SUMX2PY2 = {
+        description: _lt("Calculates the sum of the sum of the squares of the values in two array."),
+        args: [
+            arg("array_x (number, range<number>)", _lt("The array or range of values whose squares will be added to the squares of corresponding entries in array_y and added together.")),
+            arg("array_y (number, range<number>)", _lt("The array or range of values whose squares will be added to the squares of corresponding entries in array_x and added together.")),
+        ],
+        returns: ["NUMBER"],
+        compute: function (arrayX, arrayY) {
+            return getSumXAndY(arrayX, arrayY, (x, y) => x ** 2 + y ** 2);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // SUMXMY2
+    // -----------------------------------------------------------------------------
+    const SUMXMY2 = {
+        description: _lt("Calculates the sum of squares of the differences of values in two array."),
+        args: [
+            arg("array_x (number, range<number>)", _lt("The array or range of values that will be reduced by corresponding entries in array_y, squared, and added together.")),
+            arg("array_y (number, range<number>)", _lt("The array or range of values that will be subtracted from corresponding entries in array_x, the result squared, and all such results added together.")),
+        ],
+        returns: ["NUMBER"],
+        compute: function (arrayX, arrayY) {
+            return getSumXAndY(arrayX, arrayY, (x, y) => (x - y) ** 2);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TOCOL
+    // -----------------------------------------------------------------------------
+    const TO_COL_ROW_DEFAULT_IGNORE = 0;
+    const TO_COL_ROW_DEFAULT_SCAN = false;
+    const TO_COL_ROW_ARGS = [
+        arg("array (any, range<any>)", _lt("The array which will be transformed.")),
+        arg(`ignore (number, default=${TO_COL_ROW_DEFAULT_IGNORE})`, _lt("The control to ignore blanks and errors. 0 (default) is to keep all values, 1 is to ignore blanks, 2 is to ignore errors, and 3 is to ignore blanks and errors.")),
+        arg(`scan_by_column (number, default=${TO_COL_ROW_DEFAULT_SCAN})`, _lt("Whether the array should be scanned by column. True scans the array by column and false (default) \
+      scans the array by row.")),
+    ];
+    const TOCOL = {
+        description: _lt("Transforms a range of cells into a single column."),
+        args: TO_COL_ROW_ARGS,
+        returns: ["RANGE<ANY>"],
+        //TODO compute format
+        compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
+            const _array = toMatrixArgValue(array);
+            const _ignore = toInteger(ignore);
+            const _scanByColumn = toBoolean(scanByColumn);
+            assert(() => _ignore >= 0 && _ignore <= 3, _lt("Argument ignore must be between 0 and 3"));
+            const mappedFn = (acc, item) => {
+                // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
+                // the array w/o crashing
+                if ((_ignore === 1 || _ignore === 3) && (item === undefined || item === null)) {
+                    return acc;
+                }
+                acc.push(toCellValue(item));
+                return acc;
+            };
+            const result = reduceAny([_array], mappedFn, [], _scanByColumn ? "colFirst" : "rowFirst");
+            if (result.length === 0) {
+                throw new NotAvailableError(_lt("No results for the given arguments of TOCOL."));
+            }
+            return [result];
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TOROW
+    // -----------------------------------------------------------------------------
+    const TOROW = {
+        description: _lt("Transforms a range of cells into a single row."),
+        args: TO_COL_ROW_ARGS,
+        returns: ["RANGE<ANY>"],
+        //TODO compute format
+        compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
+            const _array = toMatrixArgValue(array);
+            const _ignore = toInteger(ignore);
+            const _scanByColumn = toBoolean(scanByColumn);
+            assert(() => _ignore >= 0 && _ignore <= 3, _lt("Argument ignore must be between 0 and 3"));
+            const mappedFn = (acc, item) => {
+                // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
+                // the array w/o crashing
+                if ((_ignore === 1 || _ignore === 3) && (item === undefined || item === null)) {
+                    return acc;
+                }
+                acc.push([toCellValue(item)]);
+                return acc;
+            };
+            const result = reduceAny([_array], mappedFn, [], _scanByColumn ? "colFirst" : "rowFirst");
+            if (result.length === 0 || result[0].length === 0) {
+                throw new NotAvailableError(_lt("No results for the given arguments of TOROW."));
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // TRANSPOSE
+    // -----------------------------------------------------------------------------
+    const TRANSPOSE = {
+        description: _lt("Transposes the rows and columns of a range."),
+        args: [arg("range (any, range<any>)", _lt("The range to be transposed."))],
+        returns: ["RANGE<ANY>"],
+        computeFormat: (values) => {
+            if (!values.format) {
+                return undefined;
+            }
+            if (!isMatrix(values.format)) {
+                return values.format;
+            }
+            return transpose2dArray(values.format);
+        },
+        compute: function (values) {
+            const _values = toMatrixArgValue(values);
+            return transpose2dArray(_values, toCellValue);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // VSTACK
+    // -----------------------------------------------------------------------------
+    const VSTACK = {
+        description: _lt("Appends ranges vertically and in sequence to return a larger array."),
+        args: [
+            arg("range1 (any, range<any>)", _lt("The first range to be appended.")),
+            arg("range2 (any, range<any>, repeating)", _lt("Additional ranges to add to range1.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (...ranges) {
+            const _ranges = ranges.map((range) => toMatrixArgValue(range));
+            const nCols = Math.max(..._ranges.map((range) => range.length));
+            const nRows = _ranges.reduce((acc, range) => acc + range[0].length, 0);
+            const result = Array(nCols)
+                .fill([])
+                .map(() => Array(nRows).fill(0)); // TODO fill with #N/A
+            let currentRow = 0;
+            for (const range of _ranges) {
+                for (let col = 0; col < range.length; col++) {
+                    for (let row = 0; row < range[col].length; row++) {
+                        result[col][currentRow + row] = toCellValue(range[col][row]);
+                    }
+                }
+                currentRow += range[0].length;
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // WRAPCOLS
+    // -----------------------------------------------------------------------------
+    const WRAPCOLS = {
+        description: _lt("Wraps the provided row or column of cells by columns after a specified number of elements to form a new array."),
+        args: [
+            arg("range (any, range<any>)", _lt("The range to wrap.")),
+            arg("wrap_count (number)", _lt("The maximum number of cells for each column, rounded down to the nearest whole number.")),
+            arg("pad_with  (any, default=0)", // TODO : replace with #N/A
+            _lt("The value with which to fill the extra cells in the range.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (range, wrapCount, padWith = 0) {
+            const _range = toMatrixArgValue(range);
+            const nOfRows = toInteger(wrapCount);
+            const _padWith = padWith === null ? 0 : padWith;
+            assertSingleColOrRow(_lt("Argument range must be a single row or column."), _range);
+            const values = _range.flat();
+            const nOfCols = Math.ceil(values.length / nOfRows);
+            const result = Array(nOfCols);
+            for (let col = 0; col < nOfCols; col++) {
+                result[col] = Array(nOfRows).fill(_padWith);
+                for (let row = 0; row < nOfRows; row++) {
+                    const index = col * nOfRows + row;
+                    if (index < values.length) {
+                        result[col][row] = toCellValue(values[index]);
+                    }
+                }
+            }
+            return result;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // WRAPROWS
+    // -----------------------------------------------------------------------------
+    const WRAPROWS = {
+        description: _lt("Wraps the provided row or column of cells by rows after a specified number of elements to form a new array."),
+        args: [
+            arg("range (any, range<any>)", _lt("The range to wrap.")),
+            arg("wrap_count (number)", _lt("The maximum number of cells for each row, rounded down to the nearest whole number.")),
+            arg("pad_with  (any, default=0)", // TODO : replace with #N/A
+            _lt("The value with which to fill the extra cells in the range.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (range, wrapCount, padWith = 0) {
+            const _range = toMatrixArgValue(range);
+            const nOfCols = toInteger(wrapCount);
+            const _padWith = padWith === null ? 0 : padWith;
+            assertSingleColOrRow(_lt("Argument range must be a single row or column."), _range);
+            const values = _range.flat();
+            const nOfRows = Math.ceil(values.length / nOfCols);
+            const result = Array(nOfCols)
+                .fill([])
+                .map(() => Array(nOfRows).fill(_padWith));
+            for (let row = 0; row < nOfRows; row++) {
+                for (let col = 0; col < nOfCols; col++) {
+                    const index = row * nOfCols + col;
+                    if (index < values.length) {
+                        result[col][row] = toCellValue(values[index]);
+                    }
+                }
+            }
+            return result;
+        },
+        isExported: true,
+    };
+
+    var array = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        ARRAY_CONSTRAIN: ARRAY_CONSTRAIN,
+        CHOOSECOLS: CHOOSECOLS,
+        CHOOSEROWS: CHOOSEROWS,
+        EXPAND: EXPAND,
+        FLATTEN: FLATTEN,
+        FREQUENCY: FREQUENCY,
+        HSTACK: HSTACK,
+        MDETERM: MDETERM,
+        MINVERSE: MINVERSE,
+        MMULT: MMULT,
+        SUMPRODUCT: SUMPRODUCT,
+        SUMX2MY2: SUMX2MY2,
+        SUMX2PY2: SUMX2PY2,
+        SUMXMY2: SUMXMY2,
+        TOCOL: TOCOL,
+        TOROW: TOROW,
+        TRANSPOSE: TRANSPOSE,
+        VSTACK: VSTACK,
+        WRAPCOLS: WRAPCOLS,
+        WRAPROWS: WRAPROWS
+    });
 
     // -----------------------------------------------------------------------------
     // FORMAT.LARGE.NUMBER
@@ -10411,6 +10886,22 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // MUNIT
+    // -----------------------------------------------------------------------------
+    const MUNIT = {
+        description: _lt("Returns a n x n unit matrix, where n is the input dimension."),
+        args: [
+            arg("dimension (number)", _lt("An integer specifying the dimension size of the unit matrix. It must be positive.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        compute: function (n) {
+            const _n = toInteger(n);
+            assertPositive(_lt("The argument dimension must be positive"), _n);
+            return getUnitMatrix(_n);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // ODD
     // -----------------------------------------------------------------------------
     const ODD = {
@@ -10505,6 +10996,47 @@
         returns: ["NUMBER"],
         compute: function () {
             return Math.random();
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // RANDARRAY
+    // -----------------------------------------------------------------------------
+    const RANDARRAY = {
+        description: _lt("Returns a grid of random numbers between 0 inclusive and 1 exclusive."),
+        args: [
+            arg("rows (number, default=1)", _lt("The number of rows to be returned.")),
+            arg("columns (number, default=1)", _lt("The number of columns to be returned.")),
+            arg("min (number, default=0)", _lt("The minimum number you would like returned.")),
+            arg("max (number, default=1)", _lt("The maximum number you would like returned.")),
+            arg("whole_number (number, default=FALSE)", _lt("Return a whole number or a decimal value.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        compute: function (rows = 1, columns = 1, min = 0, max = 1, whole_number = false) {
+            const _cols = toInteger(columns);
+            const _rows = toInteger(rows);
+            const _min = toNumber(min);
+            const _max = toNumber(max);
+            const _whole_number = toBoolean(whole_number);
+            assertPositive(_lt("The number columns (%s) must be positive.", _cols.toString()), _cols);
+            assertPositive(_lt("The number rows (%s) must be positive.", _rows.toString()), _rows);
+            assert(() => _min <= _max, _lt("The maximum (%s) must be greater than or equal to the minimum (%s).", _max.toString(), _min.toString()));
+            if (_whole_number) {
+                assert(() => Number.isInteger(_min) && Number.isInteger(_max), _lt("The maximum (%s) and minimum (%s) must be integers when whole_number is TRUE.", _max.toString(), _min.toString()));
+            }
+            const result = Array(_cols);
+            for (let col = 0; col < _cols; col++) {
+                result[col] = Array(_rows);
+                for (let row = 0; row < _rows; row++) {
+                    if (!_whole_number) {
+                        result[col][row] = _min + Math.random() * (_max - _min);
+                    }
+                    else {
+                        result[col][row] = Math.floor(Math.random() * (_max - _min + 1) + _min);
+                    }
+                }
+            }
+            return result;
         },
         isExported: true,
     };
@@ -10838,11 +11370,13 @@
         ISODD: ISODD,
         LN: LN,
         MOD: MOD,
+        MUNIT: MUNIT,
         ODD: ODD,
         PI: PI,
         POWER: POWER,
         PRODUCT: PRODUCT,
         RAND: RAND,
+        RANDARRAY: RANDARRAY,
         RANDBETWEEN: RANDBETWEEN,
         ROUND: ROUND,
         ROUNDDOWN: ROUNDDOWN,
@@ -12867,6 +13401,89 @@
     var engineering = /*#__PURE__*/Object.freeze({
         __proto__: null,
         DELTA: DELTA
+    });
+
+    // -----------------------------------------------------------------------------
+    // FILTER
+    // -----------------------------------------------------------------------------
+    const FILTER = {
+        description: _lt("Returns a filtered version of the source range, returning only rows or columns that meet the specified conditions."),
+        // TODO modify args description when vectorization on formulas is available
+        args: [
+            arg("range (any, range<any>)", _lt("The data to be filtered.")),
+            arg("condition1 (boolean, range<boolean>)", _lt("A column or row containing true or false values corresponding to the first column or row of range.")),
+            arg("condition2 (boolean, range<boolean>, repeating)", _lt("Additional column or row containing true or false values.")),
+        ],
+        returns: ["RANGE<ANY>"],
+        //TODO computeFormat
+        compute: function (range, ...conditions) {
+            let _range = toMatrixArgValue(range);
+            const _conditionsMatrices = conditions.map((cond) => toMatrixArgValue(cond));
+            _conditionsMatrices.map((c) => assertSingleColOrRow(_lt("The arguments condition must be a single column or row."), c));
+            assertSameDimensions(_lt("The arguments conditions must have the same dimensions."), ..._conditionsMatrices);
+            const _conditions = _conditionsMatrices.map((c) => c.flat());
+            const mode = _conditionsMatrices[0].length === 1 ? "row" : "col";
+            _range = mode === "row" ? transpose2dArray(_range) : _range;
+            assert(() => _conditions.every((cond) => cond.length === _range.length), _lt(`FILTER has mismatched sizes on the range and conditions.`));
+            const results = [];
+            for (let i = 0; i < _range.length; i++) {
+                const row = _range[i];
+                if (_conditions.every((c) => c[i])) {
+                    results.push(row);
+                }
+            }
+            if (!results.length) {
+                throw new NotAvailableError(_lt("No match found in FILTER evaluation"));
+            }
+            return toCellValueMatrix(mode === "row" ? transpose2dArray(results) : results);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
+    // UNIQUE
+    // -----------------------------------------------------------------------------
+    const UNIQUE = {
+        description: _lt("Unique rows in the provided source range."),
+        args: [
+            arg("range (any, range<any>)", _lt("The data to filter by unique entries.")),
+            arg("by_column (boolean, default=FALSE)", _lt("Whether to filter the data by columns or by rows.")),
+            arg("exactly_once (boolean, default=FALSE)", _lt("Whether to return only entries with no duplicates.")),
+        ],
+        returns: ["RANGE<NUMBER>"],
+        // TODO computeFormat
+        compute: function (range, byColumn, exactlyOnce) {
+            if (!isMatrix(range)) {
+                return toCellValue(range);
+            }
+            const _byColumn = toBoolean(byColumn) || false;
+            const _exactlyOnce = toBoolean(exactlyOnce) || false;
+            if (!_byColumn)
+                range = transpose2dArray(range);
+            const map = new Map();
+            for (const row of range) {
+                const key = JSON.stringify(row);
+                const occurrence = map.get(key);
+                if (!occurrence) {
+                    map.set(key, { val: row, count: 1 });
+                }
+                else {
+                    occurrence.count++;
+                }
+            }
+            const results = _exactlyOnce
+                ? [...map.values()].filter((v) => v.count === 1).map((v) => v.val)
+                : [...map.values()].map((v) => v.val);
+            if (!results.length)
+                throw new Error(_lt("No unique values found"));
+            return toCellValueMatrix(_byColumn ? results : transpose2dArray(results));
+        },
+        isExported: true,
+    };
+
+    var filter = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        FILTER: FILTER,
+        UNIQUE: UNIQUE
     });
 
     /** Assert maturity date > settlement date */
@@ -15564,13 +16181,16 @@
             const _searchMode = Math.trunc(toNumber(searchMode));
             const _searchKey = normalizeValue(searchKey);
             assert(() => lookupRange.length === 1 || lookupRange[0].length === 1, _lt("lookup_range should be either a single row or single column."));
-            assert(() => returnRange.length === 1 || returnRange[0].length === 1, _lt("return_range should be either a single row or single column."));
-            assert(() => returnRange.length === lookupRange.length &&
-                returnRange[0].length === lookupRange[0].length, _lt("return_range should have the same dimensions as lookup_range."));
             assert(() => [-1, 1, -2, 2].includes(_searchMode), _lt("searchMode should be a value in [-1, 1, -2, 2]."));
             assert(() => [-1, 0, 1].includes(_matchMode), _lt("matchMode should be a value in [-1, 0, 1]."));
-            const getElement = lookupRange.length === 1 ? getNormalizedValueFromColumnRange : getNormalizedValueFromRowRange;
-            const rangeLen = lookupRange.length === 1 ? lookupRange[0].length : lookupRange.length;
+            const lookupDirection = lookupRange.length === 1 ? "col" : "row";
+            assert(() => lookupDirection === "col"
+                ? returnRange[0].length === lookupRange[0].length
+                : returnRange.length === lookupRange.length, _lt("return_range should have the same dimensions as lookup_range."));
+            const getElement = lookupDirection === "col"
+                ? getNormalizedValueFromColumnRange
+                : getNormalizedValueFromRowRange;
+            const rangeLen = lookupDirection === "col" ? lookupRange[0].length : lookupRange.length;
             const mode = _matchMode === 0 ? "strict" : _matchMode === 1 ? "nextGreater" : "nextSmaller";
             const reverseSearch = _searchMode === -1;
             let index;
@@ -15582,7 +16202,7 @@
                 index = linearSearch(lookupRange, _searchKey, mode, rangeLen, getElement, reverseSearch);
             }
             if (index !== -1) {
-                return (lookupRange.length === 1 ? returnRange[0][index] : returnRange[index][0]);
+                return toCellValueMatrix(lookupDirection === "col" ? returnRange.map((col) => [col[index]]) : [returnRange[index]]);
             }
             const _defaultValue = defaultValue?.();
             assertAvailable(_defaultValue, searchKey);
@@ -16123,6 +16743,36 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // SPLIT
+    // -----------------------------------------------------------------------------
+    const SPLIT_DEFAULT_SPLIT_BY_EACH = true;
+    const SPLIT_DEFAULT_REMOVE_EMPTY_TEXT = true;
+    const SPLIT = {
+        description: _lt("Split text by specific character delimiter(s)."),
+        args: [
+            arg("text (string)", _lt("The text to divide.")),
+            arg("delimiter (string)", _lt("The character or characters to use to split text.")),
+            arg(`split_by_each (boolean, default=${SPLIT_DEFAULT_SPLIT_BY_EACH}})`, _lt("Whether or not to divide text around each character contained in delimiter.")),
+            arg(`remove_empty_text (boolean, default=${SPLIT_DEFAULT_REMOVE_EMPTY_TEXT})`, _lt("Whether or not to remove empty text messages from the split results. The default behavior is to treat \
+        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters.")),
+        ],
+        returns: ["RANGE<STRING>"],
+        compute: function (text, delimiter, splitByEach = SPLIT_DEFAULT_SPLIT_BY_EACH, removeEmptyText = SPLIT_DEFAULT_REMOVE_EMPTY_TEXT) {
+            const _text = toString(text);
+            const _delimiter = escapeRegExp(toString(delimiter));
+            const _splitByEach = toBoolean(splitByEach);
+            const _removeEmptyText = toBoolean(removeEmptyText);
+            assert(() => _delimiter.length > 0, _lt("The _delimiter (%s) must be not be empty.", _delimiter));
+            const regex = _splitByEach ? new RegExp(`[${_delimiter}]`, "g") : new RegExp(_delimiter, "g");
+            let result = _text.split(regex);
+            if (_removeEmptyText) {
+                result = result.filter((text) => text !== "");
+            }
+            return transpose2dArray([result]);
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // SUBSTITUTE
     // -----------------------------------------------------------------------------
     const SUBSTITUTE = {
@@ -16231,6 +16881,7 @@
         REPLACE: REPLACE,
         RIGHT: RIGHT,
         SEARCH: SEARCH,
+        SPLIT: SPLIT,
         SUBSTITUTE: SUBSTITUTE,
         TEXTJOIN: TEXTJOIN,
         TRIM: TRIM,
@@ -16264,8 +16915,10 @@
     });
 
     const categories = [
+        { name: _lt("Array"), functions: array },
         { name: _lt("Database"), functions: database },
         { name: _lt("Date"), functions: date },
+        { name: _lt("Filter"), functions: filter },
         { name: _lt("Financial"), functions: financial },
         { name: _lt("Info"), functions: info },
         { name: _lt("Lookup"), functions: lookup },
@@ -16338,14 +16991,20 @@
     }
 
     const insertRow = {
-        name: MENU_INSERT_ROWS_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            return number === 1 ? _lt("Insert row") : _lt("Insert %s rows", number.toString());
+        },
         isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
             IS_ONLY_ONE_RANGE(env) &&
             env.model.getters.getActiveCols().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_ROW",
     };
     const rowInsertRowBefore = {
-        name: ROW_INSERT_ROWS_BEFORE_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            return number === 1 ? _lt("Insert row above") : _lt("Insert %s rows above", number.toString());
+        },
         execute: INSERT_ROWS_BEFORE_ACTION,
         isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
             IS_ONLY_ONE_RANGE(env) &&
@@ -16354,17 +17013,32 @@
     };
     const topBarInsertRowsBefore = {
         ...rowInsertRowBefore,
-        name: MENU_INSERT_ROWS_BEFORE_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            if (number === 1) {
+                return _lt("Row above");
+            }
+            return _lt("%s Rows above", number.toString());
+        },
     };
     const cellInsertRowsBefore = {
         ...rowInsertRowBefore,
-        name: CELL_INSERT_ROWS_BEFORE_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            if (number === 1) {
+                return _lt("Insert row");
+            }
+            return _lt("Insert %s rows", number.toString());
+        },
         isVisible: IS_ONLY_ONE_RANGE,
         icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
     };
     const rowInsertRowsAfter = {
         execute: INSERT_ROWS_AFTER_ACTION,
-        name: ROW_INSERT_ROWS_AFTER_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            return number === 1 ? _lt("Insert row below") : _lt("Insert %s rows below", number.toString());
+        },
         isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
             IS_ONLY_ONE_RANGE(env) &&
             env.model.getters.getActiveCols().size === 0,
@@ -16372,17 +17046,31 @@
     };
     const topBarInsertRowsAfter = {
         ...rowInsertRowsAfter,
-        name: MENU_INSERT_ROWS_AFTER_NAME,
+        name: (env) => {
+            const number = getRowsNumber(env);
+            if (number === 1) {
+                return _lt("Row below");
+            }
+            return _lt("%s Rows below", number.toString());
+        },
     };
     const insertCol = {
-        name: MENU_INSERT_COLUMNS_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            return number === 1 ? _lt("Insert column") : _lt("Insert %s columns", number.toString());
+        },
         isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
             IS_ONLY_ONE_RANGE(env) &&
             env.model.getters.getActiveRows().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_COL",
     };
     const colInsertColsBefore = {
-        name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            return number === 1
+                ? _lt("Insert column left")
+                : _lt("Insert %s columns left", number.toString());
+        },
         execute: INSERT_COLUMNS_BEFORE_ACTION,
         isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
             IS_ONLY_ONE_RANGE(env) &&
@@ -16391,16 +17079,33 @@
     };
     const topBarInsertColsBefore = {
         ...colInsertColsBefore,
-        name: MENU_INSERT_COLUMNS_BEFORE_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            if (number === 1) {
+                return _lt("Column left");
+            }
+            return _lt("%s Columns left", number.toString());
+        },
     };
     const cellInsertColsBefore = {
         ...colInsertColsBefore,
-        name: CELL_INSERT_COLUMNS_BEFORE_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            if (number === 1) {
+                return _lt("Insert column");
+            }
+            return _lt("Insert %s columns", number.toString());
+        },
         isVisible: IS_ONLY_ONE_RANGE,
         icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
     };
     const colInsertColsAfter = {
-        name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            return number === 1
+                ? _lt("Insert column right")
+                : _lt("Insert %s columns right", number.toString());
+        },
         execute: INSERT_COLUMNS_AFTER_ACTION,
         isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
             IS_ONLY_ONE_RANGE(env) &&
@@ -16409,7 +17114,13 @@
     };
     const topBarInsertColsAfter = {
         ...colInsertColsAfter,
-        name: MENU_INSERT_COLUMNS_AFTER_NAME,
+        name: (env) => {
+            const number = getColumnsNumber(env);
+            if (number === 1) {
+                return _lt("Column right");
+            }
+            return _lt("%s Columns right", number.toString());
+        },
         execute: INSERT_COLUMNS_AFTER_ACTION,
     };
     const insertCell = {
@@ -16421,13 +17132,21 @@
     };
     const insertCellShiftDown = {
         name: _lt("Insert cells and shift down"),
-        execute: INSERT_CELL_SHIFT_DOWN,
+        execute: (env) => {
+            const zone = env.model.getters.getSelectedZone();
+            const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "ROW" });
+            handlePasteResult(env, result);
+        },
         isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_DOWN",
     };
     const insertCellShiftRight = {
         name: _lt("Insert cells and shift right"),
-        execute: INSERT_CELL_SHIFT_RIGHT,
+        execute: (env) => {
+            const zone = env.model.getters.getSelectedZone();
+            const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "COL" });
+            handlePasteResult(env, result);
+        },
         isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_RIGHT",
     };
@@ -16493,7 +17212,13 @@
     };
     const insertSheet = {
         name: _lt("Insert sheet"),
-        execute: CREATE_SHEET_ACTION,
+        execute: (env) => {
+            const activeSheetId = env.model.getters.getActiveSheetId();
+            const position = env.model.getters.getSheetIds().indexOf(activeSheetId) + 1;
+            const sheetId = env.model.uuidGenerator.uuidv4();
+            env.model.dispatch("CREATE_SHEET", { sheetId, position });
+            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
+        },
         icon: "o-spreadsheet-Icon.INSERT_SHEET",
     };
     function createFormulaFunctions(fnNames) {
@@ -16504,6 +17229,26 @@
                 execute: (env) => env.startCellEdition(`=${fnName}(`),
             };
         });
+    }
+    function getRowsNumber(env) {
+        const activeRows = env.model.getters.getActiveRows();
+        if (activeRows.size) {
+            return activeRows.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            return zone.bottom - zone.top + 1;
+        }
+    }
+    function getColumnsNumber(env) {
+        const activeCols = env.model.getters.getActiveCols();
+        if (activeCols.size) {
+            return activeCols.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            return zone.right - zone.left + 1;
+        }
     }
 
     //------------------------------------------------------------------------------
@@ -16594,6 +17339,123 @@
         separator: true,
     });
 
+    const SORT_TYPES = [
+        CellValueType.number,
+        CellValueType.error,
+        CellValueType.text,
+        CellValueType.boolean,
+    ];
+    function sortCells(cells, sortDirection, emptyCellAsZero) {
+        const cellsWithIndex = cells.map((cell, index) => ({
+            index,
+            type: cell.type,
+            value: cell.value,
+        }));
+        let emptyCells = cellsWithIndex.filter((x) => x.type === CellValueType.empty);
+        let nonEmptyCells = cellsWithIndex.filter((x) => x.type !== CellValueType.empty);
+        if (emptyCellAsZero) {
+            nonEmptyCells.push(...emptyCells.map((emptyCell) => ({ ...emptyCell, type: CellValueType.number, value: 0 })));
+            emptyCells = [];
+        }
+        const inverse = sortDirection === "descending" ? -1 : 1;
+        return nonEmptyCells
+            .sort((left, right) => {
+            let typeOrder = SORT_TYPES.indexOf(left.type) - SORT_TYPES.indexOf(right.type);
+            if (typeOrder === 0) {
+                if (left.type === CellValueType.text || left.type === CellValueType.error) {
+                    typeOrder = left.value.localeCompare(right.value);
+                }
+                else
+                    typeOrder = left.value - right.value;
+            }
+            return inverse * typeOrder;
+        })
+            .concat(emptyCells);
+    }
+    function interactiveSortSelection(env, sheetId, anchor, zone, sortDirection) {
+        let result = DispatchResult.Success;
+        //several columns => bypass the contiguity check
+        let multiColumns = zone.right > zone.left;
+        if (env.model.getters.doesIntersectMerge(sheetId, zone)) {
+            multiColumns = false;
+            let table;
+            for (let row = zone.top; row <= zone.bottom; row++) {
+                table = [];
+                for (let col = zone.left; col <= zone.right; col++) {
+                    let merge = env.model.getters.getMerge({ sheetId, col, row });
+                    if (merge && !table.includes(merge.id.toString())) {
+                        table.push(merge.id.toString());
+                    }
+                }
+                if (table.length >= 2) {
+                    multiColumns = true;
+                    break;
+                }
+            }
+        }
+        const { col, row } = anchor;
+        if (multiColumns) {
+            result = env.model.dispatch("SORT_CELLS", { sheetId, col, row, zone, sortDirection });
+        }
+        else {
+            // check contiguity
+            const contiguousZone = env.model.getters.getContiguousZone(sheetId, zone);
+            if (isEqual(contiguousZone, zone)) {
+                // merge as it is
+                result = env.model.dispatch("SORT_CELLS", {
+                    sheetId,
+                    col,
+                    row,
+                    zone,
+                    sortDirection,
+                });
+            }
+            else {
+                env.askConfirmation(_lt("We found data next to your selection. Since this data was not selected, it will not be sorted. Do you want to extend your selection?"), () => {
+                    zone = contiguousZone;
+                    result = env.model.dispatch("SORT_CELLS", {
+                        sheetId,
+                        col,
+                        row,
+                        zone,
+                        sortDirection,
+                    });
+                }, () => {
+                    result = env.model.dispatch("SORT_CELLS", {
+                        sheetId,
+                        col,
+                        row,
+                        zone,
+                        sortDirection,
+                    });
+                });
+            }
+        }
+        if (result.isCancelledBecause(64 /* CommandResult.InvalidSortZone */)) {
+            const { col, row } = anchor;
+            env.model.selection.selectZone({ cell: { col, row }, zone });
+            env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
+        }
+    }
+
+    const AddFilterInteractiveContent = {
+        filterOverlap: _lt("You cannot create overlapping filters."),
+        nonContinuousTargets: _lt("A filter can only be created on a continuous selection."),
+        mergeInFilter: _lt("You can't create a filter over a range that contains a merge."),
+    };
+    function interactiveAddFilter(env, sheetId, target) {
+        const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
+        if (result.isCancelledBecause(79 /* CommandResult.FilterOverlap */)) {
+            env.raiseError(AddFilterInteractiveContent.filterOverlap);
+        }
+        else if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddFilterInteractiveContent.mergeInFilter);
+        }
+        else if (result.isCancelledBecause(82 /* CommandResult.NonContinuousTargets */)) {
+            env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
+        }
+    }
+
     const sortRange = {
         name: _lt("Sort range"),
         isVisible: IS_ONLY_ONE_RANGE,
@@ -16601,24 +17463,45 @@
     };
     const sortAscending = {
         name: _lt("Ascending (A ⟶ Z)"),
-        execute: SORT_CELLS_ASCENDING,
+        execute: (env) => {
+            const { anchor, zones } = env.model.getters.getSelection();
+            const sheetId = env.model.getters.getActiveSheetId();
+            interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "ascending");
+        },
         icon: "o-spreadsheet-Icon.SORT_ASCENDING",
     };
     const sortDescending = {
         name: _lt("Descending (Z ⟶ A)"),
-        execute: SORT_CELLS_DESCENDING,
+        execute: (env) => {
+            const { anchor, zones } = env.model.getters.getSelection();
+            const sheetId = env.model.getters.getActiveSheetId();
+            interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "descending");
+        },
         icon: "o-spreadsheet-Icon.SORT_DESCENDING",
     };
     const addDataFilter = {
         name: _lt("Create filter"),
-        execute: FILTERS_CREATE_FILTER_TABLE,
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const selection = env.model.getters.getSelection().zones;
+            interactiveAddFilter(env, sheetId, selection);
+        },
         isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
-        isEnabled: (env) => SELECTION_IS_CONTINUOUS(env),
+        isEnabled: (env) => {
+            const selectedZones = env.model.getters.getSelectedZones();
+            return areZonesContinuous(...selectedZones);
+        },
         icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
     };
     const removeDataFilter = {
         name: _lt("Remove filter"),
-        execute: FILTERS_REMOVE_FILTER_TABLE,
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("REMOVE_FILTER_TABLE", {
+                sheetId,
+                target: env.model.getters.getSelectedZones(),
+            });
+        },
         isVisible: SELECTION_CONTAINS_FILTER,
         icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
     };
@@ -16632,13 +17515,13 @@
 
     const formatNumberAutomatic = {
         name: _lt("Automatic"),
-        execute: FORMAT_AUTOMATIC_ACTION,
+        execute: (env) => setFormatter(env, ""),
         isActive: (env) => isAutomaticFormatSelected(env),
     };
     const formatNumberNumber = {
         name: _lt("Number"),
         description: "1,000.12",
-        execute: FORMAT_NUMBER_ACTION,
+        execute: (env) => setFormatter(env, "#,##0.00"),
         isActive: (env) => isFormatSelected(env, "#,##0.00"),
     };
     const formatPercent = {
@@ -16655,42 +17538,42 @@
     const formatNumberCurrency = {
         name: _lt("Currency"),
         description: "$1,000.12",
-        execute: FORMAT_CURRENCY_ACTION,
+        execute: (env) => setFormatter(env, "[$$]#,##0.00"),
         isActive: (env) => isFormatSelected(env, "[$$]#,##0.00"),
     };
     const formatNumberCurrencyRounded = {
         name: _lt("Currency rounded"),
         description: "$1,000",
-        execute: FORMAT_CURRENCY_ROUNDED_ACTION,
+        execute: (env) => setFormatter(env, "[$$]#,##0"),
         isActive: (env) => isFormatSelected(env, "[$$]#,##0"),
     };
     const formatCustomCurrency = {
         name: _lt("Custom currency"),
         isVisible: (env) => env.loadCurrencies !== undefined,
-        execute: OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION,
+        execute: (env) => env.openSidePanel("CustomCurrency", {}),
     };
     const formatNumberDate = {
         name: _lt("Date"),
         description: "9/26/2008",
-        execute: FORMAT_DATE_ACTION,
+        execute: (env) => setFormatter(env, "m/d/yyyy"),
         isActive: (env) => isFormatSelected(env, "m/d/yyyy"),
     };
     const formatNumberTime = {
         name: _lt("Time"),
         description: "10:43:00 PM",
-        execute: FORMAT_TIME_ACTION,
+        execute: (env) => setFormatter(env, "hh:mm:ss a"),
         isActive: (env) => isFormatSelected(env, "hh:mm:ss a"),
     };
     const formatNumberDateTime = {
         name: _lt("Date time"),
         description: "9/26/2008 22:43:00",
-        execute: FORMAT_DATE_TIME_ACTION,
+        execute: (env) => setFormatter(env, "m/d/yyyy hh:mm:ss"),
         isActive: (env) => isFormatSelected(env, "m/d/yyyy hh:mm:ss"),
     };
     const formatNumberDuration = {
         name: _lt("Duration"),
         description: "27:51:38",
-        execute: FORMAT_DURATION_ACTION,
+        execute: (env) => setFormatter(env, "hhhh:mm:ss"),
         isActive: (env) => isFormatSelected(env, "hhhh:mm:ss"),
     };
     const incraseDecimalPlaces = {
@@ -16714,27 +17597,27 @@
     const formatBold = {
         name: _lt("Bold"),
         description: "Ctrl+B",
-        execute: FORMAT_BOLD_ACTION,
+        execute: (env) => setStyle(env, { bold: !env.model.getters.getCurrentStyle().bold }),
         icon: "o-spreadsheet-Icon.BOLD",
         isActive: (env) => !!env.model.getters.getCurrentStyle().bold,
     };
     const formatItalic = {
         name: _lt("Italic"),
         description: "Ctrl+I",
-        execute: FORMAT_ITALIC_ACTION,
+        execute: (env) => setStyle(env, { italic: !env.model.getters.getCurrentStyle().italic }),
         icon: "o-spreadsheet-Icon.ITALIC",
         isActive: (env) => !!env.model.getters.getCurrentStyle().italic,
     };
     const formatUnderline = {
         name: _lt("Underline"),
         description: "Ctrl+U",
-        execute: FORMAT_UNDERLINE_ACTION,
+        execute: (env) => setStyle(env, { underline: !env.model.getters.getCurrentStyle().underline }),
         icon: "o-spreadsheet-Icon.UNDERLINE",
         isActive: (env) => !!env.model.getters.getCurrentStyle().underline,
     };
     const formatStrikethrough = {
         name: _lt("Strikethrough"),
-        execute: FORMAT_STRIKETHROUGH_ACTION,
+        execute: (env) => setStyle(env, { strikethrough: !env.model.getters.getCurrentStyle().strikethrough }),
         icon: "o-spreadsheet-Icon.STRIKE",
         isActive: (env) => !!env.model.getters.getCurrentStyle().strikethrough,
     };
@@ -16840,7 +17723,10 @@
     const clearFormat = {
         name: _lt("Clear formatting"),
         description: "Ctrl+<",
-        execute: FORMAT_CLEARFORMAT_ACTION,
+        execute: (env) => env.model.dispatch("CLEAR_FORMATTING", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+        }),
         icon: "o-spreadsheet-Icon.CLEAR_FORMAT",
     };
     function fontSizeMenuBuilder() {
@@ -16919,20 +17805,34 @@
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(65 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(66 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
 
     const hideCols = {
         name: HIDE_COLUMNS_NAME,
-        execute: HIDE_COLUMNS_ACTION,
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("COL");
+            env.model.dispatch("HIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "COL",
+                elements: columns,
+            });
+        },
         isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
         icon: "o-spreadsheet-Icon.HIDE_COL",
     };
     const unhideCols = {
         name: _lt("Unhide columns"),
-        execute: UNHIDE_COLUMNS_ACTION,
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("COL");
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "COL",
+                elements: columns,
+            });
+        },
         isVisible: (env) => {
             const hiddenCols = env.model.getters
                 .getHiddenColsGroups(env.model.getters.getActiveSheetId())
@@ -16943,18 +17843,39 @@
     };
     const unhideAllCols = {
         name: _lt("Unhide all columns"),
-        execute: UNHIDE_ALL_COLUMNS_ACTION,
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId,
+                dimension: "COL",
+                elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
+            });
+        },
         isVisible: (env) => env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId()).length > 0,
     };
     const hideRows = {
         name: HIDE_ROWS_NAME,
-        execute: HIDE_ROWS_ACTION,
+        execute: (env) => {
+            const rows = env.model.getters.getElementsFromSelection("ROW");
+            env.model.dispatch("HIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "ROW",
+                elements: rows,
+            });
+        },
         isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
         icon: "o-spreadsheet-Icon.HIDE_ROW",
     };
     const unhideRows = {
         name: _lt("Unhide rows"),
-        execute: UNHIDE_ROWS_ACTION,
+        execute: (env) => {
+            const columns = env.model.getters.getElementsFromSelection("ROW");
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                dimension: "ROW",
+                elements: columns,
+            });
+        },
         isVisible: (env) => {
             const hiddenRows = env.model.getters
                 .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
@@ -16965,7 +17886,14 @@
     };
     const unhideAllRows = {
         name: _lt("Unhide all rows"),
-        execute: UNHIDE_ALL_ROWS_ACTION,
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+                sheetId,
+                dimension: "ROW",
+                elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
+            });
+        },
         isVisible: (env) => env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId()).length > 0,
     };
     const unFreezePane = {
@@ -17039,12 +17967,18 @@
         name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
             ? _lt("Hide gridlines")
             : _lt("Show gridlines"),
-        execute: SET_GRID_LINES_VISIBILITY_ACTION,
+        execute: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
+                sheetId,
+                areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
+            });
+        },
         icon: "o-spreadsheet-Icon.SHOW_HIDE_GRID",
     };
     const viewFormulas = {
         name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
-        execute: SET_FORMULA_VISIBILITY_ACTION,
+        execute: (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() }),
         isReadonlyAllowed: true,
         icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
     };
@@ -18008,10 +18942,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDatasetInvalid() {
-            return !!this.state.datasetDispatchResult?.isCancelledBecause(32 /* CommandResult.InvalidDataSet */);
+            return !!this.state.datasetDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidDataSet */);
         }
         get isLabelInvalid() {
-            return !!this.state.labelsDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidLabelRange */);
+            return !!this.state.labelsDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidLabelRange */);
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart(this.props.figureId, {
@@ -18642,12 +19576,14 @@
         static template = "o-spreadsheet-LineBarPieDesignPanel";
         static components = { ColorPickerWidget };
         state = owl.useState({
+            title: "",
             fillColorTool: false,
         });
         onClick(ev) {
             this.state.fillColorTool = false;
         }
         setup() {
+            this.state.title = _t(this.props.definition.title);
             owl.useExternalListener(window, "click", this.onClick);
         }
         toggleColorPicker() {
@@ -18658,9 +19594,9 @@
                 background: color,
             });
         }
-        updateTitle(ev) {
+        updateTitle() {
             this.props.updateChart(this.props.figureId, {
-                title: ev.target.value,
+                title: this.state.title,
             });
         }
         updateSelect(attr, ev) {
@@ -18692,7 +19628,7 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDataRangeInvalid() {
-            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidGaugeDataRange */);
+            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(37 /* CommandResult.InvalidGaugeDataRange */);
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -18751,11 +19687,13 @@
         static template = "o-spreadsheet-GaugeChartDesignPanel";
         static components = { ColorPickerWidget, SidePanelErrors };
         state = owl.useState({
+            title: "",
             openedMenu: undefined,
             sectionRuleDispatchResult: undefined,
             sectionRule: deepCopy(this.props.definition.sectionRule),
         });
         setup() {
+            this.state.title = _t(this.props.definition.title);
             owl.useExternalListener(window, "click", this.closeMenus);
         }
         get designErrorMessages() {
@@ -18768,31 +19706,31 @@
                 background: color,
             });
         }
-        updateTitle(ev) {
+        updateTitle() {
             this.props.updateChart(this.props.figureId, {
-                title: ev.target.value,
+                title: this.state.title,
             });
         }
         isRangeMinInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(37 /* CommandResult.EmptyGaugeRangeMin */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(38 /* CommandResult.GaugeRangeMinNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(38 /* CommandResult.EmptyGaugeRangeMin */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.GaugeRangeMinNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         isRangeMaxInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.EmptyGaugeRangeMax */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.GaugeRangeMaxNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.EmptyGaugeRangeMax */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMaxNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         get isUpperInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         updateSectionColor(target, color) {
             const sectionRule = deepCopy(this.state.sectionRule);
@@ -18875,10 +19813,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isKeyValueInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidScorecardKeyValue */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidScorecardKeyValue */);
         }
         get isBaselineInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidScorecardBaseline */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidScorecardBaseline */);
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -18923,14 +19861,16 @@
         static template = "o-spreadsheet-ScorecardChartDesignPanel";
         static components = { ColorPickerWidget };
         state = owl.useState({
+            title: "",
             openedColorPicker: undefined,
         });
         setup() {
+            this.state.title = _t(this.props.definition.title);
             owl.useExternalListener(window, "click", this.closeMenus);
         }
-        updateTitle(ev) {
+        updateTitle() {
             this.props.updateChart(this.props.figureId, {
-                title: ev.target.value,
+                title: this.state.title,
             });
         }
         updateBaselineDescr(ev) {
@@ -19552,7 +20492,7 @@
             return this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
         }
         get isRangeValid() {
-            return this.state.errors.includes(24 /* CommandResult.EmptyRange */);
+            return this.state.errors.includes(25 /* CommandResult.EmptyRange */);
         }
         errorMessage(error) {
             return CfTerms.Errors[error] || CfTerms.Errors.Unexpected;
@@ -19611,7 +20551,7 @@
             if (this.state.currentCF) {
                 const invalidRanges = this.state.currentCF.ranges.some((xc) => !xc.match(rangeReference));
                 if (invalidRanges) {
-                    this.state.errors = [25 /* CommandResult.InvalidRange */];
+                    this.state.errors = [26 /* CommandResult.InvalidRange */];
                     return;
                 }
                 const sheetId = this.env.model.getters.getActiveSheetId();
@@ -19766,10 +20706,10 @@
          * Cell Is Rule
          ****************************************************************************/
         get isValue1Invalid() {
-            return !!this.state.errors?.includes(51 /* CommandResult.FirstArgMissing */);
+            return !!this.state.errors?.includes(52 /* CommandResult.FirstArgMissing */);
         }
         get isValue2Invalid() {
-            return !!this.state.errors?.includes(52 /* CommandResult.SecondArgMissing */);
+            return !!this.state.errors?.includes(53 /* CommandResult.SecondArgMissing */);
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -19786,17 +20726,17 @@
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(58 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(50 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(47 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(53 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(59 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(51 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(48 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(54 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(59 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(54 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(49 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(60 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(55 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(50 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(60 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(55 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(61 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(56 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -19844,13 +20784,13 @@
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(57 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(62 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(58 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(63 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(56 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(61 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(57 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(62 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -20160,7 +21100,7 @@
     };
     function interactiveSplitToColumns(env, separator, addNewColumns) {
         let result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", { separator, addNewColumns });
-        if (result.isCancelledBecause(90 /* CommandResult.SplitWillOverwriteContent */)) {
+        if (result.isCancelledBecause(91 /* CommandResult.SplitWillOverwriteContent */)) {
             env.askConfirmation(SplitToColumnsInteractiveContent.SplitIsDestructive, () => {
                 result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", {
                     separator,
@@ -20224,8 +21164,8 @@
             const errors = new Set();
             for (const reason of cancelledReasons) {
                 switch (reason) {
-                    case 90 /* CommandResult.SplitWillOverwriteContent */:
-                    case 89 /* CommandResult.EmptySplitSeparator */:
+                    case 91 /* CommandResult.SplitWillOverwriteContent */:
+                    case 90 /* CommandResult.EmptySplitSeparator */:
                         break;
                     default:
                         errors.add(SplitToColumnsTerms.Errors[reason] || SplitToColumnsTerms.Errors.Unexpected);
@@ -20240,8 +21180,8 @@
                 addNewColumns: this.state.addNewColumns,
                 force: false,
             }).reasons;
-            if (cancelledReasons.includes(90 /* CommandResult.SplitWillOverwriteContent */)) {
-                warnings.push(SplitToColumnsTerms.Errors[90 /* CommandResult.SplitWillOverwriteContent */]);
+            if (cancelledReasons.includes(91 /* CommandResult.SplitWillOverwriteContent */)) {
+                warnings.push(SplitToColumnsTerms.Errors[91 /* CommandResult.SplitWillOverwriteContent */]);
             }
             return warnings;
         }
@@ -20894,6 +21834,13 @@
             const element = focusedNode instanceof HTMLElement ? focusedNode : focusedNode.parentElement;
             element?.scrollIntoView({ block: "nearest" });
         }
+        /**
+         * remove the current selection of the user
+         * */
+        removeSelection() {
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+        }
         removeAll() {
             if (this.el) {
                 while (this.el.firstChild) {
@@ -21380,6 +22327,21 @@
             this.autoCompleteState.values = values.slice(0, 10);
             this.autoCompleteState.selectedIndex = 0;
         }
+        /**
+         * This is required to ensure the content helper selection is
+         * properly updated on "onclick" events. Depending on the browser,
+         * the callback onClick from the composer will be executed before
+         * the selection was updated in the dom, which means we capture an
+         * wrong selection which is then forced upon the content helper on
+         * patchContent.
+         */
+        onMousedown(ev) {
+            if (ev.button > 0) {
+                // not main button, probably a context menu
+                return;
+            }
+            this.contentHelper.removeSelection();
+        }
         onClick() {
             if (this.env.model.getters.isReadonly()) {
                 return;
@@ -21391,6 +22353,29 @@
             }
             this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
             this.processTokenAtCursor();
+        }
+        onDblClick() {
+            if (this.env.model.getters.isReadonly()) {
+                return;
+            }
+            const composerContent = this.env.model.getters.getCurrentContent();
+            const isValidFormula = composerContent.startsWith("=");
+            if (isValidFormula) {
+                const tokens = this.env.model.getters.getCurrentTokens();
+                const currentSelection = this.contentHelper.getCurrentSelection();
+                if (currentSelection.start === currentSelection.end)
+                    return;
+                const currentSelectedText = composerContent.substring(currentSelection.start, currentSelection.end);
+                const token = tokens.filter((token) => token.value.includes(currentSelectedText) &&
+                    token.start <= currentSelection.start &&
+                    token.end >= currentSelection.end)[0];
+                if (token.type === "REFERENCE") {
+                    this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", {
+                        start: token.start,
+                        end: token.end,
+                    });
+                }
+            }
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -21420,7 +22405,7 @@
          */
         getContentLines() {
             let value = this.env.model.getters.getCurrentContent();
-            const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
+            const isValidFormula = value.startsWith("=");
             if (value === "") {
                 return [];
             }
@@ -24129,7 +25114,7 @@
             }
             ev.preventDefault();
         }
-        paste(ev) {
+        async paste(ev) {
             if (!this.gridEl.contains(document.activeElement)) {
                 return;
             }
@@ -24148,6 +25133,9 @@
                 }
                 else {
                     interactivePasteFromOS(this.env, target, content);
+                }
+                if (this.env.model.getters.isCutOperation()) {
+                    await this.env.clipboard.write({ [ClipboardMIMEType.PlainText]: "" });
                 }
             }
         }
@@ -30088,9 +31076,9 @@
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
-                return 27 /* CommandResult.InvalidSheetId */;
+                return 28 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
-            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
+            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 19 /* CommandResult.TargetOutOfSheet */;
         }
     }
     class FormulaCellWithDependencies {
@@ -30313,13 +31301,13 @@
         }
         checkChartDuplicate(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
-                ? 84 /* CommandResult.DuplicatedChartId */
+                ? 85 /* CommandResult.DuplicatedChartId */
                 : 0 /* CommandResult.Success */;
         }
         checkChartExists(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
                 ? 0 /* CommandResult.Success */
-                : 85 /* CommandResult.ChartDoesNotExist */;
+                : 86 /* CommandResult.ChartDoesNotExist */;
         }
     }
 
@@ -30528,18 +31516,18 @@
         }
         checkValidReordering(cfId, direction, sheetId) {
             if (!this.cfRules[sheetId])
-                return 27 /* CommandResult.InvalidSheetId */;
+                return 28 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 71 /* CommandResult.InvalidConditionalFormatId */;
+                return 72 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 71 /* CommandResult.InvalidConditionalFormatId */;
+                return 72 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkEmptyRange(cmd) {
-            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 24 /* CommandResult.EmptyRange */;
+            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 25 /* CommandResult.EmptyRange */;
         }
         checkCFRule(cmd) {
             const rule = cmd.cf.rule;
@@ -30575,10 +31563,10 @@
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(51 /* CommandResult.FirstArgMissing */);
+                        errors.push(52 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(52 /* CommandResult.SecondArgMissing */);
+                        errors.push(53 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -30590,15 +31578,15 @@
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 53 /* CommandResult.MinNaN */;
+                        return 54 /* CommandResult.MinNaN */;
                     case "max":
-                        return 55 /* CommandResult.MaxNaN */;
+                        return 56 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 54 /* CommandResult.MidNaN */;
+                        return 55 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 56 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 57 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 57 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 58 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -30612,15 +31600,15 @@
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 58 /* CommandResult.MinInvalidFormula */;
+                        return 59 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 60 /* CommandResult.MaxInvalidFormula */;
+                        return 61 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 59 /* CommandResult.MidInvalidFormula */;
+                        return 60 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 61 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 62 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 62 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 63 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -30637,7 +31625,7 @@
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 48 /* CommandResult.LowerBiggerThanUpper */;
+                return 49 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30647,7 +31635,7 @@
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 47 /* CommandResult.MinBiggerThanMax */;
+                return 48 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30658,7 +31646,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 49 /* CommandResult.MidBiggerThanMax */;
+                return 50 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30669,7 +31657,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 50 /* CommandResult.MinBiggerThanMid */;
+                return 51 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30799,13 +31787,13 @@
         }
         checkFigureExists(sheetId, figureId) {
             if (this.figures[sheetId]?.[figureId] === undefined) {
-                return 70 /* CommandResult.FigureDoesNotExist */;
+                return 71 /* CommandResult.FigureDoesNotExist */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkFigureDuplicate(figureId) {
             if (Object.values(this.figures).find((sheet) => sheet?.[figureId])) {
-                return 82 /* CommandResult.DuplicatedFigureId */;
+                return 83 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30917,12 +31905,12 @@
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 81 /* CommandResult.NonContinuousTargets */;
+                        return 82 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 78 /* CommandResult.FilterOverlap */;
+                            return 79 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -30930,7 +31918,7 @@
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 80 /* CommandResult.MergeInFilter */;
+                                return 81 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -30940,7 +31928,7 @@
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 80 /* CommandResult.MergeInFilter */;
+                                return 81 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -30959,7 +31947,14 @@
                     this.history.update("tables", filterTables);
                     break;
                 case "DUPLICATE_SHEET":
-                    this.history.update("tables", cmd.sheetIdTo, deepCopy(this.tables[cmd.sheetId]));
+                    const tables = {};
+                    for (const filterTable of Object.values(this.tables[cmd.sheetId] || {})) {
+                        if (filterTable) {
+                            const newFilterTable = deepCopy(filterTable);
+                            tables[newFilterTable.id] = newFilterTable;
+                        }
+                    }
+                    this.history.update("tables", cmd.sheetIdTo, tables);
                     break;
                 case "ADD_COLUMNS_ROWS":
                     this.onAddColumnsRows(cmd);
@@ -31411,7 +32406,7 @@
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
-                        return 27 /* CommandResult.InvalidSheetId */;
+                        return 28 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
                         ? this.getHiddenColsGroups(cmd.sheetId)
@@ -31421,10 +32416,10 @@
                         : this.getters.getNumberRows(cmd.sheetId);
                     const hiddenElements = new Set((hiddenGroup || []).flat().concat(cmd.elements));
                     if (hiddenElements.size >= elements) {
-                        return 66 /* CommandResult.TooManyHiddenElements */;
+                        return 67 /* CommandResult.TooManyHiddenElements */;
                     }
                     else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                        return 87 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
                         return 0 /* CommandResult.Success */;
@@ -31432,7 +32427,7 @@
                 }
                 case "REMOVE_COLUMNS_ROWS":
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
-                        return 27 /* CommandResult.InvalidSheetId */;
+                        return 28 /* CommandResult.InvalidSheetId */;
                     }
                     if (!this.canRemoveHeaders(cmd.sheetId, cmd.dimension, cmd.elements)) {
                         return 8 /* CommandResult.NotEnoughElements */;
@@ -31600,7 +32595,7 @@
             switch (cmd.type) {
                 case "CREATE_IMAGE":
                     if (this.getters.getFigure(cmd.sheetId, cmd.figureId)) {
-                        return 28 /* CommandResult.InvalidFigureId */;
+                        return 29 /* CommandResult.InvalidFigureId */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -31988,7 +32983,7 @@
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 65 /* CommandResult.MergeOverlap */;
+                        return 66 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -32002,7 +32997,7 @@
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 75 /* CommandResult.FrozenPaneOverlap */;
+                    return 76 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -32196,7 +33191,7 @@
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 26 /* CommandResult.InvalidZones */;
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 27 /* CommandResult.InvalidZones */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32621,7 +33616,7 @@
                         return 0 /* CommandResult.Success */;
                     }
                     catch (e) {
-                        return 14 /* CommandResult.WrongSheetMove */;
+                        return 15 /* CommandResult.WrongSheetMove */;
                     }
                 case "RENAME_SHEET":
                     return this.isRenameAllowed(cmd);
@@ -32634,10 +33629,10 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (cmd.base < 0 || cmd.base > elements) {
-                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                        return 87 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (cmd.quantity <= 0) {
-                        return 87 /* CommandResult.InvalidQuantity */;
+                        return 88 /* CommandResult.InvalidQuantity */;
                     }
                     return 0 /* CommandResult.Success */;
                 case "REMOVE_COLUMNS_ROWS": {
@@ -32645,7 +33640,7 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                        return 87 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
                         return 0 /* CommandResult.Success */;
@@ -32972,12 +33967,12 @@
          */
         checkZonesExistInSheet(sheetId, zones) {
             if (!zones.every(isZoneValid))
-                return 25 /* CommandResult.InvalidRange */;
+                return 26 /* CommandResult.InvalidRange */;
             if (zones.length) {
                 const sheetZone = this.getSheetZone(sheetId);
                 return zones.every((zone) => isZoneInside(zone, sheetZone))
                     ? 0 /* CommandResult.Success */
-                    : 18 /* CommandResult.TargetOutOfSheet */;
+                    : 19 /* CommandResult.TargetOutOfSheet */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33084,38 +34079,42 @@
             throw new Error(_lt("There is not enough visible sheets"));
         }
         checkSheetName(cmd) {
+            const originalSheetName = this.getters.tryGetSheetName(cmd.sheetId);
+            if (originalSheetName !== undefined && cmd.name === originalSheetName) {
+                return 11 /* CommandResult.UnchangedSheetName */;
+            }
             const { orderedSheetIds, sheets } = this;
             const name = cmd.name && cmd.name.trim().toLowerCase();
-            if (orderedSheetIds.find((id) => sheets[id]?.name.toLowerCase() === name)) {
-                return 11 /* CommandResult.DuplicatedSheetName */;
+            if (orderedSheetIds.find((id) => sheets[id]?.name.toLowerCase() === name && id !== cmd.sheetId)) {
+                return 12 /* CommandResult.DuplicatedSheetName */;
             }
             if (FORBIDDEN_IN_EXCEL_REGEX.test(name)) {
-                return 13 /* CommandResult.ForbiddenCharactersInSheetName */;
+                return 14 /* CommandResult.ForbiddenCharactersInSheetName */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkSheetPosition(cmd) {
             const { orderedSheetIds } = this;
             if (cmd.position > orderedSheetIds.length || cmd.position < 0) {
-                return 15 /* CommandResult.WrongSheetPosition */;
+                return 16 /* CommandResult.WrongSheetPosition */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkRowFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 74 /* CommandResult.InvalidFreezeQuantity */;
+                : 75 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkColFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 74 /* CommandResult.InvalidFreezeQuantity */;
+                : 75 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkRowFreezeOverlapMerge(cmd) {
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                    return 65 /* CommandResult.MergeOverlap */;
+                    return 66 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -33124,7 +34123,7 @@
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                    return 65 /* CommandResult.MergeOverlap */;
+                    return 66 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -33140,8 +34139,8 @@
             const oldName = sheet.name;
             this.history.update("sheets", sheet.id, "name", name.trim());
             const sheetIdsMapName = Object.assign({}, this.sheetIdsMapName);
-            sheetIdsMapName[name] = sheet.id;
             delete sheetIdsMapName[oldName];
+            sheetIdsMapName[name] = sheet.id;
             this.history.update("sheetIdsMapName", sheetIdsMapName);
         }
         hideSheet(sheetId) {
@@ -33435,10 +34434,10 @@
          */
         checkSheetExists(cmd) {
             if (cmd.type !== "CREATE_SHEET" && "sheetId" in cmd && this.sheets[cmd.sheetId] === undefined) {
-                return 27 /* CommandResult.InvalidSheetId */;
+                return 28 /* CommandResult.InvalidSheetId */;
             }
             else if (cmd.type === "CREATE_SHEET" && this.sheets[cmd.sheetId] !== undefined) {
-                return 12 /* CommandResult.DuplicatedSheetId */;
+                return 13 /* CommandResult.DuplicatedSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -34999,7 +35998,7 @@
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 45 /* CommandResult.InvalidAutofillSelection */;
+                    return 46 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -35616,7 +36615,7 @@
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 72 /* CommandResult.InvalidCellPopover */;
+                        return 73 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -37746,12 +38745,12 @@
                 case "ADD_RANGE":
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
-                        return 30 /* CommandResult.MaximumRangesReached */;
+                        return 31 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
                 case "CHANGE_RANGE":
                     if (this.inputHasSingleRange && cmd.value.split(",").length > 1) {
-                        return 30 /* CommandResult.MaximumRangesReached */;
+                        return 31 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
             }
@@ -37980,7 +38979,7 @@
                 case "FOCUS_RANGE":
                     const index = this.currentInput?.getIndex(cmd.rangeId);
                     if (this.focusedInputId === cmd.id && this.currentInput?.focusedRangeIndex === index) {
-                        return 29 /* CommandResult.InputAlreadyFocused */;
+                        return 30 /* CommandResult.InputAlreadyFocused */;
                     }
                     break;
             }
@@ -38112,7 +39111,7 @@
             /*Test the presence of single cells*/
             const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
             if (singleCells) {
-                return 63 /* CommandResult.InvalidSortZone */;
+                return 64 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -38131,7 +39130,7 @@
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 63 /* CommandResult.InvalidSortZone */;
+                return 64 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -38624,7 +39623,7 @@
          */
         checkSheetExists(cmd) {
             if ("sheetId" in cmd && this.getters.tryGetSheet(cmd.sheetId) === undefined) {
-                return 27 /* CommandResult.InvalidSheetId */;
+                return 28 /* CommandResult.InvalidSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -38636,7 +39635,7 @@
             const sheetId = "sheetId" in cmd ? cmd.sheetId : this.getters.tryGetActiveSheetId();
             const zones = this.getters.getCommandZones(cmd);
             if (!sheetId && zones.length > 0) {
-                return 92 /* CommandResult.NoActiveSheet */;
+                return 93 /* CommandResult.NoActiveSheet */;
             }
             if (sheetId && zones.length > 0) {
                 return this.getters.checkZonesExistInSheet(sheetId, zones);
@@ -39118,13 +40117,13 @@
         }
         checkSingleColSelected() {
             if (!this.getters.isSingleColSelected()) {
-                return 88 /* CommandResult.MoreThanOneColumnSelected */;
+                return 89 /* CommandResult.MoreThanOneColumnSelected */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkNonEmptySelector(cmd) {
             if (cmd.separator === "") {
-                return 89 /* CommandResult.EmptySplitSeparator */;
+                return 90 /* CommandResult.EmptySplitSeparator */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39135,7 +40134,7 @@
             const selection = this.getters.getSelectedZones()[0];
             const splitted = this.getSplittedCols(selection, cmd.separator);
             if (this.willSplittedColsOverwriteContent(selection, splitted)) {
-                return 90 /* CommandResult.SplitWillOverwriteContent */;
+                return 91 /* CommandResult.SplitWillOverwriteContent */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39146,7 +40145,7 @@
                     return 0 /* CommandResult.Success */;
                 }
             }
-            return 91 /* CommandResult.NoSplitSeparatorInSelection */;
+            return 92 /* CommandResult.NoSplitSeparatorInSelection */;
         }
     }
 
@@ -39261,7 +40260,7 @@
         }
         isCutAllowed(target) {
             if (target.length !== 1) {
-                return 19 /* CommandResult.WrongCutSelection */;
+                return 20 /* CommandResult.WrongCutSelection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39269,13 +40268,13 @@
             const sheetId = this.getters.getActiveSheetId();
             if (this.operation === "CUT" && clipboardOption?.pasteOption !== undefined) {
                 // cannot paste only format or only value if the previous operation is a CUT
-                return 21 /* CommandResult.WrongPasteOption */;
+                return 22 /* CommandResult.WrongPasteOption */;
             }
             if (target.length > 1) {
                 // cannot paste if we have a clipped zone larger than a cell and multiple
                 // zones selected
                 if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 20 /* CommandResult.WrongPasteSelection */;
+                    return 21 /* CommandResult.WrongPasteSelection */;
                 }
             }
             const clipboardHeight = this.cells.length;
@@ -39293,7 +40292,7 @@
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 75 /* CommandResult.FrozenPaneOverlap */;
+                    return 76 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -39361,6 +40360,13 @@
                 });
             }
             this.pasteCopiedTables(target);
+            this.cells.forEach((row) => {
+                row.forEach((c) => {
+                    if (c.cell) {
+                        c.cell = undefined;
+                    }
+                });
+            });
         }
         /**
          * The clipped zone is copied as many times as it fits in the target.
@@ -39593,7 +40599,9 @@
             return (this.cells
                 .map((cells) => {
                 return cells
-                    .map((c) => c.cell ? this.getters.getCellText(c.position, this.getters.shouldShowFormulas()) : "")
+                    .map((c) => this.getters.shouldShowFormulas() && c.cell?.isFormula
+                    ? c.cell?.content || ""
+                    : c.evaluatedCell?.formattedValue || "")
                     .join("\t");
             })
                 .join("\n") || "\t");
@@ -39724,10 +40732,10 @@
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 73 /* CommandResult.EmptyTarget */;
+                return 74 /* CommandResult.EmptyTarget */;
             }
             if (option?.pasteOption !== undefined) {
-                return 22 /* CommandResult.WrongFigurePasteOption */;
+                return 23 /* CommandResult.WrongFigurePasteOption */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39829,7 +40837,10 @@
             }
             return 0 /* CommandResult.Success */;
         }
-        paste(target) {
+        paste(target, clipboardOption) {
+            if (clipboardOption?.pasteOption === "onlyFormat") {
+                return;
+            }
             const values = this.values;
             const pasteZone = this.getPasteZone(target);
             const { left: activeCol, top: activeRow } = pasteZone;
@@ -39890,6 +40901,7 @@
         state;
         lastPasteState;
         _isPaintingFormat = false;
+        originSheetId;
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
@@ -39901,13 +40913,13 @@
                     return state.isCutAllowed(zones);
                 case "PASTE":
                     if (!this.state) {
-                        return 23 /* CommandResult.EmptyClipboard */;
+                        return 24 /* CommandResult.EmptyClipboard */;
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
                 case "PASTE_FROM_OS_CLIPBOARD": {
                     const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
-                    return state.isPasteAllowed(cmd.target);
+                    return state.isPasteAllowed(cmd.target, { pasteOption: cmd.pasteOption });
                 }
                 case "INSERT_CELL": {
                     const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
@@ -39929,6 +40941,7 @@
                     const zones = ("cutTarget" in cmd && cmd.cutTarget) || this.getters.getSelectedZones();
                     this.state = this.getClipboardState(zones, cmd.type);
                     this.status = "visible";
+                    this.originSheetId = this.getters.getActiveSheetId();
                     break;
                 case "PASTE":
                     if (!this.state) {
@@ -39937,9 +40950,6 @@
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     this._isPaintingFormat = false;
                     this.state.paste(cmd.target, { pasteOption, shouldPasteCF: true, selectTarget: true });
-                    if (this.state.operation === "CUT") {
-                        this.state = undefined;
-                    }
                     this.lastPasteState = this.state;
                     this.status = "invisible";
                     break;
@@ -39994,7 +41004,7 @@
                 }
                 case "PASTE_FROM_OS_CLIPBOARD":
                     this.state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
-                    this.state.paste(cmd.target);
+                    this.state.paste(cmd.target, { pasteOption: cmd.pasteOption });
                     this.lastPasteState = this.state;
                     this.status = "invisible";
                     break;
@@ -40013,6 +41023,15 @@
                     this.status = "visible";
                     break;
                 }
+                case "DELETE_SHEET":
+                    if (this.state?.operation !== "CUT") {
+                        return;
+                    }
+                    if (this.originSheetId === cmd.sheetId) {
+                        this.state = undefined;
+                        this.status = "invisible";
+                    }
+                    break;
                 default:
                     if (isCoreCommand(cmd)) {
                         this.status = "invisible";
@@ -40471,7 +41490,7 @@
         validateSelection(length, start, end) {
             return start >= 0 && start <= length && end >= 0 && end <= length
                 ? 0 /* CommandResult.Success */
-                : 46 /* CommandResult.WrongComposerSelection */;
+                : 47 /* CommandResult.WrongComposerSelection */;
         }
         onColumnsRemoved(cmd) {
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
@@ -40847,7 +41866,7 @@
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd)) {
-                        return 79 /* CommandResult.FilterNotFound */;
+                        return 80 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
@@ -40988,6 +42007,7 @@
         }
         exportForExcel(data) {
             for (const sheetData of data.sheets) {
+                const sheetId = sheetData.id;
                 for (const tableData of sheetData.filterTables) {
                     const tableZone = toZone(tableData.range);
                     const filters = [];
@@ -41003,20 +42023,20 @@
                         if (!filter)
                             continue;
                         const valuesInFilterZone = filter.filteredZone
-                            ? positions(filter.filteredZone)
-                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
-                                .filter((cell) => cell.type !== CellValueType.empty)
-                                .map((cell) => cell.formattedValue)
+                            ? positions(filter.filteredZone).map((position) => this.getters.getEvaluatedCell({ sheetId, ...position }).formattedValue)
                             : [];
-                        // In xlsx, filtered values = values that are displayed, not values that are hidden
-                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
-                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
-                        // In xlsx, filter header should ALWAYS be a string and should be unique
-                        const headerPosition = {
-                            col: filter.col,
-                            row: filter.zoneWithHeaders.top,
-                            sheetId: sheetData.id,
-                        };
+                        if (filteredValues.length) {
+                            const xlsxDisplayedValues = valuesInFilterZone
+                                .filter((val) => val)
+                                .filter((val) => !filteredValues.includes(val));
+                            filters.push({
+                                colId: i,
+                                displayedValues: [...new Set(xlsxDisplayedValues)],
+                                displayBlanks: !filteredValues.includes("") && valuesInFilterZone.some((val) => !val),
+                            });
+                        }
+                        // In xlsx, filter header should ALWAYS be a string and should be unique in the table
+                        const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top, sheetId };
                         const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
                         const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
                         headerNames.push(headerName);
@@ -41135,7 +42155,7 @@
                         break;
                     }
                     catch (error) {
-                        return 27 /* CommandResult.InvalidSheetId */;
+                        return 28 /* CommandResult.InvalidSheetId */;
                     }
                 case "MOVE_COLUMNS_ROWS":
                     return this.isMoveElementAllowed(cmd);
@@ -42438,7 +43458,7 @@
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 68 /* CommandResult.InvalidViewportSize */;
+                return 69 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -42448,7 +43468,7 @@
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 76 /* CommandResult.ValuesNotChanged */;
+                return 77 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -42456,7 +43476,7 @@
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 69 /* CommandResult.InvalidScrollingDirection */;
+                return 70 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -42883,17 +43903,14 @@
     };
 
     function interactiveRenameSheet(env, sheetId, name, errorCallback) {
-        const originalSheetName = env.model.getters.getSheetName(sheetId);
-        if (name === null || name === originalSheetName)
-            return;
         const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
         if (result.reasons.includes(10 /* CommandResult.MissingSheetName */)) {
             env.raiseError(_lt("The sheet name cannot be empty."), errorCallback);
         }
-        else if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
+        else if (result.reasons.includes(12 /* CommandResult.DuplicatedSheetName */)) {
             env.raiseError(_lt("A sheet with the name %s already exists. Please select another name.", name), errorCallback);
         }
-        else if (result.reasons.includes(13 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+        else if (result.reasons.includes(14 /* CommandResult.ForbiddenCharactersInSheetName */)) {
             env.raiseError(_lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")), errorCallback);
         }
     }
@@ -44222,11 +45239,9 @@
         onComposerContentFocused: Function,
     };
 
-    // -----------------------------------------------------------------------------
-    // TopBar
-    // -----------------------------------------------------------------------------
     css /* scss */ `
   .o-font-size-editor {
+    height: calc(100% - 4px);
     input.o-font-size {
       outline-color: ${SELECTION_BORDER_COLOR};
       height: 20px;
@@ -44239,13 +45254,13 @@
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
     }
-
-    .o-text-options > div {
-      line-height: 26px;
-      padding: 3px 12px;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
+  }
+  .o-text-options > div {
+    cursor: pointer;
+    line-height: 26px;
+    padding: 3px 12px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
     }
   }
 `;
@@ -44310,6 +45325,7 @@
     FontSizeEditor.props = {
         onToggle: Function,
         dropdownStyle: String,
+        class: String,
     };
 
     // -----------------------------------------------------------------------------
@@ -45882,7 +46898,7 @@
          */
         moveAnchorCell(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
             }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
@@ -45928,7 +46944,7 @@
          */
         resizeAnchorZone(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
             }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
@@ -46122,20 +47138,20 @@
         checkAnchorZone(anchor) {
             const { cell, zone } = anchor;
             if (!isInside(cell.col, cell.row, zone)) {
-                return 16 /* CommandResult.InvalidAnchorZone */;
+                return 17 /* CommandResult.InvalidAnchorZone */;
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
             const refCol = this.getters.findVisibleHeader(sheetId, "COL", left, right);
             const refRow = this.getters.findVisibleHeader(sheetId, "ROW", top, bottom);
             if (refRow === undefined || refCol === undefined) {
-                return 17 /* CommandResult.SelectionOutOfBound */;
+                return 18 /* CommandResult.SelectionOutOfBound */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkAnchorZoneOrThrow(anchor) {
             const result = this.checkAnchorZone(anchor);
-            if (result === 16 /* CommandResult.InvalidAnchorZone */) {
+            if (result === 17 /* CommandResult.InvalidAnchorZone */) {
                 throw new Error(_t("The provided anchor is invalid. The cell must be part of the zone."));
             }
         }
@@ -47478,15 +48494,10 @@
   `;
     }
     function addFilterColumns(table) {
-        const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
-            const filter = table.filters[i];
-            if (!filter || !filter.filteredValues.length) {
-                continue;
-            }
+        for (const filter of table.filters) {
             const colXml = escapeXml /*xml*/ `
-      <filterColumn ${formatAttributes([["colId", i]])}>
+      <filterColumn ${formatAttributes([["colId", filter.colId]])}>
         ${addFilter(filter)}
       </filterColumn>
       `;
@@ -47495,9 +48506,10 @@
         return columns;
     }
     function addFilter(filter) {
-        const filterValues = filter.filteredValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterValues = filter.displayedValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterAttributes = filter.displayBlanks ? [["blank", 1]] : [];
         return escapeXml /*xml*/ `
-  <filters>
+  <filters ${formatAttributes(filterAttributes)}>
       ${joinXmlNodes(filterValues)}
   </filters>
 `;
@@ -47616,8 +48628,13 @@
                     const sheetId = parseSheetUrl(url);
                     const sheet = data.sheets.find((sheet) => sheet.id === sheetId);
                     const location = sheet ? `${sheet.name}!A1` : INCORRECT_RANGE_STRING;
+                    const hyperlinkAttributes = [
+                        ["display", label],
+                        ["location", location],
+                        ["ref", xc],
+                    ];
                     linkNodes.push(escapeXml /*xml*/ `
-          <hyperlink display="${label}" location="${location}" ref="${xc}"/>
+          <hyperlink ${formatAttributes(hyperlinkAttributes)}/>
         `);
                 }
                 else {
@@ -47626,8 +48643,12 @@
                         type: XLSX_RELATION_TYPE.hyperlink,
                         targetMode: "External",
                     });
+                    const hyperlinkAttributes = [
+                        ["r:id", linkRelId],
+                        ["ref", xc],
+                    ];
                     linkNodes.push(escapeXml /*xml*/ `
-          <hyperlink r:id="${linkRelId}" ref="${xc}"/>
+          <hyperlink ${formatAttributes(hyperlinkAttributes)}/>
         `);
                 }
             }
@@ -48251,10 +49272,10 @@
             const command = createCommand(type, payload);
             let status = this.status;
             if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                return new DispatchResult(67 /* CommandResult.Readonly */);
+                return new DispatchResult(68 /* CommandResult.Readonly */);
             }
             if (!this.session.canApplyOptimisticUpdate()) {
-                return new DispatchResult(64 /* CommandResult.WaitingSessionConfirmation */);
+                return new DispatchResult(65 /* CommandResult.WaitingSessionConfirmation */);
             }
             switch (status) {
                 case 0 /* Status.Ready */:
@@ -48537,9 +49558,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.0-alpha.4';
-    __info__.date = '2023-06-12T14:15:11.459Z';
-    __info__.hash = '251a52e';
+    __info__.version = '16.4.0-alpha.5';
+    __info__.date = '2023-06-26T14:47:32.747Z';
+    __info__.hash = '3b0b6f1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
