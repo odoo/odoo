@@ -96,3 +96,21 @@ class TestPricelist(ProductCommon):
         test_unit_price(3500, self.uom_kgm.id, (tonne_price - 10) / 1000.0)
         test_unit_price(2, self.uom_ton.id, tonne_price)
         test_unit_price(3, self.uom_ton.id, tonne_price - 10)
+
+    def test_30_pricelists_order(self):
+        # Verify the order of pricelists after creation
+
+        ProductPricelist = self.env['product.pricelist']
+        res_partner = self.env['res.partner'].create({'name': 'Ready Corner'})
+
+        ProductPricelist.search([]).active = False
+
+        pl_first = ProductPricelist.create({'name': 'First Pricelist'})
+        res_partner.invalidate_recordset(['property_product_pricelist'])
+
+        self.assertEqual(res_partner.property_product_pricelist, pl_first)
+
+        ProductPricelist.create({'name': 'Second Pricelist'})
+        res_partner.invalidate_recordset(['property_product_pricelist'])
+
+        self.assertEqual(res_partner.property_product_pricelist, pl_first)
