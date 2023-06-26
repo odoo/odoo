@@ -99,12 +99,10 @@ export class ChannelInvitation extends Component {
 
     async onClickInvite() {
         if (this.props.thread.type === "chat") {
-            const partners_to = [
-                this.store.self.id,
+            await this.threadService.startChat([
                 this.props.thread.chatPartnerId,
                 ...this.state.selectedPartners.map((partner) => partner.id),
-            ];
-            await this.threadService.createGroupChat({ partners_to });
+            ]);
         } else {
             await this.messaging.orm.call(
                 "discuss.channel",
@@ -124,6 +122,20 @@ export class ChannelInvitation extends Component {
         } else if (this.props.thread.type === "group") {
             return _t("Invite to Group Chat");
         } else if (this.props.thread.type === "chat") {
+            if (this.props.thread.chatPartnerId === this.store.self.id) {
+                if (this.state.selectedPartners.length === 0) {
+                    return _t("Invite");
+                }
+                if (this.state.selectedPartners.length === 1) {
+                    const alreadyChat = Object.values(this.store.threads).some(
+                        (thread) => thread.chatPartnerId === this.state.selectedPartners[0].id
+                    );
+                    if (alreadyChat) {
+                        return _t("Go to conversation");
+                    }
+                    return _t("Start a Conversation");
+                }
+            }
             return _t("Create Group Chat");
         }
         return _t("Invite");
