@@ -24,7 +24,7 @@
                 <span class="fw-bolder text-danger" t-elif="state.delay === -1">Yesterday:</span>
                 <span class="fw-bolder text-danger" t-elif="state.delay lt 0"><t t-esc="-state.delay"/> days overdue:</span>
                 <span class="fw-bolder text-warning" t-else="">Today:</span>
-                <span class="fw-bolder px-2"><t t-esc="displayName"/></span>
+                <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
                 <span class="o-mail-Activity-user px-1">for <t t-esc="activity.user_id[1]"/></span>
                 <i class="fa fa-info-circle btn-link btn-primary cursor-pointer ms-1" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"></i>
             </div>
