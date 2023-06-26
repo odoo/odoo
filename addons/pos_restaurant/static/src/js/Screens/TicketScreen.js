@@ -70,19 +70,6 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
             }
         }
     },
-    //@override
-    async onDeleteOrder(order) {
-        const _super = this._super;
-        if (this.pos.config.module_pos_restaurant) {
-            this.pos.setOrderToRemove(order);
-            await _super(...arguments);
-            if (!this.pos.table) {
-                await this.pos._removeOrdersFromServer();
-            }
-        } else {
-            await _super(...arguments);
-        }
-    },
     async setTip(order, serverId, amount) {
         try {
             const paymentline = order.get_paymentlines()[0];
