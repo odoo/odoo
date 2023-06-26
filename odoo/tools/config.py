@@ -26,8 +26,13 @@ class _OdooOption(optparse.Option):
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
         self.cli_loadable = attrs.pop('cli_loadable', True)
-        self.file_exportable = attrs.pop('file_exportable', True)
+        self.file_loadable = attrs.pop('file_loadable', True)
+        self.file_exportable = attrs.pop('file_exportable', self.file_loadable)
         super(_OdooOption, self).__init__(*opts, **attrs)
+        if self.file_exportable and not self.file_loadable:
+            e = (f"it makes no sense that the option {self} can be exported "
+                  "to the config file but not loaded from the config file")
+            raise ValueError(e)
         if self.dest and self.dest not in self.config.options_index:
             self.config.options_index[self.dest] = self
 
@@ -99,13 +104,13 @@ class configmanager:
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
-        group.add_option("-c", "--config", dest="config", file_exportable=False,
+        group.add_option("-c", "--config", dest="config", file_loadable=False,
                          help="specify alternate config file")
-        group.add_option("-s", "--save", action="store_true", dest="save", default=False, file_exportable=False,
+        group.add_option("-s", "--save", action="store_true", dest="save", default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
-        group.add_option("-i", "--init", dest="init", file_exportable=False,
+        group.add_option("-i", "--init", dest="init", file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
-        group.add_option("-u", "--update", dest="update", file_exportable=False,
+        group.add_option("-u", "--update", dest="update", file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
                          help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
@@ -280,7 +285,7 @@ class configmanager:
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
-        group.add_option("--modules", dest="translate_modules",
+        group.add_option("--modules", dest="translate_modules", default='all', file_loadable=False,
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
@@ -578,7 +583,7 @@ class configmanager:
         self.options['demo'] = (dict(self.options['init'])
                                 if not self.options['without_demo'] else {})
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
-        self.options['translate_modules'] = opt.translate_modules and [m.strip() for m in opt.translate_modules.split(',')] or ['all']
+        self.options['translate_modules'] = [m.strip() for m in opt.translate_modules.split(',')]
         self.options['translate_modules'].sort()
 
         dev_split = [s.strip() for s in opt.dev_mode.split(',')] if opt.dev_mode else []
@@ -697,6 +702,9 @@ class configmanager:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
+                option = self.options_index.get(name)
+                if option and not option.file_loadable:
+                    continue
                 if name == 'root_path':
                     continue
                 if value=='True' or value=='true':
