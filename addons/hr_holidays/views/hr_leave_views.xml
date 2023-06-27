@@ -184,15 +184,16 @@
         <field name="arch" type="xml">
             <activity string="Time Off Request">
                 <field name="employee_id"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="number_of_days"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img class="rounded" t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="50" height="50"/>
-                        <div class="ms-2">
-                            <field name="name" bold="1"/> <span class="text-muted">(<field name="number_of_days"/> days)</span>
+                        <img class="rounded" t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                        <div class="ms-2 flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <field name="name" class="o_text_block o_text_bold"/>
+                                <div class="text-muted text-nowrap">(<field name="number_of_days"/> days)</div>
+                            </div>
                             <div class="text-muted">
+                                <field name="holiday_status_id" display="full"/>
                                 <field name="date_from" widget="date"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to" widget="date"/>
                             </div>
                         </div>

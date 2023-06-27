@@ -19,6 +19,23 @@
             <field name="target">fullscreen</field>
         </record>
 
+        <record id="mrp_production_view_activity" model="ir.ui.view">
+            <field name="name">mrp.production.view.activity</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <activity string="Manufacturing Orders">
+                    <templates>
+                        <div t-name="activity-box" class="d-flex w-100">
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <div class="flex-grow-1">
+                                <field name="name" class="o_text_block"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>

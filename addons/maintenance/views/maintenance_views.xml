@@ -50,6 +50,27 @@
         </field>
     </record>
 
+    <record id="maintenance_request_view_activity" model="ir.ui.view">
+        <field name="name">maintenance.request.view.activity</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <activity string="Maintenance Request">
+                <field name="user_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <div class="flex-grow-1 d-block">
+                            <div class="d-flex justify-content-between">
+                                <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            </div>
+                            <field name="equipment_id" muted="1" display="full" class="o_text_block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="hr_equipment_request_view_form" model="ir.ui.view">
         <field name="name">equipment.request.form</field>
         <field name="model">maintenance.request</field>

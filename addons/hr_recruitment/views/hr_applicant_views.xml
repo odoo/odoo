@@ -402,9 +402,10 @@
             <activity string="Applicants">
                 <templates>
                     <div t-name="activity-box">
-                        <div class="ms-2">
-                            <field name="name" display="full"/>
-                            <field name="partner_name" muted="1" display="full"/>
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <div class="flex-grow-1">
+                            <field name="name" display="full" class="o_text_block"/>
+                            <field name="partner_name" muted="1" display="full" class="o_text_block"/>
                         </div>
                     </div>
                 </templates>

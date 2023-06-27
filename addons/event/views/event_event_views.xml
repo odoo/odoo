@@ -140,6 +140,26 @@
         </field>
     </record>
 
+    <record id="project_project_view_activity" model="ir.ui.view">
+        <field name="name">event.event.view.activity</field>
+        <field name="model">event.event</field>
+        <field name="arch" type="xml">
+            <activity string="Event">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <div class="flex-grow-1">
+                            <field name="name" string="Event Name" class="o_text_block o_text_bold"/>
+                            <field name="date_begin"/>
+                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
+                            <field name="date_end"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="event_event_view_form_quick_create" model="ir.ui.view">
         <field name="name">event.event.form.quick_create</field>
         <field name="model">event.event</field>

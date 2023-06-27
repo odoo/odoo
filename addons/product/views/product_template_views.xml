@@ -131,8 +131,8 @@
                     <div t-name="activity-box">
                         <img t-att-src="activity_image('product.template', 'image_128', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
                         <div class="ms-2">
-                            <field name="name" display="full"/>
-                            <div t-if="record.default_code.value" class="text-muted">
+                            <field name="name" display="full" class="o_text_block"/>
+                            <div t-if="record.default_code.value" class="o_text_block text-muted">
                                 [<field name="default_code"/>]
                             </div>
                         </div>
