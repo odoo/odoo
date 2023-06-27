@@ -605,7 +605,7 @@ odoo.define('website.tour.form_editor', function (require) {
                             ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
                             ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
                             ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
-                            ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" + 
+                            ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
                             ":has(.s_website_form_field:has(input[name='website_form_signature']))",
             trigger:  ".s_website_form_send"
         },
@@ -803,6 +803,10 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
             run: 'text_blur **',
+        }, {
+            content: "Check that the recipient email is correct",
+            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            run: () => null, // it's a check.
         },
     ]));
     tour.register('website_form_contactus_submit', {
