@@ -58,7 +58,7 @@
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                 <form string="Mailing" class="o_mass_mailing_mailing_form">
-                    <header class="pt-3">
+                    <header>
                         <button name="action_launch" type="object" class="oe_highlight" string="Send"
                             attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="q"
                             confirm="This will send the email to all recipients. Are you sure you want to proceed?"
@@ -72,63 +72,63 @@
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry" data-hotkey="y"/>
 
-                        <div class="alert alert-info mb-2 text-center" role="alert"
-                             attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', 'not in', ['in_queue', 'done']),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
-                            <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
-                                <button class="btn-link py-0"
-                                        name="action_view_traces_canceled"
-                                        type="object">
-                                    <strong>
-                                        <field name="canceled" class="oe_inline me-2"/>
-                                        <span name="canceled_text">emails have been canceled and will not be sent.</span>
-                                    </strong>
-                                </button>
-                            </div>
-                            <div class="o_mails_scheduled" attrs="{'invisible': [('scheduled', '=', 0)]}">
-                                <button class="btn-link py-0"
-                                        name="action_view_traces_scheduled"
-                                        type="object">
-                                    <strong>
-                                        <field name="scheduled" class="oe_inline me-2"/>
-                                        <span name="scheduled_text">emails are in queue and will be sent soon.</span>
-                                    </strong>
-                                </button>
-                            </div>
-                            <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
-                                <button class="btn-link py-0"
-                                        name="action_view_traces_sent"
-                                        type="object">
-                                    <strong>
-                                        <field name="sent" class="oe_inline me-2"/>
-                                        <span name="sent">emails have been sent.</span>
-                                    </strong>
-                                </button>
-                                <strong class="d-block" attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}">
-                                    <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
-                                </strong>
-                            </div>
-                            <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
-                                <button class="btn-link py-0"
-                                        name="action_view_traces_failed"
-                                        type="object">
-                                    <strong>
-                                        <field name="failed" class="oe_inline me-2"/>
-                                        <span name="failed_text">emails could not be sent.</span>
-                                </strong>
-                                </button>
-                            </div>
-                            <div class="o_mails_in_queue" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
-                                <strong>
-                                    <span name="next_departure_text">This mailing is scheduled for </span>
-                                    <field name="next_departure" class="oe_inline"/>.
-                                </strong>
-                            </div>
-                            <div attrs="{'invisible': [('warning_message', '=', False)]}">
-                                <strong><field name="warning_message"/></strong>
-                            </div>
-                        </div>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
+                    <div class="alert alert-info d-flex align-items-center h-100 my-0 py-0" role="alert"
+                            attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', 'not in', ['in_queue', 'done']),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
+                        <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_canceled"
+                                    type="object">
+                                <strong>
+                                    <field name="canceled" class="oe_inline me-2"/>
+                                    <span name="canceled_text">emails have been canceled and will not be sent.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_scheduled" attrs="{'invisible': [('scheduled', '=', 0)]}">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_scheduled"
+                                    type="object">
+                                <strong>
+                                    <field name="scheduled" class="oe_inline me-2"/>
+                                    <span name="scheduled_text">emails are in queue and will be sent soon.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_sent"
+                                    type="object">
+                                <strong>
+                                    <field name="sent" class="oe_inline me-2"/>
+                                    <span name="sent">emails have been sent.</span>
+                                </strong>
+                            </button>
+                            <strong class="d-block" attrs="{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}">
+                                <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
+                            </strong>
+                        </div>
+                        <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_failed"
+                                    type="object">
+                                <strong>
+                                    <field name="failed" class="oe_inline me-2"/>
+                                    <span name="failed_text">emails could not be sent.</span>
+                            </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_in_queue" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                            <strong>
+                                <span name="next_departure_text">This mailing is scheduled for </span>
+                                <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                        </div>
+                        <div attrs="{'invisible': [('warning_message', '=', False)]}">
+                            <strong><field name="warning_message"/></strong>
+                        </div>
+                    </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_delivered"
@@ -240,17 +240,15 @@
                         <notebook>
                             <page string="Mail Body" name="mail_body">
                                 <div class="position-relative">
-                                    <div class="mt-n2">
-                                        <field name="body_arch" class="o_mail_body" widget="mass_mailing_html"
-                                            options="{
-                                                'snippets': 'mass_mailing.email_designer_snippets',
-                                                'cssEdit': 'mass_mailing.iframe_css_assets_edit',
-                                                'inline-field': 'body_html',
-                                                'dynamic_placeholder': true,
-                                                'dynamic_placeholder_model_reference_field': 'mailing_model_real',
-                                                'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
-                                        }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                    </div>
+                                    <field name="body_arch" class="o_mail_body" widget="mass_mailing_html"
+                                        options="{
+                                            'snippets': 'mass_mailing.email_designer_snippets',
+                                            'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                                            'inline-field': 'body_html',
+                                            'dynamic_placeholder': true,
+                                            'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                                            'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
+                                    }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     <field name="is_body_empty" invisible="1"/>
                                     <div class="o_view_nocontent oe_read_only" attrs="{'invisible': ['|', ('is_body_empty', '=', False), ('state', 'in', ('sending', 'done'))]}">
                                         <div class="o_nocontent_help">
@@ -422,12 +420,6 @@
                     <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]" position="replace"/>
-                <xpath expr="//sheet" position="before">
-                    <xpath expr="//div[hasclass('oe_button_box')]" position="move"/>
-                    <xpath expr="//widget[@name='web_ribbon']" position="move"/>
-                    <xpath expr="//group[hasclass('o_mass_mailing_mailing_group')]" position="move"/>
-                    <xpath expr="//notebook" position="move"/>
-                </xpath>
                 <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                     <button name="action_view_traces_sent"
                         attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
@@ -439,15 +431,6 @@
                         type="object" class="oe_stat_button" icon="fa-paper-plane-o">
                         <field name="canceled" widget="statinfo" string="Ignored"/>
                     </button>
-                </xpath>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Chat" name="chat"/>
-                </xpath>
-                <xpath expr="//notebook/page[@name='chat']" position="inside">
-                    <xpath expr="//div[hasclass('oe_chatter')]" position="move"/>
-                </xpath>
-                <xpath expr="//div[hasclass('oe_chatter')]" position="attributes">
-                    <attribute name="class" remove="o-aside" add="o-full-width" separator=" "/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']//field[@name='body_arch']" position="attributes">
                     <attribute name="iframeHtmlClass">o_mass_mailing_iframe</attribute>
@@ -472,7 +455,6 @@
                         </div>
                     </page>
                 </xpath>
-                <xpath expr="//sheet" position="replace"/>
             </field>
         </record>
 

@@ -27,6 +27,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         );
         onMounted(() => {
             $('.o_content').on('scroll.repositionMailingEditorSidebar', throttledRepositionSidebar);
+            $('.o_form_sheet_bg').on('scroll.repositionMailingEditorSidebar', throttledRepositionSidebar);
         });
         onWillUnmount(() => {
             $('.o_content').off('.repositionMailingEditorSidebar');
