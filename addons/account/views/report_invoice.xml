@@ -304,12 +304,12 @@
                 <t t-call="account.tax_groups_totals"/>
             </t>
 
-            <t t-if="'formatted_rounding_amount' in tax_totals and tax_totals['rounding_amount'] != 0">
+            <tr t-if="'formatted_rounding_amount' in tax_totals and tax_totals['rounding_amount'] != 0">
                 <td>Rounding</td>
                 <td class="text-end">
                     <span t-out="tax_totals['formatted_rounding_amount']"/>
                 </td>
-            </t>
+            </tr>
             
             <!--Total amount with all taxes-->
             <tr class="border-black o_total">
