@@ -803,17 +803,19 @@
                     <field name="user_ids"/>
                     <field name="project_id"/>
                     <templates>
-                        <div class="w-100" t-name="activity-box" style="display: inline-grid; grid-template-columns: auto max-content;">
-                            <div>
-                                <span t-att-title="record.name.value">
-                                    <field name="name" display="full" class="w-100 text-truncate"/>
-                                </span>
-                                <span t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
-                                    <field t-if="record.project_id.value" name="project_id" muted="1" class="w-100 text-truncate"/>
-                                    <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
-                                </span>
+                        <div t-name="activity-box" class="justify-content-between gap-2">
+                            <div class="flex-shrink-1">
+                                <field name="name" display="full" class="o_text_block"/>
+                                <div t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
+                                    <field t-if="record.project_id.value" name="project_id" muted="1" class="o_text_block"/>
+                                    <div t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</div>
+                                </div>
                             </div>
-                            <field name="user_ids" widget="many2many_avatar_user"/>
+                            <div class="d-flex justify-content-end gap-2 flex-grow-1">
+                                <field name="state" widget="project_task_state_selection" class="align-self-center"
+                                       options="{'hide_label': 1, 'is_toggle_mode': false}"/>
+                                <field name="user_ids" widget="many2many_avatar_user" class="o_many2many_avatar_user_no_wrap"/>
+                            </div>
                         </div>
                     </templates>
                 </activity>

@@ -81,8 +81,8 @@
                         <div t-name="activity-box">
                             <img t-att-src="activity_image('res.partner', 'avatar_128', record.id.raw_value)" role="img" t-att-title="record.name.value" t-att-alt="record.name.value"/>
                             <div class="ms-2">
-                                <field name="name" display="full"/>
-                                <field name="parent_id" muted="1" display="full"/>
+                                <field name="name" display="full" class="o_text_block"/>
+                                <field name="parent_id" muted="1" display="full" class="o_text_block"/>
                             </div>
                         </div>
                     </templates>

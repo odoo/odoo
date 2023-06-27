@@ -514,9 +514,17 @@
                     <templates>
                         <div t-name="activity-box">
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                            <div>
-                                <field name="name" display="full"/>
-                                <field name="expected_revenue" widget="monetary" display="full" muted="1"/>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <field name="name" display="full" class="o_text_block o_text_bold"/>
+                                    <div class="m-1"/>
+                                    <field name="expected_revenue" widget='monetary' display="full" muted="1"/>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <field name="partner_id" muted="1" display="full" class="o_text_block"/>
+                                    <div class="m-1"/>
+                                    <field name="stage_id" widget="badge"/>
+                                </div>
                             </div>
                         </div>
                     </templates>

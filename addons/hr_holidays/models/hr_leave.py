@@ -227,6 +227,7 @@ class HolidaysRequest(models.Model):
     supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
     # UX fields
     all_employee_ids = fields.Many2many('hr.employee', compute='_compute_all_employees', compute_sudo=True, context={'active_test': False})
+    all_employee_names = fields.Char(compute='_compute_all_employee_names')
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
@@ -316,6 +317,20 @@ class HolidaysRequest(models.Model):
     def _compute_all_employees(self):
         for leave in self:
             leave.all_employee_ids = leave.employee_id | leave.employee_ids
+
+    @api.depends_context('uid')
+    def _compute_all_employee_names(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        for leave in self:
+            if is_officer or leave.user_id == self.env.user or (
+                    all(employee.leave_manager_id == self.env.user for employee in leave.employee_ids)):
+                leave.all_employee_names = ",".join(e.name for e in leave.all_employee_ids.sudo())
+            else:
+                leave.all_employee_names = '*****'
 
     @api.depends_context('uid')
     def _compute_description(self):
@@ -1557,10 +1572,15 @@ class HolidaysRequest(models.Model):
             elif holiday.state == 'confirm':
                 if holiday.holiday_status_id.leave_validation_type != 'no_validation':
                     user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    today = datetime.today()
                     for user_id in user_ids:
+                        date_deadline = holiday.sudo().date_from - timedelta(days=15)
+                        if date_deadline < today:
+                            date_deadline = today
                         activity_vals.append({
                             'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
                             'automated': True,
+                            'date_deadline': date_deadline,
                             'note': note,
                             'user_id': user_id,
                             'res_id': holiday.id,

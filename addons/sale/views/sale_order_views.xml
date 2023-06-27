@@ -7,12 +7,20 @@
         <field name="name">sale.order.activity</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <activity string="Sales Orders">
+            <activity string="Sales Order">
+                <field name="currency_id"/>
                 <templates>
-                    <div t-name="activity-box">
-                        <div>
-                            <field name="name" display="full"/>
-                            <field name="partner_id" muted="1" display="full"/>
+                    <div t-name="activity-box" class="d-block">
+                        <div class="d-flex justify-content-between">
+                            <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            <div class="m-1"/>
+                            <field name="amount_total" widget='monetary'/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <field name="partner_id" muted="1" display="full" class="o_text_block"/>
+                            <div class="m-1"/>
+                            <field name="state" widget="badge"
+                               decoration-info="state == 'draft'" decoration-success="state == 'sale'"/>
                         </div>
                     </div>
                 </templates>
