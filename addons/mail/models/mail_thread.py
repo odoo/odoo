@@ -4030,7 +4030,7 @@ class MailThread(models.AbstractModel):
         msg_not_comment.write(msg_vals)
         return True
 
-    def _message_update_content(self, message, body, attachment_ids=None,
+    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
         specific code (see ``_process_attachments_for_post``), to be added
@@ -4045,6 +4045,7 @@ class MailThread(models.AbstractModel):
         :param str body: new body (None to skip its update);
         :param list attachment_ids: list of new attachments IDs, replacing old one (None
           to skip its update);
+        :param list attachment_ids: list of new partner IDs that are mentioned;
         :param bool strict: whether to check for allowance before updating
           content. This should be skipped only when really necessary as it
           creates issues with already-sent notifications, lack of content
@@ -4068,6 +4069,10 @@ class MailThread(models.AbstractModel):
             )
         elif attachment_ids is not None:  # None means "no update"
             message.attachment_ids._delete_and_notify()
+        if partner_ids:
+            msg_values.update({
+                'partner_ids': list(partner_ids or [])
+            })
         if msg_values:
             message.write(msg_values)
 
@@ -4093,6 +4098,7 @@ class MailThread(models.AbstractModel):
                 'body': message.body,
                 'attachment_ids': message.attachment_ids._attachment_format(),
                 'pinned_at': message.pinned_at,
+                'recipients': [{'id': p.id, 'name': p.name} for p in message.partner_ids],
                 'write_date': message.write_date,
             }
         })

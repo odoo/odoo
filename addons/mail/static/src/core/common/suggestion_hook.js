@@ -42,9 +42,7 @@ export function useSuggestion() {
             if (selectionStart > 0) {
                 candidatePositions.push(selectionStart - 1);
             }
-            const supportedDelimiters = suggestionService.getSupportedDelimiters(
-                comp.props.composer.thread
-            );
+            const supportedDelimiters = suggestionService.getSupportedDelimiters(self.thread);
             for (const candidatePosition of candidatePositions) {
                 if (candidatePosition < 0 || candidatePosition >= content.length) {
                     continue;
@@ -72,6 +70,9 @@ export function useSuggestion() {
                 return;
             }
             self.clearSearch();
+        },
+        get thread() {
+            return comp.props.composer.thread || comp.props.composer.message.originThread;
         },
         fetch: {
             inProgress: false,
@@ -125,12 +126,12 @@ export function useSuggestion() {
             items: undefined,
         }),
         update() {
-            if (!self.search.delimiter || !comp.props.composer.thread) {
+            if (!self.search.delimiter) {
                 return;
             }
             const suggestions = suggestionService.searchSuggestions(
                 self.search,
-                { thread: comp.props.composer.thread },
+                { thread: self.thread },
                 true
             );
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
@@ -156,11 +157,8 @@ export function useSuggestion() {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
-                if (!comp.props.composer.thread) {
-                    return;
-                }
                 await suggestionService.fetchSuggestions(self.search, {
-                    thread: comp.props.composer.thread,
+                    thread: self.thread,
                     onFetched() {
                         if (owl.status(comp) === "destroyed") {
                             return;
