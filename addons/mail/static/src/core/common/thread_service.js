@@ -599,15 +599,32 @@ export class ThreadService {
         });
     }
 
-    async notifyThreadNameToServer(thread, name) {
-        if (thread.type === "channel" || thread.type === "group") {
-            thread.name = name;
-            await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], { name });
-        } else if (thread.type === "chat") {
-            thread.customName = name;
-            await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
-                name,
-            });
+    /**
+     * @param {Thread} thread
+     * @param {string} name
+     */
+    async renameThread(thread, name) {
+        if (!thread) {
+            return;
+        }
+        const newName = name.trim();
+        if (
+            newName !== thread.displayName &&
+            ((newName && thread.type === "channel") ||
+                thread.type === "chat" ||
+                thread.type === "group")
+        ) {
+            if (thread.type === "channel" || thread.type === "group") {
+                thread.name = newName;
+                await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], {
+                    name: newName,
+                });
+            } else if (thread.type === "chat") {
+                thread.customName = newName;
+                await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
+                    name: newName,
+                });
+            }
         }
     }
 
