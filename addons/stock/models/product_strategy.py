@@ -10,8 +10,8 @@ class RemovalStrategy(models.Model):
     _name = 'product.removal'
     _description = 'Removal Strategy'
 
-    name = fields.Char('Name', required=True)
-    method = fields.Char("Method", required=True, help="FIFO, LIFO...")
+    name = fields.Char('Name', required=True, translate=True)
+    method = fields.Char("Method", required=True, translate=True, help="FIFO, LIFO...")
 
 
 class StockPutawayRule(models.Model):
