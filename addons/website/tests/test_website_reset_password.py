@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
 
 import odoo
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -70,14 +70,24 @@ class TestWebsiteResetPassword(HttpCase):
         # several users. Make sure we can still log in if 2 users exist.
         website = self.env["website"].get_current_website()
         website.ensure_one()
+        internal_group = self.env.ref('base.group_user')
+        portal_group = self.env.ref('base.group_portal')
 
         # Use AAA and ZZZ as names since res.users are ordered by 'login, name'
-        self.env["res.users"].create(
-            {"website_id": False, "login": "bobo@mail.com", "name": "AAA", "password": "bobo@mail.com"}
-        )
-        user2 = self.env["res.users"].create(
-            {"website_id": website.id, "login": "bobo@mail.com", "name": "ZZZ", "password": "bobo@mail.com"}
-        )
+        self.env["res.users"].create({
+            "website_id": False, "login": "bobo@mail.com", "name": "AAA",
+            "password": "bobo@mail.com", "groups_id": [
+                Command.link(portal_group.id),
+                Command.unlink(internal_group.id),
+            ],
+        })
+        user2 = self.env["res.users"].create({
+            "website_id": website.id, "login": "bobo@mail.com", "name": "ZZZ",
+            "password": "bobo@mail.com", "groups_id": [
+                Command.link(portal_group.id),
+                Command.unlink(internal_group.id),
+            ],
+        })
 
         # The most specific user should be selected
         self.authenticate("bobo@mail.com", "bobo@mail.com")
@@ -92,10 +102,12 @@ class TestWebsiteResetPassword(HttpCase):
             {'name': 'Website 2', 'specific_user_account': True},
         ])
 
+        internal_group = self.env.ref('base.group_user')
+        portal_group = self.env.ref('base.group_portal')
         login = 'user@example.com'  # same login for both users
         user_website_1, user_website_2 = self.env['res.users'].with_context(no_reset_password=True).create([
-            {'website_id': website_1.id, 'login': login, 'email': login, 'name': login},
-            {'website_id': website_2.id, 'login': login, 'email': login, 'name': login},
+            {'website_id': website_1.id, 'login': login, 'email': login, 'name': login, "groups_id": [Command.link(portal_group.id), Command.unlink(internal_group.id)]},
+            {'website_id': website_2.id, 'login': login, 'email': login, 'name': login, "groups_id": [Command.link(portal_group.id), Command.unlink(internal_group.id)]},
         ])
 
         self.assertFalse(user_website_1.signup_valid)
