@@ -12796,6 +12796,52 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal .o_kanban_record:not('.o_kanban_ghost')");
     });
 
+    QUnit.test("kanban one2many (with widget) in opened view form", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <field name="display_name" widget="char"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "first record");
+
+        await click(target.querySelector(".o_kanban_record"));
+        assert.containsOnce(target, ".o_dialog .o_form_view .o_field_widget[name=display_name]");
+        assert.strictEqual(
+            target.querySelector(".o_dialog .o_form_view .o_field_widget[name=display_name] input")
+                .value,
+            "first record"
+        );
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "first record");
+
+        await editInput(
+            target,
+            ".o_dialog .o_form_view .o_field_widget[name=display_name] input",
+            "test"
+        );
+        assert.strictEqual(target.querySelector(".o_kanban_record").innerText, "test");
+    });
+
     QUnit.test("list one2many in opened view form", async function (assert) {
         serverData.models.partner.records[0].p = [1];
         await makeView({
