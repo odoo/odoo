@@ -1520,7 +1520,6 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines"/>
                                     <div class="clearfix" />
-                                    <t t-call="payment.express_checkout"/>
                                     <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
                                 </div>
                             </div>
@@ -2050,6 +2049,7 @@
                     <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                     <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
 
+                    <t t-call="payment.express_checkout"/>
                     <t t-call="website_sale.cta_buttons_navigation">
                         <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Checkout'"/>
                         <t t-set="main_cta_href" t-value="redirect_url"/>
