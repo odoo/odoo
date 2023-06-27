@@ -17,6 +17,8 @@ ProjectRightSidePanelSection.props = {
             title: { type: Object, optional: true },
         },
     },
+    dataClassName: { type: String, optional: true },
+    headerClassName: { type: String, optional: true },
 };
 ProjectRightSidePanelSection.defaultProps = {
     header: true,
