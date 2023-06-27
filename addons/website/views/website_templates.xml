@@ -284,7 +284,7 @@
 </template>
 
 <template id="navbar" name="Navbar">
-    <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or ''"/>
+    <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or _navbar_expand_class"/>
     <nav data-name="Navbar" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes}">
         <t t-out="0"/>
     </nav>
