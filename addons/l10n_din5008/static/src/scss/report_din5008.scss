@@ -3,6 +3,10 @@
     margin-left: -1rem;
     font-size: 9pt;
 
+    .container-fluid & { // center the invoice in portal preview
+       margin-left: auto;
+       margin-right: auto;
+    }
     &.header {
         table {
             width: 100%;
@@ -54,7 +58,7 @@
                 }
             }
         }
-        h2 {
+        h2, [name=payment_communication], [name=payment_term], [name=comment], [name=note], [name=incoterm] {
             margin-left: 5mm;
             margin-right: 10mm;
             margin-top: 8.46mm;
