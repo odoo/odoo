@@ -3,17 +3,19 @@
 
     <t t-name="point_of_sale.ErrorTracebackPopup" owl="1">
             <div class="popup popup-error">
-                <header class="title">
-                    <t t-esc="props.title" />
-                </header>
-                <main class="body traceback">
+                <div class="modal-header">
+                    <h4 class="modal-title title">
+                        <t t-esc="props.title" />
+                    </h4>
+                </div>
+                <main class="modal-body body traceback">
                     <t t-esc="props.body" />
                 </main>
-                <footer class="footer">
-                    <div t-if="!props.exitButtonIsShown" class="button cancel" t-on-click="confirm">
+                <footer class="footer modal-footer">
+                    <div t-if="!props.exitButtonIsShown" class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
                         <t t-esc="props.confirmText" />
                     </div>
-                    <div t-if="props.exitButtonIsShown" class="button cancel" t-on-click="() => this.pos.closePos()">
+                    <div t-if="props.exitButtonIsShown" class="button cancel btn btn-lg btn-secondary" t-on-click="() => this.pos.closePos()">
                         <t t-esc="props.exitButtonText" />
                     </div>
                     <a t-att-download="tracebackFilename" t-att-href="tracebackUrl">
@@ -23,7 +25,7 @@
                                title="Download error traceback"></i>
                         </div>
                     </a>
-                    <div class="button icon email" t-on-click="emailTraceback">
+                    <div class="button icon email btn btn-lg btn-secondary" t-on-click="emailTraceback">
                         <i class="fa fa-paper-plane" role="img" aria-label="Send by email"
                            title="Send by email"></i>
                     </div>

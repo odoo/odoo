@@ -3,26 +3,26 @@
 
 <t t-name="point_of_sale.PaymentScreenStatus" owl="1">
     <div t-if="props.order.get_paymentlines().length === 0" class="paymentlines-empty">
-        <div class="total">
+        <div class="total text-center py-2 text-success">
             <t t-esc="totalDueText" />
         </div>
-        <div class="message">
+        <div class="message text-center">
             Please select a payment method.
         </div>
     </div>
 
     <div t-else="">
-        <div class="payment-status-container">
+        <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
             <div>
                 <div class="payment-status-remaining">
-                    <span class="label">Remaining</span>
+                    <span class="label pe-2">Remaining</span>
                     <span class="amount"
-                          t-att-class="{ highlight: props.order.get_due() > 0 }">
+                          t-att-class="{ 'highlight text-primary fw-bolder': props.order.get_due() > 0 }">
                         <t t-esc="remainingText" />
                     </span>
                 </div>
-                <div class="payment-status-total-due">
-                    <span class="label">Total Due</span>
+                <div class="payment-status-total-due py-2 fs-3 text-muted">
+                    <span class="label pe-2">Total Due</span>
                     <span>
                         <t t-esc="totalDueText" />
                     </span>
@@ -30,9 +30,9 @@
             </div>
             <div>
                 <div class="payment-status-change">
-                    <span class="label">Change</span>
+                    <span class="label pe-2">Change</span>
                     <span class="amount"
-                          t-att-class="{ highlight: props.order.get_change() > 0 }">
+                          t-att-class="{ 'highlight text-primary fw-bolder': props.order.get_change() > 0 }">
                         <t t-esc="changeText" />
                     </span>
                 </div>

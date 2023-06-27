@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.TableGuestsButton" owl="1">
-        <div class="control-button" t-on-click="() => this.click()">
-            <span class="control-button-number">
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <span class="control-button-number px-2 py-1 rounded-circle text-bg-dark fw-bolder small me-1">
                 <t t-esc="nGuests" />
             </span>
             <span> </span>
