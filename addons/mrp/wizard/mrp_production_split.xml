@@ -28,39 +28,23 @@
             <field name="name">Split Production</field>
             <field name="model">mrp.production.split</field>
             <field name="arch" type="xml">
-                <form string="Split Production">
-                    <group>
-                        <group>
-                            <field name="production_id" readonly="1"/>
-                        </group>
-                        <group>
-                            <field name="product_id"/>
-                            <label for="product_qty"/>
-                            <div class="o_row">
-                                <span><field name="product_qty"/></span>
-                                <span><field name="product_uom_id" groups="uom.group_uom"/></span>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="counter"/>
-                        </group>
-                        <group>
-                            <label for="production_capacity"/>
-                            <div class="o_row">
-                                <span><field name="production_capacity"/></span>
-                                <span><field name="product_uom_id" groups="uom.group_uom"/></span>
-                            </div>
-                        </group>
-                    </group>
-                    <field name="production_detailed_vals_ids" attrs="{'invisible': [('counter', '=', 0)]}">
-                        <tree editable="top">
-                            <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="quantity"/>
-                        </tree>
-                    </field>
+                <form string="Split manufacturing Order">
+                    <field name="production_id" invisible="1"/>
                     <field name="production_split_multi_id" invisible="1"/>
                     <field name="valid_details" invisible="1"/>
+                    <div style="margin-bottom:20px">
+                        Split <span  class="fw-bold"><field name="product_qty"/> <field name="product_uom_id" groups="uom.group_uom"/></span> of <span  class="fw-bold"><field name="product_id"/></span>, into 2 manufacturing orders.<br/>
+                        Components are avaliable for <span class="text-danger"><field name="production_capacity" readonly="1"/> Units </span>, how many do you want to produce first?
+                    </div>
+                    <group>
+                        <label for="first_qty"/>
+                        <div class="o_row">
+                            <span><field name="first_qty" style="width:100px;"/></span>
+                            <span>&amp;</span>
+                            <span><field name="second_qty" style="width:100px;"/></span>
+                            <span><field name="product_uom_id" groups="uom.group_uom"/></span>
+                        </div>
+                    </group>
                     <footer>
                         <button string="Split" class="btn-primary" type="object" name="action_split" data-hotkey="q" attrs="{'invisible': [('valid_details', '=', False)]}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" attrs="{'invisible': [('production_split_multi_id', '!=', False)]}"/>

@@ -173,10 +173,10 @@ class TestManualConsumption(TestMrpCommon):
         self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
         self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).manual_consumption)
 
-        # Split in 3 parts
+        # Split in 2 parts
         action = mo.action_split()
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
-        wizard.counter = 3
+        wizard.first_qty = 6
         action = wizard.save().action_split()
         for production in mo.procurement_group_id.mrp_production_ids:
             self.assertTrue(production.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)

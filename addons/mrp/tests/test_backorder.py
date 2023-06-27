@@ -453,31 +453,27 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.uom_unit.rounding = 1
         # Create a mo for 10 products
         mo, _, _, p1, p2 = self.generate_mo(qty_final=10)
-        # Split in 3 parts
+        # Split in 2 parts
         action = mo.action_split()
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
-        wizard.counter = 3
+        wizard.first_qty = 6
         action = wizard.save().action_split()
-        # Should have 3 mos
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 3)
+        # Should have 2 mos
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
         mo1 = mo.procurement_group_id.mrp_production_ids[0]
         mo2 = mo.procurement_group_id.mrp_production_ids[1]
-        mo3 = mo.procurement_group_id.mrp_production_ids[2]
         # Check quantities
-        self.assertEqual(mo1.product_qty, 3)
-        self.assertEqual(mo2.product_qty, 3)
-        self.assertEqual(mo3.product_qty, 4)
-        # Check raw movew quantities
-        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 12)
-        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 12)
-        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 16)
-        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 3)
-        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 3)
-        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
+        self.assertEqual(mo1.product_qty, 6)
+        self.assertEqual(mo2.product_qty, 4)
+        # Check raw move quantities
+        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 24)
+        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 16)
+        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 6)
+        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
 
         # Merge them back
-        expected_origin = ",".join([mo1.name, mo2.name, mo3.name])
-        action = (mo1 + mo2 + mo3).action_merge()
+        expected_origin = ",".join([mo1.name, mo2.name])
+        action = (mo1 + mo2).action_merge()
         mo = self.env[action['res_model']].browse(action['res_id'])
         # Check origin & initial quantity
         self.assertEqual(mo.origin, expected_origin)
