@@ -31,6 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'ch_coa_4906',
                 'account_journal_early_pay_discount_loss_account_id': 'ch_coa_4901',
                 'account_journal_early_pay_discount_gain_account_id': 'ch_coa_3801',
+                'default_cash_difference_expense_account_id': 'ch_coa_4991',
+                'default_cash_difference_income_account_id': 'ch_coa_4992',
                 'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
             },
