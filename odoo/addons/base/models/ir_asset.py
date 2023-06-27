@@ -306,9 +306,7 @@ class IrAsset(models.Model):
         Returns the list of all installed addons.
         :returns: string[]: list of module names
         """
-        # Main source: the current registry list
-        # Second source of modules: server wide modules
-        return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or [])
+        return self.env.registry._init_modules.union(tools.config['server_wide_modules'])
 
     def _get_paths(self, path_def, installed):
         """
