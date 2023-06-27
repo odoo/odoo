@@ -143,6 +143,7 @@
                                     <ul class="list-inline">
                                         <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
+                                        <li t-if="company.l10n_de_ceo_id">CEO: <span t-field="company.l10n_de_ceo_id"/></li>
                                     </ul>
                                 </td>
                                 <td>
