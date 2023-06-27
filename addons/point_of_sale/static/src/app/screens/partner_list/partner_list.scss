@@ -1,0 +1,33 @@
+.partner-list th.partner-line-last-column-placeholder,
+.partner-list td.partner-line-last-column-placeholder {
+    padding: 0;
+}
+.partnerlist-screen {
+    tr {
+        &.partner-line {
+            &:hover {
+                cursor: pointer;
+                background: rgba($primary, 0.2);
+            }
+            &:active {
+                background-color: $primary;
+                color: white;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+
+    .table {
+        border: transparent;
+    }
+    .partner-list {
+        thead {
+            display: none;
+        }
+        td {
+            padding: 0;
+        }
+    }
+}

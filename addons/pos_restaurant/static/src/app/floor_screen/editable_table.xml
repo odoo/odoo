@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.EditableTable" owl="1">
-        <div class="table selected" t-ref="root">
-            <span class="label drag-handle">
+        <div class="table selected d-flex flex-column align-items-center justify-content-between position-relative" t-ref="root">
+            <span class="label drag-handle fw-bolder fs-2">
                 <t t-esc="props.table.name" />
             </span>
             <t t-if="pos.floorPlanStyle != 'kanban'" t-foreach="handles" t-as="handle" t-key="handle">

@@ -147,7 +147,7 @@ export class EditableTable extends Component {
                 width: `${widthTable}px`,
                 height: `${widthTable}px`,
                 background: table.color || "rgb(53, 211, 116)",
-                "line-height": `${widthTable}px`,
+                // "line-height": `${widthTable}px`,
                 "border-radius": table.shape === "round" ? "1000px" : "3px",
                 "font-size": widthTable >= 150 ? "32px" : "16px",
                 opacity: "0.7",
@@ -160,7 +160,7 @@ export class EditableTable extends Component {
             width: `${table.width}px`,
             height: `${table.height}px`,
             background: table.color || "rgb(53, 211, 116)",
-            "line-height": `${table.height}px`,
+            // "line-height": `${table.height}px`,
             "border-radius": table.shape === "round" ? "1000px" : "3px",
             "font-size": table.height >= 150 && table.width >= 150 ? "32px" : "16px",
         });

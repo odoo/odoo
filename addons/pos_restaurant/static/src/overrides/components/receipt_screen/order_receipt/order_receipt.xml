@@ -20,22 +20,22 @@
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="props.isBill and pos.config.set_tip_after_payment">
-                <div class="tip-form">
-                    <div class="title">For convenience, we are providing the following gratuity calculations:</div>
-                    <div class="percentage-options">
-                        <div class="option">
+                <div class="tip-form py-3">
+                    <div class="title text-center mt-3">For convenience, we are providing the following gratuity calculations:</div>
+                    <div class="percentage-options percentage-options d-flex flex-nowrap mt-3">
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
                             <div>15%</div>
                             <div class="amount">
                                 <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.15)"></t>
                             </div>
                         </div>
-                        <div class="option">
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
                             <div>20%</div>
                             <div class="amount">
                                 <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.20)"></t>
                             </div>
                         </div>
-                        <div class="option">
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
                             <div>25%</div>
                             <div class="amount">
                                 <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.25)"></t>

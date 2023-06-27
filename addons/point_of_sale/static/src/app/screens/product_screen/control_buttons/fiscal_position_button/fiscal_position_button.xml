@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.SetFiscalPositionButton" owl="1">
-        <div class="control-button o_fiscal_position_button" t-on-click="() => this.click()">
-            <i class="fa fa-book" role="img" aria-label="Set fiscal position"
+        <div class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                title="Set fiscal position" />
             <t t-esc='currentFiscalPositionName' />
         </div>

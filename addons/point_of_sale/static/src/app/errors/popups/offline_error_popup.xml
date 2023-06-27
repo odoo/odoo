@@ -3,14 +3,16 @@
 
     <t t-name="point_of_sale.OfflineErrorPopup" owl="1">
         <div class="popup offline">
-            <header class="title">
-                <t t-esc="props.title" />
-            </header>
-            <main class="body">
+            <div class="modal-header">
+                <h4 class="modal-title title">
+                    <t t-esc="props.title" />
+                </h4>
+            </div>
+            <main class="modal-body">
                 <t t-esc=" props.body" />
             </main>
-            <footer class="footer footer-flex">
-                <div class="button dont-show-again highlight" t-on-click="confirm">
+            <footer class="footer footer-flex modal-footer">
+                <div class="button dont-show-again highlight btn btn-lg btn-primary w-auto" t-on-click="confirm">
                     <t t-esc="props.confirmText" />
                 </div>
             </footer>

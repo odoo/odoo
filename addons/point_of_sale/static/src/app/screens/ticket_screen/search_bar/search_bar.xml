@@ -2,9 +2,9 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.SearchBar" owl="1">
-        <div class="pos-search-bar">
-            <div class="search">
-                <span class="search-icon" t-if="!ui.isSmall"><i class="fa fa-search"></i></span>
+        <div class="pos-search-bar d-flex align-items-center flex-grow-1 h-100 ms-3 rounded">
+            <div class="search position-relative h-100 d-flex flex-grow-1">
+                <span class="search-icon" t-if="!ui.isSmall"><i class="oi oi-search"></i></span>
                 <input class="radius-left" t-ref="autofocus" t-att-class="{ 'radius-right': !props.config.filter.show }"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                 <div t-if="state.showSearchFields and state.searchInput" class="fields">
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
             </div>
-            <div t-if="props.config.filter.show" class="filter radius-right"
+            <div t-if="props.config.filter.show" class="filter radius-right h-100"
                 t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
                 <span class="down-icon">
                     <i class="oi oi-chevron-down" aria-hidden="true"></i>

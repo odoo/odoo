@@ -16,10 +16,10 @@
 
         <xpath expr="//li[hasclass('backend-button')]" position="after">
             <li t-if="pos.config.module_pos_hr" class="menu-item navbar-button lock-button" t-on-click="showLoginScreen">
-                <span>                                                                                        
-                    Lock                                                                                      
-                </span>                                                                                       
-            </li>                                                                                             
+                <a class="dropdown-item py-2">
+                Lock
+                </a>
+            </li>
         </xpath>
     </t>
 

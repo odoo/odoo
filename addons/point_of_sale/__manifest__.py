@@ -77,16 +77,32 @@
 
         # Main PoS assets, they are loaded in the PoS UI and in the PoS unit tests
         'point_of_sale._assets_pos': [
-            # scss variables and utilities
-            'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            # 'preparation_display' bootstrap customization layer
+            'web/static/src/scss/functions.scss',
+            # 'point_of_sale/static/src/scss/primary_variables.scss', TO DO - CREATE
+
+            # 'webclient' bootstrap customization layer
             ('include', 'web._assets_helpers'),
-            'web/static/src/scss/bootstrap_overridden.scss',
+            ('include', 'web._assets_backend_helpers'),
+
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/fonts/fonts.scss',
+
+            # Import Bootstrap
+            ('include', 'web._assets_bootstrap_backend'),
+
+            # Icons
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
+            'web/static/src/webclient/icons.scss',
+
+            # scss variables and utilities
+            'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/fonts/fonts.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
+
+
             # JS framework
             'web/static/src/boot.js',
             'web/static/src/session.js',
@@ -227,14 +243,6 @@
             'web/static/tests/qunit.js',
             'web/static/tests/main.js',
             'web/static/tests/setup.js',
-
-            # These 2 lines below are taken from web.assets_frontend
-            # They're required for the web.frontend_legacy to work properly
-            # It is expected to add other lines coming from the web.assets_frontend
-            # if we need to add more and more legacy stuff that would require other scss or js.
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),
             ("include", "web.assets_backend_legacy_lazy"),

@@ -149,8 +149,8 @@ export class Table extends Component {
         const notifications = this._getNotifications();
         const countClass = {
             "order-count": true,
-            "notify-printing": notifications.printing,
-            "notify-skipped": notifications.skipped,
+            "notify-printing mt-1 px-2 rounded-pill text-bg-danger": notifications.printing,
+            "notify-skipped mt-1 px-2 rounded-pill text-bg-info": notifications.skipped,
         };
         return countClass;
     }
