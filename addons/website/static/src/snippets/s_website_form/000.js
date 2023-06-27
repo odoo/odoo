@@ -9,6 +9,7 @@ odoo.define('website.s_website_form', function (require) {
     var publicWidget = require('web.public.widget');
     const dom = require('web.dom');
     const concurrency = require('web.concurrency');
+    const wUtils = require('website.utils');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -127,26 +128,17 @@ odoo.define('website.s_website_form', function (require) {
             // Because, using t-att- inside form make it non-editable
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
-            const dataForEl = document.querySelector(`[data-for='${this.el.id}']`);
+            let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
             this.editTranslations = !!this._getContext(true).edit_translations;
             // On the "edit_translations" mode, a <span/> with a translated term
             // will replace the attribute value, leading to some inconsistencies
             // (setting again the <span> on the attributes after the editor's
             // cleanup, setting wrong values on the attributes after translating
             // default values...)
-            if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
-                const dataForValues = dataForEl ?
-                    JSON.parse(dataForEl.dataset.values
-                        // replaces `True` by `true` if they are after `,` or `:` or `[`
-                        .replace(/([,:\[]\s*)True/g, '$1true')
-                        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
-                        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
-                        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
-                        .replace(/'(\s*[,:\]}])/g, '"$1')
-                        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
-                        .replace(/([{\[:,]\s*)'/g, '$1"')
-                    ) : {};
-                const fieldNames = this.$el.serializeArray().map(el => el.name);
+            if (!this.editTranslations
+                    && (dataForValues || Object.keys(this.preFillValues).length)) {
+                dataForValues = dataForValues || {};
+                const fieldNames = this.$target.serializeArray().map(el => el.name);
                 // All types of inputs do not have a value property (eg:hidden),
                 // for these inputs any function that is supposed to put a value
                 // property actually puts a HTML value attribute. Because of
