@@ -42,6 +42,7 @@ export class MessageService {
                 .concat(message.attachments.map(({ id }) => id)),
             body: await prettifyMessageContent(body, validMentions),
             message_id: message.id,
+            partner_ids: validMentions?.partners.map((partner) => partner.id),
         });
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc(
