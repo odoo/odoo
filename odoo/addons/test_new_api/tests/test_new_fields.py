@@ -1662,6 +1662,8 @@ class TestFields(TransactionCaseWithUserDemo):
             '!=': (tag1.id, tag2.id, False),
             'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
             'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'any': ([('name', '=', tag1.name)], [],),
+            'not any': ([('name', '=', tag1.name)], [],),
         })
 
     def test_30_read(self):
