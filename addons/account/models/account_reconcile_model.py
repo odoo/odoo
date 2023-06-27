@@ -130,7 +130,7 @@ class AccountReconcileModel(models.Model):
 
     # Base fields.
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Name', required=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     sequence = fields.Integer(required=True, default=10)
     company_id = fields.Many2one(
         comodel_name='res.company',

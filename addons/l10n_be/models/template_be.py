@@ -44,7 +44,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_be_reconcile_model(self):
         return {
             'escompte_template': {
-                'name': 'Escompte',
+                'name': 'Cash discount',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a653',
@@ -53,9 +53,12 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Escompte accordé',
                     }),
                 ],
+                'name@fr': 'Escompte',
+                'name@nl': 'Betalingskorting',
+                'name@de': 'Skonto',
             },
             'frais_bancaires_htva_template': {
-                'name': 'Frais bancaires HTVA',
+                'name': 'Bank fees VAT excl.',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a6560',
@@ -64,9 +67,12 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Frais bancaires HTVA',
                     }),
                 ],
+                'name@fr': 'Frais bancaires HTVA',
+                'name@nl': 'Bankkosten exclusief btw',
+                'name@de': 'Bankgebühren exkl. MwSt.',
             },
             'frais_bancaires_tva21_template': {
-                'name': 'Frais bancaires TVA21',
+                'name': 'Bank fees VAT 21 incl.',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a6560',
@@ -80,9 +86,12 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Frais bancaires TVA21',
                     }),
                 ],
+                'name@fr': 'Frais bancaires TVA21',
+                'name@nl': 'Bankkosten inclusief 21% btw',
+                'name@de': 'Bankgebühren inkl. MwSt. 21 %',
             },
             'virements_internes_template': {
-                'name': 'Virements internes',
+                'name': 'Internal transfers',
                 'to_check': False,
                 'line_ids': [
                     Command.create({
@@ -92,6 +101,8 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Virements internes',
                     }),
                 ],
+                'name@fr': 'Virements internes',
                 'name@nl': 'Interne overboekingen',
+                'name@de': 'interne Überweisungen',
             },
         }
