@@ -137,6 +137,16 @@ class configmanager:
         self._load_default_options()
         self._parse_config()
 
+    @property
+    def rcfile(self):
+        self._warn("Since 19.0, use odoo.tools.config['config'] instead", DeprecationWarning, stacklevel=2)
+        return self['config']
+
+    @rcfile.setter
+    def rcfile(self, rcfile):
+        self._warn(f"Since 19.0, use odoo.tools.config['config'] = {rcfile!r} instead", DeprecationWarning, stacklevel=2)
+        self._runtime_options['config'] = rcfile
+
     def _build_cli(self):
         OdooOption = type('OdooOption', (_OdooOption,), {'config': self})
         FileOnlyOption = type('FileOnlyOption', (_FileOnlyOption, OdooOption), {})
@@ -430,6 +440,20 @@ class configmanager:
             f'/var/lib/{release.product_name}'
         )
 
+        if rcfilepath := os.getenv('ODOO_RC'):
+            pass
+        elif rcfilepath := os.getenv('OPENERP_SERVER'):
+            self._warn("Since ages ago, the OPENERP_SERVER environment variable has been replaced by ODOO_RC", DeprecationWarning)
+        elif os.name == 'nt':
+            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
+        elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
+            pass
+        elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):
+            self._warn("Since ages ago, the ~/.openerp_serverrc file has been replaced by ~/.odoorc", DeprecationWarning)
+        else:
+            rcfilepath = '~/.odoorc'
+        self._default_options['config'] = self._normalize(rcfilepath)
+
     _log_entries = []   # helpers for log() and warn(), accumulate messages
     _warn_entries = []  # until logging is configured and the entries flushed
 
@@ -510,27 +534,7 @@ class configmanager:
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
-        # place/search the config file on Win32 near the server installation
-        # (../etc from the server)
-        # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
-        # else he won't be able to save the configurations, or even to start the server...
-        # TODO use appdirs
-        if os.name == 'nt':
-            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
-        else:
-            rcfilepath = os.path.expanduser('~/.odoorc')
-            old_rcfilepath = os.path.expanduser('~/.openerp_serverrc')
-
-            die(os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath),
-                "Found '.odoorc' and '.openerp_serverrc' in your path. Please keep only one of "\
-                "them, preferably '.odoorc'.")
-
-            if not os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath):
-                rcfilepath = old_rcfilepath
-
-        self.rcfile = os.path.abspath(
-            opt.config or os.environ.get('ODOO_RC') or os.environ.get('OPENERP_SERVER') or rcfilepath)
-        self.load()
+        # Load CLI options
 
         # odoo.cli.command.main parses the config twice, the second time
         # without --addons-path but it expects the value is persisted
@@ -553,24 +557,22 @@ class configmanager:
         if opt.log_handler:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
 
-        self._runtime_options.clear()
+        # Load config file options
+        self.load()
 
+        # Run some validation against the file/cli config, then
+        # Load the various comma-separated options and the special ones
+        self._runtime_options.clear()
         die(bool(self.options['syslog']) and bool(self.options['logfile']),
             "the syslog and logfile options are exclusive")
-
         die(self.options['translate_in'] and (not self.options['language'] or not self.options['db_name']),
             "the i18n-import option cannot be used without the language (-l) and the database (-d) options")
-
-        die(self.options['overwrite_existing_translations'] and not (self.options['translate_in'] or self.options['update']),
+        die(self.options['overwrite_existing_translations'] and not (self.options['translate_in'] or opt.update),
             "the i18n-overwrite option cannot be used without the i18n-import option or without the update option")
-
         die(self.options['translate_out'] and (not self.options['db_name']),
             "the i18n-export option cannot be used without the database (-d) option")
-
         die(',' in (self.options.get('db_name') or '') and (opt.init or opt.update),
             "Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
-
-        # Load the various comma-separated options and the special ones
 
         # ensure default server wide modules are present
         if not self['server_wide_modules']:
@@ -763,14 +765,14 @@ class configmanager:
         self._file_options.clear()
         p = ConfigParser.RawConfigParser()
         try:
-            p.read([self.rcfile])
+            p.read([self['config']])
             for (name,value) in p.items('options'):
                 option = self.options_index.get(name)
                 if not option:
                     self._log(logging.WARNING,
                         "unknown option %r in the config file at %s, "
                         "option stored as-is, without parsing",
-                        name, self.rcfile,
+                        name, self['config'],
                     )
                     self._file_options[name] = value
                     continue
@@ -778,7 +780,7 @@ class configmanager:
                     continue
                 if (value in ('False', 'false') and option.action not in ('store_true', 'store_false', 'callback')):
                     # "False" used to be the my_default of many non-bool options
-                    self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self.rcfile)
+                    self._log(logging.WARNING, "option %s reads %r in the config file at %s but isn't a boolean option, skip", name, value, self['config'])
                     continue
                 self._file_options[name] = self._parse(name, value)
         except IOError:
@@ -788,9 +790,9 @@ class configmanager:
 
     def save(self, keys=None):
         p = ConfigParser.RawConfigParser()
-        rc_exists = os.path.exists(self.rcfile)
+        rc_exists = os.path.exists(self['config'])
         if rc_exists and keys:
-            p.read([self.rcfile])
+            p.read([self['config']])
         if not p.has_section('options'):
             p.add_section('options')
         for opt in sorted(self.options):
@@ -806,12 +808,13 @@ class configmanager:
 
         # try to create the directories and write the file
         try:
-            if not rc_exists and not os.path.exists(os.path.dirname(self.rcfile)):
-                os.makedirs(os.path.dirname(self.rcfile))
+            if not rc_exists and not os.path.exists(os.path.dirname(self['config'])):
+                os.makedirs(os.path.dirname(self['config']))
             try:
-                p.write(open(self.rcfile, 'w'))
+                with open(self['config'], 'w', encoding='utf-8') as file:
+                    p.write(file)
                 if not rc_exists:
-                    os.chmod(self.rcfile, 0o600)
+                    os.chmod(self['config'], 0o600)
             except IOError:
                 sys.stderr.write("ERROR: couldn't write the config file\n")
 
