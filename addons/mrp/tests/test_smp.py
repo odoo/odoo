@@ -122,3 +122,13 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[1].move_lines_count, 1)
         # 2nd MO should have 2 move lines (2 different lots) for product_to_use_1
         self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[1].move_lines_count, 2)
+
+        # Verify if lot IDs were correctly assigned to move lines
+        mo.procurement_group_id.mrp_production_ids.button_mark_done()
+
+        final_sns = mo.procurement_group_id.mrp_production_ids.lot_producing_id
+        self.assertRecordValues(final_sns, [
+            {'product_qty': 1},
+            {'product_qty': 1},
+            {'product_qty': 1},
+        ])
