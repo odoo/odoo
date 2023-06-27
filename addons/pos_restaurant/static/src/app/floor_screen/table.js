@@ -60,7 +60,6 @@ export class Table extends Component {
             return `
                 width: ${widthTable}px;
                 height: ${widthTable}px;
-                line-height: ${widthTable}px;
                 top: ${position_v}px;
                 left: ${position_h}px;
                 border: ${border};
@@ -74,7 +73,6 @@ export class Table extends Component {
             return `
                 width: ${table.width}px;
                 height: ${table.height}px;
-                line-height: ${table.height}px;
                 top: ${table.position_v}px;
                 left: ${table.position_h}px;
                 border: ${border};
@@ -113,8 +111,8 @@ export class Table extends Component {
         const countClass = { "order-count": true };
         if (this.pos.orderPreparationCategories.size) {
             const notifications = this._getNotifications();
-            countClass["notify-printing"] = notifications.printing;
-            countClass["notify-skipped"] = notifications.skipped;
+            countClass["notify-printing mt-1 px-2 rounded-pill text-bg-danger"] = notifications.printing;
+            countClass["notify-skipped mt-1 px-2 rounded-pill text-bg-info"] = notifications.skipped;
         }
         return countClass;
     }

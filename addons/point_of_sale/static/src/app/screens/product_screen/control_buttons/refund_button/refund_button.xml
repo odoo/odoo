@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.RefundButton" owl="1">
-        <div class="control-button" t-on-click="() => this.click()">
-            <i class="fa fa-undo" role="img" aria-label="Refund" title="Refund" />
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
             Refund
-        </div>
+        </button>
     </t>
 
 </templates>

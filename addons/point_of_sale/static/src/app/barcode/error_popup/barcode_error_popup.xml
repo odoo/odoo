@@ -10,11 +10,11 @@
                     <t t-esc="props.code" />
                 </span>
             </header>
-            <main class="body">
+            <main class="modal-body">
                 <t t-esc="translatedMessage" />
             </main>
-            <footer class="footer">
-                <div class="button cancel" t-on-click="confirm">
+            <footer class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
                     Ok
                 </div>
             </footer>

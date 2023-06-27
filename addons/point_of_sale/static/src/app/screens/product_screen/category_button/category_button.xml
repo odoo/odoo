@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CategoryButton" owl="1">
-        <span class="category-button" t-on-click="() => this.props.switchCategory(props.category.id)">
+        <button class="category-button btn btn-light" t-on-click="() => this.props.switchCategory(props.category.id)">
             <div class="category-img">
                 <img t-att-src="imageUrl" alt="Category" />
             </div>
-            <div class="category-name">
+            <div class="category-name mt-2 fw-bolder">
                 <t t-esc="props.category.name" />
             </div>
-        </span>
+        </button>
     </t>
 
 </templates>
