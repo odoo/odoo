@@ -361,7 +361,7 @@ class IrHttp(models.AbstractModel):
     def routing_map(self, key=None):
         _logger.info("Generating routing map for key %s", str(key))
         registry = Registry(threading.current_thread().dbname)
-        installed = registry._init_modules.union(odoo.conf.server_wide_modules)
+        installed = registry._init_modules.union(odoo.tools.config['server_wide_modules'])
         mods = sorted(installed)
         # Note : when routing map is generated, we put it on the class `cls`
         # to make it available for all instance. Since `env` create an new instance

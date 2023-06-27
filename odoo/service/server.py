@@ -1246,7 +1246,7 @@ server = None
 server_phoenix = False
 
 def load_server_wide_modules():
-    for m in odoo.conf.server_wide_modules:
+    for m in config['server_wide_modules']:
         try:
             odoo.modules.module.load_openerp_module(m)
         except Exception:

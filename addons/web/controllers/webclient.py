@@ -36,7 +36,7 @@ class WebClient(http.Controller):
         lang = request.env.context['lang'].partition('_')[0]
 
         if mods is None:
-            mods = odoo.conf.server_wide_modules or []
+            mods = odoo.tools.config['server_wide_modules']
             if request.db:
                 mods = request.env.registry._init_modules.union(mods)
 
@@ -65,7 +65,7 @@ class WebClient(http.Controller):
         if mods:
             mods = mods.split(',')
         elif mods is None:
-            mods = list(request.env.registry._init_modules) + (odoo.conf.server_wide_modules or [])
+            mods = list(request.env.registry._init_modules) + odoo.tools.config['server_wide_modules']
 
         if lang and lang not in {code for code, _ in request.env['res.lang'].sudo().get_installed()}:
             lang = None

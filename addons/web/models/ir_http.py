@@ -89,7 +89,7 @@ class IrHttp(models.AbstractModel):
             'web.max_file_upload_size',
             default=DEFAULT_MAX_CONTENT_LENGTH,
         ))
-        mods = odoo.conf.server_wide_modules or []
+        mods = odoo.tools.config['server_wide_modules']
         if request.db:
             mods = list(request.registry._init_modules) + mods
         is_internal_user = user._is_internal()
