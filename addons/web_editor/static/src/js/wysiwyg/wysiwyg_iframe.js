@@ -71,7 +71,6 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
             this.$root = this.$editable;
         }
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
-            'min-height': '55vh',
             width: '100%'
         });
         var avoidDoubleLoad = 0; // this bug only appears on some configurations.
