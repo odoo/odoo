@@ -714,6 +714,19 @@ const ListActivity = KanbanActivity.extend({
     _onDropdownClicked: function (ev) {
         ev.stopPropagation();
     },
+    /**
+     * @override
+     * @private
+     */
+    _onDropdownShow() {
+        if (!this.res_id) {
+            return this.displayNotification({
+                message: _t("Save the record before scheduling an activity!"),
+                type: "danger",
+            });
+        }
+        this._super(...arguments);
+    },
 });
 
 // -----------------------------------------------------------------------------
