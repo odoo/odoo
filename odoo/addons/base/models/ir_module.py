@@ -618,7 +618,7 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        un_installable_modules = set(odoo.tools.config['server_wide_modules']) & set(self.mapped('name'))
         if un_installable_modules:
             raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
