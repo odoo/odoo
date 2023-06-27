@@ -105,13 +105,13 @@
                         <tr t-foreach="docs['lines']" t-as="line" t-attf-class="#{line['is_matched'] and 'o_grid_match'}">
                             <td t-attf-class="#{line['is_late'] and 'o_grid_warning'}">
                                 <a t-if="line['document_in']"
-                                    t-attf-href="#" t-esc="line['document_in'].name"
+                                    t-attf-href="#" t-esc="line['document_in'].sudo().name"
                                     class="font-weight-bold" view-type="form"
                                     t-att-res-model="line['document_in']._name"
                                     t-att-res-id="line['document_in'].id"/>
                                 <t t-elif="line['reservation']">
                                     Reserved from stock
-                                    <button t-if="line['move_out'] and line['move_out'].picking_id"
+                                    <button t-if="env.user.has_group('stock.group_stock_user') and line['move_out'] and line['move_out'].picking_id"
                                         class="btn btn-sm btn-primary o_report_replenish_unreserve"
                                         t-attf-model="stock.picking"
                                         t-att-model-id="line['move_out'].picking_id.id"
@@ -121,7 +121,7 @@
                                 </t>
                                 <t t-elif="line['replenishment_filled']">
                                     <t t-if="line['document_out']">Inventory On Hand
-                                        <button t-if="line['move_out'] and line['move_out'].state in ('confirmed', 'partially_available') and line['move_out'].picking_id"
+                                        <button t-if="env.user.has_group('stock.group_stock_user') and line['move_out'] and line['move_out'].state in ('confirmed', 'partially_available') and line['move_out'].picking_id"
                                             class="btn btn-sm btn-primary o_report_replenish_reserve"
                                             t-attf-model="stock.picking"
                                             t-att-model-id="line['move_out'].picking_id.id"
@@ -145,7 +145,7 @@
                                     name="change_priority_link"
                                 />
                                 <a t-if="line['document_out']"
-                                    t-attf-href="#" t-esc="line['document_out'].name"
+                                    t-attf-href="#" t-esc="line['document_out'].sudo().name"
                                     class="font-weight-bold" view-type="form"
                                     t-att-res-model="line['document_out']._name"
                                     t-att-res-id="line['document_out'].id"/>
