@@ -724,4 +724,18 @@ QUnit.module("DebugMenu", (hooks) => {
             ]
         );
     });
+    QUnit.test("items can be hidden based on the hide option", async (assert) => {
+        debugRegistry.category("default")
+            .add("item_1", () => ({ type: "item", description: "Item 1" }))
+            .add("item_2", () => ({ type: "item", description: "Item 2", hide: true }))
+            .add("item_3", () => ({ type: "item", description: "Item 3", hide: false }));
+        const env = await makeTestEnv(testConfig);
+        await mount(DebugMenuParent, target, { env });
+        await click(target.querySelector("button.dropdown-toggle"));
+        const items = [...target.querySelectorAll(".dropdown-menu .dropdown-item")];
+        assert.deepEqual(
+            items.map((el) => el.textContent),
+            ["Item 1", "Item 3"]
+        );
+    });
 });
