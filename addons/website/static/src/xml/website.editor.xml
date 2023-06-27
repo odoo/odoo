@@ -164,7 +164,17 @@
     <t t-extend="web_editor.toolbar">
         <t t-jquery="#list .oe-toggle-checklist" t-operation="replace"/>
         <t t-jquery="#list" t-operation="append">
-            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
+            <div title="Animate text"
+                class="btn fa fa-play fa-fw o_we_animate_text"
+                data-text-selector=".o_animated_text"/>
+        </t>
+        <t t-jquery="#strikethrough" t-operation="replace"/>
+        <!-- DESIGN NOTE: The "fa-underline" icon was temporarily used for text highlights.
+            This can be replaced with another FA or an SVG background. -->
+        <t t-jquery="#underline" t-operation="replace">
+            <div title="Add Text Highlight Effects"
+                class="btn oi oi-text-effect oi-fw o_we_text_highlight"
+                data-text-selector=".o_text_highlight"/>
         </t>
     </t>
 </templates>

@@ -1846,8 +1846,8 @@ export function splitAroundUntil(elements, limitAncestor) {
     if ([firstNode, lastNode].includes(limitAncestor)) {
         return limitAncestor;
     }
-    let before = firstNode.previousSibling;
-    let after = lastNode.nextSibling;
+    let before = getNodeSibling(firstNode, "previousSibling");
+    let after = getNodeSibling(lastNode, "nextSibling");
     let beforeSplit, afterSplit;
     if (!before && !after && elements[0] !== limitAncestor) {
         return splitAroundUntil(elements[0].parentElement, limitAncestor);
@@ -1882,6 +1882,21 @@ export function insertText(sel, content) {
     restore();
     setSelection(...boundariesOut(txt), false);
     return txt;
+}
+
+/**
+ * @param {Node} node
+ * @param {String} domAttr
+ * @returns {Node|null}
+ */
+function getNodeSibling(node, domAttr) {
+    let sibling = node[domAttr];
+    // Ignore some nodes added by options during the split process (e.g. text
+    // highlight SVGs).
+    while (sibling && sibling.classList && sibling.classList.contains("o_ignore_content")) {
+        sibling = sibling[domAttr];
+    }
+    return sibling;
 }
 
 /**

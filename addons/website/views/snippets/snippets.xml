@@ -1488,6 +1488,39 @@
                   data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
     </div>
 
+    <!-- Text highlight effects -->
+    <div data-js="TextHighlight"
+        data-selector=".o_text_highlight"
+        data-exclude="[data-oe-xpath], .o_no_text_highlight">
+        <!-- Text highlight style -->
+        <we-select string="Highlight" data-name="text_highlight_opt" class="o_we_select_grid">
+            <div class="o_we_select_content d-flex flew-row flex-wrap">
+                <we-button data-select-class="o_text_highlight_0 o_highlight_bottom" data-set-text-highlight="highlight_0" data-select-label="Underline" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_1 o_highlight_bottom" data-set-text-highlight="highlight_1" data-select-label="Freehand" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_2 o_highlight_bottom" data-set-text-highlight="highlight_2" data-select-label="Double" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_3 o_highlight_bottom" data-set-text-highlight="highlight_3" data-select-label="Wavy" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_4 o_highlight_center" data-set-text-highlight="highlight_4" data-select-label="Circle" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_5 o_highlight_center" data-set-text-highlight="highlight_5" data-select-label="Over and underline" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_6 o_highlight_bottom" data-set-text-highlight="highlight_6" data-select-label="Scribble" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_7 o_highlight_bottom" data-set-text-highlight="highlight_7" data-select-label="Jagged" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_8 o_highlight_center" data-set-text-highlight="highlight_8" data-select-label="Cross" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_9 o_highlight_center" data-set-text-highlight="highlight_9" data-select-label="Diagonal" class="flex-grow-0 rounded-1"/>
+                <we-button data-select-class="o_text_highlight_10 o_highlight_center" data-set-text-highlight="highlight_10" data-select-label="Strikethrough" class="flex-grow-0 rounded-1"/>
+            </div>
+        </we-select>
+        <!-- Text highlight color -->
+        <we-colorpicker string="Color" class="o_we_sublevel_1"
+            data-dependencies="text_highlight_opt"
+            data-css-property="--text-highlight-color"
+            data-select-style=""/>
+        <!-- Text highlight thickness -->
+        <we-input string="Thickness" class="o_we_sublevel_1 o_we_small_input"
+            data-dependencies="text_highlight_opt"
+            data-css-property="--text-highlight-width"
+            data-select-style=""
+            data-unit="px"/>
+    </div>
+
     <!-- Theme options -->
     <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
         <we-alert class="o_old_color_system_warning d-none mt-2">
