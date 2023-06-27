@@ -135,27 +135,19 @@ def initialize_sys_path():
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
-    # hook odoo.addons on data dir
-    dd = os.path.normcase(tools.config.addons_data_dir)
-    if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
-        odoo.addons.__path__.append(dd)
-
-    # hook odoo.addons on addons paths
-    for ad in tools.config['addons_path'].split(','):
-        ad = os.path.normcase(os.path.abspath(ad.strip()))
-        if ad not in odoo.addons.__path__:
-            odoo.addons.__path__.append(ad)
-
-    # hook odoo.addons on base module path
-    base_path = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons')))
-    if base_path not in odoo.addons.__path__ and os.path.isdir(base_path):
-        odoo.addons.__path__.append(base_path)
+    for path in (
+        # tools.config.addons_base_dir,  # already present
+        tools.config.addons_data_dir,
+        *tools.config['addons_path'],
+        tools.config.addons_community_dir,
+    ):
+        if os.access(path, os.R_OK) and path not in odoo.addons.__path__:
+            odoo.addons.__path__.append(path)
 
     # hook odoo.upgrade on upgrade-path
-    legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
-    for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
-        up = os.path.normcase(os.path.abspath(up.strip()))
-        if os.path.isdir(up) and up not in odoo.upgrade.__path__:
+    legacy_upgrade_path = os.path.join(tools.config.addons_base_dir, 'base/maintenance/migrations')
+    for up in tools.config['upgrade_path'] or [legacy_upgrade_path]:
+        if up not in odoo.upgrade.__path__:
             odoo.upgrade.__path__.append(up)
 
     # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
