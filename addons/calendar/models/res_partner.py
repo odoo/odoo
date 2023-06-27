@@ -23,10 +23,16 @@ class Partner(models.Model):
 
     def _compute_meeting(self):
         if self.ids:
+<<<<<<< HEAD
             # prefetch 'parent_id'
             all_partners = self.with_context(active_test=False).search_fetch(
                 [('id', 'child_of', self.ids)], ['parent_id'],
             )
+||||||| parent of af088ebe074 (temp)
+            all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+=======
+            all_partners = self.with_context(active_test=False).search_read([('id', 'child_of', self.ids)], ["parent_id"])
+>>>>>>> af088ebe074 (temp)
 
             query = self.env['calendar.event']._search([])  # ir.rules will be applied
             query_str, params = query.subselect()
@@ -36,12 +42,18 @@ class Partner(models.Model):
                   FROM calendar_event_res_partner_rel
                  WHERE res_partner_id IN %s AND calendar_event_id IN {query_str}
               GROUP BY res_partner_id, calendar_event_id
+<<<<<<< HEAD
             """, [tuple(all_partners.ids)] + params)
+||||||| parent of af088ebe074 (temp)
+            """.format(subquery), [tuple(all_partners.ids)])
+=======
+            """.format(subquery), [tuple(p["id"] for p in all_partners)])
+>>>>>>> af088ebe074 (temp)
 
             meeting_data = self.env.cr.fetchall()
 
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
-            meetings = {p.id: set() for p in all_partners}
+            meetings = {p["id"]: set() for p in all_partners}
             for m in meeting_data:
                 meetings[m[0]].add(m[1])
 
@@ -49,9 +61,9 @@ class Partner(models.Model):
             for p in all_partners:
                 partner = p
                 while partner:
-                    if partner in self:
-                        meetings[partner.id] |= meetings[p.id]
-                    partner = partner.parent_id
+                    if partner["id"] in self.ids:
+                        meetings[partner["id"]] |= meetings[p["id"]]
+                    partner = next((pt for pt in all_partners if partner["parent_id"] and pt["id"] == partner["parent_id"][0]), None)
             return {p.id: list(meetings[p.id]) for p in self}
         return {}
 
