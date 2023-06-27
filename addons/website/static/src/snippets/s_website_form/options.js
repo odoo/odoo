@@ -9,6 +9,7 @@ import { unique } from "@web/core/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import wUtils from '@website/js/utils';
 
 let currentActionName;
 
@@ -415,6 +416,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (!this.$target[0].dataset.model_name) {
             proms.push(this._applyFormModel());
         }
+        // Get the email_to value from the data-for attribute if it exists. We
+        // use it if there is no value on the email_to input.
+        const formId = this.$target[0].id;
+        const dataForValues = wUtils.getParsedDataFor(formId, this.$target[0].ownerDocument);
+        if (dataForValues) {
+            this.dataForEmailTo = dataForValues['email_to'];
+        }
+        this.defaultEmailToValue = "info@yourcompany.example.com";
         return Promise.all(proms);
     },
     /**
@@ -601,6 +610,16 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 return this.activeForm.id;
             case 'addActionField': {
                 const value = this.$target.find(`.s_website_form_dnone input[name="${params.fieldName}"]`).val();
+                if (params.fieldName === 'email_to') {
+                    // For email_to, we try to find a value in this order:
+                    // 1. The current value of the input
+                    // 2. The data-for value if it exists
+                    // 3. The default value (`defaultEmailToValue`)
+                    if (value && value !== this.defaultEmailToValue) {
+                        return value;
+                    }
+                    return this.dataForEmailTo || this.defaultEmailToValue;
+                }
                 if (value) {
                     return value;
                 } else {
@@ -672,7 +691,12 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      */
     _addHiddenField: function (value, fieldName) {
         this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
-        if (value) {
+        // For the email_to field, we keep the field even if it has no value so
+        // that the email is sent to data-for value or to the default email.
+        if (fieldName === 'email_to' && !value && !this.dataForEmailTo) {
+            value = this.defaultEmailToValue;
+        }
+        if (value || fieldName === 'email_to') {
             const hiddenField = renderToElement('website.form_field_hidden', {
                 field: {
                     name: fieldName,
