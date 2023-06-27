@@ -995,19 +995,18 @@ class Base(models.AbstractModel):
             if not initial_values.get(parent_name, True):
                 initial_values.pop(parent_name)
 
-        # create a new record, and update it with initial values
-        record = self.new(origin=self)
+        # create a new record with initial values
         if self:
             # fill in the cache of record with the values of self
             cache_values = {fname: self[fname] for fname in fields_spec}
-            record._update_cache(cache_values, validate=False)
+            record = self.new(cache_values, origin=self)
             # apply initial values on top of the values of self
             record._update_cache(initial_values)
         else:
             # set changed values to null in initial_values; not setting them
             # triggers default_get() on the new record when creating snapshot0
             initial_values.update(dict.fromkeys(field_names, False))
-            record._update_cache(initial_values, validate=False)
+            record = self.new(initial_values, origin=self)
 
         # make parent records match with the form values; this ensures that
         # computed fields on parent records have all their dependencies at
