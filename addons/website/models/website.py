@@ -865,6 +865,8 @@ class Website(models.Model):
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
+            if self.env.user.has_group('website.group_website_designer'):
+                Model = Model.sudo()
             dependency_records = Model.search(OR(domains))
             if model == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
