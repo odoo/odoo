@@ -27,6 +27,11 @@
             <t t-if="is_online and object.state != 'accepted' and object.event_id.appointment_type_id.resource_manual_confirmation">
                 You will receive a mail of confirmation with more details when your appointment will be confirmed.
             </t>
+            <t t-if="is_online and object.event_id.children_ids.appointment_resource_id">
+                <br/><br/>
+                You will also receive emails for each resource that was required for your requested number of attendees.
+                Canceling any of these will cancel all of them.
+            </t>
         </t>
         <t t-elif="is_online and target_responsible">
             <t t-if="customer">
@@ -112,12 +117,20 @@
                     </li>
                 </ul></li>
                 <li t-if="is_online and object.event_id.appointment_type_id.resource_manage_capacity">
-                    For: <t t-out="object.event_id.resource_total_capacity_reserved"/> people
+                    For: <t t-out="object.event_id.resource_capacity_reserved"/> people
                 </li>
                 <li t-if="is_online and object.event_id.appointment_type_id.assign_method != 'time_auto_assign'">
                     Resources
                     <ul>
-                        <li t-foreach="object.event_id.appointment_resource_ids" t-as="resource">
+                        <li t-foreach="object.event_id.appointment_resource_id" t-as="resource">
+                            <span style="margin-left:5px" t-out="resource.name or ''">Table 1</span>
+                        </li>
+                    </ul>
+                </li>
+                <li t-if="is_online and object.event_id.appointment_type_id.assign_method != 'time_auto_assign'">
+                    Resources
+                    <ul>
+                        <li t-foreach="object.event_id.appointment_resource_id" t-as="resource">
                             <span style="margin-left:5px" t-out="resource.name or ''">Table 1</span>
                         </li>
                     </ul>
