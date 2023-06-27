@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="sale.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="invoice_policy" position="attributes">
-                <attribute name="invisible">type == 'service'</attribute>
+                <attribute name="invisible">type == 'service' and sale_ok == True</attribute>
             </field>
             <field name="invoice_policy" position="after">
-                <field name="service_policy" string="Invoicing Policy" invisible="type != 'service'" required="type == 'service'"/>
+                <field name="service_policy" string="Invoicing Policy" invisible="type != 'service' or sale_ok == False" required="type == 'service' and sale_ok == True"/>
                 <field name="service_tracking" required="1" invisible="type != 'service' or not sale_ok"/>
                 <div class="o_td_label d-inline-flex" invisible="service_tracking != 'task_global_project'">
                     <label for='project_id'/>
