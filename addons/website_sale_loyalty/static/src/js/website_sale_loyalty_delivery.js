@@ -14,11 +14,11 @@ patch(PublicWidget.registry.websiteSaleDelivery, 'addons/website_sale_loyalty_de
     /**
      * @override
      */
-     _handleCarrierUpdateResult: function (result) {
-        this._super.apply(this, arguments);
-        if (result.new_amount_order_discounted) {
+     _handleCarrierUpdateResult: async function (carrierInput) {
+        await this._super.apply(this, arguments);
+        if (this.result.new_amount_order_discounted) {
             // Update discount of the order
-            $('#order_discounted').html(result.new_amount_order_discounted);
+            $('#order_discounted').html(this.result.new_amount_order_discounted);
         }
     },
     /**
