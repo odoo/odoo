@@ -784,7 +784,12 @@
                                     <span t-elif="record.is_private.value" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
-                            <field name="user_ids" widget="many2many_avatar_user"/>
+                            <div class="d-flex">
+                                <div class="px-2 pt-1">
+                                    <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
+                                </div>
+                                <field name="user_ids" widget="many2many_avatar_user" class="flex-grow-1"/>
+                            </div>
                         </div>
                     </templates>
                 </activity>

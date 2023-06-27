@@ -1560,6 +1560,7 @@ class HolidaysRequest(models.Model):
                         activity_vals.append({
                             'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
                             'automated': True,
+                            'date_deadline': holiday.sudo().date_from,
                             'note': note,
                             'user_id': user_id,
                             'res_id': holiday.id,
