@@ -21,6 +21,9 @@ class CalendarProviderConfig(models.TransientModel):
     cal_client_secret = fields.Char(
         "Google Client_key",
         default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_client_secret'))
+    cal_sync_active = fields.Boolean(
+        "Synchronization",
+        default=lambda self: self.env['ir.config_parameter'].get_param('google_calendar_sync_active'))
     microsoft_outlook_client_identifier = fields.Char(
         "Outlook Client Id",
         default=lambda self: self.env['ir.config_parameter'].get_param('microsoft_calendar_client_id'))
@@ -45,6 +48,7 @@ class CalendarProviderConfig(models.TransientModel):
         if self.external_calendar_provider == 'google':
             self.env['ir.config_parameter'].set_param('google_calendar_client_id', self.cal_client_id)
             self.env['ir.config_parameter'].set_param('google_calendar_client_secret', self.cal_client_secret)
+            self.env['ir.config_parameter'].set_param('google_calendar_sync_active', self.cal_sync_active)
         elif self.external_calendar_provider == 'microsoft':
             self.env['ir.config_parameter'].set_param('microsoft_calendar_client_id', self.microsoft_outlook_client_identifier)
             self.env['ir.config_parameter'].set_param('microsoft_calendar_client_secret', self.microsoft_outlook_client_secret)

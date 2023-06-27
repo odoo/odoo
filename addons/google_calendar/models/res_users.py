@@ -43,9 +43,9 @@ class User(models.Model):
 
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
-        if self.google_synchronization_stopped:
+        sync_active_config_parameter = self.env['ir.config_parameter'].sudo().get_param("google_calendar_sync_active")
+        if self.google_synchronization_stopped or not sync_active_config_parameter:
             return False
-
         # don't attempt to sync when another sync is already in progress, as we wouldn't be
         # able to commit the transaction anyway (row is locked)
         self.env.cr.execute("""SELECT id FROM res_users WHERE id = %s FOR NO KEY UPDATE SKIP LOCKED""", [self.id])
@@ -97,11 +97,14 @@ class User(models.Model):
     def stop_google_synchronization(self):
         self.ensure_one()
         self.google_synchronization_stopped = True
+        # Doubt: Removing the comment below, the 'test_stop_synchronization' breaks: the variable above isn't updated..
+        # self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_active", False)
 
     def restart_google_synchronization(self):
         self.ensure_one()
         if not self.google_calendar_account_id:
             self.google_calendar_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
         self.google_synchronization_stopped = False
+        self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_active", True)
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()

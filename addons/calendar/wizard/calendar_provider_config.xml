@@ -16,6 +16,7 @@
                     <group>
                         <field name="cal_client_id" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
                         <field name="cal_client_secret" password="True" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
+                        <field name="cal_sync_active" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
                     </group>
                 </div>
                 <div attrs="{'invisible': [('external_calendar_provider', '!=', 'microsoft')]}">
