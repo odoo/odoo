@@ -459,7 +459,7 @@ class Applicant(models.Model):
         applicant = self[0]
         # When applcant is unarchived, they are put back to the default stage automatically. In this case,
         # don't post automated message related to the stage change.
-        if 'stage_id' in changes and applicant.stage_id.template_id and not applicant._context.get('just_unarchived'):
+        if 'stage_id' in changes and applicant.exists() and applicant.stage_id.template_id and not applicant._context.get('just_unarchived'):
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
