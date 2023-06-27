@@ -30,7 +30,8 @@ QUnit.test("basic rendering", async (assert) => {
         $(".o-mail-ChatWindow-header .o-mail-ChatWindow-name").text(),
         "New message"
     );
-    assert.containsOnce($, ".o-mail-ChatWindow-header .o-mail-ChatWindow-command");
+    assert.containsN($, ".o-mail-ChatWindow-header .o-mail-ChatWindow-command", 2);
+    assert.containsOnce($, ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Fold']");
     assert.containsOnce(
         $,
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']"
@@ -64,11 +65,11 @@ QUnit.test("fold", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow-content");
     assert.containsOnce($, ".o-discuss-ChannelSelector");
 
-    await click(".o-mail-ChatWindow-header");
+    await click(".o-mail-ChatWindow-command[title='Fold']");
     assert.containsNone($, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
     assert.containsNone($, ".o-mail-ChatWindow .o-discuss-ChannelSelector");
 
-    await click(".o-mail-ChatWindow-header");
+    await click(".o-mail-ChatWindow-command[title='Open']");
     assert.containsOnce($, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
     assert.containsOnce($, ".o-discuss-ChannelSelector");
 });

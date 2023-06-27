@@ -95,7 +95,7 @@ QUnit.test("Closing folded chat window should open it with feedback", async (ass
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
-    await click(".o-mail-ChatWindow-header");
+    await click("[title='Fold']");
     assert.containsOnce($, ".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");
     assert.containsNone($, ".o-mail-ChatWindow.o-folded");
