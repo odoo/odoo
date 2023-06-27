@@ -296,348 +296,6 @@
     const NEWLINE = "\n";
     const FONT_SIZES = [6, 7, 8, 9, 10, 11, 12, 14, 18, 24, 36];
 
-    // -----------------------------------------------------------------------------
-    // Date Type
-    // -----------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------
-    // Parsing
-    // -----------------------------------------------------------------------------
-    const INITIAL_1900_DAY = new Date(1899, 11, 30);
-    const MS_PER_DAY = 24 * 60 * 60 * 1000;
-    const CURRENT_MILLENIAL = 2000; // note: don't forget to update this in 2999
-    const CURRENT_YEAR = new Date().getFullYear();
-    const INITIAL_JS_DAY = new Date(0);
-    const DATE_JS_1900_OFFSET = INITIAL_JS_DAY - INITIAL_1900_DAY;
-    const mdyDateRegexp = /^\d{1,2}(\/|-|\s)\d{1,2}((\/|-|\s)\d{1,4})?$/;
-    const ymdDateRegexp = /^\d{3,4}(\/|-|\s)\d{1,2}(\/|-|\s)\d{1,2}$/;
-    const timeRegexp = /((\d+(:\d+)?(:\d+)?\s*(AM|PM))|(\d+:\d+(:\d+)?))$/;
-    function parseDateTime(str) {
-        str = str.trim();
-        let time;
-        const timeMatch = str.match(timeRegexp);
-        if (timeMatch) {
-            time = parseTime(timeMatch[0]);
-            if (time === null) {
-                return null;
-            }
-            str = str.replace(timeMatch[0], "").trim();
-        }
-        let date;
-        const mdyDateMatch = str.match(mdyDateRegexp);
-        const ymdDateMatch = str.match(ymdDateRegexp);
-        if (mdyDateMatch || ymdDateMatch) {
-            let dateMatch;
-            if (mdyDateMatch) {
-                dateMatch = mdyDateMatch[0];
-                date = parseDate(dateMatch, "mdy");
-            }
-            else {
-                dateMatch = ymdDateMatch[0];
-                date = parseDate(dateMatch, "ymd");
-            }
-            if (date === null) {
-                return null;
-            }
-            str = str.replace(dateMatch, "").trim();
-        }
-        if (str !== "" || !(date || time)) {
-            return null;
-        }
-        if (date && time) {
-            return {
-                value: date.value + time.value,
-                format: date.format + " " + (time.format === "hhhh:mm:ss" ? "hh:mm:ss" : time.format),
-                jsDate: new Date(date.jsDate.getFullYear() + time.jsDate.getFullYear() - 1899, date.jsDate.getMonth() + time.jsDate.getMonth() - 11, date.jsDate.getDate() + time.jsDate.getDate() - 30, date.jsDate.getHours() + time.jsDate.getHours(), date.jsDate.getMinutes() + time.jsDate.getMinutes(), date.jsDate.getSeconds() + time.jsDate.getSeconds()),
-            };
-        }
-        return date || time;
-    }
-    function parseDate(str, dateFormat) {
-        const isMDY = dateFormat === "mdy";
-        const isYMD = dateFormat === "ymd";
-        if (isMDY || isYMD) {
-            const parts = str.split(/\/|-|\s/);
-            const monthIndex = isMDY ? 0 : 1;
-            const dayIndex = isMDY ? 1 : 2;
-            const yearIndex = isMDY ? 2 : 0;
-            const month = Number(parts[monthIndex]);
-            const day = Number(parts[dayIndex]);
-            const leadingZero = (parts[monthIndex].length === 2 && month < 10) || (parts[dayIndex].length === 2 && day < 10);
-            const year = parts[yearIndex] ? inferYear(parts[yearIndex]) : CURRENT_YEAR;
-            const jsDate = new Date(year, month - 1, day);
-            const sep = str.match(/\/|-|\s/)[0];
-            if (jsDate.getMonth() !== month - 1 || jsDate.getDate() !== day) {
-                // invalid date
-                return null;
-            }
-            const delta = jsDate - INITIAL_1900_DAY;
-            let format = leadingZero ? `mm${sep}dd` : `m${sep}d`;
-            if (parts[yearIndex]) {
-                format = isMDY ? format + sep + "yyyy" : "yyyy" + sep + format;
-            }
-            return {
-                value: Math.round(delta / MS_PER_DAY),
-                format: format,
-                jsDate,
-            };
-        }
-        return null;
-    }
-    function inferYear(str) {
-        const nbr = Number(str);
-        switch (str.length) {
-            case 1:
-                return CURRENT_MILLENIAL + nbr;
-            case 2:
-                const offset = CURRENT_MILLENIAL + nbr > CURRENT_YEAR + 10 ? -100 : 0;
-                const base = CURRENT_MILLENIAL + offset;
-                return base + nbr;
-            case 3:
-            case 4:
-                return nbr;
-        }
-        return 0;
-    }
-    function parseTime(str) {
-        str = str.trim();
-        if (timeRegexp.test(str)) {
-            const isAM = /AM/i.test(str);
-            const isPM = /PM/i.test(str);
-            const strTime = isAM || isPM ? str.substring(0, str.length - 2).trim() : str;
-            const parts = strTime.split(/:/);
-            const isMinutes = parts.length >= 2;
-            const isSeconds = parts.length === 3;
-            let hours = Number(parts[0]);
-            let minutes = isMinutes ? Number(parts[1]) : 0;
-            let seconds = isSeconds ? Number(parts[2]) : 0;
-            let format = isSeconds ? "hh:mm:ss" : "hh:mm";
-            if (isAM || isPM) {
-                format += " a";
-            }
-            else if (!isMinutes) {
-                return null;
-            }
-            if (hours >= 12 && isAM) {
-                hours -= 12;
-            }
-            else if (hours < 12 && isPM) {
-                hours += 12;
-            }
-            minutes += Math.floor(seconds / 60);
-            seconds %= 60;
-            hours += Math.floor(minutes / 60);
-            minutes %= 60;
-            if (hours >= 24) {
-                format = "hhhh:mm:ss";
-            }
-            const jsDate = new Date(1899, 11, 30, hours, minutes, seconds);
-            return {
-                value: hours / 24 + minutes / 1440 + seconds / 86400,
-                format: format,
-                jsDate: jsDate,
-            };
-        }
-        return null;
-    }
-    // -----------------------------------------------------------------------------
-    // Conversion
-    // -----------------------------------------------------------------------------
-    function numberToJsDate(value) {
-        const truncValue = Math.trunc(value);
-        let date = new Date(truncValue * MS_PER_DAY - DATE_JS_1900_OFFSET);
-        let time = value - truncValue;
-        time = time < 0 ? 1 + time : time;
-        const hours = Math.round(time * 24);
-        const minutes = Math.round((time - hours / 24) * 24 * 60);
-        const seconds = Math.round((time - hours / 24 - minutes / 24 / 60) * 24 * 60 * 60);
-        date.setHours(hours);
-        date.setMinutes(minutes);
-        date.setSeconds(seconds);
-        return date;
-    }
-    function jsDateToRoundNumber(date) {
-        const delta = date.getTime() - INITIAL_1900_DAY.getTime();
-        return Math.round(delta / MS_PER_DAY);
-    }
-    /** Return the number of days in the current month of the given date */
-    function getDaysInMonth(date) {
-        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-    }
-    function isLastDayOfMonth(date) {
-        return getDaysInMonth(date) === date.getDate();
-    }
-    /**
-     * Add a certain number of months to a date. This will adapt the month number, and possibly adapt
-     * the day of the month to keep it in the month.
-     *
-     * For example "31/12/2020" minus one month will be "30/11/2020", and not "31/11/2020"
-     *
-     * @param keepEndOfMonth if true, if the given date was the last day of a month, the returned date will
-     *          also always be the last day of a month.
-     */
-    function addMonthsToDate(date, months, keepEndOfMonth) {
-        const yStart = date.getFullYear();
-        const mStart = date.getMonth();
-        const dStart = date.getDate();
-        const jsDate = new Date(yStart, mStart + months);
-        if (keepEndOfMonth && dStart === getDaysInMonth(date)) {
-            jsDate.setDate(getDaysInMonth(jsDate));
-        }
-        else if (dStart > getDaysInMonth(jsDate)) {
-            // 31/03 minus one month should be 28/02, not 31/02
-            jsDate.setDate(getDaysInMonth(jsDate));
-        }
-        else {
-            jsDate.setDate(dStart);
-        }
-        return jsDate;
-    }
-    function isLeapYear(year) {
-        const _year = Math.trunc(year);
-        return (_year % 4 === 0 && _year % 100 != 0) || _year % 400 == 0;
-    }
-    function getYearFrac(startDate, endDate, _dayCountConvention) {
-        if (startDate === endDate) {
-            return 0;
-        }
-        if (startDate > endDate) {
-            const stack = endDate;
-            endDate = startDate;
-            startDate = stack;
-        }
-        const jsStartDate = numberToJsDate(startDate);
-        const jsEndDate = numberToJsDate(endDate);
-        let dayStart = jsStartDate.getDate();
-        let dayEnd = jsEndDate.getDate();
-        const monthStart = jsStartDate.getMonth(); // january is 0
-        const monthEnd = jsEndDate.getMonth(); // january is 0
-        const yearStart = jsStartDate.getFullYear();
-        const yearEnd = jsEndDate.getFullYear();
-        let yearsStart = 0;
-        let yearsEnd = 0;
-        switch (_dayCountConvention) {
-            // 30/360 US convention --------------------------------------------------
-            case 0:
-                if (dayStart === 31)
-                    dayStart = 30;
-                if (dayStart === 30 && dayEnd === 31)
-                    dayEnd = 30;
-                // If jsStartDate is the last day of February
-                if (monthStart === 1 && dayStart === (isLeapYear(yearStart) ? 29 : 28)) {
-                    dayStart = 30;
-                    // If jsEndDate is the last day of February
-                    if (monthEnd === 1 && dayEnd === (isLeapYear(yearEnd) ? 29 : 28)) {
-                        dayEnd = 30;
-                    }
-                }
-                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
-                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
-                break;
-            // actual/actual convention ----------------------------------------------
-            case 1:
-                let daysInYear = 365;
-                const isSameYear = yearStart === yearEnd;
-                const isOneDeltaYear = yearStart + 1 === yearEnd;
-                const isMonthEndBigger = monthStart < monthEnd;
-                const isSameMonth = monthStart === monthEnd;
-                const isDayEndBigger = dayStart < dayEnd;
-                // |-----|  <-- one Year
-                // 'A' is start date
-                // 'B' is end date
-                if ((!isSameYear && !isOneDeltaYear) ||
-                    (!isSameYear && isMonthEndBigger) ||
-                    (!isSameYear && isSameMonth && isDayEndBigger)) {
-                    // |---A-|-----|-B---|  <-- !isSameYear && !isOneDeltaYear
-                    // |---A-|----B|-----|  <-- !isSameYear && isMonthEndBigger
-                    // |---A-|---B-|-----|  <-- !isSameYear && isSameMonth && isDayEndBigger
-                    let countYears = 0;
-                    let countDaysInYears = 0;
-                    for (let y = yearStart; y <= yearEnd; y++) {
-                        countYears++;
-                        countDaysInYears += isLeapYear(y) ? 366 : 365;
-                    }
-                    daysInYear = countDaysInYears / countYears;
-                }
-                else if (!isSameYear) {
-                    // |-AF--|B----|-----|
-                    if (isLeapYear(yearStart) && monthStart < 2) {
-                        daysInYear = 366;
-                    }
-                    // |--A--|FB---|-----|
-                    if (isLeapYear(yearEnd) && (monthEnd > 1 || (monthEnd === 1 && dayEnd === 29))) {
-                        daysInYear = 366;
-                    }
-                }
-                else {
-                    // remaining cases:
-                    //
-                    // |-F-AB|-----|-----|
-                    // |AB-F-|-----|-----|
-                    // |A-F-B|-----|-----|
-                    // if February 29 occurs between date1 (exclusive) and date2 (inclusive)
-                    // daysInYear --> 366
-                    if (isLeapYear(yearStart)) {
-                        daysInYear = 366;
-                    }
-                }
-                yearsStart = startDate / daysInYear;
-                yearsEnd = endDate / daysInYear;
-                break;
-            // actual/360 convention -------------------------------------------------
-            case 2:
-                yearsStart = startDate / 360;
-                yearsEnd = endDate / 360;
-                break;
-            // actual/365 convention -------------------------------------------------
-            case 3:
-                yearsStart = startDate / 365;
-                yearsEnd = endDate / 365;
-                break;
-            // 30/360 European convention --------------------------------------------
-            case 4:
-                if (dayStart === 31)
-                    dayStart = 30;
-                if (dayEnd === 31)
-                    dayEnd = 30;
-                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
-                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
-                break;
-        }
-        return yearsEnd - yearsStart;
-    }
-    /**
-     * Get the number of whole months between two dates.
-     * e.g.
-     *  2002/01/01 -> 2002/02/01 = 1 month,
-     *  2002/01/01 -> 2003/02/01 = 13 months
-     * @param startDate
-     * @param endDate
-     * @returns
-     */
-    function getTimeDifferenceInWholeMonths(startDate, endDate) {
-        const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-            endDate.getMonth() -
-            startDate.getMonth();
-        return startDate.getDate() > endDate.getDate() ? months - 1 : months;
-    }
-    function getTimeDifferenceInWholeDays(startDate, endDate) {
-        const startUtc = startDate.getTime();
-        const endUtc = endDate.getTime();
-        return Math.floor((endUtc - startUtc) / MS_PER_DAY);
-    }
-    function getTimeDifferenceInWholeYears(startDate, endDate) {
-        const years = endDate.getFullYear() - startDate.getFullYear();
-        const monthStart = startDate.getMonth();
-        const monthEnd = endDate.getMonth();
-        const dateStart = startDate.getDate();
-        const dateEnd = endDate.getDate();
-        const isEndMonthDateBigger = monthEnd > monthStart || (monthEnd === monthStart && dateEnd >= dateStart);
-        return isEndMonthDateBigger ? years : years - 1;
-    }
-    function areTwoDatesWithinOneYear(startDate, endDate) {
-        return getYearFrac(startDate, endDate, 1) < 1;
-    }
-
     //------------------------------------------------------------------------------
     /**
      * Stringify an object, like JSON.stringify, except that the first level of keys
@@ -871,9 +529,6 @@
     function isBoolean(str) {
         const upperCased = str.toUpperCase();
         return upperCased === "TRUE" || upperCased === "FALSE";
-    }
-    function isDateTime(str) {
-        return parseDateTime(str) !== null;
     }
     const MARKDOWN_LINK_REGEX = /^\[([^\[]+)\]\((.+)\)$/;
     //link must start with http or https
@@ -1144,6 +799,22 @@
             }
             return deleted;
         }
+    }
+    /**
+     * Creates a version of the function that's memoized on the value of its first
+     * argument, if any.
+     */
+    function memoize(func) {
+        const cache = new Map();
+        const funcName = func.name ? func.name + " (memoized)" : "memoized";
+        return {
+            [funcName](...args) {
+                if (!cache.has(args[0])) {
+                    cache.set(args[0], func(...args));
+                }
+                return cache.get(args[0]);
+            },
+        }[funcName];
     }
 
     const RBA_REGEX = /rgba?\(|\s+|\)/gi;
@@ -1571,6 +1242,429 @@
             String(row + 1));
     }
 
+    // -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
+    // Parsing
+    // -----------------------------------------------------------------------------
+    const INITIAL_1900_DAY = new Date(1899, 11, 30);
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    const CURRENT_MILLENIAL = 2000; // note: don't forget to update this in 2999
+    const CURRENT_YEAR = new Date().getFullYear();
+    const CURRENT_MONTH = new Date().getMonth();
+    const INITIAL_JS_DAY = new Date(0);
+    const DATE_JS_1900_OFFSET = INITIAL_JS_DAY - INITIAL_1900_DAY;
+    const mdyDateRegexp = /^\d{1,2}(\/|-|\s)\d{1,2}((\/|-|\s)\d{1,4})?$/;
+    const ymdDateRegexp = /^\d{3,4}(\/|-|\s)\d{1,2}(\/|-|\s)\d{1,2}$/;
+    const dateSeparatorsRegex = /\/|-|\s/;
+    const dateRegexp = /^(\d{1,4})[\/-\s](\d{1,2})([\/-\s](\d{1,4}))?$/;
+    const timeRegexp = /((\d+(:\d+)?(:\d+)?\s*(AM|PM))|(\d+:\d+(:\d+)?))$/;
+    function isDateTime(str, locale) {
+        return parseDateTime(str, locale) !== null;
+    }
+    function parseDateTime(str, locale) {
+        str = str.trim();
+        let time = null;
+        const timeMatch = str.match(timeRegexp);
+        if (timeMatch) {
+            time = parseTime(timeMatch[0]);
+            if (time === null) {
+                return null;
+            }
+            str = str.replace(timeMatch[0], "").trim();
+        }
+        let date = null;
+        const dateParts = getDateParts(str, locale);
+        if (dateParts) {
+            const separator = dateParts.dateString.match(dateSeparatorsRegex)[0];
+            date = parseDate(dateParts, separator);
+            if (date === null) {
+                return null;
+            }
+            str = str.replace(dateParts.dateString, "").trim();
+        }
+        if (str !== "" || !(date || time)) {
+            return null;
+        }
+        if (date && date.jsDate && time && time.jsDate) {
+            return {
+                value: date.value + time.value,
+                format: date.format + " " + (time.format === "hhhh:mm:ss" ? "hh:mm:ss" : time.format),
+                jsDate: new Date(date.jsDate.getFullYear() + time.jsDate.getFullYear() - 1899, date.jsDate.getMonth() + time.jsDate.getMonth() - 11, date.jsDate.getDate() + time.jsDate.getDate() - 30, date.jsDate.getHours() + time.jsDate.getHours(), date.jsDate.getMinutes() + time.jsDate.getMinutes(), date.jsDate.getSeconds() + time.jsDate.getSeconds()),
+            };
+        }
+        return date || time;
+    }
+    /**
+     * Returns the parts (day/month/year) of a date string corresponding to the given locale.
+     *
+     * - A string "xxxx-xx-xx" will be parsed as "y-m-d" no matter the locale.
+     * - A string "xx-xx-xxxx" will be parsed as "m-d-y" for mdy locale, and "d-m-y" for ymd and dmy locales.
+     * - A string "xx-xx-xx" will be "y-m-d" for ymd locale, "d-m-y" for dmy locale, "m-d-y" for mdy locale.
+     * - A string "xxxx-xx" will be parsed as "y-m" no matter the locale.
+     * - A string "xx-xx" will be parsed as "m-d" for mdy and ymd locales, and "d-m" for dmy locale.
+     */
+    function getDateParts(dateString, locale) {
+        const match = dateString.match(dateRegexp);
+        if (!match) {
+            return null;
+        }
+        const [, part1, part2, , part3] = match;
+        if (part1.length > 2 && part3 && part3.length > 2) {
+            return null;
+        }
+        if (part1.length > 2) {
+            return { year: part1, month: part2, day: part3, dateString, type: "ymd" };
+        }
+        const localeDateType = getLocaleDateFormatType(locale);
+        if (!part3) {
+            if (localeDateType === "dmy") {
+                return { day: part1, month: part2, year: part3, dateString, type: "dmy" };
+            }
+            return { month: part1, day: part2, year: part3, dateString, type: "mdy" };
+        }
+        if (part3.length > 2) {
+            if (localeDateType === "mdy") {
+                return { month: part1, day: part2, year: part3, dateString, type: "mdy" };
+            }
+            return { day: part1, month: part2, year: part3, dateString, type: "dmy" };
+        }
+        if (localeDateType === "mdy") {
+            return { month: part1, day: part2, year: part3, dateString, type: "mdy" };
+        }
+        if (localeDateType === "ymd") {
+            return { year: part1, month: part2, day: part3, dateString, type: "ymd" };
+        }
+        if (localeDateType === "dmy") {
+            return { day: part1, month: part2, year: part3, dateString, type: "dmy" };
+        }
+        return null;
+    }
+    function getLocaleDateFormatType(locale) {
+        switch (locale.dateFormat[0]) {
+            case "d":
+                return "dmy";
+            case "m":
+                return "mdy";
+            case "y":
+                return "ymd";
+        }
+        throw new Error("Invalid date format in locale");
+    }
+    function parseDate(parts, separator) {
+        let { year: yearStr, month: monthStr, day: dayStr } = parts;
+        const month = inferMonth(monthStr);
+        const day = inferDay(dayStr);
+        const year = inferYear(yearStr);
+        if (year === null || month === null || day === null) {
+            return null;
+        }
+        // month + 1: months are 0-indexed in JS
+        const leadingZero = (monthStr?.length === 2 && month + 1 < 10) || (dayStr?.length === 2 && day < 10);
+        const fullYear = yearStr?.length !== 2;
+        const jsDate = new Date(year, month, day);
+        if (jsDate.getMonth() !== month || jsDate.getDate() !== day) {
+            // invalid date
+            return null;
+        }
+        const delta = jsDate - INITIAL_1900_DAY;
+        const format = getFormatFromDateParts(parts, separator, leadingZero, fullYear);
+        return {
+            value: Math.round(delta / MS_PER_DAY),
+            format: format,
+            jsDate,
+        };
+    }
+    function getFormatFromDateParts(parts, sep, leadingZero, fullYear) {
+        const yearFmt = parts.year ? (fullYear ? "yyyy" : "yy") : undefined;
+        const monthFmt = parts.month ? (leadingZero ? "mm" : "m") : undefined;
+        const dayFmt = parts.day ? (leadingZero ? "dd" : "d") : undefined;
+        switch (parts.type) {
+            case "mdy":
+                return [monthFmt, dayFmt, yearFmt].filter(isDefined$1).join(sep);
+            case "ymd":
+                return [yearFmt, monthFmt, dayFmt].filter(isDefined$1).join(sep);
+            case "dmy":
+                return [dayFmt, monthFmt, yearFmt].filter(isDefined$1).join(sep);
+        }
+    }
+    function inferYear(yearStr) {
+        if (!yearStr) {
+            return CURRENT_YEAR;
+        }
+        const nbr = Number(yearStr);
+        switch (yearStr.length) {
+            case 1:
+                return CURRENT_MILLENIAL + nbr;
+            case 2:
+                const offset = CURRENT_MILLENIAL + nbr > CURRENT_YEAR + 10 ? -100 : 0;
+                const base = CURRENT_MILLENIAL + offset;
+                return base + nbr;
+            case 3:
+            case 4:
+                return nbr;
+        }
+        return null;
+    }
+    function inferMonth(monthStr) {
+        if (!monthStr) {
+            return CURRENT_MONTH;
+        }
+        const nbr = Number(monthStr);
+        if (nbr >= 1 && nbr <= 12) {
+            return nbr - 1;
+        }
+        return null;
+    }
+    function inferDay(dayStr) {
+        if (!dayStr) {
+            return 1;
+        }
+        const nbr = Number(dayStr);
+        if (nbr >= 0 && nbr <= 31) {
+            return nbr;
+        }
+        return null;
+    }
+    function parseTime(str) {
+        str = str.trim();
+        if (timeRegexp.test(str)) {
+            const isAM = /AM/i.test(str);
+            const isPM = /PM/i.test(str);
+            const strTime = isAM || isPM ? str.substring(0, str.length - 2).trim() : str;
+            const parts = strTime.split(/:/);
+            const isMinutes = parts.length >= 2;
+            const isSeconds = parts.length === 3;
+            let hours = Number(parts[0]);
+            let minutes = isMinutes ? Number(parts[1]) : 0;
+            let seconds = isSeconds ? Number(parts[2]) : 0;
+            let format = isSeconds ? "hh:mm:ss" : "hh:mm";
+            if (isAM || isPM) {
+                format += " a";
+            }
+            else if (!isMinutes) {
+                return null;
+            }
+            if (hours >= 12 && isAM) {
+                hours -= 12;
+            }
+            else if (hours < 12 && isPM) {
+                hours += 12;
+            }
+            minutes += Math.floor(seconds / 60);
+            seconds %= 60;
+            hours += Math.floor(minutes / 60);
+            minutes %= 60;
+            if (hours >= 24) {
+                format = "hhhh:mm:ss";
+            }
+            const jsDate = new Date(1899, 11, 30, hours, minutes, seconds);
+            return {
+                value: hours / 24 + minutes / 1440 + seconds / 86400,
+                format: format,
+                jsDate: jsDate,
+            };
+        }
+        return null;
+    }
+    // -----------------------------------------------------------------------------
+    // Conversion
+    // -----------------------------------------------------------------------------
+    function numberToJsDate(value) {
+        const truncValue = Math.trunc(value);
+        let date = new Date(truncValue * MS_PER_DAY - DATE_JS_1900_OFFSET);
+        let time = value - truncValue;
+        time = time < 0 ? 1 + time : time;
+        const hours = Math.round(time * 24);
+        const minutes = Math.round((time - hours / 24) * 24 * 60);
+        const seconds = Math.round((time - hours / 24 - minutes / 24 / 60) * 24 * 60 * 60);
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        date.setSeconds(seconds);
+        return date;
+    }
+    function jsDateToRoundNumber(date) {
+        const delta = date.getTime() - INITIAL_1900_DAY.getTime();
+        return Math.round(delta / MS_PER_DAY);
+    }
+    /** Return the number of days in the current month of the given date */
+    function getDaysInMonth(date) {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    }
+    function isLastDayOfMonth(date) {
+        return getDaysInMonth(date) === date.getDate();
+    }
+    /**
+     * Add a certain number of months to a date. This will adapt the month number, and possibly adapt
+     * the day of the month to keep it in the month.
+     *
+     * For example "31/12/2020" minus one month will be "30/11/2020", and not "31/11/2020"
+     *
+     * @param keepEndOfMonth if true, if the given date was the last day of a month, the returned date will
+     *          also always be the last day of a month.
+     */
+    function addMonthsToDate(date, months, keepEndOfMonth) {
+        const yStart = date.getFullYear();
+        const mStart = date.getMonth();
+        const dStart = date.getDate();
+        const jsDate = new Date(yStart, mStart + months);
+        if (keepEndOfMonth && dStart === getDaysInMonth(date)) {
+            jsDate.setDate(getDaysInMonth(jsDate));
+        }
+        else if (dStart > getDaysInMonth(jsDate)) {
+            // 31/03 minus one month should be 28/02, not 31/02
+            jsDate.setDate(getDaysInMonth(jsDate));
+        }
+        else {
+            jsDate.setDate(dStart);
+        }
+        return jsDate;
+    }
+    function isLeapYear(year) {
+        const _year = Math.trunc(year);
+        return (_year % 4 === 0 && _year % 100 != 0) || _year % 400 == 0;
+    }
+    function getYearFrac(startDate, endDate, _dayCountConvention) {
+        if (startDate === endDate) {
+            return 0;
+        }
+        if (startDate > endDate) {
+            const stack = endDate;
+            endDate = startDate;
+            startDate = stack;
+        }
+        const jsStartDate = numberToJsDate(startDate);
+        const jsEndDate = numberToJsDate(endDate);
+        let dayStart = jsStartDate.getDate();
+        let dayEnd = jsEndDate.getDate();
+        const monthStart = jsStartDate.getMonth(); // january is 0
+        const monthEnd = jsEndDate.getMonth(); // january is 0
+        const yearStart = jsStartDate.getFullYear();
+        const yearEnd = jsEndDate.getFullYear();
+        let yearsStart = 0;
+        let yearsEnd = 0;
+        switch (_dayCountConvention) {
+            // 30/360 US convention --------------------------------------------------
+            case 0:
+                if (dayStart === 31)
+                    dayStart = 30;
+                if (dayStart === 30 && dayEnd === 31)
+                    dayEnd = 30;
+                // If jsStartDate is the last day of February
+                if (monthStart === 1 && dayStart === (isLeapYear(yearStart) ? 29 : 28)) {
+                    dayStart = 30;
+                    // If jsEndDate is the last day of February
+                    if (monthEnd === 1 && dayEnd === (isLeapYear(yearEnd) ? 29 : 28)) {
+                        dayEnd = 30;
+                    }
+                }
+                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
+                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
+                break;
+            // actual/actual convention ----------------------------------------------
+            case 1:
+                let daysInYear = 365;
+                const isSameYear = yearStart === yearEnd;
+                const isOneDeltaYear = yearStart + 1 === yearEnd;
+                const isMonthEndBigger = monthStart < monthEnd;
+                const isSameMonth = monthStart === monthEnd;
+                const isDayEndBigger = dayStart < dayEnd;
+                // |-----|  <-- one Year
+                // 'A' is start date
+                // 'B' is end date
+                if ((!isSameYear && !isOneDeltaYear) ||
+                    (!isSameYear && isMonthEndBigger) ||
+                    (!isSameYear && isSameMonth && isDayEndBigger)) {
+                    // |---A-|-----|-B---|  <-- !isSameYear && !isOneDeltaYear
+                    // |---A-|----B|-----|  <-- !isSameYear && isMonthEndBigger
+                    // |---A-|---B-|-----|  <-- !isSameYear && isSameMonth && isDayEndBigger
+                    let countYears = 0;
+                    let countDaysInYears = 0;
+                    for (let y = yearStart; y <= yearEnd; y++) {
+                        countYears++;
+                        countDaysInYears += isLeapYear(y) ? 366 : 365;
+                    }
+                    daysInYear = countDaysInYears / countYears;
+                }
+                else if (!isSameYear) {
+                    // |-AF--|B----|-----|
+                    if (isLeapYear(yearStart) && monthStart < 2) {
+                        daysInYear = 366;
+                    }
+                    // |--A--|FB---|-----|
+                    if (isLeapYear(yearEnd) && (monthEnd > 1 || (monthEnd === 1 && dayEnd === 29))) {
+                        daysInYear = 366;
+                    }
+                }
+                else {
+                    // remaining cases:
+                    //
+                    // |-F-AB|-----|-----|
+                    // |AB-F-|-----|-----|
+                    // |A-F-B|-----|-----|
+                    // if February 29 occurs between date1 (exclusive) and date2 (inclusive)
+                    // daysInYear --> 366
+                    if (isLeapYear(yearStart)) {
+                        daysInYear = 366;
+                    }
+                }
+                yearsStart = startDate / daysInYear;
+                yearsEnd = endDate / daysInYear;
+                break;
+            // actual/360 convention -------------------------------------------------
+            case 2:
+                yearsStart = startDate / 360;
+                yearsEnd = endDate / 360;
+                break;
+            // actual/365 convention -------------------------------------------------
+            case 3:
+                yearsStart = startDate / 365;
+                yearsEnd = endDate / 365;
+                break;
+            // 30/360 European convention --------------------------------------------
+            case 4:
+                if (dayStart === 31)
+                    dayStart = 30;
+                if (dayEnd === 31)
+                    dayEnd = 30;
+                yearsStart = yearStart + (monthStart * 30 + dayStart) / 360;
+                yearsEnd = yearEnd + (monthEnd * 30 + dayEnd) / 360;
+                break;
+        }
+        return yearsEnd - yearsStart;
+    }
+    /**
+     * Get the number of whole months between two dates.
+     * e.g.
+     *  2002/01/01 -> 2002/02/01 = 1 month,
+     *  2002/01/01 -> 2003/02/01 = 13 months
+     * @param startDate
+     * @param endDate
+     * @returns
+     */
+    function getTimeDifferenceInWholeMonths(startDate, endDate) {
+        const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+            endDate.getMonth() -
+            startDate.getMonth();
+        return startDate.getDate() > endDate.getDate() ? months - 1 : months;
+    }
+    function getTimeDifferenceInWholeDays(startDate, endDate) {
+        const startUtc = startDate.getTime();
+        const endUtc = endDate.getTime();
+        return Math.floor((endUtc - startUtc) / MS_PER_DAY);
+    }
+    function getTimeDifferenceInWholeYears(startDate, endDate) {
+        const years = endDate.getFullYear() - startDate.getFullYear();
+        const monthStart = startDate.getMonth();
+        const monthEnd = endDate.getMonth();
+        const dateStart = startDate.getDate();
+        const dateEnd = endDate.getDate();
+        const isEndMonthDateBigger = monthEnd > monthStart || (monthEnd === monthStart && dateEnd >= dateStart);
+        return isEndMonthDateBigger ? years : years - 1;
+    }
+    function areTwoDatesWithinOneYear(startDate, endDate) {
+        return getYearFrac(startDate, endDate, 1) < 1;
+    }
+
     const MAX_DELAY = 140;
     const MIN_DELAY = 20;
     const ACCELERATION = 0.035;
@@ -1585,41 +1679,71 @@
         return MIN_DELAY + (MAX_DELAY - MIN_DELAY) * Math.exp(-ACCELERATION * (value - 1));
     }
 
+    const DEFAULT_LOCALES = [
+        {
+            name: "English (US)",
+            code: "en_US",
+            thousandsSeparator: ",",
+            decimalSeparator: ".",
+            dateFormat: "m/d/yyyy",
+            timeFormat: "hh:mm:ss a",
+            formulaArgSeparator: ",",
+        },
+        {
+            name: "French",
+            code: "fr_FR",
+            thousandsSeparator: " ",
+            decimalSeparator: ",",
+            dateFormat: "dd/mm/yyyy",
+            timeFormat: "hh:mm:ss",
+            formulaArgSeparator: ";",
+        },
+    ];
+    const DEFAULT_LOCALE = DEFAULT_LOCALES[0];
+
     /**
-     * This regexp is supposed to be as close as possible as the numberRegexp, but
-     * its purpose is to be used by the tokenizer.
+     * This function returns a regexp that is supposed to be as close as possible as the numberRegexp,
+     * but its purpose is to be used by the tokenizer.
      *
      * - it tolerates extra characters at the end. This is useful because the tokenizer
      *   only needs to find the number at the start of a string
-     * - it does not accept "," as thousand separator, because when we tokenize a
-     *   formula, commas are used to separate arguments
      * - it does not support % symbol, in formulas % is an operator
      */
-    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+)(?!\w|!)/;
-    const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
-    const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
-    const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
-    const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
-    const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
-    const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
-    const pCurrencyFormat = "(\\s*[\\$€])?";
-    const p1 = pMinus + pCurrencyFormat + pNumber;
-    const p2 = pMinus + pNumber + pCurrencyFormat;
-    const p3 = pCurrencyFormat + pMinus + pNumber;
-    const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
-    const numberRegexp = new RegExp(pNumberExp, "i");
+    const getFormulaNumberRegex = memoize(function getFormulaNumberRegex(decimalSeparator) {
+        decimalSeparator = escapeRegExp(decimalSeparator);
+        return new RegExp(`(^-?\\d+(${decimalSeparator}?\\d*(e\\d+)?)?|^-?${decimalSeparator}\\d+)(?!\\w|!)`);
+    });
+    const getNumberRegex = memoize(function getNumberRegex(locale) {
+        const decimalSeparator = escapeRegExp(locale.decimalSeparator);
+        const thousandsSeparator = escapeRegExp(locale.thousandsSeparator);
+        const pIntegerAndDecimals = `(\\d+(${thousandsSeparator}\\d{3,})*(${decimalSeparator}\\d*)?)`; // pattern that match integer number with or without decimal digits
+        const pOnlyDecimals = `(${decimalSeparator}\\d+)`; // pattern that match only expression with decimal digits
+        const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
+        const pPercentFormat = "(\\s*%)?"; // pattern that match percent symbol between zero and one time
+        const pNumber = "(\\s*" + pIntegerAndDecimals + "|" + pOnlyDecimals + ")" + pScientificFormat + pPercentFormat;
+        const pMinus = "(\\s*-)?"; // pattern that match negative symbol between zero and one time
+        const pCurrencyFormat = "(\\s*[\\$€])?";
+        const p1 = pMinus + pCurrencyFormat + pNumber;
+        const p2 = pMinus + pNumber + pCurrencyFormat;
+        const p3 = pCurrencyFormat + pMinus + pNumber;
+        const pNumberExp = "^((" + [p1, p2, p3].join(")|(") + "))$";
+        const numberRegexp = new RegExp(pNumberExp, "i");
+        return numberRegexp;
+    });
     /**
      * Return true if the argument is a "number string".
      *
      * Note that "" (empty string) does not count as a number string
      */
-    function isNumber(value) {
+    function isNumber(value, locale) {
         if (!value)
             return false;
         // TO DO: add regexp for DATE string format (ex match: "28 02 2020")
-        return numberRegexp.test(value.trim());
+        return getNumberRegex(locale).test(value.trim());
     }
-    const invaluableSymbolsRegexp = /[,\$€]+/g;
+    const getInvaluableSymbolsRegexp = memoize(function getInvaluableSymbolsRegexp(locale) {
+        return new RegExp(`[\$€${escapeRegExp(locale.thousandsSeparator)}]`, "g");
+    });
     /**
      * Convert a string into a number. It assumes that the string actually represents
      * a number (as determined by the isNumber function)
@@ -1627,9 +1751,12 @@
      * Note that it accepts "" (empty string), even though it does not count as a
      * number from the point of view of the isNumber function.
      */
-    function parseNumber(str) {
+    function parseNumber(str, locale) {
+        if (locale.decimalSeparator !== ".") {
+            str = str.replace(locale.decimalSeparator, ".");
+        }
         // remove invaluable characters
-        str = str.replace(invaluableSymbolsRegexp, "");
+        str = str.replace(getInvaluableSymbolsRegexp(locale), "");
         let n = Number(str);
         if (isNaN(n) && str.includes("%")) {
             n = Number(str.split("%")[0]);
@@ -1710,7 +1837,7 @@
     /**
      * Formats a cell value with its format.
      */
-    function formatValue(value, format) {
+    function formatValue(value, { format, locale }) {
         switch (typeof value) {
             case "string":
                 return value;
@@ -1722,12 +1849,12 @@
                     format = createDefaultFormat(value);
                 }
                 const internalFormat = parseFormat(format);
-                return applyInternalFormat(value, internalFormat);
+                return applyInternalFormat(value, internalFormat, locale);
             case "object":
                 return "0";
         }
     }
-    function applyInternalFormat(value, internalFormat) {
+    function applyInternalFormat(value, internalFormat, locale) {
         if (internalFormat[0].type === "DATE") {
             return applyDateTimeFormat(value, internalFormat[0].format);
         }
@@ -1735,7 +1862,7 @@
         for (let part of internalFormat) {
             switch (part.type) {
                 case "NUMBER":
-                    formattedValue += applyInternalNumberFormat(Math.abs(value), part.format);
+                    formattedValue += applyInternalNumberFormat(Math.abs(value), part.format, locale);
                     break;
                 case "STRING":
                     formattedValue += part.format;
@@ -1744,7 +1871,7 @@
         }
         return formattedValue;
     }
-    function applyInternalNumberFormat(value, format) {
+    function applyInternalNumberFormat(value, format, locale) {
         if (format.isPercent) {
             value = value * 100;
         }
@@ -1754,16 +1881,17 @@
             maxDecimals = format.decimalPart.length;
         }
         const { integerDigits, decimalDigits } = splitNumber(value, maxDecimals);
-        let formattedValue = applyIntegerFormat(integerDigits, format.integerPart, format.thousandsSeparator);
+        let formattedValue = applyIntegerFormat(integerDigits, format.integerPart, format.thousandsSeparator ? locale.thousandsSeparator : undefined);
         if (format.decimalPart !== undefined) {
-            formattedValue += "." + applyDecimalFormat(decimalDigits || "", format.decimalPart);
+            formattedValue +=
+                locale.decimalSeparator + applyDecimalFormat(decimalDigits || "", format.decimalPart);
         }
         if (format.isPercent) {
             formattedValue += "%";
         }
         return formattedValue;
     }
-    function applyIntegerFormat(integerDigits, integerFormat, hasSeparator) {
+    function applyIntegerFormat(integerDigits, integerFormat, thousandsSeparator) {
         const _integerDigits = integerDigits === "0" ? "" : integerDigits;
         let formattedInteger = _integerDigits;
         const delta = integerFormat.length - _integerDigits.length;
@@ -1773,8 +1901,9 @@
             const countZero = (restIntegerFormat.match(zeroRegexp) || []).length; // countZero = 3
             formattedInteger = "0".repeat(countZero) + formattedInteger; // return "000123"
         }
-        if (hasSeparator) {
-            formattedInteger = formattedInteger.match(thousandsGroupsRegexp)?.join(",") || formattedInteger;
+        if (thousandsSeparator) {
+            formattedInteger =
+                formattedInteger.match(thousandsGroupsRegexp)?.join(thousandsSeparator) || formattedInteger;
         }
         return formattedInteger;
     }
@@ -1889,9 +2018,9 @@
         return { integerDigits, decimalDigits };
     }
     /** Convert a number into a string, without scientific notation */
-    function numberToString(number) {
+    function numberToString(number, decimalSeparator) {
         const { integerDigits, decimalDigits } = splitNumber(number, 20);
-        return decimalDigits ? `${integerDigits}.${decimalDigits}` : integerDigits;
+        return decimalDigits ? integerDigits + decimalSeparator + decimalDigits : integerDigits;
     }
     /**
      * Check if the given format is a time, date or date time format.
@@ -1995,6 +2124,14 @@
         })
             .join(":") + meridian);
     }
+    /**
+     * Get a regex matching decimal number based on the locale's thousand separator
+     *
+     * eg. if the locale's thousand separator is a comma, this will return a regex /[0-9]+,[0-9]/
+     */
+    const getDecimalNumberRegex = memoize(function getDecimalNumberRegex(locale) {
+        return new RegExp(`[0-9]+${escapeRegExp(locale.decimalSeparator)}[0-9]`);
+    });
     // -----------------------------------------------------------------------------
     // CREATE / MODIFY FORMAT
     // -----------------------------------------------------------------------------
@@ -2019,12 +2156,15 @@
         ({ decimalDigits } = splitNumber(value, Math.min(spaceForDecimalsDigits, decimalDigits.length)));
         return decimalDigits ? "0." + "0".repeat(decimalDigits.length) : "0";
     }
-    function detectFormat(content) {
-        if (isDateTime(content)) {
-            const internalDate = parseDateTime(content);
-            return internalDate.format;
+    function detectDateFormat(content, locale) {
+        if (!isDateTime(content, locale)) {
+            return undefined;
         }
-        if (!isNumber(content)) {
+        const internalDate = parseDateTime(content, locale);
+        return internalDate.format;
+    }
+    function detectNumberFormat(content) {
+        if (!isNumber(content, DEFAULT_LOCALE)) {
             return undefined;
         }
         const digitBase = content.includes(".") ? "0.00" : "0";
@@ -2042,7 +2182,7 @@
         }
         return undefined;
     }
-    function createLargeNumberFormat(format, magnitude, postFix) {
+    function createLargeNumberFormat(format, magnitude, postFix, locale) {
         const internalFormat = parseFormat(format || "#,##0");
         const largeNumberFormat = internalFormat
             .map((formatPart) => {
@@ -2067,7 +2207,7 @@
             .flat();
         return convertInternalFormatToFormat(largeNumberFormat);
     }
-    function changeDecimalPlaces(format, step) {
+    function changeDecimalPlaces(format, step, locale) {
         const internalFormat = parseFormat(format);
         const newInternalFormat = internalFormat.map((intFmt) => {
             if (intFmt.type === "NUMBER") {
@@ -3759,6 +3899,7 @@
         "UNDO",
         "REDO",
         "ADD_MERGE",
+        "UPDATE_LOCALE",
     ]);
     const invalidateDependenciesCommands = new Set([
         ...invalidateEvaluationCommands,
@@ -3844,6 +3985,7 @@
         "REMOVE_FILTER_TABLE",
         /** IMAGE */
         "CREATE_IMAGE",
+        "UPDATE_LOCALE",
     ]);
     function isCoreCommand(cmd) {
         return coreTypes.has(cmd.type);
@@ -3895,89 +4037,88 @@
         CommandResult[CommandResult["NotEnoughElements"] = 8] = "NotEnoughElements";
         CommandResult[CommandResult["NotEnoughSheets"] = 9] = "NotEnoughSheets";
         CommandResult[CommandResult["MissingSheetName"] = 10] = "MissingSheetName";
-        CommandResult[CommandResult["UnchangedSheetName"] = 11] = "UnchangedSheetName";
-        CommandResult[CommandResult["DuplicatedSheetName"] = 12] = "DuplicatedSheetName";
-        CommandResult[CommandResult["DuplicatedSheetId"] = 13] = "DuplicatedSheetId";
-        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 14] = "ForbiddenCharactersInSheetName";
-        CommandResult[CommandResult["WrongSheetMove"] = 15] = "WrongSheetMove";
-        CommandResult[CommandResult["WrongSheetPosition"] = 16] = "WrongSheetPosition";
-        CommandResult[CommandResult["InvalidAnchorZone"] = 17] = "InvalidAnchorZone";
-        CommandResult[CommandResult["SelectionOutOfBound"] = 18] = "SelectionOutOfBound";
-        CommandResult[CommandResult["TargetOutOfSheet"] = 19] = "TargetOutOfSheet";
-        CommandResult[CommandResult["WrongCutSelection"] = 20] = "WrongCutSelection";
-        CommandResult[CommandResult["WrongPasteSelection"] = 21] = "WrongPasteSelection";
-        CommandResult[CommandResult["WrongPasteOption"] = 22] = "WrongPasteOption";
-        CommandResult[CommandResult["WrongFigurePasteOption"] = 23] = "WrongFigurePasteOption";
-        CommandResult[CommandResult["EmptyClipboard"] = 24] = "EmptyClipboard";
-        CommandResult[CommandResult["EmptyRange"] = 25] = "EmptyRange";
-        CommandResult[CommandResult["InvalidRange"] = 26] = "InvalidRange";
-        CommandResult[CommandResult["InvalidZones"] = 27] = "InvalidZones";
-        CommandResult[CommandResult["InvalidSheetId"] = 28] = "InvalidSheetId";
-        CommandResult[CommandResult["InvalidFigureId"] = 29] = "InvalidFigureId";
-        CommandResult[CommandResult["InputAlreadyFocused"] = 30] = "InputAlreadyFocused";
-        CommandResult[CommandResult["MaximumRangesReached"] = 31] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 32] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 33] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 34] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 35] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 36] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 37] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 38] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 39] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 40] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 41] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 42] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 43] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 44] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 45] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 46] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 47] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 48] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 49] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 50] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 51] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 52] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 53] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 54] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 55] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 56] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 57] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 58] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 59] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 60] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 61] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 62] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 63] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 64] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 65] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 66] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 67] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 68] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 69] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 70] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 71] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 72] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 73] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 74] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 75] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 76] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 77] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 78] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 79] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 80] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 81] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 82] = "NonContinuousTargets";
-        CommandResult[CommandResult["DuplicatedFigureId"] = 83] = "DuplicatedFigureId";
-        CommandResult[CommandResult["InvalidSelectionStep"] = 84] = "InvalidSelectionStep";
-        CommandResult[CommandResult["DuplicatedChartId"] = 85] = "DuplicatedChartId";
-        CommandResult[CommandResult["ChartDoesNotExist"] = 86] = "ChartDoesNotExist";
-        CommandResult[CommandResult["InvalidHeaderIndex"] = 87] = "InvalidHeaderIndex";
-        CommandResult[CommandResult["InvalidQuantity"] = 88] = "InvalidQuantity";
-        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 89] = "MoreThanOneColumnSelected";
-        CommandResult[CommandResult["EmptySplitSeparator"] = 90] = "EmptySplitSeparator";
-        CommandResult[CommandResult["SplitWillOverwriteContent"] = 91] = "SplitWillOverwriteContent";
-        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 92] = "NoSplitSeparatorInSelection";
-        CommandResult[CommandResult["NoActiveSheet"] = 93] = "NoActiveSheet";
+        CommandResult[CommandResult["DuplicatedSheetName"] = 11] = "DuplicatedSheetName";
+        CommandResult[CommandResult["DuplicatedSheetId"] = 12] = "DuplicatedSheetId";
+        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 13] = "ForbiddenCharactersInSheetName";
+        CommandResult[CommandResult["WrongSheetMove"] = 14] = "WrongSheetMove";
+        CommandResult[CommandResult["WrongSheetPosition"] = 15] = "WrongSheetPosition";
+        CommandResult[CommandResult["InvalidAnchorZone"] = 16] = "InvalidAnchorZone";
+        CommandResult[CommandResult["SelectionOutOfBound"] = 17] = "SelectionOutOfBound";
+        CommandResult[CommandResult["TargetOutOfSheet"] = 18] = "TargetOutOfSheet";
+        CommandResult[CommandResult["WrongCutSelection"] = 19] = "WrongCutSelection";
+        CommandResult[CommandResult["WrongPasteSelection"] = 20] = "WrongPasteSelection";
+        CommandResult[CommandResult["WrongPasteOption"] = 21] = "WrongPasteOption";
+        CommandResult[CommandResult["WrongFigurePasteOption"] = 22] = "WrongFigurePasteOption";
+        CommandResult[CommandResult["EmptyClipboard"] = 23] = "EmptyClipboard";
+        CommandResult[CommandResult["EmptyRange"] = 24] = "EmptyRange";
+        CommandResult[CommandResult["InvalidRange"] = 25] = "InvalidRange";
+        CommandResult[CommandResult["InvalidZones"] = 26] = "InvalidZones";
+        CommandResult[CommandResult["InvalidSheetId"] = 27] = "InvalidSheetId";
+        CommandResult[CommandResult["InvalidFigureId"] = 28] = "InvalidFigureId";
+        CommandResult[CommandResult["InputAlreadyFocused"] = 29] = "InputAlreadyFocused";
+        CommandResult[CommandResult["MaximumRangesReached"] = 30] = "MaximumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 31] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 32] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 33] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 34] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 35] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 36] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 37] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 38] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 39] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 40] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 41] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 42] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 43] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 44] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 45] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 46] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 47] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 48] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 49] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 50] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 51] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 52] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 53] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 54] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 55] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 56] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 57] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 58] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 59] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 60] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 61] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 62] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 63] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 64] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 65] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 66] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 67] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 68] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 69] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 70] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 71] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 72] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 73] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 74] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 75] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 76] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 77] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 78] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 79] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 80] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 84] = "DuplicatedChartId";
+        CommandResult[CommandResult["ChartDoesNotExist"] = 85] = "ChartDoesNotExist";
+        CommandResult[CommandResult["InvalidHeaderIndex"] = 86] = "InvalidHeaderIndex";
+        CommandResult[CommandResult["InvalidQuantity"] = 87] = "InvalidQuantity";
+        CommandResult[CommandResult["MoreThanOneColumnSelected"] = 88] = "MoreThanOneColumnSelected";
+        CommandResult[CommandResult["EmptySplitSeparator"] = 89] = "EmptySplitSeparator";
+        CommandResult[CommandResult["SplitWillOverwriteContent"] = 90] = "SplitWillOverwriteContent";
+        CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
+        CommandResult[CommandResult["NoActiveSheet"] = 92] = "NoActiveSheet";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
@@ -4020,17 +4161,17 @@
         const stringSetString = stringSet.map((str) => `'${str}'`).join(", ");
         return _lt("The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be one of: %s.", value, stringSetString);
     };
-    function toNumber(value) {
+    function toNumber(value, locale) {
         switch (typeof value) {
             case "number":
                 return value;
             case "boolean":
                 return value ? 1 : 0;
             case "string":
-                if (isNumber(value) || value === "") {
-                    return parseNumber(value);
+                if (isNumber(value, locale) || value === "") {
+                    return parseNumber(value, locale);
                 }
-                const internalDate = parseDateTime(value);
+                const internalDate = parseDateTime(value, locale);
                 if (internalDate) {
                     return internalDate.value;
                 }
@@ -4039,17 +4180,17 @@
                 return 0;
         }
     }
-    function strictToNumber(value) {
+    function strictToNumber(value, locale) {
         if (value === "") {
             throw new Error(expectNumberValueError(value));
         }
-        return toNumber(value);
+        return toNumber(value, locale);
     }
-    function toInteger(value) {
-        return Math.trunc(toNumber(value));
+    function toInteger(value, locale) {
+        return Math.trunc(toNumber(value, locale));
     }
-    function strictToInteger(value) {
-        return Math.trunc(strictToNumber(value));
+    function strictToInteger(value, locale) {
+        return Math.trunc(strictToNumber(value, locale));
     }
     function assertNumberGreaterThanOrEqualToOne(value) {
         assert(() => value >= 1, _lt("The function [[FUNCTION_NAME]] expects a number value to be greater than or equal to 1, but receives %s.", value.toString()));
@@ -4111,8 +4252,8 @@
         }
         return toBoolean(value);
     }
-    function toJsDate(value) {
-        return numberToJsDate(toNumber(value));
+    function toJsDate(value, locale) {
+        return numberToJsDate(toNumber(value, locale));
     }
     // -----------------------------------------------------------------------------
     // VISIT FUNCTIONS
@@ -4138,13 +4279,13 @@
     function visitAny(args, cb) {
         visitArgs(args, cb, cb);
     }
-    function visitNumbers(args, cb) {
+    function visitNumbers(args, cb, locale) {
         visitArgs(args, (cellValue) => {
             if (typeof cellValue === "number") {
                 cb(cellValue);
             }
         }, (argValue) => {
-            cb(strictToNumber(argValue));
+            cb(strictToNumber(argValue, locale));
         });
     }
     // -----------------------------------------------------------------------------
@@ -4182,24 +4323,24 @@
     function reduceAny(args, cb, initialValue, dir = "rowFirst") {
         return reduceArgs(args, cb, cb, initialValue, dir);
     }
-    function reduceNumbers(args, cb, initialValue) {
+    function reduceNumbers(args, cb, initialValue, locale) {
         return reduceArgs(args, (acc, ArgValue) => {
             if (typeof ArgValue === "number") {
                 return cb(acc, ArgValue);
             }
             return acc;
         }, (acc, argValue) => {
-            return cb(acc, strictToNumber(argValue));
+            return cb(acc, strictToNumber(argValue, locale));
         }, initialValue);
     }
-    function reduceNumbersTextAs0(args, cb, initialValue) {
+    function reduceNumbersTextAs0(args, cb, initialValue, locale) {
         return reduceArgs(args, (acc, ArgValue) => {
             if (ArgValue !== undefined && ArgValue !== null) {
                 if (typeof ArgValue === "number") {
                     return cb(acc, ArgValue);
                 }
                 else if (typeof ArgValue === "boolean") {
-                    return cb(acc, toNumber(ArgValue));
+                    return cb(acc, toNumber(ArgValue, locale));
                 }
                 else {
                     return cb(acc, 0);
@@ -4207,7 +4348,7 @@
             }
             return acc;
         }, (acc, argValue) => {
-            return cb(acc, toNumber(argValue));
+            return cb(acc, toNumber(argValue, locale));
         }, initialValue);
     }
     // -----------------------------------------------------------------------------
@@ -4253,7 +4394,7 @@
             return true;
         });
     }
-    function getPredicate(descr, isQuery) {
+    function getPredicate(descr, isQuery, locale) {
         let operator;
         let operand;
         let subString = descr.substring(0, 2);
@@ -4272,8 +4413,8 @@
                 operand = descr;
             }
         }
-        if (isNumber(operand)) {
-            operand = toNumber(operand);
+        if (isNumber(operand, locale)) {
+            operand = toNumber(operand, locale);
         }
         else if (operand === "TRUE" || operand === "FALSE") {
             operand = toBoolean(operand);
@@ -4372,7 +4513,7 @@
      * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
      * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
      */
-    function visitMatchingRanges(args, cb, isQuery = false) {
+    function visitMatchingRanges(args, cb, locale, isQuery = false) {
         const countArg = args.length;
         if (countArg % 2 === 1) {
             throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
@@ -4388,7 +4529,7 @@
                 throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
             }
             const description = toString(args[i + 1]);
-            predicates.push(getPredicate(description, isQuery));
+            predicates.push(getPredicate(description, isQuery, locale));
         }
         for (let i = 0; i < dimRow; i++) {
             for (let j = 0; j < dimCol; j++) {
@@ -4609,63 +4750,71 @@
         return flattened;
     }
 
-    function evaluateLiteral(content, format) {
-        return createEvaluatedCell(parseLiteral(content || ""), format);
+    function evaluateLiteral(content, localeFormat) {
+        return createEvaluatedCell(parseLiteral(content || "", localeFormat.locale), localeFormat);
     }
-    function parseLiteral(content) {
+    function parseLiteral(content, locale) {
         if (content.startsWith("=")) {
             throw new Error(`Cannot parse "${content}" because it's not a literal value. It's a formula`);
         }
-        if (isNumber(content) || isDateTime(content)) {
-            return toNumber(content);
+        if (isNumber(content, DEFAULT_LOCALE)) {
+            return toNumber(content, DEFAULT_LOCALE);
+        }
+        else if (isDateTime(content, locale)) {
+            return toNumber(content, locale);
         }
         else if (isBoolean(content)) {
             return content.toUpperCase() === "TRUE" ? true : false;
         }
         return content;
     }
-    function createEvaluatedCell(value, format) {
+    function createEvaluatedCell(value, localeFormat) {
         const link = detectLink(value);
         if (link) {
             return {
-                ..._createEvaluatedCell(parseLiteral(link.label), format || detectFormat(link.label)),
+                ..._createEvaluatedCell(parseLiteral(link.label, localeFormat.locale), {
+                    format: localeFormat.format ||
+                        detectDateFormat(link.label, localeFormat.locale) ||
+                        detectNumberFormat(link.label),
+                    locale: localeFormat.locale,
+                }),
                 link,
             };
         }
-        return _createEvaluatedCell(value, format);
+        return _createEvaluatedCell(value, localeFormat);
     }
-    function _createEvaluatedCell(value, format) {
+    function _createEvaluatedCell(value, localeFormat) {
         try {
             for (const builder of builders) {
-                const evaluateCell = builder(value, format);
+                const evaluateCell = builder(value, localeFormat);
                 if (evaluateCell) {
                     return evaluateCell;
                 }
             }
-            return textCell((value || "").toString(), format);
+            return textCell((value || "").toString(), localeFormat);
         }
         catch (error) {
             return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
         }
     }
-    function textCell(value, format) {
+    function textCell(value, localeFormat) {
         return {
             type: CellValueType.text,
             value,
-            format,
+            format: localeFormat.format,
             isAutoSummable: true,
             defaultAlign: "left",
-            formattedValue: formatValue(value, format),
+            formattedValue: formatValue(value, localeFormat),
         };
     }
-    function numberCell(value, format) {
+    function numberCell(value, localeFormat) {
         return {
             type: CellValueType.number,
             value: value || 0,
-            format,
+            format: localeFormat.format,
             isAutoSummable: true,
             defaultAlign: "right",
-            formattedValue: formatValue(value, format),
+            formattedValue: formatValue(value, localeFormat),
         };
     }
     const EMPTY_EVALUATED_CELL = {
@@ -4676,37 +4825,37 @@
         defaultAlign: "left",
         formattedValue: "",
     };
-    function emptyCell(format) {
-        if (format === undefined) {
+    function emptyCell(localeFormat) {
+        if (localeFormat.format === undefined) {
             // share the same object to save memory
             return EMPTY_EVALUATED_CELL;
         }
         return {
             type: CellValueType.empty,
             value: "",
-            format,
+            format: localeFormat.format,
             isAutoSummable: true,
             defaultAlign: "left",
             formattedValue: "",
         };
     }
-    function dateTimeCell(value, format) {
-        const formattedValue = formatValue(value, format);
+    function dateTimeCell(value, localeFormat) {
+        const formattedValue = formatValue(value, localeFormat);
         return {
             type: CellValueType.number,
             value,
-            format,
+            format: localeFormat.format,
             isAutoSummable: false,
             defaultAlign: "right",
             formattedValue,
         };
     }
-    function booleanCell(value, format) {
+    function booleanCell(value, localeFormat) {
         const formattedValue = value ? "TRUE" : "FALSE";
         return {
             type: CellValueType.boolean,
             value,
-            format,
+            format: localeFormat.format,
             isAutoSummable: false,
             defaultAlign: "center",
             formattedValue,
@@ -4723,30 +4872,32 @@
         };
     }
     const builders = [
-        function createEmpty(value, format) {
+        function createEmpty(value, localeFormat) {
             if (value === "") {
-                return emptyCell(format);
+                return emptyCell(localeFormat);
             }
             return undefined;
         },
-        function createDateTime(value, format) {
-            if (!!format && typeof value === "number" && isDateTimeFormat(format)) {
-                return dateTimeCell(value, format);
+        function createDateTime(value, localeFormat) {
+            if (!!localeFormat.format &&
+                typeof value === "number" &&
+                isDateTimeFormat(localeFormat.format)) {
+                return dateTimeCell(value, localeFormat);
             }
             return undefined;
         },
-        function createNumber(value, format) {
+        function createNumber(value, localeFormat) {
             if (typeof value === "number") {
-                return numberCell(value, format);
+                return numberCell(value, localeFormat);
             }
             else if (value === null) {
-                return numberCell(0, format);
+                return numberCell(0, localeFormat);
             }
             return undefined;
         },
-        function createBoolean(value, format) {
+        function createBoolean(value, localeFormat) {
             if (typeof value === "boolean") {
-                return booleanCell(value, format);
+                return booleanCell(value, localeFormat);
             }
             return undefined;
         },
@@ -4776,10 +4927,11 @@
         },
     })
         .add("INCREMENT_MODIFIER", {
-        apply: (rule, data) => {
+        apply: (rule, data, getters) => {
             rule.current += rule.increment;
             const content = rule.current.toString();
-            const tooltipValue = formatValue(rule.current, data.cell?.format);
+            const locale = getters.getLocale();
+            const tooltipValue = formatValue(rule.current, { format: data.cell?.format, locale });
             return {
                 cellData: {
                     border: data.border,
@@ -4794,6 +4946,7 @@
         .add("COPY_MODIFIER", {
         apply: (rule, data, getters) => {
             const content = data.cell?.content || "";
+            const localeFormat = { locale: getters.getLocale(), format: data.cell?.format };
             return {
                 cellData: {
                     border: data.border,
@@ -4804,7 +4957,7 @@
                 tooltip: content
                     ? {
                         props: {
-                            content: evaluateLiteral(data.cell?.content, data.cell?.format).formattedValue,
+                            content: evaluateLiteral(data.cell?.content, localeFormat).formattedValue,
                         },
                     }
                     : undefined,
@@ -4868,7 +5021,7 @@
             if (x === cell) {
                 found = true;
             }
-            const cellValue = evaluateLiteral(x?.content);
+            const cellValue = evaluateLiteral(x?.content, { locale: DEFAULT_LOCALE });
             if (filter(cellValue)) {
                 group.push(cellValue);
             }
@@ -4916,7 +5069,7 @@
     })
         .add("increment_alphanumeric_value", {
         condition: (cell) => !cell.isFormula &&
-            evaluateLiteral(cell.content).type === CellValueType.text &&
+            evaluateLiteral(cell.content, { locale: DEFAULT_LOCALE }).type === CellValueType.text &&
             alphaNumericValueRegExp.test(cell.content),
         generateRule: (cell, cells) => {
             const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
@@ -4938,7 +5091,8 @@
         sequence: 15,
     })
         .add("copy_text", {
-        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
+        condition: (cell) => !cell.isFormula &&
+            evaluateLiteral(cell.content, { locale: DEFAULT_LOCALE }).type === CellValueType.text,
         generateRule: () => {
             return { type: "COPY_MODIFIER" };
         },
@@ -4952,11 +5106,12 @@
         sequence: 30,
     })
         .add("increment_number", {
-        condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
+        condition: (cell) => !cell.isFormula &&
+            evaluateLiteral(cell.content, { locale: DEFAULT_LOCALE }).type === CellValueType.number,
         generateRule: (cell, cells) => {
             const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.number).map((cell) => Number(cell.value));
             const increment = calculateIncrementBasedOnGroup(group);
-            const evaluation = evaluateLiteral(cell.content);
+            const evaluation = evaluateLiteral(cell.content, { locale: DEFAULT_LOCALE });
             return {
                 type: "INCREMENT_MODIFIER",
                 increment,
@@ -5990,3350 +6145,6 @@
         onClosed: { type: Function, optional: true },
     };
 
-    const linkSheet = {
-        name: _lt("Link sheet"),
-        children: [
-            (env) => {
-                const sheets = env.model.getters
-                    .getSheetIds()
-                    .map((sheetId) => env.model.getters.getSheet(sheetId));
-                return sheets.map((sheet) => ({
-                    id: sheet.id,
-                    name: sheet.name,
-                    execute: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
-                }));
-            },
-        ],
-    };
-    const deleteSheet = {
-        name: _lt("Delete"),
-        isVisible: (env) => {
-            return env.model.getters.getSheetIds().length > 1;
-        },
-        execute: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
-            env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
-        }),
-    };
-    const duplicateSheet = {
-        name: _lt("Duplicate"),
-        execute: (env) => {
-            const sheetIdFrom = env.model.getters.getActiveSheetId();
-            const sheetIdTo = env.model.uuidGenerator.uuidv4();
-            env.model.dispatch("DUPLICATE_SHEET", {
-                sheetId: sheetIdFrom,
-                sheetIdTo,
-            });
-            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
-        },
-    };
-    const renameSheet = (args) => {
-        return {
-            name: _lt("Rename"),
-            execute: args.renameSheetCallback,
-        };
-    };
-    const sheetMoveRight = {
-        name: _lt("Move right"),
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const sheetIds = env.model.getters.getVisibleSheetIds();
-            return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
-        },
-        execute: (env) => env.model.dispatch("MOVE_SHEET", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            delta: 1,
-        }),
-    };
-    const sheetMoveLeft = {
-        name: _lt("Move left"),
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
-        },
-        execute: (env) => env.model.dispatch("MOVE_SHEET", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            delta: -1,
-        }),
-    };
-    const hideSheet = {
-        name: _lt("Hide sheet"),
-        isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
-        execute: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
-    };
-
-    function createActions(menuItems) {
-        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
-    }
-    const uuidGenerator$2 = new UuidGenerator();
-    function createAction(item) {
-        const name = item.name;
-        const children = item.children;
-        return {
-            id: item.id || uuidGenerator$2.uuidv4(),
-            name: typeof name === "function" ? name : () => name,
-            isVisible: item.isVisible ? item.isVisible : () => true,
-            isEnabled: item.isEnabled ? item.isEnabled : () => true,
-            isActive: item.isActive,
-            execute: item.execute,
-            children: children
-                ? (env) => {
-                    return children
-                        .map((child) => (typeof child === "function" ? child(env) : child))
-                        .flat()
-                        .map(createAction);
-                }
-                : () => [],
-            isReadonlyAllowed: item.isReadonlyAllowed || false,
-            separator: item.separator || false,
-            icon: item.icon || "",
-            description: item.description || "",
-            textColor: item.textColor,
-            sequence: item.sequence || 0,
-        };
-    }
-
-    /**
-     * The class Registry is extended in order to add the function addChild
-     *
-     */
-    class MenuItemRegistry extends Registry {
-        /**
-         * @override
-         */
-        add(key, value) {
-            if (value.id === undefined) {
-                value.id = key;
-            }
-            this.content[key] = value;
-            return this;
-        }
-        /**
-         * Add a subitem to an existing item
-         * @param path Path of items to add this subitem
-         * @param value Subitem to add
-         */
-        addChild(key, path, value) {
-            if (typeof value !== "function" && value.id === undefined) {
-                value.id = key;
-            }
-            const root = path.splice(0, 1)[0];
-            let node = this.content[root];
-            if (!node) {
-                throw new Error(`Path ${root + ":" + path.join(":")} not found`);
-            }
-            for (let p of path) {
-                const children = node.children;
-                if (!children || typeof children === "function") {
-                    throw new Error(`${p} is either not a node or it's dynamically computed`);
-                }
-                node = children.find((elt) => elt.id === p);
-                if (!node) {
-                    throw new Error(`Path ${root + ":" + path.join(":")} not found`);
-                }
-            }
-            if (!node.children) {
-                node.children = [];
-            }
-            node.children.push(value);
-            return this;
-        }
-        getMenuItems() {
-            return createActions(this.getAll());
-        }
-    }
-
-    //------------------------------------------------------------------------------
-    // Link Menu Registry
-    //------------------------------------------------------------------------------
-    const linkMenuRegistry = new MenuItemRegistry();
-    linkMenuRegistry.add("sheet", {
-        ...linkSheet,
-        sequence: 10,
-    });
-
-    const MENU_OFFSET_X = 320;
-    const MENU_OFFSET_Y = 100;
-    const PADDING = 12;
-    const LINK_EDITOR_WIDTH = 340;
-    const LINK_EDITOR_HEIGHT = 165;
-    css /* scss */ `
-  .o-link-editor {
-    font-size: 13px;
-    background-color: white;
-    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
-    padding: ${PADDING}px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 4px;
-    height: ${LINK_EDITOR_HEIGHT}px;
-    width: ${LINK_EDITOR_WIDTH}px;
-
-    .o-section {
-      .o-section-title {
-        font-weight: bold;
-        color: dimgrey;
-        margin-bottom: 5px;
-      }
-    }
-    .o-buttons {
-      padding-left: 16px;
-      padding-top: 16px;
-      padding-bottom: 16px;
-      text-align: right;
-      .o-button {
-        border: 1px solid lightgrey;
-        padding: 0px 20px 0px 20px;
-        border-radius: 4px;
-        font-weight: 500;
-        font-size: 14px;
-        height: 30px;
-        line-height: 16px;
-        background: white;
-        margin-right: 8px;
-        &:hover:enabled {
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-      }
-      .o-button:enabled {
-        cursor: pointer;
-      }
-      .o-button:last-child {
-        margin-right: 0px;
-      }
-    }
-    input {
-      box-sizing: border-box;
-      width: 100%;
-      border-radius: 4px;
-      padding: 4px 23px 4px 10px;
-      border: none;
-      height: 24px;
-      border: 1px solid lightgrey;
-    }
-    .o-link-url {
-      position: relative;
-      flex-grow: 1;
-      button {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        border: none;
-        height: 20px;
-        width: 20px;
-        background-color: #fff;
-        margin: 2px 3px 1px 0px;
-        padding: 0px 1px 0px 0px;
-      }
-      button:hover {
-        cursor: pointer;
-      }
-    }
-  }
-`;
-    class LinkEditor extends owl.Component {
-        static template = "o-spreadsheet-LinkEditor";
-        static components = { Menu };
-        menuItems = linkMenuRegistry.getMenuItems();
-        link = owl.useState(this.defaultState);
-        menu = owl.useState({
-            isOpen: false,
-        });
-        linkEditorRef = owl.useRef("linkEditor");
-        position = useAbsoluteBoundingRect(this.linkEditorRef);
-        urlInput = owl.useRef("urlInput");
-        setup() {
-            owl.onMounted(() => this.urlInput.el?.focus());
-        }
-        get defaultState() {
-            const { col, row } = this.props.cellPosition;
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
-            if (cell.link) {
-                return {
-                    url: cell.link.url,
-                    label: cell.formattedValue,
-                    isUrlEditable: cell.link.isUrlEditable,
-                };
-            }
-            return {
-                label: cell.formattedValue,
-                url: "",
-                isUrlEditable: true,
-            };
-        }
-        get menuPosition() {
-            return {
-                x: this.position.x + MENU_OFFSET_X - PADDING - 2,
-                y: this.position.y + MENU_OFFSET_Y,
-            };
-        }
-        onSpecialLink(ev) {
-            const { detail: markdownLink } = ev;
-            const link = detectLink(markdownLink);
-            if (!link) {
-                return;
-            }
-            this.link.url = link.url;
-            this.link.label = link.label;
-            this.link.isUrlEditable = link.isUrlEditable;
-        }
-        getUrlRepresentation(link) {
-            return urlRepresentation(link, this.env.model.getters);
-        }
-        openMenu() {
-            this.menu.isOpen = true;
-        }
-        removeLink() {
-            this.link.url = "";
-            this.link.isUrlEditable = true;
-        }
-        save() {
-            const { col, row } = this.props.cellPosition;
-            const label = this.link.label || this.link.url;
-            this.env.model.dispatch("UPDATE_CELL", {
-                col: col,
-                row: row,
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                content: markdownLink(label, this.link.url),
-            });
-            this.props.onClosed?.();
-        }
-        cancel() {
-            this.props.onClosed?.();
-        }
-        onKeyDown(ev) {
-            switch (ev.key) {
-                case "Enter":
-                    if (this.link.url) {
-                        this.save();
-                    }
-                    ev.stopPropagation();
-                    break;
-                case "Escape":
-                    this.cancel();
-                    ev.stopPropagation();
-                    break;
-            }
-        }
-    }
-    const LinkEditorPopoverBuilder = {
-        onOpen: (position, getters) => {
-            return {
-                isOpen: true,
-                props: { cellPosition: position },
-                Component: LinkEditor,
-                cellCorner: "BottomLeft",
-            };
-        },
-    };
-    LinkEditor.props = {
-        cellPosition: Object,
-        onClosed: { type: Function, optional: true },
-    };
-
-    const cellPopoverRegistry = new Registry();
-    cellPopoverRegistry
-        .add("ErrorToolTip", ErrorToolTipPopoverBuilder)
-        .add("LinkCell", LinkCellPopoverBuilder)
-        .add("LinkEditor", LinkEditorPopoverBuilder)
-        .add("FilterMenu", FilterMenuPopoverBuilder);
-
-    /**
-     * Convert a JS color hexadecimal to an excel compatible color.
-     *
-     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
-     */
-    function toXlsxHexColor(color) {
-        color = toHex(color).replace("#", "");
-        // alpha channel goes first
-        if (color.length === 8) {
-            return color.slice(6) + color.slice(0, 6);
-        }
-        return color;
-    }
-
-    /**
-     * AbstractChart is the class from which every Chart should inherit.
-     * The role of this class is to maintain the state of each chart.
-     */
-    class AbstractChart {
-        sheetId;
-        title;
-        getters;
-        constructor(definition, sheetId, getters) {
-            this.title = definition.title;
-            this.sheetId = sheetId;
-            this.getters = getters;
-        }
-        /**
-         * Validate the chart definition given as arguments. This function will be
-         * called from allowDispatch function
-         */
-        static validateChartDefinition(validator, definition) {
-            throw new Error("This method should be implemented by sub class");
-        }
-        /**
-         * Get a new chart definition transformed with the executed command. This
-         * functions will be called during operational transform process
-         */
-        static transformDefinition(definition, executed) {
-            throw new Error("This method should be implemented by sub class");
-        }
-        /**
-         * Get an empty definition based on the given context
-         */
-        static getDefinitionFromContextCreation(context) {
-            throw new Error("This method should be implemented by sub class");
-        }
-    }
-
-    function transformZone(zone, executed) {
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
-        }
-        return { ...zone };
-    }
-
-    /**
-     * This file contains helpers that are common to different charts (mainly
-     * line, bar and pie charts)
-     */
-    /**
-     * Adapt ranges of a chart which support DataSet (dataSets and LabelRange).
-     */
-    function updateChartRangesWithDataSets(getters, applyChange, chartDataSets, chartLabelRange) {
-        let isStale = false;
-        const dataSetsWithUndefined = [];
-        for (let index in chartDataSets) {
-            let ds = chartDataSets[index];
-            if (ds.labelCell) {
-                const labelCell = adaptChartRange(ds.labelCell, applyChange);
-                if (ds.labelCell !== labelCell) {
-                    isStale = true;
-                    ds = {
-                        ...ds,
-                        labelCell: labelCell,
-                    };
-                }
-            }
-            const dataRange = adaptChartRange(ds.dataRange, applyChange);
-            if (dataRange === undefined ||
-                getters.getRangeString(dataRange, dataRange.sheetId) === INCORRECT_RANGE_STRING) {
-                isStale = true;
-                ds = undefined;
-            }
-            else if (dataRange !== ds.dataRange) {
-                isStale = true;
-                ds = {
-                    ...ds,
-                    dataRange,
-                };
-            }
-            dataSetsWithUndefined[index] = ds;
-        }
-        let labelRange = chartLabelRange;
-        const range = adaptChartRange(labelRange, applyChange);
-        if (range !== labelRange) {
-            isStale = true;
-            labelRange = range;
-        }
-        const dataSets = dataSetsWithUndefined.filter(isDefined$1);
-        return {
-            isStale,
-            dataSets,
-            labelRange,
-        };
-    }
-    /**
-     * Copy the dataSets given. All the ranges which are on sheetIdFrom will target
-     * sheetIdTo.
-     */
-    function copyDataSetsWithNewSheetId(sheetIdFrom, sheetIdTo, dataSets) {
-        return dataSets.map((ds) => {
-            return {
-                dataRange: copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.dataRange),
-                labelCell: ds.labelCell
-                    ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.labelCell)
-                    : undefined,
-            };
-        });
-    }
-    /**
-     * Copy a range. If the range is on the sheetIdFrom, the range will target
-     * sheetIdTo.
-     */
-    function copyLabelRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) {
-        return range ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) : undefined;
-    }
-    /**
-     * Adapt a single range of a chart
-     */
-    function adaptChartRange(range, applyChange) {
-        if (!range) {
-            return undefined;
-        }
-        const change = applyChange(range);
-        switch (change.changeType) {
-            case "NONE":
-                return range;
-            case "REMOVE":
-                return undefined;
-            default:
-                return change.range;
-        }
-    }
-    /**
-     * Create the dataSet objects from xcs
-     */
-    function createDataSets(getters, dataSetsString, sheetId, dataSetsHaveTitle) {
-        const dataSets = [];
-        for (const sheetXC of dataSetsString) {
-            const dataRange = getters.getRangeFromSheetXC(sheetId, sheetXC);
-            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName, invalidXc } = dataRange;
-            if (invalidSheetName || invalidXc) {
-                continue;
-            }
-            // It's a rectangle. We treat all columns (arbitrary) as different data series.
-            if (zone.left !== zone.right && zone.top !== zone.bottom) {
-                if (zone.right === undefined) {
-                    // Should never happens because of the allowDispatch of charts, but just making sure
-                    continue;
-                }
-                for (let column = zone.left; column <= zone.right; column++) {
-                    const columnZone = {
-                        ...zone,
-                        left: column,
-                        right: column,
-                    };
-                    dataSets.push(createDataSet(getters, dataSetSheetId, columnZone, dataSetsHaveTitle
-                        ? {
-                            top: columnZone.top,
-                            bottom: columnZone.top,
-                            left: columnZone.left,
-                            right: columnZone.left,
-                        }
-                        : undefined));
-                }
-            }
-            else if (zone.left === zone.right && zone.top === zone.bottom) {
-                // A single cell. If it's only the title, the dataset is not added.
-                if (!dataSetsHaveTitle) {
-                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
-                }
-            }
-            else {
-                /* 1 row or 1 column */
-                dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
-                    ? {
-                        top: zone.top,
-                        bottom: zone.top,
-                        left: zone.left,
-                        right: zone.left,
-                    }
-                    : undefined));
-            }
-        }
-        return dataSets;
-    }
-    function createDataSet(getters, sheetId, fullZone, titleZone) {
-        if (fullZone.left !== fullZone.right && fullZone.top !== fullZone.bottom) {
-            throw new Error(`Zone should be a single column or row: ${zoneToXc(fullZone)}`);
-        }
-        if (titleZone) {
-            const dataXC = zoneToXc(fullZone);
-            const labelCellXC = zoneToXc(titleZone);
-            return {
-                labelCell: getters.getRangeFromSheetXC(sheetId, labelCellXC),
-                dataRange: getters.getRangeFromSheetXC(sheetId, dataXC),
-            };
-        }
-        else {
-            return {
-                labelCell: undefined,
-                dataRange: getters.getRangeFromSheetXC(sheetId, zoneToXc(fullZone)),
-            };
-        }
-    }
-    /**
-     * Transform a dataSet to a ExcelDataSet
-     */
-    function toExcelDataset(getters, ds) {
-        const labelZone = ds.labelCell?.zone;
-        let dataZone = ds.dataRange.zone;
-        if (labelZone) {
-            const { numberOfRows, numberOfCols } = zoneToDimension(dataZone);
-            if (numberOfRows === 1) {
-                dataZone = { ...dataZone, left: dataZone.left + 1 };
-            }
-            else if (numberOfCols === 1) {
-                dataZone = { ...dataZone, top: dataZone.top + 1 };
-            }
-        }
-        const dataRange = ds.dataRange.clone({ zone: dataZone });
-        return {
-            label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
-            range: getters.getRangeString(dataRange, "forceSheetReference"),
-        };
-    }
-    function toExcelLabelRange(getters, labelRange, shouldRemoveFirstLabel) {
-        if (!labelRange)
-            return undefined;
-        let zone = {
-            ...labelRange.zone,
-        };
-        if (shouldRemoveFirstLabel && labelRange.zone.bottom > labelRange.zone.top) {
-            zone.top = zone.top + 1;
-        }
-        const range = labelRange.clone({ zone });
-        return getters.getRangeString(range, "forceSheetReference");
-    }
-    /**
-     * Transform a chart definition which supports dataSets (dataSets and LabelRange)
-     * with an executed command
-     */
-    function transformChartDefinitionWithDataSetsWithZone(definition, executed) {
-        let labelRange;
-        if (definition.labelRange) {
-            const labelZone = transformZone(toUnboundedZone(definition.labelRange), executed);
-            labelRange = labelZone ? zoneToXc(labelZone) : undefined;
-        }
-        const dataSets = definition.dataSets
-            .map(toUnboundedZone)
-            .map((zone) => transformZone(zone, executed))
-            .filter(isDefined$1)
-            .map(zoneToXc);
-        return {
-            ...definition,
-            labelRange,
-            dataSets,
-        };
-    }
-    const GraphColors = [
-        // the same colors as those used in odoo reporting
-        "rgb(31,119,180)",
-        "rgb(255,127,14)",
-        "rgb(174,199,232)",
-        "rgb(255,187,120)",
-        "rgb(44,160,44)",
-        "rgb(152,223,138)",
-        "rgb(214,39,40)",
-        "rgb(255,152,150)",
-        "rgb(148,103,189)",
-        "rgb(197,176,213)",
-        "rgb(140,86,75)",
-        "rgb(196,156,148)",
-        "rgb(227,119,194)",
-        "rgb(247,182,210)",
-        "rgb(127,127,127)",
-        "rgb(199,199,199)",
-        "rgb(188,189,34)",
-        "rgb(219,219,141)",
-        "rgb(23,190,207)",
-        "rgb(158,218,229)",
-    ];
-    class ChartColors {
-        graphColorIndex = 0;
-        next() {
-            return GraphColors[this.graphColorIndex++ % GraphColors.length];
-        }
-    }
-    /**
-     * Choose a font color based on a background color.
-     * The font is white with a dark background.
-     */
-    function chartFontColor(backgroundColor) {
-        if (!backgroundColor) {
-            return "#000000";
-        }
-        return relativeLuminance(backgroundColor) < 0.3 ? "#FFFFFF" : "#000000";
-    }
-    function checkDataset(definition) {
-        if (definition.dataSets) {
-            const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
-            if (invalidRanges) {
-                return 33 /* CommandResult.InvalidDataSet */;
-            }
-            const zones = definition.dataSets.map(toUnboundedZone);
-            if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 33 /* CommandResult.InvalidDataSet */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkLabelRange(definition) {
-        if (definition.labelRange) {
-            const invalidLabels = !rangeReference.test(definition.labelRange || "");
-            if (invalidLabels) {
-                return 34 /* CommandResult.InvalidLabelRange */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function shouldRemoveFirstLabel(labelRange, dataset, dataSetsHaveTitle) {
-        if (!dataSetsHaveTitle)
-            return false;
-        if (!labelRange)
-            return false;
-        if (!dataset)
-            return true;
-        const datasetLength = getZoneArea(dataset.dataRange.zone);
-        const labelLength = getZoneArea(labelRange.zone);
-        if (labelLength < datasetLength) {
-            return false;
-        }
-        return true;
-    }
-    // ---------------------------------------------------------------------------
-    // Scorecard
-    // ---------------------------------------------------------------------------
-    function getBaselineText(baseline, keyValue, baselineMode) {
-        if (!baseline) {
-            return "";
-        }
-        else if (baselineMode === "text" ||
-            keyValue?.type !== CellValueType.number ||
-            baseline.type !== CellValueType.number) {
-            return baseline.formattedValue;
-        }
-        else {
-            let diff = keyValue.value - baseline.value;
-            if (baselineMode === "percentage" && diff !== 0) {
-                diff = (diff / baseline.value) * 100;
-            }
-            if (baselineMode !== "percentage" && baseline.format) {
-                return formatValue(diff, baseline.format);
-            }
-            const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
-            return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
-        }
-    }
-    function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
-        if (baselineMode === "text" ||
-            baseline?.type !== CellValueType.number ||
-            keyValue?.type !== CellValueType.number) {
-            return undefined;
-        }
-        const diff = keyValue.value - baseline.value;
-        if (diff > 0) {
-            return colorUp;
-        }
-        else if (diff < 0) {
-            return colorDown;
-        }
-        return undefined;
-    }
-    function getBaselineArrowDirection(baseline, keyValue, baselineMode) {
-        if (baselineMode === "text" ||
-            baseline?.type !== CellValueType.number ||
-            keyValue?.type !== CellValueType.number) {
-            return "neutral";
-        }
-        const diff = keyValue.value - baseline.value;
-        if (diff > 0) {
-            return "up";
-        }
-        else if (diff < 0) {
-            return "down";
-        }
-        return "neutral";
-    }
-    function getChartPositionAtCenterOfViewport(getters, chartSize) {
-        const { x, y } = getters.getMainViewportCoordinates();
-        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
-        const { width, height } = getters.getVisibleRect(getters.getActiveMainViewport());
-        const position = {
-            x: x + scrollX + Math.max(0, (width - chartSize.width) / 2),
-            y: y + scrollY + Math.max(0, (height - chartSize.height) / 2),
-        }; // Position at the center of the scrollable viewport
-        return position;
-    }
-
-    const CfTerms = {
-        Errors: {
-            [26 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [52 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [53 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [54 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [55 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [56 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [57 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [58 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [48 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [51 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [50 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [49 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [59 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [61 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [60 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [62 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [63 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [25 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
-            Unexpected: _lt("The rule is invalid for an unknown reason"),
-        },
-        ColorScale: _lt("Color scale"),
-        IconSet: _lt("Icon set"),
-    };
-    const CellIsOperators = {
-        IsEmpty: _lt("Is empty"),
-        IsNotEmpty: _lt("Is not empty"),
-        ContainsText: _lt("Contains"),
-        NotContains: _lt("Does not contain"),
-        BeginsWith: _lt("Starts with"),
-        EndsWith: _lt("Ends with"),
-        Equal: _lt("Is equal to"),
-        NotEqual: _lt("Is not equal to"),
-        GreaterThan: _lt("Is greater than"),
-        GreaterThanOrEqual: _lt("Is greater than or equal to"),
-        LessThan: _lt("Is less than"),
-        LessThanOrEqual: _lt("Is less than or equal to"),
-        Between: _lt("Is between"),
-        NotBetween: _lt("Is not between"),
-    };
-    const ChartTerms = {
-        Series: _lt("Series"),
-        Errors: {
-            Unexpected: _lt("The chart definition is invalid for an unknown reason"),
-            // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [33 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [34 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
-            // SCORECARD CHART ERRORS
-            [35 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [36 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
-            // GAUGE CHART ERRORS
-            [37 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [38 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [39 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [40 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [41 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [43 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [44 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
-        },
-    };
-    const CustomCurrencyTerms = {
-        Custom: _lt("Custom"),
-    };
-    const MergeErrorMessage = _lt("Merged cells are preventing this operation. Unmerge those cells and try again.");
-    const SplitToColumnsTerms = {
-        Errors: {
-            Unexpected: _lt("Cannot split the selection for an unknown reason"),
-            [92 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
-            [89 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
-            [91 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
-        },
-    };
-
-    /**
-     * This file contains helpers that are common to different runtime charts (mainly
-     * line, bar and pie charts)
-     */
-    /**
-     * Get the data from a dataSet
-     */
-    function getData(getters, ds) {
-        if (ds.dataRange) {
-            const labelCellZone = ds.labelCell ? [zoneToXc(ds.labelCell.zone)] : [];
-            const dataXC = recomputeZones([zoneToXc(ds.dataRange.zone)], labelCellZone)[0];
-            if (dataXC === undefined) {
-                return [];
-            }
-            const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
-            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
-        }
-        return [];
-    }
-    function filterEmptyDataPoints(labels, datasets) {
-        const numberOfDataPoints = Math.max(labels.length, ...datasets.map((dataset) => dataset.data?.length || 0));
-        const dataPointsIndexes = range(0, numberOfDataPoints).filter((dataPointIndex) => {
-            const label = labels[dataPointIndex];
-            const values = datasets.map((dataset) => dataset.data?.[dataPointIndex]);
-            return label || values.some((value) => value === 0 || Boolean(value));
-        });
-        return {
-            labels: dataPointsIndexes.map((i) => labels[i] || ""),
-            dataSetsValues: datasets.map((dataset) => ({
-                ...dataset,
-                data: dataPointsIndexes.map((i) => dataset.data[i]),
-            })),
-        };
-    }
-    /**
-     * Aggregates data based on labels
-     */
-    function aggregateDataForLabels(labels, datasets) {
-        const parseNumber = (value) => (typeof value === "number" ? value : 0);
-        const labelSet = new Set(labels);
-        const labelMap = {};
-        labelSet.forEach((label) => {
-            labelMap[label] = new Array(datasets.length).fill(0);
-        });
-        for (const indexOfLabel of range(0, labels.length)) {
-            const label = labels[indexOfLabel];
-            for (const indexOfDataset of range(0, datasets.length)) {
-                labelMap[label][indexOfDataset] += parseNumber(datasets[indexOfDataset].data[indexOfLabel]);
-            }
-        }
-        return {
-            labels: Object.keys(labelMap),
-            dataSetsValues: datasets.map((dataset, indexOfDataset) => ({
-                ...dataset,
-                data: Object.values(labelMap).map((dataOfLabel) => dataOfLabel[indexOfDataset]),
-            })),
-        };
-    }
-    function truncateLabel(label) {
-        if (!label) {
-            return "";
-        }
-        if (label.length > MAX_CHAR_LABEL) {
-            return label.substring(0, MAX_CHAR_LABEL) + "…";
-        }
-        return label;
-    }
-    /**
-     * Get a default chart js configuration
-     */
-    function getDefaultChartJsRuntime(chart, labels, fontColor, dataSetsFormat) {
-        return {
-            type: chart.type,
-            options: {
-                // https://www.chartjs.org/docs/latest/general/responsive.html
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-                },
-                elements: {
-                    line: {
-                        fill: false, // do not fill the area under line charts
-                    },
-                    point: {
-                        hitRadius: 15, // increased hit radius to display point tooltip when hovering nearby
-                    },
-                },
-                animation: {
-                    duration: 0, // general animation time
-                },
-                hover: {
-                    animationDuration: 10, // duration of animations when hovering an item
-                },
-                responsiveAnimationDuration: 0,
-                title: {
-                    display: !!chart.title,
-                    fontSize: 22,
-                    fontStyle: "normal",
-                    text: _t(chart.title),
-                    fontColor,
-                },
-                legend: {
-                    // Disable default legend onClick (show/hide dataset), to allow us to set a global onClick on the chart container.
-                    // If we want to re-enable this in the future, we need to override the default onClick to stop the event propagation
-                    onClick: undefined,
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            let xLabel = data.datasets?.[tooltipItem.datasetIndex || 0]?.label;
-                            const yLabel = tooltipItem.yLabel !== ""
-                                ? tooltipItem.yLabel
-                                : data.datasets?.[tooltipItem.datasetIndex || 0]?.data?.[tooltipItem.index || 0];
-                            const yLabelStr = dataSetsFormat && typeof yLabel === "number"
-                                ? formatValue(yLabel, dataSetsFormat)
-                                : yLabel?.toLocaleString() || "";
-                            return xLabel ? `${xLabel}: ${yLabelStr}` : yLabelStr;
-                        },
-                    },
-                },
-            },
-            data: {
-                labels: labels.map(truncateLabel),
-                datasets: [],
-            },
-        };
-    }
-    function getChartLabelFormat(getters, range) {
-        if (!range)
-            return undefined;
-        return getters.getEvaluatedCell({
-            sheetId: range.sheetId,
-            col: range.zone.left,
-            row: range.zone.top,
-        }).format;
-    }
-    function getChartLabelValues(getters, dataSets, labelRange) {
-        let labels = { values: [], formattedValues: [] };
-        if (labelRange) {
-            if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
-                labels = {
-                    formattedValues: getters.getRangeFormattedValues(labelRange),
-                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
-                };
-            }
-        }
-        else if (dataSets.length === 1) {
-            for (let i = 0; i < getData(getters, dataSets[0]).length; i++) {
-                labels.formattedValues.push("");
-                labels.values.push("");
-            }
-        }
-        else {
-            if (dataSets[0]) {
-                const ranges = getData(getters, dataSets[0]);
-                labels = {
-                    formattedValues: range(0, ranges.length).map((r) => r.toString()),
-                    values: labels.formattedValues,
-                };
-            }
-        }
-        return labels;
-    }
-    /**
-     * Get the format to apply to the the dataset values. This format is defined as the first format
-     * found in the dataset ranges that isn't a date format.
-     */
-    function getChartDatasetFormat(getters, dataSets) {
-        for (const ds of dataSets) {
-            const formatsInDataset = getters.getRangeFormats(ds.dataRange);
-            const format = formatsInDataset.find((f) => f !== undefined && !isDateTimeFormat(f));
-            if (format)
-                return format;
-        }
-        return undefined;
-    }
-    function getChartDatasetValues(getters, dataSets) {
-        const datasetValues = [];
-        for (const [dsIndex, ds] of Object.entries(dataSets)) {
-            let label;
-            if (ds.labelCell) {
-                const labelRange = ds.labelCell;
-                const cell = labelRange
-                    ? getters.getEvaluatedCell({
-                        sheetId: labelRange.sheetId,
-                        col: labelRange.zone.left,
-                        row: labelRange.zone.top,
-                    })
-                    : undefined;
-                label =
-                    cell && labelRange
-                        ? truncateLabel(cell.formattedValue)
-                        : (label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`);
-            }
-            else {
-                label = label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`;
-            }
-            let data = ds.dataRange ? getData(getters, ds) : [];
-            datasetValues.push({ data, label });
-        }
-        return datasetValues;
-    }
-    /** See https://www.chartjs.org/docs/latest/charts/area.html#filling-modes */
-    function getFillingMode(index) {
-        if (index === 0) {
-            return "origin";
-        }
-        else {
-            return index - 1;
-        }
-    }
-
-    class BarChart extends AbstractChart {
-        dataSets;
-        labelRange;
-        background;
-        verticalAxisPosition;
-        legendPosition;
-        stacked;
-        aggregated;
-        type = "bar";
-        dataSetsHaveTitle;
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.verticalAxisPosition = definition.verticalAxisPosition;
-            this.legendPosition = definition.legendPosition;
-            this.stacked = definition.stacked;
-            this.aggregated = definition.aggregated;
-            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                stacked: false,
-                aggregated: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "bar",
-                verticalAxisPosition: "left",
-                labelRange: context.auxiliaryRange || undefined,
-            };
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new BarChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new BarChart(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "bar",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                verticalAxisPosition: this.verticalAxisPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-                stacked: this.stacked,
-                aggregated: this.aggregated,
-            };
-        }
-        getDefinitionForExcel() {
-            // Excel does not support aggregating labels
-            if (this.aggregated)
-                return undefined;
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                dataSets,
-                labelRange,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new BarChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getBarConfiguration(chart, labels, dataSetFormat) {
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor, dataSetFormat);
-        const legend = {
-            labels: { fontColor },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...config.options?.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.scales = {
-            xAxes: [
-                {
-                    ticks: {
-                        // x axis configuration
-                        maxRotation: 60,
-                        minRotation: 15,
-                        padding: 5,
-                        labelOffset: 2,
-                        fontColor,
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    position: chart.verticalAxisPosition,
-                    ticks: {
-                        fontColor,
-                        // y axis configuration
-                        beginAtZero: true,
-                        callback: (value) => {
-                            return dataSetFormat
-                                ? formatValue(value, dataSetFormat)
-                                : value?.toLocaleString() || value;
-                        },
-                    },
-                },
-            ],
-        };
-        if (chart.stacked) {
-            config.options.scales.xAxes[0].stacked = true;
-            config.options.scales.yAxes[0].stacked = true;
-        }
-        return config;
-    }
-    function createBarChartRuntime(chart, getters) {
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        if (chart.dataSetsHaveTitle &&
-            dataSetsValues[0] &&
-            labels.length > dataSetsValues[0].data.length) {
-            labels.shift();
-        }
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        if (chart.aggregated) {
-            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
-        }
-        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
-        const config = getBarConfiguration(chart, labels, dataSetFormat);
-        const colors = new ChartColors();
-        for (let { label, data } of dataSetsValues) {
-            const color = colors.next();
-            const dataset = {
-                label,
-                data,
-                borderColor: color,
-                backgroundColor: color,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    function isDataRangeValid(definition) {
-        return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 37 /* CommandResult.InvalidGaugeDataRange */
-            : 0 /* CommandResult.Success */;
-    }
-    function checkRangeLimits(check, batchValidations) {
-        return batchValidations((definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.rangeMin, "rangeMin");
-            }
-            return 0 /* CommandResult.Success */;
-        }, (definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.rangeMax, "rangeMax");
-            }
-            return 0 /* CommandResult.Success */;
-        });
-    }
-    function checkInflectionPointsValue(check, batchValidations) {
-        return batchValidations((definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.lowerInflectionPoint.value, "lowerInflectionPointValue");
-            }
-            return 0 /* CommandResult.Success */;
-        }, (definition) => {
-            if (definition.sectionRule) {
-                return check(definition.sectionRule.upperInflectionPoint.value, "upperInflectionPointValue");
-            }
-            return 0 /* CommandResult.Success */;
-        });
-    }
-    function checkRangeMinBiggerThanRangeMax(definition) {
-        if (definition.sectionRule) {
-            if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkEmpty(value, valueName) {
-        if (value === "") {
-            switch (valueName) {
-                case "rangeMin":
-                    return 38 /* CommandResult.EmptyGaugeRangeMin */;
-                case "rangeMax":
-                    return 40 /* CommandResult.EmptyGaugeRangeMax */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    function checkNaN(value, valueName) {
-        if (isNaN(value)) {
-            switch (valueName) {
-                case "rangeMin":
-                    return 39 /* CommandResult.GaugeRangeMinNaN */;
-                case "rangeMax":
-                    return 41 /* CommandResult.GaugeRangeMaxNaN */;
-                case "lowerInflectionPointValue":
-                    return 43 /* CommandResult.GaugeLowerInflectionPointNaN */;
-                case "upperInflectionPointValue":
-                    return 44 /* CommandResult.GaugeUpperInflectionPointNaN */;
-            }
-        }
-        return 0 /* CommandResult.Success */;
-    }
-    class GaugeChart extends AbstractChart {
-        dataRange;
-        sectionRule;
-        background;
-        type = "gauge";
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.dataRange = createRange(this.getters, this.sheetId, definition.dataRange);
-            this.sectionRule = definition.sectionRule;
-            this.background = definition.background;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, isDataRangeValid, validator.chainValidations(checkRangeLimits(checkEmpty, validator.batchValidations), checkRangeLimits(checkNaN, validator.batchValidations), checkRangeMinBiggerThanRangeMax), validator.chainValidations(checkInflectionPointsValue(checkNaN, validator.batchValidations)));
-        }
-        static transformDefinition(definition, executed) {
-            let dataRangeZone;
-            if (definition.dataRange) {
-                dataRangeZone = transformZone(toUnboundedZone(definition.dataRange), executed);
-            }
-            return {
-                ...definition,
-                dataRange: dataRangeZone ? zoneToXc(dataRangeZone) : undefined,
-            };
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                title: context.title || "",
-                type: "gauge",
-                dataRange: context.range ? context.range[0] : undefined,
-                sectionRule: {
-                    colors: {
-                        lowerColor: DEFAULT_GAUGE_LOWER_COLOR,
-                        middleColor: DEFAULT_GAUGE_MIDDLE_COLOR,
-                        upperColor: DEFAULT_GAUGE_UPPER_COLOR,
-                    },
-                    rangeMin: "0",
-                    rangeMax: "100",
-                    lowerInflectionPoint: {
-                        type: "percentage",
-                        value: "15",
-                    },
-                    upperInflectionPoint: {
-                        type: "percentage",
-                        value: "40",
-                    },
-                },
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.dataRange);
-            const definition = this.getDefinitionWithSpecificRanges(dataRange, sheetId);
-            return new GaugeChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificRanges(this.dataRange, sheetId);
-            return new GaugeChart(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificRanges(this.dataRange);
-        }
-        getDefinitionWithSpecificRanges(dataRange, targetSheetId) {
-            return {
-                background: this.background,
-                sectionRule: this.sectionRule,
-                title: this.title,
-                type: "gauge",
-                dataRange: dataRange
-                    ? this.getters.getRangeString(dataRange, targetSheetId || this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionForExcel() {
-            // This kind of graph is not exportable in Excel
-            return undefined;
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataRange
-                    ? [this.getters.getRangeString(this.dataRange, this.sheetId)]
-                    : undefined,
-            };
-        }
-        updateRanges(applyChange) {
-            const range = adaptChartRange(this.dataRange, applyChange);
-            if (this.dataRange === range) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificRanges(range);
-            return new GaugeChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getGaugeConfiguration(chart) {
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, [], fontColor);
-        config.options.hover = undefined;
-        config.options.events = [];
-        config.options.layout = {
-            padding: { left: 30, right: 30, top: chart.title ? 10 : 25, bottom: 25 },
-        };
-        config.options.needle = {
-            radiusPercentage: 2,
-            widthPercentage: 3.2,
-            lengthPercentage: 80,
-            color: "#000000",
-        };
-        config.options.valueLabel = {
-            display: false,
-            formatter: null,
-            color: "#FFFFFF",
-            backgroundColor: "#000000",
-            fontSize: 30,
-            borderRadius: 5,
-            padding: {
-                top: 5,
-                right: 5,
-                bottom: 5,
-                left: 5,
-            },
-            bottomMarginPercentage: 5,
-        };
-        return config;
-    }
-    function createGaugeChartRuntime(chart, getters) {
-        const config = getGaugeConfiguration(chart);
-        const colors = chart.sectionRule.colors;
-        const lowerPoint = chart.sectionRule.lowerInflectionPoint;
-        const upperPoint = chart.sectionRule.upperInflectionPoint;
-        const lowerPointValue = Number(lowerPoint.value);
-        const upperPointValue = Number(upperPoint.value);
-        const minNeedleValue = Number(chart.sectionRule.rangeMin);
-        const maxNeedleValue = Number(chart.sectionRule.rangeMax);
-        const needleCoverage = maxNeedleValue - minNeedleValue;
-        const needleInflectionPoint = [];
-        if (lowerPoint.value !== "") {
-            const lowerPointNeedleValue = lowerPoint.type === "number"
-                ? lowerPointValue
-                : minNeedleValue + (needleCoverage * lowerPointValue) / 100;
-            needleInflectionPoint.push({
-                value: clip(lowerPointNeedleValue, minNeedleValue, maxNeedleValue),
-                color: colors.lowerColor,
-            });
-        }
-        if (upperPoint.value !== "") {
-            const upperPointNeedleValue = upperPoint.type === "number"
-                ? upperPointValue
-                : minNeedleValue + (needleCoverage * upperPointValue) / 100;
-            needleInflectionPoint.push({
-                value: clip(upperPointNeedleValue, minNeedleValue, maxNeedleValue),
-                color: colors.middleColor,
-            });
-        }
-        const data = [];
-        const backgroundColor = [];
-        needleInflectionPoint
-            .sort((a, b) => a.value - b.value)
-            .map((point) => {
-            data.push(point.value);
-            backgroundColor.push(point.color);
-        });
-        // There's a bug in gauge lib when the last element in `data` is 0 (i.e. when the range maximum is 0).
-        // The value wrongly fallbacks to 1 because 0 is falsy
-        // See https://github.com/haiiaaa/chartjs-gauge/pull/33
-        // https://github.com/haiiaaa/chartjs-gauge/blob/2ea50541d754d710cb30c2502fa690ac5dc27afd/src/controllers/controller.gauge.js#L52
-        data.push(maxNeedleValue);
-        backgroundColor.push(colors.upperColor);
-        const dataRange = chart.dataRange;
-        const deltaBeyondRangeLimit = needleCoverage / 30;
-        let needleValue = minNeedleValue - deltaBeyondRangeLimit; // make needle value always at the minimum by default
-        let cellFormatter = null;
-        let displayValue = false;
-        if (dataRange !== undefined) {
-            const cell = getters.getEvaluatedCell({
-                sheetId: dataRange.sheetId,
-                col: dataRange.zone.left,
-                row: dataRange.zone.top,
-            });
-            if (cell.type === CellValueType.number) {
-                // in gauge graph "datasets.value" is used to calculate the angle of the
-                // needle in the graph. To prevent the needle from making 360° turns, we
-                // clip the value between a min and a max. This min and this max are slightly
-                // smaller and slightly larger than minRange and maxRange to mark the fact
-                // that the needle is out of the range limits
-                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
-                cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
-                displayValue = true;
-            }
-        }
-        config.options.valueLabel.display = displayValue;
-        config.options.valueLabel.formatter = cellFormatter;
-        config.data.datasets.push({
-            data,
-            minValue: Number(chart.sectionRule.rangeMin),
-            value: needleValue,
-            backgroundColor,
-        });
-        return {
-            chartJsConfig: config,
-            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
-        };
-    }
-
-    const UNIT_LENGTH = {
-        second: 1000,
-        minute: 1000 * 60,
-        hour: 1000 * 3600,
-        day: 1000 * 3600 * 24,
-        month: 1000 * 3600 * 24 * 30,
-        year: 1000 * 3600 * 24 * 365,
-    };
-    const Milliseconds = {
-        inSeconds: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.second);
-        },
-        inMinutes: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.minute);
-        },
-        inHours: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.hour);
-        },
-        inDays: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.day);
-        },
-        inMonths: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.month);
-        },
-        inYears: function (milliseconds) {
-            return Math.floor(milliseconds / UNIT_LENGTH.year);
-        },
-    };
-    /**
-     * Regex to test if a format string is a date format that can be translated into a moment time format
-     */
-    const timeFormatMomentCompatible = /^((d|dd|m|mm|yyyy|yy|hh|h|ss|a)(-|:|\s|\/))*(d|dd|m|mm|yyyy|yy|hh|h|ss|a)$/i;
-    /** Get the time options for the XAxis of ChartJS */
-    function getChartTimeOptions(labels, labelFormat) {
-        const momentFormat = convertDateFormatForMoment(labelFormat);
-        const timeUnit = getBestTimeUnitForScale(labels, momentFormat);
-        const displayFormats = {};
-        if (timeUnit) {
-            displayFormats[timeUnit] = momentFormat;
-        }
-        return {
-            parser: momentFormat,
-            displayFormats,
-            unit: timeUnit,
-        };
-    }
-    /**
-     * Convert the given date format into a format that moment.js understands.
-     *
-     * https://momentjs.com/docs/#/parsing/string-format/
-     */
-    function convertDateFormatForMoment(format) {
-        format = format.replace(/y/g, "Y");
-        format = format.replace(/d/g, "D");
-        // "m" before "h" == month, "m" after "h" == minute
-        const indexH = format.indexOf("h");
-        if (indexH >= 0) {
-            format = format.slice(0, indexH).replace(/m/g, "M") + format.slice(indexH);
-        }
-        else {
-            format = format.replace(/m/g, "M");
-        }
-        // If we have an "a", we should display hours as AM/PM (h), otherwise display 24 hours format (H)
-        if (!format.includes("a")) {
-            format = format.replace(/h/g, "H");
-        }
-        return format;
-    }
-    /** Get the minimum time unit that the format is able to display */
-    function getFormatMinDisplayUnit(format) {
-        if (format.includes("s")) {
-            return "second";
-        }
-        else if (format.includes("m")) {
-            return "minute";
-        }
-        else if (format.includes("h") || format.includes("H")) {
-            return "hour";
-        }
-        else if (format.includes("D")) {
-            return "day";
-        }
-        else if (format.includes("M")) {
-            return "month";
-        }
-        return "year";
-    }
-    /**
-     * Returns the best time unit that should be used for the X axis of a chart in order to display all
-     * the labels correctly.
-     *
-     * There is two conditions :
-     *  - the format of the labels should be able to display the unit. For example if the format is "DD/MM/YYYY"
-     *    it makes no sense to try to use minutes in the X axis
-     *  - we want the "best fit" unit. For example if the labels span a period of several days, we want to use days
-     *    as a unit, but if they span 200 days, we'd like to use months instead
-     *
-     */
-    function getBestTimeUnitForScale(labels, format) {
-        const labelDates = labels.map((label) => parseDateTime(label)?.jsDate);
-        if (labelDates.some((date) => date === undefined) || labels.length < 2) {
-            return undefined;
-        }
-        const labelsTimestamps = labelDates.map((date) => date.getTime());
-        const period = Math.max(...labelsTimestamps) - Math.min(...labelsTimestamps);
-        const minUnit = getFormatMinDisplayUnit(format);
-        if (UNIT_LENGTH.second >= UNIT_LENGTH[minUnit] && Milliseconds.inSeconds(period) < 180) {
-            return "second";
-        }
-        else if (UNIT_LENGTH.minute >= UNIT_LENGTH[minUnit] && Milliseconds.inMinutes(period) < 180) {
-            return "minute";
-        }
-        else if (UNIT_LENGTH.hour >= UNIT_LENGTH[minUnit] && Milliseconds.inHours(period) < 96) {
-            return "hour";
-        }
-        else if (UNIT_LENGTH.day >= UNIT_LENGTH[minUnit] && Milliseconds.inDays(period) < 90) {
-            return "day";
-        }
-        else if (UNIT_LENGTH.month >= UNIT_LENGTH[minUnit] && Milliseconds.inMonths(period) < 36) {
-            return "month";
-        }
-        return "year";
-    }
-
-    class LineChart extends AbstractChart {
-        dataSets;
-        labelRange;
-        background;
-        verticalAxisPosition;
-        legendPosition;
-        labelsAsText;
-        stacked;
-        aggregated;
-        type = "line";
-        dataSetsHaveTitle;
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.dataSets = createDataSets(this.getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(this.getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.verticalAxisPosition = definition.verticalAxisPosition;
-            this.legendPosition = definition.legendPosition;
-            this.labelsAsText = definition.labelsAsText;
-            this.stacked = definition.stacked;
-            this.aggregated = definition.aggregated;
-            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                labelsAsText: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "line",
-                verticalAxisPosition: "left",
-                labelRange: context.auxiliaryRange || undefined,
-                stacked: false,
-                aggregated: false,
-            };
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "line",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                verticalAxisPosition: this.verticalAxisPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-                labelsAsText: this.labelsAsText,
-                stacked: this.stacked,
-                aggregated: this.aggregated,
-            };
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new LineChart(definition, this.sheetId, this.getters);
-        }
-        getDefinitionForExcel() {
-            // Excel does not support aggregating labels
-            if (this.aggregated)
-                return undefined;
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                dataSets,
-                labelRange,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new LineChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new LineChart(definition, sheetId, this.getters);
-        }
-    }
-    function fixEmptyLabelsForDateCharts(labels, dataSetsValues) {
-        if (labels.length === 0 || labels.every((label) => !label)) {
-            return { labels, dataSetsValues };
-        }
-        const newLabels = [...labels];
-        const newDatasets = deepCopy(dataSetsValues);
-        for (let i = 0; i < newLabels.length; i++) {
-            if (!newLabels[i]) {
-                newLabels[i] = findNextDefinedValue(newLabels, i);
-                for (let ds of newDatasets) {
-                    ds.data[i] = undefined;
-                }
-            }
-        }
-        return { labels: newLabels, dataSetsValues: newDatasets };
-    }
-    function canChartParseLabels(labelRange, getters) {
-        return canBeDateChart(labelRange, getters) || canBeLinearChart(labelRange, getters);
-    }
-    function getChartAxisType(chart, getters) {
-        if (isDateChart(chart, getters)) {
-            return "time";
-        }
-        if (isLinearChart(chart, getters)) {
-            return "linear";
-        }
-        return "category";
-    }
-    function isDateChart(chart, getters) {
-        return !chart.labelsAsText && canBeDateChart(chart.labelRange, getters);
-    }
-    function isLinearChart(chart, getters) {
-        return !chart.labelsAsText && canBeLinearChart(chart.labelRange, getters);
-    }
-    function canBeDateChart(labelRange, getters) {
-        if (!labelRange || !canBeLinearChart(labelRange, getters)) {
-            return false;
-        }
-        const labelFormat = getters.getEvaluatedCell({
-            sheetId: labelRange.sheetId,
-            col: labelRange.zone.left,
-            row: labelRange.zone.top,
-        }).format;
-        return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
-    }
-    function canBeLinearChart(labelRange, getters) {
-        if (!labelRange) {
-            return false;
-        }
-        const labels = getters.getRangeValues(labelRange);
-        if (labels.some((label) => isNaN(Number(label)) && label)) {
-            return false;
-        }
-        if (labels.every((label) => !label)) {
-            return false;
-        }
-        return true;
-    }
-    function getLineConfiguration(chart, labels, dataSetFormat) {
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor, dataSetFormat);
-        const legend = {
-            labels: {
-                fontColor,
-                generateLabels(chart) {
-                    const { data } = chart;
-                    const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
-                    for (const [index, label] of labels.entries()) {
-                        label.fillStyle = data.datasets[index].borderColor;
-                    }
-                    return labels;
-                },
-            },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...config.options?.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.scales = {
-            xAxes: [
-                {
-                    ticks: {
-                        // x axis configuration
-                        maxRotation: 60,
-                        minRotation: 15,
-                        padding: 5,
-                        labelOffset: 2,
-                        fontColor,
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    position: chart.verticalAxisPosition,
-                    ticks: {
-                        fontColor,
-                        // y axis configuration
-                        beginAtZero: true,
-                        callback: (value) => {
-                            return dataSetFormat
-                                ? formatValue(value, dataSetFormat)
-                                : value?.toLocaleString() || value;
-                        },
-                    },
-                },
-            ],
-        };
-        if (chart.stacked) {
-            config.options.scales.yAxes[0].stacked = true;
-        }
-        return config;
-    }
-    function createLineChartRuntime(chart, getters) {
-        const axisType = getChartAxisType(chart, getters);
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = axisType === "linear" ? labelValues.values : labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        if (chart.dataSetsHaveTitle &&
-            dataSetsValues[0] &&
-            labels.length > dataSetsValues[0].data.length) {
-            labels.shift();
-        }
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        if (axisType === "time") {
-            ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
-        }
-        if (chart.aggregated) {
-            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
-        }
-        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
-        const config = getLineConfiguration(chart, labels, dataSetFormat);
-        const labelFormat = getChartLabelFormat(getters, chart.labelRange);
-        if (axisType === "time") {
-            config.options.scales.xAxes[0].type = "time";
-            config.options.scales.xAxes[0].time = getChartTimeOptions(labels, labelFormat);
-            config.options.scales.xAxes[0].ticks.maxTicksLimit = 15;
-        }
-        else if (axisType === "linear") {
-            config.options.scales.xAxes[0].type = "linear";
-            config.options.scales.xAxes[0].ticks.callback = (value) => formatValue(value, labelFormat);
-            config.options.tooltips.callbacks.title = (tooltipItem) => {
-                return formatValue(tooltipItem[0]?.xLabel || "", labelFormat);
-            };
-        }
-        const colors = new ChartColors();
-        for (let [index, { label, data }] of dataSetsValues.entries()) {
-            if (["linear", "time"].includes(axisType)) {
-                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
-                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
-            }
-            const color = colors.next();
-            let backgroundRGBA = colorToRGBA(color);
-            if (chart.stacked) {
-                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
-            }
-            const backgroundColor = rgbaToHex(backgroundRGBA);
-            const dataset = {
-                label,
-                data,
-                lineTension: 0,
-                borderColor: color,
-                backgroundColor,
-                pointBackgroundColor: color,
-                fill: chart.stacked ? getFillingMode(index) : false,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    class PieChart extends AbstractChart {
-        dataSets;
-        labelRange;
-        background;
-        legendPosition;
-        type = "pie";
-        aggregated;
-        dataSetsHaveTitle;
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
-            this.background = definition.background;
-            this.legendPosition = definition.legendPosition;
-            this.aggregated = definition.aggregated;
-            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
-        }
-        static transformDefinition(definition, executed) {
-            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkDataset, checkLabelRange);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                dataSets: context.range ? context.range : [],
-                dataSetsHaveTitle: false,
-                legendPosition: "top",
-                title: context.title || "",
-                type: "pie",
-                labelRange: context.auxiliaryRange || undefined,
-                aggregated: false,
-            };
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
-                auxiliaryRange: this.labelRange
-                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
-            return {
-                type: "pie",
-                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
-                background: this.background,
-                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
-                legendPosition: this.legendPosition,
-                labelRange: labelRange
-                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
-                    : undefined,
-                title: this.title,
-                aggregated: this.aggregated,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
-            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
-            return new PieChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
-            return new PieChart(definition, sheetId, this.getters);
-        }
-        getDefinitionForExcel() {
-            // Excel does not support aggregating labels
-            if (this.aggregated)
-                return undefined;
-            const dataSets = this.dataSets
-                .map((ds) => toExcelDataset(this.getters, ds))
-                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
-            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
-            return {
-                ...this.getDefinition(),
-                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
-                fontColor: toXlsxHexColor(chartFontColor(this.background)),
-                verticalAxisPosition: "left",
-                dataSets,
-                labelRange,
-            };
-        }
-        updateRanges(applyChange) {
-            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
-            if (!isStale) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
-            return new PieChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function getPieConfiguration(chart, labels, dataSetFormat) {
-        const fontColor = chartFontColor(chart.background);
-        const config = getDefaultChartJsRuntime(chart, labels, fontColor, dataSetFormat);
-        const legend = {
-            labels: { fontColor },
-        };
-        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
-            legend.display = false;
-        }
-        else {
-            legend.position = chart.legendPosition;
-        }
-        config.options.legend = { ...config.options?.legend, ...legend };
-        config.options.layout = {
-            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
-        };
-        config.options.tooltips.callbacks.title = function (tooltipItems, data) {
-            return data.datasets[tooltipItems[0].datasetIndex].label;
-        };
-        return config;
-    }
-    function getPieColors(colors, dataSetsValues) {
-        const pieColors = [];
-        const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
-        for (let i = 0; i <= maxLength; i++) {
-            pieColors.push(colors.next());
-        }
-        return pieColors;
-    }
-    function createPieChartRuntime(chart, getters) {
-        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
-        let labels = labelValues.formattedValues;
-        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
-        if (chart.dataSetsHaveTitle &&
-            dataSetsValues[0] &&
-            labels.length > dataSetsValues[0].data.length) {
-            labels.shift();
-        }
-        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
-        if (chart.aggregated) {
-            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
-        }
-        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
-        const config = getPieConfiguration(chart, labels, dataSetFormat);
-        const colors = new ChartColors();
-        for (let { label, data } of dataSetsValues) {
-            const backgroundColor = getPieColors(colors, dataSetsValues);
-            const dataset = {
-                label,
-                data,
-                borderColor: "#FFFFFF",
-                backgroundColor,
-            };
-            config.data.datasets.push(dataset);
-        }
-        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
-    }
-
-    function checkKeyValue(definition) {
-        return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 35 /* CommandResult.InvalidScorecardKeyValue */
-            : 0 /* CommandResult.Success */;
-    }
-    function checkBaseline(definition) {
-        return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 36 /* CommandResult.InvalidScorecardBaseline */
-            : 0 /* CommandResult.Success */;
-    }
-    class ScorecardChart extends AbstractChart {
-        keyValue;
-        baseline;
-        baselineMode;
-        baselineDescr;
-        background;
-        baselineColorUp;
-        baselineColorDown;
-        fontColor;
-        type = "scorecard";
-        constructor(definition, sheetId, getters) {
-            super(definition, sheetId, getters);
-            this.keyValue = createRange(getters, sheetId, definition.keyValue);
-            this.baseline = createRange(getters, sheetId, definition.baseline);
-            this.baselineMode = definition.baselineMode;
-            this.baselineDescr = definition.baselineDescr;
-            this.background = definition.background;
-            this.baselineColorUp = definition.baselineColorUp;
-            this.baselineColorDown = definition.baselineColorDown;
-        }
-        static validateChartDefinition(validator, definition) {
-            return validator.checkValidations(definition, checkKeyValue, checkBaseline);
-        }
-        static getDefinitionFromContextCreation(context) {
-            return {
-                background: context.background,
-                type: "scorecard",
-                keyValue: context.range ? context.range[0] : undefined,
-                title: context.title || "",
-                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
-                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
-                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
-                baseline: context.auxiliaryRange || "",
-            };
-        }
-        static transformDefinition(definition, executed) {
-            let baselineZone;
-            let keyValueZone;
-            if (definition.baseline) {
-                baselineZone = transformZone(toUnboundedZone(definition.baseline), executed);
-            }
-            if (definition.keyValue) {
-                keyValueZone = transformZone(toUnboundedZone(definition.keyValue), executed);
-            }
-            return {
-                ...definition,
-                baseline: baselineZone ? zoneToXc(baselineZone) : undefined,
-                keyValue: keyValueZone ? zoneToXc(keyValueZone) : undefined,
-            };
-        }
-        copyForSheetId(sheetId) {
-            const baseline = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.baseline);
-            const keyValue = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.keyValue);
-            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue, sheetId);
-            return new ScorecardChart(definition, sheetId, this.getters);
-        }
-        copyInSheetId(sheetId) {
-            const definition = this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue, sheetId);
-            return new ScorecardChart(definition, sheetId, this.getters);
-        }
-        getDefinition() {
-            return this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue);
-        }
-        getContextCreation() {
-            return {
-                background: this.background,
-                title: this.title,
-                range: this.keyValue ? [this.getters.getRangeString(this.keyValue, this.sheetId)] : undefined,
-                auxiliaryRange: this.baseline
-                    ? this.getters.getRangeString(this.baseline, this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
-            return {
-                baselineColorDown: this.baselineColorDown,
-                baselineColorUp: this.baselineColorUp,
-                baselineMode: this.baselineMode,
-                title: this.title,
-                type: "scorecard",
-                background: this.background,
-                baseline: baseline
-                    ? this.getters.getRangeString(baseline, targetSheetId || this.sheetId)
-                    : undefined,
-                baselineDescr: this.baselineDescr,
-                keyValue: keyValue
-                    ? this.getters.getRangeString(keyValue, targetSheetId || this.sheetId)
-                    : undefined,
-            };
-        }
-        getDefinitionForExcel() {
-            // This kind of graph is not exportable in Excel
-            return undefined;
-        }
-        updateRanges(applyChange) {
-            const baseline = adaptChartRange(this.baseline, applyChange);
-            const keyValue = adaptChartRange(this.keyValue, applyChange);
-            if (this.baseline === baseline && this.keyValue === keyValue) {
-                return this;
-            }
-            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue);
-            return new ScorecardChart(definition, this.sheetId, this.getters);
-        }
-    }
-    function createScorecardChartRuntime(chart, getters) {
-        let keyValue = "";
-        let formattedKeyValue = "";
-        let keyValueCell;
-        if (chart.keyValue) {
-            const keyValuePosition = {
-                sheetId: chart.keyValue.sheetId,
-                col: chart.keyValue.zone.left,
-                row: chart.keyValue.zone.top,
-            };
-            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
-            keyValue = String(keyValueCell.value);
-            formattedKeyValue = keyValueCell.formattedValue;
-        }
-        let baselineCell;
-        const baseline = chart.baseline;
-        if (baseline) {
-            const baselinePosition = {
-                sheetId: chart.baseline.sheetId,
-                col: chart.baseline.zone.left,
-                row: chart.baseline.zone.top,
-            };
-            baselineCell = getters.getEvaluatedCell(baselinePosition);
-        }
-        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
-        return {
-            title: _t(chart.title),
-            keyValue: formattedKeyValue || keyValue,
-            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode),
-            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
-            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
-            baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
-            fontColor: chartFontColor(background),
-            background,
-            baselineStyle: chart.baselineMode !== "percentage" && baseline
-                ? getters.getCellStyle({
-                    sheetId: baseline.sheetId,
-                    col: baseline.zone.left,
-                    row: baseline.zone.top,
-                })
-                : undefined,
-            keyValueStyle: chart.keyValue
-                ? getters.getCellStyle({
-                    sheetId: chart.keyValue.sheetId,
-                    col: chart.keyValue.zone.left,
-                    row: chart.keyValue.zone.top,
-                })
-                : undefined,
-        };
-    }
-
-    /**
-     * This registry is intended to map a cell content (raw string) to
-     * an instance of a cell.
-     */
-    const chartRegistry = new Registry();
-    chartRegistry.add("bar", {
-        match: (type) => type === "bar",
-        createChart: (definition, sheetId, getters) => new BarChart(definition, sheetId, getters),
-        getChartRuntime: createBarChartRuntime,
-        validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
-        name: _lt("Bar"),
-        sequence: 10,
-    });
-    chartRegistry.add("line", {
-        match: (type) => type === "line",
-        createChart: (definition, sheetId, getters) => new LineChart(definition, sheetId, getters),
-        getChartRuntime: createLineChartRuntime,
-        validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
-        name: _lt("Line"),
-        sequence: 20,
-    });
-    chartRegistry.add("pie", {
-        match: (type) => type === "pie",
-        createChart: (definition, sheetId, getters) => new PieChart(definition, sheetId, getters),
-        getChartRuntime: createPieChartRuntime,
-        validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
-        name: _lt("Pie"),
-        sequence: 30,
-    });
-    chartRegistry.add("scorecard", {
-        match: (type) => type === "scorecard",
-        createChart: (definition, sheetId, getters) => new ScorecardChart(definition, sheetId, getters),
-        getChartRuntime: createScorecardChartRuntime,
-        validateChartDefinition: (validator, definition) => ScorecardChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => ScorecardChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => ScorecardChart.getDefinitionFromContextCreation(context),
-        name: _lt("Scorecard"),
-        sequence: 40,
-    });
-    chartRegistry.add("gauge", {
-        match: (type) => type === "gauge",
-        createChart: (definition, sheetId, getters) => new GaugeChart(definition, sheetId, getters),
-        getChartRuntime: createGaugeChartRuntime,
-        validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
-        transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
-        getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
-        name: _lt("Gauge"),
-        sequence: 50,
-    });
-    const chartComponentRegistry = new Registry();
-    chartComponentRegistry.add("line", ChartJsComponent);
-    chartComponentRegistry.add("bar", ChartJsComponent);
-    chartComponentRegistry.add("pie", ChartJsComponent);
-    chartComponentRegistry.add("gauge", ChartJsComponent);
-    chartComponentRegistry.add("scorecard", ScorecardChart$1);
-
-    /**
-     * Registry intended to support usual currencies. It is mainly used to create
-     * currency formats that can be selected or modified when customizing formats.
-     */
-    const currenciesRegistry = new Registry();
-
-    // -----------------------------------------------------------------------------
-    // STYLE
-    // -----------------------------------------------------------------------------
-    css /* scss */ `
-  .o-chart-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-`;
-    class ChartFigure extends owl.Component {
-        static template = "o-spreadsheet-ChartFigure";
-        static components = {};
-        onDoubleClick() {
-            this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
-            this.env.openSidePanel("ChartPanel");
-        }
-        get chartType() {
-            return this.env.model.getters.getChartType(this.props.figure.id);
-        }
-        get chartComponent() {
-            const type = this.chartType;
-            const component = chartComponentRegistry.get(type);
-            if (!component) {
-                throw new Error(`Component is not defined for type ${type}`);
-            }
-            return component;
-        }
-    }
-    ChartFigure.props = {
-        figure: Object,
-        onFigureDeleted: Function,
-    };
-
-    class ImageFigure extends owl.Component {
-        static template = "o-spreadsheet-ImageFigure";
-        static components = {};
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        get figureId() {
-            return this.props.figure.id;
-        }
-        get getImagePath() {
-            return this.env.model.getters.getImagePath(this.figureId);
-        }
-    }
-    ImageFigure.props = {
-        figure: Object,
-        onFigureDeleted: Function,
-    };
-
-    function centerFigurePosition(getters, size) {
-        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
-        const dim = getters.getSheetViewDimension();
-        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
-        const scrollableViewportWidth = Math.min(rect.width, dim.width - offsetCorrectionX);
-        const scrollableViewportHeight = Math.min(rect.height, dim.height - offsetCorrectionY);
-        const position = {
-            x: offsetCorrectionX + scrollX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
-            y: offsetCorrectionY + scrollY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
-        }; // Position at the center of the scrollable viewport
-        return position;
-    }
-    function getMaxFigureSize(getters, figureSize) {
-        const size = deepCopy(figureSize);
-        const dim = getters.getSheetViewDimension();
-        const maxWidth = dim.width;
-        const maxHeight = dim.height;
-        if (size.width > maxWidth) {
-            const ratio = maxWidth / size.width;
-            size.width = maxWidth;
-            size.height = size.height * ratio;
-        }
-        if (size.height > maxHeight) {
-            const ratio = maxHeight / size.height;
-            size.height = maxHeight;
-            size.width = size.width * ratio;
-        }
-        return size;
-    }
-
-    const figureRegistry = new Registry();
-    figureRegistry.add("chart", {
-        Component: ChartFigure,
-        SidePanelComponent: "ChartPanel",
-        menuBuilder: getChartMenu,
-    });
-    figureRegistry.add("image", {
-        Component: ImageFigure,
-        keepRatio: true,
-        minFigSize: 20,
-        borderWidth: 0,
-        menuBuilder: getImageMenuRegistry,
-    });
-    function getChartMenu(figureId, onFigureDeleted, env) {
-        const menuItemSpecs = [
-            {
-                id: "edit",
-                name: _lt("Edit"),
-                sequence: 1,
-                execute: () => {
-                    env.model.dispatch("SELECT_FIGURE", { id: figureId });
-                    env.openSidePanel("ChartPanel");
-                },
-            },
-            getCopyMenuItem(figureId, env),
-            getCutMenuItem(figureId, env),
-            getDeleteMenuItem(figureId, onFigureDeleted, env),
-        ];
-        return createActions(menuItemSpecs);
-    }
-    function getImageMenuRegistry(figureId, onFigureDeleted, env) {
-        const menuItemSpecs = [
-            getCopyMenuItem(figureId, env),
-            getCutMenuItem(figureId, env),
-            {
-                id: "reset_size",
-                name: _lt("Reset size"),
-                sequence: 4,
-                execute: () => {
-                    const size = env.model.getters.getImageSize(figureId);
-                    const { height, width } = getMaxFigureSize(env.model.getters, size);
-                    env.model.dispatch("UPDATE_FIGURE", {
-                        sheetId: env.model.getters.getActiveSheetId(),
-                        id: figureId,
-                        height,
-                        width,
-                    });
-                },
-            },
-            getDeleteMenuItem(figureId, onFigureDeleted, env),
-        ];
-        return createActions(menuItemSpecs);
-    }
-    function getCopyMenuItem(figureId, env) {
-        return {
-            id: "copy",
-            name: _lt("Copy"),
-            sequence: 2,
-            description: "Ctrl+C",
-            execute: async () => {
-                env.model.dispatch("SELECT_FIGURE", { id: figureId });
-                env.model.dispatch("COPY");
-                await env.clipboard.write(env.model.getters.getClipboardContent());
-            },
-        };
-    }
-    function getCutMenuItem(figureId, env) {
-        return {
-            id: "cut",
-            name: _lt("Cut"),
-            sequence: 3,
-            description: "Ctrl+X",
-            execute: async () => {
-                env.model.dispatch("SELECT_FIGURE", { id: figureId });
-                env.model.dispatch("CUT");
-                await env.clipboard.write(env.model.getters.getClipboardContent());
-            },
-        };
-    }
-    function getDeleteMenuItem(figureId, onFigureDeleted, env) {
-        return {
-            id: "delete",
-            name: _lt("Delete"),
-            sequence: 10,
-            execute: () => {
-                env.model.dispatch("DELETE_FIGURE", {
-                    sheetId: env.model.getters.getActiveSheetId(),
-                    id: figureId,
-                });
-                onFigureDeleted();
-            },
-        };
-    }
-
-    const inverseCommandRegistry = new Registry()
-        .add("ADD_COLUMNS_ROWS", inverseAddColumnsRows)
-        .add("REMOVE_COLUMNS_ROWS", inverseRemoveColumnsRows)
-        .add("ADD_MERGE", inverseAddMerge)
-        .add("REMOVE_MERGE", inverseRemoveMerge)
-        .add("CREATE_SHEET", inverseCreateSheet)
-        .add("DELETE_SHEET", inverseDeleteSheet)
-        .add("DUPLICATE_SHEET", inverseDuplicateSheet)
-        .add("CREATE_FIGURE", inverseCreateFigure)
-        .add("CREATE_CHART", inverseCreateChart)
-        .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
-        .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
-    for (const cmd of coreTypes.values()) {
-        if (!inverseCommandRegistry.contains(cmd)) {
-            inverseCommandRegistry.add(cmd, identity);
-        }
-    }
-    function identity(cmd) {
-        return [cmd];
-    }
-    function inverseAddColumnsRows(cmd) {
-        const elements = [];
-        let start = cmd.base;
-        if (cmd.position === "after") {
-            start++;
-        }
-        for (let i = 0; i < cmd.quantity; i++) {
-            elements.push(i + start);
-        }
-        return [
-            {
-                type: "REMOVE_COLUMNS_ROWS",
-                dimension: cmd.dimension,
-                elements,
-                sheetId: cmd.sheetId,
-            },
-        ];
-    }
-    function inverseAddMerge(cmd) {
-        return [{ type: "REMOVE_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
-    }
-    function inverseRemoveMerge(cmd) {
-        return [{ type: "ADD_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
-    }
-    function inverseCreateSheet(cmd) {
-        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetId }];
-    }
-    function inverseDuplicateSheet(cmd) {
-        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetIdTo }];
-    }
-    function inverseRemoveColumnsRows(cmd) {
-        const commands = [];
-        const elements = [...cmd.elements].sort((a, b) => a - b);
-        for (let group of groupConsecutive(elements)) {
-            const column = group[0] === 0 ? 0 : group[0] - 1;
-            const position = group[0] === 0 ? "before" : "after";
-            commands.push({
-                type: "ADD_COLUMNS_ROWS",
-                dimension: cmd.dimension,
-                quantity: group.length,
-                base: column,
-                sheetId: cmd.sheetId,
-                position,
-            });
-        }
-        return commands;
-    }
-    function inverseDeleteSheet(cmd) {
-        return [{ type: "CREATE_SHEET", sheetId: cmd.sheetId, position: 1 }];
-    }
-    function inverseCreateFigure(cmd) {
-        return [{ type: "DELETE_FIGURE", id: cmd.figure.id, sheetId: cmd.sheetId }];
-    }
-    function inverseCreateChart(cmd) {
-        return [{ type: "DELETE_FIGURE", id: cmd.id, sheetId: cmd.sheetId }];
-    }
-    function inverseHideColumnsRows(cmd) {
-        return [
-            {
-                type: "UNHIDE_COLUMNS_ROWS",
-                sheetId: cmd.sheetId,
-                dimension: cmd.dimension,
-                elements: cmd.elements,
-            },
-        ];
-    }
-    function inverseUnhideColumnsRows(cmd) {
-        return [
-            {
-                type: "HIDE_COLUMNS_ROWS",
-                sheetId: cmd.sheetId,
-                dimension: cmd.dimension,
-                elements: cmd.elements,
-            },
-        ];
-    }
-
-    function interactiveCut(env) {
-        const result = env.model.dispatch("CUT");
-        if (!result.isSuccessful) {
-            if (result.isCancelledBecause(20 /* CommandResult.WrongCutSelection */)) {
-                env.raiseError(_lt("This operation is not allowed with multiple selections."));
-            }
-        }
-    }
-
-    const AddMergeInteractiveContent = {
-        MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
-        MergeInFilter: _lt("You can't merge cells inside of an existing filter."),
-    };
-    function interactiveAddMerge(env, sheetId, target) {
-        const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
-            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
-        }
-        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
-            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
-                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
-            });
-        }
-    }
-
-    const PasteInteractiveContent = {
-        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
-        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
-        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
-        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
-    };
-    function handlePasteResult(env, result) {
-        if (!result.isSuccessful) {
-            if (result.reasons.includes(21 /* CommandResult.WrongPasteSelection */)) {
-                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
-            }
-            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
-                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
-            }
-            else if (result.reasons.includes(23 /* CommandResult.WrongFigurePasteOption */)) {
-                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
-            }
-            else if (result.reasons.includes(76 /* CommandResult.FrozenPaneOverlap */)) {
-                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
-            }
-        }
-    }
-    function interactivePaste(env, target, pasteOption) {
-        const result = env.model.dispatch("PASTE", { target, pasteOption });
-        handlePasteResult(env, result);
-    }
-    function interactivePasteFromOS(env, target, text, pasteOption) {
-        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text, pasteOption });
-        handlePasteResult(env, result);
-    }
-
-    /**
-     * Create a function used to create a Chart based on the definition
-     */
-    function chartFactory(getters) {
-        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
-        function createChart(id, definition, sheetId) {
-            const builder = builders.find((builder) => builder.match(definition.type));
-            if (!builder) {
-                throw new Error(`No builder for this chart: ${definition.type}`);
-            }
-            return builder.createChart(definition, sheetId, getters);
-        }
-        return createChart;
-    }
-    /**
-     * Create a function used to create a Chart Runtime based on the chart class
-     * instance
-     */
-    function chartRuntimeFactory(getters) {
-        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
-        function createRuntimeChart(chart) {
-            const builder = builders.find((builder) => builder.match(chart.type));
-            if (!builder) {
-                throw new Error("No runtime builder for this chart.");
-            }
-            return builder.getChartRuntime(chart, getters);
-        }
-        return createRuntimeChart;
-    }
-    /**
-     * Validate the chart definition given in arguments
-     */
-    function validateChartDefinition(validator, definition) {
-        const validators = chartRegistry.getAll().find((validator) => validator.match(definition.type));
-        if (!validators) {
-            throw new Error("Unknown chart type.");
-        }
-        return validators.validateChartDefinition(validator, definition);
-    }
-    /**
-     * Get a new chart definition transformed with the executed command. This
-     * functions will be called during operational transform process
-     */
-    function transformDefinition(definition, executed) {
-        const transformation = chartRegistry.getAll().find((factory) => factory.match(definition.type));
-        if (!transformation) {
-            throw new Error("Unknown chart type.");
-        }
-        return transformation.transformDefinition(definition, executed);
-    }
-    /**
-     * Get an empty definition based on the given context and the given type
-     */
-    function getChartDefinitionFromContextCreation(context, type) {
-        const chartClass = chartRegistry.get(type);
-        return chartClass.getChartDefinitionFromContextCreation(context);
-    }
-    function getChartTypes() {
-        const result = {};
-        for (const key of chartRegistry.getKeys()) {
-            result[key] = chartRegistry.get(key).name;
-        }
-        return result;
-    }
-    /**
-     * Return a "smart" chart definition in the given zone. The definition is "smart" because it will
-     * use the best type of chart to display the data of the zone.
-     *
-     * It will also try to find labels and datasets in the range, and try to find title for the datasets.
-     *
-     * The type of chart will be :
-     * - If the zone is a single non-empty cell, returns a scorecard
-     * - If the all the labels are numbers/date, returns a line chart
-     * - Else returns a bar chart
-     */
-    function getSmartChartDefinition(zone, getters) {
-        let dataSetZone = zone;
-        if (zone.left !== zone.right) {
-            dataSetZone = { ...zone, left: zone.left + 1 };
-        }
-        const dataSets = [zoneToXc(dataSetZone)];
-        const sheetId = getters.getActiveSheetId();
-        const topLeftCell = getters.getCell({ sheetId, col: zone.left, row: zone.top });
-        if (getZoneArea(zone) === 1 && topLeftCell?.content) {
-            return {
-                type: "scorecard",
-                title: "",
-                background: topLeftCell.style?.fillColor || undefined,
-                keyValue: zoneToXc(zone),
-                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
-                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
-                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
-            };
-        }
-        let title = "";
-        const cellsInFirstRow = getters.getEvaluatedCellsInZone(sheetId, {
-            ...dataSetZone,
-            bottom: dataSetZone.top,
-        });
-        const dataSetsHaveTitle = !!cellsInFirstRow.find((cell) => cell.type !== CellValueType.empty && cell.type !== CellValueType.number);
-        if (dataSetsHaveTitle) {
-            const texts = cellsInFirstRow
-                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
-                .map((cell) => cell.formattedValue);
-            const lastElement = texts.splice(-1)[0];
-            title = texts.join(", ");
-            if (lastElement) {
-                title += (title ? " " + _t("and") + " " : "") + lastElement;
-            }
-        }
-        let labelRangeXc;
-        if (zone.left !== zone.right) {
-            labelRangeXc = zoneToXc({
-                ...zone,
-                right: zone.left,
-            });
-        }
-        // Only display legend for several datasets.
-        const newLegendPos = dataSetZone.right === dataSetZone.left ? "none" : "top";
-        const labelRange = labelRangeXc ? getters.getRangeFromSheetXC(sheetId, labelRangeXc) : undefined;
-        if (canChartParseLabels(labelRange, getters)) {
-            return {
-                title,
-                dataSets,
-                labelsAsText: false,
-                stacked: false,
-                aggregated: false,
-                labelRange: labelRangeXc,
-                type: "line",
-                dataSetsHaveTitle,
-                verticalAxisPosition: "left",
-                legendPosition: newLegendPos,
-            };
-        }
-        return {
-            title,
-            dataSets,
-            labelRange: labelRangeXc,
-            type: "bar",
-            stacked: false,
-            aggregated: false,
-            dataSetsHaveTitle,
-            verticalAxisPosition: "left",
-            legendPosition: newLegendPos,
-        };
-    }
-
-    //------------------------------------------------------------------------------
-    // Helpers
-    //------------------------------------------------------------------------------
-    function setFormatter(env, format) {
-        env.model.dispatch("SET_FORMATTING", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-            format,
-        });
-    }
-    function setStyle(env, style) {
-        env.model.dispatch("SET_FORMATTING", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-            style,
-        });
-    }
-    //------------------------------------------------------------------------------
-    // Simple actions
-    //------------------------------------------------------------------------------
-    const PASTE_ACTION = async (env) => paste$1(env);
-    const PASTE_VALUE_ACTION = async (env) => paste$1(env, "onlyValue");
-    async function paste$1(env, pasteOption) {
-        const spreadsheetClipboard = env.model.getters.getClipboardTextContent();
-        const osClipboard = await env.clipboard.readText();
-        switch (osClipboard.status) {
-            case "ok":
-                const target = env.model.getters.getSelectedZones();
-                if (osClipboard && osClipboard.content !== spreadsheetClipboard) {
-                    interactivePasteFromOS(env, target, osClipboard.content, pasteOption);
-                }
-                else {
-                    interactivePaste(env, target, pasteOption);
-                }
-                if (env.model.getters.isCutOperation() && pasteOption !== "onlyValue") {
-                    await env.clipboard.write({ [ClipboardMIMEType.PlainText]: "" });
-                }
-                break;
-            case "notImplemented":
-                env.raiseError(_lt("Pasting from the context menu is not supported in this browser. Use keyboard shortcuts ctrl+c / ctrl+v instead."));
-                break;
-            case "permissionDenied":
-                env.raiseError(_lt("Access to the clipboard denied by the browser. Please enable clipboard permission for this page in your browser settings."));
-                break;
-        }
-    }
-    const PASTE_FORMAT_ACTION = (env) => paste$1(env, "onlyFormat");
-    //------------------------------------------------------------------------------
-    // Grid manipulations
-    //------------------------------------------------------------------------------
-    const DELETE_CONTENT_ROWS_NAME = (env) => {
-        if (env.model.getters.getSelectedZones().length > 1) {
-            return _lt("Clear rows");
-        }
-        let first;
-        let last;
-        const activesRows = env.model.getters.getActiveRows();
-        if (activesRows.size !== 0) {
-            first = Math.min(...activesRows);
-            last = Math.max(...activesRows);
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            first = zone.top;
-            last = zone.bottom;
-        }
-        if (first === last) {
-            return _lt("Clear row %s", (first + 1).toString());
-        }
-        return _lt("Clear rows %s - %s", (first + 1).toString(), (last + 1).toString());
-    };
-    const DELETE_CONTENT_ROWS_ACTION = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const target = [...env.model.getters.getActiveRows()].map((index) => env.model.getters.getRowsZone(sheetId, index, index));
-        env.model.dispatch("DELETE_CONTENT", {
-            target,
-            sheetId: env.model.getters.getActiveSheetId(),
-        });
-    };
-    const DELETE_CONTENT_COLUMNS_NAME = (env) => {
-        if (env.model.getters.getSelectedZones().length > 1) {
-            return _lt("Clear columns");
-        }
-        let first;
-        let last;
-        const activeCols = env.model.getters.getActiveCols();
-        if (activeCols.size !== 0) {
-            first = Math.min(...activeCols);
-            last = Math.max(...activeCols);
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            first = zone.left;
-            last = zone.right;
-        }
-        if (first === last) {
-            return _lt("Clear column %s", numberToLetters(first));
-        }
-        return _lt("Clear columns %s - %s", numberToLetters(first), numberToLetters(last));
-    };
-    const DELETE_CONTENT_COLUMNS_ACTION = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const target = [...env.model.getters.getActiveCols()].map((index) => env.model.getters.getColsZone(sheetId, index, index));
-        env.model.dispatch("DELETE_CONTENT", {
-            target,
-            sheetId: env.model.getters.getActiveSheetId(),
-        });
-    };
-    const REMOVE_ROWS_NAME = (env) => {
-        if (env.model.getters.getSelectedZones().length > 1) {
-            return _lt("Delete rows");
-        }
-        let first;
-        let last;
-        const activesRows = env.model.getters.getActiveRows();
-        if (activesRows.size !== 0) {
-            first = Math.min(...activesRows);
-            last = Math.max(...activesRows);
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            first = zone.top;
-            last = zone.bottom;
-        }
-        if (first === last) {
-            return _lt("Delete row %s", (first + 1).toString());
-        }
-        return _lt("Delete rows %s - %s", (first + 1).toString(), (last + 1).toString());
-    };
-    const REMOVE_ROWS_ACTION = (env) => {
-        let rows = [...env.model.getters.getActiveRows()];
-        if (!rows.length) {
-            const zone = env.model.getters.getSelectedZones()[0];
-            for (let i = zone.top; i <= zone.bottom; i++) {
-                rows.push(i);
-            }
-        }
-        env.model.dispatch("REMOVE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "ROW",
-            elements: rows,
-        });
-    };
-    const REMOVE_COLUMNS_NAME = (env) => {
-        if (env.model.getters.getSelectedZones().length > 1) {
-            return _lt("Delete columns");
-        }
-        let first;
-        let last;
-        const activeCols = env.model.getters.getActiveCols();
-        if (activeCols.size !== 0) {
-            first = Math.min(...activeCols);
-            last = Math.max(...activeCols);
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            first = zone.left;
-            last = zone.right;
-        }
-        if (first === last) {
-            return _lt("Delete column %s", numberToLetters(first));
-        }
-        return _lt("Delete columns %s - %s", numberToLetters(first), numberToLetters(last));
-    };
-    const NOT_ALL_VISIBLE_ROWS_SELECTED = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selectedRows = env.model.getters.getElementsFromSelection("ROW");
-        return env.model.getters.canRemoveHeaders(sheetId, "ROW", selectedRows);
-    };
-    const REMOVE_COLUMNS_ACTION = (env) => {
-        let columns = [...env.model.getters.getActiveCols()];
-        if (!columns.length) {
-            const zone = env.model.getters.getSelectedZones()[0];
-            for (let i = zone.left; i <= zone.right; i++) {
-                columns.push(i);
-            }
-        }
-        env.model.dispatch("REMOVE_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            dimension: "COL",
-            elements: columns,
-        });
-    };
-    const NOT_ALL_VISIBLE_COLS_SELECTED = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selectedCols = env.model.getters.getElementsFromSelection("COL");
-        return env.model.getters.canRemoveHeaders(sheetId, "COL", selectedCols);
-    };
-    const INSERT_ROWS_BEFORE_ACTION = (env) => {
-        const activeRows = env.model.getters.getActiveRows();
-        let row;
-        let quantity;
-        if (activeRows.size) {
-            row = Math.min(...activeRows);
-            quantity = activeRows.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            row = zone.top;
-            quantity = zone.bottom - zone.top + 1;
-        }
-        env.model.dispatch("ADD_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            position: "before",
-            base: row,
-            quantity,
-            dimension: "ROW",
-        });
-    };
-    const INSERT_ROWS_AFTER_ACTION = (env) => {
-        const activeRows = env.model.getters.getActiveRows();
-        let row;
-        let quantity;
-        if (activeRows.size) {
-            row = Math.max(...activeRows);
-            quantity = activeRows.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            row = zone.bottom;
-            quantity = zone.bottom - zone.top + 1;
-        }
-        env.model.dispatch("ADD_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            position: "after",
-            base: row,
-            quantity,
-            dimension: "ROW",
-        });
-    };
-    const INSERT_COLUMNS_BEFORE_ACTION = (env) => {
-        const activeCols = env.model.getters.getActiveCols();
-        let column;
-        let quantity;
-        if (activeCols.size) {
-            column = Math.min(...activeCols);
-            quantity = activeCols.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            column = zone.left;
-            quantity = zone.right - zone.left + 1;
-        }
-        env.model.dispatch("ADD_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            position: "before",
-            dimension: "COL",
-            base: column,
-            quantity,
-        });
-    };
-    const INSERT_COLUMNS_AFTER_ACTION = (env) => {
-        const activeCols = env.model.getters.getActiveCols();
-        let column;
-        let quantity;
-        if (activeCols.size) {
-            column = Math.max(...activeCols);
-            quantity = activeCols.size;
-        }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            column = zone.right;
-            quantity = zone.right - zone.left + 1;
-        }
-        env.model.dispatch("ADD_COLUMNS_ROWS", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            position: "after",
-            dimension: "COL",
-            base: column,
-            quantity,
-        });
-    };
-    const HIDE_COLUMNS_NAME = (env) => {
-        const cols = env.model.getters.getElementsFromSelection("COL");
-        let first = cols[0];
-        let last = cols[cols.length - 1];
-        if (cols.length === 1) {
-            return _lt("Hide column %s", numberToLetters(first).toString());
-        }
-        else if (last - first + 1 === cols.length) {
-            return _lt("Hide columns %s - %s", numberToLetters(first).toString(), numberToLetters(last).toString());
-        }
-        else {
-            return _lt("Hide columns");
-        }
-    };
-    const HIDE_ROWS_NAME = (env) => {
-        const rows = env.model.getters.getElementsFromSelection("ROW");
-        let first = rows[0];
-        let last = rows[rows.length - 1];
-        if (rows.length === 1) {
-            return _lt("Hide row %s", (first + 1).toString());
-        }
-        else if (last - first + 1 === rows.length) {
-            return _lt("Hide rows %s - %s", (first + 1).toString(), (last + 1).toString());
-        }
-        else {
-            return _lt("Hide rows");
-        }
-    };
-    //------------------------------------------------------------------------------
-    // Charts
-    //------------------------------------------------------------------------------
-    const CREATE_CHART = (env) => {
-        const getters = env.model.getters;
-        const id = env.model.uuidGenerator.uuidv4();
-        const sheetId = getters.getActiveSheetId();
-        if (getZoneArea(env.model.getters.getSelectedZone()) === 1) {
-            env.model.selection.selectTableAroundSelection();
-        }
-        const size = { width: DEFAULT_FIGURE_WIDTH, height: DEFAULT_FIGURE_HEIGHT };
-        const position = getChartPositionAtCenterOfViewport(getters, size);
-        const result = env.model.dispatch("CREATE_CHART", {
-            sheetId,
-            id,
-            position,
-            size,
-            definition: getSmartChartDefinition(env.model.getters.getSelectedZone(), env.model.getters),
-        });
-        if (result.isSuccessful) {
-            env.model.dispatch("SELECT_FIGURE", { id });
-            env.openSidePanel("ChartPanel");
-        }
-    };
-    //------------------------------------------------------------------------------
-    // Image
-    //------------------------------------------------------------------------------
-    async function requestImage(env) {
-        try {
-            return await env.imageProvider.requestImage();
-        }
-        catch {
-            env.raiseError(_lt("An unexpected error occurred during the image transfer"));
-            return undefined;
-        }
-    }
-    const CREATE_IMAGE = async (env) => {
-        if (env.imageProvider) {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const figureId = env.model.uuidGenerator.uuidv4();
-            const image = await requestImage(env);
-            if (!image) {
-                throw new Error("No image provider was given to the environment");
-            }
-            const size = getMaxFigureSize(env.model.getters, image.size);
-            const position = centerFigurePosition(env.model.getters, size);
-            env.model.dispatch("CREATE_IMAGE", {
-                sheetId,
-                figureId,
-                position,
-                size,
-                definition: image,
-            });
-        }
-    };
-    //------------------------------------------------------------------------------
-    // Style/Format
-    //------------------------------------------------------------------------------
-    const FORMAT_PERCENT_ACTION = (env) => setFormatter(env, "0.00%");
-    //------------------------------------------------------------------------------
-    // Side panel
-    //------------------------------------------------------------------------------
-    const OPEN_CF_SIDEPANEL_ACTION = (env) => {
-        env.openSidePanel("ConditionalFormatting", { selection: env.model.getters.getSelectedZones() });
-    };
-    const INSERT_LINK = (env) => {
-        let { col, row } = env.model.getters.getActivePosition();
-        env.model.dispatch("OPEN_CELL_POPOVER", { col, row, popoverType: "LinkEditor" });
-    };
-    //------------------------------------------------------------------------------
-    // Filters action
-    //------------------------------------------------------------------------------
-    const SELECTION_CONTAINS_FILTER = (env) => {
-        const sheetId = env.model.getters.getActiveSheetId();
-        const selectedZones = env.model.getters.getSelectedZones();
-        return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
-    };
-    //------------------------------------------------------------------------------
-    // Sorting action
-    //------------------------------------------------------------------------------
-    const IS_ONLY_ONE_RANGE = (env) => {
-        return env.model.getters.getSelectedZones().length === 1;
-    };
-
-    const undo = {
-        name: _lt("Undo"),
-        description: "Ctrl+Z",
-        execute: (env) => env.model.dispatch("REQUEST_UNDO"),
-        isEnabled: (env) => env.model.getters.canUndo(),
-        icon: "o-spreadsheet-Icon.UNDO",
-    };
-    const redo = {
-        name: _lt("Redo"),
-        description: "Ctrl+Y",
-        execute: (env) => env.model.dispatch("REQUEST_REDO"),
-        isEnabled: (env) => env.model.getters.canRedo(),
-        icon: "o-spreadsheet-Icon.REDO",
-    };
-    const copy = {
-        name: _lt("Copy"),
-        description: "Ctrl+C",
-        isReadonlyAllowed: true,
-        execute: async (env) => {
-            env.model.dispatch("COPY");
-            await env.clipboard.write(env.model.getters.getClipboardContent());
-        },
-        icon: "o-spreadsheet-Icon.COPY",
-    };
-    const cut = {
-        name: _lt("Cut"),
-        description: "Ctrl+X",
-        execute: async (env) => {
-            interactiveCut(env);
-            await env.clipboard.write(env.model.getters.getClipboardContent());
-        },
-        icon: "o-spreadsheet-Icon.CUT",
-    };
-    const paste = {
-        name: _lt("Paste"),
-        description: "Ctrl+V",
-        execute: PASTE_ACTION,
-        icon: "o-spreadsheet-Icon.PASTE",
-    };
-    const pasteSpecial = {
-        name: _lt("Paste special"),
-        isVisible: (env) => {
-            return !env.model.getters.isCutOperation();
-        },
-        icon: "o-spreadsheet-Icon.PASTE",
-    };
-    const pasteSpecialValue = {
-        name: _lt("Paste value only"),
-        description: "Ctrl+Shift+V",
-        execute: PASTE_VALUE_ACTION,
-    };
-    const pasteSpecialFormat = {
-        name: _lt("Paste format only"),
-        execute: PASTE_FORMAT_ACTION,
-    };
-    const findAndReplace = {
-        name: _lt("Find and replace"),
-        description: "Ctrl+H",
-        isReadonlyAllowed: true,
-        execute: (env) => {
-            env.openSidePanel("FindAndReplace", {});
-        },
-        icon: "o-spreadsheet-Icon.FIND_AND_REPLACE",
-    };
-    const deleteValues = {
-        name: _lt("Delete values"),
-        execute: (env) => env.model.dispatch("DELETE_CONTENT", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-        }),
-    };
-    const deleteRows = {
-        name: REMOVE_ROWS_NAME,
-        execute: REMOVE_ROWS_ACTION,
-        isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
-    };
-    const deleteRow = {
-        ...deleteRows,
-        isVisible: IS_ONLY_ONE_RANGE,
-    };
-    const clearRows = {
-        name: DELETE_CONTENT_ROWS_NAME,
-        execute: DELETE_CONTENT_ROWS_ACTION,
-    };
-    const deleteCols = {
-        name: REMOVE_COLUMNS_NAME,
-        execute: REMOVE_COLUMNS_ACTION,
-        isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
-    };
-    const deleteCol = {
-        ...deleteCols,
-        isVisible: IS_ONLY_ONE_RANGE,
-    };
-    const clearCols = {
-        name: DELETE_CONTENT_COLUMNS_NAME,
-        execute: DELETE_CONTENT_COLUMNS_ACTION,
-    };
-    const deleteCells = {
-        name: _lt("Delete cells"),
-        isVisible: IS_ONLY_ONE_RANGE,
-    };
-    const deleteCellShiftUp = {
-        name: _lt("Delete cell and shift up"),
-        execute: (env) => {
-            const zone = env.model.getters.getSelectedZone();
-            const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "ROW" });
-            handlePasteResult(env, result);
-        },
-    };
-    const deleteCellShiftLeft = {
-        name: _lt("Delete cell and shift left"),
-        execute: (env) => {
-            const zone = env.model.getters.getSelectedZone();
-            const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "COL" });
-            handlePasteResult(env, result);
-        },
-    };
-    const mergeCells = {
-        name: _lt("Merge cells"),
-        isEnabled: (env) => !cannotMerge(env),
-        isActive: (env) => isInMerge(env),
-        execute: (env) => toggleMerge(env),
-        icon: "o-spreadsheet-Icon.MERGE_CELL",
-    };
-    function cannotMerge(env) {
-        const zones = env.model.getters.getSelectedZones();
-        const { top, left, right, bottom } = env.model.getters.getSelectedZone();
-        const { sheetId } = env.model.getters.getActivePosition();
-        const { xSplit, ySplit } = env.model.getters.getPaneDivisions(sheetId);
-        return (zones.length > 1 ||
-            (top === bottom && left === right) ||
-            (left < xSplit && xSplit <= right) ||
-            (top < ySplit && ySplit <= bottom));
-    }
-    function isInMerge(env) {
-        if (!cannotMerge(env)) {
-            const zones = env.model.getters.getSelectedZones();
-            const { col, row, sheetId } = env.model.getters.getActivePosition();
-            const zone = env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
-            return isEqual(zones[0], zone);
-        }
-        return false;
-    }
-    function toggleMerge(env) {
-        if (cannotMerge(env)) {
-            return;
-        }
-        const zones = env.model.getters.getSelectedZones();
-        const target = [zones[zones.length - 1]];
-        const sheetId = env.model.getters.getActiveSheetId();
-        if (isInMerge(env)) {
-            env.model.dispatch("REMOVE_MERGE", { sheetId, target });
-        }
-        else {
-            interactiveAddMerge(env, sheetId, target);
-        }
-    }
-
-    var ACTION_EDIT = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        undo: undo,
-        redo: redo,
-        copy: copy,
-        cut: cut,
-        paste: paste,
-        pasteSpecial: pasteSpecial,
-        pasteSpecialValue: pasteSpecialValue,
-        pasteSpecialFormat: pasteSpecialFormat,
-        findAndReplace: findAndReplace,
-        deleteValues: deleteValues,
-        deleteRows: deleteRows,
-        deleteRow: deleteRow,
-        clearRows: clearRows,
-        deleteCols: deleteCols,
-        deleteCol: deleteCol,
-        clearCols: clearCols,
-        deleteCells: deleteCells,
-        deleteCellShiftUp: deleteCellShiftUp,
-        deleteCellShiftLeft: deleteCellShiftLeft,
-        mergeCells: mergeCells
-    });
-
     //------------------------------------------------------------------------------
     // Arg description DSL
     //------------------------------------------------------------------------------
@@ -9651,8 +6462,8 @@
         //TODO computeFormat
         compute: function (array, rows, columns) {
             const _array = toMatrixArgValue(array);
-            const _rowsArg = toInteger(rows);
-            const _columnsArg = toInteger(columns);
+            const _rowsArg = toInteger(rows, this.locale);
+            const _columnsArg = toInteger(columns, this.locale);
             assertPositive(_lt("The rows argument (%s) must be strictly positive.", _rowsArg.toString()), _rowsArg);
             assertPositive(_lt("The columns argument (%s) must be strictly positive.", _rowsArg.toString()), _columnsArg);
             const _rows = Math.min(_rowsArg, _array[0].length);
@@ -9682,7 +6493,7 @@
         //TODO computeFormat
         compute: function (array, ...columns) {
             const _array = toMatrixArgValue(array);
-            const _columns = flattenRowFirst(columns, toInteger);
+            const _columns = flattenRowFirst(columns, (val) => toInteger(val, this.locale));
             assert(() => _columns.every((col) => col > 0 && col <= _array.length), _lt("The columns arguments must be between 1 and %s (got %s).", _array.length.toString(), (_columns.find((col) => col <= 0 || col > _array.length) || 0).toString()));
             const result = Array(_columns.length);
             for (let i = 0; i < _columns.length; i++) {
@@ -9707,7 +6518,7 @@
         //TODO computeFormat
         compute: function (array, ...rows) {
             const _array = toMatrixArgValue(array);
-            const _rows = flattenRowFirst(rows, toInteger);
+            const _rows = flattenRowFirst(rows, (val) => toInteger(val, this.locale));
             assert(() => _rows.every((row) => row > 0 && row <= _array[0].length), _lt("The rows arguments must be between 1 and %s (got %s).", _array[0].length.toString(), (_rows.find((row) => row <= 0 || row > _array[0].length) || 0).toString()));
             const result = Array(_array.length);
             for (let col = 0; col < _array.length; col++) {
@@ -9736,8 +6547,8 @@
         //TODO computeFormat
         compute: function (array, rows, columns, padWith = 0) {
             const _array = toMatrixArgValue(array);
-            const _rows = toInteger(rows);
-            const _columns = columns !== undefined ? toInteger(columns) : _array.length;
+            const _rows = toInteger(rows, this.locale);
+            const _columns = columns !== undefined ? toInteger(columns, this.locale) : _array.length;
             const _padWith = padWith !== undefined && padWith !== null ? padWith : 0; // TODO : Replace with #N/A errors once it's supported
             assert(() => _rows >= _array[0].length, _lt("The rows arguments (%s) must be greater or equal than the number of rows of the array.", _rows.toString()));
             assert(() => _columns >= _array.length, _lt("The columns arguments (%s) must be greater or equal than the number of columns of the array.", _columns.toString()));
@@ -9935,7 +6746,7 @@
                     }
                     let product = 1;
                     for (const range of _args) {
-                        product *= toNumber(range[i][j]);
+                        product *= toNumber(range[i][j], this.locale);
                     }
                     result += product;
                 }
@@ -10034,7 +6845,7 @@
         //TODO compute format
         compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
             const _array = toMatrixArgValue(array);
-            const _ignore = toInteger(ignore);
+            const _ignore = toInteger(ignore, this.locale);
             const _scanByColumn = toBoolean(scanByColumn);
             assert(() => _ignore >= 0 && _ignore <= 3, _lt("Argument ignore must be between 0 and 3"));
             const mappedFn = (acc, item) => {
@@ -10064,7 +6875,7 @@
         //TODO compute format
         compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
             const _array = toMatrixArgValue(array);
-            const _ignore = toInteger(ignore);
+            const _ignore = toInteger(ignore, this.locale);
             const _scanByColumn = toBoolean(scanByColumn);
             assert(() => _ignore >= 0 && _ignore <= 3, _lt("Argument ignore must be between 0 and 3"));
             const mappedFn = (acc, item) => {
@@ -10152,7 +6963,7 @@
         //TODO computeFormat
         compute: function (range, wrapCount, padWith = 0) {
             const _range = toMatrixArgValue(range);
-            const nOfRows = toInteger(wrapCount);
+            const nOfRows = toInteger(wrapCount, this.locale);
             const _padWith = padWith === null ? 0 : padWith;
             assertSingleColOrRow(_lt("Argument range must be a single row or column."), _range);
             const values = _range.flat();
@@ -10186,7 +6997,7 @@
         //TODO computeFormat
         compute: function (range, wrapCount, padWith = 0) {
             const _range = toMatrixArgValue(range);
-            const nOfCols = toInteger(wrapCount);
+            const nOfCols = toInteger(wrapCount, this.locale);
             const _padWith = padWith === null ? 0 : padWith;
             assertSingleColOrRow(_lt("Argument range must be a single row or column."), _range);
             const values = _range.flat();
@@ -10241,35 +7052,35 @@
             arg("unit (string, optional)", _lt("The formatting unit. Use 'k', 'm', or 'b' to force the unit")),
         ],
         returns: ["NUMBER"],
-        computeFormat: (arg, unit) => {
-            const value = Math.abs(toNumber(arg.value));
+        computeFormat: function (arg, unit) {
+            const value = Math.abs(toNumber(arg.value, this.locale));
             const format = arg.format;
             if (unit !== undefined) {
                 const postFix = unit?.value;
                 switch (postFix) {
                     case "k":
-                        return createLargeNumberFormat(format, 1e3, "k");
+                        return createLargeNumberFormat(format, 1e3, "k", this.locale);
                     case "m":
-                        return createLargeNumberFormat(format, 1e6, "m");
+                        return createLargeNumberFormat(format, 1e6, "m", this.locale);
                     case "b":
-                        return createLargeNumberFormat(format, 1e9, "b");
+                        return createLargeNumberFormat(format, 1e9, "b", this.locale);
                     default:
                         throw new Error(_lt("The formatting unit should be 'k', 'm' or 'b'."));
                 }
             }
             if (value < 1e5) {
-                return createLargeNumberFormat(format, 0, "");
+                return createLargeNumberFormat(format, 0, "", this.locale);
             }
             else if (value < 1e8) {
-                return createLargeNumberFormat(format, 1e3, "k");
+                return createLargeNumberFormat(format, 1e3, "k", this.locale);
             }
             else if (value < 1e11) {
-                return createLargeNumberFormat(format, 1e6, "m");
+                return createLargeNumberFormat(format, 1e6, "m", this.locale);
             }
-            return createLargeNumberFormat(format, 1e9, "b");
+            return createLargeNumberFormat(format, 1e9, "b", this.locale);
         },
         compute: function (value) {
-            return toNumber(value);
+            return toNumber(value, this.locale);
         },
     };
 
@@ -10291,7 +7102,7 @@
         args: [arg("value (number)", _lt("The number of which to return the absolute value."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.abs(toNumber(value));
+            return Math.abs(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -10305,7 +7116,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => Math.abs(_value) <= 1, _lt("The value (%s) must be between -1 and 1 inclusive.", _value.toString()));
             return Math.acos(_value);
         },
@@ -10321,7 +7132,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => _value >= 1, _lt("The value (%s) must be greater than or equal to 1.", _value.toString()));
             return Math.acosh(_value);
         },
@@ -10335,11 +7146,11 @@
         args: [arg("value (number)", _lt("The value for which to calculate the inverse cotangent."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             const sign = Math.sign(_value) || 1;
             // ACOT has two possible configurations:
-            // @compatibility Excel: return Math.PI / 2 - Math.atan(toNumber(_value));
-            // @compatibility Google: return sign * Math.PI / 2 - Math.atan(toNumber(_value));
+            // @compatibility Excel: return Math.PI / 2 - Math.atan(toNumber(_value, this.locale));
+            // @compatibility Google: return sign * Math.PI / 2 - Math.atan(toNumber(_value, this.locale));
             return (sign * Math.PI) / 2 - Math.atan(_value);
         },
         isExported: true,
@@ -10354,7 +7165,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => Math.abs(_value) > 1, _lt("The value (%s) cannot be between -1 and 1 inclusive.", _value.toString()));
             return Math.log((_value + 1) / (_value - 1)) / 2;
         },
@@ -10370,7 +7181,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => Math.abs(_value) <= 1, _lt("The value (%s) must be between -1 and 1 inclusive.", _value.toString()));
             return Math.asin(_value);
         },
@@ -10386,7 +7197,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.asinh(toNumber(value));
+            return Math.asinh(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -10398,7 +7209,7 @@
         args: [arg("value (number)", _lt("The value for which to calculate the inverse tangent."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.atan(toNumber(value));
+            return Math.atan(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -10413,8 +7224,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (x, y) {
-            const _x = toNumber(x);
-            const _y = toNumber(y);
+            const _x = toNumber(x, this.locale);
+            const _y = toNumber(y, this.locale);
             assert(() => _x !== 0 || _y !== 0, _lt(`Function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return Math.atan2(_y, _x);
         },
@@ -10430,7 +7241,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => Math.abs(_value) < 1, _lt("The value (%s) must be between -1 and 1 exclusive.", _value.toString()));
             return Math.atanh(_value);
         },
@@ -10448,8 +7259,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, factor = DEFAULT_FACTOR) {
-            const _value = toNumber(value);
-            const _factor = toNumber(factor);
+            const _value = toNumber(value, this.locale);
+            const _factor = toNumber(factor, this.locale);
             assert(() => _factor >= 0 || _value <= 0, _lt("The factor (%s) must be positive when the value (%s) is positive.", _factor.toString(), _value.toString()));
             return _factor ? Math.ceil(_value / _factor) * _factor : 0;
         },
@@ -10468,16 +7279,16 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE, mode = DEFAULT_MODE) {
-            let _significance = toNumber(significance);
+            let _significance = toNumber(significance, this.locale);
             if (_significance === 0) {
                 return 0;
             }
-            const _number = toNumber(number);
+            const _number = toNumber(number, this.locale);
             _significance = Math.abs(_significance);
             if (_number >= 0) {
                 return Math.ceil(_number / _significance) * _significance;
             }
-            const _mode = toNumber(mode);
+            const _mode = toNumber(mode, this.locale);
             if (_mode === 0) {
                 return -Math.floor(Math.abs(_number) / _significance) * _significance;
             }
@@ -10497,7 +7308,7 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (number, significance) {
-            return CEILING_MATH.compute(number, significance, 0);
+            return CEILING_MATH.compute.bind(this)(number, significance, 0);
         },
         isExported: true,
     };
@@ -10509,7 +7320,7 @@
         args: [arg("angle (number)", _lt("The angle to find the cosine of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            return Math.cos(toNumber(angle));
+            return Math.cos(toNumber(angle, this.locale));
         },
         isExported: true,
     };
@@ -10521,7 +7332,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cosine of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.cosh(toNumber(value));
+            return Math.cosh(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -10533,7 +7344,7 @@
         args: [arg("angle (number)", _lt("The angle to find the cotangent of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            const _angle = toNumber(angle);
+            const _angle = toNumber(angle, this.locale);
             assert(() => _angle !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return 1 / Math.tan(_angle);
         },
@@ -10547,7 +7358,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cotangent of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => _value !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return 1 / Math.tanh(_value);
         },
@@ -10582,7 +7393,7 @@
             let count = 0;
             visitMatchingRanges(argsValues, (i, j) => {
                 count += 1;
-            });
+            }, this.locale);
             return count;
         },
         isExported: true,
@@ -10603,7 +7414,7 @@
             let count = 0;
             visitMatchingRanges(argsValues, (i, j) => {
                 count += 1;
-            });
+            }, this.locale);
             return count;
         },
         isExported: true,
@@ -10654,7 +7465,7 @@
                 if (isDefined(value)) {
                     uniqueValues.add(value);
                 }
-            });
+            }, this.locale);
             return uniqueValues.size;
         },
     };
@@ -10666,7 +7477,7 @@
         args: [arg("angle (number)", _lt("The angle to find the cosecant of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            const _angle = toNumber(angle);
+            const _angle = toNumber(angle, this.locale);
             assert(() => _angle !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return 1 / Math.sin(_angle);
         },
@@ -10680,7 +7491,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cosecant of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => _value !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return 1 / Math.sinh(_value);
         },
@@ -10697,7 +7508,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (value, base) {
-            let _base = toNumber(base);
+            let _base = toNumber(base, this.locale);
             _base = Math.floor(_base);
             assert(() => 2 <= _base && _base <= 36, _lt("The base (%s) must be between 2 and 36 inclusive.", _base.toString()));
             const _value = toString(value);
@@ -10724,7 +7535,7 @@
         args: [arg("angle (number)", _lt("The angle to convert from radians to degrees."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            return (toNumber(angle) * 180) / Math.PI;
+            return (toNumber(angle, this.locale) * 180) / Math.PI;
         },
         isExported: true,
     };
@@ -10736,7 +7547,7 @@
         args: [arg("value (number)", _lt("The exponent to raise e."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.exp(toNumber(value));
+            return Math.exp(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -10752,8 +7563,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, factor = DEFAULT_FACTOR) {
-            const _value = toNumber(value);
-            const _factor = toNumber(factor);
+            const _value = toNumber(value, this.locale);
+            const _factor = toNumber(factor, this.locale);
             assert(() => _factor >= 0 || _value <= 0, _lt("The factor (%s) must be positive when the value (%s) is positive.", _factor.toString(), _value.toString()));
             return _factor ? Math.floor(_value / _factor) * _factor : 0;
         },
@@ -10772,16 +7583,16 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE, mode = DEFAULT_MODE) {
-            let _significance = toNumber(significance);
+            let _significance = toNumber(significance, this.locale);
             if (_significance === 0) {
                 return 0;
             }
-            const _number = toNumber(number);
+            const _number = toNumber(number, this.locale);
             _significance = Math.abs(_significance);
             if (_number >= 0) {
                 return Math.floor(_number / _significance) * _significance;
             }
-            const _mode = toNumber(mode);
+            const _mode = toNumber(mode, this.locale);
             if (_mode === 0) {
                 return -Math.ceil(Math.abs(_number) / _significance) * _significance;
             }
@@ -10801,7 +7612,7 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE) {
-            return FLOOR_MATH.compute(number, significance, 0);
+            return FLOOR_MATH.compute.bind(this)(number, significance, 0);
         },
         isExported: true,
     };
@@ -10813,7 +7624,7 @@
         args: [arg("value (number)", _lt("The value to be verified as even."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
-            const _value = strictToNumber(value);
+            const _value = strictToNumber(value, this.locale);
             return Math.floor(Math.abs(_value)) & 1 ? false : true;
         },
         isExported: true,
@@ -10830,7 +7641,7 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE) {
-            return CEILING_MATH.compute(number, significance, 0);
+            return CEILING_MATH.compute.bind(this)(number, significance, 0);
         },
         isExported: true,
     };
@@ -10842,7 +7653,7 @@
         args: [arg("value (number)", _lt("The value to be verified as even."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
-            const _value = strictToNumber(value);
+            const _value = strictToNumber(value, this.locale);
             return Math.floor(Math.abs(_value)) & 1 ? true : false;
         },
         isExported: true,
@@ -10855,7 +7666,7 @@
         args: [arg("value (number)", _lt("The value for which to calculate the logarithm, base e."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => _value > 0, _lt("The value (%s) must be strictly positive.", _value.toString()));
             return Math.log(_value);
         },
@@ -10873,9 +7684,9 @@
         returns: ["NUMBER"],
         computeFormat: (dividend) => dividend?.format,
         compute: function (dividend, divisor) {
-            const _divisor = toNumber(divisor);
+            const _divisor = toNumber(divisor, this.locale);
             assert(() => _divisor !== 0, _lt("The divisor must be different from 0."));
-            const _dividend = toNumber(dividend);
+            const _dividend = toNumber(dividend, this.locale);
             const modulus = _dividend % _divisor;
             // -42 % 10 = -2 but we want 8, so need the code below
             if ((modulus > 0 && _divisor < 0) || (modulus < 0 && _divisor > 0)) {
@@ -10895,7 +7706,7 @@
         ],
         returns: ["RANGE<NUMBER>"],
         compute: function (n) {
-            const _n = toInteger(n);
+            const _n = toInteger(n, this.locale);
             assertPositive(_lt("The argument dimension must be positive"), _n);
             return getUnitMatrix(_n);
         },
@@ -10910,7 +7721,7 @@
         returns: ["NUMBER"],
         computeFormat: (number) => number?.format,
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             let temp = Math.ceil(Math.abs(_value));
             temp = temp & 1 ? temp : temp + 1;
             return _value < 0 ? -temp : temp;
@@ -10941,8 +7752,8 @@
         returns: ["NUMBER"],
         computeFormat: (base) => base?.format,
         compute: function (base, exponent) {
-            const _base = toNumber(base);
-            const _exponent = toNumber(exponent);
+            const _base = toNumber(base, this.locale);
+            const _exponent = toNumber(exponent, this.locale);
             assert(() => _base >= 0 || Number.isInteger(_exponent), _lt("The exponent (%s) must be an integer when the base is negative.", _exponent.toString()));
             return Math.pow(_base, _exponent);
         },
@@ -10976,7 +7787,7 @@
                     }
                 }
                 else if (n !== null && n !== undefined) {
-                    acc *= strictToNumber(n);
+                    acc *= strictToNumber(n, this.locale);
                     count += 1;
                 }
             }
@@ -11013,10 +7824,10 @@
         ],
         returns: ["RANGE<NUMBER>"],
         compute: function (rows = 1, columns = 1, min = 0, max = 1, whole_number = false) {
-            const _cols = toInteger(columns);
-            const _rows = toInteger(rows);
-            const _min = toNumber(min);
-            const _max = toNumber(max);
+            const _cols = toInteger(columns, this.locale);
+            const _rows = toInteger(rows, this.locale);
+            const _min = toNumber(min, this.locale);
+            const _max = toNumber(max, this.locale);
             const _whole_number = toBoolean(whole_number);
             assertPositive(_lt("The number columns (%s) must be positive.", _cols.toString()), _cols);
             assertPositive(_lt("The number rows (%s) must be positive.", _rows.toString()), _rows);
@@ -11052,11 +7863,11 @@
         returns: ["NUMBER"],
         computeFormat: (low) => low?.format,
         compute: function (low, high) {
-            let _low = toNumber(low);
+            let _low = toNumber(low, this.locale);
             if (!Number.isInteger(_low)) {
                 _low = Math.ceil(_low);
             }
-            let _high = toNumber(high);
+            let _high = toNumber(high, this.locale);
             if (!Number.isInteger(_high)) {
                 _high = Math.floor(_high);
             }
@@ -11077,8 +7888,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, places = DEFAULT_PLACES) {
-            const _value = toNumber(value);
-            let _places = toNumber(places);
+            const _value = toNumber(value, this.locale);
+            let _places = toNumber(places, this.locale);
             const absValue = Math.abs(_value);
             let tempResult;
             if (_places === 0) {
@@ -11106,8 +7917,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, places = DEFAULT_PLACES) {
-            const _value = toNumber(value);
-            let _places = toNumber(places);
+            const _value = toNumber(value, this.locale);
+            let _places = toNumber(places, this.locale);
             const absValue = Math.abs(_value);
             let tempResult;
             if (_places === 0) {
@@ -11135,8 +7946,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, places = DEFAULT_PLACES) {
-            const _value = toNumber(value);
-            let _places = toNumber(places);
+            const _value = toNumber(value, this.locale);
+            let _places = toNumber(places, this.locale);
             const absValue = Math.abs(_value);
             let tempResult;
             if (_places === 0) {
@@ -11160,7 +7971,7 @@
         args: [arg("angle (number)", _lt("The angle to find the secant of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            return 1 / Math.cos(toNumber(angle));
+            return 1 / Math.cos(toNumber(angle, this.locale));
         },
         isExported: true,
     };
@@ -11172,7 +7983,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic secant of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return 1 / Math.cosh(toNumber(value));
+            return 1 / Math.cosh(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -11184,7 +7995,7 @@
         args: [arg("angle (number)", _lt("The angle to find the sine of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            return Math.sin(toNumber(angle));
+            return Math.sin(toNumber(angle, this.locale));
         },
         isExported: true,
     };
@@ -11196,7 +8007,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic sine of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.sinh(toNumber(value));
+            return Math.sinh(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -11209,7 +8020,7 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value) {
-            const _value = toNumber(value);
+            const _value = toNumber(value, this.locale);
             assert(() => _value >= 0, _lt("The value (%s) must be positive or null.", _value.toString()));
             return Math.sqrt(_value);
         },
@@ -11229,7 +8040,7 @@
             return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
-            return reduceNumbers(values, (acc, a) => acc + a, 0);
+            return reduceNumbers(values, (acc, a) => acc + a, 0, this.locale);
         },
         isExported: true,
     };
@@ -11254,7 +8065,7 @@
                 if (typeof value === "number") {
                     sum += value;
                 }
-            });
+            }, this.locale);
             return sum;
         },
         isExported: true,
@@ -11279,7 +8090,7 @@
                 if (typeof value === "number") {
                     sum += value;
                 }
-            });
+            }, this.locale);
             return sum;
         },
         isExported: true,
@@ -11292,7 +8103,7 @@
         args: [arg("angle (number)", _lt("The angle to find the tangent of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
-            return Math.tan(toNumber(angle));
+            return Math.tan(toNumber(angle, this.locale));
         },
         isExported: true,
     };
@@ -11304,7 +8115,7 @@
         args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic tangent of."))],
         returns: ["NUMBER"],
         compute: function (value) {
-            return Math.tanh(toNumber(value));
+            return Math.tanh(toNumber(value, this.locale));
         },
         isExported: true,
     };
@@ -11320,8 +8131,8 @@
         returns: ["NUMBER"],
         computeFormat: (value) => value?.format,
         compute: function (value, places = DEFAULT_PLACES) {
-            const _value = toNumber(value);
-            let _places = toNumber(places);
+            const _value = toNumber(value, this.locale);
+            let _places = toNumber(places, this.locale);
             if (_places === 0) {
                 return Math.trunc(_value);
             }
@@ -11434,21 +8245,21 @@
         }
         return acc / (count - (isSample ? 1 : 0));
     }
-    function variance(args, isSample, textAs0) {
+    function variance(args, isSample, textAs0, locale) {
         let count = 0;
         let sum = 0;
         const reduceFunction = textAs0 ? reduceNumbersTextAs0 : reduceNumbers;
         sum = reduceFunction(args, (acc, a) => {
             count += 1;
             return acc + a;
-        }, 0);
+        }, 0, locale);
         assert(() => count !== 0 && (!isSample || count !== 1), _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
         const average = sum / count;
-        return (reduceFunction(args, (acc, a) => acc + Math.pow(a - average, 2), 0) /
+        return (reduceFunction(args, (acc, a) => acc + Math.pow(a - average, 2), 0, locale) /
             (count - (isSample ? 1 : 0)));
     }
-    function centile(data, percent, isInclusive) {
-        const _percent = toNumber(percent);
+    function centile(data, percent, isInclusive, locale) {
+        const _percent = toNumber(percent, locale);
         assert(() => (isInclusive ? 0 <= _percent && _percent <= 1 : 0 < _percent && _percent < 1), _lt(`Function [[FUNCTION_NAME]] parameter 2 value is out of range.`));
         let sortedArray = [];
         let index;
@@ -11482,10 +8293,10 @@
             const sum = reduceNumbers(values, (acc, a) => {
                 count += 1;
                 return acc + a;
-            }, 0);
+            }, 0, this.locale);
             assert(() => count !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             const average = sum / count;
-            return reduceNumbers(values, (acc, a) => acc + Math.abs(average - a), 0) / count;
+            return reduceNumbers(values, (acc, a) => acc + Math.abs(average - a), 0, this.locale) / count;
         },
         isExported: true,
     };
@@ -11507,7 +8318,7 @@
             const sum = reduceNumbers(values, (acc, a) => {
                 count += 1;
                 return acc + a;
-            }, 0);
+            }, 0, this.locale);
             assert(() => count !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return sum / count;
         },
@@ -11564,8 +8375,8 @@
                     }
                 }
                 else {
-                    weight = toNumber(weight);
-                    value = toNumber(value);
+                    weight = toNumber(weight, this.locale);
+                    value = toNumber(value, this.locale);
                     assert(() => weight >= 0, negativeWeightError);
                     sum += value * weight;
                     count += weight;
@@ -11593,7 +8404,7 @@
             const sum = reduceNumbersTextAs0(values, (acc, a) => {
                 count += 1;
                 return acc + a;
-            }, 0);
+            }, 0, this.locale);
             assert(() => count !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return sum / count;
         },
@@ -11622,7 +8433,7 @@
                     count += 1;
                     sum += value;
                 }
-            });
+            }, this.locale);
             assert(() => count !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return sum / count;
         },
@@ -11650,7 +8461,7 @@
                     count += 1;
                     sum += value;
                 }
-            });
+            }, this.locale);
             assert(() => count !== 0, _lt(`Evaluation of function [[FUNCTION_NAME]] caused a divide by zero error.`));
             return sum / count;
         },
@@ -11678,7 +8489,9 @@
                         }
                     }
                 }
-                else if (typeof n !== "string" || isNumber(n) || parseDateTime(n)) {
+                else if (typeof n !== "string" ||
+                    isNumber(n, this.locale) ||
+                    parseDateTime(n, this.locale)) {
                     count += 1;
                 }
             }
@@ -11762,7 +8575,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, n) {
-            const _n = Math.trunc(toNumber(n));
+            const _n = Math.trunc(toNumber(n, this.locale));
             let largests = [];
             let index;
             let count = 0;
@@ -11798,7 +8611,7 @@
             return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
-            const result = reduceNumbers(values, (acc, a) => (acc < a ? a : acc), -Infinity);
+            const result = reduceNumbers(values, (acc, a) => (acc < a ? a : acc), -Infinity, this.locale);
             return result === -Infinity ? 0 : result;
         },
         isExported: true,
@@ -11819,7 +8632,7 @@
         compute: function (...values) {
             const maxa = reduceNumbersTextAs0(values, (acc, a) => {
                 return Math.max(a, acc);
-            }, -Infinity);
+            }, -Infinity, this.locale);
             return maxa === -Infinity ? 0 : maxa;
         },
         isExported: true,
@@ -11844,7 +8657,7 @@
                 if (typeof value === "number") {
                     result = result < value ? value : result;
                 }
-            });
+            }, this.locale);
             return result === -Infinity ? 0 : result;
         },
         isExported: true,
@@ -11866,8 +8679,8 @@
             let data = [];
             visitNumbers(values, (arg) => {
                 data.push(arg);
-            });
-            return centile(data, 0.5, true);
+            }, this.locale);
+            return centile(data, 0.5, true, this.locale);
         },
         isExported: true,
     };
@@ -11885,7 +8698,7 @@
             return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
-            const result = reduceNumbers(values, (acc, a) => (a < acc ? a : acc), Infinity);
+            const result = reduceNumbers(values, (acc, a) => (a < acc ? a : acc), Infinity, this.locale);
             return result === Infinity ? 0 : result;
         },
         isExported: true,
@@ -11906,7 +8719,7 @@
         compute: function (...values) {
             const mina = reduceNumbersTextAs0(values, (acc, a) => {
                 return Math.min(a, acc);
-            }, Infinity);
+            }, Infinity, this.locale);
             return mina === Infinity ? 0 : mina;
         },
         isExported: true,
@@ -11931,7 +8744,7 @@
                 if (typeof value === "number") {
                     result = result > value ? value : result;
                 }
-            });
+            }, this.locale);
             return result === Infinity ? 0 : result;
         },
         isExported: true,
@@ -11950,7 +8763,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
-            return PERCENTILE_INC.compute(data, percentile);
+            return PERCENTILE_INC.compute.bind(this)(data, percentile);
         },
         isExported: true,
     };
@@ -11968,7 +8781,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
-            return centile([data], percentile, false);
+            return centile([data], percentile, false, this.locale);
         },
         isExported: true,
     };
@@ -11986,7 +8799,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
-            return centile([data], percentile, true);
+            return centile([data], percentile, true, this.locale);
         },
         isExported: true,
     };
@@ -12004,7 +8817,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
-            return QUARTILE_INC.compute(data, quartileNumber);
+            return QUARTILE_INC.compute.bind(this)(data, quartileNumber);
         },
         isExported: true,
     };
@@ -12022,8 +8835,8 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
-            const _quartileNumber = Math.trunc(toNumber(quartileNumber));
-            return centile([data], 0.25 * _quartileNumber, false);
+            const _quartileNumber = Math.trunc(toNumber(quartileNumber, this.locale));
+            return centile([data], 0.25 * _quartileNumber, false, this.locale);
         },
         isExported: true,
     };
@@ -12041,8 +8854,8 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
-            const _quartileNumber = Math.trunc(toNumber(quartileNumber));
-            return centile([data], 0.25 * _quartileNumber, true);
+            const _quartileNumber = Math.trunc(toNumber(quartileNumber, this.locale));
+            return centile([data], 0.25 * _quartileNumber, true, this.locale);
         },
         isExported: true,
     };
@@ -12060,7 +8873,7 @@
             return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, n) {
-            const _n = Math.trunc(toNumber(n));
+            const _n = Math.trunc(toNumber(n, this.locale));
             let largests = [];
             let index;
             let count = 0;
@@ -12093,7 +8906,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VAR.compute(...values));
+            return Math.sqrt(VAR.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12108,7 +8921,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VAR_P.compute(...values));
+            return Math.sqrt(VAR_P.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12123,7 +8936,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VAR_S.compute(...values));
+            return Math.sqrt(VAR_S.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12138,7 +8951,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VARA.compute(...values));
+            return Math.sqrt(VARA.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12153,7 +8966,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VARP.compute(...values));
+            return Math.sqrt(VARP.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12168,7 +8981,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return Math.sqrt(VARPA.compute(...values));
+            return Math.sqrt(VARPA.compute.bind(this)(...values));
         },
         isExported: true,
     };
@@ -12183,7 +8996,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, true, false);
+            return variance(values, true, false, this.locale);
         },
         isExported: true,
     };
@@ -12198,7 +9011,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, false, false);
+            return variance(values, false, false, this.locale);
         },
         isExported: true,
     };
@@ -12213,7 +9026,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, true, false);
+            return variance(values, true, false, this.locale);
         },
         isExported: true,
     };
@@ -12228,7 +9041,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, true, true);
+            return variance(values, true, true, this.locale);
         },
         isExported: true,
     };
@@ -12243,7 +9056,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, false, false);
+            return variance(values, false, false, this.locale);
         },
         isExported: true,
     };
@@ -12258,7 +9071,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (...values) {
-            return variance(values, false, true);
+            return variance(values, false, true, this.locale);
         },
         isExported: true,
     };
@@ -12305,7 +9118,7 @@
         VARPA: VARPA
     });
 
-    function getMatchingCells(database, field, criteria) {
+    function getMatchingCells(database, field, criteria, locale) {
         // Example
         // # DATABASE             # CRITERIA          # field = "C"
         //
@@ -12374,7 +9187,7 @@
                 if (args.length > 0) {
                     visitMatchingRanges(args, (i, j) => {
                         matchingRows.add(j);
-                    }, true);
+                    }, locale, true);
                 }
                 else {
                     // return indices of each database row when a criteria table row is void
@@ -12404,8 +9217,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return AVERAGE.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return AVERAGE.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12417,8 +9230,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return COUNT.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return COUNT.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12430,8 +9243,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return COUNTA.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return COUNTA.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12443,7 +9256,7 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
             assert(() => cells.length === 1, _lt("More than one match found in DGET evaluation."));
             return cells[0];
         },
@@ -12457,8 +9270,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return MAX.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return MAX.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12470,8 +9283,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return MIN.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return MIN.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12483,8 +9296,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return PRODUCT.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return PRODUCT.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12496,8 +9309,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return STDEV.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return STDEV.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12509,8 +9322,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return STDEVP.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return STDEVP.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12522,8 +9335,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return SUM.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return SUM.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12535,8 +9348,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return VAR.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return VAR.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12548,8 +9361,8 @@
         args: databaseArgs,
         returns: ["NUMBER"],
         compute: function (database, field, criteria) {
-            const cells = getMatchingCells(database, field, criteria);
-            return VARP.compute([cells]);
+            const cells = getMatchingCells(database, field, criteria, this.locale);
+            return VARP.compute.bind(this)([cells]);
         },
         isExported: true,
     };
@@ -12592,11 +9405,13 @@
             arg("day (number)", _lt("The day component of the date.")),
         ],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (year, month, day) {
-            let _year = Math.trunc(toNumber(year));
-            const _month = Math.trunc(toNumber(month));
-            const _day = Math.trunc(toNumber(day));
+            let _year = Math.trunc(toNumber(year, this.locale));
+            const _month = Math.trunc(toNumber(month, this.locale));
+            const _day = Math.trunc(toNumber(day, this.locale));
             // For years less than 0 or greater than 10000, return #ERROR.
             assert(() => 0 <= _year && _year <= 9999, _lt("The year (%s) must be between 0 and 9999 inclusive.", _year.toString()));
             // Between 0 and 1899, we add that value to 1900 to calculate the year
@@ -12624,8 +9439,8 @@
         compute: function (startDate, endDate, unit) {
             const _unit = toString(unit).toUpperCase();
             assert(() => Object.values(TIME_UNIT).includes(_unit), expectStringSetError(Object.values(TIME_UNIT), toString(unit)));
-            const _startDate = Math.trunc(toNumber(startDate));
-            const _endDate = Math.trunc(toNumber(endDate));
+            const _startDate = Math.trunc(toNumber(startDate, this.locale));
+            const _endDate = Math.trunc(toNumber(endDate, this.locale));
             const jsStartDate = numberToJsDate(_startDate);
             const jsEndDate = numberToJsDate(_endDate);
             assert(() => _endDate >= _startDate, _lt("start_date (%s) should be on or before end_date (%s).", jsStartDate.toLocaleDateString(), jsEndDate.toLocaleDateString()));
@@ -12676,7 +9491,7 @@
         returns: ["NUMBER"],
         compute: function (dateString) {
             const _dateString = toString(dateString);
-            const internalDate = parseDateTime(_dateString);
+            const internalDate = parseDateTime(_dateString, this.locale);
             assert(() => internalDate !== null, _lt("The date_string (%s) cannot be parsed to date/time.", _dateString.toString()));
             return Math.trunc(internalDate.value);
         },
@@ -12690,7 +9505,7 @@
         args: [arg("date (string)", _lt("The date from which to extract the day."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getDate();
+            return toJsDate(date, this.locale).getDate();
         },
         isExported: true,
     };
@@ -12705,8 +9520,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (endDate, startDate) {
-            const _endDate = toJsDate(endDate);
-            const _startDate = toJsDate(startDate);
+            const _endDate = toJsDate(endDate, this.locale);
+            const _startDate = toJsDate(startDate, this.locale);
             const dateDif = _endDate.getTime() - _startDate.getTime();
             return Math.round(dateDif / MS_PER_DAY);
         },
@@ -12725,10 +9540,10 @@
         ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, method = DEFAULT_DAY_COUNT_METHOD) {
-            const _startDate = toNumber(startDate);
-            const _endDate = toNumber(endDate);
+            const _startDate = toNumber(startDate, this.locale);
+            const _endDate = toNumber(endDate, this.locale);
             const dayCountConvention = toBoolean(method) ? 4 : 0;
-            const yearFrac = YEARFRAC.compute(startDate, endDate, dayCountConvention);
+            const yearFrac = YEARFRAC.compute.bind(this)(startDate, endDate, dayCountConvention);
             return Math.sign(_endDate - _startDate) * Math.round(yearFrac * 360);
         },
         isExported: true,
@@ -12743,10 +9558,12 @@
             arg("months (number)", _lt("The number of months before (negative) or after (positive) 'start_date' to calculate.")),
         ],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (startDate, months) {
-            const _startDate = toJsDate(startDate);
-            const _months = Math.trunc(toNumber(months));
+            const _startDate = toJsDate(startDate, this.locale);
+            const _months = Math.trunc(toNumber(months, this.locale));
             const jsDate = addMonthsToDate(_startDate, _months, false);
             return jsDateToRoundNumber(jsDate);
         },
@@ -12762,10 +9579,12 @@
             arg("months (number)", _lt("The number of months before (negative) or after (positive) 'start_date' to consider.")),
         ],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (startDate, months) {
-            const _startDate = toJsDate(startDate);
-            const _months = Math.trunc(toNumber(months));
+            const _startDate = toJsDate(startDate, this.locale);
+            const _months = Math.trunc(toNumber(months, this.locale));
             const yStart = _startDate.getFullYear();
             const mStart = _startDate.getMonth();
             const jsDate = new Date(yStart, mStart + _months + 1, 0);
@@ -12781,7 +9600,7 @@
         args: [arg("time (date)", _lt("The time from which to calculate the hour component."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getHours();
+            return toJsDate(date, this.locale).getHours();
         },
         isExported: true,
     };
@@ -12795,7 +9614,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (date) {
-            const _date = toJsDate(date);
+            const _date = toJsDate(date, this.locale);
             const y = _date.getFullYear();
             // 1 - As the 1st week of a year can start the previous year or after the 1st
             // january we first look if the date is in the weeks of the current year, previous
@@ -12867,7 +9686,7 @@
         args: [arg("time (date)", _lt("The time from which to calculate the minute component."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getMinutes();
+            return toJsDate(date, this.locale).getMinutes();
         },
         isExported: true,
     };
@@ -12879,7 +9698,7 @@
         args: [arg("date (date)", _lt("The date from which to extract the month."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getMonth() + 1;
+            return toJsDate(date, this.locale).getMonth() + 1;
         },
         isExported: true,
     };
@@ -12895,7 +9714,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, holidays) {
-            return NETWORKDAYS_INTL.compute(startDate, endDate, 1, holidays);
+            return NETWORKDAYS_INTL.compute.bind(this)(startDate, endDate, 1, holidays);
         },
         isExported: true,
     };
@@ -12975,13 +9794,13 @@
         ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, weekend = DEFAULT_WEEKEND, holidays) {
-            const _startDate = toJsDate(startDate);
-            const _endDate = toJsDate(endDate);
+            const _startDate = toJsDate(startDate, this.locale);
+            const _endDate = toJsDate(endDate, this.locale);
             const daysWeekend = weekendToDayNumber(weekend);
             let timesHoliday = new Set();
             if (holidays !== undefined) {
                 visitAny([holidays], (h) => {
-                    const holiday = toJsDate(h);
+                    const holiday = toJsDate(h, this.locale);
                     timesHoliday.add(holiday.getTime());
                 });
             }
@@ -13009,7 +9828,9 @@
         description: _lt("Current date and time as a date value."),
         args: [],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy hh:mm:ss",
+        computeFormat: function () {
+            return this.locale.dateFormat + " " + this.locale.timeFormat;
+        },
         compute: function () {
             let today = new Date();
             today.setMilliseconds(0);
@@ -13027,7 +9848,7 @@
         args: [arg("time (date)", _lt("The time from which to calculate the second component."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getSeconds();
+            return toJsDate(date, this.locale).getSeconds();
         },
         isExported: true,
     };
@@ -13042,11 +9863,13 @@
             arg("second (number)", _lt("The second component of the time.")),
         ],
         returns: ["DATE"],
-        computeFormat: () => "hh:mm:ss a",
+        computeFormat: function () {
+            return this.locale.timeFormat;
+        },
         compute: function (hour, minute, second) {
-            let _hour = Math.trunc(toNumber(hour));
-            let _minute = Math.trunc(toNumber(minute));
-            let _second = Math.trunc(toNumber(second));
+            let _hour = Math.trunc(toNumber(hour, this.locale));
+            let _minute = Math.trunc(toNumber(minute, this.locale));
+            let _second = Math.trunc(toNumber(second, this.locale));
             _minute += Math.floor(_second / 60);
             _second = (_second % 60) + (_second < 0 ? 60 : 0);
             _hour += Math.floor(_minute / 60);
@@ -13066,7 +9889,7 @@
         returns: ["NUMBER"],
         compute: function (timeString) {
             const _timeString = toString(timeString);
-            const internalDate = parseDateTime(_timeString);
+            const internalDate = parseDateTime(_timeString, this.locale);
             assert(() => internalDate !== null, _lt("The time_string (%s) cannot be parsed to date/time.", _timeString));
             const result = internalDate.value - Math.trunc(internalDate.value);
             return result < 0 ? 1 + result : result;
@@ -13080,7 +9903,9 @@
         description: _lt("Current date as a date value."),
         args: [],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function () {
             const today = new Date();
             const jsDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -13099,8 +9924,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (date, type = DEFAULT_TYPE) {
-            const _date = toJsDate(date);
-            const _type = Math.round(toNumber(type));
+            const _date = toJsDate(date, this.locale);
+            const _type = Math.round(toNumber(type, this.locale));
             const m = _date.getDay();
             assert(() => [1, 2, 3].includes(_type), _lt("The type (%s) must be 1, 2 or 3.", _type.toString()));
             if (_type === 1)
@@ -13122,11 +9947,11 @@
         ],
         returns: ["NUMBER"],
         compute: function (date, type = DEFAULT_TYPE) {
-            const _date = toJsDate(date);
-            const _type = Math.round(toNumber(type));
+            const _date = toJsDate(date, this.locale);
+            const _type = Math.round(toNumber(type, this.locale));
             assert(() => _type === 1 || _type === 2 || (11 <= _type && _type <= 17) || _type === 21, _lt("The type (%s) is out of range.", _type.toString()));
             if (_type === 21) {
-                return ISOWEEKNUM.compute(date);
+                return ISOWEEKNUM.compute.bind(this)(date);
             }
             let startDayOfWeek;
             if (_type === 1 || _type === 2) {
@@ -13162,9 +9987,11 @@
             arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the dates to consider holidays.")),
         ],
         returns: ["NUMBER"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (startDate, numDays, holidays = undefined) {
-            return WORKDAY_INTL.compute(startDate, numDays, 1, holidays);
+            return WORKDAY_INTL.compute.bind(this)(startDate, numDays, 1, holidays);
         },
         isExported: true,
     };
@@ -13180,10 +10007,12 @@
             arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the dates to consider holidays.")),
         ],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (startDate, numDays, weekend = DEFAULT_WEEKEND, holidays) {
-            let _startDate = toJsDate(startDate);
-            let _numDays = Math.trunc(toNumber(numDays));
+            let _startDate = toJsDate(startDate, this.locale);
+            let _numDays = Math.trunc(toNumber(numDays, this.locale));
             if (typeof weekend === "string") {
                 assert(() => weekend !== "1111111", _lt("The weekend (%s) must be different from '1111111'.", weekend));
             }
@@ -13191,7 +10020,7 @@
             let timesHoliday = new Set();
             if (holidays !== undefined) {
                 visitAny([holidays], (h) => {
-                    const holiday = toJsDate(h);
+                    const holiday = toJsDate(h, this.locale);
                     timesHoliday.add(holiday.getTime());
                 });
             }
@@ -13219,7 +10048,7 @@
         args: [arg("date (date)", _lt("The date from which to extract the year."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return toJsDate(date).getFullYear();
+            return toJsDate(date, this.locale).getFullYear();
         },
         isExported: true,
     };
@@ -13236,9 +10065,9 @@
         ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION$1) {
-            let _startDate = Math.trunc(toNumber(startDate));
-            let _endDate = Math.trunc(toNumber(endDate));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            let _startDate = Math.trunc(toNumber(startDate, this.locale));
+            let _endDate = Math.trunc(toNumber(endDate, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assert(() => _startDate >= 0, _lt("The start_date (%s) must be positive or null.", _startDate.toString()));
             assert(() => _endDate >= 0, _lt("The end_date (%s) must be positive or null.", _endDate.toString()));
             assert(() => 0 <= _dayCountConvention && _dayCountConvention <= 4, _lt("The day_count_convention (%s) must be between 0 and 4 inclusive.", _dayCountConvention.toString()));
@@ -13252,9 +10081,11 @@
         description: _lt("First day of the month preceding a date."),
         args: [arg("date (date)", _lt("The date from which to calculate the result."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            const _startDate = toJsDate(date);
+            const _startDate = toJsDate(date, this.locale);
             const yStart = _startDate.getFullYear();
             const mStart = _startDate.getMonth();
             const jsDate = new Date(yStart, mStart, 1);
@@ -13268,9 +10099,11 @@
         description: _lt("Last day of the month following a date."),
         args: [arg("date (date)", _lt("The date from which to calculate the result."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            return EOMONTH.compute(date, 0);
+            return EOMONTH.compute.bind(this)(date, 0);
         },
     };
     // -----------------------------------------------------------------------------
@@ -13281,7 +10114,7 @@
         args: [arg("date (date)", _lt("The date from which to extract the quarter."))],
         returns: ["NUMBER"],
         compute: function (date) {
-            return Math.ceil((toJsDate(date).getMonth() + 1) / 3);
+            return Math.ceil((toJsDate(date, this.locale).getMonth() + 1) / 3);
         },
     };
     // -----------------------------------------------------------------------------
@@ -13291,10 +10124,12 @@
         description: _lt("First day of the quarter of the year a specific date falls in."),
         args: [arg("date (date)", _lt("The date from which to calculate the start of quarter."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            const quarter = QUARTER.compute(date);
-            const year = YEAR.compute(date);
+            const quarter = QUARTER.compute.bind(this)(date);
+            const year = YEAR.compute.bind(this)(date);
             const jsDate = new Date(year, (quarter - 1) * 3, 1);
             return jsDateToRoundNumber(jsDate);
         },
@@ -13306,10 +10141,12 @@
         description: _lt("Last day of the quarter of the year a specific date falls in."),
         args: [arg("date (date)", _lt("The date from which to calculate the end of quarter."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            const quarter = QUARTER.compute(date);
-            const year = YEAR.compute(date);
+            const quarter = QUARTER.compute.bind(this)(date);
+            const year = YEAR.compute.bind(this)(date);
             const jsDate = new Date(year, quarter * 3, 0);
             return jsDateToRoundNumber(jsDate);
         },
@@ -13321,9 +10158,11 @@
         description: _lt("First day of the year a specific date falls in."),
         args: [arg("date (date)", _lt("The date from which to calculate the start of the year."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            const year = YEAR.compute(date);
+            const year = YEAR.compute.bind(this)(date);
             const jsDate = new Date(year, 0, 1);
             return jsDateToRoundNumber(jsDate);
         },
@@ -13335,9 +10174,11 @@
         description: _lt("Last day of the year a specific date falls in."),
         args: [arg("date (date)", _lt("The date from which to calculate the end of the year."))],
         returns: ["DATE"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (date) {
-            const year = YEAR.compute(date);
+            const year = YEAR.compute.bind(this)(date);
             const jsDate = new Date(year + 1, 0, 0);
             return jsDateToRoundNumber(jsDate);
         },
@@ -13391,8 +10232,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (number1, number2 = DEFAULT_DELTA_ARG) {
-            const _number1 = toNumber(number1);
-            const _number2 = toNumber(number2);
+            const _number1 = toNumber(number1, this.locale);
+            const _number2 = toNumber(number2, this.locale);
             return _number1 === _number2 ? 1 : 0;
         },
         isExported: true,
@@ -13553,9 +10394,9 @@
     function assertDeprecationFactorStrictlyPositive(factor) {
         assert(() => factor > 0, _lt("The depreciation factor (%s) must be strictly positive.", factor.toString()));
     }
-    function assertSettlementLessThanOneYearBeforeMaturity(settlement, maturity) {
-        const startDate = toJsDate(settlement);
-        const endDate = toJsDate(maturity);
+    function assertSettlementLessThanOneYearBeforeMaturity(settlement, maturity, locale) {
+        const startDate = toJsDate(settlement, locale);
+        const endDate = toJsDate(maturity, locale);
         const startDatePlusOneYear = new Date(startDate);
         startDatePlusOneYear.setFullYear(startDate.getFullYear() + 1);
         assert(() => endDate.getTime() <= startDatePlusOneYear.getTime(), _lt("The settlement date (%s) must at most one year after the maturity date (%s).", settlement.toString(), maturity.toString()));
@@ -13665,16 +10506,16 @@
         returns: ["NUMBER"],
         compute: function (issue, maturity, rate, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(issue));
-            const end = Math.trunc(toNumber(maturity));
-            const _redemption = toNumber(redemption);
-            const _rate = toNumber(rate);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(issue, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _redemption = toNumber(redemption, this.locale);
+            const _rate = toNumber(rate, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertSettlementAndIssueDatesAreValid(end, start);
             assertDayCountConventionIsValid(_dayCountConvention);
             assertRedemptionStrictlyPositive(_redemption);
             assertRateStrictlyPositive(_rate);
-            const yearFrac = YEARFRAC.compute(start, end, dayCountConvention);
+            const yearFrac = YEARFRAC.compute.bind(this)(start, end, dayCountConvention);
             return _redemption * _rate * yearFrac;
         },
         isExported: true,
@@ -13696,13 +10537,13 @@
         returns: ["NUMBER"],
         compute: function (cost, purchaseDate, firstPeriodEnd, salvage, period, rate, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _cost = toNumber(cost);
-            const _purchaseDate = Math.trunc(toNumber(purchaseDate));
-            const _firstPeriodEnd = Math.trunc(toNumber(firstPeriodEnd));
-            const _salvage = toNumber(salvage);
-            const _period = toNumber(period);
-            const _rate = toNumber(rate);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _cost = toNumber(cost, this.locale);
+            const _purchaseDate = Math.trunc(toNumber(purchaseDate, this.locale));
+            const _firstPeriodEnd = Math.trunc(toNumber(firstPeriodEnd, this.locale));
+            const _salvage = toNumber(salvage, this.locale);
+            const _period = toNumber(period, this.locale);
+            const _rate = toNumber(rate, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertCostStrictlyPositive(_cost);
             assertSalvagePositiveOrZero(_salvage);
             assertSalvageSmallerOrEqualThanCost(_salvage, _cost);
@@ -13725,7 +10566,7 @@
              */
             const roundedPeriod = _period < 1 && _period > 0 ? 1 : Math.trunc(_period);
             const deprec = _cost * _rate;
-            const yearFrac = YEARFRAC.compute(_purchaseDate, _firstPeriodEnd, _dayCountConvention);
+            const yearFrac = YEARFRAC.compute.bind(this)(_purchaseDate, _firstPeriodEnd, _dayCountConvention);
             const firstDeprec = _purchaseDate === _firstPeriodEnd ? deprec : deprec * yearFrac;
             const valueAtPeriod = _cost - firstDeprec - deprec * roundedPeriod;
             if (valueAtPeriod >= _salvage) {
@@ -13744,17 +10585,17 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             // https://wiki.documentfoundation.org/Documentation/Calc_Functions/COUPDAYS
             if (_dayCountConvention === 1) {
-                const before = COUPPCD.compute(settlement, maturity, frequency, dayCountConvention);
-                const after = COUPNCD.compute(settlement, maturity, frequency, dayCountConvention);
+                const before = COUPPCD.compute.bind(this)(settlement, maturity, frequency, dayCountConvention);
+                const after = COUPNCD.compute.bind(this)(settlement, maturity, frequency, dayCountConvention);
                 return after - before;
             }
             const daysInYear = _dayCountConvention === 3 ? 365 : 360;
@@ -13771,14 +10612,14 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
-            const couponBeforeStart = COUPPCD.compute(start, end, frequency, dayCountConvention);
+            const couponBeforeStart = COUPPCD.compute.bind(this)(start, end, frequency, dayCountConvention);
             if ([1, 2, 3].includes(_dayCountConvention)) {
                 return start - couponBeforeStart;
             }
@@ -13786,8 +10627,8 @@
                 const yearFrac = getYearFrac(couponBeforeStart, start, _dayCountConvention);
                 return Math.round(yearFrac * 360);
             }
-            const startDate = toJsDate(start);
-            const dateCouponBeforeStart = toJsDate(couponBeforeStart);
+            const startDate = toJsDate(start, this.locale);
+            const dateCouponBeforeStart = toJsDate(couponBeforeStart, this.locale);
             const y1 = dateCouponBeforeStart.getFullYear();
             const y2 = startDate.getFullYear();
             const m1 = dateCouponBeforeStart.getMonth() + 1; // +1 because months in js start at 0 and it's confusing
@@ -13828,14 +10669,14 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
-            const couponAfterStart = COUPNCD.compute(start, end, frequency, dayCountConvention);
+            const couponAfterStart = COUPNCD.compute.bind(this)(start, end, frequency, dayCountConvention);
             if ([1, 2, 3].includes(_dayCountConvention)) {
                 return couponAfterStart - start;
             }
@@ -13843,8 +10684,8 @@
                 const yearFrac = getYearFrac(start, couponAfterStart, _dayCountConvention);
                 return Math.round(yearFrac * 360);
             }
-            const coupDayBs = COUPDAYBS.compute(settlement, maturity, frequency, _dayCountConvention);
-            const coupDays = COUPDAYS.compute(settlement, maturity, frequency, _dayCountConvention);
+            const coupDayBs = COUPDAYBS.compute.bind(this)(settlement, maturity, frequency, _dayCountConvention);
+            const coupDays = COUPDAYS.compute.bind(this)(settlement, maturity, frequency, _dayCountConvention);
             return coupDays - coupDayBs;
         },
         isExported: true,
@@ -13856,19 +10697,21 @@
         description: _lt("Next coupon date after the settlement date."),
         args: COUPON_FUNCTION_ARGS,
         returns: ["NUMBER"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             const monthsPerPeriod = 12 / _frequency;
-            const coupNum = COUPNUM.compute(settlement, maturity, frequency, dayCountConvention);
-            const date = addMonthsToDate(toJsDate(end), -(coupNum - 1) * monthsPerPeriod, true);
+            const coupNum = COUPNUM.compute.bind(this)(settlement, maturity, frequency, dayCountConvention);
+            const date = addMonthsToDate(toJsDate(end, this.locale), -(coupNum - 1) * monthsPerPeriod, true);
             return jsDateToRoundNumber(date);
         },
         isExported: true,
@@ -13882,10 +10725,10 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
@@ -13893,7 +10736,7 @@
             let currentDate = end;
             const monthsPerPeriod = 12 / _frequency;
             while (currentDate > start) {
-                currentDate = jsDateToRoundNumber(addMonthsToDate(toJsDate(currentDate), -monthsPerPeriod, false));
+                currentDate = jsDateToRoundNumber(addMonthsToDate(toJsDate(currentDate, this.locale), -monthsPerPeriod, false));
                 num++;
             }
             return num - 1;
@@ -13907,19 +10750,21 @@
         description: _lt("Last coupon date prior to or on the settlement date."),
         args: COUPON_FUNCTION_ARGS,
         returns: ["NUMBER"],
-        computeFormat: () => "m/d/yyyy",
+        computeFormat: function () {
+            return this.locale.dateFormat;
+        },
         compute: function (settlement, maturity, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             const monthsPerPeriod = 12 / _frequency;
-            const coupNum = COUPNUM.compute(settlement, maturity, frequency, dayCountConvention);
-            const date = addMonthsToDate(toJsDate(end), -coupNum * monthsPerPeriod, true);
+            const coupNum = COUPNUM.compute.bind(this)(settlement, maturity, frequency, dayCountConvention);
+            const date = addMonthsToDate(toJsDate(end, this.locale), -coupNum * monthsPerPeriod, true);
             return jsDateToRoundNumber(date);
         },
         isExported: true,
@@ -13939,17 +10784,17 @@
         ],
         returns: ["NUMBER"],
         compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
-            const first = toNumber(firstPeriod);
-            const last = toNumber(lastPeriod);
-            const _rate = toNumber(rate);
-            const pv = toNumber(presentValue);
-            const nOfPeriods = toNumber(numberOfPeriods);
+            const first = toNumber(firstPeriod, this.locale);
+            const last = toNumber(lastPeriod, this.locale);
+            const _rate = toNumber(rate, this.locale);
+            const pv = toNumber(presentValue, this.locale);
+            const nOfPeriods = toNumber(numberOfPeriods, this.locale);
             assertFirstAndLastPeriodsAreValid(first, last, nOfPeriods);
             assertRateStrictlyPositive(_rate);
             assertPresentValueStrictlyPositive(pv);
             let cumSum = 0;
             for (let i = first; i <= last; i++) {
-                const impt = IPMT.compute(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
+                const impt = IPMT.compute.bind(this)(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
                 cumSum += impt;
             }
             return cumSum;
@@ -13971,17 +10816,17 @@
         ],
         returns: ["NUMBER"],
         compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
-            const first = toNumber(firstPeriod);
-            const last = toNumber(lastPeriod);
-            const _rate = toNumber(rate);
-            const pv = toNumber(presentValue);
-            const nOfPeriods = toNumber(numberOfPeriods);
+            const first = toNumber(firstPeriod, this.locale);
+            const last = toNumber(lastPeriod, this.locale);
+            const _rate = toNumber(rate, this.locale);
+            const pv = toNumber(presentValue, this.locale);
+            const nOfPeriods = toNumber(numberOfPeriods, this.locale);
             assertFirstAndLastPeriodsAreValid(first, last, nOfPeriods);
             assertRateStrictlyPositive(_rate);
             assertPresentValueStrictlyPositive(pv);
             let cumSum = 0;
             for (let i = first; i <= last; i++) {
-                const ppmt = PPMT.compute(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
+                const ppmt = PPMT.compute.bind(this)(rate, i, nOfPeriods, presentValue, 0, endOrBeginning);
                 cumSum += ppmt;
             }
             return cumSum;
@@ -14004,11 +10849,11 @@
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life, period, ...args) {
-            const _cost = toNumber(cost);
-            const _salvage = toNumber(salvage);
-            const _life = toNumber(life);
-            const _period = Math.trunc(toNumber(period));
-            const _month = args.length ? Math.trunc(toNumber(args[0])) : 12;
+            const _cost = toNumber(cost, this.locale);
+            const _salvage = toNumber(salvage, this.locale);
+            const _life = toNumber(life, this.locale);
+            const _period = Math.trunc(toNumber(period, this.locale));
+            const _month = args.length ? Math.trunc(toNumber(args[0], this.locale)) : 12;
             const lifeLimit = _life + (_month === 12 ? 0 : 1);
             assertCostPositiveOrZero(_cost);
             assertSalvagePositiveOrZero(_salvage);
@@ -14050,11 +10895,11 @@
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life, period, factor = DEFAULT_DDB_DEPRECIATION_FACTOR) {
             factor = factor || 0;
-            const _cost = toNumber(cost);
-            const _salvage = toNumber(salvage);
-            const _life = toNumber(life);
-            const _period = toNumber(period);
-            const _factor = toNumber(factor);
+            const _cost = toNumber(cost, this.locale);
+            const _salvage = toNumber(salvage, this.locale);
+            const _life = toNumber(life, this.locale);
+            const _period = toNumber(period, this.locale);
+            const _factor = toNumber(factor, this.locale);
             assertCostPositiveOrZero(_cost);
             assertSalvagePositiveOrZero(_salvage);
             assertPeriodStrictlyPositive(_period);
@@ -14092,11 +10937,11 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _price = toNumber(price);
-            const _redemption = toNumber(redemption);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _price = toNumber(price, this.locale);
+            const _redemption = toNumber(redemption, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCountConvention);
             assertPriceStrictlyPositive(_price);
@@ -14111,7 +10956,7 @@
              * DISC = ____________________  *    ____
              *            redemption             DSM
              */
-            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const yearsFrac = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             return (_redemption - _price) / _redemption / yearsFrac;
         },
         isExported: true,
@@ -14127,8 +10972,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (fractionalPrice, unit) {
-            const price = toNumber(fractionalPrice);
-            const _unit = Math.trunc(toNumber(unit));
+            const price = toNumber(fractionalPrice, this.locale);
+            const _unit = Math.trunc(toNumber(unit, this.locale));
             assert(() => _unit > 0, _lt("The unit (%s) must be strictly positive.", _unit.toString()));
             const truncatedPrice = Math.trunc(price);
             const priceFractionalPart = price - truncatedPrice;
@@ -14148,8 +10993,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (decimalPrice, unit) {
-            const price = toNumber(decimalPrice);
-            const _unit = Math.trunc(toNumber(unit));
+            const price = toNumber(decimalPrice, this.locale);
+            const _unit = Math.trunc(toNumber(unit, this.locale));
             assert(() => _unit > 0, _lt("The unit (%s) must be strictly positive.", _unit.toString()));
             const truncatedPrice = Math.trunc(price);
             const priceFractionalPart = price - truncatedPrice;
@@ -14174,18 +11019,18 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const _rate = toNumber(rate);
-            const _yield = toNumber(securityYield);
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const _rate = toNumber(rate, this.locale);
+            const _yield = toNumber(securityYield, this.locale);
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(start, end);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assert(() => _yield >= 0, _lt("The yield (%s) must be positive or null.", _yield.toString()));
-            const years = YEARFRAC.compute(start, end, _dayCountConvention);
+            const years = YEARFRAC.compute.bind(this)(start, end, _dayCountConvention);
             const timeFirstYear = years - Math.trunc(years) || 1 / _frequency;
             const nbrCoupons = Math.ceil(years * _frequency);
             // The DURATION function return the Macaulay duration
@@ -14215,8 +11060,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (nominal_rate, periods_per_year) {
-            const nominal = toNumber(nominal_rate);
-            const periods = Math.trunc(toNumber(periods_per_year));
+            const nominal = toNumber(nominal_rate, this.locale);
+            const periods = Math.trunc(toNumber(periods_per_year, this.locale));
             assert(() => nominal > 0, _lt("The nominal rate (%s) must be strictly greater than 0.", nominal.toString()));
             assert(() => periods > 0, _lt("The number of periods by year (%s) must strictly greater than 0.", periods.toString()));
             // https://en.wikipedia.org/wiki/Nominal_interest_rate#Nominal_versus_effective_interest_rate
@@ -14243,10 +11088,10 @@
         compute: function (rate, numberOfPeriods, paymentAmount, presentValue = DEFAULT_PRESENT_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             presentValue = presentValue || 0;
             endOrBeginning = endOrBeginning || 0;
-            const r = toNumber(rate);
-            const n = toNumber(numberOfPeriods);
-            const p = toNumber(paymentAmount);
-            const pv = toNumber(presentValue);
+            const r = toNumber(rate, this.locale);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const p = toNumber(paymentAmount, this.locale);
+            const pv = toNumber(presentValue, this.locale);
             const type = toBoolean(endOrBeginning) ? 1 : 0;
             return r ? -pv * (1 + r) ** n - (p * (1 + r * type) * ((1 + r) ** n - 1)) / r : -(pv + p * n);
         },
@@ -14263,8 +11108,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (principalAmount, rateSchedule) {
-            const principal = toNumber(principalAmount);
-            return reduceAny([rateSchedule], (acc, rate) => acc * (1 + toNumber(rate)), principal);
+            const principal = toNumber(principalAmount, this.locale);
+            return reduceAny([rateSchedule], (acc, rate) => acc * (1 + toNumber(rate, this.locale)), principal);
         },
         isExported: true,
     };
@@ -14282,10 +11127,10 @@
         ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, investment, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _redemption = toNumber(redemption);
-            const _investment = toNumber(investment);
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _redemption = toNumber(redemption, this.locale);
+            const _investment = toNumber(investment, this.locale);
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertInvestmentStrictlyPositive(_investment);
             assertRedemptionStrictlyPositive(_redemption);
@@ -14296,7 +11141,7 @@
              * INTRATE =  _________________________________________
              *              YEARFRAC(settlement, maturity, basis)
              */
-            const yearFrac = YEARFRAC.compute(_settlement, _maturity, dayCountConvention);
+            const yearFrac = YEARFRAC.compute.bind(this)(_settlement, _maturity, dayCountConvention);
             return (_redemption - _investment) / _investment / yearFrac;
         },
         isExported: true,
@@ -14317,8 +11162,8 @@
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
-            const payment = PMT.compute(rate, numberOfPeriods, presentValue, futureValue, endOrBeginning);
-            const ppmt = PPMT.compute(rate, currentPeriod, numberOfPeriods, presentValue, futureValue, endOrBeginning);
+            const payment = PMT.compute.bind(this)(rate, numberOfPeriods, presentValue, futureValue, endOrBeginning);
+            const ppmt = PPMT.compute.bind(this)(rate, currentPeriod, numberOfPeriods, presentValue, futureValue, endOrBeginning);
             return payment - ppmt;
         },
         isExported: true,
@@ -14336,7 +11181,7 @@
         returns: ["NUMBER"],
         computeFormat: () => "0%",
         compute: function (cashFlowAmounts, rateGuess = DEFAULT_RATE_GUESS) {
-            const _rateGuess = toNumber(rateGuess);
+            const _rateGuess = toNumber(rateGuess, this.locale);
             assertRateGuessStrictlyGreaterThanMinusOne(_rateGuess);
             // check that values contains at least one positive value and one negative value
             // and extract number present in the cashFlowAmount argument
@@ -14349,7 +11194,7 @@
                 if (amount < 0)
                     negative = true;
                 amounts.push(amount);
-            });
+            }, this.locale);
             assert(() => positive && negative, _lt("The cashflow_amounts must include negative and positive values."));
             const firstAmount = amounts.shift();
             // The result of IRR is the rate at which the NPV() function will return zero with the given values.
@@ -14395,10 +11240,10 @@
         ],
         returns: ["NUMBER"],
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue) {
-            const interestRate = toNumber(rate);
-            const period = toNumber(currentPeriod);
-            const nOfPeriods = toNumber(numberOfPeriods);
-            const investment = toNumber(presentValue);
+            const interestRate = toNumber(rate, this.locale);
+            const period = toNumber(currentPeriod, this.locale);
+            const nOfPeriods = toNumber(numberOfPeriods, this.locale);
+            const investment = toNumber(presentValue, this.locale);
             assert(() => nOfPeriods !== 0, _lt("The number of periods must be different than 0.", nOfPeriods.toString()));
             const currentInvestment = investment - investment * (period / nOfPeriods);
             return -1 * currentInvestment * interestRate;
@@ -14420,9 +11265,9 @@
         ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
-            const duration = DURATION.compute(settlement, maturity, rate, securityYield, frequency, dayCountConvention);
-            const y = toNumber(securityYield);
-            const k = Math.trunc(toNumber(frequency));
+            const duration = DURATION.compute.bind(this)(settlement, maturity, rate, securityYield, frequency, dayCountConvention);
+            const y = toNumber(securityYield, this.locale);
+            const k = Math.trunc(toNumber(frequency, this.locale));
             return duration / (1 + y / k);
         },
         isExported: true,
@@ -14439,9 +11284,12 @@
         ],
         returns: ["NUMBER"],
         compute: function (cashflowAmount, financingRate, reinvestmentRate) {
-            const fRate = toNumber(financingRate);
-            const rRate = toNumber(reinvestmentRate);
-            const cashFlow = transpose2dArray(cashflowAmount).flat().filter(isDefined$1).map(toNumber);
+            const fRate = toNumber(financingRate, this.locale);
+            const rRate = toNumber(reinvestmentRate, this.locale);
+            const cashFlow = transpose2dArray(cashflowAmount)
+                .flat()
+                .filter(isDefined$1)
+                .map((val) => toNumber(val, this.locale));
             const n = cashFlow.length;
             /**
              * https://en.wikipedia.org/wiki/Modified_internal_rate_of_return
@@ -14488,8 +11336,8 @@
         ],
         returns: ["NUMBER"],
         compute: function (effective_rate, periods_per_year) {
-            const effective = toNumber(effective_rate);
-            const periods = Math.trunc(toNumber(periods_per_year));
+            const effective = toNumber(effective_rate, this.locale);
+            const periods = Math.trunc(toNumber(periods_per_year, this.locale));
             assert(() => effective > 0, _lt("The effective rate (%s) must must strictly greater than 0.", effective.toString()));
             assert(() => periods > 0, _lt("The number of periods by year (%s) must strictly greater than 0.", periods.toString()));
             // https://en.wikipedia.org/wiki/Nominal_interest_rate#Nominal_versus_effective_interest_rate
@@ -14513,10 +11361,10 @@
         compute: function (rate, paymentAmount, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             futureValue = futureValue || 0;
             endOrBeginning = endOrBeginning || 0;
-            const r = toNumber(rate);
-            const p = toNumber(paymentAmount);
-            const pv = toNumber(presentValue);
-            const fv = toNumber(futureValue);
+            const r = toNumber(rate, this.locale);
+            const p = toNumber(paymentAmount, this.locale);
+            const pv = toNumber(presentValue, this.locale);
+            const fv = toNumber(futureValue, this.locale);
             const t = toBoolean(endOrBeginning) ? 1 : 0;
             /**
              * https://wiki.documentfoundation.org/Documentation/Calc_Functions/NPER
@@ -14543,12 +11391,12 @@
     // -----------------------------------------------------------------------------
     // NPV
     // -----------------------------------------------------------------------------
-    function npvResult(r, startValue, values) {
+    function npvResult(r, startValue, values, locale) {
         let i = 0;
         return reduceNumbers(values, (acc, v) => {
             i++;
             return acc + v / (1 + r) ** i;
-        }, startValue);
+        }, startValue, locale);
     }
     const NPV = {
         description: _lt("The net present value of an investment based on a series of periodic cash flows and a discount rate."),
@@ -14561,9 +11409,9 @@
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
         compute: function (discount, ...values) {
-            const _discount = toNumber(discount);
+            const _discount = toNumber(discount, this.locale);
             assert(() => _discount !== -1, _lt("The discount (%s) must be different from -1.", _discount.toString()));
-            return npvResult(_discount, 0, values);
+            return npvResult(_discount, 0, values, this.locale);
         },
         isExported: true,
     };
@@ -14579,9 +11427,9 @@
         ],
         returns: ["NUMBER"],
         compute: function (rate, presentValue, futureValue) {
-            const _rate = toNumber(rate);
-            const _presentValue = toNumber(presentValue);
-            const _futureValue = toNumber(futureValue);
+            const _rate = toNumber(rate, this.locale);
+            const _presentValue = toNumber(presentValue, this.locale);
+            const _futureValue = toNumber(futureValue, this.locale);
             assertRateStrictlyPositive(_rate);
             assert(() => _presentValue > 0, _lt("The present_value (%s) must be strictly positive.", _presentValue.toString()));
             assert(() => _futureValue > 0, _lt("The future_value (%s) must be strictly positive.", _futureValue.toString()));
@@ -14606,11 +11454,11 @@
         compute: function (rate, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             futureValue = futureValue || 0;
             endOrBeginning = endOrBeginning || 0;
-            const n = toNumber(numberOfPeriods);
-            const r = toNumber(rate);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const r = toNumber(rate, this.locale);
             const t = toBoolean(endOrBeginning) ? 1 : 0;
-            let fv = toNumber(futureValue);
-            let pv = toNumber(presentValue);
+            let fv = toNumber(futureValue, this.locale);
+            let pv = toNumber(presentValue, this.locale);
             assertNumberOfPeriodsStrictlyPositive(n);
             /**
              * https://wiki.documentfoundation.org/Documentation/Calc_Functions/PMT
@@ -14646,20 +11494,20 @@
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             futureValue = futureValue || 0;
             endOrBeginning = endOrBeginning || 0;
-            const n = toNumber(numberOfPeriods);
-            const r = toNumber(rate);
-            const period = toNumber(currentPeriod);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const r = toNumber(rate, this.locale);
+            const period = toNumber(currentPeriod, this.locale);
             const type = toBoolean(endOrBeginning) ? 1 : 0;
-            const fv = toNumber(futureValue);
-            const pv = toNumber(presentValue);
+            const fv = toNumber(futureValue, this.locale);
+            const pv = toNumber(presentValue, this.locale);
             assertNumberOfPeriodsStrictlyPositive(n);
             assert(() => period > 0 && period <= n, _lt("The period must be between 1 and number_of_periods", n.toString()));
-            const payment = PMT.compute(r, n, pv, fv, endOrBeginning);
+            const payment = PMT.compute.bind(this)(r, n, pv, fv, endOrBeginning);
             if (type === 1 && period === 1)
                 return payment;
             const eqPeriod = type === 0 ? period - 1 : period - 2;
             const eqPv = pv + payment * type;
-            const capitalAtPeriod = -FV.compute(r, eqPeriod, payment, eqPv, 0);
+            const capitalAtPeriod = -FV.compute.bind(this)(r, eqPeriod, payment, eqPv, 0);
             const currentInterest = capitalAtPeriod * r;
             return payment + currentInterest;
         },
@@ -14683,10 +11531,10 @@
         compute: function (rate, numberOfPeriods, paymentAmount, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             futureValue = futureValue || 0;
             endOrBeginning = endOrBeginning || 0;
-            const r = toNumber(rate);
-            const n = toNumber(numberOfPeriods);
-            const p = toNumber(paymentAmount);
-            const fv = toNumber(futureValue);
+            const r = toNumber(rate, this.locale);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const p = toNumber(paymentAmount, this.locale);
+            const fv = toNumber(futureValue, this.locale);
             const type = toBoolean(endOrBeginning) ? 1 : 0;
             // https://wiki.documentfoundation.org/Documentation/Calc_Functions/PV
             return r ? -((p * (1 + r * type) * ((1 + r) ** n - 1)) / r + fv) / (1 + r) ** n : -(fv + p * n);
@@ -14710,20 +11558,20 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, redemption, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _rate = toNumber(rate);
-            const _yield = toNumber(securityYield);
-            const _redemption = toNumber(redemption);
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _rate = toNumber(rate, this.locale);
+            const _yield = toNumber(securityYield, this.locale);
+            const _redemption = toNumber(redemption, this.locale);
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assert(() => _yield >= 0, _lt("The yield (%s) must be positive or null.", _yield.toString()));
             assertRedemptionStrictlyPositive(_redemption);
-            const years = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const years = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             const nbrRealCoupons = years * _frequency;
             const nbrFullCoupons = Math.ceil(nbrRealCoupons);
             const timeFirstCoupon = nbrRealCoupons - Math.floor(nbrRealCoupons) || 1;
@@ -14758,11 +11606,11 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _discount = toNumber(discount);
-            const _redemption = toNumber(redemption);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _discount = toNumber(discount, this.locale);
+            const _redemption = toNumber(redemption, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCountConvention);
             assertDiscountStrictlyPositive(_discount);
@@ -14775,7 +11623,7 @@
              *
              * PRICEDISC = redemption - discount * redemption * (DSM/B)
              */
-            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const yearsFrac = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             return _redemption - _discount * _redemption * yearsFrac;
         },
         isExported: true,
@@ -14796,12 +11644,12 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, issue, rate, securityYield, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _issue = Math.trunc(toNumber(issue));
-            const _rate = toNumber(rate);
-            const _yield = toNumber(securityYield);
-            const _dayCount = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _issue = Math.trunc(toNumber(issue, this.locale));
+            const _rate = toNumber(rate, this.locale);
+            const _yield = toNumber(securityYield, this.locale);
+            const _dayCount = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertSettlementAndIssueDatesAreValid(_settlement, _issue);
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCount);
@@ -14833,9 +11681,9 @@
              * from the results of Excel/LibreOffice, thus we get different values with PRICEMAT.
              *
              */
-            const settlementToMaturity = YEARFRAC.compute(_settlement, _maturity, _dayCount);
-            const issueToSettlement = YEARFRAC.compute(_settlement, _issue, _dayCount);
-            const issueToMaturity = YEARFRAC.compute(_issue, _maturity, _dayCount);
+            const settlementToMaturity = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCount);
+            const issueToSettlement = YEARFRAC.compute.bind(this)(_settlement, _issue, _dayCount);
+            const issueToMaturity = YEARFRAC.compute.bind(this)(_issue, _maturity, _dayCount);
             const numerator = 100 + issueToMaturity * _rate * 100;
             const denominator = 1 + settlementToMaturity * _yield;
             const term2 = issueToSettlement * _rate * 100;
@@ -14863,12 +11711,12 @@
             futureValue = futureValue || 0;
             endOrBeginning = endOrBeginning || 0;
             rateGuess = rateGuess || RATE_GUESS_DEFAULT;
-            const n = toNumber(numberOfPeriods);
-            const payment = toNumber(paymentPerPeriod);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const payment = toNumber(paymentPerPeriod, this.locale);
             const type = toBoolean(endOrBeginning) ? 1 : 0;
-            const guess = toNumber(rateGuess);
-            let fv = toNumber(futureValue);
-            let pv = toNumber(presentValue);
+            const guess = toNumber(rateGuess, this.locale);
+            let fv = toNumber(futureValue, this.locale);
+            let pv = toNumber(presentValue, this.locale);
             assertNumberOfPeriodsStrictlyPositive(n);
             assert(() => [payment, pv, fv].some((val) => val > 0) && [payment, pv, fv].some((val) => val < 0), _lt("There must be both positive and negative values in [payment_amount, present_value, future_value].", n.toString()));
             assertRateGuessStrictlyGreaterThanMinusOne(guess);
@@ -14907,11 +11755,11 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, investment, discount, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _investment = toNumber(investment);
-            const _discount = toNumber(discount);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _investment = toNumber(investment, this.locale);
+            const _discount = toNumber(discount, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCountConvention);
             assertInvestmentStrictlyPositive(_investment);
@@ -14927,7 +11775,7 @@
              *
              * The ratio DSM/B can be computed with the YEARFRAC function to take the dayCountConvention into account.
              */
-            const yearsFrac = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const yearsFrac = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             return _investment / (1 - _discount * yearsFrac);
         },
         isExported: true,
@@ -14944,9 +11792,9 @@
         ],
         returns: ["NUMBER"],
         compute: function (numberOfPeriods, presentValue, futureValue) {
-            const n = toNumber(numberOfPeriods);
-            const pv = toNumber(presentValue);
-            const fv = toNumber(futureValue);
+            const n = toNumber(numberOfPeriods, this.locale);
+            const pv = toNumber(presentValue, this.locale);
+            const fv = toNumber(futureValue, this.locale);
             assertNumberOfPeriodsStrictlyPositive(n);
             /**
              * https://support.microsoft.com/en-us/office/rri-function-6f5822d8-7ef1-4233-944c-79e8172930f4
@@ -14970,9 +11818,9 @@
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life) {
-            const _cost = toNumber(cost);
-            const _salvage = toNumber(salvage);
-            const _life = toNumber(life);
+            const _cost = toNumber(cost, this.locale);
+            const _salvage = toNumber(salvage, this.locale);
+            const _life = toNumber(life, this.locale);
             // No assertion is done on the values of the arguments to be compatible with Excel/Gsheet that don't check the values.
             // It's up to the user to make sure the arguments make sense, which is good design because the user is smart.
             return (_cost - _salvage) / _life;
@@ -14993,10 +11841,10 @@
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life, period) {
-            const _cost = toNumber(cost);
-            const _salvage = toNumber(salvage);
-            const _life = toNumber(life);
-            const _period = toNumber(period);
+            const _cost = toNumber(cost, this.locale);
+            const _salvage = toNumber(salvage, this.locale);
+            const _life = toNumber(life, this.locale);
+            const _period = toNumber(period, this.locale);
             assertPeriodStrictlyPositive(_period);
             assertLifeStrictlyPositive(_life);
             assertPeriodSmallerOrEqualToLife(_period, _life);
@@ -15026,11 +11874,11 @@
         ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount) {
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const disc = toNumber(discount);
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const disc = toNumber(discount, this.locale);
             assertMaturityAndSettlementDatesAreValid(start, end);
-            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end, this.locale);
             assertDiscountStrictlyPositive(disc);
             assertDiscountStrictlySmallerThanOne(disc);
             /**
@@ -15042,7 +11890,7 @@
              *
              * The ratio DSM/360 can be computed with the YEARFRAC function with dayCountConvention = 2 (actual/360).
              */
-            const yearFrac = YEARFRAC.compute(start, end, 2);
+            const yearFrac = YEARFRAC.compute.bind(this)(start, end, 2);
             return 100 * (1 - disc * yearFrac);
         },
         isExported: true,
@@ -15059,11 +11907,11 @@
         ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount) {
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const disc = toNumber(discount);
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const disc = toNumber(discount, this.locale);
             assertMaturityAndSettlementDatesAreValid(start, end);
-            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end, this.locale);
             assertDiscountStrictlyPositive(disc);
             assertDiscountStrictlySmallerThanOne(disc);
             /**
@@ -15092,11 +11940,11 @@
              * the settlement year is a leap year.
              *
              */
-            const nDays = DAYS.compute(end, start);
+            const nDays = DAYS.compute.bind(this)(end, start);
             if (nDays <= 182) {
                 return (365 * disc) / (360 - disc * nDays);
             }
-            const p = TBILLPRICE.compute(start, end, disc) / 100;
+            const p = TBILLPRICE.compute.bind(this)(start, end, disc) / 100;
             const daysInYear = nDays === 366 ? 366 : 365;
             const x = nDays / daysInYear;
             const num = -2 * x + 2 * Math.sqrt(x ** 2 - (2 * x - 1) * (1 - 1 / p));
@@ -15117,11 +11965,11 @@
         ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price) {
-            const start = Math.trunc(toNumber(settlement));
-            const end = Math.trunc(toNumber(maturity));
-            const p = toNumber(price);
+            const start = Math.trunc(toNumber(settlement, this.locale));
+            const end = Math.trunc(toNumber(maturity, this.locale));
+            const p = toNumber(price, this.locale);
             assertMaturityAndSettlementDatesAreValid(start, end);
-            assertSettlementLessThanOneYearBeforeMaturity(start, end);
+            assertSettlementLessThanOneYearBeforeMaturity(start, end, this.locale);
             assertPriceStrictlyPositive(p);
             /**
              * https://support.microsoft.com/en-us/office/tbillyield-function-6d381232-f4b0-4cd5-8e97-45b9c03468ba
@@ -15135,7 +11983,7 @@
              * The ratio DSM/360 can be computed with the YEARFRAC function with dayCountConvention = 2 (actual/360).
              *
              */
-            const yearFrac = YEARFRAC.compute(start, end, 2);
+            const yearFrac = YEARFRAC.compute.bind(this)(start, end, 2);
             return ((100 - p) / p) * (1 / yearFrac);
         },
         isExported: true,
@@ -15158,16 +12006,16 @@
         returns: ["NUMBER"],
         compute: function (cost, salvage, life, startPeriod, endPeriod, factor = DEFAULT_DDB_DEPRECIATION_FACTOR, noSwitch = DEFAULT_VDB_NO_SWITCH) {
             factor = factor || 0;
-            const _cost = toNumber(cost);
-            const _salvage = toNumber(salvage);
-            const _life = toNumber(life);
+            const _cost = toNumber(cost, this.locale);
+            const _salvage = toNumber(salvage, this.locale);
+            const _life = toNumber(life, this.locale);
             /* TODO : handle decimal periods
              * on end_period it looks like it is a simple linear function, but I cannot understand exactly how
              * decimals periods are handled with start_period.
              */
-            const _startPeriod = Math.trunc(toNumber(startPeriod));
-            const _endPeriod = Math.trunc(toNumber(endPeriod));
-            const _factor = toNumber(factor);
+            const _startPeriod = Math.trunc(toNumber(startPeriod, this.locale));
+            const _endPeriod = Math.trunc(toNumber(endPeriod, this.locale));
+            const _factor = toNumber(factor, this.locale);
             const _noSwitch = toBoolean(noSwitch);
             assertCostPositiveOrZero(_cost);
             assertSalvagePositiveOrZero(_salvage);
@@ -15223,9 +12071,9 @@
         returns: ["NUMBER"],
         compute: function (cashflowAmounts, cashflowDates, rateGuess = RATE_GUESS_DEFAULT) {
             rateGuess = rateGuess || 0;
-            const guess = toNumber(rateGuess);
-            const _cashFlows = cashflowAmounts.flat().map(toNumber);
-            const _dates = cashflowDates.flat().map(toNumber);
+            const guess = toNumber(rateGuess, this.locale);
+            const _cashFlows = cashflowAmounts.flat().map((val) => toNumber(val, this.locale));
+            const _dates = cashflowDates.flat().map((val) => toNumber(val, this.locale));
             assertCashFlowsAndDatesHaveSameDimension(cashflowAmounts, cashflowDates);
             assertCashFlowsHavePositiveAndNegativesValues(_cashFlows);
             assertEveryDateGreaterThanFirstDateOfCashFlowDates(_dates);
@@ -15294,13 +12142,13 @@
         ],
         returns: ["NUMBER"],
         compute: function (discount, cashflowAmounts, cashflowDates) {
-            const rate = toNumber(discount);
+            const rate = toNumber(discount, this.locale);
             const _cashFlows = Array.isArray(cashflowAmounts)
-                ? cashflowAmounts.flat().map(strictToNumber)
-                : [strictToNumber(cashflowAmounts)];
+                ? cashflowAmounts.flat().map((val) => strictToNumber(val, this.locale))
+                : [strictToNumber(cashflowAmounts, this.locale)];
             const _dates = Array.isArray(cashflowDates)
-                ? cashflowDates.flat().map(strictToNumber)
-                : [strictToNumber(cashflowDates)];
+                ? cashflowDates.flat().map((val) => strictToNumber(val, this.locale))
+                : [strictToNumber(cashflowDates, this.locale)];
             if (Array.isArray(cashflowDates) && Array.isArray(cashflowAmounts)) {
                 assertCashFlowsAndDatesHaveSameDimension(cashflowAmounts, cashflowDates);
             }
@@ -15362,20 +12210,20 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, price, redemption, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _rate = toNumber(rate);
-            const _price = toNumber(price);
-            const _redemption = toNumber(redemption);
-            const _frequency = Math.trunc(toNumber(frequency));
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _rate = toNumber(rate, this.locale);
+            const _price = toNumber(price, this.locale);
+            const _redemption = toNumber(redemption, this.locale);
+            const _frequency = Math.trunc(toNumber(frequency, this.locale));
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertCouponFrequencyIsValid(_frequency);
             assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assertPriceStrictlyPositive(_price);
             assertRedemptionStrictlyPositive(_redemption);
-            const years = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const years = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             const nbrRealCoupons = years * _frequency;
             const nbrFullCoupons = Math.ceil(nbrRealCoupons);
             const timeFirstCoupon = nbrRealCoupons - Math.floor(nbrRealCoupons) || 1;
@@ -15437,11 +12285,11 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _price = toNumber(price);
-            const _redemption = toNumber(redemption);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _price = toNumber(price, this.locale);
+            const _redemption = toNumber(redemption, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCountConvention);
             assertPriceStrictlyPositive(_price);
@@ -15453,7 +12301,7 @@
              * YIELDDISC = _____________________________________
              *             YEARFRAC(settlement, maturity, basis)
              */
-            const yearFrac = YEARFRAC.compute(settlement, maturity, dayCountConvention);
+            const yearFrac = YEARFRAC.compute.bind(this)(settlement, maturity, dayCountConvention);
             return (_redemption / _price - 1) / yearFrac;
         },
         isExported: true,
@@ -15474,20 +12322,20 @@
         returns: ["NUMBER"],
         compute: function (settlement, maturity, issue, rate, price, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
-            const _settlement = Math.trunc(toNumber(settlement));
-            const _maturity = Math.trunc(toNumber(maturity));
-            const _issue = Math.trunc(toNumber(issue));
-            const _rate = toNumber(rate);
-            const _price = toNumber(price);
-            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention));
+            const _settlement = Math.trunc(toNumber(settlement, this.locale));
+            const _maturity = Math.trunc(toNumber(maturity, this.locale));
+            const _issue = Math.trunc(toNumber(issue, this.locale));
+            const _rate = toNumber(rate, this.locale);
+            const _price = toNumber(price, this.locale);
+            const _dayCountConvention = Math.trunc(toNumber(dayCountConvention, this.locale));
             assertMaturityAndSettlementDatesAreValid(_settlement, _maturity);
             assertDayCountConventionIsValid(_dayCountConvention);
             assert(() => _settlement >= _issue, _lt("The settlement (%s) must be greater than or equal to the issue (%s).", _settlement.toString(), _issue.toString()));
             assert(() => _rate >= 0, _lt("The rate (%s) must be positive or null.", _rate.toString()));
             assertPriceStrictlyPositive(_price);
-            const issueToMaturity = YEARFRAC.compute(_issue, _maturity, _dayCountConvention);
-            const issueToSettlement = YEARFRAC.compute(_issue, _settlement, _dayCountConvention);
-            const settlementToMaturity = YEARFRAC.compute(_settlement, _maturity, _dayCountConvention);
+            const issueToMaturity = YEARFRAC.compute.bind(this)(_issue, _maturity, _dayCountConvention);
+            const issueToSettlement = YEARFRAC.compute.bind(this)(_issue, _settlement, _dayCountConvention);
+            const settlementToMaturity = YEARFRAC.compute.bind(this)(_settlement, _maturity, _dayCountConvention);
             const numerator = (100 * (1 + _rate * issueToMaturity)) / (_price + 100 * _rate * issueToSettlement) - 1;
             return numerator / settlementToMaturity;
         },
@@ -15932,11 +12780,11 @@
         ],
         returns: ["STRING"],
         compute: function (row, column, absoluteRelativeMode = DEFAULT_ABSOLUTE_RELATIVE_MODE, useA1Notation = true, sheet) {
-            const rowNumber = strictToInteger(row);
-            const colNumber = strictToInteger(column);
+            const rowNumber = strictToInteger(row, this.locale);
+            const colNumber = strictToInteger(column, this.locale);
             assertNumberGreaterThanOrEqualToOne(rowNumber);
             assertNumberGreaterThanOrEqualToOne(colNumber);
-            const _absoluteRelativeMode = strictToInteger(absoluteRelativeMode);
+            const _absoluteRelativeMode = strictToInteger(absoluteRelativeMode, this.locale);
             assert(() => [1, 2, 3, 4].includes(_absoluteRelativeMode), expectNumberRangeError(1, 4, _absoluteRelativeMode));
             const _useA1Notation = toBoolean(useA1Notation);
             let cellReference;
@@ -16002,7 +12850,7 @@
         ],
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
-            const _index = Math.trunc(toNumber(index));
+            const _index = Math.trunc(toNumber(index, this.locale));
             const _searchKey = normalizeValue(searchKey);
             assert(() => 1 <= _index && _index <= range[0].length, _lt("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
             const _isSorted = toBoolean(isSorted);
@@ -16073,7 +12921,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (searchKey, range, searchType = DEFAULT_SEARCH_TYPE) {
-            let _searchType = toNumber(searchType);
+            let _searchType = toNumber(searchType, this.locale);
             const _searchKey = normalizeValue(searchKey);
             const nbCol = range.length;
             const nbRow = range[0].length;
@@ -16141,7 +12989,7 @@
         ],
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
-            const _index = Math.trunc(toNumber(index));
+            const _index = Math.trunc(toNumber(index, this.locale));
             const _searchKey = normalizeValue(searchKey);
             assert(() => 1 <= _index && _index <= range.length, _lt("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
             const _isSorted = toBoolean(isSorted);
@@ -16177,8 +13025,8 @@
         ],
         returns: ["ANY"],
         compute: function (searchKey, lookupRange, returnRange, defaultValue, matchMode = DEFAULT_MATCH_MODE, searchMode = DEFAULT_SEARCH_MODE) {
-            const _matchMode = Math.trunc(toNumber(matchMode));
-            const _searchMode = Math.trunc(toNumber(searchMode));
+            const _matchMode = Math.trunc(toNumber(matchMode, this.locale));
+            const _searchMode = Math.trunc(toNumber(searchMode, this.locale));
             const _searchKey = normalizeValue(searchKey);
             assert(() => lookupRange.length === 1 || lookupRange[0].length === 1, _lt("lookup_range should be either a single row or single column."));
             assert(() => [-1, 1, -2, 2].includes(_searchMode), _lt("searchMode should be a value in [-1, 1, -2, 2]."));
@@ -16237,7 +13085,7 @@
         returns: ["NUMBER"],
         computeFormat: (value1, value2) => value1?.format || value2?.format,
         compute: function (value1, value2) {
-            return toNumber(value1) + toNumber(value2);
+            return toNumber(value1, this.locale) + toNumber(value2, this.locale);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16267,9 +13115,9 @@
         returns: ["NUMBER"],
         computeFormat: (dividend, divisor) => dividend?.format || divisor?.format,
         compute: function (dividend, divisor) {
-            const _divisor = toNumber(divisor);
+            const _divisor = toNumber(divisor, this.locale);
             assert(() => _divisor !== 0, _lt("The divisor must be different from zero."));
-            return toNumber(dividend) / _divisor;
+            return toNumber(dividend, this.locale) / _divisor;
         },
     };
     // -----------------------------------------------------------------------------
@@ -16360,7 +13208,7 @@
         ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
-            return !GTE.compute(value1, value2);
+            return !GTE.compute.bind(this)(value1, value2);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16374,7 +13222,7 @@
         ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
-            return !GT.compute(value1, value2);
+            return !GT.compute.bind(this)(value1, value2);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16389,7 +13237,7 @@
         returns: ["NUMBER"],
         computeFormat: (value1, value2) => value1?.format || value2?.format,
         compute: function (value1, value2) {
-            return toNumber(value1) - toNumber(value2);
+            return toNumber(value1, this.locale) - toNumber(value2, this.locale);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16404,7 +13252,7 @@
         returns: ["NUMBER"],
         computeFormat: (factor1, factor2) => factor1?.format || factor2?.format,
         compute: function (factor1, factor2) {
-            return toNumber(factor1) * toNumber(factor2);
+            return toNumber(factor1, this.locale) * toNumber(factor2, this.locale);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16418,7 +13266,7 @@
         ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
-            return !EQ.compute(value1, value2);
+            return !EQ.compute.bind(this)(value1, value2);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16432,7 +13280,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (base, exponent) {
-            return POWER.compute(base, exponent);
+            return POWER.compute.bind(this)(base, exponent);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16446,7 +13294,7 @@
         computeFormat: (value) => value?.format,
         returns: ["NUMBER"],
         compute: function (value) {
-            return -toNumber(value);
+            return -toNumber(value, this.locale);
         },
     };
     // -----------------------------------------------------------------------------
@@ -16457,7 +13305,7 @@
         args: [arg("percentage (number)", _lt("The value to interpret as a percentage."))],
         returns: ["NUMBER"],
         compute: function (percentage) {
-            return toNumber(percentage) / 100;
+            return toNumber(percentage, this.locale) / 100;
         },
     };
     // -----------------------------------------------------------------------------
@@ -16505,7 +13353,7 @@
         ],
         returns: ["STRING"],
         compute: function (tableNumber) {
-            const _tableNumber = Math.trunc(toNumber(tableNumber));
+            const _tableNumber = Math.trunc(toNumber(tableNumber, this.locale));
             assert(() => _tableNumber >= 1, _lt("The table_number (%s) is out of range.", _tableNumber.toString()));
             return String.fromCharCode(_tableNumber);
         },
@@ -16574,7 +13422,7 @@
         compute: function (searchFor, textToSearch, startingAt = DEFAULT_STARTING_AT) {
             const _searchFor = toString(searchFor);
             const _textToSearch = toString(textToSearch);
-            const _startingAt = toNumber(startingAt);
+            const _startingAt = toNumber(startingAt, this.locale);
             assert(() => _textToSearch !== "", _lt(`The text_to_search must be non-empty.`));
             assert(() => _startingAt >= 1, _lt("The starting_at (%s) must be greater than or equal to 1.", _startingAt.toString()));
             const result = _textToSearch.indexOf(_searchFor, _startingAt - 1);
@@ -16610,7 +13458,7 @@
         ],
         returns: ["STRING"],
         compute: function (text, ...args) {
-            const _numberOfCharacters = args.length ? toNumber(args[0]) : 1;
+            const _numberOfCharacters = args.length ? toNumber(args[0], this.locale) : 1;
             assert(() => _numberOfCharacters >= 0, _lt("The number_of_characters (%s) must be positive or null.", _numberOfCharacters.toString()));
             return toString(text).substring(0, _numberOfCharacters);
         },
@@ -16653,8 +13501,8 @@
         returns: ["STRING"],
         compute: function (text, starting_at, extract_length) {
             const _text = toString(text);
-            const _starting_at = toNumber(starting_at);
-            const _extract_length = toNumber(extract_length);
+            const _starting_at = toNumber(starting_at, this.locale);
+            const _extract_length = toNumber(extract_length, this.locale);
             assert(() => _starting_at >= 1, _lt("The starting_at argument (%s) must be positive greater than one.", _starting_at.toString()));
             assert(() => _extract_length >= 0, _lt("The extract_length argument (%s) must be positive or null.", _extract_length.toString()));
             return _text.slice(_starting_at - 1, _starting_at + _extract_length - 1);
@@ -16691,10 +13539,10 @@
         ],
         returns: ["STRING"],
         compute: function (text, position, length, newText) {
-            const _position = toNumber(position);
+            const _position = toNumber(position, this.locale);
             assert(() => _position >= 1, _lt("The position (%s) must be greater than or equal to 1.", _position.toString()));
             const _text = toString(text);
-            const _length = toNumber(length);
+            const _length = toNumber(length, this.locale);
             const _newText = toString(newText);
             return _text.substring(0, _position - 1) + _newText + _text.substring(_position - 1 + _length);
         },
@@ -16711,7 +13559,7 @@
         ],
         returns: ["STRING"],
         compute: function (text, ...args) {
-            const _numberOfCharacters = args.length ? toNumber(args[0]) : 1;
+            const _numberOfCharacters = args.length ? toNumber(args[0], this.locale) : 1;
             assert(() => _numberOfCharacters >= 0, _lt("The number_of_characters (%s) must be positive or null.", _numberOfCharacters.toString()));
             const _text = toString(text);
             const stringLength = _text.length;
@@ -16733,7 +13581,7 @@
         compute: function (searchFor, textToSearch, startingAt = DEFAULT_STARTING_AT) {
             const _searchFor = toString(searchFor).toLowerCase();
             const _textToSearch = toString(textToSearch).toLowerCase();
-            const _startingAt = toNumber(startingAt);
+            const _startingAt = toNumber(startingAt, this.locale);
             assert(() => _textToSearch !== "", _lt(`The text_to_search must be non-empty.`));
             assert(() => _startingAt >= 1, _lt("The starting_at (%s) must be greater than or equal to 1.", _startingAt.toString()));
             const result = _textToSearch.indexOf(_searchFor, _startingAt - 1);
@@ -16785,7 +13633,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (textToSearch, searchFor, replaceWith, occurrenceNumber) {
-            const _occurrenceNumber = toNumber(occurrenceNumber);
+            const _occurrenceNumber = toNumber(occurrenceNumber, this.locale);
             assert(() => _occurrenceNumber >= 0, _lt("The occurrenceNumber (%s) must be positive or null.", _occurrenceNumber.toString()));
             const _textToSearch = toString(textToSearch);
             const _searchFor = toString(searchFor);
@@ -16859,8 +13707,8 @@
         ],
         returns: ["STRING"],
         compute: function (number, format) {
-            const _number = toNumber(number);
-            return formatValue(_number, toString(format));
+            const _number = toNumber(number, this.locale);
+            return formatValue(_number, { format: toString(format), locale: this.locale });
         },
         isExported: true,
     };
@@ -16990,354 +13838,3951 @@
         }
     }
 
-    const insertRow = {
-        name: (env) => {
-            const number = getRowsNumber(env);
-            return number === 1 ? _lt("Insert row") : _lt("Insert %s rows", number.toString());
-        },
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_ROW",
-    };
-    const rowInsertRowBefore = {
-        name: (env) => {
-            const number = getRowsNumber(env);
-            return number === 1 ? _lt("Insert row above") : _lt("Insert %s rows above", number.toString());
-        },
-        execute: INSERT_ROWS_BEFORE_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
-    };
-    const topBarInsertRowsBefore = {
-        ...rowInsertRowBefore,
-        name: (env) => {
-            const number = getRowsNumber(env);
-            if (number === 1) {
-                return _lt("Row above");
-            }
-            return _lt("%s Rows above", number.toString());
-        },
-    };
-    const cellInsertRowsBefore = {
-        ...rowInsertRowBefore,
-        name: (env) => {
-            const number = getRowsNumber(env);
-            if (number === 1) {
-                return _lt("Insert row");
-            }
-            return _lt("Insert %s rows", number.toString());
-        },
-        isVisible: IS_ONLY_ONE_RANGE,
-        icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
-    };
-    const rowInsertRowsAfter = {
-        execute: INSERT_ROWS_AFTER_ACTION,
-        name: (env) => {
-            const number = getRowsNumber(env);
-            return number === 1 ? _lt("Insert row below") : _lt("Insert %s rows below", number.toString());
-        },
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_ROW_AFTER",
-    };
-    const topBarInsertRowsAfter = {
-        ...rowInsertRowsAfter,
-        name: (env) => {
-            const number = getRowsNumber(env);
-            if (number === 1) {
-                return _lt("Row below");
-            }
-            return _lt("%s Rows below", number.toString());
-        },
-    };
-    const insertCol = {
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            return number === 1 ? _lt("Insert column") : _lt("Insert %s columns", number.toString());
-        },
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_COL",
-    };
-    const colInsertColsBefore = {
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            return number === 1
-                ? _lt("Insert column left")
-                : _lt("Insert %s columns left", number.toString());
-        },
-        execute: INSERT_COLUMNS_BEFORE_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
-    };
-    const topBarInsertColsBefore = {
-        ...colInsertColsBefore,
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            if (number === 1) {
-                return _lt("Column left");
-            }
-            return _lt("%s Columns left", number.toString());
-        },
-    };
-    const cellInsertColsBefore = {
-        ...colInsertColsBefore,
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            if (number === 1) {
-                return _lt("Insert column");
-            }
-            return _lt("Insert %s columns", number.toString());
-        },
-        isVisible: IS_ONLY_ONE_RANGE,
-        icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
-    };
-    const colInsertColsAfter = {
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            return number === 1
-                ? _lt("Insert column right")
-                : _lt("Insert %s columns right", number.toString());
-        },
-        execute: INSERT_COLUMNS_AFTER_ACTION,
-        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
-            IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveRows().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_COL_AFTER",
-    };
-    const topBarInsertColsAfter = {
-        ...colInsertColsAfter,
-        name: (env) => {
-            const number = getColumnsNumber(env);
-            if (number === 1) {
-                return _lt("Column right");
-            }
-            return _lt("%s Columns right", number.toString());
-        },
-        execute: INSERT_COLUMNS_AFTER_ACTION,
-    };
-    const insertCell = {
-        name: _lt("Insert cells"),
-        isVisible: (env) => IS_ONLY_ONE_RANGE(env) &&
-            env.model.getters.getActiveCols().size === 0 &&
-            env.model.getters.getActiveRows().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_CELL",
-    };
-    const insertCellShiftDown = {
-        name: _lt("Insert cells and shift down"),
-        execute: (env) => {
-            const zone = env.model.getters.getSelectedZone();
-            const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "ROW" });
-            handlePasteResult(env, result);
-        },
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_DOWN",
-    };
-    const insertCellShiftRight = {
-        name: _lt("Insert cells and shift right"),
-        execute: (env) => {
-            const zone = env.model.getters.getSelectedZone();
-            const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "COL" });
-            handlePasteResult(env, result);
-        },
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
-        icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_RIGHT",
-    };
-    const insertChart = {
-        name: _lt("Chart"),
-        execute: CREATE_CHART,
-        icon: "o-spreadsheet-Icon.INSERT_CHART",
-    };
-    const insertImage = {
-        name: _lt("Image"),
-        description: "Ctrl+O",
-        execute: CREATE_IMAGE,
-        isVisible: (env) => env.imageProvider !== undefined,
-        icon: "o-spreadsheet-Icon.INSERT_IMAGE",
-    };
-    const insertFunction = {
-        name: _lt("Function"),
-        icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
-    };
-    const insertFunctionSum = {
-        name: _lt("SUM"),
-        execute: (env) => env.startCellEdition(`=SUM(`),
-    };
-    const insertFunctionAverage = {
-        name: _lt("AVERAGE"),
-        execute: (env) => env.startCellEdition(`=AVERAGE(`),
-    };
-    const insertFunctionCount = {
-        name: _lt("COUNT"),
-        execute: (env) => env.startCellEdition(`=COUNT(`),
-    };
-    const insertFunctionMax = {
-        name: _lt("MAX"),
-        execute: (env) => env.startCellEdition(`=MAX(`),
-    };
-    const insertFunctionMin = {
-        name: _lt("MIN"),
-        execute: (env) => env.startCellEdition(`=MIN(`),
-    };
-    const categorieFunctionAll = {
-        name: _lt("All"),
-        children: allFunctionListMenuBuilder(),
-    };
-    function allFunctionListMenuBuilder() {
-        const fnNames = functionRegistry.getKeys();
-        return createFormulaFunctions(fnNames);
+    class FunctionCodeBuilder {
+        scope;
+        code = "";
+        constructor(scope = new Scope()) {
+            this.scope = scope;
+        }
+        append(...lines) {
+            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
+        }
+        return(expression) {
+            return new FunctionCodeImpl(this.scope, this.code, expression);
+        }
+        toString() {
+            return indentCode(this.code);
+        }
     }
-    const categoriesFunctionListMenuBuilder = () => {
-        const functions = functionRegistry.content;
-        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
-        return categories.sort().map((category, i) => {
-            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+    class FunctionCodeImpl {
+        scope;
+        returnExpression;
+        code;
+        constructor(scope, code, returnExpression) {
+            this.scope = scope;
+            this.returnExpression = returnExpression;
+            this.code = indentCode(code);
+        }
+        toString() {
+            return this.code;
+        }
+        wrapInClosure() {
+            const closureName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(`const ${closureName} = () => {`);
+            code.append(this.code);
+            code.append(`return ${this.returnExpression};`);
+            code.append(`}`);
+            return code.return(closureName);
+        }
+        assignResultToVariable() {
+            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
+                return this;
+            }
+            const variableName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(this.code);
+            code.append(`const ${variableName} = ${this.returnExpression};`);
+            return code.return(variableName);
+        }
+    }
+    class Scope {
+        nextId = 1;
+        declaredVariables = new Set();
+        nextVariableName() {
+            const name = `_${this.nextId++}`;
+            this.declaredVariables.add(name);
+            return name;
+        }
+        isAlreadyDeclared(name) {
+            return this.declaredVariables.has(name);
+        }
+    }
+    /**
+     * Takes a list of strings that might be single or multiline
+     * and maps them in a list of single line strings.
+     */
+    function splitLines(str) {
+        return str
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
+    }
+    function indentCode(code) {
+        let result = "";
+        let indentLevel = 0;
+        const lines = splitLines(code);
+        for (const line of lines) {
+            if (line.startsWith("}")) {
+                indentLevel--;
+            }
+            result += "\t".repeat(indentLevel) + line + "\n";
+            if (line.endsWith("{")) {
+                indentLevel++;
+            }
+        }
+        return result.trim();
+    }
+
+    /**
+     * Tokenizer
+     *
+     * A tokenizer is a piece of code whose job is to transform a string into a list
+     * of "tokens". For example, "(12+" is converted into:
+     *   [{type: "LEFT_PAREN", value: "("},
+     *    {type: "NUMBER", value: "12"},
+     *    {type: "OPERATOR", value: "+"}]
+     *
+     * As the example shows, a tokenizer does not care about the meaning behind those
+     * tokens. It only cares about the structure.
+     *
+     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
+     * is useful for the composer, which needs to be able to work with incomplete
+     * formulas.
+     */
+    const functions$3 = functionRegistry.content;
+    const POSTFIX_UNARY_OPERATORS = ["%"];
+    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
+    function tokenize(str, locale = DEFAULT_LOCALE) {
+        str = replaceSpecialSpaces(str);
+        const chars = new TokenizingChars(str);
+        const result = [];
+        while (!chars.isOver()) {
+            let token = tokenizeSpace(chars) ||
+                tokenizeArgsSeparator(chars, locale) ||
+                tokenizeMisc(chars) ||
+                tokenizeOperator(chars) ||
+                tokenizeString(chars) ||
+                tokenizeDebugger(chars) ||
+                tokenizeInvalidRange(chars) ||
+                tokenizeNumber(chars, locale) ||
+                tokenizeSymbol(chars);
+            if (!token) {
+                token = { type: "UNKNOWN", value: chars.shift() };
+            }
+            result.push(token);
+        }
+        return result;
+    }
+    function tokenizeDebugger(chars) {
+        if (chars.current() === "?") {
+            chars.shift();
+            return { type: "DEBUGGER", value: "?" };
+        }
+        return null;
+    }
+    const misc = {
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    function tokenizeMisc(chars) {
+        if (chars.current() in misc) {
+            const value = chars.shift();
+            const type = misc[value];
+            return { type, value };
+        }
+        return null;
+    }
+    function tokenizeArgsSeparator(chars, locale) {
+        if (chars.current() === locale.formulaArgSeparator) {
+            const value = chars.shift();
+            const type = "ARG_SEPARATOR";
+            return { type, value };
+        }
+        return null;
+    }
+    function tokenizeOperator(chars) {
+        for (let op of OPERATORS) {
+            if (chars.currentStartsWith(op)) {
+                chars.advanceBy(op.length);
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return null;
+    }
+    function tokenizeNumber(chars, locale) {
+        const match = chars.remaining().match(getFormulaNumberRegex(locale.decimalSeparator));
+        if (match) {
+            chars.advanceBy(match[0].length);
+            return { type: "NUMBER", value: match[0] };
+        }
+        return null;
+    }
+    function tokenizeString(chars) {
+        if (chars.current() === '"') {
+            const startChar = chars.shift();
+            let letters = startChar;
+            while (chars.current() &&
+                (chars.current() !== startChar || letters[letters.length - 1] === "\\")) {
+                letters += chars.shift();
+            }
+            if (chars.current() === '"') {
+                letters += chars.shift();
+            }
             return {
-                name: category,
-                children: createFormulaFunctions(functionsInCategory),
+                type: "STRING",
+                value: letters,
             };
-        });
+        }
+        return null;
+    }
+    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+     * A "Symbol" is just basically any word-like element that can appear in a
+     * formula, which is not a string. So:
+     *   A1
+     *   SUM
+     *   CEILING.MATH
+     *   A$1
+     *   Sheet2!A2
+     *   'Sheet 2'!A2
+     *
+     * are examples of symbols
+     */
+    function tokenizeSymbol(chars) {
+        let result = "";
+        // there are two main cases to manage: either something which starts with
+        // a ', like 'Sheet 2'A2, or a word-like element.
+        if (chars.current() === "'") {
+            let lastChar = chars.shift();
+            result += lastChar;
+            while (chars.current()) {
+                lastChar = chars.shift();
+                result += lastChar;
+                if (lastChar === "'") {
+                    if (chars.current() && chars.current() === "'") {
+                        lastChar = chars.shift();
+                        result += lastChar;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            if (lastChar !== "'") {
+                return {
+                    type: "UNKNOWN",
+                    value: result,
+                };
+            }
+        }
+        while (chars.current() && separatorRegexp.test(chars.current())) {
+            result += chars.shift();
+        }
+        if (result.length) {
+            const value = result;
+            const isFunction = value.toUpperCase() in functions$3;
+            if (isFunction) {
+                return { type: "FUNCTION", value };
+            }
+            const isReference = rangeReference.test(value);
+            if (isReference) {
+                return { type: "REFERENCE", value };
+            }
+            else {
+                return { type: "SYMBOL", value };
+            }
+        }
+        return null;
+    }
+    function tokenizeSpace(chars) {
+        let length = 0;
+        while (chars.current() === NEWLINE) {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: NEWLINE.repeat(length) };
+        }
+        while (chars.current() === " ") {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: " ".repeat(length) };
+        }
+        return null;
+    }
+    function tokenizeInvalidRange(chars) {
+        if (chars.currentStartsWith(INCORRECT_RANGE_STRING)) {
+            chars.advanceBy(INCORRECT_RANGE_STRING.length);
+            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
+        }
+        return null;
+    }
+    class TokenizingChars {
+        text;
+        currentIndex = 0;
+        constructor(text) {
+            this.text = text;
+        }
+        current() {
+            return this.text[this.currentIndex];
+        }
+        shift() {
+            return this.text[this.currentIndex++];
+        }
+        advanceBy(length) {
+            this.currentIndex += length;
+        }
+        isOver() {
+            return this.currentIndex >= this.text.length;
+        }
+        remaining() {
+            return this.text.substring(this.currentIndex);
+        }
+        currentStartsWith(str) {
+            for (let j = 0; j < str.length; j++) {
+                if (this.text[this.currentIndex + j] !== str[j]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
+    const UNARY_OPERATORS_PREFIX = ["-", "+"];
+    const UNARY_OPERATORS_POSTFIX = ["%"];
+    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
+    const OP_PRIORITY = {
+        "^": 30,
+        "%": 30,
+        "*": 20,
+        "/": 20,
+        "+": 15,
+        "-": 15,
+        "&": 13,
+        ">": 10,
+        "<>": 10,
+        ">=": 10,
+        "<": 10,
+        "<=": 10,
+        "=": 10,
     };
-    const insertLink = {
-        name: _lt("Link"),
-        execute: INSERT_LINK,
-        icon: "o-spreadsheet-Icon.INSERT_LINK",
-    };
-    const insertSheet = {
-        name: _lt("Insert sheet"),
-        execute: (env) => {
-            const activeSheetId = env.model.getters.getActiveSheetId();
-            const position = env.model.getters.getSheetIds().indexOf(activeSheetId) + 1;
-            const sheetId = env.model.uuidGenerator.uuidv4();
-            env.model.dispatch("CREATE_SHEET", { sheetId, position });
-            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
+    /**
+     * Parse the next operand in an arithmetic expression.
+     * e.g.
+     *  for 1+2*3, the next operand is 1
+     *  for (1+2)*3, the next operand is (1+2)
+     *  for SUM(1,2)+3, the next operand is SUM(1,2)
+     */
+    function parseOperand(tokens) {
+        const current = tokens.shift();
+        if (!current) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        switch (current.type) {
+            case "DEBUGGER":
+                const next = parseExpression(tokens, 1000);
+                next.debug = true;
+                return next;
+            case "NUMBER":
+                return { type: "NUMBER", value: parseNumber(current.value, DEFAULT_LOCALE) };
+            case "STRING":
+                return { type: "STRING", value: removeStringQuotes(current.value) };
+            case "FUNCTION":
+                const args = parseFunctionArgs(tokens);
+                return { type: "FUNCALL", value: current.value, args };
+            case "INVALID_REFERENCE":
+                throw new InvalidReferenceError();
+            case "REFERENCE":
+                if (tokens[0]?.value === ":" && tokens[1]?.type === "REFERENCE") {
+                    tokens.shift();
+                    const rightReference = tokens.shift();
+                    return {
+                        type: "REFERENCE",
+                        value: `${current.value}:${rightReference?.value}`,
+                    };
+                }
+                return {
+                    type: "REFERENCE",
+                    value: current.value,
+                };
+            case "SYMBOL":
+                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
+                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                }
+                if (current.value) {
+                    if (functionRegex.test(current.value) && tokens[0]?.type === "LEFT_PAREN") {
+                        throw new UnknownFunctionError(current.value);
+                    }
+                }
+                throw new BadExpressionError(_lt("Invalid formula"));
+            case "LEFT_PAREN":
+                const result = parseExpression(tokens);
+                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
+                return result;
+            case "OPERATOR":
+                const operator = current.value;
+                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
+                    return {
+                        type: "UNARY_OPERATION",
+                        value: operator,
+                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
+                    };
+                }
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+            default:
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+        }
+    }
+    function parseFunctionArgs(tokens) {
+        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
+        const nextToken = tokens[0];
+        if (nextToken?.type === "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "RIGHT_PAREN");
+            return [];
+        }
+        const args = [];
+        args.push(parseOneFunctionArg(tokens));
+        while (tokens[0]?.type !== "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "ARG_SEPARATOR", _lt("Wrong function call"));
+            args.push(parseOneFunctionArg(tokens));
+        }
+        consumeOrThrow(tokens, "RIGHT_PAREN");
+        return args;
+    }
+    function parseOneFunctionArg(tokens) {
+        const nextToken = tokens[0];
+        if (nextToken?.type === "ARG_SEPARATOR" || nextToken?.type === "RIGHT_PAREN") {
+            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
+            return { type: "EMPTY", value: "" };
+        }
+        return parseExpression(tokens);
+    }
+    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
+        const token = tokens.shift();
+        if (!token || token.type !== type) {
+            throw new BadExpressionError(message);
+        }
+    }
+    function parseExpression(tokens, parent_priority = 0) {
+        if (tokens.length === 0) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        let left = parseOperand(tokens);
+        // as long as we have operators with higher priority than the parent one,
+        // continue parsing the expression because it is a child sub-expression
+        while (tokens[0]?.type === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
+            const operator = tokens.shift().value;
+            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
+                left = {
+                    type: "UNARY_OPERATION",
+                    value: operator,
+                    operand: left,
+                    postfix: true,
+                };
+            }
+            else {
+                const right = parseExpression(tokens, OP_PRIORITY[operator]);
+                left = {
+                    type: "BIN_OPERATION",
+                    value: operator,
+                    left,
+                    right,
+                };
+            }
+        }
+        return left;
+    }
+    /**
+     * Parse an expression (as a string) into an AST.
+     */
+    function parse(str) {
+        return parseTokens(tokenize(str));
+    }
+    function parseTokens(tokens) {
+        tokens = tokens.filter((x) => x.type !== "SPACE");
+        if (tokens[0].value === "=") {
+            tokens.splice(0, 1);
+        }
+        const result = parseExpression(tokens);
+        if (tokens.length) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        return result;
+    }
+    /**
+     * Allows to visit all nodes of an AST and apply a mapping function
+     * to nodes of a specific type.
+     * Useful if you want to convert some part of a formula.
+     *
+     * e.g.
+     * ```ts
+     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
+     *
+     * function convertFormulaToExcel(ast: ASTFuncall) {
+     *   // ...
+     *   return modifiedAst
+     * }
+     * ```
+     */
+    function convertAstNodes(ast, type, fn) {
+        if (type === ast.type) {
+            ast = fn(ast);
+        }
+        switch (ast.type) {
+            case "FUNCALL":
+                return {
+                    ...ast,
+                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                };
+            case "UNARY_OPERATION":
+                return {
+                    ...ast,
+                    operand: convertAstNodes(ast.operand, type, fn),
+                };
+            case "BIN_OPERATION":
+                return {
+                    ...ast,
+                    right: convertAstNodes(ast.right, type, fn),
+                    left: convertAstNodes(ast.left, type, fn),
+                };
+            default:
+                return ast;
+        }
+    }
+    /**
+     * Converts an ast formula to the corresponding string
+     */
+    function astToFormula(ast) {
+        switch (ast.type) {
+            case "FUNCALL":
+                const args = ast.args.map((arg) => astToFormula(arg));
+                return `${ast.value}(${args.join(",")})`;
+            case "NUMBER":
+                return ast.value.toString();
+            case "REFERENCE":
+                return ast.value;
+            case "STRING":
+                return `"${ast.value}"`;
+            case "BOOLEAN":
+                return ast.value ? "TRUE" : "FALSE";
+            case "UNARY_OPERATION":
+                return ast.postfix
+                    ? leftOperandToFormula(ast) + ast.value
+                    : ast.value + rightOperandToFormula(ast);
+            case "BIN_OPERATION":
+                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
+            default:
+                return ast.value;
+        }
+    }
+    /**
+     * Convert the left operand of a binary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function leftOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
+        const leftOperator = leftOperation.value;
+        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
+        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
+    }
+    /**
+     * Convert the right operand of a binary or unary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function rightOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
+        const rightPriority = OP_PRIORITY[rightOperation.value];
+        const mainPriority = OP_PRIORITY[mainOperator];
+        let needParenthesis = false;
+        if (rightOperation.type !== "BIN_OPERATION") {
+            needParenthesis = false;
+        }
+        else if (rightPriority < mainPriority) {
+            needParenthesis = true;
+        }
+        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
+            needParenthesis = true;
+        }
+        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
+    }
+
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
         },
-        icon: "o-spreadsheet-Icon.INSERT_SHEET",
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.Found]: {},
     };
-    function createFormulaFunctions(fnNames) {
-        return fnNames.sort().map((fnName, i) => {
-            return {
-                name: fnName,
-                sequence: i * 10,
-                execute: (env) => env.startCellEdition(`=${fnName}(`),
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        const matchedTokens = [];
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = transitions[token.type]?.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens.push(token);
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: concat(matchedTokens.map((token) => token.value)),
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens.push(token);
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula, locale = DEFAULT_LOCALE) {
+        const tokens = tokenize(formula, locale);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
+    const functions$2 = functionRegistry.content;
+    const OPERATOR_MAP = {
+        "=": "EQ",
+        "+": "ADD",
+        "-": "MINUS",
+        "*": "MULTIPLY",
+        "/": "DIVIDE",
+        ">=": "GTE",
+        "<>": "NE",
+        ">": "GT",
+        "<=": "LTE",
+        "<": "LT",
+        "^": "POWER",
+        "&": "CONCATENATE",
+    };
+    const UNARY_OPERATOR_MAP = {
+        "-": "UMINUS",
+        "+": "UPLUS",
+        "%": "UNARY.PERCENT",
+    };
+    // this cache contains all compiled function code, grouped by "structure". For
+    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
+    // structural function.
+    // It is only exported for testing purposes
+    const functionCache = {};
+    // -----------------------------------------------------------------------------
+    // COMPILER
+    // -----------------------------------------------------------------------------
+    function compile(formula) {
+        const tokens = rangeTokenize(formula);
+        const { dependencies, constantValues } = formulaArguments(tokens);
+        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
+        if (!functionCache[cacheKey]) {
+            const ast = parseTokens([...tokens]);
+            const scope = new Scope();
+            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            if (ast.type === "EMPTY") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            const compiledAST = compileAST(ast);
+            const code = new FunctionCodeBuilder();
+            code.append(`// ${cacheKey}`);
+            code.append(compiledAST);
+            code.append(`return ${compiledAST.returnExpression};`);
+            let baseFunction = new Function("deps", // the dependencies in the current formula
+            "ref", // a function to access a certain dependency at a given index
+            "range", // same as above, but guarantee that the result is in the form of a range
+            "ctx", code.toString());
+            functionCache[cacheKey] = {
+                // @ts-ignore
+                execute: baseFunction,
             };
+            /**
+             * This function compile the function arguments. It is mostly straightforward,
+             * except that there is a non trivial transformation in one situation:
+             *
+             * If a function argument is asking for a range, and get a cell, we transform
+             * the cell value into a range. This allow the grid model to differentiate
+             * between a cell value and a non cell value.
+             */
+            function compileFunctionArgs(ast) {
+                const { args } = ast;
+                const functionName = ast.value.toUpperCase();
+                const functionDefinition = functions$2[functionName];
+                assertEnoughArgs(ast);
+                const compiledArgs = [];
+                for (let i = 0; i < args.length; i++) {
+                    const argToFocus = functionDefinition.getArgToFocus(i + 1) - 1;
+                    const argDefinition = functionDefinition.args[argToFocus];
+                    const currentArg = args[i];
+                    const argTypes = argDefinition.type || [];
+                    // detect when an argument need to be evaluated as a meta argument
+                    const isMeta = argTypes.includes("META");
+                    // detect when an argument need to be evaluated as a lazy argument
+                    const isLazy = argDefinition.lazy;
+                    const hasRange = argTypes.some((t) => isRangeType(t));
+                    const isRangeOnly = argTypes.every((t) => isRangeType(t));
+                    if (isRangeOnly) {
+                        if (!isRangeInput(currentArg)) {
+                            throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", functionName, (i + 1).toString(), currentArg.type.toLowerCase()));
+                        }
+                    }
+                    const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                        functionName,
+                        paramIndex: i + 1,
+                    });
+                    compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
+                }
+                return compiledArgs;
+            }
+            /**
+             * This function compiles all the information extracted by the parser into an
+             * executable code for the evaluation of the cells content. It uses a cash to
+             * not reevaluate identical code structures.
+             *
+             * The function is sensitive to parameter “isMeta”. This
+             * parameter may vary when compiling function arguments:
+             * isMeta: In some cases the function arguments expects information on the
+             * cell/range other than the associated value(s). For example the COLUMN
+             * function needs to receive as argument the coordinates of a cell rather
+             * than its value. For this we have meta arguments.
+             */
+            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
+                const code = new FunctionCodeBuilder(scope);
+                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
+                    if (isMeta) {
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
+                    }
+                }
+                if (ast.debug) {
+                    code.append("debugger;");
+                }
+                switch (ast.type) {
+                    case "BOOLEAN":
+                        return code.return(`{ value: ${ast.value} }`);
+                    case "NUMBER":
+                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
+                    case "STRING":
+                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
+                    case "REFERENCE":
+                        const referenceIndex = dependencies.indexOf(ast.value);
+                        if (hasRange) {
+                            return code.return(`range(deps[${referenceIndex}])`);
+                        }
+                        else {
+                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
+                        }
+                    case "FUNCALL":
+                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
+                        code.append(...args);
+                        const fnName = ast.value.toUpperCase();
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
+                    case "UNARY_OPERATION": {
+                        const fnName = UNARY_OPERATOR_MAP[ast.value];
+                        const operand = compileAST(ast.operand, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(operand);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
+                    }
+                    case "BIN_OPERATION": {
+                        const fnName = OPERATOR_MAP[ast.value];
+                        const left = compileAST(ast.left, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        const right = compileAST(ast.right, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(left);
+                        code.append(right);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
+                    }
+                    case "EMPTY":
+                        return code.return("undefined");
+                }
+            }
+        }
+        const compiledFormula = {
+            execute: functionCache[cacheKey].execute,
+            dependencies,
+            constantValues,
+            tokens,
+        };
+        return compiledFormula;
+    }
+    /**
+     * Compute a cache key for the formula.
+     * References, numbers and strings are replaced with placeholders because
+     * the compiled formula does not depend on their actual value.
+     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
+     *
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
+     */
+    function compilationCacheKey(tokens, dependencies, constantValues) {
+        return concat(tokens.map((token) => {
+            switch (token.type) {
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    return `|S${constantValues.strings.indexOf(value)}|`;
+                case "NUMBER":
+                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value, DEFAULT_LOCALE))}|`;
+                case "REFERENCE":
+                case "INVALID_REFERENCE":
+                    return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
+                default:
+                    return token.value;
+            }
+        }));
+    }
+    /**
+     * Return formula arguments which are references, strings and numbers.
+     */
+    function formulaArguments(tokens) {
+        const constantValues = {
+            numbers: [],
+            strings: [],
+        };
+        const dependencies = [];
+        for (const token of tokens) {
+            switch (token.type) {
+                case "INVALID_REFERENCE":
+                case "REFERENCE":
+                    dependencies.push(token.value);
+                    break;
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    if (!constantValues.strings.includes(value)) {
+                        constantValues.strings.push(value);
+                    }
+                    break;
+                case "NUMBER": {
+                    const value = parseNumber(token.value, DEFAULT_LOCALE);
+                    if (!constantValues.numbers.includes(value)) {
+                        constantValues.numbers.push(value);
+                    }
+                    break;
+                }
+            }
+        }
+        return {
+            dependencies,
+            constantValues,
+        };
+    }
+    /**
+     * Check if arguments are supplied in the correct quantities
+     */
+    function assertEnoughArgs(ast) {
+        const nbrArg = ast.args.length;
+        const functionName = ast.value.toUpperCase();
+        const functionDefinition = functions$2[functionName];
+        if (nbrArg < functionDefinition.minArgRequired) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", functionName, functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+        }
+        if (nbrArg > functionDefinition.maxArgPossible) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", functionName, functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+        }
+        const repeatableArgs = functionDefinition.nbrArgRepeating;
+        if (repeatableArgs > 1) {
+            const unrepeatableArgs = functionDefinition.args.length - repeatableArgs;
+            const repeatingArgs = nbrArg - unrepeatableArgs;
+            if (repeatingArgs % repeatableArgs !== 0) {
+                throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", functionName, unrepeatableArgs.toString(), repeatableArgs.toString()));
+            }
+        }
+    }
+    function isRangeType(type) {
+        return type.startsWith("RANGE");
+    }
+    function isRangeInput(arg) {
+        if (arg.type === "REFERENCE") {
+            return true;
+        }
+        if (arg.type === "FUNCALL") {
+            const fnDef = functions$2[arg.value.toUpperCase()];
+            return fnDef && isRangeType(fnDef.returns[0]);
+        }
+        return false;
+    }
+
+    /**
+     * Add the following information on tokens:
+     * - length
+     * - start
+     * - end
+     */
+    function enrichTokens(tokens) {
+        let current = 0;
+        return tokens.map((x) => {
+            const len = x.value.toString().length;
+            const token = Object.assign({}, x, {
+                start: current,
+                end: current + len,
+                length: len,
+            });
+            current = token.end;
+            return token;
         });
     }
-    function getRowsNumber(env) {
-        const activeRows = env.model.getters.getActiveRows();
-        if (activeRows.size) {
-            return activeRows.size;
+    /**
+     * add on each token the length, start and end
+     * also matches the opening to its closing parenthesis (using the same number)
+     */
+    function mapParenthesis(tokens) {
+        let maxParen = 1;
+        const stack = [];
+        return tokens.map((token) => {
+            if (token.type === "LEFT_PAREN") {
+                stack.push(maxParen);
+                token.parenIndex = maxParen;
+                maxParen++;
+            }
+            else if (token.type === "RIGHT_PAREN") {
+                token.parenIndex = stack.pop();
+            }
+            return token;
+        });
+    }
+    /**
+     * add on each token its parent function and the index corresponding to
+     * its position as an argument of the function.
+     * In this example "=MIN(42,SUM(MAX(1,2),3))":
+     * - the parent function of the token correspond to number 42 is the MIN function
+     * - the argument position of the token correspond to number 42 is 0
+     * - the parent function of the token correspond to number 3 is the SUM function
+     * - the argument position of the token correspond to number 3 is 1
+     */
+    function mapParentFunction(tokens) {
+        let stack = [];
+        let functionStarted = "";
+        const res = tokens.map((token, i) => {
+            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
+                functionStarted = "";
+            }
+            switch (token.type) {
+                case "FUNCTION":
+                    functionStarted = token.value;
+                    break;
+                case "LEFT_PAREN":
+                    stack.push({ parent: functionStarted, argPosition: 0 });
+                    functionStarted = "";
+                    break;
+                case "RIGHT_PAREN":
+                    stack.pop();
+                    break;
+                case "ARG_SEPARATOR":
+                    if (stack.length) {
+                        // increment position on current function
+                        stack[stack.length - 1].argPosition++;
+                    }
+                    break;
+            }
+            if (stack.length) {
+                const functionContext = stack[stack.length - 1];
+                if (functionContext.parent) {
+                    token.functionContext = Object.assign({}, functionContext);
+                }
+            }
+            return token;
+        });
+        return res;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the composer.
+     *
+     * @param formula
+     */
+    function composerTokenize(formula, locale) {
+        const tokens = rangeTokenize(formula, locale);
+        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
+    function isValidLocale(locale) {
+        if (!(locale &&
+            typeof locale === "object" &&
+            typeof locale.name === "string" &&
+            typeof locale.code === "string" &&
+            typeof locale.thousandsSeparator === "string" &&
+            typeof locale.decimalSeparator === "string" &&
+            typeof locale.dateFormat === "string" &&
+            typeof locale.timeFormat === "string" &&
+            typeof locale.formulaArgSeparator === "string")) {
+            return false;
         }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            return zone.bottom - zone.top + 1;
+        try {
+            formatValue(1, { locale, format: "#,##0.00" });
+            formatValue(1, { locale, format: locale.dateFormat });
+            formatValue(1, { locale, format: locale.timeFormat });
+        }
+        catch {
+            return false;
+        }
+        return true;
+    }
+    /** Change a content string to its canonical form (en_US locale) */
+    function canonicalizeContent(content, locale) {
+        return content.startsWith("=")
+            ? canonicalizeFormula$1(content, locale)
+            : toCanonicalNumberString(content, locale);
+    }
+    /** Change the content of a cell to its canonical form (en_US locale) */
+    function localizeContent(content, locale) {
+        return content.startsWith("=")
+            ? localizeFormula(content, locale)
+            : localizeLiteral(content, locale);
+    }
+    /** Change a formula to its canonical form (en_US locale) */
+    function canonicalizeFormula$1(formula, locale) {
+        return _localizeFormula$1(formula, locale, DEFAULT_LOCALE);
+    }
+    /** Change a formula from the canonical form to the given locale */
+    function localizeFormula(formula, locale) {
+        return _localizeFormula$1(formula, DEFAULT_LOCALE, locale);
+    }
+    function _localizeFormula$1(formula, fromLocale, toLocale) {
+        if (fromLocale.formulaArgSeparator === toLocale.formulaArgSeparator &&
+            fromLocale.decimalSeparator === toLocale.decimalSeparator) {
+            return formula;
+        }
+        const tokens = tokenize(formula, fromLocale);
+        let localizedFormula = "";
+        for (const token of tokens) {
+            if (token.type === "NUMBER") {
+                localizedFormula += token.value.replace(fromLocale.decimalSeparator, toLocale.decimalSeparator);
+            }
+            else if (token.type === "ARG_SEPARATOR") {
+                localizedFormula += toLocale.formulaArgSeparator;
+            }
+            else {
+                localizedFormula += token.value;
+            }
+        }
+        return localizedFormula;
+    }
+    /**
+     *  Replace localized number with localized decimal separator by a number with "." as decimal separator
+     */
+    function toCanonicalNumberString(content, locale) {
+        if (locale.decimalSeparator === "." || !isNumber(content, locale)) {
+            return content;
+        }
+        return content.replace(locale.decimalSeparator, ".");
+    }
+    function localizeLiteral(content, locale) {
+        if (locale.decimalSeparator === "." || !isNumber(content, DEFAULT_LOCALE)) {
+            return content;
+        }
+        const decimalNumberRegex = getDecimalNumberRegex(DEFAULT_LOCALE);
+        const localized = content.replace(decimalNumberRegex, (match) => {
+            return match.replace(".", locale.decimalSeparator);
+        });
+        return localized;
+    }
+    function canonicalizeCFRule(cf, locale) {
+        return changeCFRuleLocale(cf, (content) => canonicalizeContent(content, locale));
+    }
+    function localizeCFRule(cf, locale) {
+        return changeCFRuleLocale(cf, (content) => localizeContent(content, locale));
+    }
+    function changeCFRuleLocale(rule, changeContentLocale) {
+        rule = deepCopy(rule);
+        switch (rule.type) {
+            case "CellIsRule":
+                // Only change value for number operators
+                switch (rule.operator) {
+                    case "Between":
+                    case "NotBetween":
+                    case "Equal":
+                    case "NotEqual":
+                    case "GreaterThan":
+                    case "GreaterThanOrEqual":
+                    case "LessThan":
+                    case "LessThanOrEqual":
+                        rule.values = rule.values.map((v) => changeContentLocale(v));
+                        return rule;
+                    case "BeginsWith":
+                    case "ContainsText":
+                    case "EndsWith":
+                    case "NotContains":
+                    case "IsEmpty":
+                    case "IsNotEmpty":
+                        return rule;
+                }
+                break;
+            case "ColorScaleRule":
+                rule.minimum = changeCFRuleThresholdLocale(rule.minimum, changeContentLocale);
+                rule.maximum = changeCFRuleThresholdLocale(rule.maximum, changeContentLocale);
+                if (rule.midpoint) {
+                    rule.midpoint = changeCFRuleThresholdLocale(rule.midpoint, changeContentLocale);
+                }
+                return rule;
+            case "IconSetRule":
+                rule.lowerInflectionPoint.value = changeContentLocale(rule.lowerInflectionPoint.value);
+                rule.upperInflectionPoint.value = changeContentLocale(rule.upperInflectionPoint.value);
+                return rule;
         }
     }
-    function getColumnsNumber(env) {
-        const activeCols = env.model.getters.getActiveCols();
-        if (activeCols.size) {
-            return activeCols.size;
+    function changeCFRuleThresholdLocale(threshold, changeContentLocale) {
+        if (!threshold?.value) {
+            return threshold;
         }
-        else {
-            const zone = env.model.getters.getSelectedZones()[0];
-            return zone.right - zone.left + 1;
+        const value = threshold.type === "formula" ? "=" + threshold.value : threshold.value;
+        const modified = changeContentLocale(value);
+        const newValue = threshold.type === "formula" ? modified.slice(1) : modified;
+        return { ...threshold, value: newValue };
+    }
+
+    const linkSheet = {
+        name: _lt("Link sheet"),
+        children: [
+            (env) => {
+                const sheets = env.model.getters
+                    .getSheetIds()
+                    .map((sheetId) => env.model.getters.getSheet(sheetId));
+                return sheets.map((sheet) => ({
+                    id: sheet.id,
+                    name: sheet.name,
+                    execute: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
+                }));
+            },
+        ],
+    };
+    const deleteSheet = {
+        name: _lt("Delete"),
+        isVisible: (env) => {
+            return env.model.getters.getSheetIds().length > 1;
+        },
+        execute: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
+            env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
+        }),
+    };
+    const duplicateSheet = {
+        name: _lt("Duplicate"),
+        execute: (env) => {
+            const sheetIdFrom = env.model.getters.getActiveSheetId();
+            const sheetIdTo = env.model.uuidGenerator.uuidv4();
+            env.model.dispatch("DUPLICATE_SHEET", {
+                sheetId: sheetIdFrom,
+                sheetIdTo,
+            });
+            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
+        },
+    };
+    const renameSheet = (args) => {
+        return {
+            name: _lt("Rename"),
+            execute: args.renameSheetCallback,
+        };
+    };
+    const sheetMoveRight = {
+        name: _lt("Move right"),
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const sheetIds = env.model.getters.getVisibleSheetIds();
+            return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
+        },
+        execute: (env) => env.model.dispatch("MOVE_SHEET", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            delta: 1,
+        }),
+    };
+    const sheetMoveLeft = {
+        name: _lt("Move left"),
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
+        },
+        execute: (env) => env.model.dispatch("MOVE_SHEET", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            delta: -1,
+        }),
+    };
+    const hideSheet = {
+        name: _lt("Hide sheet"),
+        isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
+        execute: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
+    };
+
+    function createActions(menuItems) {
+        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
+    }
+    const uuidGenerator$2 = new UuidGenerator();
+    function createAction(item) {
+        const name = item.name;
+        const children = item.children;
+        return {
+            id: item.id || uuidGenerator$2.uuidv4(),
+            name: typeof name === "function" ? name : () => name,
+            isVisible: item.isVisible ? item.isVisible : () => true,
+            isEnabled: item.isEnabled ? item.isEnabled : () => true,
+            isActive: item.isActive,
+            execute: item.execute,
+            children: children
+                ? (env) => {
+                    return children
+                        .map((child) => (typeof child === "function" ? child(env) : child))
+                        .flat()
+                        .map(createAction);
+                }
+                : () => [],
+            isReadonlyAllowed: item.isReadonlyAllowed || false,
+            separator: item.separator || false,
+            icon: item.icon || "",
+            description: item.description || "",
+            textColor: item.textColor,
+            sequence: item.sequence || 0,
+        };
+    }
+
+    /**
+     * The class Registry is extended in order to add the function addChild
+     *
+     */
+    class MenuItemRegistry extends Registry {
+        /**
+         * @override
+         */
+        add(key, value) {
+            if (value.id === undefined) {
+                value.id = key;
+            }
+            this.content[key] = value;
+            return this;
+        }
+        /**
+         * Add a subitem to an existing item
+         * @param path Path of items to add this subitem
+         * @param value Subitem to add
+         */
+        addChild(key, path, value) {
+            if (typeof value !== "function" && value.id === undefined) {
+                value.id = key;
+            }
+            const root = path.splice(0, 1)[0];
+            let node = this.content[root];
+            if (!node) {
+                throw new Error(`Path ${root + ":" + path.join(":")} not found`);
+            }
+            for (let p of path) {
+                const children = node.children;
+                if (!children || typeof children === "function") {
+                    throw new Error(`${p} is either not a node or it's dynamically computed`);
+                }
+                node = children.find((elt) => elt.id === p);
+                if (!node) {
+                    throw new Error(`Path ${root + ":" + path.join(":")} not found`);
+                }
+            }
+            if (!node.children) {
+                node.children = [];
+            }
+            node.children.push(value);
+            return this;
+        }
+        getMenuItems() {
+            return createActions(this.getAll());
         }
     }
 
     //------------------------------------------------------------------------------
-    // Context Menu Registry
+    // Link Menu Registry
     //------------------------------------------------------------------------------
-    const cellMenuRegistry = new MenuItemRegistry();
-    cellMenuRegistry
-        .add("cut", {
-        ...cut,
+    const linkMenuRegistry = new MenuItemRegistry();
+    linkMenuRegistry.add("sheet", {
+        ...linkSheet,
         sequence: 10,
-    })
-        .add("copy", {
-        ...copy,
-        sequence: 20,
-    })
-        .add("paste", {
-        ...paste,
-        sequence: 30,
-    })
-        .add("paste_special", {
-        ...pasteSpecial,
-        sequence: 40,
-        separator: true,
-    })
-        .addChild("paste_value_only", ["paste_special"], {
-        ...pasteSpecialValue,
-        sequence: 10,
-    })
-        .addChild("paste_format_only", ["paste_special"], {
-        ...pasteSpecialFormat,
-        sequence: 20,
-    })
-        .add("add_row_before", {
-        ...cellInsertRowsBefore,
-        sequence: 70,
-    })
-        .add("add_column_before", {
-        ...cellInsertColsBefore,
-        sequence: 90,
-    })
-        .add("insert_cell", {
-        ...insertCell,
-        sequence: 100,
-        separator: true,
-    })
-        .addChild("insert_cell_down", ["insert_cell"], {
-        ...insertCellShiftDown,
-        name: _lt("Shift down"),
-        sequence: 10,
-    })
-        .addChild("insert_cell_right", ["insert_cell"], {
-        ...insertCellShiftRight,
-        name: _lt("Shift right"),
-        sequence: 20,
-    })
-        .add("delete_row", {
-        ...deleteRow,
-        sequence: 110,
-        icon: "o-spreadsheet-Icon.DELETE",
-    })
-        .add("delete_column", {
-        ...deleteCol,
-        sequence: 120,
-        icon: "o-spreadsheet-Icon.DELETE",
-    })
-        .add("delete_cell", {
-        ...deleteCells,
-        sequence: 130,
-        separator: true,
-        icon: "o-spreadsheet-Icon.DELETE",
-    })
-        .addChild("delete_cell_up", ["delete_cell"], {
-        ...deleteCellShiftUp,
-        name: _lt("Shift up"),
-        sequence: 10,
-        icon: "o-spreadsheet-Icon.DELETE_CELL_SHIFT_UP",
-    })
-        .addChild("delete_cell_left", ["delete_cell"], {
-        ...deleteCellShiftLeft,
-        name: _lt("Shift left"),
-        sequence: 20,
-        icon: "o-spreadsheet-Icon.DELETE_CELL_SHIFT_LEFT",
-    })
-        .add("insert_link", {
-        ...insertLink,
-        name: _lt("Insert link"),
-        sequence: 150,
-        separator: true,
     });
+
+    const MENU_OFFSET_X = 320;
+    const MENU_OFFSET_Y = 100;
+    const PADDING = 12;
+    const LINK_EDITOR_WIDTH = 340;
+    const LINK_EDITOR_HEIGHT = 165;
+    css /* scss */ `
+  .o-link-editor {
+    font-size: 13px;
+    background-color: white;
+    box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
+    padding: ${PADDING}px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    height: ${LINK_EDITOR_HEIGHT}px;
+    width: ${LINK_EDITOR_WIDTH}px;
+
+    .o-section {
+      .o-section-title {
+        font-weight: bold;
+        color: dimgrey;
+        margin-bottom: 5px;
+      }
+    }
+    .o-buttons {
+      padding-left: 16px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      text-align: right;
+      .o-button {
+        border: 1px solid lightgrey;
+        padding: 0px 20px 0px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 14px;
+        height: 30px;
+        line-height: 16px;
+        background: white;
+        margin-right: 8px;
+        &:hover:enabled {
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+      }
+      .o-button:enabled {
+        cursor: pointer;
+      }
+      .o-button:last-child {
+        margin-right: 0px;
+      }
+    }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      border-radius: 4px;
+      padding: 4px 23px 4px 10px;
+      border: none;
+      height: 24px;
+      border: 1px solid lightgrey;
+    }
+    .o-link-url {
+      position: relative;
+      flex-grow: 1;
+      button {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        border: none;
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        margin: 2px 3px 1px 0px;
+        padding: 0px 1px 0px 0px;
+      }
+      button:hover {
+        cursor: pointer;
+      }
+    }
+  }
+`;
+    class LinkEditor extends owl.Component {
+        static template = "o-spreadsheet-LinkEditor";
+        static components = { Menu };
+        menuItems = linkMenuRegistry.getMenuItems();
+        link = owl.useState(this.defaultState);
+        menu = owl.useState({
+            isOpen: false,
+        });
+        linkEditorRef = owl.useRef("linkEditor");
+        position = useAbsoluteBoundingRect(this.linkEditorRef);
+        urlInput = owl.useRef("urlInput");
+        setup() {
+            owl.onMounted(() => this.urlInput.el?.focus());
+        }
+        get defaultState() {
+            const { col, row } = this.props.cellPosition;
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
+            if (cell.link) {
+                return {
+                    url: cell.link.url,
+                    label: cell.formattedValue,
+                    isUrlEditable: cell.link.isUrlEditable,
+                };
+            }
+            return {
+                label: cell.formattedValue,
+                url: "",
+                isUrlEditable: true,
+            };
+        }
+        get menuPosition() {
+            return {
+                x: this.position.x + MENU_OFFSET_X - PADDING - 2,
+                y: this.position.y + MENU_OFFSET_Y,
+            };
+        }
+        onSpecialLink(ev) {
+            const { detail: markdownLink } = ev;
+            const link = detectLink(markdownLink);
+            if (!link) {
+                return;
+            }
+            this.link.url = link.url;
+            this.link.label = link.label;
+            this.link.isUrlEditable = link.isUrlEditable;
+        }
+        getUrlRepresentation(link) {
+            return urlRepresentation(link, this.env.model.getters);
+        }
+        openMenu() {
+            this.menu.isOpen = true;
+        }
+        removeLink() {
+            this.link.url = "";
+            this.link.isUrlEditable = true;
+        }
+        save() {
+            const { col, row } = this.props.cellPosition;
+            const locale = this.env.model.getters.getLocale();
+            const label = this.link.label ? canonicalizeContent(this.link.label, locale) : this.link.url;
+            this.env.model.dispatch("UPDATE_CELL", {
+                col: col,
+                row: row,
+                sheetId: this.env.model.getters.getActiveSheetId(),
+                content: markdownLink(label, this.link.url),
+            });
+            this.props.onClosed?.();
+        }
+        cancel() {
+            this.props.onClosed?.();
+        }
+        onKeyDown(ev) {
+            switch (ev.key) {
+                case "Enter":
+                    if (this.link.url) {
+                        this.save();
+                    }
+                    ev.stopPropagation();
+                    break;
+                case "Escape":
+                    this.cancel();
+                    ev.stopPropagation();
+                    break;
+            }
+        }
+    }
+    const LinkEditorPopoverBuilder = {
+        onOpen: (position, getters) => {
+            return {
+                isOpen: true,
+                props: { cellPosition: position },
+                Component: LinkEditor,
+                cellCorner: "BottomLeft",
+            };
+        },
+    };
+    LinkEditor.props = {
+        cellPosition: Object,
+        onClosed: { type: Function, optional: true },
+    };
+
+    const cellPopoverRegistry = new Registry();
+    cellPopoverRegistry
+        .add("ErrorToolTip", ErrorToolTipPopoverBuilder)
+        .add("LinkCell", LinkCellPopoverBuilder)
+        .add("LinkEditor", LinkEditorPopoverBuilder)
+        .add("FilterMenu", FilterMenuPopoverBuilder);
+
+    /**
+     * Convert a JS color hexadecimal to an excel compatible color.
+     *
+     * In Excel the color don't start with a '#' and the format is AARRGGBB instead of RRGGBBAA
+     */
+    function toXlsxHexColor(color) {
+        color = toHex(color).replace("#", "");
+        // alpha channel goes first
+        if (color.length === 8) {
+            return color.slice(6) + color.slice(0, 6);
+        }
+        return color;
+    }
+
+    /**
+     * AbstractChart is the class from which every Chart should inherit.
+     * The role of this class is to maintain the state of each chart.
+     */
+    class AbstractChart {
+        sheetId;
+        title;
+        getters;
+        constructor(definition, sheetId, getters) {
+            this.title = definition.title;
+            this.sheetId = sheetId;
+            this.getters = getters;
+        }
+        /**
+         * Validate the chart definition given as arguments. This function will be
+         * called from allowDispatch function
+         */
+        static validateChartDefinition(validator, definition) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get a new chart definition transformed with the executed command. This
+         * functions will be called during operational transform process
+         */
+        static transformDefinition(definition, executed) {
+            throw new Error("This method should be implemented by sub class");
+        }
+        /**
+         * Get an empty definition based on the given context
+         */
+        static getDefinitionFromContextCreation(context) {
+            throw new Error("This method should be implemented by sub class");
+        }
+    }
+
+    function transformZone(zone, executed) {
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            return reduceZoneOnDeletion(zone, executed.dimension === "COL" ? "left" : "top", executed.elements);
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            return expandZoneOnInsertion(zone, executed.dimension === "COL" ? "left" : "top", executed.base, executed.position, executed.quantity);
+        }
+        return { ...zone };
+    }
+
+    /**
+     * This file contains helpers that are common to different charts (mainly
+     * line, bar and pie charts)
+     */
+    /**
+     * Adapt ranges of a chart which support DataSet (dataSets and LabelRange).
+     */
+    function updateChartRangesWithDataSets(getters, applyChange, chartDataSets, chartLabelRange) {
+        let isStale = false;
+        const dataSetsWithUndefined = [];
+        for (let index in chartDataSets) {
+            let ds = chartDataSets[index];
+            if (ds.labelCell) {
+                const labelCell = adaptChartRange(ds.labelCell, applyChange);
+                if (ds.labelCell !== labelCell) {
+                    isStale = true;
+                    ds = {
+                        ...ds,
+                        labelCell: labelCell,
+                    };
+                }
+            }
+            const dataRange = adaptChartRange(ds.dataRange, applyChange);
+            if (dataRange === undefined ||
+                getters.getRangeString(dataRange, dataRange.sheetId) === INCORRECT_RANGE_STRING) {
+                isStale = true;
+                ds = undefined;
+            }
+            else if (dataRange !== ds.dataRange) {
+                isStale = true;
+                ds = {
+                    ...ds,
+                    dataRange,
+                };
+            }
+            dataSetsWithUndefined[index] = ds;
+        }
+        let labelRange = chartLabelRange;
+        const range = adaptChartRange(labelRange, applyChange);
+        if (range !== labelRange) {
+            isStale = true;
+            labelRange = range;
+        }
+        const dataSets = dataSetsWithUndefined.filter(isDefined$1);
+        return {
+            isStale,
+            dataSets,
+            labelRange,
+        };
+    }
+    /**
+     * Copy the dataSets given. All the ranges which are on sheetIdFrom will target
+     * sheetIdTo.
+     */
+    function copyDataSetsWithNewSheetId(sheetIdFrom, sheetIdTo, dataSets) {
+        return dataSets.map((ds) => {
+            return {
+                dataRange: copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.dataRange),
+                labelCell: ds.labelCell
+                    ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, ds.labelCell)
+                    : undefined,
+            };
+        });
+    }
+    /**
+     * Copy a range. If the range is on the sheetIdFrom, the range will target
+     * sheetIdTo.
+     */
+    function copyLabelRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) {
+        return range ? copyRangeWithNewSheetId(sheetIdFrom, sheetIdTo, range) : undefined;
+    }
+    /**
+     * Adapt a single range of a chart
+     */
+    function adaptChartRange(range, applyChange) {
+        if (!range) {
+            return undefined;
+        }
+        const change = applyChange(range);
+        switch (change.changeType) {
+            case "NONE":
+                return range;
+            case "REMOVE":
+                return undefined;
+            default:
+                return change.range;
+        }
+    }
+    /**
+     * Create the dataSet objects from xcs
+     */
+    function createDataSets(getters, dataSetsString, sheetId, dataSetsHaveTitle) {
+        const dataSets = [];
+        for (const sheetXC of dataSetsString) {
+            const dataRange = getters.getRangeFromSheetXC(sheetId, sheetXC);
+            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName, invalidXc } = dataRange;
+            if (invalidSheetName || invalidXc) {
+                continue;
+            }
+            // It's a rectangle. We treat all columns (arbitrary) as different data series.
+            if (zone.left !== zone.right && zone.top !== zone.bottom) {
+                if (zone.right === undefined) {
+                    // Should never happens because of the allowDispatch of charts, but just making sure
+                    continue;
+                }
+                for (let column = zone.left; column <= zone.right; column++) {
+                    const columnZone = {
+                        ...zone,
+                        left: column,
+                        right: column,
+                    };
+                    dataSets.push(createDataSet(getters, dataSetSheetId, columnZone, dataSetsHaveTitle
+                        ? {
+                            top: columnZone.top,
+                            bottom: columnZone.top,
+                            left: columnZone.left,
+                            right: columnZone.left,
+                        }
+                        : undefined));
+                }
+            }
+            else if (zone.left === zone.right && zone.top === zone.bottom) {
+                // A single cell. If it's only the title, the dataset is not added.
+                if (!dataSetsHaveTitle) {
+                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
+                }
+            }
+            else {
+                /* 1 row or 1 column */
+                dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
+                    ? {
+                        top: zone.top,
+                        bottom: zone.top,
+                        left: zone.left,
+                        right: zone.left,
+                    }
+                    : undefined));
+            }
+        }
+        return dataSets;
+    }
+    function createDataSet(getters, sheetId, fullZone, titleZone) {
+        if (fullZone.left !== fullZone.right && fullZone.top !== fullZone.bottom) {
+            throw new Error(`Zone should be a single column or row: ${zoneToXc(fullZone)}`);
+        }
+        if (titleZone) {
+            const dataXC = zoneToXc(fullZone);
+            const labelCellXC = zoneToXc(titleZone);
+            return {
+                labelCell: getters.getRangeFromSheetXC(sheetId, labelCellXC),
+                dataRange: getters.getRangeFromSheetXC(sheetId, dataXC),
+            };
+        }
+        else {
+            return {
+                labelCell: undefined,
+                dataRange: getters.getRangeFromSheetXC(sheetId, zoneToXc(fullZone)),
+            };
+        }
+    }
+    /**
+     * Transform a dataSet to a ExcelDataSet
+     */
+    function toExcelDataset(getters, ds) {
+        const labelZone = ds.labelCell?.zone;
+        let dataZone = ds.dataRange.zone;
+        if (labelZone) {
+            const { numberOfRows, numberOfCols } = zoneToDimension(dataZone);
+            if (numberOfRows === 1) {
+                dataZone = { ...dataZone, left: dataZone.left + 1 };
+            }
+            else if (numberOfCols === 1) {
+                dataZone = { ...dataZone, top: dataZone.top + 1 };
+            }
+        }
+        const dataRange = ds.dataRange.clone({ zone: dataZone });
+        return {
+            label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
+            range: getters.getRangeString(dataRange, "forceSheetReference"),
+        };
+    }
+    function toExcelLabelRange(getters, labelRange, shouldRemoveFirstLabel) {
+        if (!labelRange)
+            return undefined;
+        let zone = {
+            ...labelRange.zone,
+        };
+        if (shouldRemoveFirstLabel && labelRange.zone.bottom > labelRange.zone.top) {
+            zone.top = zone.top + 1;
+        }
+        const range = labelRange.clone({ zone });
+        return getters.getRangeString(range, "forceSheetReference");
+    }
+    /**
+     * Transform a chart definition which supports dataSets (dataSets and LabelRange)
+     * with an executed command
+     */
+    function transformChartDefinitionWithDataSetsWithZone(definition, executed) {
+        let labelRange;
+        if (definition.labelRange) {
+            const labelZone = transformZone(toUnboundedZone(definition.labelRange), executed);
+            labelRange = labelZone ? zoneToXc(labelZone) : undefined;
+        }
+        const dataSets = definition.dataSets
+            .map(toUnboundedZone)
+            .map((zone) => transformZone(zone, executed))
+            .filter(isDefined$1)
+            .map(zoneToXc);
+        return {
+            ...definition,
+            labelRange,
+            dataSets,
+        };
+    }
+    const GraphColors = [
+        // the same colors as those used in odoo reporting
+        "rgb(31,119,180)",
+        "rgb(255,127,14)",
+        "rgb(174,199,232)",
+        "rgb(255,187,120)",
+        "rgb(44,160,44)",
+        "rgb(152,223,138)",
+        "rgb(214,39,40)",
+        "rgb(255,152,150)",
+        "rgb(148,103,189)",
+        "rgb(197,176,213)",
+        "rgb(140,86,75)",
+        "rgb(196,156,148)",
+        "rgb(227,119,194)",
+        "rgb(247,182,210)",
+        "rgb(127,127,127)",
+        "rgb(199,199,199)",
+        "rgb(188,189,34)",
+        "rgb(219,219,141)",
+        "rgb(23,190,207)",
+        "rgb(158,218,229)",
+    ];
+    class ChartColors {
+        graphColorIndex = 0;
+        next() {
+            return GraphColors[this.graphColorIndex++ % GraphColors.length];
+        }
+    }
+    /**
+     * Choose a font color based on a background color.
+     * The font is white with a dark background.
+     */
+    function chartFontColor(backgroundColor) {
+        if (!backgroundColor) {
+            return "#000000";
+        }
+        return relativeLuminance(backgroundColor) < 0.3 ? "#FFFFFF" : "#000000";
+    }
+    function checkDataset(definition) {
+        if (definition.dataSets) {
+            const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
+            if (invalidRanges) {
+                return 32 /* CommandResult.InvalidDataSet */;
+            }
+            const zones = definition.dataSets.map(toUnboundedZone);
+            if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
+                return 32 /* CommandResult.InvalidDataSet */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkLabelRange(definition) {
+        if (definition.labelRange) {
+            const invalidLabels = !rangeReference.test(definition.labelRange || "");
+            if (invalidLabels) {
+                return 33 /* CommandResult.InvalidLabelRange */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function shouldRemoveFirstLabel(labelRange, dataset, dataSetsHaveTitle) {
+        if (!dataSetsHaveTitle)
+            return false;
+        if (!labelRange)
+            return false;
+        if (!dataset)
+            return true;
+        const datasetLength = getZoneArea(dataset.dataRange.zone);
+        const labelLength = getZoneArea(labelRange.zone);
+        if (labelLength < datasetLength) {
+            return false;
+        }
+        return true;
+    }
+    // ---------------------------------------------------------------------------
+    // Scorecard
+    // ---------------------------------------------------------------------------
+    function getBaselineText(baseline, keyValue, baselineMode, locale) {
+        if (!baseline) {
+            return "";
+        }
+        else if (baselineMode === "text" ||
+            keyValue?.type !== CellValueType.number ||
+            baseline.type !== CellValueType.number) {
+            return baseline.formattedValue;
+        }
+        else {
+            let diff = keyValue.value - baseline.value;
+            if (baselineMode === "percentage" && diff !== 0) {
+                diff = (diff / baseline.value) * 100;
+            }
+            if (baselineMode !== "percentage" && baseline.format) {
+                return formatValue(diff, { format: baseline.format, locale });
+            }
+            const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
+            return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
+        }
+    }
+    function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
+        if (baselineMode === "text" ||
+            baseline?.type !== CellValueType.number ||
+            keyValue?.type !== CellValueType.number) {
+            return undefined;
+        }
+        const diff = keyValue.value - baseline.value;
+        if (diff > 0) {
+            return colorUp;
+        }
+        else if (diff < 0) {
+            return colorDown;
+        }
+        return undefined;
+    }
+    function getBaselineArrowDirection(baseline, keyValue, baselineMode) {
+        if (baselineMode === "text" ||
+            baseline?.type !== CellValueType.number ||
+            keyValue?.type !== CellValueType.number) {
+            return "neutral";
+        }
+        const diff = keyValue.value - baseline.value;
+        if (diff > 0) {
+            return "up";
+        }
+        else if (diff < 0) {
+            return "down";
+        }
+        return "neutral";
+    }
+    function getChartPositionAtCenterOfViewport(getters, chartSize) {
+        const { x, y } = getters.getMainViewportCoordinates();
+        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
+        const { width, height } = getters.getVisibleRect(getters.getActiveMainViewport());
+        const position = {
+            x: x + scrollX + Math.max(0, (width - chartSize.width) / 2),
+            y: y + scrollY + Math.max(0, (height - chartSize.height) / 2),
+        }; // Position at the center of the scrollable viewport
+        return position;
+    }
+
+    const CfTerms = {
+        Errors: {
+            [25 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [51 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [52 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [53 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [54 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [55 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [56 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [57 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [47 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [50 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [49 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [48 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [58 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [60 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [59 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [61 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [62 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [24 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            Unexpected: _lt("The rule is invalid for an unknown reason"),
+        },
+        ColorScale: _lt("Color scale"),
+        IconSet: _lt("Icon set"),
+    };
+    const CellIsOperators = {
+        IsEmpty: _lt("Is empty"),
+        IsNotEmpty: _lt("Is not empty"),
+        ContainsText: _lt("Contains"),
+        NotContains: _lt("Does not contain"),
+        BeginsWith: _lt("Starts with"),
+        EndsWith: _lt("Ends with"),
+        Equal: _lt("Is equal to"),
+        NotEqual: _lt("Is not equal to"),
+        GreaterThan: _lt("Is greater than"),
+        GreaterThanOrEqual: _lt("Is greater than or equal to"),
+        LessThan: _lt("Is less than"),
+        LessThanOrEqual: _lt("Is less than or equal to"),
+        Between: _lt("Is between"),
+        NotBetween: _lt("Is not between"),
+    };
+    const ChartTerms = {
+        Series: _lt("Series"),
+        Errors: {
+            Unexpected: _lt("The chart definition is invalid for an unknown reason"),
+            // BASIC CHART ERRORS (LINE | BAR | PIE)
+            [32 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [33 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            // SCORECARD CHART ERRORS
+            [34 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [35 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            // GAUGE CHART ERRORS
+            [36 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [37 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [38 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [39 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [40 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [42 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [43 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+        },
+    };
+    const CustomCurrencyTerms = {
+        Custom: _lt("Custom"),
+    };
+    const MergeErrorMessage = _lt("Merged cells are preventing this operation. Unmerge those cells and try again.");
+    const SplitToColumnsTerms = {
+        Errors: {
+            Unexpected: _lt("Cannot split the selection for an unknown reason"),
+            [91 /* CommandResult.NoSplitSeparatorInSelection */]: _lt("There is no match for the selected separator in the selection"),
+            [88 /* CommandResult.MoreThanOneColumnSelected */]: _lt("Only a selection from a single column can be split"),
+            [90 /* CommandResult.SplitWillOverwriteContent */]: _lt("Splitting will overwrite existing content"),
+        },
+    };
+
+    /**
+     * This file contains helpers that are common to different runtime charts (mainly
+     * line, bar and pie charts)
+     */
+    /**
+     * Get the data from a dataSet
+     */
+    function getData(getters, ds) {
+        if (ds.dataRange) {
+            const labelCellZone = ds.labelCell ? [zoneToXc(ds.labelCell.zone)] : [];
+            const dataXC = recomputeZones([zoneToXc(ds.dataRange.zone)], labelCellZone)[0];
+            if (dataXC === undefined) {
+                return [];
+            }
+            const dataRange = getters.getRangeFromSheetXC(ds.dataRange.sheetId, dataXC);
+            return getters.getRangeValues(dataRange).map((value) => (value === "" ? undefined : value));
+        }
+        return [];
+    }
+    function filterEmptyDataPoints(labels, datasets) {
+        const numberOfDataPoints = Math.max(labels.length, ...datasets.map((dataset) => dataset.data?.length || 0));
+        const dataPointsIndexes = range(0, numberOfDataPoints).filter((dataPointIndex) => {
+            const label = labels[dataPointIndex];
+            const values = datasets.map((dataset) => dataset.data?.[dataPointIndex]);
+            return label || values.some((value) => value === 0 || Boolean(value));
+        });
+        return {
+            labels: dataPointsIndexes.map((i) => labels[i] || ""),
+            dataSetsValues: datasets.map((dataset) => ({
+                ...dataset,
+                data: dataPointsIndexes.map((i) => dataset.data[i]),
+            })),
+        };
+    }
+    /**
+     * Aggregates data based on labels
+     */
+    function aggregateDataForLabels(labels, datasets) {
+        const parseNumber = (value) => (typeof value === "number" ? value : 0);
+        const labelSet = new Set(labels);
+        const labelMap = {};
+        labelSet.forEach((label) => {
+            labelMap[label] = new Array(datasets.length).fill(0);
+        });
+        for (const indexOfLabel of range(0, labels.length)) {
+            const label = labels[indexOfLabel];
+            for (const indexOfDataset of range(0, datasets.length)) {
+                labelMap[label][indexOfDataset] += parseNumber(datasets[indexOfDataset].data[indexOfLabel]);
+            }
+        }
+        return {
+            labels: Object.keys(labelMap),
+            dataSetsValues: datasets.map((dataset, indexOfDataset) => ({
+                ...dataset,
+                data: Object.values(labelMap).map((dataOfLabel) => dataOfLabel[indexOfDataset]),
+            })),
+        };
+    }
+    function truncateLabel(label) {
+        if (!label) {
+            return "";
+        }
+        if (label.length > MAX_CHAR_LABEL) {
+            return label.substring(0, MAX_CHAR_LABEL) + "…";
+        }
+        return label;
+    }
+    /**
+     * Get a default chart js configuration
+     */
+    function getDefaultChartJsRuntime(chart, labels, fontColor, { format, locale }) {
+        return {
+            type: chart.type,
+            options: {
+                // https://www.chartjs.org/docs/latest/general/responsive.html
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+                },
+                elements: {
+                    line: {
+                        fill: false, // do not fill the area under line charts
+                    },
+                    point: {
+                        hitRadius: 15, // increased hit radius to display point tooltip when hovering nearby
+                    },
+                },
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 10, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0,
+                title: {
+                    display: !!chart.title,
+                    fontSize: 22,
+                    fontStyle: "normal",
+                    text: _t(chart.title),
+                    fontColor,
+                },
+                legend: {
+                    // Disable default legend onClick (show/hide dataset), to allow us to set a global onClick on the chart container.
+                    // If we want to re-enable this in the future, we need to override the default onClick to stop the event propagation
+                    onClick: undefined,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            let xLabel = data.datasets?.[tooltipItem.datasetIndex || 0]?.label;
+                            const yLabel = tooltipItem.yLabel !== ""
+                                ? tooltipItem.yLabel
+                                : data.datasets?.[tooltipItem.datasetIndex || 0]?.data?.[tooltipItem.index || 0];
+                            const yLabelStr = format && typeof yLabel === "number"
+                                ? formatValue(yLabel, { format, locale })
+                                : yLabel?.toLocaleString() || "";
+                            return xLabel ? `${xLabel}: ${yLabelStr}` : yLabelStr;
+                        },
+                    },
+                },
+            },
+            data: {
+                labels: labels.map(truncateLabel),
+                datasets: [],
+            },
+        };
+    }
+    function getChartLabelFormat(getters, range) {
+        if (!range)
+            return undefined;
+        return getters.getEvaluatedCell({
+            sheetId: range.sheetId,
+            col: range.zone.left,
+            row: range.zone.top,
+        }).format;
+    }
+    function getChartLabelValues(getters, dataSets, labelRange) {
+        let labels = { values: [], formattedValues: [] };
+        if (labelRange) {
+            if (!labelRange.invalidXc && !labelRange.invalidSheetName) {
+                labels = {
+                    formattedValues: getters.getRangeFormattedValues(labelRange),
+                    values: getters.getRangeValues(labelRange).map((val) => String(val)),
+                };
+            }
+        }
+        else if (dataSets.length === 1) {
+            for (let i = 0; i < getData(getters, dataSets[0]).length; i++) {
+                labels.formattedValues.push("");
+                labels.values.push("");
+            }
+        }
+        else {
+            if (dataSets[0]) {
+                const ranges = getData(getters, dataSets[0]);
+                labels = {
+                    formattedValues: range(0, ranges.length).map((r) => r.toString()),
+                    values: labels.formattedValues,
+                };
+            }
+        }
+        return labels;
+    }
+    /**
+     * Get the format to apply to the the dataset values. This format is defined as the first format
+     * found in the dataset ranges that isn't a date format.
+     */
+    function getChartDatasetFormat(getters, dataSets) {
+        for (const ds of dataSets) {
+            const formatsInDataset = getters.getRangeFormats(ds.dataRange);
+            const format = formatsInDataset.find((f) => f !== undefined && !isDateTimeFormat(f));
+            if (format)
+                return format;
+        }
+        return undefined;
+    }
+    function getChartDatasetValues(getters, dataSets) {
+        const datasetValues = [];
+        for (const [dsIndex, ds] of Object.entries(dataSets)) {
+            let label;
+            if (ds.labelCell) {
+                const labelRange = ds.labelCell;
+                const cell = labelRange
+                    ? getters.getEvaluatedCell({
+                        sheetId: labelRange.sheetId,
+                        col: labelRange.zone.left,
+                        row: labelRange.zone.top,
+                    })
+                    : undefined;
+                label =
+                    cell && labelRange
+                        ? truncateLabel(cell.formattedValue)
+                        : (label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`);
+            }
+            else {
+                label = label = `${ChartTerms.Series} ${parseInt(dsIndex) + 1}`;
+            }
+            let data = ds.dataRange ? getData(getters, ds) : [];
+            datasetValues.push({ data, label });
+        }
+        return datasetValues;
+    }
+    /** See https://www.chartjs.org/docs/latest/charts/area.html#filling-modes */
+    function getFillingMode(index) {
+        if (index === 0) {
+            return "origin";
+        }
+        else {
+            return index - 1;
+        }
+    }
+
+    class BarChart extends AbstractChart {
+        dataSets;
+        labelRange;
+        background;
+        verticalAxisPosition;
+        legendPosition;
+        stacked;
+        aggregated;
+        type = "bar";
+        dataSetsHaveTitle;
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.verticalAxisPosition = definition.verticalAxisPosition;
+            this.legendPosition = definition.legendPosition;
+            this.stacked = definition.stacked;
+            this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                stacked: false,
+                aggregated: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "bar",
+                verticalAxisPosition: "left",
+                labelRange: context.auxiliaryRange || undefined,
+            };
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new BarChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new BarChart(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "bar",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                verticalAxisPosition: this.verticalAxisPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+                stacked: this.stacked,
+                aggregated: this.aggregated,
+            };
+        }
+        getDefinitionForExcel() {
+            // Excel does not support aggregating labels
+            if (this.aggregated)
+                return undefined;
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                dataSets,
+                labelRange,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new BarChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getBarConfiguration(chart, labels, localeFormat) {
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor, localeFormat);
+        const legend = {
+            labels: { fontColor },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...config.options?.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.scales = {
+            xAxes: [
+                {
+                    ticks: {
+                        // x axis configuration
+                        maxRotation: 60,
+                        minRotation: 15,
+                        padding: 5,
+                        labelOffset: 2,
+                        fontColor,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    position: chart.verticalAxisPosition,
+                    ticks: {
+                        fontColor,
+                        // y axis configuration
+                        beginAtZero: true,
+                        callback: (value) => {
+                            return localeFormat.format
+                                ? formatValue(value, localeFormat)
+                                : value?.toLocaleString() || value;
+                        },
+                    },
+                },
+            ],
+        };
+        if (chart.stacked) {
+            config.options.scales.xAxes[0].stacked = true;
+            config.options.scales.yAxes[0].stacked = true;
+        }
+        return config;
+    }
+    function createBarChartRuntime(chart, getters) {
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        if (chart.aggregated) {
+            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
+        }
+        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
+        const locale = getters.getLocale();
+        const config = getBarConfiguration(chart, labels, { format: dataSetFormat, locale });
+        const colors = new ChartColors();
+        for (let { label, data } of dataSetsValues) {
+            const color = colors.next();
+            const dataset = {
+                label,
+                data,
+                borderColor: color,
+                backgroundColor: color,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    function isDataRangeValid(definition) {
+        return definition.dataRange && !rangeReference.test(definition.dataRange)
+            ? 36 /* CommandResult.InvalidGaugeDataRange */
+            : 0 /* CommandResult.Success */;
+    }
+    function checkRangeLimits(check, batchValidations) {
+        return batchValidations((definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.rangeMin, "rangeMin");
+            }
+            return 0 /* CommandResult.Success */;
+        }, (definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.rangeMax, "rangeMax");
+            }
+            return 0 /* CommandResult.Success */;
+        });
+    }
+    function checkInflectionPointsValue(check, batchValidations) {
+        return batchValidations((definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.lowerInflectionPoint.value, "lowerInflectionPointValue");
+            }
+            return 0 /* CommandResult.Success */;
+        }, (definition) => {
+            if (definition.sectionRule) {
+                return check(definition.sectionRule.upperInflectionPoint.value, "upperInflectionPointValue");
+            }
+            return 0 /* CommandResult.Success */;
+        });
+    }
+    function checkRangeMinBiggerThanRangeMax(definition) {
+        if (definition.sectionRule) {
+            if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
+                return 41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkEmpty(value, valueName) {
+        if (value === "") {
+            switch (valueName) {
+                case "rangeMin":
+                    return 37 /* CommandResult.EmptyGaugeRangeMin */;
+                case "rangeMax":
+                    return 39 /* CommandResult.EmptyGaugeRangeMax */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    function checkNaN(value, valueName) {
+        if (isNaN(value)) {
+            switch (valueName) {
+                case "rangeMin":
+                    return 38 /* CommandResult.GaugeRangeMinNaN */;
+                case "rangeMax":
+                    return 40 /* CommandResult.GaugeRangeMaxNaN */;
+                case "lowerInflectionPointValue":
+                    return 42 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                case "upperInflectionPointValue":
+                    return 43 /* CommandResult.GaugeUpperInflectionPointNaN */;
+            }
+        }
+        return 0 /* CommandResult.Success */;
+    }
+    class GaugeChart extends AbstractChart {
+        dataRange;
+        sectionRule;
+        background;
+        type = "gauge";
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.dataRange = createRange(this.getters, this.sheetId, definition.dataRange);
+            this.sectionRule = definition.sectionRule;
+            this.background = definition.background;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, isDataRangeValid, validator.chainValidations(checkRangeLimits(checkEmpty, validator.batchValidations), checkRangeLimits(checkNaN, validator.batchValidations), checkRangeMinBiggerThanRangeMax), validator.chainValidations(checkInflectionPointsValue(checkNaN, validator.batchValidations)));
+        }
+        static transformDefinition(definition, executed) {
+            let dataRangeZone;
+            if (definition.dataRange) {
+                dataRangeZone = transformZone(toUnboundedZone(definition.dataRange), executed);
+            }
+            return {
+                ...definition,
+                dataRange: dataRangeZone ? zoneToXc(dataRangeZone) : undefined,
+            };
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                title: context.title || "",
+                type: "gauge",
+                dataRange: context.range ? context.range[0] : undefined,
+                sectionRule: {
+                    colors: {
+                        lowerColor: DEFAULT_GAUGE_LOWER_COLOR,
+                        middleColor: DEFAULT_GAUGE_MIDDLE_COLOR,
+                        upperColor: DEFAULT_GAUGE_UPPER_COLOR,
+                    },
+                    rangeMin: "0",
+                    rangeMax: "100",
+                    lowerInflectionPoint: {
+                        type: "percentage",
+                        value: "15",
+                    },
+                    upperInflectionPoint: {
+                        type: "percentage",
+                        value: "40",
+                    },
+                },
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.dataRange);
+            const definition = this.getDefinitionWithSpecificRanges(dataRange, sheetId);
+            return new GaugeChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificRanges(this.dataRange, sheetId);
+            return new GaugeChart(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificRanges(this.dataRange);
+        }
+        getDefinitionWithSpecificRanges(dataRange, targetSheetId) {
+            return {
+                background: this.background,
+                sectionRule: this.sectionRule,
+                title: this.title,
+                type: "gauge",
+                dataRange: dataRange
+                    ? this.getters.getRangeString(dataRange, targetSheetId || this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionForExcel() {
+            // This kind of graph is not exportable in Excel
+            return undefined;
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataRange
+                    ? [this.getters.getRangeString(this.dataRange, this.sheetId)]
+                    : undefined,
+            };
+        }
+        updateRanges(applyChange) {
+            const range = adaptChartRange(this.dataRange, applyChange);
+            if (this.dataRange === range) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificRanges(range);
+            return new GaugeChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getGaugeConfiguration(chart, locale) {
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, [], fontColor, {
+            locale,
+        });
+        config.options.hover = undefined;
+        config.options.events = [];
+        config.options.layout = {
+            padding: { left: 30, right: 30, top: chart.title ? 10 : 25, bottom: 25 },
+        };
+        config.options.needle = {
+            radiusPercentage: 2,
+            widthPercentage: 3.2,
+            lengthPercentage: 80,
+            color: "#000000",
+        };
+        config.options.valueLabel = {
+            display: false,
+            formatter: null,
+            color: "#FFFFFF",
+            backgroundColor: "#000000",
+            fontSize: 30,
+            borderRadius: 5,
+            padding: {
+                top: 5,
+                right: 5,
+                bottom: 5,
+                left: 5,
+            },
+            bottomMarginPercentage: 5,
+        };
+        return config;
+    }
+    function createGaugeChartRuntime(chart, getters) {
+        const locale = getters.getLocale();
+        const config = getGaugeConfiguration(chart, locale);
+        const colors = chart.sectionRule.colors;
+        const lowerPoint = chart.sectionRule.lowerInflectionPoint;
+        const upperPoint = chart.sectionRule.upperInflectionPoint;
+        const lowerPointValue = Number(lowerPoint.value);
+        const upperPointValue = Number(upperPoint.value);
+        const minNeedleValue = Number(chart.sectionRule.rangeMin);
+        const maxNeedleValue = Number(chart.sectionRule.rangeMax);
+        const needleCoverage = maxNeedleValue - minNeedleValue;
+        const needleInflectionPoint = [];
+        if (lowerPoint.value !== "") {
+            const lowerPointNeedleValue = lowerPoint.type === "number"
+                ? lowerPointValue
+                : minNeedleValue + (needleCoverage * lowerPointValue) / 100;
+            needleInflectionPoint.push({
+                value: clip(lowerPointNeedleValue, minNeedleValue, maxNeedleValue),
+                color: colors.lowerColor,
+            });
+        }
+        if (upperPoint.value !== "") {
+            const upperPointNeedleValue = upperPoint.type === "number"
+                ? upperPointValue
+                : minNeedleValue + (needleCoverage * upperPointValue) / 100;
+            needleInflectionPoint.push({
+                value: clip(upperPointNeedleValue, minNeedleValue, maxNeedleValue),
+                color: colors.middleColor,
+            });
+        }
+        const data = [];
+        const backgroundColor = [];
+        needleInflectionPoint
+            .sort((a, b) => a.value - b.value)
+            .map((point) => {
+            data.push(point.value);
+            backgroundColor.push(point.color);
+        });
+        // There's a bug in gauge lib when the last element in `data` is 0 (i.e. when the range maximum is 0).
+        // The value wrongly fallbacks to 1 because 0 is falsy
+        // See https://github.com/haiiaaa/chartjs-gauge/pull/33
+        // https://github.com/haiiaaa/chartjs-gauge/blob/2ea50541d754d710cb30c2502fa690ac5dc27afd/src/controllers/controller.gauge.js#L52
+        data.push(maxNeedleValue);
+        backgroundColor.push(colors.upperColor);
+        const dataRange = chart.dataRange;
+        const deltaBeyondRangeLimit = needleCoverage / 30;
+        let needleValue = minNeedleValue - deltaBeyondRangeLimit; // make needle value always at the minimum by default
+        let cellFormatter = null;
+        let displayValue = false;
+        if (dataRange !== undefined) {
+            const cell = getters.getEvaluatedCell({
+                sheetId: dataRange.sheetId,
+                col: dataRange.zone.left,
+                row: dataRange.zone.top,
+            });
+            if (cell.type === CellValueType.number) {
+                // in gauge graph "datasets.value" is used to calculate the angle of the
+                // needle in the graph. To prevent the needle from making 360° turns, we
+                // clip the value between a min and a max. This min and this max are slightly
+                // smaller and slightly larger than minRange and maxRange to mark the fact
+                // that the needle is out of the range limits
+                needleValue = clip(cell.value, minNeedleValue - deltaBeyondRangeLimit, maxNeedleValue + deltaBeyondRangeLimit);
+                cellFormatter = () => getters.getRangeFormattedValues(dataRange)[0];
+                displayValue = true;
+            }
+        }
+        config.options.valueLabel.display = displayValue;
+        config.options.valueLabel.formatter = cellFormatter;
+        config.data.datasets.push({
+            data,
+            minValue: Number(chart.sectionRule.rangeMin),
+            value: needleValue,
+            backgroundColor,
+        });
+        return {
+            chartJsConfig: config,
+            background: getters.getBackgroundOfSingleCellChart(chart.background, dataRange),
+        };
+    }
+
+    const UNIT_LENGTH = {
+        second: 1000,
+        minute: 1000 * 60,
+        hour: 1000 * 3600,
+        day: 1000 * 3600 * 24,
+        month: 1000 * 3600 * 24 * 30,
+        year: 1000 * 3600 * 24 * 365,
+    };
+    const Milliseconds = {
+        inSeconds: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.second);
+        },
+        inMinutes: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.minute);
+        },
+        inHours: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.hour);
+        },
+        inDays: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.day);
+        },
+        inMonths: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.month);
+        },
+        inYears: function (milliseconds) {
+            return Math.floor(milliseconds / UNIT_LENGTH.year);
+        },
+    };
+    /**
+     * Regex to test if a format string is a date format that can be translated into a moment time format
+     */
+    const timeFormatMomentCompatible = /^((d|dd|m|mm|yyyy|yy|hh|h|ss|a)(-|:|\s|\/))*(d|dd|m|mm|yyyy|yy|hh|h|ss|a)$/i;
+    /** Get the time options for the XAxis of ChartJS */
+    function getChartTimeOptions(labels, labelFormat, locale) {
+        const momentFormat = convertDateFormatForMoment(labelFormat);
+        const timeUnit = getBestTimeUnitForScale(labels, momentFormat, locale);
+        const displayFormats = {};
+        if (timeUnit) {
+            displayFormats[timeUnit] = momentFormat;
+        }
+        return {
+            parser: momentFormat,
+            displayFormats,
+            unit: timeUnit,
+        };
+    }
+    /**
+     * Convert the given date format into a format that moment.js understands.
+     *
+     * https://momentjs.com/docs/#/parsing/string-format/
+     */
+    function convertDateFormatForMoment(format) {
+        format = format.replace(/y/g, "Y");
+        format = format.replace(/d/g, "D");
+        // "m" before "h" == month, "m" after "h" == minute
+        const indexH = format.indexOf("h");
+        if (indexH >= 0) {
+            format = format.slice(0, indexH).replace(/m/g, "M") + format.slice(indexH);
+        }
+        else {
+            format = format.replace(/m/g, "M");
+        }
+        // If we have an "a", we should display hours as AM/PM (h), otherwise display 24 hours format (H)
+        if (!format.includes("a")) {
+            format = format.replace(/h/g, "H");
+        }
+        return format;
+    }
+    /** Get the minimum time unit that the format is able to display */
+    function getFormatMinDisplayUnit(format) {
+        if (format.includes("s")) {
+            return "second";
+        }
+        else if (format.includes("m")) {
+            return "minute";
+        }
+        else if (format.includes("h") || format.includes("H")) {
+            return "hour";
+        }
+        else if (format.includes("D")) {
+            return "day";
+        }
+        else if (format.includes("M")) {
+            return "month";
+        }
+        return "year";
+    }
+    /**
+     * Returns the best time unit that should be used for the X axis of a chart in order to display all
+     * the labels correctly.
+     *
+     * There is two conditions :
+     *  - the format of the labels should be able to display the unit. For example if the format is "DD/MM/YYYY"
+     *    it makes no sense to try to use minutes in the X axis
+     *  - we want the "best fit" unit. For example if the labels span a period of several days, we want to use days
+     *    as a unit, but if they span 200 days, we'd like to use months instead
+     *
+     */
+    function getBestTimeUnitForScale(labels, format, locale) {
+        const labelDates = labels.map((label) => parseDateTime(label, locale)?.jsDate);
+        if (labelDates.some((date) => date === undefined) || labels.length < 2) {
+            return undefined;
+        }
+        const labelsTimestamps = labelDates.map((date) => date.getTime());
+        const period = Math.max(...labelsTimestamps) - Math.min(...labelsTimestamps);
+        const minUnit = getFormatMinDisplayUnit(format);
+        if (UNIT_LENGTH.second >= UNIT_LENGTH[minUnit] && Milliseconds.inSeconds(period) < 180) {
+            return "second";
+        }
+        else if (UNIT_LENGTH.minute >= UNIT_LENGTH[minUnit] && Milliseconds.inMinutes(period) < 180) {
+            return "minute";
+        }
+        else if (UNIT_LENGTH.hour >= UNIT_LENGTH[minUnit] && Milliseconds.inHours(period) < 96) {
+            return "hour";
+        }
+        else if (UNIT_LENGTH.day >= UNIT_LENGTH[minUnit] && Milliseconds.inDays(period) < 90) {
+            return "day";
+        }
+        else if (UNIT_LENGTH.month >= UNIT_LENGTH[minUnit] && Milliseconds.inMonths(period) < 36) {
+            return "month";
+        }
+        return "year";
+    }
+
+    class LineChart extends AbstractChart {
+        dataSets;
+        labelRange;
+        background;
+        verticalAxisPosition;
+        legendPosition;
+        labelsAsText;
+        stacked;
+        aggregated;
+        type = "line";
+        dataSetsHaveTitle;
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.dataSets = createDataSets(this.getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(this.getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.verticalAxisPosition = definition.verticalAxisPosition;
+            this.legendPosition = definition.legendPosition;
+            this.labelsAsText = definition.labelsAsText;
+            this.stacked = definition.stacked;
+            this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                labelsAsText: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "line",
+                verticalAxisPosition: "left",
+                labelRange: context.auxiliaryRange || undefined,
+                stacked: false,
+                aggregated: false,
+            };
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "line",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                verticalAxisPosition: this.verticalAxisPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+                labelsAsText: this.labelsAsText,
+                stacked: this.stacked,
+                aggregated: this.aggregated,
+            };
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new LineChart(definition, this.sheetId, this.getters);
+        }
+        getDefinitionForExcel() {
+            // Excel does not support aggregating labels
+            if (this.aggregated)
+                return undefined;
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                dataSets,
+                labelRange,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new LineChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new LineChart(definition, sheetId, this.getters);
+        }
+    }
+    function fixEmptyLabelsForDateCharts(labels, dataSetsValues) {
+        if (labels.length === 0 || labels.every((label) => !label)) {
+            return { labels, dataSetsValues };
+        }
+        const newLabels = [...labels];
+        const newDatasets = deepCopy(dataSetsValues);
+        for (let i = 0; i < newLabels.length; i++) {
+            if (!newLabels[i]) {
+                newLabels[i] = findNextDefinedValue(newLabels, i);
+                for (let ds of newDatasets) {
+                    ds.data[i] = undefined;
+                }
+            }
+        }
+        return { labels: newLabels, dataSetsValues: newDatasets };
+    }
+    function canChartParseLabels(labelRange, getters) {
+        return canBeDateChart(labelRange, getters) || canBeLinearChart(labelRange, getters);
+    }
+    function getChartAxisType(chart, getters) {
+        if (isDateChart(chart, getters)) {
+            return "time";
+        }
+        if (isLinearChart(chart, getters)) {
+            return "linear";
+        }
+        return "category";
+    }
+    function isDateChart(chart, getters) {
+        return !chart.labelsAsText && canBeDateChart(chart.labelRange, getters);
+    }
+    function isLinearChart(chart, getters) {
+        return !chart.labelsAsText && canBeLinearChart(chart.labelRange, getters);
+    }
+    function canBeDateChart(labelRange, getters) {
+        if (!labelRange || !canBeLinearChart(labelRange, getters)) {
+            return false;
+        }
+        const labelFormat = getters.getEvaluatedCell({
+            sheetId: labelRange.sheetId,
+            col: labelRange.zone.left,
+            row: labelRange.zone.top,
+        }).format;
+        return Boolean(labelFormat && timeFormatMomentCompatible.test(labelFormat));
+    }
+    function canBeLinearChart(labelRange, getters) {
+        if (!labelRange) {
+            return false;
+        }
+        const labels = getters.getRangeValues(labelRange);
+        if (labels.some((label) => isNaN(Number(label)) && label)) {
+            return false;
+        }
+        if (labels.every((label) => !label)) {
+            return false;
+        }
+        return true;
+    }
+    function getLineConfiguration(chart, labels, localeFormat) {
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor, localeFormat);
+        const legend = {
+            labels: {
+                fontColor,
+                generateLabels(chart) {
+                    const { data } = chart;
+                    const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
+                    for (const [index, label] of labels.entries()) {
+                        label.fillStyle = data.datasets[index].borderColor;
+                    }
+                    return labels;
+                },
+            },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...config.options?.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.scales = {
+            xAxes: [
+                {
+                    ticks: {
+                        // x axis configuration
+                        maxRotation: 60,
+                        minRotation: 15,
+                        padding: 5,
+                        labelOffset: 2,
+                        fontColor,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    position: chart.verticalAxisPosition,
+                    ticks: {
+                        fontColor,
+                        // y axis configuration
+                        beginAtZero: true,
+                        callback: (value) => {
+                            return localeFormat.format
+                                ? formatValue(value, localeFormat)
+                                : value?.toLocaleString() || value;
+                        },
+                    },
+                },
+            ],
+        };
+        if (chart.stacked) {
+            config.options.scales.yAxes[0].stacked = true;
+        }
+        return config;
+    }
+    function createLineChartRuntime(chart, getters) {
+        const axisType = getChartAxisType(chart, getters);
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = axisType === "linear" ? labelValues.values : labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        if (axisType === "time") {
+            ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
+        }
+        if (chart.aggregated) {
+            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
+        }
+        const locale = getters.getLocale();
+        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
+        const localeFormat = { format: dataSetFormat, locale };
+        const config = getLineConfiguration(chart, labels, localeFormat);
+        const labelFormat = getChartLabelFormat(getters, chart.labelRange);
+        if (axisType === "time") {
+            config.options.scales.xAxes[0].type = "time";
+            config.options.scales.xAxes[0].time = getChartTimeOptions(labels, labelFormat, locale);
+            config.options.scales.xAxes[0].ticks.maxTicksLimit = 15;
+        }
+        else if (axisType === "linear") {
+            config.options.scales.xAxes[0].type = "linear";
+            config.options.scales.xAxes[0].ticks.callback = (value) => formatValue(value, localeFormat);
+            config.options.tooltips.callbacks.title = (tooltipItem) => {
+                return formatValue(tooltipItem[0]?.xLabel || "", localeFormat);
+            };
+        }
+        const colors = new ChartColors();
+        for (let [index, { label, data }] of dataSetsValues.entries()) {
+            if (["linear", "time"].includes(axisType)) {
+                // Replace empty string labels by undefined to make sure chartJS doesn't decide that "" is the same as 0
+                data = data.map((y, index) => ({ x: labels[index] || undefined, y }));
+            }
+            const color = colors.next();
+            let backgroundRGBA = colorToRGBA(color);
+            if (chart.stacked) {
+                backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
+            }
+            const backgroundColor = rgbaToHex(backgroundRGBA);
+            const dataset = {
+                label,
+                data,
+                lineTension: 0,
+                borderColor: color,
+                backgroundColor,
+                pointBackgroundColor: color,
+                fill: chart.stacked ? getFillingMode(index) : false,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    class PieChart extends AbstractChart {
+        dataSets;
+        labelRange;
+        background;
+        legendPosition;
+        type = "pie";
+        aggregated;
+        dataSetsHaveTitle;
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
+            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.background = definition.background;
+            this.legendPosition = definition.legendPosition;
+            this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
+        }
+        static transformDefinition(definition, executed) {
+            return transformChartDefinitionWithDataSetsWithZone(definition, executed);
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkDataset, checkLabelRange);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                dataSets: context.range ? context.range : [],
+                dataSetsHaveTitle: false,
+                legendPosition: "top",
+                title: context.title || "",
+                type: "pie",
+                labelRange: context.auxiliaryRange || undefined,
+                aggregated: false,
+            };
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange);
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, this.sheetId)),
+                auxiliaryRange: this.labelRange
+                    ? this.getters.getRangeString(this.labelRange, this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
+            return {
+                type: "pie",
+                dataSetsHaveTitle: dataSets.length ? Boolean(dataSets[0].labelCell) : false,
+                background: this.background,
+                dataSets: dataSets.map((ds) => this.getters.getRangeString(ds.dataRange, targetSheetId || this.sheetId)),
+                legendPosition: this.legendPosition,
+                labelRange: labelRange
+                    ? this.getters.getRangeString(labelRange, targetSheetId || this.sheetId)
+                    : undefined,
+                title: this.title,
+                aggregated: this.aggregated,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const dataSets = copyDataSetsWithNewSheetId(this.sheetId, sheetId, this.dataSets);
+            const labelRange = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.labelRange);
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange, sheetId);
+            return new PieChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
+            return new PieChart(definition, sheetId, this.getters);
+        }
+        getDefinitionForExcel() {
+            // Excel does not support aggregating labels
+            if (this.aggregated)
+                return undefined;
+            const dataSets = this.dataSets
+                .map((ds) => toExcelDataset(this.getters, ds))
+                .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
+            return {
+                ...this.getDefinition(),
+                backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
+                fontColor: toXlsxHexColor(chartFontColor(this.background)),
+                verticalAxisPosition: "left",
+                dataSets,
+                labelRange,
+            };
+        }
+        updateRanges(applyChange) {
+            const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
+            if (!isStale) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificDataSets(dataSets, labelRange);
+            return new PieChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function getPieConfiguration(chart, labels, localeFormat) {
+        const fontColor = chartFontColor(chart.background);
+        const config = getDefaultChartJsRuntime(chart, labels, fontColor, localeFormat);
+        const legend = {
+            labels: { fontColor },
+        };
+        if ((!chart.labelRange && chart.dataSets.length === 1) || chart.legendPosition === "none") {
+            legend.display = false;
+        }
+        else {
+            legend.position = chart.legendPosition;
+        }
+        config.options.legend = { ...config.options?.legend, ...legend };
+        config.options.layout = {
+            padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
+        };
+        config.options.tooltips.callbacks.title = function (tooltipItems, data) {
+            return data.datasets[tooltipItems[0].datasetIndex].label;
+        };
+        return config;
+    }
+    function getPieColors(colors, dataSetsValues) {
+        const pieColors = [];
+        const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
+        for (let i = 0; i <= maxLength; i++) {
+            pieColors.push(colors.next());
+        }
+        return pieColors;
+    }
+    function createPieChartRuntime(chart, getters) {
+        const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
+        let labels = labelValues.formattedValues;
+        let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
+        ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
+        if (chart.aggregated) {
+            ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
+        }
+        const dataSetFormat = getChartDatasetFormat(getters, chart.dataSets);
+        const locale = getters.getLocale();
+        const config = getPieConfiguration(chart, labels, { format: dataSetFormat, locale });
+        const colors = new ChartColors();
+        for (let { label, data } of dataSetsValues) {
+            const backgroundColor = getPieColors(colors, dataSetsValues);
+            const dataset = {
+                label,
+                data,
+                borderColor: "#FFFFFF",
+                backgroundColor,
+            };
+            config.data.datasets.push(dataset);
+        }
+        return { chartJsConfig: config, background: chart.background || BACKGROUND_CHART_COLOR };
+    }
+
+    function checkKeyValue(definition) {
+        return definition.keyValue && !rangeReference.test(definition.keyValue)
+            ? 34 /* CommandResult.InvalidScorecardKeyValue */
+            : 0 /* CommandResult.Success */;
+    }
+    function checkBaseline(definition) {
+        return definition.baseline && !rangeReference.test(definition.baseline)
+            ? 35 /* CommandResult.InvalidScorecardBaseline */
+            : 0 /* CommandResult.Success */;
+    }
+    class ScorecardChart extends AbstractChart {
+        keyValue;
+        baseline;
+        baselineMode;
+        baselineDescr;
+        background;
+        baselineColorUp;
+        baselineColorDown;
+        fontColor;
+        type = "scorecard";
+        constructor(definition, sheetId, getters) {
+            super(definition, sheetId, getters);
+            this.keyValue = createRange(getters, sheetId, definition.keyValue);
+            this.baseline = createRange(getters, sheetId, definition.baseline);
+            this.baselineMode = definition.baselineMode;
+            this.baselineDescr = definition.baselineDescr;
+            this.background = definition.background;
+            this.baselineColorUp = definition.baselineColorUp;
+            this.baselineColorDown = definition.baselineColorDown;
+        }
+        static validateChartDefinition(validator, definition) {
+            return validator.checkValidations(definition, checkKeyValue, checkBaseline);
+        }
+        static getDefinitionFromContextCreation(context) {
+            return {
+                background: context.background,
+                type: "scorecard",
+                keyValue: context.range ? context.range[0] : undefined,
+                title: context.title || "",
+                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
+                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
+                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
+                baseline: context.auxiliaryRange || "",
+            };
+        }
+        static transformDefinition(definition, executed) {
+            let baselineZone;
+            let keyValueZone;
+            if (definition.baseline) {
+                baselineZone = transformZone(toUnboundedZone(definition.baseline), executed);
+            }
+            if (definition.keyValue) {
+                keyValueZone = transformZone(toUnboundedZone(definition.keyValue), executed);
+            }
+            return {
+                ...definition,
+                baseline: baselineZone ? zoneToXc(baselineZone) : undefined,
+                keyValue: keyValueZone ? zoneToXc(keyValueZone) : undefined,
+            };
+        }
+        copyForSheetId(sheetId) {
+            const baseline = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.baseline);
+            const keyValue = copyLabelRangeWithNewSheetId(this.sheetId, sheetId, this.keyValue);
+            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue, sheetId);
+            return new ScorecardChart(definition, sheetId, this.getters);
+        }
+        copyInSheetId(sheetId) {
+            const definition = this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue, sheetId);
+            return new ScorecardChart(definition, sheetId, this.getters);
+        }
+        getDefinition() {
+            return this.getDefinitionWithSpecificRanges(this.baseline, this.keyValue);
+        }
+        getContextCreation() {
+            return {
+                background: this.background,
+                title: this.title,
+                range: this.keyValue ? [this.getters.getRangeString(this.keyValue, this.sheetId)] : undefined,
+                auxiliaryRange: this.baseline
+                    ? this.getters.getRangeString(this.baseline, this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
+            return {
+                baselineColorDown: this.baselineColorDown,
+                baselineColorUp: this.baselineColorUp,
+                baselineMode: this.baselineMode,
+                title: this.title,
+                type: "scorecard",
+                background: this.background,
+                baseline: baseline
+                    ? this.getters.getRangeString(baseline, targetSheetId || this.sheetId)
+                    : undefined,
+                baselineDescr: this.baselineDescr,
+                keyValue: keyValue
+                    ? this.getters.getRangeString(keyValue, targetSheetId || this.sheetId)
+                    : undefined,
+            };
+        }
+        getDefinitionForExcel() {
+            // This kind of graph is not exportable in Excel
+            return undefined;
+        }
+        updateRanges(applyChange) {
+            const baseline = adaptChartRange(this.baseline, applyChange);
+            const keyValue = adaptChartRange(this.keyValue, applyChange);
+            if (this.baseline === baseline && this.keyValue === keyValue) {
+                return this;
+            }
+            const definition = this.getDefinitionWithSpecificRanges(baseline, keyValue);
+            return new ScorecardChart(definition, this.sheetId, this.getters);
+        }
+    }
+    function createScorecardChartRuntime(chart, getters) {
+        let keyValue = "";
+        let formattedKeyValue = "";
+        let keyValueCell;
+        if (chart.keyValue) {
+            const keyValuePosition = {
+                sheetId: chart.keyValue.sheetId,
+                col: chart.keyValue.zone.left,
+                row: chart.keyValue.zone.top,
+            };
+            keyValueCell = getters.getEvaluatedCell(keyValuePosition);
+            keyValue = String(keyValueCell.value);
+            formattedKeyValue = keyValueCell.formattedValue;
+        }
+        let baselineCell;
+        const baseline = chart.baseline;
+        if (baseline) {
+            const baselinePosition = {
+                sheetId: chart.baseline.sheetId,
+                col: chart.baseline.zone.left,
+                row: chart.baseline.zone.top,
+            };
+            baselineCell = getters.getEvaluatedCell(baselinePosition);
+        }
+        const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
+        const locale = getters.getLocale();
+        return {
+            title: _t(chart.title),
+            keyValue: formattedKeyValue || keyValue,
+            baselineDisplay: getBaselineText(baselineCell, keyValueCell, chart.baselineMode, locale),
+            baselineArrow: getBaselineArrowDirection(baselineCell, keyValueCell, chart.baselineMode),
+            baselineColor: getBaselineColor(baselineCell, chart.baselineMode, keyValueCell, chart.baselineColorUp, chart.baselineColorDown),
+            baselineDescr: chart.baselineDescr ? _t(chart.baselineDescr) : "",
+            fontColor: chartFontColor(background),
+            background,
+            baselineStyle: chart.baselineMode !== "percentage" && baseline
+                ? getters.getCellStyle({
+                    sheetId: baseline.sheetId,
+                    col: baseline.zone.left,
+                    row: baseline.zone.top,
+                })
+                : undefined,
+            keyValueStyle: chart.keyValue
+                ? getters.getCellStyle({
+                    sheetId: chart.keyValue.sheetId,
+                    col: chart.keyValue.zone.left,
+                    row: chart.keyValue.zone.top,
+                })
+                : undefined,
+        };
+    }
+
+    /**
+     * This registry is intended to map a cell content (raw string) to
+     * an instance of a cell.
+     */
+    const chartRegistry = new Registry();
+    chartRegistry.add("bar", {
+        match: (type) => type === "bar",
+        createChart: (definition, sheetId, getters) => new BarChart(definition, sheetId, getters),
+        getChartRuntime: createBarChartRuntime,
+        validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
+        name: _lt("Bar"),
+        sequence: 10,
+    });
+    chartRegistry.add("line", {
+        match: (type) => type === "line",
+        createChart: (definition, sheetId, getters) => new LineChart(definition, sheetId, getters),
+        getChartRuntime: createLineChartRuntime,
+        validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
+        name: _lt("Line"),
+        sequence: 20,
+    });
+    chartRegistry.add("pie", {
+        match: (type) => type === "pie",
+        createChart: (definition, sheetId, getters) => new PieChart(definition, sheetId, getters),
+        getChartRuntime: createPieChartRuntime,
+        validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
+        name: _lt("Pie"),
+        sequence: 30,
+    });
+    chartRegistry.add("scorecard", {
+        match: (type) => type === "scorecard",
+        createChart: (definition, sheetId, getters) => new ScorecardChart(definition, sheetId, getters),
+        getChartRuntime: createScorecardChartRuntime,
+        validateChartDefinition: (validator, definition) => ScorecardChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => ScorecardChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => ScorecardChart.getDefinitionFromContextCreation(context),
+        name: _lt("Scorecard"),
+        sequence: 40,
+    });
+    chartRegistry.add("gauge", {
+        match: (type) => type === "gauge",
+        createChart: (definition, sheetId, getters) => new GaugeChart(definition, sheetId, getters),
+        getChartRuntime: createGaugeChartRuntime,
+        validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
+        transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
+        getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
+        name: _lt("Gauge"),
+        sequence: 50,
+    });
+    const chartComponentRegistry = new Registry();
+    chartComponentRegistry.add("line", ChartJsComponent);
+    chartComponentRegistry.add("bar", ChartJsComponent);
+    chartComponentRegistry.add("pie", ChartJsComponent);
+    chartComponentRegistry.add("gauge", ChartJsComponent);
+    chartComponentRegistry.add("scorecard", ScorecardChart$1);
+
+    /**
+     * Registry intended to support usual currencies. It is mainly used to create
+     * currency formats that can be selected or modified when customizing formats.
+     */
+    const currenciesRegistry = new Registry();
+
+    // -----------------------------------------------------------------------------
+    // STYLE
+    // -----------------------------------------------------------------------------
+    css /* scss */ `
+  .o-chart-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+`;
+    class ChartFigure extends owl.Component {
+        static template = "o-spreadsheet-ChartFigure";
+        static components = {};
+        onDoubleClick() {
+            this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
+            this.env.openSidePanel("ChartPanel");
+        }
+        get chartType() {
+            return this.env.model.getters.getChartType(this.props.figure.id);
+        }
+        get chartComponent() {
+            const type = this.chartType;
+            const component = chartComponentRegistry.get(type);
+            if (!component) {
+                throw new Error(`Component is not defined for type ${type}`);
+            }
+            return component;
+        }
+    }
+    ChartFigure.props = {
+        figure: Object,
+        onFigureDeleted: Function,
+    };
+
+    class ImageFigure extends owl.Component {
+        static template = "o-spreadsheet-ImageFigure";
+        static components = {};
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        get figureId() {
+            return this.props.figure.id;
+        }
+        get getImagePath() {
+            return this.env.model.getters.getImagePath(this.figureId);
+        }
+    }
+    ImageFigure.props = {
+        figure: Object,
+        onFigureDeleted: Function,
+    };
+
+    function centerFigurePosition(getters, size) {
+        const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
+        const dim = getters.getSheetViewDimension();
+        const rect = getters.getVisibleRect(getters.getActiveMainViewport());
+        const scrollableViewportWidth = Math.min(rect.width, dim.width - offsetCorrectionX);
+        const scrollableViewportHeight = Math.min(rect.height, dim.height - offsetCorrectionY);
+        const position = {
+            x: offsetCorrectionX + scrollX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
+            y: offsetCorrectionY + scrollY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
+        }; // Position at the center of the scrollable viewport
+        return position;
+    }
+    function getMaxFigureSize(getters, figureSize) {
+        const size = deepCopy(figureSize);
+        const dim = getters.getSheetViewDimension();
+        const maxWidth = dim.width;
+        const maxHeight = dim.height;
+        if (size.width > maxWidth) {
+            const ratio = maxWidth / size.width;
+            size.width = maxWidth;
+            size.height = size.height * ratio;
+        }
+        if (size.height > maxHeight) {
+            const ratio = maxHeight / size.height;
+            size.height = maxHeight;
+            size.width = size.width * ratio;
+        }
+        return size;
+    }
+
+    const figureRegistry = new Registry();
+    figureRegistry.add("chart", {
+        Component: ChartFigure,
+        SidePanelComponent: "ChartPanel",
+        menuBuilder: getChartMenu,
+    });
+    figureRegistry.add("image", {
+        Component: ImageFigure,
+        keepRatio: true,
+        minFigSize: 20,
+        borderWidth: 0,
+        menuBuilder: getImageMenuRegistry,
+    });
+    function getChartMenu(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            {
+                id: "edit",
+                name: _lt("Edit"),
+                sequence: 1,
+                execute: () => {
+                    env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                    env.openSidePanel("ChartPanel");
+                },
+            },
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createActions(menuItemSpecs);
+    }
+    function getImageMenuRegistry(figureId, onFigureDeleted, env) {
+        const menuItemSpecs = [
+            getCopyMenuItem(figureId, env),
+            getCutMenuItem(figureId, env),
+            {
+                id: "reset_size",
+                name: _lt("Reset size"),
+                sequence: 4,
+                execute: () => {
+                    const size = env.model.getters.getImageSize(figureId);
+                    const { height, width } = getMaxFigureSize(env.model.getters, size);
+                    env.model.dispatch("UPDATE_FIGURE", {
+                        sheetId: env.model.getters.getActiveSheetId(),
+                        id: figureId,
+                        height,
+                        width,
+                    });
+                },
+            },
+            getDeleteMenuItem(figureId, onFigureDeleted, env),
+        ];
+        return createActions(menuItemSpecs);
+    }
+    function getCopyMenuItem(figureId, env) {
+        return {
+            id: "copy",
+            name: _lt("Copy"),
+            sequence: 2,
+            description: "Ctrl+C",
+            execute: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("COPY");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getCutMenuItem(figureId, env) {
+        return {
+            id: "cut",
+            name: _lt("Cut"),
+            sequence: 3,
+            description: "Ctrl+X",
+            execute: async () => {
+                env.model.dispatch("SELECT_FIGURE", { id: figureId });
+                env.model.dispatch("CUT");
+                await env.clipboard.write(env.model.getters.getClipboardContent());
+            },
+        };
+    }
+    function getDeleteMenuItem(figureId, onFigureDeleted, env) {
+        return {
+            id: "delete",
+            name: _lt("Delete"),
+            sequence: 10,
+            execute: () => {
+                env.model.dispatch("DELETE_FIGURE", {
+                    sheetId: env.model.getters.getActiveSheetId(),
+                    id: figureId,
+                });
+                onFigureDeleted();
+            },
+        };
+    }
+
+    const inverseCommandRegistry = new Registry()
+        .add("ADD_COLUMNS_ROWS", inverseAddColumnsRows)
+        .add("REMOVE_COLUMNS_ROWS", inverseRemoveColumnsRows)
+        .add("ADD_MERGE", inverseAddMerge)
+        .add("REMOVE_MERGE", inverseRemoveMerge)
+        .add("CREATE_SHEET", inverseCreateSheet)
+        .add("DELETE_SHEET", inverseDeleteSheet)
+        .add("DUPLICATE_SHEET", inverseDuplicateSheet)
+        .add("CREATE_FIGURE", inverseCreateFigure)
+        .add("CREATE_CHART", inverseCreateChart)
+        .add("HIDE_COLUMNS_ROWS", inverseHideColumnsRows)
+        .add("UNHIDE_COLUMNS_ROWS", inverseUnhideColumnsRows);
+    for (const cmd of coreTypes.values()) {
+        if (!inverseCommandRegistry.contains(cmd)) {
+            inverseCommandRegistry.add(cmd, identity);
+        }
+    }
+    function identity(cmd) {
+        return [cmd];
+    }
+    function inverseAddColumnsRows(cmd) {
+        const elements = [];
+        let start = cmd.base;
+        if (cmd.position === "after") {
+            start++;
+        }
+        for (let i = 0; i < cmd.quantity; i++) {
+            elements.push(i + start);
+        }
+        return [
+            {
+                type: "REMOVE_COLUMNS_ROWS",
+                dimension: cmd.dimension,
+                elements,
+                sheetId: cmd.sheetId,
+            },
+        ];
+    }
+    function inverseAddMerge(cmd) {
+        return [{ type: "REMOVE_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
+    }
+    function inverseRemoveMerge(cmd) {
+        return [{ type: "ADD_MERGE", sheetId: cmd.sheetId, target: cmd.target }];
+    }
+    function inverseCreateSheet(cmd) {
+        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetId }];
+    }
+    function inverseDuplicateSheet(cmd) {
+        return [{ type: "DELETE_SHEET", sheetId: cmd.sheetIdTo }];
+    }
+    function inverseRemoveColumnsRows(cmd) {
+        const commands = [];
+        const elements = [...cmd.elements].sort((a, b) => a - b);
+        for (let group of groupConsecutive(elements)) {
+            const column = group[0] === 0 ? 0 : group[0] - 1;
+            const position = group[0] === 0 ? "before" : "after";
+            commands.push({
+                type: "ADD_COLUMNS_ROWS",
+                dimension: cmd.dimension,
+                quantity: group.length,
+                base: column,
+                sheetId: cmd.sheetId,
+                position,
+            });
+        }
+        return commands;
+    }
+    function inverseDeleteSheet(cmd) {
+        return [{ type: "CREATE_SHEET", sheetId: cmd.sheetId, position: 1 }];
+    }
+    function inverseCreateFigure(cmd) {
+        return [{ type: "DELETE_FIGURE", id: cmd.figure.id, sheetId: cmd.sheetId }];
+    }
+    function inverseCreateChart(cmd) {
+        return [{ type: "DELETE_FIGURE", id: cmd.id, sheetId: cmd.sheetId }];
+    }
+    function inverseHideColumnsRows(cmd) {
+        return [
+            {
+                type: "UNHIDE_COLUMNS_ROWS",
+                sheetId: cmd.sheetId,
+                dimension: cmd.dimension,
+                elements: cmd.elements,
+            },
+        ];
+    }
+    function inverseUnhideColumnsRows(cmd) {
+        return [
+            {
+                type: "HIDE_COLUMNS_ROWS",
+                sheetId: cmd.sheetId,
+                dimension: cmd.dimension,
+                elements: cmd.elements,
+            },
+        ];
+    }
+
+    const AddMergeInteractiveContent = {
+        MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
+        MergeInFilter: _lt("You can't merge cells inside of an existing filter."),
+    };
+    function interactiveAddMerge(env, sheetId, target) {
+        const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
+        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+        }
+        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
+            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
+                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
+            });
+        }
+    }
+
+    /**
+     * Create a function used to create a Chart based on the definition
+     */
+    function chartFactory(getters) {
+        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
+        function createChart(id, definition, sheetId) {
+            const builder = builders.find((builder) => builder.match(definition.type));
+            if (!builder) {
+                throw new Error(`No builder for this chart: ${definition.type}`);
+            }
+            return builder.createChart(definition, sheetId, getters);
+        }
+        return createChart;
+    }
+    /**
+     * Create a function used to create a Chart Runtime based on the chart class
+     * instance
+     */
+    function chartRuntimeFactory(getters) {
+        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
+        function createRuntimeChart(chart) {
+            const builder = builders.find((builder) => builder.match(chart.type));
+            if (!builder) {
+                throw new Error("No runtime builder for this chart.");
+            }
+            return builder.getChartRuntime(chart, getters);
+        }
+        return createRuntimeChart;
+    }
+    /**
+     * Validate the chart definition given in arguments
+     */
+    function validateChartDefinition(validator, definition) {
+        const validators = chartRegistry.getAll().find((validator) => validator.match(definition.type));
+        if (!validators) {
+            throw new Error("Unknown chart type.");
+        }
+        return validators.validateChartDefinition(validator, definition);
+    }
+    /**
+     * Get a new chart definition transformed with the executed command. This
+     * functions will be called during operational transform process
+     */
+    function transformDefinition(definition, executed) {
+        const transformation = chartRegistry.getAll().find((factory) => factory.match(definition.type));
+        if (!transformation) {
+            throw new Error("Unknown chart type.");
+        }
+        return transformation.transformDefinition(definition, executed);
+    }
+    /**
+     * Get an empty definition based on the given context and the given type
+     */
+    function getChartDefinitionFromContextCreation(context, type) {
+        const chartClass = chartRegistry.get(type);
+        return chartClass.getChartDefinitionFromContextCreation(context);
+    }
+    function getChartTypes() {
+        const result = {};
+        for (const key of chartRegistry.getKeys()) {
+            result[key] = chartRegistry.get(key).name;
+        }
+        return result;
+    }
+    /**
+     * Return a "smart" chart definition in the given zone. The definition is "smart" because it will
+     * use the best type of chart to display the data of the zone.
+     *
+     * It will also try to find labels and datasets in the range, and try to find title for the datasets.
+     *
+     * The type of chart will be :
+     * - If the zone is a single non-empty cell, returns a scorecard
+     * - If the all the labels are numbers/date, returns a line chart
+     * - Else returns a bar chart
+     */
+    function getSmartChartDefinition(zone, getters) {
+        let dataSetZone = zone;
+        if (zone.left !== zone.right) {
+            dataSetZone = { ...zone, left: zone.left + 1 };
+        }
+        const dataSets = [zoneToXc(dataSetZone)];
+        const sheetId = getters.getActiveSheetId();
+        const topLeftCell = getters.getCell({ sheetId, col: zone.left, row: zone.top });
+        if (getZoneArea(zone) === 1 && topLeftCell?.content) {
+            return {
+                type: "scorecard",
+                title: "",
+                background: topLeftCell.style?.fillColor || undefined,
+                keyValue: zoneToXc(zone),
+                baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
+                baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
+                baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
+            };
+        }
+        let title = "";
+        const cellsInFirstRow = getters.getEvaluatedCellsInZone(sheetId, {
+            ...dataSetZone,
+            bottom: dataSetZone.top,
+        });
+        const dataSetsHaveTitle = !!cellsInFirstRow.find((cell) => cell.type !== CellValueType.empty && cell.type !== CellValueType.number);
+        if (dataSetsHaveTitle) {
+            const texts = cellsInFirstRow
+                .filter((cell) => cell.type !== CellValueType.error && cell.type !== CellValueType.empty)
+                .map((cell) => cell.formattedValue);
+            const lastElement = texts.splice(-1)[0];
+            title = texts.join(", ");
+            if (lastElement) {
+                title += (title ? " " + _t("and") + " " : "") + lastElement;
+            }
+        }
+        let labelRangeXc;
+        if (zone.left !== zone.right) {
+            labelRangeXc = zoneToXc({
+                ...zone,
+                right: zone.left,
+            });
+        }
+        // Only display legend for several datasets.
+        const newLegendPos = dataSetZone.right === dataSetZone.left ? "none" : "top";
+        const labelRange = labelRangeXc ? getters.getRangeFromSheetXC(sheetId, labelRangeXc) : undefined;
+        if (canChartParseLabels(labelRange, getters)) {
+            return {
+                title,
+                dataSets,
+                labelsAsText: false,
+                stacked: false,
+                aggregated: false,
+                labelRange: labelRangeXc,
+                type: "line",
+                dataSetsHaveTitle,
+                verticalAxisPosition: "left",
+                legendPosition: newLegendPos,
+            };
+        }
+        return {
+            title,
+            dataSets,
+            labelRange: labelRangeXc,
+            type: "bar",
+            stacked: false,
+            aggregated: false,
+            dataSetsHaveTitle,
+            verticalAxisPosition: "left",
+            legendPosition: newLegendPos,
+        };
+    }
 
     const SORT_TYPES = [
         CellValueType.number,
@@ -17431,10 +17876,19 @@
                 });
             }
         }
-        if (result.isCancelledBecause(64 /* CommandResult.InvalidSortZone */)) {
+        if (result.isCancelledBecause(63 /* CommandResult.InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
             env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
+        }
+    }
+
+    function interactiveCut(env) {
+        const result = env.model.dispatch("CUT");
+        if (!result.isSuccessful) {
+            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
+                env.raiseError(_lt("This operation is not allowed with multiple selections."));
+            }
         }
     }
 
@@ -17445,16 +17899,1102 @@
     };
     function interactiveAddFilter(env, sheetId, target) {
         const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(79 /* CommandResult.FilterOverlap */)) {
+        if (result.isCancelledBecause(78 /* CommandResult.FilterOverlap */)) {
             env.raiseError(AddFilterInteractiveContent.filterOverlap);
         }
-        else if (result.isCancelledBecause(81 /* CommandResult.MergeInFilter */)) {
+        else if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddFilterInteractiveContent.mergeInFilter);
         }
-        else if (result.isCancelledBecause(82 /* CommandResult.NonContinuousTargets */)) {
+        else if (result.isCancelledBecause(81 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
     }
+
+    const PasteInteractiveContent = {
+        wrongPasteSelection: _lt("This operation is not allowed with multiple selections."),
+        willRemoveExistingMerge: _lt("This operation is not possible due to a merge. Please remove the merges first than try again."),
+        wrongFigurePasteOption: _lt("Cannot do a special paste of a figure."),
+        frozenPaneOverlap: _lt("Cannot paste merged cells over a frozen pane."),
+    };
+    function handlePasteResult(env, result) {
+        if (!result.isSuccessful) {
+            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
+                env.raiseError(PasteInteractiveContent.wrongPasteSelection);
+            }
+            else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
+                env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
+            }
+            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
+                env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
+            }
+            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
+                env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
+            }
+        }
+    }
+    function interactivePaste(env, target, pasteOption) {
+        const result = env.model.dispatch("PASTE", { target, pasteOption });
+        handlePasteResult(env, result);
+    }
+    function interactivePasteFromOS(env, target, text, pasteOption) {
+        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text, pasteOption });
+        handlePasteResult(env, result);
+    }
+
+    //------------------------------------------------------------------------------
+    // Helpers
+    //------------------------------------------------------------------------------
+    function getColumnsNumber(env) {
+        const activeCols = env.model.getters.getActiveCols();
+        if (activeCols.size) {
+            return activeCols.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            return zone.right - zone.left + 1;
+        }
+    }
+    function getRowsNumber(env) {
+        const activeRows = env.model.getters.getActiveRows();
+        if (activeRows.size) {
+            return activeRows.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            return zone.bottom - zone.top + 1;
+        }
+    }
+    function setFormatter(env, format) {
+        env.model.dispatch("SET_FORMATTING", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+            format,
+        });
+    }
+    function setStyle(env, style) {
+        env.model.dispatch("SET_FORMATTING", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+            style,
+        });
+    }
+    //------------------------------------------------------------------------------
+    // Simple actions
+    //------------------------------------------------------------------------------
+    const UNDO_ACTION = (env) => env.model.dispatch("REQUEST_UNDO");
+    const REDO_ACTION = (env) => env.model.dispatch("REQUEST_REDO");
+    const COPY_ACTION = async (env) => {
+        env.model.dispatch("COPY");
+        await env.clipboard.write(env.model.getters.getClipboardContent());
+    };
+    const CUT_ACTION = async (env) => {
+        interactiveCut(env);
+        await env.clipboard.write(env.model.getters.getClipboardContent());
+    };
+    const PASTE_ACTION = async (env) => paste$1(env);
+    const PASTE_VALUE_ACTION = async (env) => paste$1(env, "onlyValue");
+    async function paste$1(env, pasteOption) {
+        const spreadsheetClipboard = env.model.getters.getClipboardTextContent();
+        const osClipboard = await env.clipboard.readText();
+        switch (osClipboard.status) {
+            case "ok":
+                const target = env.model.getters.getSelectedZones();
+                if (osClipboard && osClipboard.content !== spreadsheetClipboard) {
+                    interactivePasteFromOS(env, target, osClipboard.content, pasteOption);
+                }
+                else {
+                    interactivePaste(env, target, pasteOption);
+                }
+                if (env.model.getters.isCutOperation() && pasteOption !== "onlyValue") {
+                    await env.clipboard.write({ [ClipboardMIMEType.PlainText]: "" });
+                }
+                break;
+            case "notImplemented":
+                env.raiseError(_lt("Pasting from the context menu is not supported in this browser. Use keyboard shortcuts ctrl+c / ctrl+v instead."));
+                break;
+            case "permissionDenied":
+                env.raiseError(_lt("Access to the clipboard denied by the browser. Please enable clipboard permission for this page in your browser settings."));
+                break;
+        }
+    }
+    const PASTE_FORMAT_ACTION = (env) => paste$1(env, "onlyFormat");
+    const DELETE_CONTENT_ACTION = (env) => env.model.dispatch("DELETE_CONTENT", {
+        sheetId: env.model.getters.getActiveSheetId(),
+        target: env.model.getters.getSelectedZones(),
+    });
+    const SET_FORMULA_VISIBILITY_ACTION = (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() });
+    const SET_GRID_LINES_VISIBILITY_ACTION = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
+            sheetId,
+            areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
+        });
+    };
+    const IS_NOT_CUT_OPERATION = (env) => {
+        return !env.model.getters.isCutOperation();
+    };
+    //------------------------------------------------------------------------------
+    // Grid manipulations
+    //------------------------------------------------------------------------------
+    const DELETE_CONTENT_ROWS_NAME = (env) => {
+        if (env.model.getters.getSelectedZones().length > 1) {
+            return _lt("Clear rows");
+        }
+        let first;
+        let last;
+        const activesRows = env.model.getters.getActiveRows();
+        if (activesRows.size !== 0) {
+            first = Math.min(...activesRows);
+            last = Math.max(...activesRows);
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            first = zone.top;
+            last = zone.bottom;
+        }
+        if (first === last) {
+            return _lt("Clear row %s", (first + 1).toString());
+        }
+        return _lt("Clear rows %s - %s", (first + 1).toString(), (last + 1).toString());
+    };
+    const DELETE_CONTENT_ROWS_ACTION = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const target = [...env.model.getters.getActiveRows()].map((index) => env.model.getters.getRowsZone(sheetId, index, index));
+        env.model.dispatch("DELETE_CONTENT", {
+            target,
+            sheetId: env.model.getters.getActiveSheetId(),
+        });
+    };
+    const DELETE_CONTENT_COLUMNS_NAME = (env) => {
+        if (env.model.getters.getSelectedZones().length > 1) {
+            return _lt("Clear columns");
+        }
+        let first;
+        let last;
+        const activeCols = env.model.getters.getActiveCols();
+        if (activeCols.size !== 0) {
+            first = Math.min(...activeCols);
+            last = Math.max(...activeCols);
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            first = zone.left;
+            last = zone.right;
+        }
+        if (first === last) {
+            return _lt("Clear column %s", numberToLetters(first));
+        }
+        return _lt("Clear columns %s - %s", numberToLetters(first), numberToLetters(last));
+    };
+    const DELETE_CONTENT_COLUMNS_ACTION = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const target = [...env.model.getters.getActiveCols()].map((index) => env.model.getters.getColsZone(sheetId, index, index));
+        env.model.dispatch("DELETE_CONTENT", {
+            target,
+            sheetId: env.model.getters.getActiveSheetId(),
+        });
+    };
+    const REMOVE_ROWS_NAME = (env) => {
+        if (env.model.getters.getSelectedZones().length > 1) {
+            return _lt("Delete rows");
+        }
+        let first;
+        let last;
+        const activesRows = env.model.getters.getActiveRows();
+        if (activesRows.size !== 0) {
+            first = Math.min(...activesRows);
+            last = Math.max(...activesRows);
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            first = zone.top;
+            last = zone.bottom;
+        }
+        if (first === last) {
+            return _lt("Delete row %s", (first + 1).toString());
+        }
+        return _lt("Delete rows %s - %s", (first + 1).toString(), (last + 1).toString());
+    };
+    const REMOVE_ROWS_ACTION = (env) => {
+        let rows = [...env.model.getters.getActiveRows()];
+        if (!rows.length) {
+            const zone = env.model.getters.getSelectedZones()[0];
+            for (let i = zone.top; i <= zone.bottom; i++) {
+                rows.push(i);
+            }
+        }
+        env.model.dispatch("REMOVE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "ROW",
+            elements: rows,
+        });
+    };
+    const REMOVE_COLUMNS_NAME = (env) => {
+        if (env.model.getters.getSelectedZones().length > 1) {
+            return _lt("Delete columns");
+        }
+        let first;
+        let last;
+        const activeCols = env.model.getters.getActiveCols();
+        if (activeCols.size !== 0) {
+            first = Math.min(...activeCols);
+            last = Math.max(...activeCols);
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            first = zone.left;
+            last = zone.right;
+        }
+        if (first === last) {
+            return _lt("Delete column %s", numberToLetters(first));
+        }
+        return _lt("Delete columns %s - %s", numberToLetters(first), numberToLetters(last));
+    };
+    const NOT_ALL_VISIBLE_ROWS_SELECTED = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selectedRows = env.model.getters.getElementsFromSelection("ROW");
+        return env.model.getters.canRemoveHeaders(sheetId, "ROW", selectedRows);
+    };
+    const REMOVE_COLUMNS_ACTION = (env) => {
+        let columns = [...env.model.getters.getActiveCols()];
+        if (!columns.length) {
+            const zone = env.model.getters.getSelectedZones()[0];
+            for (let i = zone.left; i <= zone.right; i++) {
+                columns.push(i);
+            }
+        }
+        env.model.dispatch("REMOVE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "COL",
+            elements: columns,
+        });
+    };
+    const NOT_ALL_VISIBLE_COLS_SELECTED = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selectedCols = env.model.getters.getElementsFromSelection("COL");
+        return env.model.getters.canRemoveHeaders(sheetId, "COL", selectedCols);
+    };
+    const INSERT_CELL_SHIFT_DOWN = (env) => {
+        const zone = env.model.getters.getSelectedZone();
+        const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "ROW" });
+        handlePasteResult(env, result);
+    };
+    const INSERT_CELL_SHIFT_RIGHT = (env) => {
+        const zone = env.model.getters.getSelectedZone();
+        const result = env.model.dispatch("INSERT_CELL", { zone, shiftDimension: "COL" });
+        handlePasteResult(env, result);
+    };
+    const DELETE_CELL_SHIFT_UP = (env) => {
+        const zone = env.model.getters.getSelectedZone();
+        const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "ROW" });
+        handlePasteResult(env, result);
+    };
+    const DELETE_CELL_SHIFT_LEFT = (env) => {
+        const zone = env.model.getters.getSelectedZone();
+        const result = env.model.dispatch("DELETE_CELL", { zone, shiftDimension: "COL" });
+        handlePasteResult(env, result);
+    };
+    const MENU_INSERT_ROWS_NAME = (env) => {
+        const number = getRowsNumber(env);
+        return number === 1 ? _lt("Insert row") : _lt("Insert %s rows", number.toString());
+    };
+    const MENU_INSERT_ROWS_BEFORE_NAME = (env) => {
+        const number = getRowsNumber(env);
+        if (number === 1) {
+            return _lt("Row above");
+        }
+        return _lt("%s Rows above", number.toString());
+    };
+    const ROW_INSERT_ROWS_BEFORE_NAME = (env) => {
+        const number = getRowsNumber(env);
+        return number === 1 ? _lt("Insert row above") : _lt("Insert %s rows above", number.toString());
+    };
+    const CELL_INSERT_ROWS_BEFORE_NAME = (env) => {
+        const number = getRowsNumber(env);
+        if (number === 1) {
+            return _lt("Insert row");
+        }
+        return _lt("Insert %s rows", number.toString());
+    };
+    const INSERT_ROWS_BEFORE_ACTION = (env) => {
+        const activeRows = env.model.getters.getActiveRows();
+        let row;
+        let quantity;
+        if (activeRows.size) {
+            row = Math.min(...activeRows);
+            quantity = activeRows.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            row = zone.top;
+            quantity = zone.bottom - zone.top + 1;
+        }
+        env.model.dispatch("ADD_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            position: "before",
+            base: row,
+            quantity,
+            dimension: "ROW",
+        });
+    };
+    const MENU_INSERT_ROWS_AFTER_NAME = (env) => {
+        const number = getRowsNumber(env);
+        if (number === 1) {
+            return _lt("Row below");
+        }
+        return _lt("%s Rows below", number.toString());
+    };
+    const ROW_INSERT_ROWS_AFTER_NAME = (env) => {
+        const number = getRowsNumber(env);
+        return number === 1 ? _lt("Insert row below") : _lt("Insert %s rows below", number.toString());
+    };
+    const INSERT_ROWS_AFTER_ACTION = (env) => {
+        const activeRows = env.model.getters.getActiveRows();
+        let row;
+        let quantity;
+        if (activeRows.size) {
+            row = Math.max(...activeRows);
+            quantity = activeRows.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            row = zone.bottom;
+            quantity = zone.bottom - zone.top + 1;
+        }
+        env.model.dispatch("ADD_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            position: "after",
+            base: row,
+            quantity,
+            dimension: "ROW",
+        });
+    };
+    const MENU_INSERT_COLUMNS_BEFORE_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        if (number === 1) {
+            return _lt("Column left");
+        }
+        return _lt("%s Columns left", number.toString());
+    };
+    const MENU_INSERT_COLUMNS_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        return number === 1 ? _lt("Insert column") : _lt("Insert %s columns", number.toString());
+    };
+    const COLUMN_INSERT_COLUMNS_BEFORE_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        return number === 1
+            ? _lt("Insert column left")
+            : _lt("Insert %s columns left", number.toString());
+    };
+    const CELL_INSERT_COLUMNS_BEFORE_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        if (number === 1) {
+            return _lt("Insert column");
+        }
+        return _lt("Insert %s columns", number.toString());
+    };
+    const INSERT_COLUMNS_BEFORE_ACTION = (env) => {
+        const activeCols = env.model.getters.getActiveCols();
+        let column;
+        let quantity;
+        if (activeCols.size) {
+            column = Math.min(...activeCols);
+            quantity = activeCols.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            column = zone.left;
+            quantity = zone.right - zone.left + 1;
+        }
+        env.model.dispatch("ADD_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            position: "before",
+            dimension: "COL",
+            base: column,
+            quantity,
+        });
+    };
+    const MENU_INSERT_COLUMNS_AFTER_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        if (number === 1) {
+            return _lt("Column right");
+        }
+        return _lt("%s Columns right", number.toString());
+    };
+    const COLUMN_INSERT_COLUMNS_AFTER_NAME = (env) => {
+        const number = getColumnsNumber(env);
+        return number === 1
+            ? _lt("Insert column right")
+            : _lt("Insert %s columns right", number.toString());
+    };
+    const INSERT_COLUMNS_AFTER_ACTION = (env) => {
+        const activeCols = env.model.getters.getActiveCols();
+        let column;
+        let quantity;
+        if (activeCols.size) {
+            column = Math.max(...activeCols);
+            quantity = activeCols.size;
+        }
+        else {
+            const zone = env.model.getters.getSelectedZones()[0];
+            column = zone.right;
+            quantity = zone.right - zone.left + 1;
+        }
+        env.model.dispatch("ADD_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            position: "after",
+            dimension: "COL",
+            base: column,
+            quantity,
+        });
+    };
+    const HIDE_COLUMNS_NAME = (env) => {
+        const cols = env.model.getters.getElementsFromSelection("COL");
+        let first = cols[0];
+        let last = cols[cols.length - 1];
+        if (cols.length === 1) {
+            return _lt("Hide column %s", numberToLetters(first).toString());
+        }
+        else if (last - first + 1 === cols.length) {
+            return _lt("Hide columns %s - %s", numberToLetters(first).toString(), numberToLetters(last).toString());
+        }
+        else {
+            return _lt("Hide columns");
+        }
+    };
+    const HIDE_COLUMNS_ACTION = (env) => {
+        const columns = env.model.getters.getElementsFromSelection("COL");
+        env.model.dispatch("HIDE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "COL",
+            elements: columns,
+        });
+    };
+    const UNHIDE_ALL_COLUMNS_ACTION = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+            sheetId,
+            dimension: "COL",
+            elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
+        });
+    };
+    const UNHIDE_COLUMNS_ACTION = (env) => {
+        const columns = env.model.getters.getElementsFromSelection("COL");
+        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "COL",
+            elements: columns,
+        });
+    };
+    const HIDE_ROWS_NAME = (env) => {
+        const rows = env.model.getters.getElementsFromSelection("ROW");
+        let first = rows[0];
+        let last = rows[rows.length - 1];
+        if (rows.length === 1) {
+            return _lt("Hide row %s", (first + 1).toString());
+        }
+        else if (last - first + 1 === rows.length) {
+            return _lt("Hide rows %s - %s", (first + 1).toString(), (last + 1).toString());
+        }
+        else {
+            return _lt("Hide rows");
+        }
+    };
+    const HIDE_ROWS_ACTION = (env) => {
+        const rows = env.model.getters.getElementsFromSelection("ROW");
+        env.model.dispatch("HIDE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "ROW",
+            elements: rows,
+        });
+    };
+    const UNHIDE_ALL_ROWS_ACTION = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+            sheetId,
+            dimension: "ROW",
+            elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
+        });
+    };
+    const UNHIDE_ROWS_ACTION = (env) => {
+        const columns = env.model.getters.getElementsFromSelection("ROW");
+        env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            dimension: "ROW",
+            elements: columns,
+        });
+    };
+    //------------------------------------------------------------------------------
+    // Sheets
+    //------------------------------------------------------------------------------
+    const CREATE_SHEET_ACTION = (env) => {
+        const activeSheetId = env.model.getters.getActiveSheetId();
+        const position = env.model.getters.getSheetIds().indexOf(activeSheetId) + 1;
+        const sheetId = env.model.uuidGenerator.uuidv4();
+        env.model.dispatch("CREATE_SHEET", { sheetId, position });
+        env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
+    };
+    //------------------------------------------------------------------------------
+    // Charts
+    //------------------------------------------------------------------------------
+    const CREATE_CHART = (env) => {
+        const getters = env.model.getters;
+        const id = env.model.uuidGenerator.uuidv4();
+        const sheetId = getters.getActiveSheetId();
+        if (getZoneArea(env.model.getters.getSelectedZone()) === 1) {
+            env.model.selection.selectTableAroundSelection();
+        }
+        const size = { width: DEFAULT_FIGURE_WIDTH, height: DEFAULT_FIGURE_HEIGHT };
+        const position = getChartPositionAtCenterOfViewport(getters, size);
+        const result = env.model.dispatch("CREATE_CHART", {
+            sheetId,
+            id,
+            position,
+            size,
+            definition: getSmartChartDefinition(env.model.getters.getSelectedZone(), env.model.getters),
+        });
+        if (result.isSuccessful) {
+            env.model.dispatch("SELECT_FIGURE", { id });
+            env.openSidePanel("ChartPanel");
+        }
+    };
+    //------------------------------------------------------------------------------
+    // Image
+    //------------------------------------------------------------------------------
+    async function requestImage(env) {
+        try {
+            return await env.imageProvider.requestImage();
+        }
+        catch {
+            env.raiseError(_lt("An unexpected error occurred during the image transfer"));
+            return undefined;
+        }
+    }
+    const CREATE_IMAGE = async (env) => {
+        if (env.imageProvider) {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const figureId = env.model.uuidGenerator.uuidv4();
+            const image = await requestImage(env);
+            if (!image) {
+                throw new Error("No image provider was given to the environment");
+            }
+            const size = getMaxFigureSize(env.model.getters, image.size);
+            const position = centerFigurePosition(env.model.getters, size);
+            env.model.dispatch("CREATE_IMAGE", {
+                sheetId,
+                figureId,
+                position,
+                size,
+                definition: image,
+            });
+        }
+    };
+    //------------------------------------------------------------------------------
+    // Style/Format
+    //------------------------------------------------------------------------------
+    const FORMAT_AUTOMATIC_ACTION = (env) => setFormatter(env, "");
+    const FORMAT_NUMBER_ACTION = (env) => setFormatter(env, "#,##0.00");
+    const FORMAT_PERCENT_ACTION = (env) => setFormatter(env, "0.00%");
+    const FORMAT_CURRENCY_ACTION = (env) => setFormatter(env, "[$$]#,##0.00");
+    const FORMAT_CURRENCY_ROUNDED_ACTION = (env) => setFormatter(env, "[$$]#,##0");
+    const FORMAT_DATE_ACTION = (env) => setFormatter(env, getEnvDateFormat(env));
+    const FORMAT_TIME_ACTION = (env) => setFormatter(env, getEnvTimeFormat(env));
+    const FORMAT_DATE_TIME_ACTION = (env) => setFormatter(env, getEnvDateTimeFormat(env));
+    const FORMAT_DURATION_ACTION = (env) => setFormatter(env, "hhhh:mm:ss");
+    const FORMAT_BOLD_ACTION = (env) => setStyle(env, { bold: !env.model.getters.getCurrentStyle().bold });
+    const FORMAT_ITALIC_ACTION = (env) => setStyle(env, { italic: !env.model.getters.getCurrentStyle().italic });
+    const FORMAT_STRIKETHROUGH_ACTION = (env) => setStyle(env, { strikethrough: !env.model.getters.getCurrentStyle().strikethrough });
+    const FORMAT_UNDERLINE_ACTION = (env) => setStyle(env, { underline: !env.model.getters.getCurrentStyle().underline });
+    const FORMAT_CLEARFORMAT_ACTION = (env) => {
+        env.model.dispatch("CLEAR_FORMATTING", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+        });
+    };
+    function getEnvDateFormat(env) {
+        return env.model.getters.getLocale().dateFormat;
+    }
+    function getEnvTimeFormat(env) {
+        return env.model.getters.getLocale().timeFormat;
+    }
+    function getEnvDateTimeFormat(env) {
+        const locale = env.model.getters.getLocale();
+        return `${locale.dateFormat} ${locale.timeFormat}`;
+    }
+    //------------------------------------------------------------------------------
+    // Side panel
+    //------------------------------------------------------------------------------
+    const OPEN_CF_SIDEPANEL_ACTION = (env) => {
+        env.openSidePanel("ConditionalFormatting", { selection: env.model.getters.getSelectedZones() });
+    };
+    const OPEN_FAR_SIDEPANEL_ACTION = (env) => {
+        env.openSidePanel("FindAndReplace", {});
+    };
+    const OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION = (env) => {
+        env.openSidePanel("CustomCurrency", {});
+    };
+    const INSERT_LINK = (env) => {
+        let { col, row } = env.model.getters.getActivePosition();
+        env.model.dispatch("OPEN_CELL_POPOVER", { col, row, popoverType: "LinkEditor" });
+    };
+    //------------------------------------------------------------------------------
+    // Filters action
+    //------------------------------------------------------------------------------
+    const FILTERS_CREATE_FILTER_TABLE = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selection = env.model.getters.getSelection().zones;
+        interactiveAddFilter(env, sheetId, selection);
+    };
+    const FILTERS_REMOVE_FILTER_TABLE = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        env.model.dispatch("REMOVE_FILTER_TABLE", {
+            sheetId,
+            target: env.model.getters.getSelectedZones(),
+        });
+    };
+    const SELECTION_CONTAINS_FILTER = (env) => {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selectedZones = env.model.getters.getSelectedZones();
+        return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
+    };
+    const SELECTION_IS_CONTINUOUS = (env) => {
+        const selectedZones = env.model.getters.getSelectedZones();
+        return areZonesContinuous(...selectedZones);
+    };
+    //------------------------------------------------------------------------------
+    // Sorting action
+    //------------------------------------------------------------------------------
+    const SORT_CELLS_ASCENDING = (env) => {
+        const { anchor, zones } = env.model.getters.getSelection();
+        const sheetId = env.model.getters.getActiveSheetId();
+        interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "ascending");
+    };
+    const SORT_CELLS_DESCENDING = (env) => {
+        const { anchor, zones } = env.model.getters.getSelection();
+        const sheetId = env.model.getters.getActiveSheetId();
+        interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "descending");
+    };
+    const IS_ONLY_ONE_RANGE = (env) => {
+        return env.model.getters.getSelectedZones().length === 1;
+    };
+
+    const undo = {
+        name: _lt("Undo"),
+        description: "Ctrl+Z",
+        execute: UNDO_ACTION,
+        isEnabled: (env) => env.model.getters.canUndo(),
+        icon: "o-spreadsheet-Icon.UNDO",
+    };
+    const redo = {
+        name: _lt("Redo"),
+        description: "Ctrl+Y",
+        execute: REDO_ACTION,
+        isEnabled: (env) => env.model.getters.canRedo(),
+        icon: "o-spreadsheet-Icon.REDO",
+    };
+    const copy = {
+        name: _lt("Copy"),
+        description: "Ctrl+C",
+        isReadonlyAllowed: true,
+        execute: COPY_ACTION,
+        icon: "o-spreadsheet-Icon.COPY",
+    };
+    const cut = {
+        name: _lt("Cut"),
+        description: "Ctrl+X",
+        execute: CUT_ACTION,
+        icon: "o-spreadsheet-Icon.CUT",
+    };
+    const paste = {
+        name: _lt("Paste"),
+        description: "Ctrl+V",
+        execute: PASTE_ACTION,
+        icon: "o-spreadsheet-Icon.PASTE",
+    };
+    const pasteSpecial = {
+        name: _lt("Paste special"),
+        isVisible: IS_NOT_CUT_OPERATION,
+        icon: "o-spreadsheet-Icon.PASTE",
+    };
+    const pasteSpecialValue = {
+        name: _lt("Paste value only"),
+        description: "Ctrl+Shift+V",
+        execute: PASTE_VALUE_ACTION,
+    };
+    const pasteSpecialFormat = {
+        name: _lt("Paste format only"),
+        execute: PASTE_FORMAT_ACTION,
+    };
+    const findAndReplace = {
+        name: _lt("Find and replace"),
+        description: "Ctrl+H",
+        isReadonlyAllowed: true,
+        execute: OPEN_FAR_SIDEPANEL_ACTION,
+        icon: "o-spreadsheet-Icon.FIND_AND_REPLACE",
+    };
+    const deleteValues = {
+        name: _lt("Delete values"),
+        execute: DELETE_CONTENT_ACTION,
+    };
+    const deleteRows = {
+        name: REMOVE_ROWS_NAME,
+        execute: REMOVE_ROWS_ACTION,
+        isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
+    };
+    const deleteRow = {
+        ...deleteRows,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const clearRows = {
+        name: DELETE_CONTENT_ROWS_NAME,
+        execute: DELETE_CONTENT_ROWS_ACTION,
+    };
+    const deleteCols = {
+        name: REMOVE_COLUMNS_NAME,
+        execute: REMOVE_COLUMNS_ACTION,
+        isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
+    };
+    const deleteCol = {
+        ...deleteCols,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const clearCols = {
+        name: DELETE_CONTENT_COLUMNS_NAME,
+        execute: DELETE_CONTENT_COLUMNS_ACTION,
+    };
+    const deleteCells = {
+        name: _lt("Delete cells"),
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const deleteCellShiftUp = {
+        name: _lt("Delete cell and shift up"),
+        execute: DELETE_CELL_SHIFT_UP,
+    };
+    const deleteCellShiftLeft = {
+        name: _lt("Delete cell and shift left"),
+        execute: DELETE_CELL_SHIFT_LEFT,
+    };
+    const mergeCells = {
+        name: _lt("Merge cells"),
+        isEnabled: (env) => !cannotMerge(env),
+        isActive: (env) => isInMerge(env),
+        execute: (env) => toggleMerge(env),
+        icon: "o-spreadsheet-Icon.MERGE_CELL",
+    };
+    function cannotMerge(env) {
+        const zones = env.model.getters.getSelectedZones();
+        const { top, left, right, bottom } = env.model.getters.getSelectedZone();
+        const { sheetId } = env.model.getters.getActivePosition();
+        const { xSplit, ySplit } = env.model.getters.getPaneDivisions(sheetId);
+        return (zones.length > 1 ||
+            (top === bottom && left === right) ||
+            (left < xSplit && xSplit <= right) ||
+            (top < ySplit && ySplit <= bottom));
+    }
+    function isInMerge(env) {
+        if (!cannotMerge(env)) {
+            const zones = env.model.getters.getSelectedZones();
+            const { col, row, sheetId } = env.model.getters.getActivePosition();
+            const zone = env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
+            return isEqual(zones[0], zone);
+        }
+        return false;
+    }
+    function toggleMerge(env) {
+        if (cannotMerge(env)) {
+            return;
+        }
+        const zones = env.model.getters.getSelectedZones();
+        const target = [zones[zones.length - 1]];
+        const sheetId = env.model.getters.getActiveSheetId();
+        if (isInMerge(env)) {
+            env.model.dispatch("REMOVE_MERGE", { sheetId, target });
+        }
+        else {
+            interactiveAddMerge(env, sheetId, target);
+        }
+    }
+
+    var ACTION_EDIT = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        undo: undo,
+        redo: redo,
+        copy: copy,
+        cut: cut,
+        paste: paste,
+        pasteSpecial: pasteSpecial,
+        pasteSpecialValue: pasteSpecialValue,
+        pasteSpecialFormat: pasteSpecialFormat,
+        findAndReplace: findAndReplace,
+        deleteValues: deleteValues,
+        deleteRows: deleteRows,
+        deleteRow: deleteRow,
+        clearRows: clearRows,
+        deleteCols: deleteCols,
+        deleteCol: deleteCol,
+        clearCols: clearCols,
+        deleteCells: deleteCells,
+        deleteCellShiftUp: deleteCellShiftUp,
+        deleteCellShiftLeft: deleteCellShiftLeft,
+        mergeCells: mergeCells
+    });
+
+    const insertRow = {
+        name: MENU_INSERT_ROWS_NAME,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_ROW",
+    };
+    const rowInsertRowBefore = {
+        name: ROW_INSERT_ROWS_BEFORE_NAME,
+        execute: INSERT_ROWS_BEFORE_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
+    };
+    const topBarInsertRowsBefore = {
+        ...rowInsertRowBefore,
+        name: MENU_INSERT_ROWS_BEFORE_NAME,
+    };
+    const cellInsertRowsBefore = {
+        ...rowInsertRowBefore,
+        name: CELL_INSERT_ROWS_BEFORE_NAME,
+        isVisible: IS_ONLY_ONE_RANGE,
+        icon: "o-spreadsheet-Icon.INSERT_ROW_BEFORE",
+    };
+    const rowInsertRowsAfter = {
+        execute: INSERT_ROWS_AFTER_ACTION,
+        name: ROW_INSERT_ROWS_AFTER_NAME,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_ROW_AFTER",
+    };
+    const topBarInsertRowsAfter = {
+        ...rowInsertRowsAfter,
+        name: MENU_INSERT_ROWS_AFTER_NAME,
+    };
+    const insertCol = {
+        name: MENU_INSERT_COLUMNS_NAME,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_COL",
+    };
+    const colInsertColsBefore = {
+        name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
+        execute: INSERT_COLUMNS_BEFORE_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
+    };
+    const topBarInsertColsBefore = {
+        ...colInsertColsBefore,
+        name: MENU_INSERT_COLUMNS_BEFORE_NAME,
+    };
+    const cellInsertColsBefore = {
+        ...colInsertColsBefore,
+        name: CELL_INSERT_COLUMNS_BEFORE_NAME,
+        isVisible: IS_ONLY_ONE_RANGE,
+        icon: "o-spreadsheet-Icon.INSERT_COL_BEFORE",
+    };
+    const colInsertColsAfter = {
+        name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
+        execute: INSERT_COLUMNS_AFTER_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_COL_AFTER",
+    };
+    const topBarInsertColsAfter = {
+        ...colInsertColsAfter,
+        name: MENU_INSERT_COLUMNS_AFTER_NAME,
+        execute: INSERT_COLUMNS_AFTER_ACTION,
+    };
+    const insertCell = {
+        name: _lt("Insert cells"),
+        isVisible: (env) => IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0 &&
+            env.model.getters.getActiveRows().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_CELL",
+    };
+    const insertCellShiftDown = {
+        name: _lt("Insert cells and shift down"),
+        execute: INSERT_CELL_SHIFT_DOWN,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_DOWN",
+    };
+    const insertCellShiftRight = {
+        name: _lt("Insert cells and shift right"),
+        execute: INSERT_CELL_SHIFT_RIGHT,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
+        icon: "o-spreadsheet-Icon.INSERT_CELL_SHIFT_RIGHT",
+    };
+    const insertChart = {
+        name: _lt("Chart"),
+        execute: CREATE_CHART,
+        icon: "o-spreadsheet-Icon.INSERT_CHART",
+    };
+    const insertImage = {
+        name: _lt("Image"),
+        description: "Ctrl+O",
+        execute: CREATE_IMAGE,
+        isVisible: (env) => env.imageProvider !== undefined,
+        icon: "o-spreadsheet-Icon.INSERT_IMAGE",
+    };
+    const insertFunction = {
+        name: _lt("Function"),
+        icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
+    };
+    const insertFunctionSum = {
+        name: _lt("SUM"),
+        execute: (env) => env.startCellEdition(`=SUM(`),
+    };
+    const insertFunctionAverage = {
+        name: _lt("AVERAGE"),
+        execute: (env) => env.startCellEdition(`=AVERAGE(`),
+    };
+    const insertFunctionCount = {
+        name: _lt("COUNT"),
+        execute: (env) => env.startCellEdition(`=COUNT(`),
+    };
+    const insertFunctionMax = {
+        name: _lt("MAX"),
+        execute: (env) => env.startCellEdition(`=MAX(`),
+    };
+    const insertFunctionMin = {
+        name: _lt("MIN"),
+        execute: (env) => env.startCellEdition(`=MIN(`),
+    };
+    const categorieFunctionAll = {
+        name: _lt("All"),
+        children: allFunctionListMenuBuilder(),
+    };
+    function allFunctionListMenuBuilder() {
+        const fnNames = functionRegistry.getKeys();
+        return createFormulaFunctions(fnNames);
+    }
+    const categoriesFunctionListMenuBuilder = () => {
+        const functions = functionRegistry.content;
+        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
+        return categories.sort().map((category, i) => {
+            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+            return {
+                name: category,
+                children: createFormulaFunctions(functionsInCategory),
+            };
+        });
+    };
+    const insertLink = {
+        name: _lt("Link"),
+        execute: INSERT_LINK,
+        icon: "o-spreadsheet-Icon.INSERT_LINK",
+    };
+    const insertSheet = {
+        name: _lt("Insert sheet"),
+        execute: CREATE_SHEET_ACTION,
+        icon: "o-spreadsheet-Icon.INSERT_SHEET",
+    };
+    function createFormulaFunctions(fnNames) {
+        return fnNames.sort().map((fnName, i) => {
+            return {
+                name: fnName,
+                sequence: i * 10,
+                execute: (env) => env.startCellEdition(`=${fnName}(`),
+            };
+        });
+    }
+
+    //------------------------------------------------------------------------------
+    // Context Menu Registry
+    //------------------------------------------------------------------------------
+    const cellMenuRegistry = new MenuItemRegistry();
+    cellMenuRegistry
+        .add("cut", {
+        ...cut,
+        sequence: 10,
+    })
+        .add("copy", {
+        ...copy,
+        sequence: 20,
+    })
+        .add("paste", {
+        ...paste,
+        sequence: 30,
+    })
+        .add("paste_special", {
+        ...pasteSpecial,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("paste_value_only", ["paste_special"], {
+        ...pasteSpecialValue,
+        sequence: 10,
+    })
+        .addChild("paste_format_only", ["paste_special"], {
+        ...pasteSpecialFormat,
+        sequence: 20,
+    })
+        .add("add_row_before", {
+        ...cellInsertRowsBefore,
+        sequence: 70,
+    })
+        .add("add_column_before", {
+        ...cellInsertColsBefore,
+        sequence: 90,
+    })
+        .add("insert_cell", {
+        ...insertCell,
+        sequence: 100,
+        separator: true,
+    })
+        .addChild("insert_cell_down", ["insert_cell"], {
+        ...insertCellShiftDown,
+        name: _lt("Shift down"),
+        sequence: 10,
+    })
+        .addChild("insert_cell_right", ["insert_cell"], {
+        ...insertCellShiftRight,
+        name: _lt("Shift right"),
+        sequence: 20,
+    })
+        .add("delete_row", {
+        ...deleteRow,
+        sequence: 110,
+        icon: "o-spreadsheet-Icon.DELETE",
+    })
+        .add("delete_column", {
+        ...deleteCol,
+        sequence: 120,
+        icon: "o-spreadsheet-Icon.DELETE",
+    })
+        .add("delete_cell", {
+        ...deleteCells,
+        sequence: 130,
+        separator: true,
+        icon: "o-spreadsheet-Icon.DELETE",
+    })
+        .addChild("delete_cell_up", ["delete_cell"], {
+        ...deleteCellShiftUp,
+        name: _lt("Shift up"),
+        sequence: 10,
+        icon: "o-spreadsheet-Icon.DELETE_CELL_SHIFT_UP",
+    })
+        .addChild("delete_cell_left", ["delete_cell"], {
+        ...deleteCellShiftLeft,
+        name: _lt("Shift left"),
+        sequence: 20,
+        icon: "o-spreadsheet-Icon.DELETE_CELL_SHIFT_LEFT",
+    })
+        .add("insert_link", {
+        ...insertLink,
+        name: _lt("Insert link"),
+        sequence: 150,
+        separator: true,
+    });
 
     const sortRange = {
         name: _lt("Sort range"),
@@ -17463,45 +19003,24 @@
     };
     const sortAscending = {
         name: _lt("Ascending (A ⟶ Z)"),
-        execute: (env) => {
-            const { anchor, zones } = env.model.getters.getSelection();
-            const sheetId = env.model.getters.getActiveSheetId();
-            interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "ascending");
-        },
+        execute: SORT_CELLS_ASCENDING,
         icon: "o-spreadsheet-Icon.SORT_ASCENDING",
     };
     const sortDescending = {
         name: _lt("Descending (Z ⟶ A)"),
-        execute: (env) => {
-            const { anchor, zones } = env.model.getters.getSelection();
-            const sheetId = env.model.getters.getActiveSheetId();
-            interactiveSortSelection(env, sheetId, anchor.cell, zones[0], "descending");
-        },
+        execute: SORT_CELLS_DESCENDING,
         icon: "o-spreadsheet-Icon.SORT_DESCENDING",
     };
     const addDataFilter = {
         name: _lt("Create filter"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const selection = env.model.getters.getSelection().zones;
-            interactiveAddFilter(env, sheetId, selection);
-        },
+        execute: FILTERS_CREATE_FILTER_TABLE,
         isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
-        isEnabled: (env) => {
-            const selectedZones = env.model.getters.getSelectedZones();
-            return areZonesContinuous(...selectedZones);
-        },
+        isEnabled: (env) => SELECTION_IS_CONTINUOUS(env),
         icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
     };
     const removeDataFilter = {
         name: _lt("Remove filter"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("REMOVE_FILTER_TABLE", {
-                sheetId,
-                target: env.model.getters.getSelectedZones(),
-            });
-        },
+        execute: FILTERS_REMOVE_FILTER_TABLE,
         isVisible: SELECTION_CONTAINS_FILTER,
         icon: "o-spreadsheet-Icon.MENU_FILTER_ICON",
     };
@@ -17515,13 +19034,13 @@
 
     const formatNumberAutomatic = {
         name: _lt("Automatic"),
-        execute: (env) => setFormatter(env, ""),
+        execute: FORMAT_AUTOMATIC_ACTION,
         isActive: (env) => isAutomaticFormatSelected(env),
     };
     const formatNumberNumber = {
         name: _lt("Number"),
         description: "1,000.12",
-        execute: (env) => setFormatter(env, "#,##0.00"),
+        execute: FORMAT_NUMBER_ACTION,
         isActive: (env) => isFormatSelected(env, "#,##0.00"),
     };
     const formatPercent = {
@@ -17538,42 +19057,42 @@
     const formatNumberCurrency = {
         name: _lt("Currency"),
         description: "$1,000.12",
-        execute: (env) => setFormatter(env, "[$$]#,##0.00"),
+        execute: FORMAT_CURRENCY_ACTION,
         isActive: (env) => isFormatSelected(env, "[$$]#,##0.00"),
     };
     const formatNumberCurrencyRounded = {
         name: _lt("Currency rounded"),
         description: "$1,000",
-        execute: (env) => setFormatter(env, "[$$]#,##0"),
+        execute: FORMAT_CURRENCY_ROUNDED_ACTION,
         isActive: (env) => isFormatSelected(env, "[$$]#,##0"),
     };
     const formatCustomCurrency = {
         name: _lt("Custom currency"),
         isVisible: (env) => env.loadCurrencies !== undefined,
-        execute: (env) => env.openSidePanel("CustomCurrency", {}),
+        execute: OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION,
     };
     const formatNumberDate = {
         name: _lt("Date"),
         description: "9/26/2008",
-        execute: (env) => setFormatter(env, "m/d/yyyy"),
-        isActive: (env) => isFormatSelected(env, "m/d/yyyy"),
+        execute: FORMAT_DATE_ACTION,
+        isActive: (env) => isFormatSelected(env, getEnvDateFormat(env)),
     };
     const formatNumberTime = {
         name: _lt("Time"),
         description: "10:43:00 PM",
-        execute: (env) => setFormatter(env, "hh:mm:ss a"),
-        isActive: (env) => isFormatSelected(env, "hh:mm:ss a"),
+        execute: FORMAT_TIME_ACTION,
+        isActive: (env) => isFormatSelected(env, getEnvTimeFormat(env)),
     };
     const formatNumberDateTime = {
         name: _lt("Date time"),
         description: "9/26/2008 22:43:00",
-        execute: (env) => setFormatter(env, "m/d/yyyy hh:mm:ss"),
-        isActive: (env) => isFormatSelected(env, "m/d/yyyy hh:mm:ss"),
+        execute: FORMAT_DATE_TIME_ACTION,
+        isActive: (env) => isFormatSelected(env, getEnvDateTimeFormat(env)),
     };
     const formatNumberDuration = {
         name: _lt("Duration"),
         description: "27:51:38",
-        execute: (env) => setFormatter(env, "hhhh:mm:ss"),
+        execute: FORMAT_DURATION_ACTION,
         isActive: (env) => isFormatSelected(env, "hhhh:mm:ss"),
     };
     const incraseDecimalPlaces = {
@@ -17597,27 +19116,27 @@
     const formatBold = {
         name: _lt("Bold"),
         description: "Ctrl+B",
-        execute: (env) => setStyle(env, { bold: !env.model.getters.getCurrentStyle().bold }),
+        execute: FORMAT_BOLD_ACTION,
         icon: "o-spreadsheet-Icon.BOLD",
         isActive: (env) => !!env.model.getters.getCurrentStyle().bold,
     };
     const formatItalic = {
         name: _lt("Italic"),
         description: "Ctrl+I",
-        execute: (env) => setStyle(env, { italic: !env.model.getters.getCurrentStyle().italic }),
+        execute: FORMAT_ITALIC_ACTION,
         icon: "o-spreadsheet-Icon.ITALIC",
         isActive: (env) => !!env.model.getters.getCurrentStyle().italic,
     };
     const formatUnderline = {
         name: _lt("Underline"),
         description: "Ctrl+U",
-        execute: (env) => setStyle(env, { underline: !env.model.getters.getCurrentStyle().underline }),
+        execute: FORMAT_UNDERLINE_ACTION,
         icon: "o-spreadsheet-Icon.UNDERLINE",
         isActive: (env) => !!env.model.getters.getCurrentStyle().underline,
     };
     const formatStrikethrough = {
         name: _lt("Strikethrough"),
-        execute: (env) => setStyle(env, { strikethrough: !env.model.getters.getCurrentStyle().strikethrough }),
+        execute: FORMAT_STRIKETHROUGH_ACTION,
         icon: "o-spreadsheet-Icon.STRIKE",
         isActive: (env) => !!env.model.getters.getCurrentStyle().strikethrough,
     };
@@ -17723,10 +19242,7 @@
     const clearFormat = {
         name: _lt("Clear formatting"),
         description: "Ctrl+<",
-        execute: (env) => env.model.dispatch("CLEAR_FORMATTING", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-        }),
+        execute: FORMAT_CLEARFORMAT_ACTION,
         icon: "o-spreadsheet-Icon.CLEAR_FORMAT",
     };
     function fontSizeMenuBuilder() {
@@ -17805,34 +19321,20 @@
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(66 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(65 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
 
     const hideCols = {
         name: HIDE_COLUMNS_NAME,
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("COL");
-            env.model.dispatch("HIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "COL",
-                elements: columns,
-            });
-        },
+        execute: HIDE_COLUMNS_ACTION,
         isVisible: NOT_ALL_VISIBLE_COLS_SELECTED,
         icon: "o-spreadsheet-Icon.HIDE_COL",
     };
     const unhideCols = {
         name: _lt("Unhide columns"),
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("COL");
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "COL",
-                elements: columns,
-            });
-        },
+        execute: UNHIDE_COLUMNS_ACTION,
         isVisible: (env) => {
             const hiddenCols = env.model.getters
                 .getHiddenColsGroups(env.model.getters.getActiveSheetId())
@@ -17843,39 +19345,18 @@
     };
     const unhideAllCols = {
         name: _lt("Unhide all columns"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId,
-                dimension: "COL",
-                elements: Array.from(Array(env.model.getters.getNumberCols(sheetId)).keys()),
-            });
-        },
+        execute: UNHIDE_ALL_COLUMNS_ACTION,
         isVisible: (env) => env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId()).length > 0,
     };
     const hideRows = {
         name: HIDE_ROWS_NAME,
-        execute: (env) => {
-            const rows = env.model.getters.getElementsFromSelection("ROW");
-            env.model.dispatch("HIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "ROW",
-                elements: rows,
-            });
-        },
+        execute: HIDE_ROWS_ACTION,
         isVisible: NOT_ALL_VISIBLE_ROWS_SELECTED,
         icon: "o-spreadsheet-Icon.HIDE_ROW",
     };
     const unhideRows = {
         name: _lt("Unhide rows"),
-        execute: (env) => {
-            const columns = env.model.getters.getElementsFromSelection("ROW");
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                dimension: "ROW",
-                elements: columns,
-            });
-        },
+        execute: UNHIDE_ROWS_ACTION,
         isVisible: (env) => {
             const hiddenRows = env.model.getters
                 .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
@@ -17886,14 +19367,7 @@
     };
     const unhideAllRows = {
         name: _lt("Unhide all rows"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("UNHIDE_COLUMNS_ROWS", {
-                sheetId,
-                dimension: "ROW",
-                elements: Array.from(Array(env.model.getters.getNumberRows(sheetId)).keys()),
-            });
-        },
+        execute: UNHIDE_ALL_ROWS_ACTION,
         isVisible: (env) => env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId()).length > 0,
     };
     const unFreezePane = {
@@ -17967,18 +19441,12 @@
         name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
             ? _lt("Hide gridlines")
             : _lt("Show gridlines"),
-        execute: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            env.model.dispatch("SET_GRID_LINES_VISIBILITY", {
-                sheetId,
-                areGridLinesVisible: !env.model.getters.getGridLinesVisibility(sheetId),
-            });
-        },
+        execute: SET_GRID_LINES_VISIBILITY_ACTION,
         icon: "o-spreadsheet-Icon.SHOW_HIDE_GRID",
     };
     const viewFormulas = {
         name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
-        execute: (env) => env.model.dispatch("SET_FORMULA_VISIBILITY", { show: !env.model.getters.shouldShowFormulas() }),
+        execute: SET_FORMULA_VISIBILITY_ACTION,
         isReadonlyAllowed: true,
         icon: "o-spreadsheet-Icon.SHOW_HIDE_FORMULA",
     };
@@ -18261,6 +19729,12 @@
         .add("file", {
         name: _lt("File"),
         sequence: 10,
+    })
+        .addChild("settings", ["file"], {
+        name: _lt("Settings"),
+        sequence: 100,
+        execute: (env) => env.openSidePanel("Settings"),
+        icon: "o-spreadsheet-Icon.COG",
     })
         // ---------------------------------------------------------------------
         // EDIT MENU ITEMS
@@ -18942,10 +20416,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDatasetInvalid() {
-            return !!this.state.datasetDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidDataSet */);
+            return !!this.state.datasetDispatchResult?.isCancelledBecause(32 /* CommandResult.InvalidDataSet */);
         }
         get isLabelInvalid() {
-            return !!this.state.labelsDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidLabelRange */);
+            return !!this.state.labelsDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidLabelRange */);
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart(this.props.figureId, {
@@ -19628,7 +21102,7 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isDataRangeInvalid() {
-            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(37 /* CommandResult.InvalidGaugeDataRange */);
+            return !!this.state.dataRangeDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidGaugeDataRange */);
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -19712,25 +21186,25 @@
             });
         }
         isRangeMinInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(38 /* CommandResult.EmptyGaugeRangeMin */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.GaugeRangeMinNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(37 /* CommandResult.EmptyGaugeRangeMin */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(38 /* CommandResult.GaugeRangeMinNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         isRangeMaxInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.EmptyGaugeRangeMax */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMaxNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(39 /* CommandResult.EmptyGaugeRangeMax */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(40 /* CommandResult.GaugeRangeMaxNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(42 /* CommandResult.GaugeLowerInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         get isUpperInflectionPointInvalid() {
-            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
-                this.state.sectionRuleDispatchResult?.isCancelledBecause(45 /* CommandResult.GaugeLowerBiggerThanUpper */));
+            return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
+                this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
         updateSectionColor(target, color) {
             const sectionRule = deepCopy(this.state.sectionRule);
@@ -19813,10 +21287,10 @@
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
         }
         get isKeyValueInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidScorecardKeyValue */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(34 /* CommandResult.InvalidScorecardKeyValue */);
         }
         get isBaselineInvalid() {
-            return !!this.state.keyValueDispatchResult?.isCancelledBecause(36 /* CommandResult.InvalidScorecardBaseline */);
+            return !!this.state.keyValueDispatchResult?.isCancelledBecause(35 /* CommandResult.InvalidScorecardBaseline */);
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -20489,10 +21963,14 @@
             owl.useExternalListener(window, "click", this.closeMenus);
         }
         get conditionalFormats() {
-            return this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
+            const cfs = this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
+            return cfs.map((cf) => ({
+                ...cf,
+                rule: localizeCFRule(cf.rule, this.env.model.getters.getLocale()),
+            }));
         }
         get isRangeValid() {
-            return this.state.errors.includes(25 /* CommandResult.EmptyRange */);
+            return this.state.errors.includes(24 /* CommandResult.EmptyRange */);
         }
         errorMessage(error) {
             return CfTerms.Errors[error] || CfTerms.Errors.Unexpected;
@@ -20551,13 +22029,14 @@
             if (this.state.currentCF) {
                 const invalidRanges = this.state.currentCF.ranges.some((xc) => !xc.match(rangeReference));
                 if (invalidRanges) {
-                    this.state.errors = [26 /* CommandResult.InvalidRange */];
+                    this.state.errors = [25 /* CommandResult.InvalidRange */];
                     return;
                 }
                 const sheetId = this.env.model.getters.getActiveSheetId();
+                const locale = this.env.model.getters.getLocale();
                 const result = this.env.model.dispatch("ADD_CONDITIONAL_FORMAT", {
                     cf: {
-                        rule: this.getEditorRule(),
+                        rule: canonicalizeCFRule(this.getEditorRule(), locale),
                         id: this.state.mode === "edit"
                             ? this.state.currentCF.id
                             : this.env.model.uuidGenerator.uuidv4(),
@@ -20706,10 +22185,10 @@
          * Cell Is Rule
          ****************************************************************************/
         get isValue1Invalid() {
-            return !!this.state.errors?.includes(52 /* CommandResult.FirstArgMissing */);
+            return !!this.state.errors?.includes(51 /* CommandResult.FirstArgMissing */);
         }
         get isValue2Invalid() {
-            return !!this.state.errors?.includes(53 /* CommandResult.SecondArgMissing */);
+            return !!this.state.errors?.includes(52 /* CommandResult.SecondArgMissing */);
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -20726,17 +22205,17 @@
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(59 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(51 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(48 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(54 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(58 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(50 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(47 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(53 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(60 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(55 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(50 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(59 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(54 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(49 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(61 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(56 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(60 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(55 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -20784,13 +22263,13 @@
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(58 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(63 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(57 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(62 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(57 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(62 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(56 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(61 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -21095,12 +22574,71 @@
         onCloseSidePanel: Function,
     };
 
+    css /* scss */ `
+  .o-locale-preview {
+    color: dimgrey;
+  }
+`;
+    class SettingsPanel extends owl.Component {
+        static template = "o-spreadsheet-SettingsPanel";
+        loadedLocales = [];
+        setup() {
+            owl.onWillStart(() => this.loadLocales());
+        }
+        onLocaleChange(code) {
+            const locale = this.loadedLocales.find((l) => l.code === code);
+            if (!locale)
+                return;
+            this.env.model.dispatch("UPDATE_LOCALE", { locale });
+        }
+        async loadLocales() {
+            this.loadedLocales = (await this.env.loadLocales())
+                .filter(isValidLocale)
+                .sort((a, b) => a.name.localeCompare(b.name));
+        }
+        get numberFormatPreview() {
+            const locale = this.env.model.getters.getLocale();
+            return formatValue(1234567.89, { format: "#,##0.00", locale });
+        }
+        get dateFormatPreview() {
+            const locale = this.env.model.getters.getLocale();
+            return formatValue(1.6, { format: locale.dateFormat, locale });
+        }
+        get dateTimeFormatPreview() {
+            const locale = this.env.model.getters.getLocale();
+            const dateTimeFormat = locale.dateFormat + " " + locale.timeFormat;
+            return formatValue(1.6, { format: dateTimeFormat, locale });
+        }
+        get currentLocale() {
+            return this.env.model.getters.getLocale();
+        }
+        get supportedLocales() {
+            const currentLocale = this.currentLocale;
+            const localeInLoadedLocales = this.loadedLocales.find((l) => l.code === currentLocale.code);
+            if (!localeInLoadedLocales) {
+                const locales = [...this.loadedLocales, currentLocale].sort((a, b) => a.name.localeCompare(b.name));
+                return locales;
+            }
+            else if (!deepEquals(currentLocale, localeInLoadedLocales)) {
+                const index = this.loadedLocales.indexOf(localeInLoadedLocales);
+                const locales = [...this.loadedLocales];
+                locales[index] = currentLocale;
+                locales.sort((a, b) => a.name.localeCompare(b.name));
+                return locales;
+            }
+            return this.loadedLocales;
+        }
+    }
+    SettingsPanel.props = {
+        onCloseSidePanel: Function,
+    };
+
     const SplitToColumnsInteractiveContent = {
         SplitIsDestructive: _lt("This will overwrite data in the subsequent columns. Split anyway?"),
     };
     function interactiveSplitToColumns(env, separator, addNewColumns) {
         let result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", { separator, addNewColumns });
-        if (result.isCancelledBecause(91 /* CommandResult.SplitWillOverwriteContent */)) {
+        if (result.isCancelledBecause(90 /* CommandResult.SplitWillOverwriteContent */)) {
             env.askConfirmation(SplitToColumnsInteractiveContent.SplitIsDestructive, () => {
                 result = env.model.dispatch("SPLIT_TEXT_INTO_COLUMNS", {
                     separator,
@@ -21164,8 +22702,8 @@
             const errors = new Set();
             for (const reason of cancelledReasons) {
                 switch (reason) {
-                    case 91 /* CommandResult.SplitWillOverwriteContent */:
-                    case 90 /* CommandResult.EmptySplitSeparator */:
+                    case 90 /* CommandResult.SplitWillOverwriteContent */:
+                    case 89 /* CommandResult.EmptySplitSeparator */:
                         break;
                     default:
                         errors.add(SplitToColumnsTerms.Errors[reason] || SplitToColumnsTerms.Errors.Unexpected);
@@ -21180,8 +22718,8 @@
                 addNewColumns: this.state.addNewColumns,
                 force: false,
             }).reasons;
-            if (cancelledReasons.includes(91 /* CommandResult.SplitWillOverwriteContent */)) {
-                warnings.push(SplitToColumnsTerms.Errors[91 /* CommandResult.SplitWillOverwriteContent */]);
+            if (cancelledReasons.includes(90 /* CommandResult.SplitWillOverwriteContent */)) {
+                warnings.push(SplitToColumnsTerms.Errors[90 /* CommandResult.SplitWillOverwriteContent */]);
             }
             return warnings;
         }
@@ -21225,6 +22763,10 @@
     sidePanelRegistry.add("SplitToColumns", {
         title: _lt("Split text into columns"),
         Body: SplitIntoColumnsPanel,
+    });
+    sidePanelRegistry.add("Settings", {
+        title: _lt("Spreadsheet settings"),
+        Body: SettingsPanel,
     });
 
     class TopBarComponentRegistry extends Registry {
@@ -22042,7 +23584,7 @@
         argToFocus: Number,
     };
 
-    const functions$3 = functionRegistry.content;
+    const functions$1 = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
     const selectionIndicatorClass = "selector-flag";
     const selectionIndicatorColor = "#a9a9a9";
@@ -22057,7 +23599,7 @@
         DEBUGGER: operatorColor,
         LEFT_PAREN: functionColor,
         RIGHT_PAREN: functionColor,
-        COMMA: functionColor,
+        ARG_SEPARATOR: functionColor,
         MATCHING_PAREN: "#000000",
     };
     css /* scss */ `
@@ -22159,6 +23701,9 @@
             Tab: (ev) => this.processTabKey(ev),
             " ": (ev) => this.processSpaceKey(ev),
         };
+        keyCodeMapping = {
+            NumpadDecimal: this.processNumpadDecimal,
+        };
         setup() {
             owl.onMounted(() => {
                 const el = this.composerRef.el;
@@ -22258,6 +23803,25 @@
             this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
             this.processContent();
         }
+        processNumpadDecimal(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            const locale = this.env.model.getters.getLocale();
+            const selection = this.contentHelper.getCurrentSelection();
+            const currentContent = this.env.model.getters.getCurrentContent();
+            const content = currentContent.slice(0, selection.start) +
+                locale.decimalSeparator +
+                currentContent.slice(selection.end);
+            // Update composer even by hand rather than dispatching an InputEvent because untrusted inputs
+            // events aren't handled natively by contentEditable
+            this.env.model.dispatch("SET_CURRENT_CONTENT", {
+                content,
+                selection: { start: selection.start + 1, end: selection.start + 1 },
+            });
+            // We need to do the process content here in case there is no render between the keyDown and the
+            // keyUp event
+            this.processContent();
+        }
         onCompositionStart() {
             this.compositionActive = true;
         }
@@ -22265,7 +23829,7 @@
             this.compositionActive = false;
         }
         onKeydown(ev) {
-            let handler = this.keyMapping[ev.key];
+            let handler = this.keyMapping[ev.key] || this.keyCodeMapping[ev.code];
             if (handler) {
                 handler.call(this, ev);
             }
@@ -22424,7 +23988,7 @@
                     case "OPERATOR":
                     case "NUMBER":
                     case "FUNCTION":
-                    case "COMMA":
+                    case "ARG_SEPARATOR":
                     case "STRING":
                         result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
                         break;
@@ -22544,7 +24108,7 @@
                         // initialize Formula Assistant
                         const tokenContext = tokenAtCursor.functionContext;
                         const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions$3[parentFunction];
+                        const description = functions$1[parentFunction];
                         const argPosition = tokenContext.argPosition;
                         this.functionDescriptionState.functionName = parentFunction;
                         this.functionDescriptionState.functionDescription = description;
@@ -25957,7 +27521,7 @@
     }
     function isFormatSupported(format) {
         try {
-            formatValue(0, format);
+            formatValue(0, { format, locale: DEFAULT_LOCALE });
             return true;
         }
         catch (e) {
@@ -28453,354 +30017,6 @@
     }
 
     /**
-     * Tokenizer
-     *
-     * A tokenizer is a piece of code whose job is to transform a string into a list
-     * of "tokens". For example, "(12+" is converted into:
-     *   [{type: "LEFT_PAREN", value: "("},
-     *    {type: "NUMBER", value: "12"},
-     *    {type: "OPERATOR", value: "+"}]
-     *
-     * As the example shows, a tokenizer does not care about the meaning behind those
-     * tokens. It only cares about the structure.
-     *
-     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
-     * is useful for the composer, which needs to be able to work with incomplete
-     * formulas.
-     */
-    const functions$2 = functionRegistry.content;
-    const POSTFIX_UNARY_OPERATORS = ["%"];
-    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
-    function tokenize(str) {
-        str = replaceSpecialSpaces(str);
-        const chars = new TokenizingChars(str);
-        const result = [];
-        while (!chars.isOver()) {
-            let token = tokenizeSpace(chars) ||
-                tokenizeMisc(chars) ||
-                tokenizeOperator(chars) ||
-                tokenizeString(chars) ||
-                tokenizeDebugger(chars) ||
-                tokenizeInvalidRange(chars) ||
-                tokenizeNumber(chars) ||
-                tokenizeSymbol(chars);
-            if (!token) {
-                token = { type: "UNKNOWN", value: chars.shift() };
-            }
-            result.push(token);
-        }
-        return result;
-    }
-    function tokenizeDebugger(chars) {
-        if (chars.current() === "?") {
-            chars.shift();
-            return { type: "DEBUGGER", value: "?" };
-        }
-        return null;
-    }
-    const misc = {
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    function tokenizeMisc(chars) {
-        if (chars.current() in misc) {
-            const value = chars.shift();
-            const type = misc[value];
-            return { type, value };
-        }
-        return null;
-    }
-    function tokenizeOperator(chars) {
-        for (let op of OPERATORS) {
-            if (chars.currentStartsWith(op)) {
-                chars.advanceBy(op.length);
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return null;
-    }
-    function tokenizeNumber(chars) {
-        const match = chars.remaining().match(formulaNumberRegexp);
-        if (match) {
-            chars.advanceBy(match[0].length);
-            return { type: "NUMBER", value: match[0] };
-        }
-        return null;
-    }
-    function tokenizeString(chars) {
-        if (chars.current() === '"') {
-            const startChar = chars.shift();
-            let letters = startChar;
-            while (chars.current() &&
-                (chars.current() !== startChar || letters[letters.length - 1] === "\\")) {
-                letters += chars.shift();
-            }
-            if (chars.current() === '"') {
-                letters += chars.shift();
-            }
-            return {
-                type: "STRING",
-                value: letters,
-            };
-        }
-        return null;
-    }
-    const separatorRegexp = /\w|\.|!|\$/;
-    /**
-     * A "Symbol" is just basically any word-like element that can appear in a
-     * formula, which is not a string. So:
-     *   A1
-     *   SUM
-     *   CEILING.MATH
-     *   A$1
-     *   Sheet2!A2
-     *   'Sheet 2'!A2
-     *
-     * are examples of symbols
-     */
-    function tokenizeSymbol(chars) {
-        let result = "";
-        // there are two main cases to manage: either something which starts with
-        // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars.current() === "'") {
-            let lastChar = chars.shift();
-            result += lastChar;
-            while (chars.current()) {
-                lastChar = chars.shift();
-                result += lastChar;
-                if (lastChar === "'") {
-                    if (chars.current() && chars.current() === "'") {
-                        lastChar = chars.shift();
-                        result += lastChar;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (lastChar !== "'") {
-                return {
-                    type: "UNKNOWN",
-                    value: result,
-                };
-            }
-        }
-        while (chars.current() && separatorRegexp.test(chars.current())) {
-            result += chars.shift();
-        }
-        if (result.length) {
-            const value = result;
-            const isFunction = value.toUpperCase() in functions$2;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
-            const isReference = rangeReference.test(value);
-            if (isReference) {
-                return { type: "REFERENCE", value };
-            }
-            else {
-                return { type: "SYMBOL", value };
-            }
-        }
-        return null;
-    }
-    function tokenizeSpace(chars) {
-        let length = 0;
-        while (chars.current() === NEWLINE) {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: NEWLINE.repeat(length) };
-        }
-        while (chars.current() === " ") {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: " ".repeat(length) };
-        }
-        return null;
-    }
-    function tokenizeInvalidRange(chars) {
-        if (chars.currentStartsWith(INCORRECT_RANGE_STRING)) {
-            chars.advanceBy(INCORRECT_RANGE_STRING.length);
-            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
-        }
-        return null;
-    }
-    class TokenizingChars {
-        text;
-        currentIndex = 0;
-        constructor(text) {
-            this.text = text;
-        }
-        current() {
-            return this.text[this.currentIndex];
-        }
-        shift() {
-            return this.text[this.currentIndex++];
-        }
-        advanceBy(length) {
-            this.currentIndex += length;
-        }
-        isOver() {
-            return this.currentIndex >= this.text.length;
-        }
-        remaining() {
-            return this.text.substring(this.currentIndex);
-        }
-        currentStartsWith(str) {
-            for (let j = 0; j < str.length; j++) {
-                if (this.text[this.currentIndex + j] !== str[j]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = transitions[token.type]?.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens.push(token);
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens.push(token);
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
-    }
-
-    /**
      * parses a formula (as a string) into the same formula,
      * but with the references to other cells extracted
      *
@@ -28831,7 +30047,7 @@
      * a breaking change is made in the way the state is handled, and an upgrade
      * function should be defined
      */
-    const CURRENT_VERSION = 13;
+    const CURRENT_VERSION = 14;
     const INITIAL_SHEET_ID = "Sheet1";
     /**
      * This function tries to load anything that could look like a valid
@@ -29114,6 +30330,20 @@
                 return data;
             },
         },
+        {
+            description: "Add locale to spreadsheet settings",
+            from: 13,
+            to: 14,
+            applyMigration(data) {
+                if (!data.settings) {
+                    data.settings = {};
+                }
+                if (!data.settings.locale) {
+                    data.settings.locale = DEFAULT_LOCALE;
+                }
+                return data;
+            },
+        },
     ];
     /**
      * This function is used to repair faulty data independently of the migration.
@@ -29147,13 +30377,18 @@
      * sanity check: try to fix missing fields/corrupted state by providing
      * sensible default values
      */
-    function setDefaults(data) {
-        data = Object.assign(createEmptyWorkbookData(), data, { version: CURRENT_VERSION });
+    function setDefaults(partialData) {
+        const data = Object.assign(createEmptyWorkbookData(), partialData, {
+            version: CURRENT_VERSION,
+        });
         data.sheets = data.sheets
             ? data.sheets.map((s, i) => Object.assign(createEmptySheet(`Sheet${i + 1}`, `Sheet${i + 1}`), s))
             : [];
         if (data.sheets.length === 0) {
             data.sheets.push(createEmptySheet(INITIAL_SHEET_ID, "Sheet1"));
+        }
+        if (!isValidLocale(data.settings.locale)) {
+            data.settings.locale = DEFAULT_LOCALE;
         }
         return data;
     }
@@ -29295,6 +30530,7 @@
             borders: {},
             revisionId: DEFAULT_REVISION_ID,
             uniqueFigureIds: true,
+            settings: { locale: DEFAULT_LOCALE },
         };
         return data;
     }
@@ -29939,714 +31175,6 @@
         }
     }
 
-    class FunctionCodeBuilder {
-        scope;
-        code = "";
-        constructor(scope = new Scope()) {
-            this.scope = scope;
-        }
-        append(...lines) {
-            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
-        }
-        return(expression) {
-            return new FunctionCodeImpl(this.scope, this.code, expression);
-        }
-        toString() {
-            return indentCode(this.code);
-        }
-    }
-    class FunctionCodeImpl {
-        scope;
-        returnExpression;
-        code;
-        constructor(scope, code, returnExpression) {
-            this.scope = scope;
-            this.returnExpression = returnExpression;
-            this.code = indentCode(code);
-        }
-        toString() {
-            return this.code;
-        }
-        wrapInClosure() {
-            const closureName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(`const ${closureName} = () => {`);
-            code.append(this.code);
-            code.append(`return ${this.returnExpression};`);
-            code.append(`}`);
-            return code.return(closureName);
-        }
-        assignResultToVariable() {
-            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
-                return this;
-            }
-            const variableName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(this.code);
-            code.append(`const ${variableName} = ${this.returnExpression};`);
-            return code.return(variableName);
-        }
-    }
-    class Scope {
-        nextId = 1;
-        declaredVariables = new Set();
-        nextVariableName() {
-            const name = `_${this.nextId++}`;
-            this.declaredVariables.add(name);
-            return name;
-        }
-        isAlreadyDeclared(name) {
-            return this.declaredVariables.has(name);
-        }
-    }
-    /**
-     * Takes a list of strings that might be single or multiline
-     * and maps them in a list of single line strings.
-     */
-    function splitLines(str) {
-        return str
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line !== "");
-    }
-    function indentCode(code) {
-        let result = "";
-        let indentLevel = 0;
-        const lines = splitLines(code);
-        for (const line of lines) {
-            if (line.startsWith("}")) {
-                indentLevel--;
-            }
-            result += "\t".repeat(indentLevel) + line + "\n";
-            if (line.endsWith("{")) {
-                indentLevel++;
-            }
-        }
-        return result.trim();
-    }
-
-    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
-    const UNARY_OPERATORS_PREFIX = ["-", "+"];
-    const UNARY_OPERATORS_POSTFIX = ["%"];
-    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
-    const OP_PRIORITY = {
-        "^": 30,
-        "%": 30,
-        "*": 20,
-        "/": 20,
-        "+": 15,
-        "-": 15,
-        "&": 13,
-        ">": 10,
-        "<>": 10,
-        ">=": 10,
-        "<": 10,
-        "<=": 10,
-        "=": 10,
-    };
-    /**
-     * Parse the next operand in an arithmetic expression.
-     * e.g.
-     *  for 1+2*3, the next operand is 1
-     *  for (1+2)*3, the next operand is (1+2)
-     *  for SUM(1,2)+3, the next operand is SUM(1,2)
-     */
-    function parseOperand(tokens) {
-        const current = tokens.shift();
-        if (!current) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        switch (current.type) {
-            case "DEBUGGER":
-                const next = parseExpression(tokens, 1000);
-                next.debug = true;
-                return next;
-            case "NUMBER":
-                return { type: "NUMBER", value: parseNumber(current.value) };
-            case "STRING":
-                return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                const args = parseFunctionArgs(tokens);
-                return { type: "FUNCALL", value: current.value, args };
-            case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
-            case "REFERENCE":
-                if (tokens[0]?.value === ":" && tokens[1]?.type === "REFERENCE") {
-                    tokens.shift();
-                    const rightReference = tokens.shift();
-                    return {
-                        type: "REFERENCE",
-                        value: `${current.value}:${rightReference?.value}`,
-                    };
-                }
-                return {
-                    type: "REFERENCE",
-                    value: current.value,
-                };
-            case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
-                }
-                if (current.value) {
-                    if (functionRegex.test(current.value) && tokens[0]?.type === "LEFT_PAREN") {
-                        throw new UnknownFunctionError(current.value);
-                    }
-                }
-                throw new BadExpressionError(_lt("Invalid formula"));
-            case "LEFT_PAREN":
-                const result = parseExpression(tokens);
-                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
-                return result;
-            case "OPERATOR":
-                const operator = current.value;
-                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
-                    return {
-                        type: "UNARY_OPERATION",
-                        value: operator,
-                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
-                    };
-                }
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-            default:
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-        }
-    }
-    function parseFunctionArgs(tokens) {
-        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
-        const nextToken = tokens[0];
-        if (nextToken?.type === "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "RIGHT_PAREN");
-            return [];
-        }
-        const args = [];
-        args.push(parseOneFunctionArg(tokens));
-        while (tokens[0]?.type !== "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "COMMA", _lt("Wrong function call"));
-            args.push(parseOneFunctionArg(tokens));
-        }
-        consumeOrThrow(tokens, "RIGHT_PAREN");
-        return args;
-    }
-    function parseOneFunctionArg(tokens) {
-        const nextToken = tokens[0];
-        if (nextToken?.type === "COMMA" || nextToken?.type === "RIGHT_PAREN") {
-            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
-            return { type: "EMPTY", value: "" };
-        }
-        return parseExpression(tokens);
-    }
-    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
-        const token = tokens.shift();
-        if (!token || token.type !== type) {
-            throw new BadExpressionError(message);
-        }
-    }
-    function parseExpression(tokens, parent_priority = 0) {
-        if (tokens.length === 0) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        let left = parseOperand(tokens);
-        // as long as we have operators with higher priority than the parent one,
-        // continue parsing the expression because it is a child sub-expression
-        while (tokens[0]?.type === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
-            const operator = tokens.shift().value;
-            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
-                left = {
-                    type: "UNARY_OPERATION",
-                    value: operator,
-                    operand: left,
-                    postfix: true,
-                };
-            }
-            else {
-                const right = parseExpression(tokens, OP_PRIORITY[operator]);
-                left = {
-                    type: "BIN_OPERATION",
-                    value: operator,
-                    left,
-                    right,
-                };
-            }
-        }
-        return left;
-    }
-    /**
-     * Parse an expression (as a string) into an AST.
-     */
-    function parse(str) {
-        return parseTokens(tokenize(str));
-    }
-    function parseTokens(tokens) {
-        tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].value === "=") {
-            tokens.splice(0, 1);
-        }
-        const result = parseExpression(tokens);
-        if (tokens.length) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        return result;
-    }
-    /**
-     * Allows to visit all nodes of an AST and apply a mapping function
-     * to nodes of a specific type.
-     * Useful if you want to convert some part of a formula.
-     *
-     * e.g.
-     * ```ts
-     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
-     *
-     * function convertFormulaToExcel(ast: ASTFuncall) {
-     *   // ...
-     *   return modifiedAst
-     * }
-     * ```
-     */
-    function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
-        }
-        switch (ast.type) {
-            case "FUNCALL":
-                return {
-                    ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
-                };
-            case "UNARY_OPERATION":
-                return {
-                    ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
-                };
-            case "BIN_OPERATION":
-                return {
-                    ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
-                };
-            default:
-                return ast;
-        }
-    }
-    /**
-     * Converts an ast formula to the corresponding string
-     */
-    function astToFormula(ast) {
-        switch (ast.type) {
-            case "FUNCALL":
-                const args = ast.args.map((arg) => astToFormula(arg));
-                return `${ast.value}(${args.join(",")})`;
-            case "NUMBER":
-                return ast.value.toString();
-            case "REFERENCE":
-                return ast.value;
-            case "STRING":
-                return `"${ast.value}"`;
-            case "BOOLEAN":
-                return ast.value ? "TRUE" : "FALSE";
-            case "UNARY_OPERATION":
-                return ast.postfix
-                    ? leftOperandToFormula(ast) + ast.value
-                    : ast.value + rightOperandToFormula(ast);
-            case "BIN_OPERATION":
-                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
-            default:
-                return ast.value;
-        }
-    }
-    /**
-     * Convert the left operand of a binary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function leftOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
-        const leftOperator = leftOperation.value;
-        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
-        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
-    }
-    /**
-     * Convert the right operand of a binary or unary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function rightOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
-        const rightPriority = OP_PRIORITY[rightOperation.value];
-        const mainPriority = OP_PRIORITY[mainOperator];
-        let needParenthesis = false;
-        if (rightOperation.type !== "BIN_OPERATION") {
-            needParenthesis = false;
-        }
-        else if (rightPriority < mainPriority) {
-            needParenthesis = true;
-        }
-        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
-            needParenthesis = true;
-        }
-        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    const functions$1 = functionRegistry.content;
-    const OPERATOR_MAP = {
-        "=": "EQ",
-        "+": "ADD",
-        "-": "MINUS",
-        "*": "MULTIPLY",
-        "/": "DIVIDE",
-        ">=": "GTE",
-        "<>": "NE",
-        ">": "GT",
-        "<=": "LTE",
-        "<": "LT",
-        "^": "POWER",
-        "&": "CONCATENATE",
-    };
-    const UNARY_OPERATOR_MAP = {
-        "-": "UMINUS",
-        "+": "UPLUS",
-        "%": "UNARY.PERCENT",
-    };
-    // this cache contains all compiled function code, grouped by "structure". For
-    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
-    // structural function.
-    // It is only exported for testing purposes
-    const functionCache = {};
-    // -----------------------------------------------------------------------------
-    // COMPILER
-    // -----------------------------------------------------------------------------
-    function compile(formula) {
-        const tokens = rangeTokenize(formula);
-        const { dependencies, constantValues } = formulaArguments(tokens);
-        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
-        if (!functionCache[cacheKey]) {
-            const ast = parseTokens([...tokens]);
-            const scope = new Scope();
-            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            if (ast.type === "EMPTY") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            const compiledAST = compileAST(ast);
-            const code = new FunctionCodeBuilder();
-            code.append(`// ${cacheKey}`);
-            code.append(compiledAST);
-            code.append(`return ${compiledAST.returnExpression};`);
-            let baseFunction = new Function("deps", // the dependencies in the current formula
-            "ref", // a function to access a certain dependency at a given index
-            "range", // same as above, but guarantee that the result is in the form of a range
-            "ctx", code.toString());
-            functionCache[cacheKey] = {
-                // @ts-ignore
-                execute: baseFunction,
-            };
-            /**
-             * This function compile the function arguments. It is mostly straightforward,
-             * except that there is a non trivial transformation in one situation:
-             *
-             * If a function argument is asking for a range, and get a cell, we transform
-             * the cell value into a range. This allow the grid model to differentiate
-             * between a cell value and a non cell value.
-             */
-            function compileFunctionArgs(ast) {
-                const { args } = ast;
-                const functionName = ast.value.toUpperCase();
-                const functionDefinition = functions$1[functionName];
-                assertEnoughArgs(ast);
-                const compiledArgs = [];
-                for (let i = 0; i < args.length; i++) {
-                    const argToFocus = functionDefinition.getArgToFocus(i + 1) - 1;
-                    const argDefinition = functionDefinition.args[argToFocus];
-                    const currentArg = args[i];
-                    const argTypes = argDefinition.type || [];
-                    // detect when an argument need to be evaluated as a meta argument
-                    const isMeta = argTypes.includes("META");
-                    // detect when an argument need to be evaluated as a lazy argument
-                    const isLazy = argDefinition.lazy;
-                    const hasRange = argTypes.some((t) => isRangeType(t));
-                    const isRangeOnly = argTypes.every((t) => isRangeType(t));
-                    if (isRangeOnly) {
-                        if (!isRangeInput(currentArg)) {
-                            throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", functionName, (i + 1).toString(), currentArg.type.toLowerCase()));
-                        }
-                    }
-                    const compiledAST = compileAST(currentArg, isMeta, hasRange, {
-                        functionName,
-                        paramIndex: i + 1,
-                    });
-                    compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
-                }
-                return compiledArgs;
-            }
-            /**
-             * This function compiles all the information extracted by the parser into an
-             * executable code for the evaluation of the cells content. It uses a cash to
-             * not reevaluate identical code structures.
-             *
-             * The function is sensitive to parameter “isMeta”. This
-             * parameter may vary when compiling function arguments:
-             * isMeta: In some cases the function arguments expects information on the
-             * cell/range other than the associated value(s). For example the COLUMN
-             * function needs to receive as argument the coordinates of a cell rather
-             * than its value. For this we have meta arguments.
-             */
-            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
-                const code = new FunctionCodeBuilder(scope);
-                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
-                    if (isMeta) {
-                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
-                    }
-                }
-                if (ast.debug) {
-                    code.append("debugger;");
-                }
-                switch (ast.type) {
-                    case "BOOLEAN":
-                        return code.return(`{ value: ${ast.value} }`);
-                    case "NUMBER":
-                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
-                    case "STRING":
-                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
-                    case "REFERENCE":
-                        const referenceIndex = dependencies.indexOf(ast.value);
-                        if (hasRange) {
-                            return code.return(`range(deps[${referenceIndex}])`);
-                        }
-                        else {
-                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
-                        }
-                    case "FUNCALL":
-                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
-                        code.append(...args);
-                        const fnName = ast.value.toUpperCase();
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
-                    case "UNARY_OPERATION": {
-                        const fnName = UNARY_OPERATOR_MAP[ast.value];
-                        const operand = compileAST(ast.operand, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(operand);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
-                    }
-                    case "BIN_OPERATION": {
-                        const fnName = OPERATOR_MAP[ast.value];
-                        const left = compileAST(ast.left, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        const right = compileAST(ast.right, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(left);
-                        code.append(right);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
-                    }
-                    case "EMPTY":
-                        return code.return("undefined");
-                }
-            }
-        }
-        const compiledFormula = {
-            execute: functionCache[cacheKey].execute,
-            dependencies,
-            constantValues,
-            tokens,
-        };
-        return compiledFormula;
-    }
-    /**
-     * Compute a cache key for the formula.
-     * References, numbers and strings are replaced with placeholders because
-     * the compiled formula does not depend on their actual value.
-     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
-     *
-     * Spaces are also ignored to compute the cache key.
-     *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
-     */
-    function compilationCacheKey(tokens, dependencies, constantValues) {
-        return concat(tokens.map((token) => {
-            switch (token.type) {
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    return `|S${constantValues.strings.indexOf(value)}|`;
-                case "NUMBER":
-                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
-                case "REFERENCE":
-                case "INVALID_REFERENCE":
-                    return `|${dependencies.indexOf(token.value)}|`;
-                case "SPACE":
-                    return "";
-                default:
-                    return token.value;
-            }
-        }));
-    }
-    /**
-     * Return formula arguments which are references, strings and numbers.
-     */
-    function formulaArguments(tokens) {
-        const constantValues = {
-            numbers: [],
-            strings: [],
-        };
-        const dependencies = [];
-        for (const token of tokens) {
-            switch (token.type) {
-                case "INVALID_REFERENCE":
-                case "REFERENCE":
-                    dependencies.push(token.value);
-                    break;
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    if (!constantValues.strings.includes(value)) {
-                        constantValues.strings.push(value);
-                    }
-                    break;
-                case "NUMBER": {
-                    const value = parseNumber(token.value);
-                    if (!constantValues.numbers.includes(value)) {
-                        constantValues.numbers.push(value);
-                    }
-                    break;
-                }
-            }
-        }
-        return {
-            dependencies,
-            constantValues,
-        };
-    }
-    /**
-     * Check if arguments are supplied in the correct quantities
-     */
-    function assertEnoughArgs(ast) {
-        const nbrArg = ast.args.length;
-        const functionName = ast.value.toUpperCase();
-        const functionDefinition = functions$1[functionName];
-        if (nbrArg < functionDefinition.minArgRequired) {
-            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", functionName, functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-        }
-        if (nbrArg > functionDefinition.maxArgPossible) {
-            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", functionName, functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-        }
-        const repeatableArgs = functionDefinition.nbrArgRepeating;
-        if (repeatableArgs > 1) {
-            const unrepeatableArgs = functionDefinition.args.length - repeatableArgs;
-            const repeatingArgs = nbrArg - unrepeatableArgs;
-            if (repeatingArgs % repeatableArgs !== 0) {
-                throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", functionName, unrepeatableArgs.toString(), repeatableArgs.toString()));
-            }
-        }
-    }
-    function isRangeType(type) {
-        return type.startsWith("RANGE");
-    }
-    function isRangeInput(arg) {
-        if (arg.type === "REFERENCE") {
-            return true;
-        }
-        if (arg.type === "FUNCALL") {
-            const fnDef = functions$1[arg.value.toUpperCase()];
-            return fnDef && isRangeType(fnDef.returns[0]);
-        }
-        return false;
-    }
-
-    /**
-     * Add the following information on tokens:
-     * - length
-     * - start
-     * - end
-     */
-    function enrichTokens(tokens) {
-        let current = 0;
-        return tokens.map((x) => {
-            const len = x.value.toString().length;
-            const token = Object.assign({}, x, {
-                start: current,
-                end: current + len,
-                length: len,
-            });
-            current = token.end;
-            return token;
-        });
-    }
-    /**
-     * add on each token the length, start and end
-     * also matches the opening to its closing parenthesis (using the same number)
-     */
-    function mapParenthesis(tokens) {
-        let maxParen = 1;
-        const stack = [];
-        return tokens.map((token) => {
-            if (token.type === "LEFT_PAREN") {
-                stack.push(maxParen);
-                token.parenIndex = maxParen;
-                maxParen++;
-            }
-            else if (token.type === "RIGHT_PAREN") {
-                token.parenIndex = stack.pop();
-            }
-            return token;
-        });
-    }
-    /**
-     * add on each token its parent function and the index corresponding to
-     * its position as an argument of the function.
-     * In this example "=MIN(42,SUM(MAX(1,2),3))":
-     * - the parent function of the token correspond to number 42 is the MIN function
-     * - the argument position of the token correspond to number 42 is 0
-     * - the parent function of the token correspond to number 3 is the SUM function
-     * - the argument position of the token correspond to number 3 is 1
-     */
-    function mapParentFunction(tokens) {
-        let stack = [];
-        let functionStarted = "";
-        const res = tokens.map((token, i) => {
-            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
-                functionStarted = "";
-            }
-            switch (token.type) {
-                case "FUNCTION":
-                    functionStarted = token.value;
-                    break;
-                case "LEFT_PAREN":
-                    stack.push({ parent: functionStarted, argPosition: 0 });
-                    functionStarted = "";
-                    break;
-                case "RIGHT_PAREN":
-                    stack.pop();
-                    break;
-                case "COMMA":
-                    if (stack.length) {
-                        // increment position on current function
-                        stack[stack.length - 1].argPosition++;
-                    }
-                    break;
-            }
-            if (stack.length) {
-                const functionContext = stack[stack.length - 1];
-                if (functionContext.parent) {
-                    token.functionContext = Object.assign({}, functionContext);
-                }
-            }
-            return token;
-        });
-        return res;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the composer.
-     *
-     * @param formula
-     */
-    function composerTokenize(formula) {
-        const tokens = rangeTokenize(formula);
-        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
-    }
-
     /**
      * Core Plugin
      *
@@ -30985,7 +31513,10 @@
             else {
                 style = before ? before.style : undefined;
             }
-            let format = ("format" in after ? after.format : before && before.format) || detectFormat(afterContent);
+            const locale = this.getters.getLocale();
+            let format = ("format" in after ? after.format : before && before.format) ||
+                detectDateFormat(afterContent, locale) ||
+                detectNumberFormat(afterContent);
             /* Read the following IF as:
              * we need to remove the cell if it is completely empty, but we can know if it completely empty if:
              * - the command says the new content is empty and has no border/format/style
@@ -31076,9 +31607,9 @@
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
-                return 28 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
-            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 19 /* CommandResult.TargetOutOfSheet */;
+            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
         }
     }
     class FormulaCellWithDependencies {
@@ -31301,13 +31832,13 @@
         }
         checkChartDuplicate(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
-                ? 85 /* CommandResult.DuplicatedChartId */
+                ? 84 /* CommandResult.DuplicatedChartId */
                 : 0 /* CommandResult.Success */;
         }
         checkChartExists(cmd) {
             return this.getters.getFigureSheetId(cmd.id)
                 ? 0 /* CommandResult.Success */
-                : 86 /* CommandResult.ChartDoesNotExist */;
+                : 85 /* CommandResult.ChartDoesNotExist */;
         }
     }
 
@@ -31516,18 +32047,18 @@
         }
         checkValidReordering(cfId, direction, sheetId) {
             if (!this.cfRules[sheetId])
-                return 28 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 72 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 72 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkEmptyRange(cmd) {
-            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 25 /* CommandResult.EmptyRange */;
+            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 24 /* CommandResult.EmptyRange */;
         }
         checkCFRule(cmd) {
             const rule = cmd.cf.rule;
@@ -31563,10 +32094,10 @@
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(52 /* CommandResult.FirstArgMissing */);
+                        errors.push(51 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(53 /* CommandResult.SecondArgMissing */);
+                        errors.push(52 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -31578,15 +32109,15 @@
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 54 /* CommandResult.MinNaN */;
+                        return 53 /* CommandResult.MinNaN */;
                     case "max":
-                        return 56 /* CommandResult.MaxNaN */;
+                        return 55 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 55 /* CommandResult.MidNaN */;
+                        return 54 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 57 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 56 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 58 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 57 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -31600,15 +32131,15 @@
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 59 /* CommandResult.MinInvalidFormula */;
+                        return 58 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 61 /* CommandResult.MaxInvalidFormula */;
+                        return 60 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 60 /* CommandResult.MidInvalidFormula */;
+                        return 59 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 62 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 61 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 63 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 62 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -31625,7 +32156,7 @@
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 49 /* CommandResult.LowerBiggerThanUpper */;
+                return 48 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31635,7 +32166,7 @@
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 48 /* CommandResult.MinBiggerThanMax */;
+                return 47 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31646,7 +32177,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 50 /* CommandResult.MidBiggerThanMax */;
+                return 49 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31657,7 +32188,7 @@
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 51 /* CommandResult.MinBiggerThanMid */;
+                return 50 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31787,13 +32318,13 @@
         }
         checkFigureExists(sheetId, figureId) {
             if (this.figures[sheetId]?.[figureId] === undefined) {
-                return 71 /* CommandResult.FigureDoesNotExist */;
+                return 70 /* CommandResult.FigureDoesNotExist */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkFigureDuplicate(figureId) {
             if (Object.values(this.figures).find((sheet) => sheet?.[figureId])) {
-                return 83 /* CommandResult.DuplicatedFigureId */;
+                return 82 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31905,12 +32436,12 @@
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 82 /* CommandResult.NonContinuousTargets */;
+                        return 81 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 79 /* CommandResult.FilterOverlap */;
+                            return 78 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -31918,7 +32449,7 @@
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 81 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -31928,7 +32459,7 @@
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 81 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -31947,14 +32478,7 @@
                     this.history.update("tables", filterTables);
                     break;
                 case "DUPLICATE_SHEET":
-                    const tables = {};
-                    for (const filterTable of Object.values(this.tables[cmd.sheetId] || {})) {
-                        if (filterTable) {
-                            const newFilterTable = deepCopy(filterTable);
-                            tables[newFilterTable.id] = newFilterTable;
-                        }
-                    }
-                    this.history.update("tables", cmd.sheetIdTo, tables);
+                    this.history.update("tables", cmd.sheetIdTo, deepCopy(this.tables[cmd.sheetId]));
                     break;
                 case "ADD_COLUMNS_ROWS":
                     this.onAddColumnsRows(cmd);
@@ -32406,7 +32930,7 @@
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
-                        return 28 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
                         ? this.getHiddenColsGroups(cmd.sheetId)
@@ -32416,10 +32940,10 @@
                         : this.getters.getNumberRows(cmd.sheetId);
                     const hiddenElements = new Set((hiddenGroup || []).flat().concat(cmd.elements));
                     if (hiddenElements.size >= elements) {
-                        return 67 /* CommandResult.TooManyHiddenElements */;
+                        return 66 /* CommandResult.TooManyHiddenElements */;
                     }
                     else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
                         return 0 /* CommandResult.Success */;
@@ -32427,7 +32951,7 @@
                 }
                 case "REMOVE_COLUMNS_ROWS":
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
-                        return 28 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                     if (!this.canRemoveHeaders(cmd.sheetId, cmd.dimension, cmd.elements)) {
                         return 8 /* CommandResult.NotEnoughElements */;
@@ -32595,7 +33119,7 @@
             switch (cmd.type) {
                 case "CREATE_IMAGE":
                     if (this.getters.getFigure(cmd.sheetId, cmd.figureId)) {
-                        return 29 /* CommandResult.InvalidFigureId */;
+                        return 28 /* CommandResult.InvalidFigureId */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -32983,7 +33507,7 @@
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 66 /* CommandResult.MergeOverlap */;
+                        return 65 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -32997,7 +33521,7 @@
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 76 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -33191,7 +33715,7 @@
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 27 /* CommandResult.InvalidZones */;
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 26 /* CommandResult.InvalidZones */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33616,7 +34140,7 @@
                         return 0 /* CommandResult.Success */;
                     }
                     catch (e) {
-                        return 15 /* CommandResult.WrongSheetMove */;
+                        return 14 /* CommandResult.WrongSheetMove */;
                     }
                 case "RENAME_SHEET":
                     return this.isRenameAllowed(cmd);
@@ -33629,10 +34153,10 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (cmd.base < 0 || cmd.base > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (cmd.quantity <= 0) {
-                        return 88 /* CommandResult.InvalidQuantity */;
+                        return 87 /* CommandResult.InvalidQuantity */;
                     }
                     return 0 /* CommandResult.Success */;
                 case "REMOVE_COLUMNS_ROWS": {
@@ -33640,7 +34164,7 @@
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
-                        return 87 /* CommandResult.InvalidHeaderIndex */;
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
                         return 0 /* CommandResult.Success */;
@@ -33967,12 +34491,12 @@
          */
         checkZonesExistInSheet(sheetId, zones) {
             if (!zones.every(isZoneValid))
-                return 26 /* CommandResult.InvalidRange */;
+                return 25 /* CommandResult.InvalidRange */;
             if (zones.length) {
                 const sheetZone = this.getSheetZone(sheetId);
                 return zones.every((zone) => isZoneInside(zone, sheetZone))
                     ? 0 /* CommandResult.Success */
-                    : 19 /* CommandResult.TargetOutOfSheet */;
+                    : 18 /* CommandResult.TargetOutOfSheet */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -34079,42 +34603,38 @@
             throw new Error(_lt("There is not enough visible sheets"));
         }
         checkSheetName(cmd) {
-            const originalSheetName = this.getters.tryGetSheetName(cmd.sheetId);
-            if (originalSheetName !== undefined && cmd.name === originalSheetName) {
-                return 11 /* CommandResult.UnchangedSheetName */;
-            }
             const { orderedSheetIds, sheets } = this;
             const name = cmd.name && cmd.name.trim().toLowerCase();
-            if (orderedSheetIds.find((id) => sheets[id]?.name.toLowerCase() === name && id !== cmd.sheetId)) {
-                return 12 /* CommandResult.DuplicatedSheetName */;
+            if (orderedSheetIds.find((id) => sheets[id]?.name.toLowerCase() === name)) {
+                return 11 /* CommandResult.DuplicatedSheetName */;
             }
             if (FORBIDDEN_IN_EXCEL_REGEX.test(name)) {
-                return 14 /* CommandResult.ForbiddenCharactersInSheetName */;
+                return 13 /* CommandResult.ForbiddenCharactersInSheetName */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkSheetPosition(cmd) {
             const { orderedSheetIds } = this;
             if (cmd.position > orderedSheetIds.length || cmd.position < 0) {
-                return 16 /* CommandResult.WrongSheetPosition */;
+                return 15 /* CommandResult.WrongSheetPosition */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkRowFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 75 /* CommandResult.InvalidFreezeQuantity */;
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkColFreezeQuantity(cmd) {
             return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
                 ? 0 /* CommandResult.Success */
-                : 75 /* CommandResult.InvalidFreezeQuantity */;
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
         }
         checkRowFreezeOverlapMerge(cmd) {
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                    return 66 /* CommandResult.MergeOverlap */;
+                    return 65 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -34123,7 +34643,7 @@
             const merges = this.getters.getMerges(cmd.sheetId);
             for (let merge of merges) {
                 if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                    return 66 /* CommandResult.MergeOverlap */;
+                    return 65 /* CommandResult.MergeOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -34139,8 +34659,8 @@
             const oldName = sheet.name;
             this.history.update("sheets", sheet.id, "name", name.trim());
             const sheetIdsMapName = Object.assign({}, this.sheetIdsMapName);
-            delete sheetIdsMapName[oldName];
             sheetIdsMapName[name] = sheet.id;
+            delete sheetIdsMapName[oldName];
             this.history.update("sheetIdsMapName", sheetIdsMapName);
         }
         hideSheet(sheetId) {
@@ -34434,10 +34954,10 @@
          */
         checkSheetExists(cmd) {
             if (cmd.type !== "CREATE_SHEET" && "sheetId" in cmd && this.sheets[cmd.sheetId] === undefined) {
-                return 28 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             }
             else if (cmd.type === "CREATE_SHEET" && this.sheets[cmd.sheetId] !== undefined) {
-                return 13 /* CommandResult.DuplicatedSheetId */;
+                return 12 /* CommandResult.DuplicatedSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -34449,6 +34969,29 @@
             if (!("sheetId" in cmd))
                 return 0 /* CommandResult.Success */;
             return this.checkZonesExistInSheet(cmd.sheetId, this.getCommandZones(cmd));
+        }
+    }
+
+    class SettingsPlugin extends CorePlugin {
+        static getters = ["getLocale"];
+        locale = DEFAULT_LOCALE;
+        handle(cmd) {
+            switch (cmd.type) {
+                case "UPDATE_LOCALE":
+                    this.history.update("locale", cmd.locale);
+                    break;
+            }
+        }
+        getLocale() {
+            return this.locale;
+        }
+        import(data) {
+            this.locale = data.settings?.locale ?? DEFAULT_LOCALE;
+        }
+        export(data) {
+            data.settings = {
+                locale: this.locale,
+            };
         }
     }
 
@@ -34493,6 +35036,7 @@
             this.computeCell = computeCell;
             this.evalContext = Object.assign(Object.create(functionMap), context, {
                 getters: this.getters,
+                locale: this.getters.getLocale(),
             });
         }
         getParameters() {
@@ -34749,6 +35293,7 @@
 
     const MAX_ITERATION = 30;
     class Evaluator {
+        context;
         getters;
         compilationParams;
         positionEncoder = new PositionBitsEncoder();
@@ -34757,11 +35302,13 @@
         blockedArrayFormulas = new Set();
         spreadingRelations = new SpreadingRelation();
         constructor(context, getters) {
+            this.context = context;
             this.getters = getters;
             this.compilationParams = buildCompilationParameters(context, getters, (position) => this.computeCell(this.encodePosition(position)));
         }
         getEvaluatedCell(position) {
-            return this.evaluatedCells.get(this.encodePosition(position)) || createEvaluatedCell("");
+            return (this.evaluatedCells.get(this.encodePosition(position)) ||
+                createEvaluatedCell("", { locale: this.getters.getLocale() }));
         }
         getArrayFormulaSpreadingOn(position) {
             const positionId = this.encodePosition(position);
@@ -34783,6 +35330,9 @@
             this.formulaDependencies().removeAllDependencies(positionId);
             const dependencies = this.getDirectDependencies(positionId);
             this.formulaDependencies().addDependencies(positionId, dependencies);
+        }
+        updateCompilationParameters() {
+            this.compilationParams = buildCompilationParameters(this.context, this.getters, (position) => this.computeCell(this.encodePosition(position)));
         }
         evaluateCells(positions) {
             const cells = positions.map(this.encodePosition.bind(this));
@@ -34879,7 +35429,7 @@
             }
             const cell = this.getCell(positionId);
             if (cell === undefined) {
-                return createEvaluatedCell("");
+                return createEvaluatedCell("", { locale: this.getters.getLocale() });
             }
             const cellId = cell.id;
             try {
@@ -34889,7 +35439,7 @@
                 this.cellsBeingComputed.add(cellId);
                 return cell.isFormula
                     ? this.computeFormulaCell(cell)
-                    : evaluateLiteral(cell.content, cell.format);
+                    : evaluateLiteral(cell.content, { format: cell.format, locale: this.getters.getLocale() });
             }
             catch (e) {
                 return this.handleError(e, cell);
@@ -34919,7 +35469,10 @@
             assertFormulaReturnHasConsistentDimensions(formulaReturn);
             const { value: computedValue, format: computedFormat } = formulaReturn;
             if (!isMatrix(computedValue)) {
-                return createEvaluatedCell(computedValue, cellData.format || computedFormat);
+                return createEvaluatedCell(computedValue, {
+                    format: cellData.format || computedFormat,
+                    locale: this.getters.getLocale(),
+                });
             }
             const formulaPosition = this.getters.getCellPosition(cellId);
             this.assertSheetHasEnoughSpaceToSpreadFormulaResult(formulaPosition, computedValue);
@@ -34929,7 +35482,10 @@
             // due the isMatrix check above, we know that formulaReturn is MatrixFunctionReturn
             this.spreadValues(formulaPosition, formulaReturn));
             const formatFromPosition = formatFromPositionAccess(computedFormat);
-            return createEvaluatedCell(computedValue[0][0], cellData.format || formatFromPosition(0, 0));
+            return createEvaluatedCell(computedValue[0][0], {
+                format: cellData.format || formatFromPosition(0, 0),
+                locale: this.getters.getLocale(),
+            });
         }
         assertSheetHasEnoughSpaceToSpreadFormulaResult({ sheetId, col, row }, matrixResult) {
             const numberOfCols = this.getters.getNumberCols(sheetId);
@@ -34974,7 +35530,10 @@
                 const position = { sheetId, col: i + col, row: j + row };
                 const cell = this.getters.getCell(position);
                 const format = cell?.format;
-                const evaluatedCell = createEvaluatedCell(matrixResult.value[i][j], format || formatFromPosition(i, j));
+                const evaluatedCell = createEvaluatedCell(matrixResult.value[i][j], {
+                    format: format || formatFromPosition(i, j),
+                    locale: this.getters.getLocale(),
+                });
                 const positionId = this.encodePosition(position);
                 this.setEvaluatedCell(positionId, evaluatedCell);
                 // check if formula dependencies present in the spread zone
@@ -35224,6 +35783,7 @@
     // of other cells depending on it, at the next iteration.
     //#endregion
     class EvaluationPlugin extends UIPlugin {
+        config;
         static getters = [
             "evaluateFormula",
             "getRangeFormattedValues",
@@ -35239,8 +35799,9 @@
         positionsToUpdate = [];
         constructor(config) {
             super(config);
+            this.config = config;
+            this.compilationParams = this.getCompilationParameters();
             this.evaluator = new Evaluator(config.custom, this.getters);
-            this.compilationParams = buildCompilationParameters(config.custom, this.getters, (position) => this.evaluator.getEvaluatedCell(position));
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -35263,6 +35824,10 @@
                     break;
                 case "EVALUATE_CELLS":
                     this.evaluator.evaluateAllCells();
+                    break;
+                case "UPDATE_LOCALE":
+                    this.compilationParams = this.getCompilationParameters();
+                    this.evaluator.updateCompilationParameters();
                     break;
             }
         }
@@ -35386,6 +35951,9 @@
                 return spreadingFormulaCell;
             }
             return undefined;
+        }
+        getCompilationParameters() {
+            return buildCompilationParameters(this.config.custom, this.getters, (position) => this.evaluator.getEvaluatedCell(position));
         }
     }
     function isBadExpression(formula) {
@@ -35865,7 +36433,8 @@
                 if (cell.type === CellValueType.error) {
                     return false;
                 }
-                const values = rule.values.map(parseLiteral);
+                const locale = this.getters.getLocale();
+                const values = rule.values.map((val) => parseLiteral(val, locale));
                 switch (rule.operator) {
                     case "IsEmpty":
                         return cell.value.toString().trim() === "";
@@ -35998,7 +36567,7 @@
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 46 /* CommandResult.InvalidAutofillSelection */;
+                    return 45 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -36615,7 +37184,7 @@
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 73 /* CommandResult.InvalidCellPopover */;
+                        return 72 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -36907,6 +37476,9 @@
         return cmd;
     }
     function transformSheetId(cmd, executed) {
+        if (!("sheetId" in executed)) {
+            return cmd;
+        }
         const deleteSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
         if (cmd.sheetId === deleteSheet) {
             return "IGNORE_COMMAND";
@@ -36936,6 +37508,9 @@
         return { ...cmd, target };
     }
     function transformRangeData(cmd, executed) {
+        if (!("sheetId" in executed)) {
+            return cmd;
+        }
         const ranges = [];
         const deletedSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
         for (const range of cmd.ranges) {
@@ -37785,7 +38360,7 @@
                     sheetId: this.getters.getActiveSheetId(),
                     col: selectedMatch.col,
                     row: selectedMatch.row,
-                    content: newContent,
+                    content: canonicalizeContent(newContent, this.getters.getLocale()),
                 });
                 this.searchMatches.splice(this.selectedMatchIndex, 1);
                 this.selectNextCell(Direction.current);
@@ -37801,11 +38376,7 @@
             }
         }
         getSearchableString(position) {
-            const cell = this.getters.getCell(position);
-            if (this.searchOptions.searchFormulas && cell?.isFormula) {
-                return cell.content;
-            }
-            return this.getters.getEvaluatedCell(position).formattedValue;
+            return this.getters.getCellText(position, this.searchOptions.searchFormulas);
         }
         // ---------------------------------------------------------------------------
         // Grid rendering
@@ -37862,6 +38433,7 @@
                     if (numberFormat !== undefined) {
                         // Depending on the step sign, increase or decrease the decimal representation
                         // of the format
+                        this.getters.getLocale();
                         const newFormat = changeDecimalPlaces(numberFormat, step);
                         // Apply the new format on the whole zone
                         this.dispatch("SET_FORMATTING", {
@@ -38745,12 +39317,12 @@
                 case "ADD_RANGE":
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
-                        return 31 /* CommandResult.MaximumRangesReached */;
+                        return 30 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
                 case "CHANGE_RANGE":
                     if (this.inputHasSingleRange && cmd.value.split(",").length > 1) {
-                        return 31 /* CommandResult.MaximumRangesReached */;
+                        return 30 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
             }
@@ -38979,7 +39551,7 @@
                 case "FOCUS_RANGE":
                     const index = this.currentInput?.getIndex(cmd.rangeId);
                     if (this.focusedInputId === cmd.id && this.currentInput?.focusedRangeIndex === index) {
-                        return 30 /* CommandResult.InputAlreadyFocused */;
+                        return 29 /* CommandResult.InputAlreadyFocused */;
                     }
                     break;
             }
@@ -39111,7 +39683,7 @@
             /*Test the presence of single cells*/
             const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
             if (singleCells) {
-                return 64 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39130,7 +39702,7 @@
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 64 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39476,7 +40048,7 @@
         getCellText(position, showFormula = false) {
             const cell = this.getters.getCell(position);
             if (showFormula && cell?.isFormula) {
-                return cell.content;
+                return localizeFormula(cell.content, this.getters.getLocale());
             }
             else {
                 return this.getters.getEvaluatedCell(position).formattedValue;
@@ -39623,7 +40195,7 @@
          */
         checkSheetExists(cmd) {
             if ("sheetId" in cmd && this.getters.tryGetSheet(cmd.sheetId) === undefined) {
-                return 28 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39635,7 +40207,7 @@
             const sheetId = "sheetId" in cmd ? cmd.sheetId : this.getters.tryGetActiveSheetId();
             const zones = this.getters.getCommandZones(cmd);
             if (!sheetId && zones.length > 0) {
-                return 93 /* CommandResult.NoActiveSheet */;
+                return 92 /* CommandResult.NoActiveSheet */;
             }
             if (sheetId && zones.length > 0) {
                 return this.getters.checkZonesExistInSheet(sheetId, zones);
@@ -40021,7 +40593,7 @@
                         sheetId,
                         col: col + index,
                         row,
-                        content,
+                        content: canonicalizeContent(content, this.getters.getLocale()),
                         format: "",
                         style: mainCell?.style || null,
                     });
@@ -40117,13 +40689,13 @@
         }
         checkSingleColSelected() {
             if (!this.getters.isSingleColSelected()) {
-                return 89 /* CommandResult.MoreThanOneColumnSelected */;
+                return 88 /* CommandResult.MoreThanOneColumnSelected */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkNonEmptySelector(cmd) {
             if (cmd.separator === "") {
-                return 90 /* CommandResult.EmptySplitSeparator */;
+                return 89 /* CommandResult.EmptySplitSeparator */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40134,7 +40706,7 @@
             const selection = this.getters.getSelectedZones()[0];
             const splitted = this.getSplittedCols(selection, cmd.separator);
             if (this.willSplittedColsOverwriteContent(selection, splitted)) {
-                return 91 /* CommandResult.SplitWillOverwriteContent */;
+                return 90 /* CommandResult.SplitWillOverwriteContent */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40145,7 +40717,7 @@
                     return 0 /* CommandResult.Success */;
                 }
             }
-            return 92 /* CommandResult.NoSplitSeparatorInSelection */;
+            return 91 /* CommandResult.NoSplitSeparatorInSelection */;
         }
     }
 
@@ -40260,7 +40832,7 @@
         }
         isCutAllowed(target) {
             if (target.length !== 1) {
-                return 20 /* CommandResult.WrongCutSelection */;
+                return 19 /* CommandResult.WrongCutSelection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40268,13 +40840,13 @@
             const sheetId = this.getters.getActiveSheetId();
             if (this.operation === "CUT" && clipboardOption?.pasteOption !== undefined) {
                 // cannot paste only format or only value if the previous operation is a CUT
-                return 22 /* CommandResult.WrongPasteOption */;
+                return 21 /* CommandResult.WrongPasteOption */;
             }
             if (target.length > 1) {
                 // cannot paste if we have a clipped zone larger than a cell and multiple
                 // zones selected
                 if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 21 /* CommandResult.WrongPasteSelection */;
+                    return 20 /* CommandResult.WrongPasteSelection */;
                 }
             }
             const clipboardHeight = this.cells.length;
@@ -40292,7 +40864,7 @@
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 76 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -40504,7 +41076,8 @@
                     return;
                 }
                 if (clipboardOption?.pasteOption === "onlyValue") {
-                    const content = formatValue(origin.evaluatedCell.value);
+                    const locale = this.getters.getLocale();
+                    const content = formatValue(origin.evaluatedCell.value, { locale });
                     this.dispatch("UPDATE_CELL", { ...target, content });
                     return;
                 }
@@ -40732,10 +41305,10 @@
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 74 /* CommandResult.EmptyTarget */;
+                return 73 /* CommandResult.EmptyTarget */;
             }
             if (option?.pasteOption !== undefined) {
-                return 23 /* CommandResult.WrongFigurePasteOption */;
+                return 22 /* CommandResult.WrongFigurePasteOption */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -40819,6 +41392,37 @@
         }
     }
 
+    /** Change a number string to its canonical form (en_US locale) */
+    function canonicalizeNumberValue(content, locale) {
+        return content.startsWith("=")
+            ? canonicalizeFormula(content, locale)
+            : toCanonicalNumberString(content, locale);
+    }
+    /** Change a formula to its canonical form (en_US locale) */
+    function canonicalizeFormula(formula, locale) {
+        return _localizeFormula(formula, locale, DEFAULT_LOCALE);
+    }
+    function _localizeFormula(formula, fromLocale, toLocale) {
+        if (fromLocale.formulaArgSeparator === toLocale.formulaArgSeparator &&
+            fromLocale.decimalSeparator === toLocale.decimalSeparator) {
+            return formula;
+        }
+        const tokens = tokenize(formula, fromLocale);
+        let localizedFormula = "";
+        for (const token of tokens) {
+            if (token.type === "NUMBER") {
+                localizedFormula += token.value.replace(fromLocale.decimalSeparator, toLocale.decimalSeparator);
+            }
+            else if (token.type === "ARG_SEPARATOR") {
+                localizedFormula += toLocale.formulaArgSeparator;
+            }
+            else {
+                localizedFormula += token.value;
+            }
+        }
+        return localizedFormula;
+    }
+
     /** State of the clipboard when copying/cutting from the OS clipboard*/
     class ClipboardOsState extends ClipboardCellsAbstractState {
         values;
@@ -40846,13 +41450,14 @@
             const { left: activeCol, top: activeRow } = pasteZone;
             const { numberOfCols, numberOfRows } = zoneToDimension(pasteZone);
             const sheetId = this.getters.getActiveSheetId();
+            const locale = this.getters.getLocale();
             this.addMissingDimensions(numberOfCols, numberOfRows, activeCol, activeRow);
             for (let i = 0; i < values.length; i++) {
                 for (let j = 0; j < values[i].length; j++) {
                     this.dispatch("UPDATE_CELL", {
                         row: activeRow + i,
                         col: activeCol + j,
-                        content: values[i][j],
+                        content: canonicalizeNumberValue(values[i][j], locale),
                         sheetId,
                     });
                 }
@@ -40913,7 +41518,7 @@
                     return state.isCutAllowed(zones);
                 case "PASTE":
                     if (!this.state) {
-                        return 24 /* CommandResult.EmptyClipboard */;
+                        return 23 /* CommandResult.EmptyClipboard */;
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
@@ -41490,7 +42095,7 @@
         validateSelection(length, start, end) {
             return start >= 0 && start <= length && end >= 0 && end <= length
                 ? 0 /* CommandResult.Success */
-                : 47 /* CommandResult.WrongComposerSelection */;
+                : 46 /* CommandResult.WrongComposerSelection */;
         }
         onColumnsRemoved(cmd) {
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
@@ -41542,7 +42147,8 @@
          */
         startEdition(str, selection) {
             const evaluatedCell = this.getters.getActiveCell();
-            if (str && evaluatedCell.format?.includes("%") && isNumber(str)) {
+            const locale = this.getters.getLocale();
+            if (str && evaluatedCell.format?.includes("%") && isNumber(str, locale)) {
                 selection = selection || { start: str.length, end: str.length };
                 str = `${str}%`;
             }
@@ -41575,6 +42181,7 @@
                 if (content) {
                     const sheetId = this.getters.getActiveSheetId();
                     const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
+                    content = canonicalizeContent(content, this.getters.getLocale());
                     if (content.startsWith("=")) {
                         const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
                         const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
@@ -41618,9 +42225,10 @@
             }
         }
         getComposerContent(position) {
+            const locale = this.getters.getLocale();
             const cell = this.getters.getCell(position);
             if (cell?.isFormula) {
-                return cell.content;
+                return localizeFormula(cell.content, locale);
             }
             const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
             switch (type) {
@@ -41635,14 +42243,14 @@
                     if (format && isDateTimeFormat(format)) {
                         return formattedValue;
                     }
-                    return this.numberComposerContent(value, format);
+                    return this.numberComposerContent(value, format, locale);
             }
         }
-        numberComposerContent(value, format) {
+        numberComposerContent(value, format, locale) {
             if (format?.includes("%")) {
-                return `${value * 100}%`;
+                return `${numberToString(value * 100, locale.decimalSeparator)}%`;
             }
-            return numberToString(value);
+            return numberToString(value, locale.decimalSeparator);
         }
         cancelEdition() {
             if (this.mode === "inactive") {
@@ -41668,7 +42276,8 @@
                 this.selectionStart = this.selectionEnd = text.length;
             }
             if (isNewCurrentContent || this.mode !== "inactive") {
-                this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
+                const locale = this.getters.getLocale();
+                this.currentTokens = text.startsWith("=") ? composerTokenize(text, locale) : [];
                 if (this.currentTokens.length > 100) {
                     if (raise) {
                         this.ui.notifyUI({
@@ -41805,8 +42414,8 @@
         /**
          * Function used to determine when composer selection can start.
          * Three conditions are necessary:
-         * - the previous token is among ["COMMA", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
-         * - the next token is missing or is among ["COMMA", "RIGHT_PAREN", "OPERATOR"]
+         * - the previous token is among ["ARG_SEPARATOR", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
+         * - the next token is missing or is among ["ARG_SEPARATOR", "RIGHT_PAREN", "OPERATOR"]
          * - Previous and next tokens can be separated by spaces
          */
         canStartComposerRangeSelection() {
@@ -41819,7 +42428,7 @@
                 let count = tokenIdex;
                 let currentToken = tokenAtCursor;
                 // check previous token
-                while (!["COMMA", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
+                while (!["ARG_SEPARATOR", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
                     POSTFIX_UNARY_OPERATORS.includes(currentToken.value)) {
                     if (currentToken.type !== "SPACE" || count < 1) {
                         return false;
@@ -41830,7 +42439,8 @@
                 count = tokenIdex + 1;
                 currentToken = this.currentTokens[count];
                 // check next token
-                while (currentToken && !["COMMA", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
+                while (currentToken &&
+                    !["ARG_SEPARATOR", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
                     if (currentToken.type !== "SPACE") {
                         return false;
                     }
@@ -41866,7 +42476,7 @@
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd)) {
-                        return 80 /* CommandResult.FilterNotFound */;
+                        return 79 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
@@ -42073,32 +42683,32 @@
         {
             name: _lt("Sum"),
             types: [CellValueType.number],
-            compute: (values) => SUM.compute([values]),
+            compute: (values, locale) => SUM.compute.bind({ locale })([values]),
         },
         {
             name: _lt("Avg"),
             types: [CellValueType.number],
-            compute: (values) => AVERAGE.compute([values]),
+            compute: (values, locale) => AVERAGE.compute.bind({ locale })([values]),
         },
         {
             name: _lt("Min"),
             types: [CellValueType.number],
-            compute: (values) => MIN.compute([values]),
+            compute: (values, locale) => MIN.compute.bind({ locale })([values]),
         },
         {
             name: _lt("Max"),
             types: [CellValueType.number],
-            compute: (values) => MAX.compute([values]),
+            compute: (values, locale) => MAX.compute.bind({ locale })([values]),
         },
         {
             name: _lt("Count"),
             types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
-            compute: (values) => COUNTA.compute([values]),
+            compute: (values, locale) => COUNTA.compute.bind({ locale })([values]),
         },
         {
             name: _lt("Count Numbers"),
             types: [CellValueType.number, CellValueType.text, CellValueType.boolean, CellValueType.error],
-            compute: (values) => COUNT.compute([values]),
+            compute: (values, locale) => COUNT.compute.bind({ locale })([values]),
         },
     ];
     /**
@@ -42155,7 +42765,7 @@
                         break;
                     }
                     catch (error) {
-                        return 28 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                 case "MOVE_COLUMNS_ROWS":
                     return this.isMoveElementAllowed(cmd);
@@ -42430,6 +43040,7 @@
                 cellsTypes.add(cell.type);
                 cellsValues.push(cell.value);
             }
+            const locale = this.getters.getLocale();
             let statisticFnResults = {};
             for (let fn of selectionStatisticFunctions) {
                 // We don't want to display statistical information when there is no interest:
@@ -42439,7 +43050,7 @@
                 // be displayed as undefined rather than 0.
                 let fnResult = undefined;
                 if (fn.types.some((t) => cellsTypes.has(t))) {
-                    fnResult = fn.compute(cellsValues);
+                    fnResult = fn.compute(cellsValues, locale);
                 }
                 statisticFnResults[fn.name] = fnResult;
             }
@@ -42457,7 +43068,8 @@
                     aggregate += cell.value;
                 }
             }
-            return n < 2 ? null : formatValue(aggregate);
+            const locale = this.getters.getLocale();
+            return n < 2 ? null : formatValue(aggregate, { locale });
         }
         isSelected(zone) {
             return !!this.getters.getSelectedZones().find((z) => isEqual(z, zone));
@@ -43458,7 +44070,7 @@
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 69 /* CommandResult.InvalidViewportSize */;
+                return 68 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -43468,7 +44080,7 @@
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 77 /* CommandResult.ValuesNotChanged */;
+                return 76 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -43476,7 +44088,7 @@
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 70 /* CommandResult.InvalidScrollingDirection */;
+                return 69 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -43649,6 +44261,7 @@
     }
 
     const corePluginRegistry = new Registry()
+        .add("settings", SettingsPlugin)
         .add("sheet", SheetPlugin)
         .add("header visibility", HeaderVisibilityPlugin)
         .add("filters", FiltersPlugin)
@@ -43903,14 +44516,17 @@
     };
 
     function interactiveRenameSheet(env, sheetId, name, errorCallback) {
+        const originalSheetName = env.model.getters.getSheetName(sheetId);
+        if (name === null || name === originalSheetName)
+            return;
         const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
         if (result.reasons.includes(10 /* CommandResult.MissingSheetName */)) {
             env.raiseError(_lt("The sheet name cannot be empty."), errorCallback);
         }
-        else if (result.reasons.includes(12 /* CommandResult.DuplicatedSheetName */)) {
+        else if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
             env.raiseError(_lt("A sheet with the name %s already exists. Please select another name.", name), errorCallback);
         }
-        else if (result.reasons.includes(14 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+        else if (result.reasons.includes(13 /* CommandResult.ForbiddenCharactersInSheetName */)) {
             env.raiseError(_lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")), errorCallback);
         }
     }
@@ -44144,7 +44760,8 @@
             this.props.openContextMenu(left + width, top, registry);
         }
         getComposedFnName(fnName, fnValue) {
-            return fnName + ": " + (fnValue !== undefined ? formatValue(fnValue) : "__");
+            const locale = this.env.model.getters.getLocale();
+            return fnName + ": " + (fnValue !== undefined ? formatValue(fnValue, { locale }) : "__");
         }
     }
     BottomBarStatistic.props = {
@@ -45739,6 +46356,7 @@
                 model: this.model,
                 imageProvider: fileStore ? new ImageProvider(fileStore) : undefined,
                 loadCurrencies: this.model.config.external.loadCurrencies,
+                loadLocales: this.model.config.external.loadLocales,
                 isDashboard: () => this.model.getters.isDashboard(),
                 openSidePanel: this.openSidePanel.bind(this),
                 toggleSidePanel: this.toggleSidePanel.bind(this),
@@ -46898,7 +47516,7 @@
          */
         moveAnchorCell(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
@@ -46944,7 +47562,7 @@
          */
         resizeAnchorZone(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(84 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
@@ -47138,20 +47756,20 @@
         checkAnchorZone(anchor) {
             const { cell, zone } = anchor;
             if (!isInside(cell.col, cell.row, zone)) {
-                return 17 /* CommandResult.InvalidAnchorZone */;
+                return 16 /* CommandResult.InvalidAnchorZone */;
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
             const refCol = this.getters.findVisibleHeader(sheetId, "COL", left, right);
             const refRow = this.getters.findVisibleHeader(sheetId, "ROW", top, bottom);
             if (refRow === undefined || refCol === undefined) {
-                return 18 /* CommandResult.SelectionOutOfBound */;
+                return 17 /* CommandResult.SelectionOutOfBound */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkAnchorZoneOrThrow(anchor) {
             const result = this.checkAnchorZone(anchor);
-            if (result === 17 /* CommandResult.InvalidAnchorZone */) {
+            if (result === 16 /* CommandResult.InvalidAnchorZone */) {
                 throw new Error(_t("The provided anchor is invalid. The cell must be part of the zone."));
             }
         }
@@ -47792,7 +48410,7 @@
             value = clearValue === "TRUE" ? "1" : "0";
             attrs.push(["t", "b"]);
         }
-        else if (forceString || !isNumber(value)) {
+        else if (forceString || !isNumber(value, DEFAULT_LOCALE)) {
             const { id } = pushElement(content, sharedStrings);
             value = id.toString();
             attrs.push(["t", "s"]);
@@ -47857,7 +48475,7 @@
      */
     function convertDateFormat(ast) {
         const value = ast.value.replace(new RegExp('"', "g"), "");
-        const internalDate = parseDateTime(value);
+        const internalDate = parseDateTime(value, DEFAULT_LOCALE);
         if (internalDate) {
             let format = [];
             if (mdyDateRegexp.test(value) || ymdDateRegexp.test(value)) {
@@ -47868,7 +48486,7 @@
             }
             return {
                 ...ast,
-                value: formatValue(internalDate.value, format.join(" ")),
+                value: formatValue(internalDate.value, { format: format.join(" "), locale: DEFAULT_LOCALE }),
             };
         }
         else {
@@ -49188,12 +49806,19 @@
                 ...config,
                 mode: config.mode || "normal",
                 custom: config.custom || {},
-                external: config.external || {},
+                external: this.setupExternalConfig(config.external || {}),
                 transportService,
                 client,
                 moveClient: () => { },
                 snapshotRequested: false,
                 notifyUI: (payload) => this.trigger("notify-ui", payload),
+            };
+        }
+        setupExternalConfig(external) {
+            const loadLocales = external.loadLocales || (() => Promise.resolve(DEFAULT_LOCALES));
+            return {
+                ...external,
+                loadLocales,
             };
         }
         setupCorePluginConfig() {
@@ -49272,10 +49897,10 @@
             const command = createCommand(type, payload);
             let status = this.status;
             if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                return new DispatchResult(68 /* CommandResult.Readonly */);
+                return new DispatchResult(67 /* CommandResult.Readonly */);
             }
             if (!this.session.canApplyOptimisticUpdate()) {
-                return new DispatchResult(65 /* CommandResult.WaitingSessionConfirmation */);
+                return new DispatchResult(64 /* CommandResult.WaitingSessionConfirmation */);
             }
             switch (status) {
                 case 0 /* Status.Ready */:
@@ -49522,6 +50147,9 @@
     function addFunction(functionName, functionDescription) {
         functionRegistry.add(functionName, functionDescription);
     }
+    const constants = {
+        DEFAULT_LOCALE,
+    };
 
     exports.AbstractChart = AbstractChart;
     exports.CorePlugin = CorePlugin;
@@ -49538,6 +50166,7 @@
     exports.astToFormula = astToFormula;
     exports.compile = compile;
     exports.components = components;
+    exports.constants = constants;
     exports.convertAstNodes = convertAstNodes;
     exports.coreTypes = coreTypes;
     exports.findCellInNewZone = findCellInNewZone;
@@ -49558,9 +50187,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.0-alpha.5';
-    __info__.date = '2023-06-26T14:47:32.747Z';
-    __info__.hash = '3b0b6f1';
+    __info__.version = '16.4.0-alpha.4';
+    __info__.date = '2023-06-27T08:58:34.393Z';
+    __info__.hash = '17dd0b4';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
