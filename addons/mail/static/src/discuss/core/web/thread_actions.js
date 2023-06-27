@@ -26,5 +26,5 @@ threadActionsRegistry.add("expand-discuss", {
             { clearBreadcrumbs: true }
         );
     },
-    sequence: 51,
+    sequence: 15,
 });

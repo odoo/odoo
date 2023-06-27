@@ -103,17 +103,18 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow-header");
     assert.containsOnce($(".o-mail-ChatWindow-header"), ".o-mail-ChatWindow-threadAvatar");
     assert.containsOnce($, ".o-mail-ChatWindow-name:contains(General)");
-    assert.containsN($, ".o-mail-ChatWindow-command", 3);
+    assert.containsN($, ".o-mail-ChatWindow-command", 4);
     assert.containsOnce($, "[title='Start a Call']");
-    assert.containsOnce($, "[title='More actions']");
+    assert.containsOnce($, "[title='Open Actions Menu']");
+    assert.containsOnce($, "[title='Fold']");
     assert.containsOnce($, "[title='Close Chat Window']");
     assert.containsOnce($, ".o-mail-ChatWindow-content .o-mail-Thread");
     assert.strictEqual(
         $(".o-mail-ChatWindow-content .o-mail-Thread").text().trim(),
         "There are no messages in this conversation."
     );
-    await click("[title='More actions']");
-    assert.containsN($, ".o-mail-ChatWindow-command", 8);
+    await click("[title='Open Actions Menu']");
+    assert.containsN($, ".o-mail-ChatWindow-command", 9);
     assert.containsOnce($, "[title='Pinned Messages']");
     assert.containsOnce($, "[title='Add Users']");
     assert.containsOnce($, "[title='Show Member List']");
@@ -159,12 +160,12 @@ QUnit.test("chat window: fold", async (assert) => {
     assert.verifySteps(["rpc:channel_fold/open"]);
 
     // Fold chat window
-    await click(".o-mail-ChatWindow-header");
+    await click(".o-mail-ChatWindow-command[title='Fold']");
     assert.verifySteps(["rpc:channel_fold/folded"]);
     assert.containsNone($, ".o-mail-ChatWindow .o-mail-Thread");
 
     // Unfold chat window
-    await click(".o-mail-ChatWindow-header");
+    await click(".o-mail-ChatWindow-command[title='Open']");
     assert.verifySteps(["rpc:channel_fold/open"]);
     assert.containsOnce($, ".o-mail-ChatWindow .o-mail-Thread");
 });
@@ -922,10 +923,10 @@ QUnit.test(
         assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
 
         // fold chat window
-        await click(".o-mail-ChatWindow-header");
+        await click(".o-mail-ChatWindow-command[title='Fold']");
         assert.containsNone($, ".o-mail-Thread");
         // unfold chat window
-        await click(".o-mail-ChatWindow-header");
+        await click(".o-mail-ChatWindow-command[title='Open']");
         assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
     }
 );
@@ -949,7 +950,7 @@ QUnit.test(
         // Set a scroll position to chat window
         $(".o-mail-Thread")[0].scrollTop = 142;
         // fold chat window
-        await click(".o-mail-ChatWindow-header");
+        await click(".o-mail-ChatWindow-command[title='Fold']");
         await openDiscuss(null, { waitUntilMessagesLoaded: false });
         assert.containsNone($, ".o-mail-ChatWindow");
 
@@ -959,7 +960,7 @@ QUnit.test(
             views: [[false, "list"]],
         });
         // unfold chat window
-        await click(".o-mail-ChatWindow-header");
+        await click(".o-mail-ChatWindow-command[title='Open']");
         assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
     }
 );
@@ -971,20 +972,20 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click("[title='More actions']");
+    await click("[title='Open Actions Menu']");
     assert.containsOnce($, "[title='Show Member List']");
     assert.containsOnce($, "[title='Show Call Settings']");
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
 
     // Fold chat window
-    await click(".o-mail-ChatWindow-header");
-    assert.containsNone($, "[title='More actions']");
+    await click(".o-mail-ChatWindow-command[title='Fold']");
+    assert.containsNone($, "[title='Open Actions Menu']");
     assert.containsNone($, "[title='Show Member List']");
     assert.containsNone($, "[title='Show Call Settings']");
 
     // Unfold chat window
-    await click(".o-mail-ChatWindow-header");
-    await click("[title='More actions']");
+    await click(".o-mail-ChatWindow-command[title='Open']");
+    await click("[title='Open Actions Menu']");
     assert.containsOnce($, "[title='Show Member List']");
     assert.containsOnce($, "[title='Show Call Settings']");
 });

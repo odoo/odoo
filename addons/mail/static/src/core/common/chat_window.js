@@ -4,6 +4,7 @@ import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useStore } from "@mail/core/common/messaging_hook";
 import { Thread } from "@mail/core/common/thread";
+import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import {
@@ -35,6 +36,7 @@ export class ChatWindow extends Component {
         Composer,
         ThreadIcon,
         ImStatus,
+        AutoresizeInput,
     };
     static props = ["chatWindow", "right?"];
     static template = "mail.ChatWindow";
@@ -48,7 +50,11 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
-        this.state = useState({ moreActionsExpanded: false, jumpThreadPresent: 0 });
+        this.state = useState({
+            actionsMenuOpened: false,
+            jumpThreadPresent: 0,
+            editingName: false,
+        });
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
@@ -80,6 +86,10 @@ export class ChatWindow extends Component {
                 ) {
                     return;
                 }
+                if (this.state.editingName) {
+                    this.state.editingName = false;
+                    return;
+                }
                 this.close({ escape: true });
                 break;
             case "Tab": {
@@ -97,8 +107,14 @@ export class ChatWindow extends Component {
         }
     }
 
+    onClickHeader() {
+        if (!this.ui.isSmall && !this.state.editingName) {
+            this.toggleFold();
+        }
+    }
+
     toggleFold() {
-        if (this.ui.isSmall || this.state.moreActionsExpanded) {
+        if (this.ui.isSmall || this.state.actionsMenuOpened) {
             return;
         }
         if (this.props.chatWindow.hidden) {
@@ -112,12 +128,17 @@ export class ChatWindow extends Component {
         this.chatWindowService.close(this.props.chatWindow, options);
     }
 
-    get moreMenuText() {
-        return _t("More actions");
+    get actionsMenuTitleText() {
+        return _t("Open Actions Menu");
     }
 
-    async onMoreActionsStateChanged(state) {
+    async renameThread(name) {
+        await this.threadService.renameThread(this.thread, name);
+        this.state.editingName = false;
+    }
+
+    async onActionsMenuStateChanged(state) {
         await new Promise(setTimeout); // wait for bubbling header
-        this.state.moreActionsExpanded = state.open;
+        this.state.actionsMenuOpened = state.open;
     }
 }

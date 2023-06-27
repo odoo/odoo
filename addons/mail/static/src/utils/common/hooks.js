@@ -43,16 +43,27 @@ function useExternalListener(target, eventName, handler, eventParams) {
 }
 
 export function onExternalClick(refName, cb) {
+    let downTarget, upTarget;
     const ref = useRef(refName);
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.target)) {
-            cb(ev);
+            cb(ev, { downTarget, upTarget });
         }
     }
+    function onMousedown(ev) {
+        downTarget = ev.target;
+    }
+    function onMouseup(ev) {
+        upTarget = ev.target;
+    }
     onMounted(() => {
+        document.body.addEventListener("mousedown", onMousedown, true);
+        document.body.addEventListener("mouseup", onMouseup, true);
         document.body.addEventListener("click", onClick, true);
     });
     onWillUnmount(() => {
+        document.body.removeEventListener("mousedown", onMousedown, true);
+        document.body.removeEventListener("mouseup", onMouseup, true);
         document.body.removeEventListener("click", onClick, true);
     });
 }

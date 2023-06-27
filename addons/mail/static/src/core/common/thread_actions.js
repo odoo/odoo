@@ -7,17 +7,49 @@ import { registry } from "@web/core/registry";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
-threadActionsRegistry.add("close", {
-    condition(component) {
-        return component.props.chatWindow;
-    },
-    icon: "fa fa-fw fa-close",
-    name: _t("Close Chat Window"),
-    open(component) {
-        component.close();
-    },
-    sequence: 100,
-});
+threadActionsRegistry
+    .add("fold-chat-window", {
+        condition(component) {
+            return !component.ui.isSmall && component.props.chatWindow;
+        },
+        icon: "fa fa-fw fa-minus",
+        name(component) {
+            return !component.props.chatWindow?.isOpen ? _t("Open") : _t("Fold");
+        },
+        open(component) {
+            component.toggleFold();
+        },
+        displayActive(component) {
+            return !component.props.chatWindow?.isOpen;
+        },
+        sequence: 99,
+    })
+    .add("rename-thread", {
+        condition(component) {
+            return (
+                component.thread &&
+                component.props.chatWindow?.isOpen &&
+                (component.thread.is_editable || component.thread.type === "chat")
+            );
+        },
+        icon: "fa fa-fw fa-pencil",
+        name: _t("Rename"),
+        open(component) {
+            component.state.editingName = true;
+        },
+        sequence: 17,
+    })
+    .add("close", {
+        condition(component) {
+            return component.props.chatWindow;
+        },
+        icon: "fa fa-fw fa-close",
+        name: _t("Close Chat Window"),
+        open(component) {
+            component.close();
+        },
+        sequence: 100,
+    });
 
 function transformAction(component, id, action) {
     return {
@@ -58,7 +90,8 @@ function transformAction(component, id, action) {
         },
         /** Name of this action, displayed to the user. */
         get name() {
-            return this.isActive && action.nameActive ? action.nameActive : action.name;
+            const res = this.isActive && action.nameActive ? action.nameActive : action.name;
+            return typeof res === "function" ? res(component) : res;
         },
         /** Action to execute when this action is selected (on or off). */
         onSelect() {
