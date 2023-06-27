@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
+from odoo import Command
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -77,7 +77,15 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website = self.website
         website.specific_user_account = True
 
-        user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
+        user = self.env['res.users'].create({
+            'website_id': website.id,
+            'login': 'sad@mail.com',
+            'name': 'Hope Fully',
+            'groups_id': [
+                Command.link(self.env.ref('base.group_portal').id),
+                Command.unlink(self.env.ref('base.group_user').id),
+            ],
+        })
         self.assertTrue(user.website_id == user.partner_id.website_id == website)
 
     def test_03_rpc_signin_user_website_id(self):
