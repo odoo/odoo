@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website.TranslateWebsiteSystray">
-        <div class="o_translate_website_container d-none d-md-block">
+        <div class="o_translate_website_container d-none" t-att-class="{ 'd-md-block': !this.websiteContext.snippetsLoaded }">
             <a href="#" accesskey="t" t-on-click="startTranslate" class="btn btn-primary d-flex align-items-center h-100 rounded-0 border-0 fw-normal">
                 <span t-if="websiteContext.translation" class="fa fa-refresh fa-spin me-2"/>
                 Translate

@@ -5,7 +5,6 @@
         <t t-out="this.loadingDummy"/>
     </div>
     <div t-if="state.showWysiwyg"
-        t-ref="wysiwyg-adapter"
         t-att-class="{ o_w_wysiwyg_transition: !this.state.reloading, o_w_wysiwyg: this.websiteContext.snippetsLoaded }">
         <WysiwygAdapterComponent
             editingValue="this.wysiwygOptions.value"

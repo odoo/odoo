@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 import odoo.tests
+from odoo.tools.translate import CodeTranslations
 
 class TestConfiguratorCommon(odoo.tests.HttpCase):
 
@@ -66,12 +67,19 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
         website_fr = self.env['website'].create({
             'name': "New website",
         })
-        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
-            parseltongue.code: {
-                'Save': 'Save_Parseltongue'
-            }
-        })
+
+        get_web_translations_origin = CodeTranslations.get_web_translations
+        def get_web_translations_mockup(self, module_name, lang):
+            res = get_web_translations_origin(self, module_name, lang)
+            if (lang == parseltongue.code):
+                return {'messages': [
+                    {'id': 'Save', 'string': 'Save_Parseltongue'},
+                ]}
+            return res
+
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         active_todo.update({'state': 'done'})
-        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login='admin')
+
+        with patch('odoo.tools.translate.CodeTranslations.get_web_translations', get_web_translations_mockup):
+            self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login='admin')

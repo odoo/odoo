@@ -1676,9 +1676,6 @@ var SnippetsMenu = Widget.extend({
         'mouseup': '_onMouseUp',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
-        'click .o_we_website_top_actions button[data-action=save]': '_onSaveRequest',
-        'click .o_we_website_top_actions button[data-action=cancel]': '_onDiscardClick',
-        'click .o_we_website_top_actions button[data-action=mobile]': '_onMobilePreviewClick',
         'click .o_we_website_top_actions button[data-action=undo]': '_onUndo',
         'click .o_we_website_top_actions button[data-action=redo]': '_onRedo',
     },
@@ -1847,10 +1844,8 @@ var SnippetsMenu = Widget.extend({
             // Load the sidebar with the style tab only.
             await this._loadSnippetsTemplates();
             defs.push(this._updateInvisibleDOM());
-            this.$el.find('.o_we_website_top_actions').removeClass('d-none');
             this.$('.o_snippet_search_filter').addClass('d-none');
             this.$('#o_scroll').addClass('d-none');
-            this.$('button[data-action="mobilePreview"]').addClass('d-none');
             this.$('#snippets_menu button').removeClass('active').prop('disabled', true);
             this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
             this.$('o_we_ui_loading').addClass('d-none');
@@ -4104,7 +4099,7 @@ var SnippetsMenu = Widget.extend({
         }
         delete data._toMutex;
         ev.stopPropagation();
-        this._buttonClick((after) => this._execWithLoadingEffect(() => {
+        this._freezeButtonsOnAction((after) => this._execWithLoadingEffect(() => {
             const oldOnFailure = data.onFailure;
             data.onFailure = () => {
                 if (oldOnFailure) {
@@ -4113,7 +4108,7 @@ var SnippetsMenu = Widget.extend({
                 after();
             };
             this.trigger_up('request_save', data);
-        }, true), this.$el[0].querySelector('button[data-action=save]'));
+        }, true));
     },
     /**
      * @private
@@ -4374,52 +4369,6 @@ var SnippetsMenu = Widget.extend({
         $toolbarTableContainer.toggleClass('d-none', !isInsideTD);
     },
     /**
-     * On click on discard button.
-     */
-    _onDiscardClick: function () {
-        this._buttonClick(after => {
-            this.snippetEditors.forEach(editor => {
-                editor.toggleOverlay(false);
-            });
-            this.trigger_up('request_cancel', {onReject: after});
-        }, this.$el[0].querySelector('button[data-action=cancel]'), false);
-    },
-    /**
-     * Preview on mobile.
-     */
-    _onMobilePreviewClick() {
-        this.trigger_up('request_mobile_preview');
-
-        // TODO refactor things to make this more understandable -> on mobile
-        // edition, update the UI. But to do it properly and inside the mutex
-        // this simulates what happens when a snippet option is used.
-        this._execWithLoadingEffect(async () => {
-            // TODO needed so that mobile edition is considered before updating
-            // the UI but this is clearly random. The trigger_up above should
-            // properly await for the rerender somehow.
-            await new Promise(resolve => setTimeout(resolve));
-
-            return new Promise(resolve => {
-                this.trigger_up('snippet_option_update', {
-                    onSuccess: () => resolve(),
-                });
-            });
-        }, false);
-
-        // Reload images inside grid items so that no image disappears when
-        // activating mobile preview.
-        const $gridItemEls = this.getEditableArea().find('div.o_grid_item');
-        for (const gridItemEl of $gridItemEls) {
-            gridUtils._reloadLazyImages(gridItemEl);
-        }
-        for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
-            invisibleOverrideEl.classList.remove('o_snippet_override_invisible');
-            invisibleOverrideEl.dataset.invisible = '1';
-        }
-        // This is async but using the main editor mutex.
-        this._updateInvisibleDOM();
-    },
-    /**
      * Undo..
      */
     _onUndo: async function () {
@@ -4461,36 +4410,27 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /***
-     * Display a loading effect on the clicked button, and disables the other
-     * buttons. Passes an argument to restore the buttons to their normal
-     * state to the function to execute.
+     * Disables the editor action buttons. Passes an argument to restore the
+     * buttons to their normal state to the function to execute.
      *
      * @param action {Function} The action to execute
-     * @param button {HTMLElement} The button element
-     * @param addLoadingEffect {boolean} whether or not to add a loading effect.
      * @returns {Promise<void>}
      * @private
      */
-    async _buttonClick(action, button, addLoadingEffect = true) {
+    async _freezeButtonsOnAction(action) {
         if (this._buttonAction) {
             return;
         }
         this._buttonAction = true;
-        let removeLoadingEffect;
         // Remove the tooltip now, because the button will be disabled and so,
         // the tooltip will not be removable (see BS doc).
         this._hideActiveTooltip();
-        if (addLoadingEffect) {
-            removeLoadingEffect = dom.addButtonLoadingEffect(button);
-        }
-        const actionButtons = this.$el[0].querySelectorAll('[data-action]');
+
+        const actionButtons = this.$document[0].querySelectorAll(".o_top_actions_editor button");
         for (const actionButton of actionButtons) {
             actionButton.disabled = true;
         }
         const after = () => {
-            if (removeLoadingEffect) {
-                removeLoadingEffect();
-            }
             for (const actionButton of actionButtons) {
                 actionButton.disabled = false;
             }

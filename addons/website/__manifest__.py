@@ -282,6 +282,7 @@
             'website/static/src/services/website_custom_menus.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/systray_items/*',
+            'website/static/src/systray_items/user_menu/website_user_menu_shortcuts.js',
             'web_editor/static/src/xml/editor.xml',
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/components/website_loader/*.xml',

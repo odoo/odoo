@@ -90,13 +90,14 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
 }, {
-    content: "save",
-    trigger: 'button[data-action=save]',
-    extra_trigger: 'iframe #wrap p:first b',
-}, {
+    content: "Check the content has been changed",
+    trigger: "iframe #wrap p:first b",
+    run: () => null,
+},
+...wTourUtils.clickOnSave(),
+{
     content: "click language dropdown (3)",
     trigger: 'iframe .js_language_selector .dropdown-toggle',
-    extra_trigger: 'iframe body:not(.editor_enable)',
 }, {
     content: "click on Parseltongue version",
     trigger: 'iframe .js_language_selector a[data-url_code="pa_GB"]',
@@ -182,39 +183,9 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "Check body",
     trigger: "iframe body:not(:has(#wrap p font:first:containsExact(paragraphs <b>describing</b>)))",
     run: function () {}, // it's a check
-},
-...wTourUtils.clickOnEditAndWaitEditMode(),
-{
-    content: "select text",
-    trigger: 'iframe #wrap p',
-    run: function (actionHelper) {
-        actionHelper.click();
-        var el = this.$anchor[0];
-        var mousedown = document.createEvent('MouseEvents');
-        mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
-        el.dispatchEvent(mousedown);
-        var mouseup = document.createEvent('MouseEvents');
-        Wysiwyg.setRange(el.childNodes[2], 6, el.childNodes[2], 13);
-        mouseup.initMouseEvent('mouseup', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
-        el.dispatchEvent(mouseup);
-    },
-// This is disabled for now because it reveals a bug that is fixed in saas-15.1
-// and considered a tradeoff in 15.0. The bug concerns the invalidation of
-// translations when inserting tags with more than one character. Whereas <u>
-// didn't trigger an invalidation, <span style="text-decoration-line: underline;">
-// does.
-// }, {
-//     content: "underline",
-//     trigger: '.oe-toolbar #underline',
-}, {
-    content: "save new change",
-    trigger: 'button[data-action=save]',
-    // See comment above.
-    // extra_trigger: '#wrap.o_dirty p span[style*="text-decoration-line: underline;"]',
 }, {
     content: "click language dropdown (4)",
     trigger: 'iframe .js_language_selector .dropdown-toggle',
-    extra_trigger: 'iframe body:not(.editor_enable)',
 }, {
     content: "return in Parseltongue",
     trigger: 'iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',

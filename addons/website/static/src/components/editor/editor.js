@@ -1,7 +1,6 @@
 /** @odoo-module */
 import { useService } from '@web/core/utils/hooks';
 import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
-import { useActiveElement } from '@web/core/ui/ui_service';
 
 const { markup, Component, useState, useEffect, onWillStart, onMounted, onWillUnmount } = owl;
 
@@ -50,8 +49,6 @@ export class WebsiteEditorComponent extends Component {
                 this.onWillUnmount();
             }
         });
-
-        useActiveElement('wysiwyg-adapter');
     }
     /**
      * Starts the wysiwyg or disable edition if currently

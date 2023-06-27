@@ -43,7 +43,7 @@ class ShortcutsFooterComponent extends Component {
 }
 ShortcutsFooterComponent.template = "web.UserMenu.ShortcutsFooterComponent";
 
-function shortCutsItem(env) {
+export function shortCutsItem(env) {
     // ℹ️ `_t` can only be inlined directly inside JS template literals after
     // Babel has been updated to version 2.12.
     const translatedText = _t("Shortcuts");

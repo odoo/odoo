@@ -26,7 +26,7 @@ EventAdditionalTourSteps.include({
                 position: 'bottom',
                 run: 'drag_and_drop iframe #o_wevent_event_main_col',
             }, {
-                trigger: 'button[data-action="save"]',
+                trigger: ".o_we_save_container button",
                 content: Markup(_t("Don't forget to click <b>save</b> when you're done.")),
                 position: 'bottom',
             }, {

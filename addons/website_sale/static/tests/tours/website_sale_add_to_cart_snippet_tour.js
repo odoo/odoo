@@ -35,6 +35,12 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...editAddToCartSnippet(),
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
         ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
+        {
+            // This step seems useless, but the test crashes without it.
+            content: "Check that the variant has been selected",
+            trigger: "we-select[data-name=product_variant_picker_opt] we-toggler:contains('Conference Chair (Aluminium)')",
+            run: () => null,
+        },
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
 

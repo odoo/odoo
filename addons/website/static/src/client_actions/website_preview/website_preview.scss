@@ -36,10 +36,6 @@
     }
 
     &.o_is_mobile {
-        .o_we_website_top_actions button[data-action="mobile"] span.fa {
-            color: $o-we-color-success;
-        }
-
         .o_iframe_container {
             @extend %o-mobile-phone;
             @include media-breakpoint-up(md) {
@@ -57,7 +53,7 @@
     }
 }
 
-.o_we_website_top_actions button[data-action="mobile"], .o_mobile_preview {
+.o_mobile_preview {
     span.fa {
         font-size: 20px;
     }
@@ -69,7 +65,7 @@
     }
 }
 
-.o_website_fullscreen, .editor_has_snippets, .editor_has_dummy_snippets {
+.o_website_fullscreen {
     header {
         .o_main_navbar {
             height: 0px;
@@ -88,10 +84,6 @@ header {
     .o_main_navbar {
         transition: transform 400ms ease, height 400ms ease, border-bottom 400ms ease;
     }
-}
-
-.editor_has_snippets_hide_backend_navbar header .o_main_navbar {
-    display: none !important;
 }
 
 .o_block_preview {

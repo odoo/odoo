@@ -240,9 +240,6 @@ export class MassMailingHtmlField extends HtmlField {
         const $snippetsSideBar = this.wysiwyg.snippetsMenu.$el;
         const $themes = $snippetsSideBar.find("#email_designer_themes").children();
         const $snippets = $snippetsSideBar.find(".oe_snippet");
-        const selectorToKeep = '.o_we_external_history_buttons, .email_designer_top_actions';
-        // Overide `d-flex` class which style is `!important`
-        $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
 
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();

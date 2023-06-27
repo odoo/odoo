@@ -3,10 +3,12 @@
 
 import base64
 
+from unittest.mock import patch
 from werkzeug.urls import url_encode
 
 import odoo
 import odoo.tests
+from odoo.tools.translate import CodeTranslations
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -172,11 +174,15 @@ class TestUiTranslate(odoo.tests.HttpCase):
                 'Contact us': 'Contact us in Parseltongue'
             }
         })
-        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
-            fake_user_lang.code: {
-                'Save': 'Save in fu_GB',
-            }
-        })
+        get_web_translations_origin = CodeTranslations.get_web_translations
+        def get_web_translations_mockup(self, module_name, lang):
+            res = get_web_translations_origin(self, module_name, lang)
+            if (lang == fake_user_lang.code):
+                return {'messages': [
+                    {'id': 'Save', 'string': 'Save in fu_GB'},
+                ]}
+            return res
+
         website = self.env['website'].create({
             'name': 'website pa_GB',
             'language_ids': [(6, 0, [parseltongue.id])],
@@ -188,7 +194,8 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'default_lang_id': parseltongue.id,
         })
 
-        self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
+        with patch('odoo.tools.translate.CodeTranslations.get_web_translations', get_web_translations_mockup):
+            self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
 
 

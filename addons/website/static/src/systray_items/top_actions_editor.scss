@@ -1,0 +1,15 @@
+.o_website_history_buttons_container {
+    gap: 0.1rem;
+
+    // Overriding default colors for systray items.
+    .o_main_navbar .o_menu_systray & .o_nav_entry[disabled] {
+        color: rgba(255, 255, 255, 0.5);
+        &:hover {
+            background-color: inherit;
+        }
+    }
+}
+
+.editor_has_snippets #oe_snippets .o_we_website_top_actions {
+    display:none;
+}

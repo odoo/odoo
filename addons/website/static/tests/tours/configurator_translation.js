@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
         // Parseltongue. (The editor should be in the website's default language,
         // which should be parseltongue in this test.)
         content: "exit edit mode",
-        trigger: '.o_we_website_top_actions button.btn-primary:contains("Save_Parseltongue")',
+        trigger: '.o_we_save_container button:contains("Save_Parseltongue")',
     }, {
          content: "wait for editor to be closed",
          trigger: 'iframe body:not(.editor_enable)',

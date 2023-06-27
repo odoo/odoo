@@ -1,7 +1,14 @@
+$zindex-navbar-website: (($zindex-fixed + $zindex-modal-backdrop) / 2) + 2 !default; // z-index of #oe_snippets + 1
+
 .editor_has_snippets, .editor_has_dummy_snippets {
     .o_notification_manager {
         @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
     }
+
+    header.o_navbar {
+        z-index: $zindex-navbar-website;
+    }
+
 }
 
 .ui-autocomplete.o_website_ui_autocomplete {
@@ -144,7 +151,6 @@
 
 .o_loading_dummy {
     position: absolute;
-    z-index: $zindex-modal-backdrop;
 }
 
 .o_website_fullscreen {

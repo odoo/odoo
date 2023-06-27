@@ -7,7 +7,7 @@ wTourUtils.registerWebsitePreviewTour('homepage_edit_discard', {
     url: '/',
     edition: true,
 }, () => [{
-    trigger: "#oe_snippets button[data-action=\"cancel\"]:not([disabled])",
+    trigger: ".o_we_discard_container button:not([disabled])",
     extra_trigger: "body:not(:has(.o_dialog))",
     content: "<b>Click Discard</b> to Discard all Changes.",
     position: "bottom",

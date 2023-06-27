@@ -188,7 +188,7 @@ function clickOnSnippet(snippet, position = "bottom") {
 
 function clickOnSave(position = "bottom") {
     return [{
-        trigger: "div:not(.o_loading_dummy) > #oe_snippets button[data-action=\"save\"]:not([disabled])",
+        trigger: "body:not(.editor_has_dummy_snippets) > .o_navbar .o_we_save_container button:not([disabled])",
         // TODO this should not be needed but for now it better simulates what
         // an human does. By the time this was added, it's technically possible
         // to drag and drop a snippet then immediately click on save and have
@@ -364,7 +364,7 @@ function registerThemeHomepageTour(name, steps) {
         saveAs: "homepage",
     }, () => prepend_trigger(
         steps().concat(clickOnSave()),
-        ".o_website_preview[data-view-xmlid='website.homepage'] "
+        "html:has(.o_website_preview[data-view-xmlid='website.homepage']) "
     ));
 }
 

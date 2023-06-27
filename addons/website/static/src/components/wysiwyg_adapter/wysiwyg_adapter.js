@@ -77,7 +77,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.dialogs = useService('dialog');
         this.action = useService('action');
 
-        useBus(this.websiteService.bus, 'LEAVE-EDIT-MODE', (ev) => this.leaveEditMode(ev.detail));
+        useBus(this.websiteService.bus, "LEAVE-EDIT-MODE", async (ev) =>
+            await this.leaveEditMode(ev.detail)
+        );
+        useBus(this.websiteService.bus, "UNDO", () => this.undo());
+        useBus(this.websiteService.bus, "REDO", () => this.redo());
+        useBus(this.websiteService.bus, "CANCEL", (ev) => this._onCancelRequest(ev.detail));
+        useBus(this.websiteService.bus, "SAVE", (ev) => this._onSaveRequest(ev.detail));
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])';
@@ -135,6 +141,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 }
             };
         }, () => []);
+
+        useEffect((historyCanUndo) => {
+            this.websiteService.bus.trigger("HISTORY-CAN-UNDO", { historyCanUndo });
+        }, () => [this.state.historyCanUndo]);
+        useEffect((historyCanRedo) => {
+            this.websiteService.bus.trigger("HISTORY-CAN-REDO", { historyCanRedo });
+        }, () => [this.state.historyCanRedo]);
 
         onWillUnmount(() => {
             if (this.dummyWidgetEl) {
@@ -215,6 +228,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // observer) as the widgets might trigger DOM mutations.
         this._setObserver();
         this.odooEditor.observerActive();
+        this.odooEditor.addEventListener("historyStep", this._updateHistoryStates);
     }
     /**
      * Stop the widgets and save the content.
@@ -283,7 +297,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             },
         );
     }
-    leaveEditMode({ onLeave, forceLeave, onStay, reloadIframe = true } = {}) {
+    async leaveEditMode({ onLeave, forceLeave, onStay, reloadIframe = true, pageLeave = false } = {}) {
         const leave = () => {
             this.dummyWidgetEl = this._getDummmySnippetsEl();
             this.el.parentElement.appendChild(this.dummyWidgetEl);
@@ -296,10 +310,22 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             // The onStay/leave callbacks are not passed directly as
             // primaryClick/secondaryClick props, so that closing the dialog
             // with "esc" or the top right cross icon also executes onStay.
-            this.dialogs.add(WebsiteDialog, {
+            const dialogProps = pageLeave ? {
+                body: this.env._t("Would you like to save your changes?"),
+                primaryTitle: "Save",
+                primaryClick: async () => {
+                    await this.save();
+                    leaving = true;
+                },
+                secondaryTitle: "Stay Here",
+                showTertiaryButton: true,
+                tertiaryTitle: "Discard",
+                tertiaryClick: () => leaving = true,
+            } : {
                 body: this.env._t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
                 primaryClick: () => leaving = true,
-            }, {
+            };
+            this.dialogs.add(WebsiteDialog, dialogProps, {
                 onClose: () => {
                     if (leaving) {
                         leave();
@@ -930,6 +956,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         megaMenuEl.classList.add('o_no_parent_editor');
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     }
+    /**
+     * Updates the `historyCanUndo` and `historyCanRedo` states.
+     */
+    _updateHistoryStates = () => {
+        this.state.historyCanUndo = this.odooEditor.historyCanUndo();
+        this.state.historyCanRedo = this.odooEditor.historyCanRedo();
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1023,7 +1056,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @private
      */
     _onCancelRequest(event) {
-        this.leaveEditMode({ onStay: event.data.onReject });
+        this.leaveEditMode({ onLeave: event.data.onDiscard, onStay: event.data.onReject });
     }
     /**
      * Called when a snippet is about to be cloned in the page. Notifies the

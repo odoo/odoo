@@ -17,6 +17,9 @@
                 <button t-if="props.showSecondaryButton" class="btn btn-secondary" t-on-click="protectedClick(props.secondaryClick)" t-att-disabled="state.disabled">
                     <t t-esc="props.secondaryTitle"/>
                 </button>
+                <button t-if="props.showTertiaryButton" class="btn btn-secondary" t-on-click="protectedClick(props.tertiaryClick)" t-att-disabled="state.disabled">
+                    <t t-esc="props.tertiaryTitle"/>
+                </button>
             </t>
         </t>
     </Dialog>

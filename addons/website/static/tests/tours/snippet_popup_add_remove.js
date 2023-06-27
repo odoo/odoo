@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
 }, {
     content: "Click on the 'undo' button.",
     in_modal: false,
-    trigger: '#oe_snippets button[data-action="undo"]',
+    trigger: ".o_website_history_buttons_container .o_navbar_undo",
 }, {
     content: "Check that the s_popup was removed.",
     in_modal: false,

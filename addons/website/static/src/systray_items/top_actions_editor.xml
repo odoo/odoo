@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.TopActionsEditorSystray">
+    <div class="o_top_actions_editor o_menu_systray_item d-none" t-att-class="{ 'd-md-flex': this.state.isEditorOpen }">
+        <div class="o_website_history_buttons_container d-flex">
+            <button type="button" t-on-click="undo" title="Undo"
+                class="o_navbar_undo o_nav_entry fa fa-undo"
+                t-att-disabled="!this.state.historyCanUndo or this.state.disabled"/>
+            <button type="button" t-on-click="redo" title="Redo"
+                class="o_navbar_redo o_nav_entry fa fa-repeat"
+                t-att-disabled="!this.state.historyCanRedo or this.state.disabled"/>
+        </div>
+
+        <div class="o_we_discard_container">
+            <button type="button" data-hotkey="j" t-on-click="cancel" title="Discard record"
+                t-att-disabled="this.state.disabled" class="o_nav_entry">Discard</button>
+        </div>
+        <div class="o_we_save_container">
+            <button type="button" data-hotkey="s" t-on-click="save" title="Save record"
+                class="h-100 btn btn-primary d-flex align-items-center rounded-0 border-0 fw-normal"
+                t-att-disabled="this.state.disabled">
+                <span class="fa me-2" t-att-class="{ 'fa-save': !this.state.isSaveLoading,
+                    'fa-refresh fa-spin': this.state.isSaveLoading }"/>
+                Save
+            </button>
+        </div>
+    </div>
+</t>
+</templates>

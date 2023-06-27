@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="website.EditWebsiteSystray">
-    <div class="o_edit_website_container d-none d-md-block" t-att-class="{ o_translatable: translatable }">
+    <div class="o_edit_website_container d-none" t-att-class="{ o_translatable: translatable, 'd-md-block': !this.websiteContext.snippetsLoaded }">
         <a href="#" class="h-100" accesskey="a" t-on-click="startEdit" t-att-class="{'btn btn-primary d-flex align-items-center rounded-0 border-0 fw-normal': !translatable, 'o_nav_entry': translatable}">
             <span t-if="translatable" class="fa fa-pencil me-2"/>
             <span t-else="" class="fa me-2" t-att-class="{ 'fa-refresh fa-spin': this.state.isLoading, 'fa-pencil': !this.state.isLoading }"/>

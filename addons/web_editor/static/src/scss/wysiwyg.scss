@@ -1,12 +1,6 @@
 $o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
 $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
-// Use css variables to control the default style of the editor so that an
-// external assets bundle can influence it without duplicating the css.
-:root {
-    @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
-}
-
 .o_we_command_protector {
     font-weight: 400 !important;
 

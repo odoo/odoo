@@ -15,7 +15,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation', {
     },
     {
         content: "Check that the save button contains 'in fu_GB'",
-        trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
+        trigger: '.o_we_save_container button:contains("Save in fu_GB")',
         run: () => null, // it's a check
     },
 ]);

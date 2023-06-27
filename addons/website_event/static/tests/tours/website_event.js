@@ -40,7 +40,7 @@
         position: "bottom",
         run: "drag_and_drop",
     }, {
-        trigger: "button[data-action=save]",
+        trigger: ".o_we_save_container button",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
         extra_trigger: "iframe .o_dirty",
