@@ -23,6 +23,7 @@ Tento modul definuje:
         'base_vat',
     ],
     'data': [
+          'data/menuitem_data.xml',
           'data/l10n_cz_coa_data.xml',
           'data/account.account.template.csv',
           'data/account.group.template.csv',
