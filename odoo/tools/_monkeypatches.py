@@ -32,7 +32,7 @@ def literal_eval(expr):
     # the default limit is set to 100KiB
     # can be overridden by setting the ODOO_LIMIT_LITEVAL_BUFFER environment variable
     buffer_size = os.getenv("ODOO_LIMIT_LITEVAL_BUFFER") or 1.024e5
-    if len(expr) > int(buffer_size):
+    if isinstance(expr, str) and len(expr) > int(buffer_size):
         raise ValueError("expression can't exceed buffer limit")
 
     return orig_literal_eval(expr)
