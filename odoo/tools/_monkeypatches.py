@@ -44,7 +44,7 @@ def literal_eval(expr):
         else:
             _logger.error("ODOO_LIMIT_LITEVAL_BUFFER has to be an integer, defaulting to 100KiB")
 
-    if len(expr) > buffer_size:
+    if isinstance(expr, str) and len(expr) > buffer_size:
         raise ValueError("expression can't exceed buffer limit")
 
     return orig_literal_eval(expr)
