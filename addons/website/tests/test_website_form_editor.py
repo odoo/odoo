@@ -31,6 +31,7 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'The email was edited, the form should have been sent to the configured email')
 
     def test_website_form_contact_us_edition_no_email(self):
+        self.env.company.email = 'website_form_contactus_edition_no_email@mail.com'
         self.start_tour('/web', 'website_form_contactus_edition_no_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
