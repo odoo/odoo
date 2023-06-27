@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="invoice_policy" position="attributes">
                 <attribute name="invisible">False</attribute>
-                <attribute name="attrs">{'invisible': [('type', '=', 'service')]}</attribute>
+                <attribute name="attrs">{'invisible': [('type', '=', 'service'), ('sale_ok', '=', True)]}</attribute>
             </field>
             <field name="invoice_policy" position="after">
                 <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
