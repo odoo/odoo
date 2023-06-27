@@ -342,7 +342,7 @@ const Wysiwyg = Widget.extend({
             window.addEventListener('beforeunload', this._onBeforeUnload);
         }
         if (this.options.getContentEditableAreas) {
-            $(this.options.getContentEditableAreas()).find('*').off('mousedown mouseup click');
+            $(this.options.getContentEditableAreas(this.odooEditor)).find('*').off('mousedown mouseup click');
         }
 
         // The toolbar must be configured after the snippetMenu is loaded
@@ -735,7 +735,7 @@ const Wysiwyg = Widget.extend({
         $body.off('mousemove', this.resizerMousemove);
         $body.off('mouseup', this.resizerMouseup);
         const $wrapwrap = $('#wrapwrap');
-        if ($wrapwrap.length) {
+        if ($wrapwrap.length && this.odooEditor) {
             $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
         $(this.$root).off('click');
@@ -901,7 +901,7 @@ const Wysiwyg = Widget.extend({
         this.savingContent = true;
         await this.cleanForSave();
 
-        const editables = this.options.getContentEditableAreas();
+        const editables = "getContentEditableAreas" in this.options ? this.options.getContentEditableAreas(this.odooEditor) : [];
         await this.savePendingImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
         this.savingContent = false;
