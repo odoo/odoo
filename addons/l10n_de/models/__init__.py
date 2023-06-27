@@ -5,3 +5,4 @@ from . import datev
 from . import chart_template
 from . import ir_actions_report
 from . import res_company
+from . import base_document_layout
