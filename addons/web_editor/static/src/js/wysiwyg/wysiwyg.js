@@ -354,7 +354,7 @@ export class Wysiwyg extends Component {
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
-                    const baseNode = closestElement(selection.anchorNode, 'P, DIV');
+                    const baseNode = closestElement(selection.anchorNode, 'P:not([t-field]), DIV:not([t-field])');
                     const fieldContainer = closestElement(selection.anchorNode, '[data-oe-field]');
                     if (!baseNode ||
                         (
@@ -1219,9 +1219,13 @@ export class Wysiwyg extends Component {
             $odooFields.each((i, field) => {
                 const observer = new MutationObserver((mutations) => {
                     mutations = this.odooEditor.filterMutationRecords(mutations);
+                    mutations = mutations.filter(rec => 
+                        !(rec.type === "attributes" && (rec.attributeName.startsWith("data-oe-t")))
+                    );
                     if (!mutations.length) {
                         return;
                     }
+
                     let $node = $(field);
                     // Do not forward "unstyled" copies to other nodes.
                     if ($node.hasClass('o_translation_without_style')) {
