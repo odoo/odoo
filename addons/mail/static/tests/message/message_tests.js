@@ -296,6 +296,39 @@ QUnit.test("mentions are kept when editing message", async (assert) => {
     assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)");
 });
 
+QUnit.test("can add new mentions when editing message", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "Hello",
+        model: "discuss.channel",
+        partner_ids: [pyEnv.currentPartnerId],
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await insertText(".o-mail-Composer-input", " @");
+    await click(".o-mail-Composer-suggestion:contains(TestPartner)");
+    await click(".o-mail-Message a:contains('save')");
+    assert.strictEqual($(".o-mail-Message-body")[0].innerText, "Hello @TestPartner");
+    assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@TestPartner)");
+});
+
 QUnit.test("Other messages are grayed out when replying to another one", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
