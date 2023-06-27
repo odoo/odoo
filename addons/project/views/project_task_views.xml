@@ -507,7 +507,6 @@
                                placeholder="Private"
                                class="o_project_task_project_field"
                                domain="[('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []"
-                               context="{'default_type_ids': [(4, context.get('default_stage_id', False))]}"
                         />
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_avatar_user"/>
