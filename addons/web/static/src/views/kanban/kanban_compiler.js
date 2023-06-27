@@ -131,6 +131,20 @@ export class KanbanCompiler extends ViewCompiler {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id");
             compiled.setAttribute("id", `'${fieldId}_' + __comp__.props.record.id`);
+            // In x2many kanban, records can be edited in a dialog. The same record as the one of
+            // the kanban is used for the form view dialog, so its mode is switched to "edit", but
+            // we don't want to see it in edition in the background. For that reason, we force its
+            // fields to be readonly when the record is in edition, i.e. when it is opened in a form
+            // view dialog.
+            const readonlyAttr = compiled.getAttribute("readonly");
+            if (readonlyAttr) {
+                compiled.setAttribute(
+                    "readonly",
+                    `__comp__.props.record.isInEdition || (${readonlyAttr})`
+                );
+            } else {
+                compiled.setAttribute("readonly", `__comp__.props.record.isInEdition`);
+            }
         }
 
         const { bold, display } = extractAttributes(el, ["bold", "display"]);
