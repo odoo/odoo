@@ -131,6 +131,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 'carrier_id': carrierInput.value,
             },
         })
+        this.result = result;
         this._handleCarrierUpdateResultBadge(result);
         if (carrierInput.checked) {
             var amountDelivery = document.querySelector('#order_delivery .monetary_field');
