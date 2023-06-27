@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="project.ProjectRightSidePanel" owl="1">
-        <div t-if="projectId" class="o_rightpanel pt-0 bg-view border-start overflow-auto">
+        <div t-if="projectId" class="o_rightpanel pt-0 bg-view border-start border-bottom overflow-auto">
             <ProjectRightSidePanelSection
                 name="'stat_buttons'"
                 header="false"
@@ -38,6 +38,7 @@
             <ProjectRightSidePanelSection
                 name="'profitability'"
                 show="showProjectProfitability"
+                dataClassName="'pb-3 border-bottom o_rightpanel_full_width'"
             >
                 <t t-set-slot="title" owl="1">
                     Profitability
@@ -52,6 +53,8 @@
             <ProjectRightSidePanelSection
                 name="'milestones'"
                 show="!!state.data.milestones &amp;&amp; !!state.data.milestones.data"
+                dataClassName="'my-3'"
+                headerClassName="'border-bottom'"
             >
                 <t t-set-slot="header" owl="1">
                     <span class="btn btn-secondary">
