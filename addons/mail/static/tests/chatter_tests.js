@@ -371,6 +371,43 @@ QUnit.test('list activity exception widget with activity', async function (asser
     list.destroy();
 });
 
+QUnit.test("list activity widget : displays notification to save record before scheduling activity", async function (assert) {
+    const currentUser = this.data["res.users"].records.find(
+        (user) => user.id === this.data.currentUserId
+    );
+    Object.assign(currentUser, {
+        activity_state: "today",
+        activity_type_id: 3,
+    });
+    const { widget: list } = await start({
+        hasView: true,
+        View: ListView,
+        model: "res.users",
+        data: this.data,
+        arch: `
+            <list editable='bottom'>
+                <field name='foo'/>
+                <field name='activity_ids' widget='list_activity'/>
+            </list>`,
+        services: {
+            notification: {
+                notify(notification) {
+                    assert.step("notification");
+                    assert.strictEqual(
+                        notification.message,
+                        "Save the record before scheduling an activity!",
+                    );
+                },
+            },
+        },
+    });
+    await testUtils.dom.click($(".o_list_button_add"));
+    await testUtils.dom.click($(".o_selected_row .fa-clock-o"));
+    assert.verifySteps(["notification"]);
+
+    list.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach() {
         beforeEach(this);
