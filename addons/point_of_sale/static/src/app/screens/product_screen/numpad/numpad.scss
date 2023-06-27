@@ -1,0 +1,44 @@
+/*  ********* The Numpad ********* */
+
+.pos .numpad {
+    grid-template-columns: repeat(4, 1fr);
+    min-width: 216px;
+    gap: 1px;
+}
+
+/* .pos .numpad button {
+    float: left
+    height: 54px;
+    vertical-align: middle;
+    color: $gray-700;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: $gray-300;
+    transition: all 150ms linear;
+    padding: unset;
+    width: 100%;
+    font-weight: bold;
+} */
+
+
+.pos .mode-button {
+    font-size: 14px;
+}
+
+.pos .mode-button.selected-mode {
+    color: white;
+    background: $o-brand-odoo;
+    border-color: transparent;
+}
+.pos .mode-button.selected-mode:hover {
+    background: $primary;
+    color: white;
+    border-color: transparent;
+}
+.pos .numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
+    background: $gray-200;
+    color: $gray-500;
+    cursor: not-allowed;
+}

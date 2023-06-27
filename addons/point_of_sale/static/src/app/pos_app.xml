@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Chrome" owl="1">
-        <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
+        <div class="pos">
             <div class="pos-receipt-print"></div>
             <Navbar />
-            <div class="pos-content">
-                <div class="window">
-                    <div class="subwindow">
+            <div class="pos-content position-relative w-100 bg-200">
+                <div class="window position-relative h-100 w-100 border-0 overflow-hidden">
+                    <div class="subwindow w-100 h-100">
                         <div class="subwindow-container">
                             <div class="subwindow-container-fix screens">
                                 <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->

@@ -56,7 +56,6 @@ export class FloorScreen extends Component {
     }
     onPatched() {
         this.floorMapRef.el.style.background = this.state.floorBackground;
-        this.addFloorRef.el.style.background = this.state.floorBackground;
         if (!this.pos.isEditMode && this.pos.floors.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
@@ -90,7 +89,6 @@ export class FloorScreen extends Component {
     onMounted() {
         this.pos.openCashControl();
         this.floorMapRef.el.style.background = this.state.floorBackground;
-        this.addFloorRef.el.style.background = this.state.floorBackground;
         if (!this.pos.isEditMode && this.pos.floors.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {

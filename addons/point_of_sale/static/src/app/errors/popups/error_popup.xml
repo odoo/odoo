@@ -3,14 +3,16 @@
 
     <t t-name="point_of_sale.ErrorPopup" owl="1">
             <div class="popup popup-error">
-                <p class="title">
-                    <t t-esc="props.title" />
-                </p>
-                <p class="body">
+                <div class="modal-header">
+                    <h4 class="modal-title title">
+                        <t t-esc="props.title" />
+                    </h4>
+                </div>
+                <main class="modal-body">
                     <t t-esc="props.body" />
-                </p>
-                <div class="footer">
-                    <div class="button cancel" t-on-click="confirm">
+                </main>
+                <div class="footer modal-footer">
+                    <div class="button cancel btn btn-lg btn-primary " t-on-click="confirm">
                         <t t-esc="props.confirmText" />
                     </div>
                 </div>

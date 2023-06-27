@@ -2,29 +2,28 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup" owl="1">
             <div class="popup product-info-popup">
-                <header class="title">
-                    Product information
-                </header>
-                <main class="body">
-                    <div class="section-product-info-title">
-                        <div class="column flex-start">
-                            <span t-esc="props.product.display_name" class="global-info-title product-name"/>
-                            <span><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
+                <div class="modal-header">
+                    <h4 class="modal-title">Product information</h4>
+                </div>
+                <main class="body modal-body overflow-auto">
+                    <div class="section-product-info-title d-flex flex-column flex-sm-row text-start gap-3 bg-info text-info bg-opacity-25 mx-n3 mt-n3 p-3">
+                        <div class="d-flex flex-column flex-grow-1 text-start w-100 w-sm-25">
+                            <span t-esc="props.product.display_name" class="global-info-title fs-2 fw-bolder text-truncate"/>
+                            <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
                         </div>
-                        <div class="column flex-end">
-                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title" />
-                            <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                                <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
-                            </t>
+                        <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
+                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
+                            <span class="fs-3">
+                                <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
+                                    <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
+                                </t>
+                            </span>
                         </div>
                     </div>
-                    <div class="section-financials">
-                        <div class="section-title">
-                            <span>Financials</span>
-                            <div class="section-title-line"></div>
-                        </div>
-                        <div class="section-financials-body">
-                            <table>
+                    <div class="section-financials mt-3 mb-4 pb-4 border-bottom text-start">
+                        <h3 class="section-title">Financials</h3>
+                        <div class="section-financials-body d-flex flex-column flex-sm-row">
+                            <table class="table table-borderless mb-0">
                                 <tr>
                                     <td>Price excl. VAT:</td>
                                     <td><t t-esc="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
@@ -38,7 +37,7 @@
                                     <td><t t-esc="marginCurrency"/> (<t t-esc="marginPercent"/>%) </td>
                                 </tr>
                             </table>
-                            <table>
+                            <table class="table table-borderless">
                                 <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
                                     <tr>
                                         <td t-esc="pricelist.name"/>
@@ -48,71 +47,75 @@
                             </table>
                         </div>
                     </div>
-                    <div class="section-inventory" t-if="productInfo.warehouses.length > 0">
-                        <div class="section-title">
-                            <span>Inventory <t t-if="pos.pos_session.update_stock_at_closing">(as of opening)</t></span>
-                            <div class="section-title-line"></div>
-                        </div>
+                    <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.warehouses.length > 0">
+                        <h3 class="section-title">
+                            Inventory 
+                            <t t-if="pos.pos_session.update_stock_at_closing">(as of opening)</t>
+                        </h3>
                         <div class="section-inventory-body">
-                            <table class="mobile-table">
-                                <t t-foreach="productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
-                                    <tr>
-                                        <td><span t-esc="warehouse.name" class="table-name"/>:</td>
-                                        <td><t t-esc="warehouse.available_quantity"/> <t t-esc="warehouse.uom"/> available,</td>
-                                        <td><t t-esc="warehouse.forecasted_quantity"/> forecasted</td>
-                                    </tr>
-                                </t>
-                            </table>
+                            <t t-foreach="productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <div>
+                                        <t t-esc="warehouse.name" class="table-name"/>
+                                        :
+                                    </div>
+                                    <div>
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.available_quantity" class="table-name"/></span>
+                                        <t t-esc="warehouse.uom"/> available,
+                                    </div>
+                                    <div> 
+                                        <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                        forecasted
+                                    </div>
+                                </div>
+                            </t>
                         </div>
                     </div>
-                    <div class="section-supplier" t-if="productInfo.suppliers.length > 0">
-                        <div class="section-title">
-                            <span>Replenishment</span>
-                            <div class="section-title-line"></div>
-                        </div>
+                    <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.suppliers.length > 0">
+                        <h3 class="section-title">Replenishment</h3>
                         <div class="section-supplier-body">
-                            <table class="mobile-table">
-                                <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.name">
-                                    <tr>
-                                        <td><span t-esc="supplier.name" class="table-name"/>:</td>
-                                        <div class="mobile-line">
-                                            <td><t t-esc="supplier.delay"/> Days</td>
-                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-esc="env.utils.formatCurrency(supplier.price)"/></td>
-                                        </div>
-                                    </tr>
-                                </t>
-                            </table>
+                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.name">
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <div>
+                                        <span t-esc="supplier.name" class="table-name"/>:
+                                    </div>
+                                    <span class="me-1 fw-bolder">
+                                        <t t-esc="supplier.delay"/> 
+                                        Days
+                                    </span>
+                                    <span t-if="_hasMarginsCostsAccessRights()">
+                                        <t t-esc="env.utils.formatCurrency(supplier.price)"/>
+                                    </span>
+                                </div>
+                            </t>
                         </div>
                     </div>
-                    <div class="extra">
-                        <div class="section-variants" t-if="productInfo.variants.length > 0">
-                            <div class="section-title">
-                                <span>Attributes</span>
-                                <div class="section-title-line"></div>
-                            </div>
+                    <div class="extra mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.variants.length > 0">
+                        <div class="section-variants">
+                            <h3 class="section-title">Attributes</h3>
                             <div class="section-variants-body">
-                                <table class="mobile-table">
-                                    <t t-foreach="productInfo.variants" t-as="variant" t-key="variant.name">
-                                        <tr>
-                                            <td><span t-esc="variant.name" class="table-name"/>:</td>
-                                            <td class="table-value">
-                                                <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                    <span class="searchable" t-on-click="() => this.searchProduct(attribute_value.search)"><t t-esc="attribute_value.name"/></span> <t t-if="attribute_value_index lt variant.values.length - 1">, </t>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </table>
+                                <t t-foreach="productInfo.variants" t-as="variant" t-key="variant.name">
+                                    <div class="d-flex flex-column align-items-start gap-2 mb-2">
+                                        <div>
+                                            <span t-esc="variant.name" class="table-name"/>:
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
+                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search)">
+                                                    <t t-esc="attribute_value.name"/>
+                                                </span>
+                                                <t t-if="attribute_value_index lt variant.values.length - 1"> </t>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                     </div>
-                    <div class="section-order">
-                        <div class="section-title">
-                            <span>Order</span>
-                            <div class="section-title-line"></div>
-                        </div>
+                    <div class="section-order mt-3 mb-4 pb-4 border-bottom text-start">
+                        <h3 class="section-title">Order</h3>
                         <div class="section-order-body">
-                            <table>
+                            <table class="table table-borderless w-100 w-sm-50 mb-0">
                                 <tr>
                                     <td>Total Price excl. VAT:</td>
                                     <td t-esc="orderPriceWithoutTaxCurrency" class="table-value"/>
@@ -129,8 +132,8 @@
                         </div>
                     </div>
                 </main>
-                <footer class="footer">
-                    <div class="button cancel" t-on-click="cancel">
+                <footer class="footer modal-footer">
+                    <div class="button cancel btn btn-lg btn-primary" t-on-click="cancel">
                         Close
                     </div>
                 </footer>
