@@ -45,12 +45,14 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 @mixin o-wsale-scrollbar-subdle($-vertical: true) {
     scrollbar-color: currentColor $light;
     scrollbar#{if($-vertical, -width, -height)}: 2px;
+    cursor: grab;
 
     &::-webkit-scrollbar {
         #{if($-vertical, width, height)}: 2px;
     }
 
     &::-webkit-scrollbar-thumb {
+        border-radius: $btn-border-radius-sm;
         background: currentColor;
     }
 
@@ -96,7 +98,20 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         --o-wsale-card-thumb-fill-mode: cover;
     }
 
+    .o_wsale_filmstip_container {
+        &:hover {
+            .o_wsale_filmstip_wrapper {
+                margin-bottom: map-get($spacers, 1);
+
+                &::-webkit-scrollbar {
+                    height: 6px;
+                }
+            }
+        }
+    }
+
     .o_wsale_filmstip_wrapper {
+        margin-bottom: map-get($spacers, 2);
         scroll-snap-type: x mandatory;
         @include o-wsale-scrollbar-subdle($-vertical: false);
 
