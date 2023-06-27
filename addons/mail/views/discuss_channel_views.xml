@@ -80,7 +80,6 @@
                                 <field name="channel_member_ids" mode="tree" context="{'active_test': False}" attrs="{'readonly': [('channel_type', '=', 'chat')]}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
-                                        <field name="partner_email" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>

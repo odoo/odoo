@@ -16,7 +16,6 @@ class ChannelMember(models.Model):
     # identity
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', index=True)
     guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True, index=True)
-    partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     # channel
     channel_id = fields.Many2one('discuss.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
     # state
