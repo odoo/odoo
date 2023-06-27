@@ -49,10 +49,8 @@ def cycle(db_name, module_id, module_name):
     install(db_name, module_id, module_name)
 
 
-class CheckAddons(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        self.values = namespace
-        config._check_addons_path(self, option_string, values, self)
+def addons_path(value):
+    return config._check_addons_path(config.options_index['init'], '-i', value)
 
 
 def parse_args():
@@ -76,7 +74,7 @@ def parse_args():
         help="Comma-separated list of modules to skip (they will only be installed)")
     parser.add_argument("--resume-at", "-r", type=str,
         help="Skip modules (only install) up to the specified one in topological order")
-    parser.add_argument("--addons-path", "-p", type=str, action=CheckAddons,
+    parser.add_argument("--addons-path", "-p", type=addons_path,
         help="Comma-separated list of paths to directories containing extra Odoo modules")
 
     cmds = parser.add_subparsers(title="subcommands", metavar='')
@@ -209,7 +207,7 @@ if __name__ == '__main__':
 
     # handle paths option
     if args.addons_path:
-        odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])
+        odoo.tools.config['addons_path'] = args.addons_path + odoo.tools.config['addons_path']
         if args.data_dir:
             odoo.tools.config['data_dir'] = args.data_dir
         odoo.modules.module.initialize_sys_path()

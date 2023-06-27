@@ -118,7 +118,6 @@ def __getattr__(name):
 
 
 # The odoo library is supposed already configured.
-ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = odoo.SUPERUSER_ID
