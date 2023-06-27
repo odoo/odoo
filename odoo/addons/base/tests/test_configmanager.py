@@ -54,7 +54,7 @@ class TestConfigManager(TransactionCase):
             raise
 
     def test_00_setUp(self):
-        self.assertEqual(self.config.rcfile, EMPTY_CONFIG_PATH)
+        self.assertEqual(self.config.options['config'], EMPTY_CONFIG_PATH)
 
     def test_01_default_config(self):
         self.assertConfigEqual({
@@ -71,7 +71,7 @@ class TestConfigManager(TransactionCase):
             'websocket_keep_alive_timeout': 3600,
 
             # common
-            'config': None,
+            'config': EMPTY_CONFIG_PATH,
             'save': False,
             'init': {},
             'update': {},
@@ -175,8 +175,6 @@ class TestConfigManager(TransactionCase):
         config_path = file_path('base/tests/config/non_default.conf')
         with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
             self.config._parse_config(['-c', config_path])
-        self.assertEqual(self.config.rcfile, config_path)
-        self.assertEqual(self.config.rcfile, self.config['config'])
         self.assertConfigEqual({
             # options not exposed on the command line
             'admin_passwd': 'Tigrou007',
@@ -464,7 +462,7 @@ class TestConfigManager(TransactionCase):
             'websocket_keep_alive_timeout': 3600,
 
             # common
-            'config': None,
+            'config': EMPTY_CONFIG_PATH,
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
