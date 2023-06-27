@@ -17,6 +17,6 @@ class PhoneBlacklistRemove(models.TransientModel):
         else:
             message = None
         return self.env['phone.blacklist']._remove(
-            self.phone,
+            [self.phone],
             message=message,
         )
