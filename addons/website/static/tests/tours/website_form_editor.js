@@ -598,6 +598,10 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
             run: 'text_blur **',
+        }, {
+            content: "Check that the recipient email is correct",
+            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            run: () => null, // it's a check.
         },
     ]));
 
