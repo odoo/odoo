@@ -58,3 +58,14 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             task = task_form.save()
             results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.allocated_hours)
             self.assertEqual(results, (expression, 0, 0, '0', 0))
+
+    def test_set_stage_on_project_from_task(self):
+        new_stage = self.env['project.task.type'].create({
+            'name': 'New Stage',
+        })
+        self.env['project.task'].create({
+            'name': 'Test Task',
+            'stage_id': new_stage.id,
+            'project_id': self.project_pigs.id,
+        })
+        self.assertEqual(self.project_pigs.type_ids, new_stage, "Task stage is not set in project")
