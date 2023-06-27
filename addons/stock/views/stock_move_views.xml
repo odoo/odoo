@@ -181,7 +181,7 @@
                            context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
                            widget="sml_x2_many"/>
                     <footer class="d-flex justify-content-between" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                        <div>
+                        <div class="d-flex gap-1">
                             <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
                             <button string="Discard" special="cancel" data-hotkey="z"/>
                         </div>
