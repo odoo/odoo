@@ -5,49 +5,24 @@
 
     .o_notebook .tab-content .tab-pane .o_mail_body {
         // cancel the padding of the form_sheet
-        margin-top: -$o-sheet-cancel-hpadding;
-        margin-left: -$o-sheet-cancel-hpadding;
-        margin-right: -$o-sheet-cancel-hpadding;
-        margin-bottom: -40px;
+        margin: -$o-sheet-cancel-hpadding calc(var(--formView-sheet-padding-x) * -1) -40px;
+    }
+
+    .oe-toolbar {
+        margin: 0;
     }
 }
 
 @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
     .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
         // cancel the padding of the form_sheet when breakpoints are reached
-        margin-left: -$o-sheet-cancel-hpadding*2;
-        margin-right: -$o-sheet-cancel-hpadding*2;
+        margin-left: calc(var(--formView-sheet-padding-x) * -1);
+        margin-right: calc(var(--formView-sheet-padding-x) * -1);
     }
 }
 
-.o_form_view.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width .o_form_renderer {
-    .o_form_statusbar {
-        margin-bottom: 0;
-
-        .o_statusbar_buttons {
-            flex-grow: 1;
-        }
-    }
-    .o-mail-Form-chatter {
-        margin: 0;
-        max-width: unset;
-        width: 100%;
-        padding: 0;
-    }
-    .wysiwyg_iframe {
-        border: none;
-    }
-    .oe_button_box {
-        margin-top: unset;
-
-        > .btn.oe_stat_button {
-            max-width: 135px;
-            border-left: 1px solid $border-color;
-        }
-        > .o_dropdown_more {
-            width: 135px;
-        }
-    }
+.o_form_view.o_mass_mailing_mailing_form .wysiwyg_iframe {
+    border: none;
 }
 
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
