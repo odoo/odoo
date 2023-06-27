@@ -31,13 +31,13 @@ WebsiteSaleDeliveryWidget.include({
      *
      * @override
      */
-    _handleCarrierUpdateResult: function (result) {
-        this._super(...arguments);
-        if (result.mondial_relay) {
+    _handleCarrierUpdateResult: async function (carrierInput) {
+        await this._super(...arguments);
+        if (this.result.mondial_relay) {
             if (!$('#modal_mondialrelay').length) {
-                this._loadMondialRelayModal(result);
+                this._loadMondialRelayModal(this.result);
             } else {
-                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass('disabled', !result.mondial_relay.current);
+                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass('disabled', !this.result.mondial_relay.current);
                 this.$modal_mondialrelay.modal('show');
             }
         }
