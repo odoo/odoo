@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import requests
-from paytmchecksum import PaytmChecksum
 
+from odoo.addons.pos_paytm import utils as paytm_utils
 from odoo.exceptions import UserError
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 from datetime import datetime
 from dateutil import tz
 
@@ -42,7 +42,8 @@ class PosPaymentMethod(models.Model):
             response = requests.post(url, json=payload)
             response.raise_for_status()
         except requests.exceptions.RequestException:
-            return False
+            _logger.warning("Cannot connect with PayTM")
+            return {'body':{'resultInfo': {'resultCode': "F", "resultMsg": _("Unable to establish connection with PayTM.")}}}
         return response.json()
 
     def paytm_make_payment_request(self, amount, transaction, timestamp):
@@ -82,7 +83,7 @@ class PosPaymentMethod(models.Model):
         }
 
     def _paytm_get_request_head(self, body):
-        checksum = PaytmChecksum.generateSignature(body, self.merchant_key)
+        checksum = paytm_utils.generateSignature(body, self.merchant_key)
         return {
             'requestTimeStamp' : body["transactionDateTime"],
             'channelId' : self.channel_id,

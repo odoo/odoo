@@ -17,8 +17,5 @@
             'pos_paytm/static/**/*',
         ],
     },
-    'external_dependencies': {
-        'python': ['pycryptodomex', 'paytmchecksum'],
-    },
     'license': 'LGPL-3',
 }

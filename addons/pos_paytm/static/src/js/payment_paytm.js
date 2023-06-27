@@ -33,12 +33,8 @@ let PaymentPaytm = PaymentInterface.extend({
         let transactionAmount = line.amount*100;
         let timeStamp = Math.floor(Date.now() / 1000);
         let response = await this.makePaymentRequest(transactionAmount, orderId, timeStamp);
-        if (!response || response['body']['resultInfo']['resultCode'] === "F") {
-            let errormsg = 'Unable to establish connection with PayTM API';
-            if(response) {
-                errormsg = response['body']['resultInfo']['resultMsg'];
-            }
-            this._showError(errormsg);
+        if (response['body']['resultInfo']['resultCode'] === "F") {
+            this._showError(response['body']['resultInfo']['resultMsg']);
             line.set_payment_status('force_done');
             retry++;
             localStorage.setItem(order.uid, retry);
