@@ -371,6 +371,24 @@
             </kanban>
         </field>
     </record>
+
+    <record id="survey_survey_view_activity" model="ir.ui.view">
+        <field name="name">survey.survey.view.activity</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <activity string="Survey">
+                <templates>
+                    <div t-name="activity-box" class="d-flex w-100">
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <div class="flex-grow-1">
+                            <field name="title" class="o_text_block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="survey_survey_view_search" model="ir.ui.view">
         <field name="name">survey.survey.search</field>
         <field name="model">survey.survey</field>

@@ -9,6 +9,7 @@ import pytz
 from collections import namedtuple, defaultdict
 
 from datetime import datetime, timedelta, time
+from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -1460,10 +1461,19 @@ class HolidaysRequest(models.Model):
             elif holiday.state == 'confirm':
                 if holiday.holiday_status_id.leave_validation_type != 'no_validation':
                     user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    today = fields.Date.today()
+                    activity_type = self.env.ref('hr_holidays.mail_act_leave_approval')
                     for user_id in user_ids:
+                        date_deadline = (
+                            (holiday.date_from -
+                             relativedelta(**{activity_type.delay_unit: activity_type.delay_count or 0})).date()
+                            if holiday.date_from else today)
+                        if date_deadline < today:
+                            date_deadline = today
                         activity_vals.append({
-                            'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
+                            'activity_type_id': activity_type.id,
                             'automated': True,
+                            'date_deadline': date_deadline,
                             'note': note,
                             'user_id': user_id,
                             'res_id': holiday.id,

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="stock_picking_view_activity" model="ir.ui.view">
+            <field name="name">stock.picking.view.activity</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <activity string="Activity view">
+                    <templates>
+                        <div t-name="activity-box" class="d-block">
+                            <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            <field name="scheduled_date" widget="date"/>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>

@@ -90,20 +90,12 @@
             font-size: large;
         }
 
-        > div {
-            max-width: 200px;
-
-            .o_text_block {
-                @include o-text-overflow;
-                display: block;
-            }
-        }
-
         .o_text_bold {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
 
         .o_text_block {
+            @include o-text-overflow($max-width: 15rem);
             display: block;
         }
     }

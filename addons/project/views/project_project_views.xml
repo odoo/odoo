@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="project_project_view_activity" model="ir.ui.view">
+            <field name="name">project.project.view.activity</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <activity string="Project">
+                    <templates>
+                        <div t-name="activity-box" class="d-flex">
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="name" string="Project Name" class="flex-grow-1 o_text_block"/>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="action_send_mail_project_project" model="ir.actions.act_window">
             <field name="name">Send Email</field>
             <field name="res_model">mail.compose.message</field>
