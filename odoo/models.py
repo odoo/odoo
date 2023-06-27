@@ -2788,7 +2788,7 @@ class BaseModel(metaclass=MetaModel):
                     return field.column_type[1] + (" NOT NULL" if field.required else "")
 
                 tools.create_model_table(cr, self._table, self._description, [
-                    (field.name, make_type(field), field.string)
+                    (field.name, make_type(field), field.string + (' (model_terms)' if callable(field.translate) else ''))
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
                 ])

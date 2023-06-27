@@ -1666,10 +1666,27 @@ class _String(Field):
     def _description_translate(self, env):
         return bool(self.translate)
 
+    def update_db_column(self, model, column):
+        if not column:
+            sql.create_column(model._cr, model._table, self.name, self.column_type[1],
+                              self.string + (' (model_terms)' if callable(self.translate) else ''))
+            return
+        if column['udt_name'] == 'jsonb' and \
+                (callable(self.translate) ^ ('model_terms' in (column['comment'] or ''))):
+            if callable(self.translate):
+                sql.populate_model_terms_translatable(model._cr, model._table, self.name)
+                comment = self.string + ' (model_terms)'
+            else:
+                sql.clean_model_translatable(model._cr, model._table, self.name)
+                comment = self.string
+            model._cr.execute(f'COMMENT ON COLUMN "{model._table}"."{self.name}" IS %s', (comment,))
+        super().update_db_column(model, column)
+
     def _convert_db_column(self, model, column):
         # specialized implementation for converting from/to translated fields
         if self.translate or column['udt_name'] == 'jsonb':
-            sql.convert_column_translatable(model._cr, model._table, self.name, self.column_type[1], callable(self.translate))
+            comment = self.string + (' (model_terms)' if callable(self.translate) else '')
+            sql.convert_column_translatable(model._cr, model._table, self.name, self.column_type[1], comment)
         else:
             sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
 

@@ -119,9 +119,9 @@ def table_columns(cr, tablename):
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable, col_description(%s::regclass::oid, ordinal_position::int) AS comment
                FROM information_schema.columns WHERE table_name=%s'''
-    cr.execute(query, (tablename,))
+    cr.execute(query, (tablename, tablename))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
 def column_exists(cr, tablename, columnname):
@@ -149,17 +149,44 @@ def convert_column(cr, tablename, columnname, columntype):
     using = f'"{columnname}"::{columntype}'
     _convert_column(cr, tablename, columnname, columntype, using)
 
-def convert_column_translatable(cr, tablename, columnname, columntype, is_model_terms):
+def populate_model_terms_translatable(cr, tablename, columnname):
+    cr.execute(f"""
+        UPDATE "{tablename}"
+        SET "{columnname}" = "{columnname}" || (
+            SELECT jsonb_object(array_agg('_' || key), array_agg(value))
+            FROM jsonb_each_text("{columnname}")
+        )
+        WHERE "{columnname}" IS NOT NULL AND "{columnname}"->>'_en_US' IS NULL
+    """)
+
+def clean_model_translatable(cr, tablename, columnname):
+    cr.execute(f"""
+        UPDATE "{tablename}"
+        SET "{columnname}" = (
+            SELECT jsonb_object(array_agg('_' || key), array_agg(value))
+            FROM jsonb_each_text("{columnname}")
+            WHERE key[0] != '_'
+        )
+        WHERE "{columnname}"->>'_en_US' IS NOT NULL
+    """)
+
+def convert_column_translatable(cr, tablename, columnname, columntype, comment):
     """ Convert the column from/to a 'jsonb' translated field column. """
-    drop_index(cr, make_index_name(tablename, columnname), tablename)
-    if columntype == "jsonb":
-        if is_model_terms:
-            using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar, '_en_US', "{columnname}"::varchar) END"""
+    try:
+        drop_index(cr, make_index_name(tablename, columnname), tablename)
+        if columntype == "jsonb":
+            if 'model_terms' in comment:
+                using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar, '_en_US', "{columnname}"::varchar) END"""
+            else:
+                using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
         else:
-            using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
-    else:
-        using = f""""{columnname}"->>'en_US'"""
-    _convert_column(cr, tablename, columnname, columntype, using)
+            using = f""""{columnname}"->>'en_US'"""
+        _convert_column(cr, tablename, columnname, columntype, using)
+        cr.execute(f"""COMMENT ON COLUMN "{tablename}"."{columnname}" IS %s""", (comment,))
+    except psycopg2.errors.InvalidTableDefinition:
+        if tablename in ('ir_act_window', 'ir_act_report_xml', 'ir_act_url', 'ir_act_server', 'ir_act_client'):
+            return convert_column_translatable(cr, 'ir_actions', columnname, columntype, comment)
+        raise
 
 def _convert_column(cr, tablename, columnname, columntype, using):
     query = f'''
