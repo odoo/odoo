@@ -22,8 +22,8 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ro',
-                'bank_account_code_prefix': '512',
-                'cash_account_code_prefix': '531',
+                'bank_account_code_prefix': '5121',
+                'cash_account_code_prefix': '5311',
                 'transfer_account_code_prefix': '581',
                 'account_default_pos_receivable_account_id': 'ro_pcg_recv',
                 'income_currency_exchange_account_id': 'pcg_7651',
