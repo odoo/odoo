@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.PartnerDetailsEdit" owl="1">
-        <section class="partner-details edit">
-            <div class="partner-picture">
-                <t t-if="partnerImageUrl">
-                    <img t-att-src="partnerImageUrl" alt="Partner" style="width: 64px; height: 64px; object-fit: cover;" />
-                </t>
-                <t t-else="">
-                    <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
-                </t>
-                <input type="file" class="image-uploader" t-on-change="uploadImage" />
+        <section class="partner-details edit d-flex flex-column w-100 m-3">
+            <div class="partner-details-header d-flex pe-2 gap-2">
+                <div class="partner-picture position-relative rounded text-center overflow-hidden">
+                    <t t-if="partnerImageUrl">
+                        <img class="rounded" t-att-src="partnerImageUrl" alt="Partner" style="width: 64px; height: 64px; object-fit: cover;" />
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                    </t>
+                    <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                </div>
+                <input class="detail partner-name form-control form-control-lg" name="name" t-att-value="props.partner.name or ''" placeholder="Name" t-on-change="captureChange" />
             </div>
-            <input class="detail partner-name" name="name" placeholder="Name" t-model="changes.name" />
-            <div class="partner-details-box clearfix">
-                <div class="partner-details-left">
+            <div class="partner-details-box clearfix d-flex flex-column flex-sm-row gap-2 mt-4">
+                <div class="partner-details-left d-flex flex-column gap-3 w-100">
                     <div class="partner-detail">
-                        <span class="label">Street</span>
-                        <input class="detail" name="street" t-att-class="{'border-red': missingFields.includes('street')}" t-model="changes.street" placeholder="Street" />
+                        <label class="form-label label" for="street">Street</label>
+                        <input class="detail form-control" id="street" name="street" t-model="changes.street" placeholder="Street" t-att-class="{'border-danger': missingFields.includes('street')}"/>
                     </div>
                     <div class="partner-detail">
-                        <span class="label">City</span>
-                        <input class="detail" name="city" t-att-class="{'border-red': missingFields.includes('city')}" t-model="changes.city" placeholder="City" />
+                        <label class="form-label label" for="city">City</label>
+                        <input class="detail form-control" id="city" name="city" t-model="changes.city" placeholder="City" t-att-class="{'border-danger': missingFields.includes('city')}" />
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Postcode</span>
-                        <input class="detail" name="zip" t-att-class="{'border-red': missingFields.includes('zip')}" t-model="changes.zip" placeholder="ZIP" />
+                        <label class="form-label label" for="postcode">Postcode</label>
+                        <input class="detail form-control" id="postcode" name="zip" t-model="changes.zip" placeholder="ZIP" t-att-class="{'border-danger': missingFields.includes('zip')}" />
                     </div>
-                    <div class="partner-detail" t-if="pos.states.some((state) => state.country_id[0] == changes.country_id)">
-                        <span class="label">State</span>
-                        <select class="detail" name="state_id" t-att-class="{'border-red': missingFields.includes('state_id')}" t-model="changes.state_id">
+                    <div class="partner-detail">
+                        <label class="form-label label" for="state">State</label>
+                        <select class="detail form-select" id="state" name="state_id" t-model="changes.state_id" t-att-class="{'border-danger': missingFields.includes('state_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.states" t-as="state" t-key="state.id">
                                 <option t-if="changes.country_id == state.country_id[0]" t-att-value="state.id">
@@ -38,8 +40,8 @@
                         </select>
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Country</span>
-                        <select class="detail" name="country_id" t-att-class="{'border-red': missingFields.includes('country_id')}" t-model="changes.country_id">
+                        <label class="form-label label" for="country">Country</label>
+                        <select class="detail form-select" id="country" name="country_id" t-model="changes.country_id" t-att-class="{'border-danger': missingFields.includes('country_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id">
@@ -49,10 +51,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="partner-details-right">
+                <div class="partner-details-right d-flex flex-column gap-3 w-100">
                     <div class="partner-detail">
-                        <span class="label">Language</span>
-                        <select class="detail" name="lang" t-att-class="{'border-red': missingFields.includes('lang')}" t-model="changes.lang">
+                        <label class="form-label label" for="language">Language</label>
+                        <select class="detail form-select" id="language" name="lang" t-model="changes.lang" t-att-class="{'border-danger': missingFields.includes('lang')}">
                             <t t-foreach="pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code" t-att-selected="changes.lang ? ((lang.code === changes.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
                                     <t t-esc="lang.name" />
@@ -61,30 +63,32 @@
                         </select>
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Email</span>
-                        <input class="detail" name="email" t-att-class="{'border-red': missingFields.includes('email')}" type="email" t-model="changes.email" />
+                        <label class="form-label label" for="email">Email</label>
+                        <input class="detail form-control" id="email" name="email" type="email" t-model="changes.email" t-att-class="{'border-danger': missingFields.includes('email')}" />
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Phone</span>
-                        <input class="detail" name="phone" t-att-class="{'border-red': missingFields.includes('phone')}" type="tel" t-model="changes.phone" />
+                        <label class="form-label label" for="phone">Phone</label>
+                        <input class="detail form-control" id="phone" name="phone" type="tel" t-model="changes.phone" t-att-class="{'border-danger': missingFields.includes('phone')}" />
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Mobile</span>
-                        <input class="detail" name="mobile" t-att-class="{'border-red': missingFields.includes('mobile')}" type="tel" t-model="changes.mobile" />
+                        <label class="form-label label" for="mobile">Mobile</label>
+                        <input class="detail form-control" id="mobile" name="mobile" type="tel"
+                               t-model="changes.mobile"
+                               t-att-class="{'border-danger': missingFields.includes('tel')}" />
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Barcode</span>
-                        <input class="detail barcode" name="barcode" t-model="changes.barcode" t-att-class="{'border-red': missingFields.includes('barcode')}" />
+                        <label class="form-label label" for="barcode">Barcode</label>
+                        <input class="detail barcode form-control" id="barcode" name="barcode" t-model="changes.barcode" t-att-class="{'border-danger': missingFields.includes('barcode')}" />
                     </div>
                     <div class="partner-detail">
-                        <span class="label">Tax ID</span>
-                        <input class="detail vat" name="vat" t-model="changes.vat" t-att-class="{'border-red': missingFields.includes('vat')}" />
+                        <label class="form-label label" for="vat">Tax ID</label>
+                        <input class="detail vat form-control" id="vat" name="vat" t-model="changes.vat" t-att-class="{'border-danger': missingFields.includes('vat')}" />
                     </div>
                     <div t-if="pos.pricelists.length gt 1" class="partner-detail">
-                        <span class="label">Pricelist</span>
-                        <select class="detail" name="property_product_pricelist" t-att-class="{'border-red': missingFields.includes('property_product_pricelist')}" t-model="changes.property_product_pricelist">
+                        <label class="form-label label" for="pricelist">Pricelist</label>
+                        <select class="detail form-select" id="pricelist" name="property_product_pricelist" t-model="changes.property_product_pricelist" t-att-class="{'border-danger': missingFields.includes('property_product_pricelist')}">
                             <t t-foreach="pos.pricelists" t-as="pricelist" t-key="pricelist.id">
-                                <option t-att-value="pricelist.id" t-att-selected="changes.property_product_pricelist ? (pricelist.id === changes.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
+                                <option t-att-value="pricelist.id" t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
                                 </option>
                             </t>

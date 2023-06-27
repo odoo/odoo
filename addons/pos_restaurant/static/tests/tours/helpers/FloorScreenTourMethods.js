@@ -106,7 +106,7 @@ class Check {
         return [
             {
                 content: `selected floor is '${name}'`,
-                trigger: `.floor-selector .button-floor.active:contains("${name}")`,
+                trigger: `.floor-selector .button-floor.btn-primary:contains("${name}")`,
                 run: () => {},
             },
         ];
