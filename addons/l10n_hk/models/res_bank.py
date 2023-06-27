@@ -47,7 +47,7 @@ class ResPartnerBank(models.Model):
                 (fps_type, self.proxy_value),                        # Proxy Type and Proxy Value
             ]
             merchant_account_info = ''.join([self._serialize(*val) for val in merchant_account_vals])
-            return merchant_account_info
+            return (26, merchant_account_info)
         return super()._get_merchant_account_info()
 
     def _get_additional_data_field(self, comment):

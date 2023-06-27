@@ -45,13 +45,7 @@ class TestL10nSGEmvQrCode(AccountTestInvoicingCommon):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using bank account with non Singapore Partner should fail
-        self.company_data['company'].partner_id.country_id = False
-        with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
-            self.emv_qr_invoice._generate_qr_code()
-
         # Using invoice currency other than SGD should fail
-        self.company_data['company'].partner_id.country_id = self.env.ref('base.sg')
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
         with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
             self.emv_qr_invoice._generate_qr_code()

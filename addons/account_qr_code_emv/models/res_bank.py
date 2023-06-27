@@ -40,34 +40,35 @@ class ResPartnerBank(models.Model):
         return crc & 0xFFFF
 
     def _get_merchant_account_info(self):
-        return None
+        return None, None
 
     def _get_additional_data_field(self, comment):
         return None
 
+    def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        tag, merchant_account_info = self._get_merchant_account_info()
+        currency_code = CURRENCY_MAPPING[currency.name]
+        merchant_name = self.partner_id.name and self.partner_id.name[:25] or 'NA'
+        merchant_city = self.partner_id.city and self.partner_id.city[:15] or ''
+        comment = structured_communication or free_communication or ''
+        comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', comment)
+        additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
+        return [
+            (0, '01'),                                                              # Payload Format Indicator
+            (1, '12'),                                                              # Dynamic QR Codes
+            (tag, merchant_account_info),                                           # Merchant Account Information
+            (52, '0000'),                                                           # Merchant Category Code
+            (53, currency_code),                                                    # Transaction Currency
+            (54, amount),                                                           # Transaction Amount
+            (58, self.country_code),                                                # Country Code
+            (59, merchant_name),                                                    # Merchant Name
+            (60, merchant_city),                                                    # Merchant City
+            (62, additional_data_field),                                            # Additional Data Field
+        ]
+
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'emv_qr':
-            merchant_account_info = self._get_merchant_account_info()
-            currency_code = CURRENCY_MAPPING[currency.name]
-            merchant_name = self.partner_id.name and self.partner_id.name[:25] or 'NA'
-            merchant_city = self.partner_id.city and self.partner_id.city[:15] or ''
-            comment = structured_communication or free_communication or ''
-            comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', comment)
-            additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
-
-            qr_code_vals = [
-                (0, '01'),                                                          # Payload Format Indicator
-                (1, '12'),                                                          # Dynamic QR Codes
-                (26, merchant_account_info),                                        # Merchant Account Information
-                (52, '0000'),                                                       # Merchant Category Code
-                (53, currency_code),                                                # Transaction Currency
-                (54, amount),                                                       # Transaction Amount
-                (58, self.country_code),                                            # Country Code
-                (59, merchant_name),                                                # Merchant Name
-                (60, merchant_city),                                                # Merchant City
-                (62, additional_data_field),                                        # Additional Data Field
-            ]
-
+            qr_code_vals = self._get_qr_code_vals_list(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
             qr_code_str = ''.join([self._serialize(*val) for val in qr_code_vals])
             qr_code_str += '6304'                                                   # CRC16
             crc = self._get_crc16(bytes(qr_code_str, 'utf-8'))
@@ -93,8 +94,10 @@ class ResPartnerBank(models.Model):
                 return _("Missing Merchant Account Information.")
             if not self.partner_id.city:
                 return _("Missing Merchant City.")
-            if not self.proxy_type or not self.proxy_value:
-                return _("Missing Proxy Type or Proxy Value.")
+            if not self.proxy_type:
+                return _("Missing Proxy Type.")
+            if not self.proxy_value:
+                return _("Missing Proxy Value.")
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     @api.model

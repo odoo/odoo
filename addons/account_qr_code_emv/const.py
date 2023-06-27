@@ -29,6 +29,7 @@ CURRENCY_MAPPING = {
     'RUB': '643',
     'SAR': '682',
     'SGD': '702',
+    'VND': '704',
     'ZAR': '710',
     'SEK': '752',
     'CHF': '756',
