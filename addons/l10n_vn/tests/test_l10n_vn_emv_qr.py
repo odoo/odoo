@@ -7,32 +7,33 @@ from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
+class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
     """ Test the generation of the EMV QR Code on invoices """
 
     @classmethod
-    def setup_armageddon_tax(cls, tax_name, company_data):
-        # Hong Kong doesn't have any tax, so this methods will throw errors if we don't return None
-        return None
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref='hk'):
+    def setUpClass(cls, chart_template_ref='vn'):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.company_data['company'].qr_code = True
         cls.company_data['company'].partner_id.update({
-            'country_id': cls.env.ref('base.hk').id,
-            'city': 'HK',
+            'country_id': cls.env.ref('base.vn').id,
+            'city': 'Vietnam',
         })
 
-        cls.acc_emv_hk = cls.env['res.partner.bank'].create({
+        cls.bank_vn = cls.env['res.bank'].create({
+            'name': 'VN Bank',
+            'bic': '970422',
+        })
+
+        cls.acc_emv_vn = cls.env['res.partner.bank'].create({
             'acc_number': '123456789012345678',
+            'bank_id': cls.bank_vn.id,
             'partner_id': cls.company_data['company'].partner_id.id,
-            'proxy_type': 'mobile',
-            'proxy_value': '+852-67891234',
+            'proxy_type': 'bank_acc',
+            'proxy_value': '660704060000129',
             'include_reference': True,
         })
 
-        cls.acc_emv_hk_without_fps_info = cls.env['res.partner.bank'].create({
+        cls.acc_emv_vn_without_paynow_info = cls.env['res.partner.bank'].create({
             'acc_number': '1234567890',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
@@ -40,8 +41,8 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         cls.emv_qr_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'currency_id': cls.env.ref('base.HKD').id,
-            'partner_bank_id': cls.acc_emv_hk.id,
+            'currency_id': cls.env.ref('base.VND').id,
+            'partner_bank_id': cls.acc_emv_vn.id,
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
         })
@@ -50,35 +51,34 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using invoice currency other than HKD or CNY should fail
+        # Using invoice currency other than VND should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
         with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
             self.emv_qr_invoice._generate_qr_code()
 
         # Without company partner city should fail
-        self.emv_qr_invoice.currency_id = self.env.ref('base.HKD')
+        self.emv_qr_invoice.currency_id = self.env.ref('base.VND')
         self.company_data['company'].partner_id.city = False
         with self.assertRaises(UserError, msg="Missing Merchant City."):
             self.emv_qr_invoice._generate_qr_code()
 
-        # Without fps infomation should fail
-        self.company_data['company'].partner_id.city = 'HK'
-        self.emv_qr_invoice.partner_bank_id = self.acc_emv_hk_without_fps_info
-        with self.assertRaises(UserError, msg="The account receiving the payment must have a FPS type and a FPS identifier set."):
+        # Without paynow infomation should fail
+        self.company_data['company'].partner_id.city = 'Vietnam'
+        self.emv_qr_invoice.partner_bank_id = self.acc_emv_vn_without_paynow_info
+        with self.assertRaises(UserError, msg="The account receiving the payment must have a Proxy type and a Proxy value set."):
             self.emv_qr_invoice._generate_qr_code()
 
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
-        demo_payment_reference = 'INV/TEST/0001'
+        unstruct_ref = 'INV/TEST/0001'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,
-            free_communication=demo_payment_reference,
-            structured_communication=demo_payment_reference,
+            free_communication=unstruct_ref,
+            structured_communication=self.emv_qr_invoice.payment_reference,
         )
 
         # Check the whole qr code string
-        qr_code_string = ''.join(emv_qr_vals)
-        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK62170513INV/TEST/00016304264C')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA5204000053037045405100.05802VN5914company_1_data6007Vietnam62170113INV/TEST/0001630425A9')
