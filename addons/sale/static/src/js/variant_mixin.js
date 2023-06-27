@@ -10,6 +10,7 @@ var _t = core._t;
 var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
+        'change .o_variant_pills input' :'_onChangePillsAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
@@ -54,6 +55,9 @@ var VariantMixin = {
         }
 
         const $parent = $(ev.target).closest('.js_product');
+        if(!$parent.length){
+            return Promise.resolve();
+        }
         const combination = this.getSelectedVariantValues($parent);
         let parentCombination;
 
@@ -702,6 +706,14 @@ var VariantMixin = {
     _onChangeColorAttribute: function (ev) {
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.css_attribute_color')
+            .removeClass("active")
+            .filter(':has(input:checked)')
+            .addClass("active");
+    },
+
+    _onChangePillsAttribute: function (ev) {
+        var $parent = $(ev.target).closest('.js_product');
+        $parent.find('.o_variant_pills')
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
