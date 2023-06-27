@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_policy']" position="attributes">
                 <attribute name="invisible">False</attribute>
-                <attribute name="attrs">{'invisible': [('type', '=', 'service')]}</attribute>
+                <attribute name="attrs">{'invisible': [('type', '=', 'service'), ('sale_ok', '=', True)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_policy']" position="after">
-                <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
+                <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('sale_ok', '=', False)], 'required': [('type', '=', 'service'), ('sale_ok', '=', True)]}"/>
             </xpath>
             <field name="product_tooltip" position="after">
                 <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}"/>
