@@ -30,10 +30,6 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
     max-width: 1140px;
 
     .o_rightpanel_section {
-        &:nth-child(n+3) {
-            border-top: 1px solid $border-color;
-        }
-
         .o_form_view {
             .oe_button_box {
                 margin: -1px (-$o-rightpanel-p) 0;
@@ -79,6 +75,10 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
         }
 
         .o_rightpanel_header {
+            padding-left: $o-rightpanel-p;
+            padding-right: $o-rightpanel-p;
+            margin: 0 $o-rightpanel-p * -1;
+
             @include media-breakpoint-down(md) {
                 cursor: pointer;
             }
@@ -86,6 +86,20 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
 
         tr th:not(:first-child) {
             width: 20%;
+        }
+    }
+
+    .o_rightpanel_full_width {
+        margin: 0 $o-rightpanel-p * -1;
+
+        th, td {
+            &:first-child {
+                padding-left: $o-rightpanel-p;
+            }
+
+            &:last-child {
+                padding-right: $o-rightpanel-p;
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="project.ProjectProfitability" owl="1">
-        <div class="o_rightpanel_subsection pb-3" t-if="revenues.data.length">
-            <table class="table table-striped table-hover mb-0">
-                <thead>
+        <div class="o_rightpanel_subsection pb-3 border-bottom" t-if="revenues.data.length">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="bg-100">
                     <tr>
                         <th>Revenues</th>
                         <th class="text-end">Invoiced</th>
@@ -37,9 +37,9 @@
                 </tfoot>
             </table>
         </div>
-        <div class="o_rightpanel_subsection pb-3" t-if="costs.data.length">
-            <table class="table table-striped table-hover mb-0">
-                <thead>
+        <div class="o_rightpanel_subsection pb-3 border-bottom" t-if="costs.data.length">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="bg-100">
                     <tr>
                         <th>Costs</th>
                         <th class="text-end">Billed</th>
@@ -74,7 +74,7 @@
             </table>
         </div>
         <div class="o_rightpanel_subsection">
-            <table class="w-100 table table-borderless mb-4">
+            <table class="table table-sm table-borderless w-100 mb-0">
                 <thead>
                     <tr>
                         <th>Margin</th>
