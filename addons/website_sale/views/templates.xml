@@ -2016,6 +2016,15 @@
                                     <t t-call="website_sale.payment_footer"/>
                                 </form>
                             </div>
+                            <div class="d-lg-none mb32 mt16">
+                                <t t-call="website_sale.cta_buttons_navigation">
+                                    <t t-set="main_cta_custom_attr" t-value="{'name':'o_payment_submit_button', 'disabled':true, 'data-icon-class':'fa-angle-right', 'type':'submit', 'form':'o_checkout_test'}"/>
+                                    <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Pay now'"/>
+                                    <t t-set="main_cta_href" t-value="'#'"/>
+                                    <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
+                                    <t t-set="back_cta_href" t-value="'/shop'"/>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>
