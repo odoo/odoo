@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
@@ -37,16 +38,20 @@ patch(Thread.prototype, "im_livechat", {
             return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
         }
         if (this.channel?.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${this.channel.anonymous_country.name})`;
+            return `${this.getMemberName(this.correspondent)} (${
+                this.channel.anonymous_country.name
+            })`;
         }
         return this.getMemberName(this.correspondent);
     },
 
     get imgUrl() {
-        if (this.type === "livechat" && this.correspondent && !this.correspondent.is_public) {
-            return `/web/image/res.partner/${this.correspondent.id}/avatar_128`;
+        if (this.type !== "livechat") {
+            return this._super();
         }
-        return this._super();
+        return this.correspondent && !this.correspondent.is_public
+            ? `/web/image/res.partner/${this.correspondent.id}/avatar_128`
+            : DEFAULT_AVATAR;
     },
 
     /**
