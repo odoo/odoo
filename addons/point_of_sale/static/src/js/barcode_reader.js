@@ -3,6 +3,7 @@
 import concurrency from "web.concurrency";
 import core from "web.core";
 var Mutex = concurrency.Mutex;
+import { GS1BarcodeError } from 'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js';
 
 // this module interfaces with the barcode reader. It assumes the barcode reader
 // is set-up to act like  a keyboard. Use connect() and disconnect() to activate
@@ -34,6 +35,9 @@ export const BarcodeReader = core.Class.extend({
 
     set_barcode_parser: function (barcode_parser) {
         this.barcode_parser = barcode_parser;
+    },
+    setFallbackBarcodeParser: function (fallbackBarcodeParser) {
+        this.fallbackBarcodeParser = fallbackBarcodeParser;
     },
 
     // when a barcode is scanned and parsed, the callback corresponding
@@ -107,7 +111,16 @@ export const BarcodeReader = core.Class.extend({
         const callbacks = Object.keys(this.exclusive_callbacks).length
             ? this.exclusive_callbacks
             : this.action_callbacks;
-        let parsed_result = this.barcode_parser.parse_barcode(code);
+        let parsed_result;
+        try {
+            parsed_result = this.barcode_parser.parse_barcode(code);
+        } catch (error) {
+            if (this.fallbackBarcodeParser && error instanceof GS1BarcodeError) {
+                parsed_result = this.fallbackBarcodeParser.parse_barcode(code);
+            } else {
+                throw error;
+            }
+        }
         if (Array.isArray(parsed_result)) {
             [...callbacks.gs1].map(cb => cb(parsed_result));
         } else {
