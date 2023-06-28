@@ -1443,7 +1443,7 @@ class GroupsView(models.Model):
                     # and is therefore removed when not in debug mode.
                     xml0.append(E.field(name=field_name, invisible="1", on_change="1"))
                     user_type_field_name = field_name
-                    user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
+                    user_type_readonly = f'{user_type_field_name} != {group_employee.id}'
                     attrs['widget'] = 'radio'
                     # Trigger the on_change of this "virtual field"
                     attrs['on_change'] = '1'
@@ -1453,7 +1453,7 @@ class GroupsView(models.Model):
                 elif kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
-                    attrs['attrs'] = user_type_readonly
+                    attrs['readonly'] = user_type_readonly
                     attrs['on_change'] = '1'
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
@@ -1469,7 +1469,7 @@ class GroupsView(models.Model):
                     app_name = app.name or 'Other'
                     xml4.append(E.separator(string=app_name, **attrs))
                     left_group, right_group = [], []
-                    attrs['attrs'] = user_type_readonly
+                    attrs['readonly'] = user_type_readonly
                     # we can't use enumerate, as we sometime skip groups
                     group_count = 0
                     for g in gs:
@@ -1487,10 +1487,7 @@ class GroupsView(models.Model):
                     xml4.append(E.group(*right_group))
 
             xml4.append({'class': "o_label_nowrap"})
-            if user_type_field_name:
-                user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
-            else:
-                user_type_attrs = {}
+            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else None
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
                 master_category_name = xml_cat[1]
@@ -1501,7 +1498,7 @@ class GroupsView(models.Model):
                 'class': "alert alert-warning",
                 'role': "alert",
                 'colspan': "2",
-                'attrs': str({'invisible': [(field_name, '=', False)]})
+                'invisible': f'not {field_name}',
             })
             user_group_warning_xml.append(E.label({
                 'for': field_name,
@@ -1514,9 +1511,9 @@ class GroupsView(models.Model):
             xml = E.field(
                 *(xml0),
                 E.group(*(xml1), groups="base.group_no_one"),
-                E.group(*(xml2), attrs=str(user_type_attrs)),
-                E.group(*(xml3), attrs=str(user_type_attrs)),
-                E.group(*(xml4), attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")
+                E.group(*(xml2), invisible=user_type_invisible),
+                E.group(*(xml3), invisible=user_type_invisible),
+                E.group(*(xml4), invisible=user_type_invisible, groups="base.group_no_one"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view

@@ -16,7 +16,7 @@ class PaymentMethod(models.Model):
         string="Image",
         max_width=64,
         max_height=64,
-        required="True",
+        required=True,
         help="This field holds the image used for this payment method, limited to 64x64 px")
     image_payment_form = fields.Image(
         string="Image displayed on the payment form", related='image', store=True, max_width=45,

@@ -44,7 +44,7 @@ class PriceRule(models.Model):
     currency_id = fields.Many2one(related='carrier_id.currency_id')
 
     variable = fields.Selection(selection=VARIABLE_SELECTION, required=True, default='quantity')
-    operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
+    operator = fields.Selection([('=', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
     list_base_price = fields.Float(string='Sale Base Price', digits='Product Price', required=True, default=0.0)
     list_price = fields.Float('Sale Price', digits='Product Price', required=True, default=0.0)
