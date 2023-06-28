@@ -756,39 +756,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
 
-
-    def action_open_generate_serial(self):
-        """ Open the modal to generate stock move line with a serial pattern"""
-        if not self.picking_type_id.use_create_lots:
-            raise UserError(_("You cannot create lot/serial numbers in this operation type."))
-        return {
-            'name': _('Generate Serial Numbers'),
-            'res_model': 'stock.generate.serial',
-            'type': 'ir.actions.act_window',
-            'views': [[False, "form"]],
-            'target': 'new',
-            'context': {
-                'default_move_id': self.id,
-                'default_location_dest_id': self.location_dest_id.id,
-            },
-        }
-
-    def action_open_import_lot(self):
-        """ Open the modal to import serial numbers/lots and create stock move line from them"""
-        if not self.picking_type_id.use_create_lots:
-            raise UserError(_("You cannot create lot/serial numbers in this operation type."))
-        return {
-            'name': _('Import Serial/Lots'),
-            'res_model': 'stock.import.lot',
-            'type': 'ir.actions.act_window',
-            'views': [[False, "form"]],
-            'target': 'new',
-            'context': {
-                'default_move_id': self.id,
-                'default_location_dest_id': self.location_dest_id.id,
-            },
-        }
-
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
         move lines of a particular move. This form view is used when "show operations" is not
@@ -908,7 +875,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             location_id = self.location_dest_id
 
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
-        field_data = [{'lot_name': lot_name[0], 'qty_done': lot_name[1]} for lot_name in lot_names]
+        field_data = [{'lot_name': lot_name['lot_name'], 'qty_done': lot_name.get('qty_done', 1)} for lot_name in lot_names]
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
         if self.show_reserved:
             self.move_line_ids = move_lines_commands
@@ -916,20 +883,18 @@ Please change the quantity done or the rounding precision of your unit of measur
             self.move_line_nosuggest_ids = move_lines_commands
         return True
 
-    def _import_lots(self, lots, location_id):
-        if not location_id:
-            location_id = self.location_id
+    @api.model
+    def split_lots(self, lots):
         breaking_char = '\n'
         separation_char = '\t'
         options = False
 
-        if (breaking_char not in lots and separation_char not in lots and ';' not in lots):
-            return   # Skip if the `lot_name` doesn't contain multiple values.
+        if not lots:
+            return []  # Skip if the `lot_name` doesn't contain multiple values.
 
         # Checks the lines and prepares the move lines' values.
         split_lines = lots.split(breaking_char)
         split_lines = list(filter(None, split_lines))
-        # Checks the lines and prepares the move lines' values.
         move_lines_vals = []
         for lot_text in split_lines:
             move_line_vals = {
@@ -953,12 +918,42 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move_line_vals['lot_name'] = lot_text
                     break
             move_lines_vals.append(move_line_vals)
-        move_lines_commands = self._generate_serial_move_line_commands(move_lines_vals, location_dest_id=location_id)
-        if self.show_reserved:
-            self.update({'move_line_ids': move_lines_commands})
-        else:
-            self.update({'move_line_nosuggest_ids': move_lines_commands})
-        return
+        return move_lines_vals
+
+    @api.model
+    def action_generate_lot_line_vals(self, context, mode, first_lot, count, lot_text):
+        assert mode in ('serial', 'import')
+        default_vals = {}
+        # Get default values
+        for key in context:
+            if key.startswith('default_'):
+                default_vals[key.removeprefix('default_')] = context[key]
+
+        vals_list = []
+        if mode == 'serial':
+            lot_names = self.env['stock.lot'].generate_lot_names(first_lot, count)
+        elif mode == 'import':
+            lot_names = self.split_lots(lot_text)
+        for lot in lot_names:
+            if not lot.get('qty_done'):
+                lot['qty_done'] = 1
+            loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
+            product = self.env['product.product'].browse(default_vals['product_id'])
+            loc_dest = loc_dest._get_putaway_strategy(product, lot['qty_done'])
+            vals_list.append({**default_vals,
+                             **lot,
+                             'location_dest_id': loc_dest.id,
+                             'product_uom_id': product.uom_id.id,
+                            })
+        # format many2one values for webclient, id + display_name
+        for values in vals_list:
+            for key, value in values.items():
+                if key in self.env['stock.move.line'] and isinstance(self.env['stock.move.line'][key], models.Model):
+                    values[key] = {
+                        'id': value,
+                        'display_name': self.env['stock.move.line'][key].browse(value).display_name
+                    }
+        return vals_list
 
     def _push_apply(self):
         new_moves = []
@@ -2328,5 +2323,5 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _convert_string_into_field_data(self, string, options):
         string = string.replace(',', '.')  # Parsing string as float works only with dot, not comma.
         if regex_findall(r'^([0-9]+\.?[0-9]*|\.[0-9]+)$', string):  # Number => Quantity.
-            return {'qty_done': float(string) if self.has_tracking == 'lot' else 1}
+            return {'qty_done': float(string)}
         return False
