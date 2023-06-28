@@ -62,7 +62,10 @@ export class DateTimeField extends Component {
     }
 
     get showRange() {
-        return this.relatedField && (this.props.required || this.values.filter(Boolean).length);
+        return (
+            this.relatedField &&
+            ((this.props.required && !this.props.readonly) || this.values.some(Boolean))
+        );
     }
 
     get startDateField() {
@@ -139,10 +142,11 @@ export class DateTimeField extends Component {
         this.openPicker(nextFocusedIndex);
     }
 
-    formatDisplayValue(value) {
-        if (typeof value === "string") {
-            return value;
-        }
+    /**
+     * @param {number} valueIndex
+     */
+    getFormattedValue(valueIndex) {
+        const value = this.values[valueIndex];
         return value ? (this.type === "date" ? formatDate(value) : formatDateTime(value)) : "";
     }
 
