@@ -47,7 +47,7 @@ class StockMove(models.Model):
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
             # We need to remove them from the computation of the price unit.
-            if self.origin_returned_move_id._is_dropshipped():
+            if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
                 layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
