@@ -19,8 +19,8 @@
                             <th class="text-start align-middle" t-if="timesheet_record_label"><span t-out="timesheet_record_label"/></th>
                             <th class="text-start align-middle"><span>Description</span></th>
                             <th class="text-end">
-                                <span t-if="not is_uom_day">Hours Spent</span>
-                                <span t-else="">Days Spent</span>
+                                <span t-if="not is_uom_day">Hours</span>
+                                <span t-else="">Days</span>
                             </th>
                         </tr>
                    </thead>
@@ -73,7 +73,7 @@
         <t t-set="title" t-value="docs._description"/>
         <t t-set="company" t-value="docs.company_id if len(docs) == 1 else docs.env.company"/>
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <t t-foreach="docs" t-as="doc">
                         <t t-if="from_project" t-set="show_task"
@@ -107,7 +107,7 @@
 
     <template id="report_timesheet">
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-call="web.internal_layout">
                 <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
                 <t t-set="show_task" t-value="bool(docs.task_id)"/>
                 <t t-set="show_project" t-value="len(docs.project_id) > 1"/>
@@ -135,7 +135,7 @@
     <!-- Project Task Timesheet Report for given timesheets -->
     <template id="report_timesheet_task">
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-call="web.internal_layout">
                 <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
                 <t t-set="show_task" t-value="len(docs.task_id) > 1"/>
                 <t t-set="show_project" t-value="False"/>

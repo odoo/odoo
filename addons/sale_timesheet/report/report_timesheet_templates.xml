@@ -4,7 +4,7 @@
         <t t-set="show_project" t-value="true"/>
         <t t-set="show_task" t-value="true"/>
         <t t-call="web.html_container">
-            <t t-call="web.external_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <t t-foreach="docs" t-as="doc">
                         <t t-set="doc_name" t-value="doc.name"/>
