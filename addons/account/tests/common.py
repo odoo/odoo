@@ -499,21 +499,28 @@ class AccountTestInvoicingCommon(TransactionCase):
     # Xml Comparison
     ####################################################
 
-    def _turn_node_as_dict_hierarchy(self, node):
+    def _turn_node_as_dict_hierarchy(self, node, path=None):
         ''' Turn the node as a python dictionary to be compared later with another one.
         Allow to ignore the management of namespaces.
         :param node:    A node inside an xml tree.
+        :param path:    The optional path of tags for recursive call.
         :return:        A python dictionary.
         '''
         tag_split = node.tag.split('}')
         tag_wo_ns = tag_split[-1]
         attrib_wo_ns = {k: v for k, v in node.attrib.items() if '}' not in k}
+        path = (path or []) + [tag_wo_ns]
+        full_path = '/'.join(path)
         return {
             'tag': tag_wo_ns,
+            'full_path': full_path,
             'namespace': None if len(tag_split) < 2 else tag_split[0],
             'text': (node.text or '').strip(),
             'attrib': attrib_wo_ns,
-            'children': [self._turn_node_as_dict_hierarchy(child_node) for child_node in node.getchildren()],
+            'children': [
+                self._turn_node_as_dict_hierarchy(child_node, path=path)
+                for child_node in node.getchildren()
+            ],
         }
 
     def assertXmlTreeEqual(self, xml_tree, expected_xml_tree):
@@ -537,7 +544,7 @@ class AccountTestInvoicingCommon(TransactionCase):
             self.assertDictEqual(
                 node_dict_attrib,
                 expected_node_dict_attrib,
-                "Element attributes are different for node %s" % node_dict['tag'],
+                f"Element attributes are different for node {node_dict['full_path']}",
             )
 
             # Check text.
@@ -545,14 +552,14 @@ class AccountTestInvoicingCommon(TransactionCase):
                 self.assertEqual(
                     node_dict['text'],
                     expected_node_dict['text'],
-                    "Element text are different for node %s" % node_dict['tag'],
+                    f"Element text are different for node {node_dict['full_path']}",
                 )
 
             # Check children.
             self.assertEqual(
                 [child['tag'] for child in node_dict['children']],
                 [child['tag'] for child in expected_node_dict['children']],
-                "Number of children elements for node %s is different." % node_dict['tag'],
+                f"Number of children elements for node {node_dict['full_path']} is different.",
             )
 
             for child_node_dict, expected_child_node_dict in zip(node_dict['children'], expected_node_dict['children']):
