@@ -166,6 +166,26 @@ export function getScrollParent(element) {
     }
 }
 
+/**
+ * @param {HTMLElement} el
+ * @param {string} type
+ * @param {boolean} canBubbleAndBeCanceled
+ * @param {PointerEventInit} [additionalParams]
+ */
+const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additionalParams) => {
+    const eventInit = {
+        bubbles: canBubbleAndBeCanceled,
+        cancelable: canBubbleAndBeCanceled,
+        view: window,
+        ...additionalParams,
+    };
+
+    el.dispatchEvent(new PointerEvent(type, eventInit));
+    if (type.startsWith("pointer")) {
+        el.dispatchEvent(new MouseEvent(type.replace("pointer", "mouse"), eventInit));
+    }
+};
+
 export class RunningTourActionHelper {
     constructor(tip_widget) {
         this.tip_widget = tip_widget;
@@ -227,41 +247,21 @@ export class RunningTourActionHelper {
         };
     }
     _click(values, nb, leave) {
-        trigger_mouse_event(values.$element, "mouseover");
-        values.$element.trigger("mouseenter");
-        for (var i = 1; i <= (nb || 1); i++) {
-            trigger_mouse_event(values.$element, "mousedown");
-            trigger_mouse_event(values.$element, "mouseup");
-            trigger_mouse_event(values.$element, "click", i);
+        const target = values.$element[0];
+        triggerPointerEvent(target, "pointerover", true);
+        triggerPointerEvent(target, "pointerenter", false);
+        triggerPointerEvent(target, "pointermove", true);
+        for (let i = 1; i <= (nb || 1); i++) {
+            triggerPointerEvent(target, "pointerdown", true);
+            triggerPointerEvent(target, "pointerup", true);
+            triggerPointerEvent(target, "click", true, { detail: i });
             if (i % 2 === 0) {
-                trigger_mouse_event(values.$element, "dblclick");
+                triggerPointerEvent(target, "dblclick", true);
             }
         }
         if (leave !== false) {
-            trigger_mouse_event(values.$element, "mouseout");
-            values.$element.trigger("mouseleave");
-        }
-
-        function trigger_mouse_event($element, type, count) {
-            var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(
-                type,
-                true,
-                true,
-                window,
-                count || 0,
-                0,
-                0,
-                0,
-                0,
-                false,
-                false,
-                false,
-                false,
-                0,
-                $element[0]
-            );
-            $element[0].dispatchEvent(e);
+            triggerPointerEvent(target, "pointerout", true);
+            triggerPointerEvent(target, "pointerleave", false);
         }
     }
     _text(values, text) {
@@ -385,43 +385,14 @@ export class RunningTourActionHelper {
             clientY: targetRect.y + targetRect.height / 2,
         };
 
-        source.dispatchEvent(
-            new PointerEvent("pointerdown", {
-                bubbles: true,
-                cancelable: true,
-                button: 0,
-                which: 1,
-                ...sourcePosition,
-            })
-        );
-
-        source.dispatchEvent(
-            new PointerEvent("pointermove", {
-                bubbles: true,
-                cancelable: true,
-                ...targetPosition,
-            })
-        );
+        triggerPointerEvent(source, "pointerdown", true, sourcePosition);
+        triggerPointerEvent(source, "pointermove", true, targetPosition);
 
         for (const parent of getDifferentParents(source, target)) {
-            parent.dispatchEvent(
-                new PointerEvent("pointerenter", {
-                    bubbles: false,
-                    cancelable: false,
-                    ...targetPosition,
-                })
-            );
+            triggerPointerEvent(parent, "pointerenter", false, targetPosition);
         }
 
-        target.dispatchEvent(
-            new PointerEvent("pointerup", {
-                bubbles: true,
-                cancelable: true,
-                button: 0,
-                which: 1,
-                ...targetPosition,
-            })
-        );
+        triggerPointerEvent(target, "pointerup", true, targetPosition);
     }
     _drag_move_and_drop(values, params) {
         // Extract parameters from string: '[deltaX,deltaY]@from => actualTo'.
