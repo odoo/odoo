@@ -2397,7 +2397,7 @@ class BaseModel(metaclass=MetaModel):
                 additional_domain = [(field_name, '=', value)]
 
                 if field.type in ('date', 'datetime'):
-                    if value:
+                    if value and isinstance(value, datetime.date):
                         range_start = value
                         range_end = value + interval
                         if field.type == 'datetime':
