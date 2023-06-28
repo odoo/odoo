@@ -60,14 +60,9 @@ class StockLot(models.Model):
         suffix = splitted[-1]
         initial_number = int(initial_number)
 
-        lot_names = []
-        for i in range(0, count):
-            lot_names.append(('%s%s%s' % (
-                prefix,
-                str(initial_number + i).zfill(padding),
-                suffix
-            ), 1)) # quantity=1 by default
-        return lot_names
+        return [{
+            'lot_name': '%s%s%s' % (prefix, str(initial_number + i).zfill(padding), suffix),
+        } for i in range(0, count)]
 
     @api.model
     def _get_next_serial(self, company, product):
@@ -77,7 +72,7 @@ class StockLot(models.Model):
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
-                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1][0]
+                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]['lot_name']
         return False
 
     @api.constrains('name', 'product_id', 'company_id')

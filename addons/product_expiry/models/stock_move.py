@@ -31,7 +31,7 @@ class StockMove(models.Model):
         if not res:
             try:
                 datetime = dparser.parse(string, **options)
-                if not self.use_expiration_date:
+                if self and not self.use_expiration_date:
                     # The datetime was correctly parsed but this move's product doesn't use expiration date.
                     return "ignore"
                 return {'expiration_date': datetime}
