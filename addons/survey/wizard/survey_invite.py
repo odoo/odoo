@@ -217,6 +217,9 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
+        email_from = self.template_id._render_field('email_from', answer.ids)[answer.id] if self.template_id.email_from else self.author_id.email_formatted
+        if not email_from:
+            raise UserError(_("Unable to post message, please configure the sender's email address."))
         subject = self._render_field('subject', answer.ids)[answer.id]
         body = self._render_field('body', answer.ids)[answer.id]
         # post the message
@@ -225,7 +228,7 @@ class SurveyInvite(models.TransientModel):
             'auto_delete': True,
             'author_id': self.author_id.id,
             'body_html': body,
-            'email_from': self.author_id.email_formatted,
+            'email_from': email_from,
             'model': None,
             'res_id': None,
             'subject': subject,
