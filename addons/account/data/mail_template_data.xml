@@ -45,6 +45,10 @@
                 Please use the following communication for your payment: <span style="font-weight:bold;" t-out="object.payment_reference or ''">INV/2021/05/0005</span>.
             </t>
         </t>
+        <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
+            <br /><br />
+            PS: you can review your timesheets <a t-att-href="'my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
+        </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
         <t t-if="not is_html_empty(object.invoice_user_id.signature)">
