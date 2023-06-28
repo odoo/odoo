@@ -20,6 +20,9 @@ import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/
 import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 
+import * as spreadsheet from "@odoo/o-spreadsheet";
+const { DEFAULT_LOCALE } = spreadsheet.constants;
+
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can select a Pivot from cell formula", async function (assert) {
         const { model } = await createSpreadsheetWithPivot({
@@ -624,10 +627,25 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 </pivot>`,
             });
             assert.strictEqual(getEvaluatedCell(model, "A3").format, "#,##0.00");
-            assert.strictEqual(getEvaluatedCell(model, "B1").format, "mm/dd/yyyy");
+            assert.strictEqual(getEvaluatedCell(model, "B1").format, "m/d/yyyy");
             assert.strictEqual(getEvaluatedCell(model, "B2").format, undefined);
         }
     );
+
+    QUnit.test("PIVOT.HEADER date formats are locale dependant", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="probability" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        model.dispatch("UPDATE_LOCALE", {
+            locale: { ...DEFAULT_LOCALE, dateFormat: "dd/mm/yyyy" },
+        });
+        assert.strictEqual(getEvaluatedCell(model, "B1").format, "dd/mm/yyyy");
+    });
 
     QUnit.test(
         "Pivot header zone and total row will have correct borders",
