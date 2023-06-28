@@ -48,8 +48,8 @@
                 </div>
             </t>
         </div>
-        <div class="d-flex flex-column flex-md-row justify-content-center position-relative gap-4 gap-md-3">
-            <div class="d-flex gap-3 w-100 justify-content-center">
+        <div t-attf-class="position-relative d-flex flex-column flex-md-row gap-4 gap-md-3 {{ props.type === 'datetime' ? 'justify-content-center' : 'justify-content-end' }}">
+            <div t-attf-class="d-flex gap-3 w-100 {{ props.type === 'datetime' ? 'justify-content-center' : 'd-none' }}">
                 <t t-if="props.type === 'datetime'">
                     <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
                         <div
@@ -74,10 +74,8 @@
                     </t>
                 </t>
             </div>
-            <div
-                class="o_datetime_buttons end-0"
-                t-att-class="{ 'position-md-absolute': props.type === 'datetime'  }"
-            >
+
+            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute end-0' : '' }}">
                 <t t-slot="buttons" />
             </div>
         </div>
