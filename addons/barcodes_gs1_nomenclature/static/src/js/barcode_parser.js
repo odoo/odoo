@@ -3,6 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import { _lt } from "@web/core/l10n/translation";
+export class GS1BarcodeError extends Error {};
 
 export const FNC1_CHAR = String.fromCharCode(29);
 
@@ -120,12 +121,12 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
                             return results; // Barcode completly parsed, no need to keep looping.
                         }
                     } else {
-                        throw new Error(_lt("This barcode can't be parsed by any barcode rules."));
+                        throw new GS1BarcodeError(_lt("This barcode can't be parsed by any barcode rules."));
                     }
                 }
             }
             if (barcodeLength === barcode.length) {
-                throw new Error(_lt("This barcode can't be partially or fully parsed."));
+                throw new GS1BarcodeError(_lt("This barcode can't be partially or fully parsed."));
             }
         }
 
