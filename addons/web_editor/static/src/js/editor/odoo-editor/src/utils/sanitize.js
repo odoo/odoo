@@ -21,6 +21,7 @@ import {
     EMAIL_REGEX,
     PHONE_REGEX,
     URL_REGEX,
+    unwrapContents,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -149,13 +150,16 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (
         node.nodeName === 'P' && // Note: not sure we should limit to <p>.
-        node.parentElement.nodeName === 'LI' &&
-        isEmptyBlock(node)
+        node.parentElement.nodeName === 'LI'
     ) {
         // Remove empty paragraphs in <li>.
         const parent = node.parentElement;
         const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
-        node.remove();
+        if (isEmptyBlock(node)) {
+            node.remove();
+        } else {
+            unwrapContents(node);
+        }
         fillEmpty(parent);
         restoreCursor?.(new Map([[node, parent]]));
         node = parent; // The node has been removed, update the reference.
