@@ -74,7 +74,7 @@ const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 // Components
 //------------------------------------------------------------------------------
 
-class SkipButton extends Component {}
+export class SkipButton extends Component {}
 SkipButton.template = 'website.Configurator.SkipButton';
 
 class WelcomeScreen extends Component {

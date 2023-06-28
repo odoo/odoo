@@ -267,6 +267,7 @@ class Website(models.Model):
 
     @api.model
     def _handle_domain(self, vals):
+        #TODO: use this to validate domain to scrap.
         if 'domain' in vals and vals['domain']:
             if not vals['domain'].startswith('http'):
                 vals['domain'] = 'https://%s' % vals['domain']

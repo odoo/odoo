@@ -332,6 +332,8 @@ class Website(Home):
         action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
         if step > 1:
             action_url += '&step=' + str(step)
+        if kwargs.get('enable_scrap'):
+            action_url += '&enable_scrap=1'
         return request.redirect(action_url)
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
