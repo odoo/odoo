@@ -23,6 +23,7 @@
 # Daniel Blanco <daniel@blancomartin.cl>, 2023
 # Gelo, 2023
 # Iran Villalobos López, 2023
+# Jolien De Paepe, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
@@ -8038,7 +8039,7 @@ msgstr "Widget de créditos y débitos de factura pendientes"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Nombre del socio a mostrar en la factura."
+msgstr "Nombre de la empresa a mostrar en la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -11030,7 +11031,7 @@ msgstr "Plazo de pago: Pago inmediato"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Pago: Recibo de pago"
 
 #. module: account
 #. odoo-python
@@ -12655,6 +12656,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
+"Enviado manualmente al cliente al hacer clic en \"Enviar recibo por correo "
+"electrónico\" en la acción de pago"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -13867,6 +13870,15 @@ msgstr ""
 "%(date_field)s (%(date)s) no coincide con el número de secuencia del %(model)s relacionado (%(sequence)s)\n"
 "Debe eliminar los %(sequence_field)s de %(model)s para continuar.\n"
 "Al hacerlo, es posible que desee volver a secuenciar los asientos para mantener una secuencia continua basada en la fecha."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15839,6 +15851,11 @@ msgstr "Actualizar las tasas de cambio automáticamente"
 #, python-format
 msgid "Upload"
 msgstr "Subir"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr ""
 
 #. module: account
 #. odoo-python

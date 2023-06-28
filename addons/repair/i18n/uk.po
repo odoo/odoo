@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Bohdan Lisnenko, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +28,8 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'draft' and 'Комерційна пропозиція ремонту - %s' % (object.name) or\n"
-"                'Замовлення на ремонт - %s' % (object.name))"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -90,6 +90,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Вітаємо <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
+"        Це ваше замовлення на ремонт <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            у сумі <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br>\n"
+"        </t>\n"
+"        Ви можете відповісти на цей лист, якщо у вас є запитання.\n"
+"        <br><br>\n"
+"        Дякуємо,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -208,7 +227,7 @@ msgstr "Після ремонту"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "Дозволений тип комплектування"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -291,8 +310,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
-" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"Конвертація між одиницями вимірювання може відбуватися лише у тому випадку, "
+"якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
 "здійснюватися на основі співвідношення."
 
 #. module: repair
@@ -322,13 +341,13 @@ msgstr "Створити масовий рахунок-фактуру (ремо�
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Створити ремонт"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "Створити замовлення на ремонт з повернень"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -467,7 +486,7 @@ msgstr "Підписники (Партнери)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -531,6 +550,8 @@ msgstr "Якщо позначено, деякі повідомлення маю�
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"Якщо позначено, ви зможете безпосередньо створювати замовлення на ремонт із "
+"повернення."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -573,7 +594,7 @@ msgstr "Рядок рахунку"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr "Метод рахнка-фактури"
+msgstr "Метод виставлення рахунка"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
@@ -762,7 +783,7 @@ msgstr "Звичайний"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "Зверніть увагу, що склади повернення та ремонту не збігаються!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -787,7 +808,7 @@ msgstr "Кількість повідомлень з помилковою дст
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Кількість ремонтів, пов’язаних із цим комплектуванням"
 
 #. module: repair
 #. odoo-python
@@ -1077,7 +1098,7 @@ msgstr "Замовлення на ремонт %s"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair: Quotation"
-msgstr ""
+msgstr "Ремонт: Комерційна пропозиція"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1122,11 +1143,13 @@ msgstr "Повернути"
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
 msgstr ""
+"Замовлення на повернення з якого надійшов товар, який необхідно "
+"відремонтувати."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Тип повернення"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1179,6 +1202,8 @@ msgstr "Надіслати комерційну пропозицію"
 #: model:mail.template,description:repair.mail_template_repair_quotation
 msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
 msgstr ""
+"Надсилаэться вручну під час натискання на \"Надіслати пропозицію\" на "
+"замовленні на ремонт"
 
 #. module: repair
 #. odoo-python
@@ -1246,7 +1271,7 @@ msgstr "Назва тегу"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr "Така мітка вже існує!"
+msgstr "Такий тег уже існує!"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tag
@@ -1337,6 +1362,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"True якщо цей ремонт пов'язаний із Замовленням на повернення і замовлення "
+"'Виконане'. False в інших випадках."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1449,14 +1476,14 @@ msgstr "Не можна вводити негативні величини."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
-msgstr ""
+msgstr "Ви не можете скасувати завершене замовлення на ремонт."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "Ви не можете видалити завершене замовлення на ремонт."
 
 #. module: repair
 #. odoo-python

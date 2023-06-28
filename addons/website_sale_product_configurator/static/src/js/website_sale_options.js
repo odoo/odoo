@@ -43,10 +43,13 @@ publicWidget.registry.WebsiteSale.include({
      * @override
      */
     _submitForm() {
+        var ret = this._super(...arguments);
         if (this.optionalProductsModal && this.stayOnPageOption) {
-            this.optionalProductsModal._openedResolver();
+            ret.then(()=>{
+                this.optionalProductsModal._openedResolver()
+            });
         }
-        return this._super(...arguments);
+        return ret;
     },
     /**
      * Update web shop base form quantity
@@ -117,6 +120,8 @@ publicWidget.registry.WebsiteSale.include({
                         $quantity.parent().parent().removeClass('d-none');
                         $quantity.text(quantity).hide().fadeIn(600);
                         sessionStorage.setItem('website_sale_cart_quantity', quantity);
+                    }).then(()=>{
+                        this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
                     });
             });
     },

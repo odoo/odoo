@@ -299,7 +299,7 @@ class TestExpenses(TestExpenseCommon):
         self.env['hr.expense'].create({
             'name': 'Choucroute Saucisse',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_c.id, # product with no cost, else not possible to enter amount in different currency
+            'product_id': self.product_c.id,
             'total_amount': 700.0,
             'tax_ids': [(6, 0, tax.ids)],
             'sheet_id': expense.id,
@@ -321,6 +321,8 @@ class TestExpenses(TestExpenseCommon):
         # Should get this result [(0.0, 350.0, -700.0), (318.18, 0.0, 636.36), (31.82, 0.0, 63.64)]
         analytic_line = expense.account_move_id.line_ids.analytic_line_ids
         self.assertEqual(len(analytic_line), 1)
+
+        # Expenses paid by the employee are always translated in company currency
         self.assertInvoiceValues(expense.account_move_id, [
             {
                 'balance': 318.18, # 700 * 1:2 (rate) / 1.1 (incl. tax)
@@ -359,7 +361,7 @@ class TestExpenses(TestExpenseCommon):
             'total_amount': 1000.0,
             'payment_mode': 'company_account',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_a.id,
+            'product_id': self.product_c.id,
             'currency_id': self.currency_data['currency'].id,  # rate is 1:2
         })
 
@@ -381,13 +383,13 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.approve_expense_sheets()
         expense_sheet.action_sheet_move_create()
         self.assertRecordValues(expense_sheet.account_move_id.payment_id, [{
-            'currency_id': self.env.company.currency_id.id,
+            'currency_id': self.currency_data['currency'].id,
         }])
         self.assertRecordValues(expense_sheet.account_move_id.line_ids, [
-            {'currency_id': self.env.company.currency_id.id},
-            {'currency_id': self.env.company.currency_id.id},
-            {'currency_id': self.env.company.currency_id.id},
-            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.currency_data['currency'].id},
+            {'currency_id': self.currency_data['currency'].id},
+            {'currency_id': self.currency_data['currency'].id},
+            {'currency_id': self.currency_data['currency'].id},
         ])
 
     def test_account_entry_multi_currency_own_account(self):
@@ -395,7 +397,6 @@ class TestExpenses(TestExpenseCommon):
         expense = self.env['hr.expense'].create({
             'name': 'Company expense',
             'date': '2022-11-17',
-            'total_amount': 1000.0,
             'payment_mode': 'own_account',
             'employee_id': self.expense_employee.id,
             'product_id': self.product_a.id,
@@ -417,13 +418,142 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.approve_expense_sheets()
         expense_sheet.action_sheet_move_create()
         self.assertRecordValues(expense_sheet.account_move_id, [{
-            'currency_id': self.env.company.currency_id.id,
+            'currency_id': expense_sheet.company_id.currency_id.id,
         }])
         self.assertRecordValues(expense_sheet.account_move_id.line_ids, [
-            {'currency_id': self.env.company.currency_id.id},
-            {'currency_id': self.env.company.currency_id.id},
-            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': expense_sheet.company_id.currency_id.id},
+            {'currency_id': expense_sheet.company_id.currency_id.id},
+            {'currency_id': expense_sheet.company_id.currency_id.id},
         ])
+
+    def test_multicurrencies_rounding_consistency(self):
+        # pylint: disable=bad-whitespace
+        foreign_currency = self.env['res.currency'].create({
+            'name': 'Exposure',
+            'symbol': ' ',
+            'rounding': 0.01,
+            'position': 'after',
+            'currency_unit_label': 'Nothing',
+            'currency_subunit_label': 'Smaller Nothing',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'rate': 1/1.52890,
+            'currency_id': foreign_currency.id,
+            'company_id': self.company_data['company'].id,
+        })
+        foreign_sale_journal = self.company_data['default_journal_sale'].copy()
+        foreign_sale_journal.currency_id = foreign_currency.id
+        tax = self.env['account.tax'].create({
+            'name': 'Tax Expense 15%',
+            'amount': 15,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'price_include': True,
+        })
+        taxes = tax + tax.copy()
+
+        expense_sheet_own_1_tax = self.env['hr.expense.sheet'].create({
+            'name': "own expense 1 tax",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'journal_id': foreign_sale_journal.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Own expense',
+                'date': '2022-11-16',
+                'payment_mode': 'own_account',
+                'total_amount': 1000,
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        expense_sheet_own_2_tax = self.env['hr.expense.sheet'].create({
+            'name': "own expense 2 taxes",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'journal_id': foreign_sale_journal.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Own expense',
+                'date': '2022-11-17',
+                'payment_mode': 'own_account',
+                'total_amount': 1000,
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'tax_ids': [Command.set(taxes.ids)],
+            })],
+        })
+        expense_sheet_company_1_tax = self.env['hr.expense.sheet'].create({
+            'name': "company expense 1 taxes",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'journal_id': foreign_sale_journal.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Company expense',
+                'date': '2022-11-18',
+                'payment_mode': 'company_account',
+                'total_amount': 1000,
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        expense_sheet_company_2_tax = self.env['hr.expense.sheet'].create({
+            'name': "company expense 2 taxes",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'journal_id': foreign_sale_journal.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Company expense',
+                'date': '2022-11-19',
+                'payment_mode': 'company_account',
+                'total_amount': 1000,
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'tax_ids': [Command.set(taxes.ids)],
+            })],
+        })
+        sheets = expense_sheet_own_1_tax + expense_sheet_own_2_tax + expense_sheet_company_1_tax + expense_sheet_company_2_tax
+        self.assertRecordValues(sheets.mapped('expense_line_ids'), [
+            {'untaxed_amount':  869.57, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 130.43, 'amount_tax_company': 199.42},
+            {'untaxed_amount':  769.23, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 230.77, 'amount_tax_company': 352.82},
+            {'untaxed_amount':  869.57, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 130.43, 'amount_tax_company': 199.42},
+            {'untaxed_amount':  769.23, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 230.77, 'amount_tax_company': 352.82},
+        ])
+
+        sheets.action_submit_sheet()
+        sheets.approve_expense_sheets()
+        sheets.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet_own_1_tax.account_move_id.mapped('line_ids'), [
+            {'balance':  1329.48, 'amount_currency':  1329.48, 'currency_id': self.company_data['currency'].id},
+            {'balance':   199.42, 'amount_currency':   199.42, 'currency_id': self.company_data['currency'].id},
+            {'balance': -1528.90, 'amount_currency': -1528.90, 'currency_id': self.company_data['currency'].id},
+        ])
+
+        self.assertRecordValues(expense_sheet_own_2_tax.account_move_id.mapped('line_ids'), [
+            {'balance':  1176.08, 'amount_currency':  1176.08, 'currency_id': self.company_data['currency'].id},
+            {'balance':   176.41, 'amount_currency':   176.41, 'currency_id': self.company_data['currency'].id},
+            {'balance':   176.41, 'amount_currency':   176.41, 'currency_id': self.company_data['currency'].id},  #  == 352.82 amount_tax_company
+            {'balance': -1528.90, 'amount_currency': -1528.90, 'currency_id': self.company_data['currency'].id},
+        ])
+
+        self.assertRecordValues(expense_sheet_company_1_tax.account_move_id.mapped('line_ids'), [
+            {'balance':  1329.48, 'amount_currency':   869.57, 'currency_id': foreign_currency.id},
+            {'balance':   199.42, 'amount_currency':   130.43, 'currency_id': foreign_currency.id},
+            {'balance': -1528.90, 'amount_currency': -1000.00, 'currency_id': foreign_currency.id},
+        ])
+
+        self.assertRecordValues(expense_sheet_company_2_tax.account_move_id.mapped('line_ids'), [
+            {'balance':  1176.08, 'amount_currency':   769.23, 'currency_id': foreign_currency.id},
+            {'balance':   176.41, 'amount_currency':   115.38, 'currency_id': foreign_currency.id},  #  == 352.82 amount_tax_company & 230.77 amount_tax
+            {'balance':   176.41, 'amount_currency':   115.39, 'currency_id': foreign_currency.id},  # One cent more in currency due to rounding
+            {'balance': -1528.90, 'amount_currency': -1000.00, 'currency_id': foreign_currency.id},
+        ])
+
 
     def test_expenses_with_tax_and_lockdate(self):
         ''' Test creating a journal entry for multiple expenses using taxes. A lock date is set in order to trigger
@@ -956,3 +1086,23 @@ class TestExpenses(TestExpenseCommon):
         move = expense_sheet.account_move_id
         expected_date = fields.Date.from_string('2021-01-31')
         self.assertEqual(move.invoice_date_due, expected_date, 'Bill due date should follow employee payment terms')
+
+    def test_inverse_total_amount(self):
+        """ Test if the inverse method works correctly """
+
+        expense = self.env['hr.expense'].create({
+            'name': 'Choucroute Saucisse',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount': 60,
+            'unit_amount': 0,
+            'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+            'analytic_distribution': {
+                self.analytic_account_1.id: 50,
+                self.analytic_account_2.id: 50,
+            },
+        })
+
+        expense.total_amount = 90
+
+        self.assertEqual(expense.unit_amount, 90, 'Unit amount should be the same as total amount was written to')

@@ -193,8 +193,7 @@ class PosOrder(models.Model):
             order.add_payment(return_payment_vals)
 
     def _prepare_invoice_line(self, order_line):
-        display_name = order_line.product_id.get_product_multiline_description_sale()
-        name = order_line.product_id.default_code + " " + display_name if order_line.product_id.default_code else display_name
+        name = order_line.product_id.get_product_multiline_description_sale()
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
@@ -1167,6 +1166,11 @@ class PosOrderLine(models.Model):
                     pl[2]['id'] = pl[2]['server_id']
                     del pl[2]['server_id']
         return super().write(values)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_order_state(self):
+        if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
+            raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
 
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):

@@ -3530,7 +3530,6 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @param {string} name - an identifier for a type of update
      * @param {*} data
-     * @returns {Promise}
      */
     notify: function (name, data) {
         if (name === 'target') {
@@ -3804,6 +3803,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
 
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
+                const borderWidthCssProps = weUtils.CSS_SHORTHANDS['border-width'];
                 const cssValues = cssProps.map(cssProp => {
                     let value = styles.getPropertyValue(cssProp).trim();
                     if (cssProp === 'box-shadow') {
@@ -3812,6 +3812,11 @@ const SnippetOptionWidget = Widget.extend({
                         const color = values.find(s => !s.match(/^\d/));
                         values = values.join(' ').replace(color, '').trim();
                         value = `${color} ${values}${inset ? ' inset' : ''}`;
+                    }
+                    if (borderWidthCssProps.includes(cssProp) && value.endsWith('px')) {
+                        // Rounding value up avoids zoom-in issues.
+                        // Zoom-out issues are not an expected use case.
+                        value = `${Math.ceil(parseFloat(value))}px`;
                     }
                     return value;
                 });

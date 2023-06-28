@@ -200,6 +200,10 @@ class IrFieldsConverter(models.AbstractModel):
             msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
 
+    def _str_to_properties(self, model, field, value):
+        msg = _("Unable to import field type '%s'  ", field.type)
+        raise self._format_import_error(ValueError, msg)
+
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
