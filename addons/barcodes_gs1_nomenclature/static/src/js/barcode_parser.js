@@ -4,6 +4,7 @@ odoo.define('barcodes_gs1_nomenclature/static/src/js/barcode_parser.js', functio
 const BarcodeParser = require('barcodes.BarcodeParser');
 const FNC1_CHAR = String.fromCharCode(29);
 const {_lt} = require('web.core');
+class GS1BarcodeError extends Error {};
 
 BarcodeParser.include({
     /**
@@ -105,12 +106,12 @@ BarcodeParser.include({
                             return results; // Barcode completly parsed, no need to keep looping.
                         }
                     } else {
-                        throw new Error(_lt("This barcode can't be parsed by any barcode rules."));
+                        throw new GS1BarcodeError(_lt("This barcode can't be parsed by any barcode rules."));
                     }
                 }
             }
             if (barcodeLength === barcode.length) {
-                throw new Error(_lt("This barcode can't be partially or fully parsed."));
+                throw new GS1BarcodeError(_lt("This barcode can't be partially or fully parsed."));
             }
         }
 
@@ -154,5 +155,6 @@ BarcodeParser.include({
 return {
     BarcodeParser,
     FNC1_CHAR,
+    GS1BarcodeError
 };
 });
