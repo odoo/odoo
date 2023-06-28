@@ -3,6 +3,7 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -300,14 +301,15 @@ class HrEmployee(models.Model):
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
+        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz)
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
         return list(map(lambda bh: {
             'id': -bh.id,
             'colorIndex': 0,
-            'end': datetime.datetime.combine(bh.date_to, datetime.datetime.max.time()).isoformat(),
+            'end': datetime.datetime.combine(bh.date_to.astimezone(employee_tz), datetime.datetime.max.time()).isoformat(),
             'endType': "datetime",
             'isAllDay': True,
-            'start': datetime.datetime.combine(bh.date_from, datetime.datetime.min.time()).isoformat(),
+            'start': datetime.datetime.combine(bh.date_from.astimezone(employee_tz), datetime.datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': bh.name,
         }, public_holidays))
