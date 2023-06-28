@@ -20,6 +20,9 @@ import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
 import { getBasicServerData } from "../utils/data";
 
+import * as spreadsheet from "@odoo/o-spreadsheet";
+const { DEFAULT_LOCALE } = spreadsheet.constants;
+
 QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("List export", async (assert) => {
         const { model } = await createSpreadsheetWithList();
@@ -113,10 +116,26 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "B2").format, "#,##0.00");
         assert.strictEqual(getEvaluatedCell(model, "C2").format, undefined);
         assert.strictEqual(getEvaluatedCell(model, "D2").format, "m/d/yyyy");
-        assert.strictEqual(getEvaluatedCell(model, "E2").format, "m/d/yyyy hh:mm:ss");
+        assert.strictEqual(getEvaluatedCell(model, "E2").format, "m/d/yyyy hh:mm:ss a");
         assert.strictEqual(getEvaluatedCell(model, "F2").format, undefined);
         assert.strictEqual(getEvaluatedCell(model, "G2").format, "#,##0.00[$€]");
         assert.strictEqual(getEvaluatedCell(model, "G3").format, "[$$]#,##0.00");
+    });
+
+    QUnit.test("List formulas date formats are locale dependant", async function (assert) {
+        const { model } = await createSpreadsheetWithList({
+            columns: ["date", "create_date"],
+            linesNumber: 2,
+        });
+        await waitForDataSourcesLoaded(model);
+        assert.strictEqual(getEvaluatedCell(model, "A2").format, "m/d/yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "B2").format, "m/d/yyyy hh:mm:ss a");
+
+        const myLocale = { ...DEFAULT_LOCALE, dateFormat: "d/m/yyyy", timeFormat: "hh:mm:ss" };
+        model.dispatch("UPDATE_LOCALE", { locale: myLocale });
+
+        assert.strictEqual(getEvaluatedCell(model, "A2").format, "d/m/yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "B2").format, "d/m/yyyy hh:mm:ss");
     });
 
     QUnit.test("Json fields are not supported in list formulas", async function (assert) {

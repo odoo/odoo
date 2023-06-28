@@ -26,14 +26,14 @@ functionRegistry.add("ODOO.LIST", {
     ],
     compute: function (listId, index, fieldName) {
         const id = toString(listId);
-        const position = toNumber(index) - 1;
+        const position = toNumber(index, this.locale) - 1;
         const field = toString(fieldName);
         assertListsExists(id, this.getters);
         return this.getters.getListCellValue(id, position, field);
     },
     computeFormat: function (listId, index, fieldName) {
         const id = toString(listId.value);
-        const position = toNumber(index.value) - 1;
+        const position = toNumber(index.value, this.locale) - 1;
         const field = this.getters.getListDataSource(id).getField(toString(fieldName.value));
         switch (field.type) {
             case "integer":
@@ -49,9 +49,9 @@ functionRegistry.add("ODOO.LIST", {
                 return this.getters.getCurrencyFormat(currencyName);
             }
             case "date":
-                return "m/d/yyyy";
+                return this.locale.dateFormat;
             case "datetime":
-                return "m/d/yyyy hh:mm:ss";
+                return this.locale.dateFormat + " " + this.locale.timeFormat;
             default:
                 return undefined;
         }

@@ -1,6 +1,7 @@
+import json
+
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
-
 
 class TestSpreadsheetDashboard(TransactionCase):
     def test_create_with_default_values(self):
@@ -15,8 +16,8 @@ class TestSpreadsheetDashboard(TransactionCase):
         )
         self.assertEqual(dashboard.group_ids, self.env.ref("base.group_user"))
         self.assertEqual(
-            dashboard.spreadsheet_data,
-            '{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}',
+            json.loads(dashboard.spreadsheet_data),
+            dashboard._empty_spreadsheet_data()
         )
 
     def test_unlink_prevent_spreadsheet_group(self):
