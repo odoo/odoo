@@ -618,7 +618,7 @@
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="x"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '!=', 'entry')]}"/>
                         <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
-                                attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '==', 'entry')]}"/>
+                                attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '=', 'entry')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}" data-hotkey="r" />
                         <button string="Request Cancel"
@@ -741,6 +741,7 @@
 
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
+                        <field name="state" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="journal_id" invisible="1"/>
                         <field name="show_name_warning" invisible="1"/>

@@ -39,7 +39,7 @@
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail']" position="after">
                     <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"
-                        attrs="{'invisible': ['|', ('mass_mailing_name', '==', ''), ('mass_mailing_name', '==', False)]}" data-hotkey="q"/>
+                        attrs="{'invisible': ['|', ('mass_mailing_name', '=', ''), ('mass_mailing_name', '=', False)]}" data-hotkey="q"/>
                 </xpath>
             </field>
         </record>
