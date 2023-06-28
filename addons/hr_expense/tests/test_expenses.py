@@ -1404,3 +1404,77 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   199.42, 'amount_currency':   130.43, 'currency_id': foreign_currency.id},
             {'balance': -1528.90, 'amount_currency': -1000.00, 'currency_id': foreign_currency.id},
         ])
+
+    def test_currency_rate_override(self):
+        """ Checks that the currency rate is recomputed properly when the total in company currency is set to a new value """
+        foreign_currency = self.env['res.currency'].create({
+            'name': 'Exposure',
+            'symbol': ' ',
+            'rounding': 0.01,
+            'position': 'after',
+            'currency_unit_label': 'Nothing',
+            'currency_subunit_label': 'Smaller Nothing',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'rate': 1/1.52,
+            'currency_id': foreign_currency.id,
+            'company_id': self.company_data['company'].id,
+        })
+        expense = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'date': '2022-11-16',
+            'payment_mode': 'company_account',
+            'total_amount': 1000.00,
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'currency_id': self.currency_data['currency'].id,  # rate is 1:2
+        })
+        expense_2 = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'date': '2022-11-16',
+            'payment_mode': 'company_account',
+            'total_amount': 1000.00,
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'currency_id': foreign_currency.id,  # rate is 1.52
+        })
+        expense_3 = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'date': '2022-11-16',
+            'payment_mode': 'company_account',
+            'total_amount': 1000.00,
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'currency_id': foreign_currency.id,  # rate is 1.52
+        })
+        expenses = expense | expense_2 | expense_3
+        self.assertRecordValues(expenses, [
+            {'currency_rate': 0.50, 'total_amount': 1000.00, 'total_amount_company':  500.00, 'currency_id': self.currency_data['currency'].id},
+            {'currency_rate': 1.52, 'total_amount': 1000.00, 'total_amount_company': 1520.00, 'currency_id': foreign_currency.id},
+            {'currency_rate': 1.52, 'total_amount': 1000.00, 'total_amount_company': 1520.00, 'currency_id': foreign_currency.id},
+        ])
+
+        # Changing rate on the two first expenses
+        expense.write({'total_amount_company': 1000.00})
+        expense_2.write({'total_amount_company': 2000.00})
+        self.assertRecordValues(expenses, [
+            {'currency_rate': 1.00, 'total_amount': 1000.00, 'total_amount_company': 1000.00},  # Rate should change
+            {'currency_rate': 2.00, 'total_amount': 1000.00, 'total_amount_company': 2000.00},  # Rate should change
+            {'currency_rate': 1.52, 'total_amount': 1000.00, 'total_amount_company': 1520.00},  # Rate should NOT change
+        ])
+
+        # Sheet and move creation should not touch the rates anymore
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for Company',
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': expenses,
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_ids, [
+            {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 1000.00, 'currency_id': self.currency_data['currency'].id},
+            {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 2000.00, 'currency_id': foreign_currency.id},
+            {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 1520.00, 'currency_id': foreign_currency.id},
+        ])

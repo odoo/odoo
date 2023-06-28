@@ -819,7 +819,7 @@
                                     <field name="amount_tax" optional="hide"  options="{'currency_field': 'currency_id'}" context="{'default_company_id': company_id}" readonly="1" groups="base.group_multi_currency"/>
                                     <field name="amount_tax_company" optional="hide" readonly="1"/>
                                     <field name="total_amount" options="{'currency_field': 'currency_id'}" string="Subtotal In Currency " optional="show" attrs="{'readonly': [('product_has_cost', '=', True)]}" groups="base.group_multi_currency"/>
-                                    <field name="total_amount_company" string="Subtotal" readonly="1"/>
+                                    <field name="total_amount_company" string="Subtotal"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="expense_total">
