@@ -1369,7 +1369,7 @@ export class SearchModel extends EventBus {
                         values: new Map(),
                         tooltip: value.group_tooltip,
                         sequence: value.group_sequence,
-                        hex_color: value.group_hex_color,
+                        color_index: value.color_index,
                     });
                     // restore former checked state
                     const oldGroup = filter.groups && filter.groups.get(groupId);
