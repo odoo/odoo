@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { nextAnimationFrame, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
 import testUtils from "web.test_utils";
-import { patchWithCleanup, selectDropdownItem } from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup, selectDropdownItem } from "@web/../tests/helpers/utils";
 import { ListController } from "@web/views/list/list_controller";
 
 QUnit.module("mail", {}, function () {
@@ -483,4 +483,42 @@ QUnit.module("mail", {}, function () {
             );
         }
     );
+
+    QUnit.test("auto save on click of activity widget in list view", async (assert) => {
+        const pyEnv = await startServer();
+        const activityId = pyEnv["mail.activity"].create({});
+        pyEnv["res.users"].write([pyEnv.currentUserId], {
+            activity_ids: [activityId],
+            activity_state: "today",
+        });
+        const { click, openView } = await start({
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/res.users/create") {
+                    pyEnv["res.users"].create({ activity_ids: [activityId] });
+                    assert.step(route);
+                }
+            },
+            serverData: {
+                views: {
+                    "res.users,false,list": `
+                        <list editable="bottom">
+                            <field name="name" required="1"/>
+                            <field name="activity_ids" widget="list_activity"/>
+                        </list>`,
+                },
+            },
+        });
+        await openView({
+            res_model: "res.users",
+            views: [[false, "list"]],
+        });
+        await click(".o_list_button_add");
+        assert.containsOnce($, ".o_selected_row .fa-clock-o");
+        click(".o_selected_row .fa-clock-o").catch(() => {});
+        await nextAnimationFrame();
+        assert.containsOnce($, ".o_notification:contains(Invalid fields: Name)");
+        await editInput($(".o_selected_row")[0], "[name=name] input", "tommy");
+        await click(".o_selected_row .fa-clock-o");
+        assert.verifySteps(["/web/dataset/call_kw/res.users/create"]);
+    });
 });
