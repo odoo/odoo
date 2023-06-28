@@ -46,6 +46,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    content: Markup(_t('Let\'s create your first <b>stage</b>.')),
     position: 'right',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
@@ -55,6 +56,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    content: Markup(_t('Let\'s create your second <b>stage</b>.')),
     position: 'right',
 }, {
     trigger: '.o-kanban-button-new',
