@@ -169,6 +169,13 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
         thread.suggestedRecipients = recipients;
     },
+    async leaveChannel(channel) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
+    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive || this.ui.isSmall) {
             this.chatWindowService.open(thread, replaceNewMessageChatWindow);
@@ -188,6 +195,13 @@ patch(ThreadService.prototype, "mail/core/web", {
             follower.followedThread.followers.splice(index, 1);
         }
         delete this.store.followers[follower.id];
+    },
+    unpin(thread) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
     },
 });
 
