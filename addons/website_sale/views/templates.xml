@@ -936,23 +936,23 @@
                         <div t-attf-class="o_wsale_product_images position-relative col-xl-#{image_cols[0]} col-lg-#{image_cols[0] + 1} mt-lg-4" t-if="o_product_width != 'none'">
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
-                        <div id="product_details" t-attf-class="{{'row m-0 p-0' if o_product_width_fw else 'offset-xl-1 col-lg-' + str(image_cols[1])}} mt-lg-4">
-                            <div t-attf-class="{{'sticky-top' if not o_product_width_fw and website.product_page_image_layout == 'grid' else 'row'}}">
-                                <div t-attf-class="d-flex {{'gap-3' if o_product_width_fw else ''}}">
-                                    <div t-attf-class="{{'flex-grow-1'if not o_product_width_fw else ''}} mb-3">
-                                        <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                                        <t t-if="is_view_active('website_sale.product_comment')">
-                                            <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
-                                                <t t-call="portal_rating.rating_widget_stars_static">
-                                                    <t t-set="rating_avg" t-value="product.rating_avg"/>
-                                                    <t t-set="trans_text_plural">%s reviews</t>
-                                                    <t t-set="trans_text_singular">%s review</t>
-                                                    <t t-set="rating_count" t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"/>
-                                                </t>
-                                            </a>
-                                        </t>
+                        <div id="product_details" t-attf-class="{{'offset-xl-1 col-lg-' + str(image_cols[1]) if not o_product_width_fw else ''}} mt-lg-4">
+                            <div t-attf-class="row {{'sticky-top' if not o_product_width_fw and website.product_page_image_layout == 'grid' else ''}}">
+                                <div t-attf-class="d-flex flex-column mb-3">
+                                    <div t-attf-class="d-flex {{'justify-content-between' if not o_product_width_fw else 'justify-content-between justify-content-lg-start'}}">
+                                        <h1 itemprop="name" t-field="product.name" class="mb-0 me-3 lh-1">Product Name</h1>
+                                        <div id="product_option_block" class="d-flex align-items-start"/>
                                     </div>
-                                    <div id="product_option_block" class="d-flex align-items-start"/>
+                                    <t t-if="is_view_active('website_sale.product_comment')">
+                                        <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none w-100">
+                                            <t t-call="portal_rating.rating_widget_stars_static">
+                                                <t t-set="rating_avg" t-value="product.rating_avg"/>
+                                                <t t-set="trans_text_plural">%s reviews</t>
+                                                <t t-set="trans_text_singular">%s review</t>
+                                                <t t-set="rating_count" t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"/>
+                                            </t>
+                                        </a>
+                                    </t>
                                 </div>
                                 <div id="o_product_description_div" t-attf-class="{{'col-lg-6' if o_product_width_fw else ''}} d-flex flex-column mb-2">
                                     <t t-set="base_url" t-value="product.get_base_url()"/>
