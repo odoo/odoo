@@ -280,7 +280,7 @@ class WebsiteEventController(http.Controller):
                 registration_index, field_name = key_values
                 if field_name not in registration_fields:
                     continue
-                registrations.setdefault(registration_index, dict())[field_name] = int(value)
+                registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
                 continue
 
             registration_index, question_type, question_id = key_values
