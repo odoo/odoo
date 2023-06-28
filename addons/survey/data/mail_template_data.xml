@@ -5,6 +5,7 @@
             <field name="name">Survey: Invite</field>
             <field name="model_id" ref="model_survey_user_input" />
             <field name="subject">Participate to {{ object.survey_id.display_name }} survey</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
             <field name="email_to">{{ (object.partner_id.email_formatted or object.email) }}</field>
             <field name="description">Sent to participant when you share a survey</field>
             <field name="body_html" type="html">
