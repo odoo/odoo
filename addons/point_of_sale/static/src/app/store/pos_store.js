@@ -1176,11 +1176,41 @@ export class PosStore extends Reactive {
                     this.db.save_unpaid_order(reactiveOrder);
                 }
                 this.set_synch("connected");
+                throw error;
+            }
+            if (error instanceof RPCError) {
+                await this._flush_orders_retry(orders, options);
             }
             throw error;
         } finally {
             this._after_flush_orders(orders);
         }
+    }
+    // Attempts to send the orders to the server one by one if an RPC error is encountered.
+    async _flush_orders_retry(orders, options) {
+        let lastError;
+        let serverIds = [];
+
+        for (let order of orders) {
+            try {
+                let server_ids = await this._save_to_server([order], options);
+                this.validated_orders_name_server_id_map[server_ids[0].pos_reference] = server_ids[0].id;
+                serverIds.push(server_ids[0]);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        if (serverIds.length === orders.length) {
+            this.set_synch('connected');
+            return serverIds;
+        }
+        if (lastError instanceof ConnectionLostError) {
+            this.set_synch('disconnected');
+        } else {
+            this.set_synch('error');
+        }
+        throw lastError;
     }
     /**
      * Hook method after _flush_orders resolved or rejected.
