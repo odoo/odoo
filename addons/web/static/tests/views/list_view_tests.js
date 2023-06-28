@@ -11087,6 +11087,66 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("list daterange with start date and empty end date", async (assert) => {
+        serverData.models.foo.fields.date_end = { string: "Some Date", type: "date" };
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["01/25/2017", "->"]);
+    });
+
+    QUnit.test("list daterange with start date and empty end date", async (assert) => {
+        serverData.models.foo.fields.date_end = { string: "Some Date", type: "date" };
+        const [firstRecord] = serverData.models.foo.records;
+        [firstRecord.date, firstRecord.date_end] = [firstRecord.date_end, firstRecord.date];
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["->", "01/25/2017"]);
+    });
+
     QUnit.test("editable list view: contexts are correctly sent", async function (assert) {
         patchWithCleanup(session.user_context, { someKey: "some value" });
         await makeView({

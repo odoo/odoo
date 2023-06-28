@@ -4,7 +4,7 @@
         <div class="d-flex gap-2 align-items-center" t-ref="root">
             <!-- Primary date -->
             <t t-if="props.readonly">
-                <div class="d-inline-block w-100" t-esc="formatDisplayValue(values[0])" />
+                <t t-esc="getFormattedValue(0)" />
             </t>
             <t t-else="">
                 <input
@@ -37,7 +37,7 @@
                     <i class="fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow" />
                     <!-- Secondary date -->
                     <t t-if="props.readonly">
-                        <div class="d-inline-block w-100" t-esc="formatDisplayValue(values[1])" />
+                        <t t-esc="getFormattedValue(1)" />
                     </t>
                     <t t-else="">
                         <input
