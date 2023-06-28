@@ -126,7 +126,7 @@
 
 <template id="author_box">
     <t t-set="display_info" t-value="show_name or show_date or show_karma"/>
-    <t t-if="allow_biography and object.can_display_biography" t-set="bio_popover_data">
+    <t t-if="allow_biography and object.can_display_biography and request.env.user.karma >= website.karma_profile_min" t-set="bio_popover_data">
         <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
             <div class="d-flex flex-column">
                 <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
