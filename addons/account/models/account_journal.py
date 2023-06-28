@@ -195,11 +195,6 @@ class AccountJournal(models.Model):
         check_company=True,
         string="Journal Groups")
 
-    secure_sequence_id = fields.Many2one('ir.sequence',
-        help='Sequence to use to ensure the securisation of data',
-        check_company=True,
-        readonly=True, copy=False)
-
     available_payment_method_ids = fields.Many2many(
         comodel_name='account.payment.method',
         compute='_compute_available_payment_method_ids'
@@ -573,7 +568,7 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('inalterable_hash', '!=', False)], limit=1)
                 if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
@@ -588,10 +583,6 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-        for record in self:
-            if record.restrict_mode_hash_table and not record.secure_sequence_id:
-                record._create_secure_sequence(['secure_sequence_id'])
-
         return result
 
     @api.model
@@ -785,28 +776,6 @@ class AccountJournal(models.Model):
                 'view_mode': 'list, kanban, form',
             })
         return action_vals
-
-    def _create_secure_sequence(self, sequence_fields):
-        """This function creates a no_gap sequence on each journal in self that will ensure
-        a unique number is given to all posted account.move in such a way that we can always
-        find the previous move of a journal entry on a specific journal.
-        """
-        for journal in self:
-            vals_write = {}
-            for seq_field in sequence_fields:
-                if not journal[seq_field]:
-                    vals = {
-                        'name': _('Securisation of %s - %s') % (seq_field, journal.name),
-                        'code': 'SECUR%s-%s' % (journal.id, seq_field),
-                        'implementation': 'no_gap',
-                        'prefix': '',
-                        'suffix': '',
-                        'padding': 0,
-                        'company_id': journal.company_id.id}
-                    seq = self.env['ir.sequence'].create(vals)
-                    vals_write[seq_field] = seq.id
-            if vals_write:
-                journal.write(vals_write)
 
     # -------------------------------------------------------------------------
     # REPORTING METHODS

@@ -6,7 +6,7 @@ import calendar
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
-from odoo.tools.misc import format_date
+from odoo.tools.misc import format_date, groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
@@ -486,80 +486,71 @@ class ResCompany(models.Model):
             return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
 
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
-        results_by_journal = {
-            'results': [],
-            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.context_today(self)))
-        }
+        results = []
 
         for journal in journals:
-            rslt = {
-                'journal_name': journal.name,
-                'journal_code': journal.code,
-                'restricted_by_hash_table': journal.restrict_mode_hash_table and 'V' or 'X',
-                'msg_cover': '',
-                'first_hash': 'None',
-                'first_move_name': 'None',
-                'first_move_date': 'None',
-                'last_hash': 'None',
-                'last_move_name': 'None',
-                'last_move_date': 'None',
-            }
             if not journal.restrict_mode_hash_table:
-                rslt.update({'msg_cover': _('This journal is not in strict mode.')})
-                results_by_journal['results'].append(rslt)
+                results.append({
+                    'name': f"{journal.name} [{journal.code}]",
+                    'status': 'not_checked',
+                    'msg': _('This journal is not in strict mode.'),
+                })
                 continue
 
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
             # This is required in order to generate consistent hashs.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
-            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
-                                            ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
-            if not moves:
-                rslt.update({
-                    'msg_cover': _('There isn\'t any journal entry flagged for data inalterability yet for this journal.'),
+            all_moves = self.env['account.move'].sudo().search([
+                ('journal_id', '=', journal.id),
+                ('inalterable_hash', '!=', False),
+            ])
+            if not all_moves:
+                results.append({
+                    'name': f"{journal.name} [{journal.code}]",
+                    'status': 'no_data',
+                    'msg': _('There is no journal entry flagged for data inalterability yet.'),
                 })
-                results_by_journal['results'].append(rslt)
                 continue
 
-            previous_hash = u''
-            start_move_info = []
+            grouped = groupby(all_moves, key=lambda m: m.sequence_prefix)
+
             hash_corrupted = False
-            current_hash_version = 1
-            for move in moves:
-                computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
-                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
-                    current_hash_version += 1
-                    computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
-                if move.inalterable_hash != computed_hash:
-                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
-                    results_by_journal['results'].append(rslt)
-                    hash_corrupted = True
-                    break
-                if not previous_hash:
-                    #save the date and sequence number of the first move hashed
-                    start_move_info = build_move_info(move)
-                previous_hash = move.inalterable_hash
-            end_move_info = build_move_info(move)
+            for prefix, moves in grouped:
+                moves = sorted(moves, key=lambda m: m.sequence_number)
+                previous_hash = ''
+                current_hash_version = 1
+                for move in moves:
+                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)
+                    while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                        current_hash_version += 1
+                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)
+                    if move.inalterable_hash != computed_hash:
+                        results.append({
+                            'name': f"{journal.name} [{prefix}]",
+                            'status': 'corrupted',
+                            'msg': _("Corrupted data on journal entry with id %s.", move.id),
+                        })
+                        hash_corrupted = True
+                        break
+                    previous_hash = move.inalterable_hash
 
-            if hash_corrupted:
-                continue
-
-            rslt.update({
-                        'first_move_name': start_move_info[0],
-                        'first_hash': start_move_info[1],
-                        'first_move_date': format_date(self.env, start_move_info[2]),
-                        'last_move_name': end_move_info[0],
-                        'last_hash': end_move_info[1],
-                        'last_move_date': format_date(self.env, end_move_info[2]),
+                if not hash_corrupted:
+                    results.append({
+                        'name': f"{journal.name} [{prefix}]",
+                        'status': 'ok',
+                        'msg': _("Entries are correctly hashed"),
+                        'from_name': build_move_info(moves[0])[0],
+                        'from_hash': build_move_info(moves[0])[1],
+                        'from_date': build_move_info(moves[0])[2],
+                        'to_name': build_move_info(moves[-1])[0],
+                        'to_hash': build_move_info(moves[-1])[1],
+                        'to_date': build_move_info(moves[-1])[2],
                     })
-            if len(moves) == all_moves_count:
-                rslt.update({'msg_cover': _('All entries are hashed.')})
-            else:
-                rslt.update({'msg_cover': _('Entries are hashed from %s (%s)') % (start_move_info[0], format_date(self.env, start_move_info[2]))})
-            results_by_journal['results'].append(rslt)
 
-        return results_by_journal
+        return {
+            'results': results,
+            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.context_today(self)))
+        }
 
     def compute_fiscalyear_dates(self, current_date):
         """

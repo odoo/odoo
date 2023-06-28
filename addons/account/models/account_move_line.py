@@ -1401,9 +1401,8 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
-        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
         hashed_moves = self.move_id.filtered('inalterable_hash')
-        violated_fields = set(vals) & inalterable_fields
+        violated_fields = set(vals) & set(self._get_integrity_hash_fields())
         if hashed_moves and violated_fields:
             raise UserError(_(
                 "You cannot edit the following fields: %s.\n"
@@ -2842,6 +2841,8 @@ class AccountMoveLine(models.Model):
             return ['debit', 'credit', 'account_id', 'partner_id']
         elif hash_version in (2, 3):
             return ['name', 'debit', 'credit', 'account_id', 'partner_id']
+        elif hash_version == 4:
+            return ['name', 'debit', 'credit']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
     def _reconciled_lines(self):

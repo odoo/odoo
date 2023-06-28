@@ -36,7 +36,7 @@ from odoo.tools import (
 _logger = logging.getLogger(__name__)
 
 
-MAX_HASH_VERSION = 3
+MAX_HASH_VERSION = 4
 
 PAYMENT_STATE_SELECTION = [
         ('not_paid', 'Not Paid'),
@@ -253,9 +253,7 @@ class AccountMove(models.Model):
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
-    secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False, index=True)
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
-    string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
     # ==============================================================================================
     #                                          INVOICE
@@ -2345,7 +2343,7 @@ class AccountMove(models.Model):
         for move in self:
             if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
-            if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
+            if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
@@ -2399,11 +2397,10 @@ class AccountMove(models.Model):
                 # Hash the move
                 if vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
-                    for move in self.filtered(lambda m: m.restrict_mode_hash_table and not(m.secure_sequence_number or m.inalterable_hash)).sorted(lambda m: (m.date, m.ref or '', m.id)):
-                        new_number = move.journal_id.secure_sequence_id.next_by_id()
+                    # TODOAL do BATCH to avoid 1 select
+                    for move in self.filtered(lambda m: m.restrict_mode_hash_table and not m.inalterable_hash).sorted(lambda m: (m.sequence_prefix, m.sequence_number)):
                         res |= super(AccountMove, move).write({
-                            'secure_sequence_number': new_number,
-                            'inalterable_hash': move._get_new_hash(new_number),
+                            'inalterable_hash': move._hash_compute(),
                         })
 
             self._synchronize_business_models(set(vals.keys()))
@@ -2831,65 +2828,62 @@ class AccountMove(models.Model):
             return ['date', 'journal_id', 'company_id']
         elif hash_version in (2, 3):
             return ['name', 'date', 'journal_id', 'company_id']
+        elif hash_version == 4:
+            return ['name', 'date', 'create_date']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
-    def _get_integrity_hash_fields_and_subfields(self):
-        return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
-
-    def _get_new_hash(self, secure_seq_number):
+    def _hash_compute(self, previous_hash=None):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
-        #get the only one exact previous move in the securisation sequence
-        prev_move = self.sudo().search([('state', '=', 'posted'),
-                                 ('company_id', '=', self.company_id.id),
-                                 ('journal_id', '=', self.journal_id.id),
-                                 ('secure_sequence_number', '!=', 0),
-                                 ('secure_sequence_number', '=', int(secure_seq_number) - 1)])
-        if prev_move and len(prev_move) != 1:
-            raise UserError(
-               _('An error occurred when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
+        if not previous_hash:
+            previous_move = self.sudo().search([
+                ('journal_id', '=', self.journal_id.id),
+                ('state', '=', 'posted'),
+                ('sequence_prefix', '=', self.sequence_prefix),
+                ('sequence_number', '=', self.sequence_number - 1),
+                ('inalterable_hash', '!=', False),
+            ], limit=1)
+            previous_hash = previous_move.inalterable_hash if previous_move else ""
 
-        #build and return the hash
-        return self._compute_hash(prev_move.inalterable_hash if prev_move else u'')
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version < 4:
+            def _getattrstring(obj, field_name):
+                field_value = obj[field_name]
+                if obj._fields[field_name].type == 'many2one':
+                    field_value = field_value.id
+                if obj._fields[field_name].type == 'monetary' and hash_version >= 3:
+                    return float_repr(field_value, obj.currency_id.decimal_places)
+                return str(field_value)
 
-    def _compute_hash(self, previous_hash):
-        """ Computes the hash of the browse_record given as self, based on the hash
-        of the previous record in the company's securisation sequence given as parameter"""
-        self.ensure_one()
-        hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
-        return hash_string.hexdigest()
-
-    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
-    @api.depends_context('hash_version')
-    def _compute_string_to_hash(self):
-        def _getattrstring(obj, field_str):
-            hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
-            field_value = obj[field_str]
-            if obj._fields[field_str].type == 'many2one':
-                field_value = field_value.id
-            if obj._fields[field_str].type == 'monetary' and hash_version >= 3:
-                return float_repr(field_value, obj.currency_id.decimal_places)
-            return str(field_value)
-
-        for move in self:
             values = {}
-            for field in move._get_integrity_hash_fields():
-                values[field] = _getattrstring(move, field)
+            for field in self._get_integrity_hash_fields():
+                values[field] = _getattrstring(self, field)
 
-            for line in move.line_ids:
+            for line in self.line_ids:
                 for field in line._get_integrity_hash_fields():
                     k = 'line_%d_%s' % (line.id, field)
                     values[k] = _getattrstring(line, field)
-            #make the json serialization canonical
-            #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
-            move.string_to_hash = dumps(values, sort_keys=True,
-                                                ensure_ascii=True, indent=None,
-                                                separators=(',', ':'))
+        else:
+            values = {
+                'name': self.name,
+                'date': self.date.isoformat(),
+                'create_date': self.create_date.isoformat(timespec='seconds'),
+                'amount_total': float_repr(self.amount_total, self.currency_id.decimal_places),
+                'lines': [],
+            }
+            for line in self.line_ids:
+                values['lines'].append({
+                    'name': line.name,
+                    'debit': float_repr(line.debit, self.currency_id.decimal_places),
+                    'credit': float_repr(line.credit, self.currency_id.decimal_places),
+                })
+        current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
+        hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
+        return f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
 
     # -------------------------------------------------------------------------
     # RECURRING ENTRIES
     # -------------------------------------------------------------------------
-
     @api.model
     def _apply_delta_recurring_entries(self, date, date_origin, period):
         '''Advances date by `period` months, maintaining original day of the month if possible.'''
