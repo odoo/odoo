@@ -35,27 +35,29 @@ export class PageListController extends PageControllerMixin(listView.Controller)
      */
     getStaticActionMenuItems() {
         const menuItems = super.getStaticActionMenuItems();
-        menuItems.publish = {
-            sequence: 15,
-            description: this.env._t("Publish"),
-            callback: async () => {
-                this.dialogService.add(ConfirmationDialog, {
-                    title: this.env._t("Publish Website Content"),
-                    body: sprintf(
-                        this.env._t(
-                            "%s record(s) selected, are you sure you want to publish them all?"
+        if (this.props.fields.hasOwnProperty('is_published')) {
+            menuItems.publish = {
+                sequence: 15,
+                description: this.env._t("Publish"),
+                callback: async () => {
+                    this.dialogService.add(ConfirmationDialog, {
+                        title: this.env._t("Publish Website Content"),
+                        body: sprintf(
+                            this.env._t(
+                                "%s record(s) selected, are you sure you want to publish them all?"
+                            ),
+                            this.model.root.selection.length
                         ),
-                        this.model.root.selection.length
-                    ),
-                    confirm: () => this.togglePublished(true),
-                });
-            },
-        };
-        menuItems.unpublish = {
-            sequence: 16,
-            description: this.env._t("Unpublish"),
-            callback: async () => this.togglePublished(false),
-        };
+                        confirm: () => this.togglePublished(true),
+                    });
+                },
+            };
+            menuItems.unpublish = {
+                sequence: 16,
+                description: this.env._t("Unpublish"),
+                callback: async () => this.togglePublished(false),
+            };
+        }
         return menuItems;
     }
 
