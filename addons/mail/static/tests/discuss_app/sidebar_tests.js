@@ -1122,3 +1122,17 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
     await click(".o-mail-DiscussCategoryItem");
     await waitUntil(".o-discuss-badge", 0);
 });
+
+QUnit.test("Unpinning channel closes its chat window", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "Sales" });
+    const { openFormView, openDiscuss } = await start();
+    await openFormView("discuss.channel");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-ChatWindow:contains(Sales)");
+    await openDiscuss();
+    await click(".o-mail-DiscussCategoryItem:contains(Sales) [title='Leave this channel']");
+    await openFormView("discuss.channel");
+    assert.containsNone($, ".o-mail-ChatWindow:contains(Sales)");
+});
