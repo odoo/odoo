@@ -115,6 +115,40 @@ class TestEventData(TestEventQuestionCommon):
                 (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
         ])
 
+    def test_process_attendees_form_no_tickets(self):
+        """Check that registering with no ticket works."""
+        event = self.env['event.event'].create({
+            'name': 'Test Event',
+            'event_type_id': self.event_type_questions.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+
+        name_question, email_question = event.question_ids.filtered(
+            lambda q: q.question_type in ('name', 'email'))
+
+        form_details = {
+            '1-name-%s' % name_question.id: 'Attendee Name',
+            '1-email-%s' % email_question.id: 'attendee@example.com',
+            '1-event_ticket_id': '0',
+        }
+
+        with MockRequest(self.env):
+            registrations = WebsiteEventController()._process_attendees_form(event, form_details)
+
+        self.assertEqual(len(registrations), 1)
+        self.assertDictEqual(registrations[0], {
+            'name': 'Attendee Name',
+            'email': 'attendee@example.com',
+            'event_ticket_id': False,
+            'registration_answer_ids': [
+                (0, 0, {'question_id': name_question.id, 'value_text_box': 'Attendee Name'}),
+                (0, 0, {'question_id': email_question.id, 'value_text_box': 'attendee@example.com'})
+            ]
+        })
+        self.assertTrue(registrations[0]['event_ticket_id'] is False,
+                        f'Falsy string ids should be False, not {registrations[0]["event_ticket_id"]}')
+
     def test_registration_answer_search(self):
         """ Test our custom name_search implementation in 'event.registration.answer'.
         We search on both the 'value_answer_id' and 'value_text_box' fields to allow users to easily
