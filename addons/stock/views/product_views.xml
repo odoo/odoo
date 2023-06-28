@@ -315,7 +315,7 @@
                             </button>
                             <button type="object"
                                 name="action_view_orderpoints"
-                                attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
+                                attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '=', 1)]}"
                                 class="oe_stat_button" icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
@@ -438,7 +438,7 @@
                             </button>
                             <button type="object"
                                 name="action_view_orderpoints"
-                                attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
+                                attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '=', 1)]}"
                                 class="oe_stat_button"
                                 icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>

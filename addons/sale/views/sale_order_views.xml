@@ -241,9 +241,11 @@
                 <button id="create_invoice_percentage" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                     type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="c"
                     attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g" context="{'validate_analytic': True}"/>
-                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice"
-                    groups="sale.group_proforma_sales" class="btn-primary"
+                <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g"
+                    invisible="state != 'draft'" class="btn-primary"
+                    context="{'validate_analytic': True}"/>
+                <button name="action_quotation_send" id="send_proforma_primary" type="object" string="Send PRO-FORMA Invoice" class="btn-primary"
+                    groups="sale.group_proforma_sales"
                     attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_confirm" id="action_confirm" data-hotkey="q"
                     string="Confirm" class="btn-primary" type="object" context="{'validate_analytic': True}"
@@ -251,8 +253,8 @@
                 <button name="action_confirm" data-hotkey="q"
                     string="Confirm" type="object" context="{'validate_analytic': True}"
                     attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
-                <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
+                <button name="action_quotation_send" id="send_proforma" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True, 'validate_analytic': True}"/>
+                <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" states="sent,sale" data-hotkey="g" context="{'validate_analytic': True}"/>
 
                 <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
                 <button name="action_unlock" type="object" string="Unlock"
@@ -523,7 +525,7 @@
                                         'uom': product_uom,
                                         'company_id': parent.company_id
                                     }"
-                                    attrs="{'readonly': [('is_downpayment', '==', True)]}"
+                                    attrs="{'readonly': [('is_downpayment', '=', True)]}"
                                 />
                                 <field
                                     name="qty_delivered"
@@ -562,7 +564,7 @@
                                 <field
                                     name="customer_lead"
                                     optional="hide"
-                                    attrs="{'readonly': ['|', ('parent.state', 'not in', ['draft', 'sent', 'sale']), ('is_downpayment', '==', True)]}"
+                                    attrs="{'readonly': ['|', ('parent.state', 'not in', ['draft', 'sent', 'sale']), ('is_downpayment', '=', True)]}"
                                 />
                                 <field name="product_packaging_qty" attrs="{'invisible': ['|', ('product_id', '=', False), ('product_packaging_id', '=', False)]}" groups="product.group_stock_packaging" optional="show"/>
                                 <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
@@ -576,7 +578,7 @@
                                     options="{'no_create': True}"
                                     domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                     context="{'active_test': True}"
-                                    attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_downpayment', '==', True)]}"
+                                    attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('is_downpayment', '=', True)]}"
                                     optional="show"
                                 />
                                 <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="sol_discount"/>

@@ -22,7 +22,7 @@ class TestProcurementException(common.TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.name = 'product with no seller'
         # <field name="list_price" position="attributes">
-        #     <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+        #     <attribute name="readonly">product_variant_count &gt; 1</attribute>
         #     <attribute name="invisible">1</attribute>
         # </field>
         # <field name="list_price" position="after">

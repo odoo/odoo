@@ -9,7 +9,7 @@
                 <group>
                     <field name="account_readonly" invisible="1" />
                     <field name="amount_to_balance" readonly="1" />
-                    <field name="account_id" attrs="{'readonly': [('account_readonly', '==', True)]}"/>
+                    <field name="account_id" attrs="{'readonly': [('account_readonly', '=', True)]}"/>
                 </group>
                 <footer>
                     <button name="close_session" string="Close Session" type="object" class="btn-primary" data-hotkey="q"/>
