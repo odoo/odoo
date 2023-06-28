@@ -119,7 +119,7 @@ functionRegistry
                 case "date":
                 case "datetime":
                     if (aggregateOperator === "day") {
-                        return "mm/dd/yyyy";
+                        return this.locale.dateFormat;
                     }
                     return undefined;
                 default:

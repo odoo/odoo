@@ -15,6 +15,7 @@ import {
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 const { toNumber } = spreadsheet.helpers;
+const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
@@ -158,9 +159,13 @@ export default class ListDataSource extends OdooViewsDataSource {
             case "boolean":
                 return record[fieldName] ? "TRUE" : "FALSE";
             case "date":
-                return record[fieldName] ? toNumber(this._formatDate(record[fieldName])) : "";
+                return record[fieldName]
+                    ? toNumber(this._formatDate(record[fieldName]), DEFAULT_LOCALE)
+                    : "";
             case "datetime":
-                return record[fieldName] ? toNumber(this._formatDateTime(record[fieldName])) : "";
+                return record[fieldName]
+                    ? toNumber(this._formatDateTime(record[fieldName]), DEFAULT_LOCALE)
+                    : "";
             case "properties": {
                 const properties = record[fieldName] || [];
                 return properties.map((property) => property.string).join(", ");

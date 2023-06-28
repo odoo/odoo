@@ -25,7 +25,8 @@ cellMenuRegistry.add("move_lines_see_records", {
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
         codes = toString(codes).split(",");
-        const dateRange = parseAccountingDate(date_range);
+        const locale = env.model.getters.getLocale();
+        const dateRange = parseAccountingDate(date_range, locale);
         dateRange.year += offset || 0;
         companyId = companyId || null;
         includeUnposted = toBoolean(includeUnposted);

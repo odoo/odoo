@@ -4,7 +4,6 @@
 import base64
 import json
 from odoo import api, fields, models, _
-from odoo.addons.spreadsheet.utils import empty_spreadsheet_data_base64
 from odoo.exceptions import ValidationError
 
 class SpreadsheetMixin(models.AbstractModel):
@@ -12,7 +11,11 @@ class SpreadsheetMixin(models.AbstractModel):
     _description = "Spreadsheet mixin"
     _auto = False
 
-    spreadsheet_binary_data = fields.Binary(required=True, string="Spreadsheet file", default=empty_spreadsheet_data_base64())
+    spreadsheet_binary_data = fields.Binary(
+        required=True,
+        string="Spreadsheet file",
+        default=lambda self: self._empty_spreadsheet_data_base64(),
+    )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
     thumbnail = fields.Binary()
 
@@ -39,3 +42,30 @@ class SpreadsheetMixin(models.AbstractModel):
                 json.loads(data_str)
             except:
                 raise ValidationError(_('Invalid JSON Data'))
+
+    def _empty_spreadsheet_data_base64(self):
+        """Create an empty spreadsheet workbook.
+        Encoded as base64
+        """
+        data = json.dumps(self._empty_spreadsheet_data())
+        return base64.b64encode(data.encode())
+
+    def _empty_spreadsheet_data(self):
+        """Create an empty spreadsheet workbook.
+        The sheet name should be the same for all users to allow consistent references
+        in formulas. It is translated for the user creating the spreadsheet.
+        """
+        lang = self.env["res.lang"]._lang_get(self.env.user.lang)
+        locale = lang._odoo_lang_to_spreadsheet_locale()
+        return {
+            "version": 1,
+            "sheets": [
+                {
+                    "id": "sheet1",
+                    "name": _("Sheet1"),
+                }
+            ],
+            "settings": {
+                "locale": locale,
+            }
+        }
