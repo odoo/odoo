@@ -58,8 +58,8 @@
                                     t-att-class="{ o_with_counters: group.enableCounters }"
                                     t-att-title="group.tooltip or false"
                                     >
-                                    <span class="o_search_panel_label_title text-truncate">
-                                        <span t-if="group.hex_color" class="me-1" t-attf-style="color: {{ group.hex_color }};">●</span>
+                                    <span class="o_search_panel_label_title text-truncate"
+                                          t-attf-class="{{ group.color_index ? 'o_tag o_badge badge rounded-pill o_tag_color_' + group.color_index : ''}}">
                                         <t t-esc="group.name"/>
                                     </span>
                                 </label>
