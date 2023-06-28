@@ -396,7 +396,8 @@
                       decoration-info="state == 'draft'"
                       decoration-muted="state == 'cancel'"
                       expand="context.get('expand', False)"
-                      sample="1">
+                      sample="1"
+                      default_order="invoice_date desc">
                     <header>
                         <button name="action_register_payment" type="object" string="Register Payment"
                             groups="account.group_account_user"
