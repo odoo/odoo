@@ -7,6 +7,9 @@ import {
 import { getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import "@spreadsheet_account/index";
 
+import * as spreadsheet from "@odoo/o-spreadsheet";
+const { DEFAULT_LOCALE } = spreadsheet.constants;
+
 QUnit.module("spreadsheet_account > fiscal year", {}, () => {
     QUnit.test("Basic evaluation", async (assert) => {
         const model = await createModelWithDataSource({
@@ -101,5 +104,26 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
             getEvaluatedCell(model, "A2").error.message,
             "The function ODOO.FISCALYEAR.END expects a number value, but 'not a number' is a string, and cannot be coerced to a number."
         );
+    });
+
+    QUnit.test("Date format is locale dependant", async (assert) => {
+        const model = await createModelWithDataSource({
+            mockRPC: async function (route, args) {
+                if (args.method === "get_fiscal_dates") {
+                    return [{ start: "2020-01-01", end: "2020-12-31" }];
+                }
+            },
+        });
+        setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("11/11/2020", 1)`);
+        setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 1)`);
+        await waitForDataSourcesLoaded(model);
+
+        assert.equal(getEvaluatedCell(model, "A1").format, "m/d/yyyy");
+        assert.equal(getEvaluatedCell(model, "A2").format, "m/d/yyyy");
+
+        model.dispatch("UPDATE_LOCALE", { locale: { ...DEFAULT_LOCALE, dateFormat: "d/m/yyyy" } });
+
+        assert.equal(getEvaluatedCell(model, "A1").format, "d/m/yyyy");
+        assert.equal(getEvaluatedCell(model, "A2").format, "d/m/yyyy");
     });
 });

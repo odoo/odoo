@@ -2075,6 +2075,24 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.DISPLAY_HEADER" owl="1">
+    <svg class="o-icon" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M.75.5h16.5v17H.75m1.5-12H.75V7h1.5v1.5H.75V10h1.5v1.5H.75V13h1.5v1.5H.75V16h1.5v1.5h1.5V16h1.5v1.5h1.5V16h1.5v1.5h1.5V16h1.5v1.5h1.5V16h1.5v1.5h1.5V16h1.5v-1.5h-1.5V13h1.5v-1.5h-1.5V10h1.5V8.5h-1.5V7h1.5V5.5M2.75 2.25v1.5h2v-1.5m2.5 0v1.5h7v-1.5"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.COG" owl="1">
+    <svg fill="currentColor" viewBox="0 0 16 16">
+      <path
+        d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+      />
+      <path
+        d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+      />
+    </svg>
+  </t>
 
   <t t-name="o-spreadsheet-LinkDisplay" owl="1">
     <div class="o-link-tool d-flex align-items-center">
@@ -2267,7 +2285,7 @@
           />
           <span
             t-if="isInvalid || !range.isValidRange"
-            class="error-icon text-danger position-absolute"
+            class="error-icon text-danger position-absolute d-flex align-items-center"
             title="This range is invalid">
             <t t-call="o-spreadsheet-Icon.ERROR"/>
           </span>
@@ -3582,6 +3600,40 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-SettingsPanel" owl="1">
+    <div class="o-settings-panel">
+      <div class="o-section">
+        <div class="o-section-title">Locale</div>
+        <select
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.onLocaleChange(ev.target.value)">
+          <option
+            t-foreach="supportedLocales"
+            t-as="locale"
+            t-key="locale.code"
+            t-att-value="locale.code"
+            t-esc="locale.name"
+            t-att-selected="currentLocale.code === locale.code"
+          />
+        </select>
+        <div class="o-locale-preview mt-2 ms-3">
+          <div>
+            <span class="fw-bold me-1">Number:</span>
+            <span t-esc="numberFormatPreview"/>
+          </div>
+          <div>
+            <span class="fw-bold me-1">Date:</span>
+            <span t-esc="dateFormatPreview"/>
+          </div>
+          <div>
+            <span class="fw-bold me-1">Date time:</span>
+            <span t-esc="dateTimeFormatPreview"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-SidePanel" owl="1">
     <div class="o-sidePanel">
       <div class="o-sidePanelHeader">
@@ -3882,7 +3934,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.5';
-  __info__.date = '2023-06-26T14:47:35.461Z';
-  __info__.hash = '3b0b6f1';
+  __info__.version = '16.4.0-alpha.6';
+  __info__.date = '2023-06-28T11:44:20.029Z';
+  __info__.hash = '7d15d3c';
 -->
