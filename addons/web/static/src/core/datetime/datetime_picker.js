@@ -480,6 +480,8 @@ export class DateTimePicker extends Component {
             } else if (result[1] && result[1].endOf("day") < value.startOf("day")) {
                 valueIndex = 1;
             }
+        } else {
+            valueIndex = 0;
         }
         result[valueIndex] = value;
         return [result, valueIndex];
