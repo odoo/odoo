@@ -25,7 +25,7 @@ import { useService } from "@web/core/utils/hooks";
 export class FileViewer extends Component {
     static template = "web.FileViewer";
     static components = {};
-    static props = ["files", "startIndex", "close", "modal?"];
+    static props = ["files", "startIndex", "close?", "modal?"];
     static defaultProps = {
         modal: true,
     };
@@ -64,7 +64,7 @@ export class FileViewer extends Component {
     }
 
     close() {
-        this.props.close();
+        this.props.close && this.props.close();
     }
 
     next() {
