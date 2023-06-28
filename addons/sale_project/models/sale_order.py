@@ -115,6 +115,13 @@ class SaleOrder(models.Model):
             self.project_id.sudo().sale_line_id = False
         return super(SaleOrder, self).write(values)
 
+    def _compute_line_data_for_template_change(self, line):
+        data = super()._compute_line_data_for_template_change(line)
+        # prevent the association of a related task on the SOL if a task would be generated when confirming the SO.
+        if 'default_task_id' in self.env.context and line.product_id.service_tracking in ['task_in_project', 'task_global_project']:
+            data['task_id'] = False
+        return data
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
