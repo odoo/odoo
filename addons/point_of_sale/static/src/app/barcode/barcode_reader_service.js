@@ -6,6 +6,7 @@ import { session } from "@web/session";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
+import { GS1BarcodeError } from '@barcodes_gs1_nomenclature/js/barcode_parser';
 
 export class BarcodeReader {
     static serviceDependencies = ["popup", "hardware_proxy"];
@@ -51,7 +52,16 @@ export class BarcodeReader {
 
         const cbMaps = this.exclusiveCbMap ? [this.exclusiveCbMap] : [...this.cbMaps];
 
-        let parseBarcode = this.parser.parse_barcode(code);
+        let parseBarcode;
+        try {
+            parseBarcode = this.parser.parse_barcode(code);
+        } catch (error) {
+            if (this.fallbackParser && error instanceof GS1BarcodeError) {
+                parseBarcode = this.fallbackParser.parse_barcode(code);
+            } else {
+                throw error;
+            }
+        }
         if (Array.isArray(parseBarcode)) {
             cbMaps.map((cb) => cb.gs1?.(parseBarcode));
         } else {
@@ -113,6 +123,14 @@ export const barcodeReaderService = {
             );
             const parser = new BarcodeParser({ nomenclature });
             barcodeReader = new BarcodeReader(parser, deps);
+        }
+
+        if (session.fallback_nomenclature_id && barcodeReader) {
+            const fallbackNomenclature = await BarcodeParser.fetchNomenclature(
+                orm,
+                session.fallback_nomenclature_id
+            );
+            barcodeReader.fallbackParser = new BarcodeParser({ nomenclature: fallbackNomenclature });
         }
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
