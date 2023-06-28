@@ -3,7 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
-import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
+import { WebsiteDialog } from "@website/components/dialog/dialog";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { sprintf } from '@web/core/utils/strings';
 import { Component, xml, useState, onWillStart } from "@odoo/owl";
@@ -170,8 +171,15 @@ export class NewContentModal extends Component {
     }
 
     createNewPage() {
+        if (this.isCreatingNewPage) {
+            // Prevent opening the "New page" dialog several times.
+            return;
+        }
+        this.isCreatingNewPage = true;
         this.dialogs.add(AddPageDialog, {
             onAddPage: () => this.websiteContext.showNewContentModal = false,
+            websiteId: this.website.currentWebsite.id,
+            ready: () => this.isCreatingNewPage = false,
         });
     }
 

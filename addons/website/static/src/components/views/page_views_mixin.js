@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import {AddPageDialog} from "../dialog/dialog";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import {useService} from "@web/core/utils/hooks";
 import { onWillStart, useState } from "@odoo/owl";
 
@@ -41,7 +41,15 @@ export const PageControllerMixin = (component) => class extends component {
      */
     async createWebsiteContent() {
         if (this.props.resModel === 'website.page') {
-            return this.dialog.add(AddPageDialog, {selectWebsite: true});
+            if (this.isCreatingNewPage) {
+                // Prevent opening the "New page" dialog several times.
+                return;
+            }
+            this.isCreatingNewPage = true;
+            return this.dialog.add(AddPageDialog, {
+                websiteId: this.state.activeWebsite.id,
+                ready: () => this.isCreatingNewPage = false,
+            });
         }
         const action = this.props.context.create_action;
         if (action) {
