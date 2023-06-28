@@ -287,6 +287,7 @@ class TestActivityMixin(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin(self):
+        self.env.ref('test_mail.mail_act_test_call').keep_done = True
         self.user_employee.tz = self.user_admin.tz
         with self.with_user('employee'):
             self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
@@ -340,6 +341,8 @@ class TestActivityMixin(TestActivityCommon):
                 user_id=self.user_admin.id,
                 feedback='Test feedback',)
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
+            self.assertFalse(act1.exists())
+            self.assertTrue(act2.exists() and act3.exists())
 
             # Reschedule all activities, should update the record state
             self.assertEqual(self.test_record.activity_state, 'overdue')
@@ -353,6 +356,8 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
+            self.assertTrue(act2.exists())
+            self.assertFalse(act3.exists())
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
@@ -365,6 +370,27 @@ class TestActivityMixin(TestActivityCommon):
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
+            self.assertFalse(self.test_record.activity_state)
+
+            # Schedule a call activity that is configured to be kept when done
+            act4 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_call',
+                today_user + relativedelta(days=3),
+                user_id=self.user_employee.id)
+            self.assertEqual(self.test_record.activity_state, 'planned')
+
+            # Perform call activities
+            self.test_record.activity_feedback(
+                ['test_mail.mail_act_test_call'],
+                feedback='Test feedback')
+            self.assertEqual(self.test_record.activity_state, False)
+            self.assertTrue(act4.exists())
+            self.assertEqual(act4.state, 'done')
+            self.assertIn(act4, self.test_record.activity_ids)
+            self.assertNotIn(act1, self.test_record.activity_ids)
+            self.assertNotIn(act2, self.test_record.activity_ids)
+            self.assertNotIn(act3, self.test_record.activity_ids)
+
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):

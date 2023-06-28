@@ -42,6 +42,7 @@ QUnit.module("test_mail", {}, function () {
                 {
                     display_name: "An activity",
                     date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                    date_done: false,
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -51,6 +52,7 @@ QUnit.module("test_mail", {}, function () {
                 {
                     display_name: "An activity",
                     date_deadline: moment().format("YYYY-MM-DD"), // now
+                    date_done: false,
                     can_write: true,
                     state: "today",
                     activity_type_id: mailActivityTypeIds[0],
@@ -61,6 +63,7 @@ QUnit.module("test_mail", {}, function () {
                     res_model: "mail.test.activity",
                     display_name: "An activity",
                     date_deadline: moment().subtract(2, "days").format("YYYY-MM-DD"), // now
+                    date_done: false,
                     can_write: true,
                     state: "overdue",
                     activity_type_id: mailActivityTypeIds[1],
@@ -210,7 +213,7 @@ QUnit.module("test_mail", {}, function () {
     });
 
     QUnit.test(
-        "activity view: there is no default limit of 80 in the relationalModel",
+        "activity view: there is a limit of 80 records",
         async function (assert) {
             const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
 
@@ -247,8 +250,8 @@ QUnit.module("test_mail", {}, function () {
             // = 83 records
             assert.strictEqual(
                 activityRecords.length,
-                83,
-                "The 83 records should have been loaded"
+                80,
+                "Only the first 80 records must have been loaded"
             );
         }
     );
@@ -823,6 +826,7 @@ QUnit.module("test_mail", {}, function () {
             {
                 display_name: "An activity",
                 date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                date_done: false,
                 can_write: true,
                 state: "planned",
                 activity_type_id: mailActivityTypeIds[2],
