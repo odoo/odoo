@@ -3467,9 +3467,10 @@ export class OdooEditor extends EventTarget {
             // just its rows.
             rangeContent = tableClone;
         }
-        if (rangeContent.firstChild.nodeName === 'TABLE') {
+        const table = closestElement(range.startContainer, 'table');
+        if (rangeContent.firstChild.nodeName === 'TABLE' && table) {
             // Make sure the full leading table is copied.
-            rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
+            rangeContent.firstChild.after(table.cloneNode(true));
             rangeContent.firstChild.remove();
         }
         if (rangeContent.lastChild.nodeName === 'TABLE') {
