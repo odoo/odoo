@@ -7,14 +7,17 @@ Model({
     template: "mail.ActivityButtonView",
     identifyingMode: "xor",
     recordMethods: {
-        onClick(ev) {
+        async onClick(ev) {
             if (!this.exists()) {
                 return;
             }
             if (this.listFieldActivityViewOwner) {
                 ev.stopPropagation(); // prevents list view click that opens form view. TODO use special_click instead?
             }
-            this.update({ activityListPopoverView: this.activityListPopoverView ? clear() : {} });
+            await this.webRecord.save();
+            if (this.webRecord.resId) {
+                this.update({ activityListPopoverView: this.activityListPopoverView ? clear() : {} });
+            }
         },
     },
     fields: {
