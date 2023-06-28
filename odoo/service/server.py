@@ -5,6 +5,7 @@ import contextlib
 import collections
 import datetime
 import errno
+import glob
 import logging
 import os
 import os.path
@@ -24,6 +25,10 @@ from io import BytesIO
 import psutil
 import werkzeug.serving
 from werkzeug .urls import uri_to_iri
+from ..tools.constants import ASSET_EXTENSIONS
+from ..tools.misc import frozendict
+
+import odoo.addons
 
 if os.name == 'posix':
     # Unix only for workers
@@ -32,8 +37,8 @@ if os.name == 'posix':
     try:
         import inotify
         from inotify.adapters import InotifyTrees
-        from inotify.constants import IN_MODIFY, IN_CREATE, IN_MOVED_TO
-        INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
+        from inotify.constants import IN_MODIFY, IN_CREATE, IN_MOVED_TO, IN_DELETE, IN_MOVED_FROM
+        INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO | IN_DELETE | IN_MOVED_FROM
     except ImportError:
         inotify = None
 else:
@@ -45,7 +50,7 @@ if not inotify:
     try:
         import watchdog
         from watchdog.observers import Observer
-        from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent
+        from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent, FileDeletedEvent
     except ImportError:
         watchdog = None
 
@@ -73,6 +78,7 @@ thread_local = threading.local()
 
 # the model and method name that was called via rpc, for logging
 thread_local.rpc_model_method = ''
+_static_file_cache = {}
 
 
 def memory_info(process):
@@ -292,8 +298,9 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 # FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
 class FSWatcherBase(object):
-    def handle_file(self, path):
-        if path.endswith('.py') and not os.path.basename(path).startswith('.~'):
+    def handle_file(self, path, removed=False):
+        extension = path.rsplit('.', 1)[-1]
+        if extension == 'py' and not os.path.basename(path).startswith('.~') and not removed:
             try:
                 source = open(path, 'rb').read() + b'\n'
                 compile(source, path, 'exec')
@@ -306,6 +313,9 @@ class FSWatcherBase(object):
                     _logger.info('autoreload: python code updated, autoreload activated')
                     restart()
                     return True
+        elif extension in ASSET_EXTENSIONS:
+            _logger.info('autoreload: asset file updated, autoreload activated')
+            preload_static_file_cache()
 
 
 class FSWatcherWatchdog(FSWatcherBase):
@@ -317,10 +327,11 @@ class FSWatcherWatchdog(FSWatcherBase):
             self.observer.schedule(self, path, recursive=True)
 
     def dispatch(self, event):
-        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent, FileDeletedEvent)):
             if not event.is_directory:
+                removed = isinstance(event, FileDeletedEvent)
                 path = getattr(event, 'dest_path', '') or event.src_path
-                self.handle_file(path)
+                self.handle_file(path, removed=removed)
 
     def start(self):
         self.observer.start()
@@ -351,12 +362,10 @@ class FSWatcherInotify(FSWatcherBase):
             for event in self.watcher.event_gen(timeout_s=0, yield_nones=False):
                 (_, type_names, path, filename) = event
                 if 'IN_ISDIR' not in type_names:
-                    # despite not having IN_DELETE in the watcher's mask, the
-                    # watcher sends these events when a directory is deleted.
-                    if 'IN_DELETE' not in type_names:
-                        full_path = os.path.join(path, filename)
-                        if self.handle_file(full_path):
-                            return
+                    removed = 'IN_DELETE' in type_names or 'IN_MOVED_FROM' in type_names
+                    full_path = os.path.join(path, filename)
+                    if self.handle_file(full_path, removed=removed):
+                        return
                 elif dir_creation_events.intersection(type_names):
                     full_path = os.path.join(path, filename)
                     for root, _, files in os.walk(full_path):
@@ -1504,6 +1513,8 @@ def preload_registries(dbnames):
 
     preload_profiler = contextlib.nullcontext()
 
+    preload_static_file_cache()
+
     for dbname in dbnames:
         if os.environ.get('ODOO_PROFILE_PRELOAD'):
             interval = float(os.environ.get('ODOO_PROFILE_PRELOAD_INTERVAL', '0.1'))
@@ -1550,6 +1561,38 @@ def preload_registries(dbnames):
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
             return -1
     return rc
+
+
+def preload_static_file_cache():
+    # pylint: disable=global-statement
+    static_file_cache = {}
+    start = time.time()
+    for addons_path in sorted(odoo.addons.__path__):
+        files = sorted([
+            f
+            for f in glob.glob(os.path.join(addons_path, '*/static/**'), recursive=True)
+            if f.rsplit('.', maxsplit=1)[-1] in ASSET_EXTENSIONS and os.path.isfile(f)
+        ])
+        for f in files:
+            mtime = os.path.getmtime(f)
+            cache = static_file_cache
+            parts = f[1:].split(os.sep)
+            last_part_index = len(parts) - 1
+            for index, part in enumerate(parts):
+                cache = cache.setdefault(part, (mtime if last_part_index == index else {}))
+
+    def lock(cache):
+        if isinstance(cache, dict):
+            for key, entry in cache.items():
+                cache[key] = lock(entry)
+            return frozendict(cache)
+        return cache
+
+    global _static_file_cache
+    _static_file_cache = lock(static_file_cache)
+    total_time = time.time() - start
+    _logger.info('Assets cached in %ss', total_time)
+
 
 def start(preload=None, stop=False):
     """ Start the odoo http server and cron processor.
