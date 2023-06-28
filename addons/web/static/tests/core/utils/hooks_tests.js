@@ -11,6 +11,7 @@ import {
     useSpellCheck,
 } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { useAutoresize } from "@web/core/utils/autoresize";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
     click,
@@ -19,10 +20,11 @@ import {
     makeDeferred,
     mount,
     nextTick,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -743,5 +745,58 @@ QUnit.module("utils", () => {
             assert.containsOnce(target, ".my_span");
             assert.strictEqual(parent.someRef.el, target.querySelector(".my_span"));
         });
+    });
+
+    QUnit.module("useAutoresize");
+
+    QUnit.test("should resize on input changes", async function (assert) {
+        class MyComponent extends Component {
+            setup() {
+                this.state = useState({ visible: true });
+                this.inputRef = useRef('autofocus');
+                Object.assign(this, useAutoresize(this.inputRef));
+            }
+        }
+        MyComponent.template = xml`
+            <span>
+                <textarea t-if="state.visible" t-ref="autofocus" />
+            </span>
+        `;
+
+        registry.category("services").add("ui", uiService);
+
+        const env = await makeTestEnv();
+        const target = getFixture();
+        const comp = await mount(MyComponent, target, { env });
+        await nextTick();
+
+        const initialHeight = comp.inputRef.el.clientHeight;
+        comp.inputRef.el.value = 'Line 1\nLine 2\nLine 3\nLine 4\n';
+        triggerEvent(comp.inputRef.el, null, "input");
+        await nextTick();
+        assert.ok(comp.inputRef.el.clientHeight > initialHeight);
+
+        // Remove while enabled
+        comp.state.visible = false;
+        await nextTick();
+        assert.containsNone(target, 'textarea');
+
+        // Disable while invisible
+        comp.disable();
+        await nextTick();
+        assert.containsNone(target, 'textarea');
+
+        // Render while disabled
+        comp.state.visible = true;
+        await nextTick();
+        comp.inputRef.el.value = 'Line 1\nLine 2\nLine 3\nLine 4\n';
+        triggerEvent(comp.inputRef.el, null, "input");
+        await nextTick();
+        assert.strictEqual(initialHeight, comp.inputRef.el.clientHeight);
+
+        // Enable while visible
+        comp.enable();
+        await nextTick();
+        assert.ok(comp.inputRef.el.clientHeight > initialHeight);
     });
 });

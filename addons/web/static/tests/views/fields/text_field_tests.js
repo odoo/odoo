@@ -1,6 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
+import { TextField } from "@web/views/fields/text/text_field";
+import { RelationalModel } from "@web/views/relational_model";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -8,11 +12,13 @@ import {
     clickSave,
     editInput,
     getFixture,
+    mount,
     nextTick,
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { Component, useState, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 
@@ -632,5 +638,61 @@ QUnit.module("Fields", (hooks) => {
         triggerHotkey("#");
         await nextTick();
         assert.containsOnce(document.body, ".o_popover .o_model_field_selector_popover");
+    });
+
+    QUnit.test("text field should autoresize when editable", async (assert) => {
+        registry.category("services").add("ui", uiService);
+        const env = await makeTestEnv();
+        const model = new RelationalModel(env, {
+            resModel: "partner",
+            fields: serverData.models.partner.fields,
+            viewMode: "form",
+            rootType: "record",
+            activeFields: serverData.models.partner.fields,
+        }, env.services);
+
+        await model.load({ mode: "edit", values: Object.assign({
+            'display_name': 'partner record',
+        }, serverData.models.partner.records[0]) });
+
+        class MyComponent extends Component {
+            setup() {
+                this.state = useState({ editable: false });
+            }
+            getTextProps() {
+                return {
+                    name: 'txt',
+                    record: model.root,
+                    readonly: !this.state.editable,
+                };
+            }
+        }
+        MyComponent.components = { TextField };
+        MyComponent.template = xml`
+            <span class="my_component">
+                <TextField t-props="getTextProps()" />
+            </span>
+        `;
+
+        const target = getFixture();
+        const comp = await mount(MyComponent, target, { env });
+        const field = target.querySelector('span.my_component *:not(:has(*))');
+        assert.strictEqual(field.textContent, 'some text');
+        assert.containsNone(target, 'textarea');
+
+        comp.state.editable = true;
+        await nextTick();
+
+        // Although the TextField component was readonly at first, it now no
+        // longer is. Let's check that the textarea now correctly resizes based
+        // on its contents.
+        const textarea = target.querySelector('textarea');
+        assert.ok(textarea);
+
+        const initialHeight = textarea.clientHeight;
+        textarea.value = 'Line 1\nLine 2\nLine 3\nLine 4\n';
+        triggerEvent(textarea, null, "input");
+        await nextTick();
+        assert.ok(textarea.clientHeight > initialHeight);
     });
 });

@@ -13,29 +13,39 @@ import { useEffect } from "@odoo/owl";
  * @param {Ref} ref
  */
 export function useAutoresize(ref, options = {}) {
-    let resize = null;
-    useEffect(
-        (el) => {
-            if (el) {
-                resize = (el instanceof HTMLInputElement ? resizeInput : resizeTextArea).bind(
-                    null,
-                    el,
-                    options
-                );
-                el.addEventListener("input", resize);
-                return () => {
-                    el.removeEventListener("input", resize);
-                    resize = null;
-                };
+    let resize, attach, detach;
+    let active = options.enable || true;
+    useEffect(el => {
+        const resizeFunc = el instanceof HTMLInputElement ? resizeInput : resizeTextArea;
+        attach = () => {
+            resize = el ? resizeFunc.bind(null, el, options) : null;
+            el?.addEventListener("input", resize);
+        };
+        detach = () => {
+            el?.removeEventListener("input", resize);
+            resize = null;
+        };
+        if (active) {
+            attach();
+        }
+        return detach;
+    }, () => [ref.el]);
+    useEffect(() => resize?.(), () => [ref.el?.value]);
+    return {
+        enable: () => {
+            if (!active) {
+                attach?.();
+                active = true;
+                resize?.();
             }
         },
-        () => [ref.el]
-    );
-    useEffect(() => {
-        if (resize) {
-            resize(ref.el, options);
-        }
-    });
+        disable: () => {
+            if (active) {
+                detach?.();
+                active = false;
+            }
+        },
+    };
 }
 
 function resizeInput(input) {
@@ -78,7 +88,6 @@ function resizeTextArea(textarea, options) {
         paddingBottom: 0,
         paddingLeft: style.paddingLeft,
     });
-    textarea.style.height = "auto";
     const height = Math.max(minimumHeight, textarea.scrollHeight + heightOffset);
     Object.assign(textarea.style, previousStyle, { height: `${height}px` });
     textarea.parentElement.style.height = `${height}px`;
