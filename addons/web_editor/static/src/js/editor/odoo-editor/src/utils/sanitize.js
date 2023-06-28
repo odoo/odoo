@@ -18,6 +18,7 @@ import {
     isArtificialVoidElement,
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
+    unwrapContents,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -220,12 +221,16 @@ class Sanitize {
             // Remove empty blocks in <li>
             if (
                 node.nodeName === 'P' &&
-                node.parentElement.tagName === 'LI' &&
-                isEmptyBlock(node)
+                node.parentElement.tagName === 'LI'
             ) {
                 const parent = node.parentElement;
                 const restoreCursor = node.isConnected &&
                     preserveCursor(this.root.ownerDocument);
+                if (isEmptyBlock(node)) {
+                    node.remove();
+                } else {
+                    unwrapContents(node);
+                }
                 node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
