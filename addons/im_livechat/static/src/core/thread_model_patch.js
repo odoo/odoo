@@ -3,6 +3,13 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Thread } from "@mail/core/common/thread_model";
 
+<<<<<<< HEAD
+||||||| parent of e56e39a7352 (temp)
+import { Thread } from "@mail/core/thread_model";
+=======
+import { DEFAULT_AVATAR } from "@mail/core/persona_service";
+import { Thread } from "@mail/core/thread_model";
+>>>>>>> e56e39a7352 (temp)
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, "im_livechat", {
