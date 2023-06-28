@@ -12,7 +12,7 @@ import werkzeug.utils
 import werkzeug.wrappers
 
 from itertools import islice
-from lxml import etree
+from lxml import etree, html
 from textwrap import shorten
 from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
@@ -24,6 +24,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
+from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
@@ -629,7 +630,7 @@ class Website(Home):
         if website_id:
             website = request.env['website'].browse(int(website_id))
             website._force()
-        page = request.env['website'].new_page(path, add_menu=add_menu, **template)
+        page = request.env['website'].new_page(path, add_menu=add_menu, sections_arch=kwargs.get('sections_arch'), **template)
         url = page['url']
 
         if redirect:
@@ -640,6 +641,49 @@ class Website(Home):
         if ext_special_case:
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
+
+    @http.route('/website/get_new_page_templates', type='json', auth='user', website=True)
+    def get_new_page_templates(self, **kw):
+        View = request.env['ir.ui.view']
+        result = []
+        groups_html = View._render_template("website.new_page_template_groups")
+        groups_el = etree.fromstring(f'<data>{groups_html}</data>')
+        for group_el in groups_el.getchildren():
+            group = {
+                'id': group_el.attrib['id'],
+                'title': group_el.text,
+                'templates': [],
+            }
+            for template in View.search([
+                ('mode', '=', 'primary'),
+                ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
+            ], order='key'):
+                try:
+                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                        template.key,
+                    ))
+                    for section_el in html_tree.xpath("//section[@data-snippet]"):
+                        # data-snippet must be the short general name
+                        snippet = section_el.attrib['data-snippet']
+                        # Because the templates are generated from specific
+                        # t-snippet-calls such as:
+                        # "website.new_page_template_about_0_s_text_block",
+                        # the generated data-snippet looks like:
+                        # "new_page_template_about_0_s_text_block"
+                        # while it should be "s_text_block" only.
+                        if '_s_' in snippet:
+                            section_el.attrib['data-snippet'] = f's_{snippet.split("_s_")[-1]}'
+
+                    group['templates'].append({
+                        'key': template.key,
+                        'template': html.tostring(html_tree),
+                    })
+                except QWebException as qe:
+                    # Do not fail if theme is not compatible.
+                    logger.warning("Theme not compatible with template %r: %s", template.key, qe)
+            if group['templates']:
+                result.append(group)
+        return result
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):

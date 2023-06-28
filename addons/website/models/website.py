@@ -765,7 +765,7 @@ class Website(models.Model):
                 copy_menu(submenu, new_top_menu)
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name: the name of the page
             :param add_menu: if True, add a menu for that page
@@ -773,6 +773,7 @@ class Website(models.Model):
             :param namespace: module part of the xml_id if none, the template module name is used
             :param page_values: default values for the page to be created
             :param menu_values: default values for the menu to be created
+            :param sections_arch: HTML content of sections
         """
         if namespace:
             template_module = namespace
@@ -788,12 +789,19 @@ class Website(models.Model):
             page_key = 'home'
 
         template_record = self.env.ref(template)
+        arch = template_record.arch
+        if sections_arch:
+            tree = html.fromstring(arch)
+            wrap = tree.xpath('//div[@id="wrap"]')[0]
+            for section in html.fromstring(f'<wrap>{sections_arch}</wrap>'):
+                wrap.append(section)
+            arch = etree.tostring(tree, encoding="unicode")
         website_id = self._context.get('website_id')
         key = self.get_unique_key(page_key, template_module)
         view = template_record.copy({'website_id': website_id, 'key': key})
 
         view.with_context(lang=None).write({
-            'arch': template_record.arch.replace(template, key),
+            'arch': arch.replace(template, key),
             'name': name,
         })
         result['view_id'] = view.id

@@ -41,6 +41,9 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "click on new page",
     trigger: '.o_new_content_element a',
 }, {
+    content: "click on Use this template",
+    trigger: ".o_page_template button.btn-primary",
+}, {
     content: "insert file name",
     trigger: '.modal-dialog input[type="text"]',
     run: 'text rte_translator.xml',
@@ -61,6 +64,9 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 }, {
     content: "click on new page",
     trigger: '.o_new_content_element a',
+}, {
+    content: "click on Use this template",
+    trigger: ".o_page_template button.btn-primary",
 }, {
     content: "insert page name",
     trigger: '.modal-dialog input[type="text"]',
