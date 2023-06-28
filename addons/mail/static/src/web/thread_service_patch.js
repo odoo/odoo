@@ -169,6 +169,13 @@ patch(ThreadService.prototype, "mail/web", {
         }
         thread.suggestedRecipients = recipients;
     },
+    async leaveChannel(channel) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
+    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive || this.store.isSmall) {
             const chatWindow = this.chatWindowService.insert({
@@ -198,6 +205,13 @@ patch(ThreadService.prototype, "mail/web", {
             follower.followedThread.followers.splice(index, 1);
         }
         delete this.store.followers[follower.id];
+    },
+    unpin(thread) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
     },
 });
 
