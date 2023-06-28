@@ -8,9 +8,10 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     def button_cancel(self):
-        for l in self.line_ids:
-            if l.expense_id:
-                l.expense_id.refuse_expense(reason=_("Payment Cancelled"))
+        """Get all expenses for refuse"""
+        expense_lines = self.line_ids.mapped("expense_id.sheet_id").mapped("expense_line_ids")
+        for exp in expense_lines:
+            exp.refuse_expense(reason=_("Payment Cancelled"))
         return super().button_cancel()
 
     def button_draft(self):
