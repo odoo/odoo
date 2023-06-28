@@ -4,7 +4,18 @@ import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
-export class MovesListRenderer extends ListRenderer {}
+export class MovesListRenderer extends ListRenderer {
+    processAllColumn(allColumns, list) {
+        let cols = super.processAllColumn(...arguments);
+        if (list.resModel === "stock.move") {
+            cols.push({
+                type: 'opendetailsop',
+                id: `column_detailOp_${cols.length}`,
+            });
+        }
+        return cols;
+    }
+}
 
 MovesListRenderer.props = [ ...ListRenderer.props, 'stockMoveOpen?']
 
