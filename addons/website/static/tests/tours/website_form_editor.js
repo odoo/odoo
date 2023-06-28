@@ -35,6 +35,15 @@
                        .replaceAll(/`/g, character => `&lsquo;`);
     };
 
+    const triggerFieldByLabel = (label) => {
+        return `.s_website_form_field.s_website_form_custom:has(label:contains("${label}"))`;
+    };
+    const selectFieldByLabel = (label) => {
+        return [{
+            content: `Select field "${label}"`,
+            trigger: "iframe " + triggerFieldByLabel(label),
+        }];
+    };
     const selectButtonByText = function (text) {
         return [{
             content: "Open the select",
@@ -356,6 +365,21 @@
             trigger: 'we-input[data-attribute-name="value"] input',
             run: 'text John Smith',
         },
+
+        // Add two fields: the 1st one's visibility is tied to the 2nd one
+        // being set, and the 2nd one is autopopulated. As a result, both
+        // should be visible by default.
+        ...addCustomField("char", "text", "field A", false, {visibility: CONDITIONALVISIBILITY}),
+        ...addCustomField("char", "text", "field B", false),
+        ...selectFieldByLabel("field A"),
+        ...selectButtonByData('data-set-visibility-dependency="field B"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+        ...selectFieldByLabel("field B"),
+        {
+            content: "Insert default value",
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: "text prefilled",
+        },
         {
             content: "Save the page",
             trigger: "button[data-action=save]",
@@ -369,23 +393,96 @@
             content: 'Verify that phone field is still auto-fillable',
             trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
         },
-        // Check that if we edit again and save again the default value is not deleted.
+        // Check that the resulting form behavior is correct.
+        {
+            content: "Check that field B prefill text is set",
+            trigger: `iframe ${triggerFieldByLabel("field B")}:has(input[value="prefilled"])`,
+            run: () => null, // it's a check
+        }, {
+            content: "Check that field A is visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
+        },
+        // A) Check that if we edit again and save again the default value is
+        // not deleted.
+        // B) Add a 3rd field. Field A's visibility is tied to field B being set,
+        // field B is autopopulated and its visibility is tied to field C being
+        // set, and field C is empty.
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Edit the form',
             trigger: 'iframe .s_website_form_field:eq(0) input',
             run: 'click',
         },
-        ...addCustomField('many2one', 'select', 'Select Field', true),
+        ...addCustomField("char", "text", "field C", false),
+        ...selectFieldByLabel("field B"),
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="field C"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
             run: 'click',
         },
+
+        // Check that the resulting form behavior is correct.
         {
             content: 'Verify that the value has not been deleted',
             extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
+        }, {
+            content: "Check that fields A and B are not visible and that field B's prefill text is still set",
+            trigger: "iframe .s_website_form" +
+                `:has(${triggerFieldByLabel("field A")}:not(:visible))` +
+                `:has(${triggerFieldByLabel("field B")}` +
+                `:has(input[value="prefilled"]):not(:visible))`,
+            run: () => null, // it's a check
+        }, {
+            content: "Type something in field C",
+            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            run: "text Sesame",
+        }, {
+            content: "Check that fields A and B are visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+                `:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
+        },
+
+        // Have field A's visibility tied to field B containing something,
+        // while field B's visibility is also tied to another field.
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...selectFieldByLabel("field A"),
+        {
+            content: "Verify that the form editor appeared",
+            trigger: ".o_we_customize_panel .snippet-option-WebsiteFormEditor",
+            run: () => null,
+        },
+        ...selectButtonByData('data-select-data-attribute="contains"'),
+        {
+            content: "Tie the visibility of field A to field B containing 'peek-a-boo'",
+            trigger: "we-input[data-name=hidden_condition_additional_text] input",
+            run: "text peek-a-boo",
+        },
+        ...wTourUtils.clickOnSave(),
+
+        // Check that the resulting form works and does not raise an error.
+         {
+            content: "Write anything in C",
+            trigger: `iframe ${triggerFieldByLabel("field C")} input`,
+            run: "text Mellon",
+        }, {
+            content: "Check that field B is visible, but field A is not",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
+                `:has(${triggerFieldByLabel("field A")}:not(:visible))`,
+            run: () => null, // it's a check
+        }, {
+            content: "Insert 'peek-a-boo' in field B",
+            trigger: `iframe ${triggerFieldByLabel("field B")} input`,
+            run: "text peek-a-boo",
+        }, {
+            content: "Check that field A is visible",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
+            run: () => null, // it's a check
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {

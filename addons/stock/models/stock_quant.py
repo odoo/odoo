@@ -77,6 +77,7 @@ class StockQuant(models.Model):
         'stock.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', check_company=True,
         domain=lambda self: self._domain_lot_id())
+    lot_properties = fields.Properties(related='lot_id.lot_properties', definition='product_id.lot_properties_definition', readonly=True)
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
@@ -184,6 +185,14 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search(self, domain, *args, **kwargs):
+        domain = [
+            line if not isinstance(line, (list, tuple)) or not line[0].startswith('lot_properties.')
+            else ['lot_id', 'any', [line]]
+            for line in domain
+        ]
+        return super()._search(domain, *args, **kwargs)
 
     @api.depends('inventory_quantity')
     def _compute_inventory_diff_quantity(self):
