@@ -221,24 +221,24 @@ describe('Paste HTML tables', () => {
             
             
             <tbody><tr>
-                <td class="" style="color: #495057;font-size: 10.0pt;font-style: italic"><span class="" style="color: #495057;font-size: 10.0pt;font-weight: 400;font-style: italic;text-decoration: none">Italic
-                        then also </span><span class="" style="color: #495057;font-size: 10.0pt;font-weight: 700;font-style: italic;text-decoration: none">BOLD</span></td>
-                <td class="" style="color: #495057;font-size: 10.0pt;font-style: italic"><s>Italic strike</s></td>
+                <td class="">Italic
+                        then also BOLD</td>
+                <td class=""><s>Italic strike</s></td>
             </tr>
             <tr>
-                <td class="" style="color: #495057;font-size: 10.0pt;font-weight: 700"><span class="" style="color: #495057;font-size: 10.0pt;font-weight: 700;font-style: normal;text-decoration: none">Just bold </span><span class="" style="color: #495057;font-size: 10.0pt;font-weight: 400;font-style: italic;text-decoration: none">Just Italic</span></td>
-                <td class="" style="color: #495057;font-size: 10.0pt;font-weight: 700;text-decoration: underline">Bold underline</td>
+                <td class="">Just bold Just Italic</td>
+                <td class="">Bold underline</td>
             </tr>
             <tr>
-                <td class="" style="color: red;font-size: 10.0pt">Color text</td>
-                <td class="" style="color: red;font-size: 10.0pt;text-decoration: underline"><s>Color strike and underline</s></td>
+                <td class="">Color text</td>
+                <td class=""><s>Color strike and underline</s></td>
             </tr>
             <tr>
-                <td class="" style="color: #495057;font-size: 10.0pt;background-color: yellow">Color background</td>
-                <td class="" style="color: red;font-size: 10.0pt;background-color: yellow">Color text on color background</td>
+                <td class="">Color background</td>
+                <td class="">Color text on color background</td>
             </tr>
             <tr>
-                <td class="" style="font-size: 14.0pt">14pt MONO TEXT
+                <td class="">14pt MONO TEXT
                 </td>
             </tr>
         </tbody></table><p>
@@ -328,33 +328,33 @@ describe('Paste HTML tables', () => {
         
         <tbody>
             <tr>
-                <td style="font-weight:normal;font-style:italic;color:#495057">
-                    <span style="font-size:10pt;font-style:italic;color:#495057">Italic then also
-                    </span><span style="font-size:10pt;font-weight:bold;font-style:italic;color:#495057">BOLD</span>
+                <td>
+                    Italic then also
+                    BOLD
                 </td>
-                <td style="font-style:italic;text-decoration:line-through;color:#495057">Italic strike</td>
+                <td>Italic strike</td>
             </tr>
             <tr>
-                <td style="font-weight:bold;color:#495057">
-                    <span style="font-size:10pt;font-weight:bold;font-style:normal;color:#495057">Just
-                        Bold </span><span style="font-size:10pt;font-style:italic;color:#495057">Just
-                        Italic</span>
+                <td>
+                    Just
+                        Bold Just
+                        Italic
                 </td>
-                <td style="font-weight:bold;text-decoration:underline;color:#495057">Bold underline</td>
+                <td>Bold underline</td>
             </tr>
             <tr>
-                <td><span style="color:#ff0000">Color text</span></td>
-                <td style="text-decoration:underline line-through;color:#ff0000">Color
+                <td>Color text</td>
+                <td>Color
                     strike and underline</td>
             </tr>
             <tr>
-                <td style="background-color:#ffff00;font-weight:normal;color:#495057">Color background
+                <td>Color background
                 </td>
-                <td style="background-color:#ffff00;color:#ff0000">Color
+                <td>Color
                     text on color background</td>
             </tr>
             <tr>
-                <td style="font-size:14pt;font-weight:normal">14pt MONO TEXT</td>
+                <td>14pt MONO TEXT</td>
             </tr>
         </tbody>
     </table><p>
@@ -471,21 +471,21 @@ describe('Paste HTML tables', () => {
         </tr>
         <tr>
             <td>
-                <font style="color: rgb(255, 0, 0)">Color text</font>
+                Color text
             </td>
             <td><u><s>
-                        <font style="color: rgb(255, 0, 0)">Color strike and underline</font>
+                        Color strike and underline
                     </s></u></td>
         </tr>
         <tr>
-            <td style="background-color: rgb(255, 255, 0)">Color background</td>
-            <td style="background-color: rgb(255, 255, 0)">
-                <font style="color: rgb(255, 0, 0)">Color text on color background</font>
+            <td>Color background</td>
+            <td>
+                Color text on color background
             </td>
         </tr>
         <tr>
             <td>
-                <font style="font-size: 14pt">14pt MONO TEXT</font>
+                14pt MONO TEXT
             </td>
         </tr>
     </tbody></table><p>
