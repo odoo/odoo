@@ -146,8 +146,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 await this.pos._addProducts(foundProductIds);
                 // assume that the result is unique.
                 product = this.pos.db.get_product_by_id(foundProductIds[0]);
-            } else {
-                return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
             }
         }
         return product;
@@ -155,7 +153,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     async _barcodeProductAction(code) {
         const product = await this._getProductByBarcode(code);
         if (!product) {
-            return;
+            return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
         }
         const options = await product.getAddProductOptions(code);
         // Do not proceed on adding the product when no options is returned.
@@ -212,7 +210,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         const lotBarcode = parsed_results.find((element) => element.type === "lot");
         const product = await this._getProductByBarcode(productBarcode);
         if (!product) {
-            return;
+            return this.popup.add(ErrorBarcodePopup, { code: productBarcode.base_code });
         }
         const options = await product.getAddProductOptions(lotBarcode);
         await this.currentOrder.add_product(product, options);
