@@ -13,7 +13,6 @@ import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { sprintf } from "@web/core/utils/strings";
@@ -1117,23 +1116,64 @@ export class PosStore extends Reactive {
             }
             return server_ids;
         } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                Promise.reject(error);
-                return error;
-            } else {
-                for (const order of orders) {
-                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
-                    reactiveOrder.validation_date = null;
-                    reactiveOrder.formatted_validation_date = null;
-                    reactiveOrder.finalized = false;
-                    this.db.remove_order(reactiveOrder.uid);
-                    this.db.save_unpaid_order(reactiveOrder);
+            if (this._isRPCError(error)) {
+                if (orders.length > 1) {
+                    return this._flush_orders_retry(orders, options);
+                } else {
+                    this._makeOrdersUnpaid(orders);
+                    this.set_synch('connected');
+                    return error;
                 }
-                this.set_synch("connected");
-                throw error;
+            } else {
+                this.set_synch('disconnected');
+                return error;
             }
         } finally {
             this._after_flush_orders(orders);
+        }
+    }
+    // Attempts to send the orders to the server one by one if an RPC error is encountered.
+    async _flush_orders_retry(orders, options) {
+        let connectionError;
+        let serverIds = [];
+
+        for (let order of orders) {
+            try {
+                let server_ids = await this._save_to_server([order], options);
+                this.validated_orders_name_server_id_map[server_ids[0].pos_reference] = server_ids[0].id;
+                serverIds.push(server_ids[0]);
+            } catch (err) {
+                if (this._isRPCError(err)) {
+                    this._makeOrdersUnpaid([order]);
+                } else {
+                    connectionError = err;
+                }
+            }
+        }
+
+        if (!connectionError) {
+            this.set_synch('connected');
+            return serverIds;
+        } else {
+            this.set_synch('disconnected');
+        }
+        throw connectionError;
+    }
+    _isRPCError(err) {
+        return err.name === 'RPC_ERROR';
+    }
+    _makeOrdersUnpaid(orders) {
+        for (const order of orders) {
+            let reactiveOrder = this.orders.find((o) => o.uid === order.id);
+            if (!reactiveOrder) {
+                this.orders.add(this.createReactiveOrder(order.data));
+                reactiveOrder = this.orders.find((o) => o.uid === order.id);
+            }
+            reactiveOrder.validation_date = null;
+            reactiveOrder.formatted_validation_date = null;
+            reactiveOrder.finalized = false;
+            this.db.remove_order(reactiveOrder.uid);
+            this.db.save_unpaid_order(reactiveOrder);
         }
     }
     /**
