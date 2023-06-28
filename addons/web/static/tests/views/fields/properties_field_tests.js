@@ -1388,6 +1388,46 @@ QUnit.module("Fields", (hooks) => {
     });
 
     /**
+     * check if property field popover closes when clicking on delete property icon.
+     */
+    QUnit.test(
+        "properties: close property popover once clicked on delete icon",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
+                    return true;
+                }
+            }
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 3,
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                mockRPC,
+            });
+
+            // We open the property popover
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            assert.containsOnce(target,".o_field_property_definition");
+
+            // Trying to delete the property should have closed its definition popover
+            // We click on delete button
+            await click(target, ".o_field_property_definition_delete");
+            assert.containsNone(target, ".o_field_property_definition");
+        }
+    );
+
+    /**
      * Check the behavior of the domain (properies with "definition_deleted" should be ignored).
      * In that case, some properties start without the flag "definition_deleted".
      */
