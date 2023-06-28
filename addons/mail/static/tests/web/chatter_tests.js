@@ -527,6 +527,83 @@ QUnit.test("basic chatter rendering without activities", async (assert) => {
     assert.containsOnce($, ".o-mail-Thread");
 });
 
+QUnit.test("basic chatter rendering with activities", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const todoActivityType = pyEnv["mail.activity.type"].create({ name: 'todo', keep_done: true });
+    const previousWeek = moment().add(-7, "day").format("YYYY-MM-DD");
+    const today = moment().format("YYYY-MM-DD");
+    const nextWeek = moment().add(7, "day").format("YYYY-MM-DD");
+    pyEnv["mail.activity"].create([
+        {
+            display_name: "Write specification",
+            date_deadline: previousWeek,
+            date_done: previousWeek,
+            state: "done",
+            activity_type_id: todoActivityType,
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+        {
+            display_name: "Implement specification",
+            date_deadline: today,
+            date_done: false,
+            state: "today",
+            activity_type_id: todoActivityType,
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+        {
+            display_name: "Write tests",
+            date_deadline: nextWeek,
+            date_done: false,
+            state: "planned",
+            activity_type_id: todoActivityType,
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    assert.containsOnce($, ".o-mail-Chatter-content");
+    assert.containsOnce($, ".o-mail-ActivityList");
+    assert.containsOnce($, ".o-mail-ActivityList:contains('Planned Activities')");
+    assert.containsOnce($, ".o-mail-ActivityList:contains('Completed Activities')");
+    // By default, only planned activities are displayed
+    assert.containsN($, ".o-mail-ActivityList .o-mail-Activity", 2, '2 planned activities');
+    assert.containsOnce($, ".o-mail-ActivityList .o-mail-Activity:contains('Due in')");
+    assert.containsOnce($, ".o-mail-ActivityList .o-mail-Activity:contains('Today')");
+    assert.containsNone($, ".o-mail-ActivityList .o-mail-Activity:contains('Done on')", 1);
+    // Display completed activities as well
+    await click(".o-mail-ActivityList div:contains('Completed Activities') .fa-caret-right");
+    assert.containsN($, ".o-mail-ActivityList .o-mail-Activity", 3, '2 planned and 1 completed activity');
+    assert.containsOnce($, ".o-mail-ActivityList .o-mail-Activity:contains('Done on')", 1);
+    // Hide planned activities
+    await click(".o-mail-ActivityList div:contains('Planned Activities') .fa-caret-down");
+    assert.containsN($, ".o-mail-ActivityList .o-mail-Activity", 1, 'Only 1 completed activity');
+    assert.containsNone($, ".o-mail-ActivityList .o-mail-Activity:contains('Due in')");
+    assert.containsNone($, ".o-mail-ActivityList .o-mail-Activity:contains('Today')");
+    assert.containsOnce($, ".o-mail-ActivityList .o-mail-Activity:contains('Done on')", 1);
+    // Hide completed activities
+    await click(".o-mail-ActivityList div:contains('Completed Activities') .fa-caret-down");
+    assert.containsNone($, ".o-mail-ActivityList .o-mail-Activity", 'Planned and completed activities hidden');
+});
+
 QUnit.test(
     'chatter just contains "creating a new record" message during the creation of a new record after having displayed a chatter for an existing record',
     async (assert) => {

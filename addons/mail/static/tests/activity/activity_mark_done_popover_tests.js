@@ -70,12 +70,12 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
     });
     const { openView } = await start({
         async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                assert.step("action_feedback");
+            if (route === "/web/dataset/call_kw/mail.activity/action_feedback_and_link_attachment") {
+                assert.step("action_feedback_and_link_attachment");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
-                assert.strictEqual(args.kwargs.attachment_ids.length, 0);
+                assert.strictEqual(args.kwargs.attachment_id, false);
                 assert.notOk(args.kwargs.feedback);
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
@@ -95,7 +95,7 @@ QUnit.test("activity mark done popover mark done without feedback", async (asser
     });
     await click(".btn:contains('Mark Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.verifySteps(["action_feedback"]);
+    assert.verifySteps(["action_feedback_and_link_attachment"]);
 });
 
 QUnit.test("activity mark done popover mark done with feedback", async (assert) => {
@@ -109,12 +109,12 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
     });
     const { openView } = await start({
         async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/mail.activity/action_feedback") {
-                assert.step("action_feedback");
+            if (route === "/web/dataset/call_kw/mail.activity/action_feedback_and_link_attachment") {
+                assert.step("action_feedback_and_link_attachment");
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], activityId);
-                assert.strictEqual(args.kwargs.attachment_ids.length, 0);
+                assert.strictEqual(args.kwargs.attachment_id, false);
                 assert.strictEqual(args.kwargs.feedback, "This task is done");
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
@@ -139,7 +139,7 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
     ).catch(() => {}); // no render
     await nextTick();
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.verifySteps(["action_feedback"]);
+    assert.verifySteps(["action_feedback_and_link_attachment"]);
 });
 
 QUnit.test("activity mark done popover mark done and schedule next", async (assert) => {
