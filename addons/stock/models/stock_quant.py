@@ -497,6 +497,31 @@ The correction could unreserve some operations with problematics products.""", p
                     raise UserError(_('It is not possible to unreserve more products of %s than you have in stock. Contact an administrator.', product_id.display_name))
         else:
             return reserved_quants
+        
+        def update_reserved_quantity(quant, reserved_quantity):
+            try:
+                with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
+                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id],
+                                      log_exceptions=False)
+                    quant.write({
+                        'reserved_quantity': quant.reserved_quantity + reserved_quantity,
+                    })
+            except OperationalError as e:
+                if e.pgcode == '55P03':  # could not obtain the lock
+                    quant = self.create({
+                        'product_id': quant.product_id.id,
+                        'location_id': quant.location_id.id,
+                        'quantity': 0,
+                        'reserved_quantity': reserved_quantity,
+                        'lot_id': quant.lot_id.id,
+                        'package_id': quant.package_id.id,
+                        'owner_id': quant.owner_id.id,
+                        'in_date': quant.in_date,
+                    })
+                else:
+                    self.clear_caches()
+                    raise
+            return quant
 
         for quant in quants:
             if float_compare(quantity, 0, precision_rounding=rounding) > 0:
@@ -504,13 +529,13 @@ The correction could unreserve some operations with problematics products.""", p
                 if float_compare(max_quantity_on_quant, 0, precision_rounding=rounding) <= 0:
                     continue
                 max_quantity_on_quant = min(max_quantity_on_quant, quantity)
-                quant.reserved_quantity += max_quantity_on_quant
+                quant = update_reserved_quantity(quant, max_quantity_on_quant)
                 reserved_quants.append((quant, max_quantity_on_quant))
                 quantity -= max_quantity_on_quant
                 available_quantity -= max_quantity_on_quant
             else:
                 max_quantity_on_quant = min(quant.reserved_quantity, abs(quantity))
-                quant.reserved_quantity -= max_quantity_on_quant
+                quant = update_reserved_quantity(quant, -1 * max_quantity_on_quant)
                 reserved_quants.append((quant, -max_quantity_on_quant))
                 quantity += max_quantity_on_quant
                 available_quantity += max_quantity_on_quant
