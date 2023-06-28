@@ -155,9 +155,18 @@ class ResUsers(models.Model):
         """ retrieve the user corresponding to login (login or email),
             and reset their password
         """
-        users = self.search([('login', '=', login)])
+        current_website = self.env['website'].get_current_website()
+        login_search_domain = [('login', '=', login)]
+        email_search_domain = [('email', '=', login)]
+        website_filter = ('website_id', '=', current_website.id)
+
+        if current_website.specific_user_account:
+            login_search_domain.append(website_filter)
+            email_search_domain.append(website_filter)
+
+        users = self.search(login_search_domain)
         if not users:
-            users = self.search([('email', '=', login)])
+            users = self.search(email_search_domain)
         if len(users) != 1:
             raise Exception(_('Reset password: invalid username or email'))
         return users.action_reset_password()
