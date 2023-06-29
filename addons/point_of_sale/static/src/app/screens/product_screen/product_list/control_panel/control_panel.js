@@ -20,7 +20,6 @@ export class ProductsWidgetControlPanel extends Component {
         this.updateSearch = debounce(this.updateSearch, 100);
         this.state = useState({ mobileSearchBarIsShown: false, isMobile: false });
         this.productsWidgetControl = useRef("products-widget-control");
-        this.ui = useService("ui");
 
         const toggleIsMobile = () => this.toggleIsMobile();
         onMounted(() => {

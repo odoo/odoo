@@ -13,7 +13,7 @@
                 hasNoCategories="hasNoCategories"
                 loadProductFromServer.bind="onPressEnterKey" />
             <div class="product-list-container">
-                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" class="product-list">
+                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="{{this.pos.productListViewMode}} product-list">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductItem
                             product="product" />

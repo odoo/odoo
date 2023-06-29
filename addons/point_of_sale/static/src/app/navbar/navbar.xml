@@ -43,6 +43,11 @@
                                         Close Session
                                     </span>
                                 </li>
+                                <li t-if="showToggleProductView" class="menu-item navbar-button close-button" t-on-click="toggleProductView">
+                                    <span>
+                                        Switch Product View
+                                    </span>
+                                </li>
                                 <li t-if="this.env.debug" t-on-click="() => debug.toggleWidget()" class="menu-item navbar-button">
                                     <span>Debug Window</span>
                                 </li>

@@ -852,7 +852,7 @@ td {
 
 /*  ********* The product list  ********* */
 
-.pos .product-list {
+.pos .product-list.grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
     padding: 3px;
@@ -1112,28 +1112,49 @@ td {
 /*  e) the product */
 
 .pos .product {
-    position:relative;
-    background:#fff;
-    overflow: hidden;
-    cursor: pointer;
     display: flex;
-    flex-direction: column;
+    position:relative;
+    cursor: pointer;
+    overflow: hidden;
+    background:#fff;
     align-items: stretch;
+}
+.pos .product.grid {
+    height: 170px;
+    flex-direction: column;
+}
+.pos .product.list {
+    height: 90px;
+    flex-direction: row-reverse;
+    margin: 3px;
+    justify-content: space-between;
 }
 
 .pos .product-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+.pos .product.list .product-content {
     height: 100%;
 }
-
+.pos .product.grid .product-img {
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+    margin: 3px;
+}
+.pos .product.list .product-img {
+    height: 84px;
+    width: 84px;
+    margin: 3px;
+    overflow: hidden;
+}
 .pos .product .product-img img {
     width: 100%;
     height: 100px;
-    object-fit: contain;
+    object-fit: cover;
 }
-
 @media screen and (max-width: 768px) {
     .pos .product:active {
         box-shadow: 0 0 0 3px $primary;
