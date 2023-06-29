@@ -10,11 +10,13 @@
                     <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} text-900 fw-bold fs-6">
                         <t t-set="lineName" t-value="getNameAndDescription(line)" />
                         <h3 class="mb-0 o_self_product_name" t-esc="lineName.productName" />
-                        <span
-                            t-if="line.qty"
-                            class="flex-grow-1 me-3 small text-muted"
-                            t-esc="`${line.qty} x ${selfOrder.formatMonetary(selfOrder.productByIds[line.product_id].prices)}`"
-                            />
+                        <div t-if="line.qty">
+                            <span class="text-primary fw-bolder small" t-esc="`${line.qty}x `" />
+                            <span
+                                class="flex-grow-1 me-3 small text-muted"
+                                t-esc="selfOrder.formatMonetary(selfOrder.productByIds[line.product_id].prices)"
+                                />
+                        </div>
                         <span
                             t-if="lineName.attributes"
                             class="m-0 text-muted small break-line"

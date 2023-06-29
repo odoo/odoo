@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.OrdersHistory" owl="1">
-        <NavBar customText="'Orders'" />
+        <NavBar customText="'Orders'" shadow="true" />
         <div class="overflow-auto dvh-100 pb-5">
             <t t-if="state.loadingProgress">
                 <div class="d-flex align-items-center h-100 justify-content-center">
@@ -11,13 +11,13 @@
                 </div>
             </t>
             <div t-else="">
-                <t t-foreach="orders" t-as="order" t-key="order.pos_reference">
+                <t t-foreach="orders" t-as="order" t-key="order.access_token">
                     <div class="o_so_order d-flex flex-column">
                         <div class="o_so_order_header p-3 bg-white" t-on-click="() => this.editOrder(order)">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h6 class="m-0"
                                     t-esc="order.pos_reference"/>
-                                <span class="badge p-2 text-bg-primary"
+                                <span class="badge p-2 text-bg-primary text-capitalize"
                                     t-esc="order.state"/>
                             </div>
                             <p class="small m-0 fst-italic text-muted"

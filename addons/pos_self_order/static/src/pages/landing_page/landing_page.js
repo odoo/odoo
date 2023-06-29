@@ -13,4 +13,9 @@ export class LandingPage extends Component {
         this.formatMonetary = formatMonetary;
         this.selfOrder.currentProduct = 0;
     }
+
+    showMyOrderBtn() {
+        const ordersNotDraft = this.selfOrder.orders.find((o) => o.access_token);
+        return this.selfOrder.ordering && ordersNotDraft;
+    }
 }
