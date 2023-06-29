@@ -237,7 +237,6 @@ class Base(models.AbstractModel):
                 domain,
                 groupby=groupby if not lazy else [groupby[0]],
                 offset=limit,
-                order=orderby,
             ))
 
         else:
