@@ -6,7 +6,7 @@ import logging
 
 import odoo
 from odoo import api, http, models
-from odoo.http import request
+from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import file_open, image_process, ustr
 from odoo.tools.misc import str2bool
 
@@ -84,7 +84,7 @@ class Http(models.AbstractModel):
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
         max_file_upload_size = int(IrConfigSudo.get_param(
             'web.max_file_upload_size',
-            default=128 * 1024 * 1024,  # 128MiB
+            default=DEFAULT_MAX_CONTENT_LENGTH,
         ))
         mods = odoo.conf.server_wide_modules or []
         if request.db:

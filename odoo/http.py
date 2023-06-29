@@ -232,6 +232,8 @@ def get_default_session():
         'session_token': None,
     }
 
+DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
+
 # Two empty objects used when the geolocalization failed. They have the
 # sames attributes as real countries/cities except that accessing them
 # evaluates to None.
@@ -1482,6 +1484,18 @@ class Request:
         :returns: The merged key-value pairs.
         :rtype: dict
         """
+        if self.env:
+            ICP = self.env['ir.config_parameter'].sudo()
+            try:
+                key = 'web.max_file_upload_size'
+                self.httprequest.max_content_length = int(ICP.get_param(
+                    key, DEFAULT_MAX_CONTENT_LENGTH
+                ))
+            except ValueError:  # better not crash on ALL requests
+                _logger.error("invalid %s: %r, use %s instead",
+                    key, ICP.get_param(key), self.httprequest.max_content_length,
+                )
+
         params = {
             **self.httprequest.args,
             **self.httprequest.form,
@@ -2121,6 +2135,7 @@ class Application:
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = (
             werkzeug.datastructures.ImmutableOrderedMultiDict)
+        httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         request = Request(httprequest)
         _request_stack.push(request)
         request._post_init()
