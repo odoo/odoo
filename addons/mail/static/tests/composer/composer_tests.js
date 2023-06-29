@@ -28,6 +28,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { Composer } from "@mail/composer/composer";
 import { patchUiSize, SIZES } from "../helpers/patch_ui_size";
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("composer", {
     async beforeEach() {
@@ -359,13 +360,16 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
 
@@ -427,10 +431,13 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
 
 QUnit.test("pending mentions are kept when toggling composer", async (assert) => {
     const pyEnv = await startServer();
-    const { openFormView } = await start();
+    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
     await click("button:contains(Send message)");
     await click("button:contains(Send message)");
@@ -611,7 +618,8 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start({
+    const { advanceTime, openDiscuss } = await start({
+        hasTimeControl: true,
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
                 assert.step("message_post");
@@ -621,6 +629,9 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Shrek");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.equal($(".o-mail-Composer-input").val().trim(), "@Shrek");
     assert.verifySteps([]);

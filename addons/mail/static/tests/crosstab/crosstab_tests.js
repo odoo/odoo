@@ -8,8 +8,9 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
-import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { triggerHotkey, patchWithCleanup, nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("crosstab");
 
@@ -93,7 +94,7 @@ QUnit.test("Thread description update", async (assert) => {
 QUnit.test("Channel subscription is renewed when channel is manually added", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
-    const { env, openDiscuss } = await start();
+    const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
             assert.step("update-channels");
@@ -102,6 +103,8 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
     await openDiscuss();
     await click("[title='Add or join a channel']");
     await insertText(".o-mail-ChannelSelector", "General");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.verifySteps(["update-channels"]);
 });

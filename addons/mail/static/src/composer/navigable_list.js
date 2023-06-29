@@ -63,9 +63,6 @@ export class NavigableList extends Component {
     }
 
     open() {
-        if (this.state.isLoading) {
-            return;
-        }
         this.load().then(() => {
             this.state.open = true;
             this.navigate("first");
@@ -78,6 +75,7 @@ export class NavigableList extends Component {
     }
 
     async load() {
+        this.state.isLoading = true;
         this.state.options = [];
         const makeOption = (opt) => {
             return Object.assign(Object.create(opt), {
@@ -85,12 +83,12 @@ export class NavigableList extends Component {
             });
         };
         if (this.props.options instanceof Promise) {
-            this.state.isLoading = true;
             return this.props.options.then((opts) => {
                 opts.forEach((opt) => this.state.options.push(makeOption(opt)));
                 this.state.isLoading = false;
             });
         }
+        this.state.isLoading = false;
         if (this.props.options instanceof Array) {
             if (this.props.options.length === 0) {
                 return;
