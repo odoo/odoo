@@ -949,3 +949,13 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},
         ])
+
+    def test_multiple_one2many_domain_trigger(self):
+        with Form(self.env['test_new_api.discussion'], "test_new_api.discussion_form_3") as discussion:
+            with discussion.important_messages.new() as message:
+                self.assertEqual(message.discussion_name, False)
+            discussion.name = 'Jean'
+            with discussion.important_messages.edit(0) as message:
+                self.assertEqual(message.discussion_name, 'Jean')
+
+            discussion.participants.add(message.author)
