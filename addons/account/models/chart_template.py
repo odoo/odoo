@@ -218,11 +218,19 @@ class AccountChartTemplate(models.AbstractModel):
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
                 del data['account.journal'][xmlid]
-            elif 'code' in journal_data:
-                journal = self.env['account.journal'].with_context(active_test=False).search([
-                    ('code', '=', journal_data['code']),
-                    ('company_id', '=', company.id),
-                ])
+            else:
+                if 'code' in journal_data:
+                    journal = self.env['account.journal'].with_context(active_test=False).search([
+                        ('code', '=', journal_data['code']),
+                        ('company_id', '=', company.id),
+                    ])
+                # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
+                if not journal and 'name' in journal_data and 'type' in journal_data:
+                    journal = self.env['account.journal'].with_context(active_test=False).search([
+                        ('type', '=', journal_data['type']),
+                        ('name', '=', journal_data['name']),
+                        ('company_id', '=', company.id),
+                    ], limit=1)
                 if journal:
                     del data['account.journal'][xmlid]
                     self.env['ir.model.data']._update_xmlids([{
