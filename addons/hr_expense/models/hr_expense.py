@@ -400,11 +400,14 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             attachment_name = '.'.join(attachment.name.split('.')[:-1])
-            expense = self.env['hr.expense'].create({
+            vals = {
                 'name': attachment_name,
                 'unit_amount': 0,
                 'product_id': product.id,
-            })
+            }
+            if product.property_account_expense_id:
+                vals['account_id'] = product.property_account_expense_id.id
+            expense = self.env['hr.expense'].create(vals)
             attachment.write({
                 'res_model': 'hr.expense',
                 'res_id': expense.id,
