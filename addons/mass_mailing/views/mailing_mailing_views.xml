@@ -232,7 +232,7 @@
                                 <field name="mailing_on_mailing_list" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
                                 <div attrs="{'invisible': [('mailing_on_mailing_list', '=', True)]}">
-                                    <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
+                                    <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real', 'foldable': true}"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                 </div>
                             </div>
