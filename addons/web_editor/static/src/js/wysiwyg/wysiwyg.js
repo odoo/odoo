@@ -324,8 +324,7 @@ export class Wysiwyg extends Component {
         let editorCollaborationOptions;
         if (
             options.collaborationChannel &&
-            // Hack: check if mail module is installed.
-            session.notification_type
+            this._hasICEServers()
         ) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             if (this.options.collaborativeTrigger === 'start') {
@@ -2864,6 +2863,12 @@ export class Wysiwyg extends Component {
     _bindOnBlur() {
         this.$editable.on('blur', this._onBlur);
     }
+
+    _hasICEServers() {
+        // Hack: check if mail module is installed.
+        session.notification_type
+    }
+
     /**
      * Saves a base64 encoded image as an attachment.
      * Relies on _saveModifiedImage being called after it for webp.
