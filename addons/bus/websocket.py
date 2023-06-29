@@ -574,7 +574,13 @@ class Websocket:
             code = CloseCode.SESSION_EXPIRED
         if code is CloseCode.SERVER_ERROR:
             reason = None
-            _logger.error(exc, exc_info=True)
+            registry = Registry(self._session.db)
+            sequence = registry.registry_sequence
+            registry = registry.check_signaling()
+            if sequence != registry.registry_sequence:
+                _logger.warning("Bus operation aborted; registry has been reloaded")
+            else:
+                _logger.error(exc, exc_info=True)
         self.disconnect(code, reason)
 
     def _limit_rate(self):
