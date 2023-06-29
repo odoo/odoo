@@ -59,11 +59,18 @@ const ShareWidget = publicWidget.Widget.extend({
 
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.title);
-        const media = encodeURIComponent(document.querySelector('meta[property="og:image"]').content);
+        const mediaEl = document.querySelector('meta[property="og:image"]');
+        let media = "";
+        if (mediaEl && mediaEl.content) {
+            media = encodeURIComponent(mediaEl.content);
+        }
 
         aEl.href = currentHref
             .replace(this.URL_REGEX, (match, a, b, c) => {
-                return a + url + c;
+                if (b === "{url}") {
+                    return a + url + c;
+                }
+                return a + b + c;
             })
             .replace(this.TITLE_REGEX, function (match, a, b, c) {
                 if (aEl.classList.contains('s_share_whatsapp')) {
@@ -74,10 +81,16 @@ const ShareWidget = publicWidget.Widget.extend({
                     // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
                     return `${a + title}%20${url + c}`;
                 }
-                return a + title + c;
+                if (b === "{title}") {
+                    return a + title + c;
+                }
+                return a + b + c;
             })
             .replace(this.MEDIA_REGEX, (match, a, b, c) => {
-                return a + media + c;
+                if (b === "{media}") {
+                    return a + media + c;
+                }
+                return a + b + c;
             });
 
         window.open(aEl.href, aEl.target, 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
