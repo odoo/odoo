@@ -30,8 +30,8 @@
                             <div class="mt16" attrs="{'invisible': [('hr_attendance_overtime', '=', False)],
                                                         'required': [('hr_attendance_overtime', '=', True)]}">
                                 <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
-                                    <label for="overtime_start_date" string="Start from" class="col-3 col-lg-3 o_light_label"/>
-                                    <field name="overtime_start_date" class="col-lg-3 p-0" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
+                                    <label for="overtime_start_date" string="Start from" class="o_light_label col-lg-3"/>
+                                    <field name="overtime_start_date" class="col-lg-3 w-75" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
                                 </div>
                                 <br/>
                                 <label for="overtime_company_threshold" class="o_form_label">
