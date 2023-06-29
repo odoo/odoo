@@ -1128,31 +1128,26 @@ class MassMailing(models.Model):
         Find inline base64 encoded images, make an attachement out of
         them and replace the inline image with an url to the attachement.
         """
-
-        def _image_to_url(b64image: bytes):
-            """Store an image in an attachement and returns an url"""
-            attachment = self.env['ir.attachment'].create({
-                'datas': b64image,
-                'name': "cropped_image_mailing_{}".format(self.id),
-                'type': 'binary',})
-
-            attachment.generate_access_token()
-
-            return '/web/image/%s?access_token=%s' % (
-                attachment.id, attachment.access_token)
-
-        modified = False
-        root = lxml.html.fromstring(body_html)
-        for node in root.iter('img'):
-            match = image_re.match(node.attrib.get('src', ''))
-            if match:
-                mime = match.group(1)  # unsed
-                image = match.group(2).encode()  # base64 image as bytes
-
-                node.attrib['src'] = _image_to_url(image)
-                modified = True
-
-        if modified:
-            return lxml.html.tostring(root, encoding='unicode')
-
+        base64_in_element_regex = re.compile(r"""
+                # Group 1: element until the base64 data
+                (<[^>]+\b(?:src="|style=["'][^"']+\burl\((?:&\#34;|"|'|&quot;)?))
+                data:image/[A-Za-z]+;base64,
+                (.*?) # Group 2: base64 image
+                ((?:(?:&\#34;|"|'|&quot;)?\))|") # Group 3: closing the property or attribute
+            """, re.VERBOSE)
+        do_match = True
+        while do_match:
+            (body_html, do_match) = re.subn(base64_in_element_regex, lambda x: x[1] + self._image_to_url(x[2].encode()) + x[3], body_html)
         return body_html
+
+    def _image_to_url(self, b64image: bytes):
+        """Store an image in an attachement and returns an url"""
+        attachment = self.env['ir.attachment'].create({
+            'datas': b64image,
+            'name': "cropped_image_mailing_{}".format(self.id),
+            'type': 'binary',})
+
+        attachment.generate_access_token()
+
+        return '/web/image/%s?access_token=%s' % (
+            attachment.id, attachment.access_token)
