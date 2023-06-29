@@ -36,12 +36,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.$currentAnimatedText = $();
 
         this.__onSelectionChange = ev => {
             this._toggleAnimatedTextButton();
         };
-        this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
 
         // editor_has_snippets is, amongst other things, in charge of hiding the
         // backend navbar with a CSS animation. But we also need to make it
@@ -58,7 +57,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     destroy() {
         this._super(...arguments);
-        this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
         clearTimeout(this._hideBackendNavbarTimeout);
         this.el.ownerDocument.body.classList.remove('editor_has_snippets_hide_backend_navbar');
@@ -300,7 +299,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
         const animatedText = this._getAnimatedTextElement();
         this.$('.o_we_animate_text').toggleClass('active', !!animatedText);
-        this.$currentAnimatedText = animatedText ? $(animatedText) : $();
     },
     /**
      * Displays the button that allows to highlight the animated text if there
@@ -439,8 +437,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
         const editable = this.options.wysiwyg.$editable[0];
         const range = getDeepRange(editable, { splitText: true, select: true, correctTripleClick: true });
-        if (this.$currentAnimatedText.length) {
-            this.$currentAnimatedText.contents().unwrap();
+        const animatedText = this._getAnimatedTextElement();
+        if (animatedText) {
+            $(animatedText).contents().unwrap();
             this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
             this._toggleHighlightAnimatedTextButton();
             ev.target.classList.remove('active');
