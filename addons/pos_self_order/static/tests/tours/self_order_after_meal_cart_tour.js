@@ -90,5 +90,10 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.check.isOrderline("Desk Organizer", "5.87", "dav", "S, Custom"),
         PosSelf.check.isOrderline("Desk Organizer", "11.74", "okkk", "L, Custom"),
         PosSelf.action.clickPrimaryBtn("Order"),
+
+        PosSelf.action.clickBack(),
+        PosSelf.check.isPrimaryBtn("My Orders"),
+        PosSelf.action.clickPrimaryBtn("My Orders"),
+        PosSelf.action.clickBack(),
     ],
 });

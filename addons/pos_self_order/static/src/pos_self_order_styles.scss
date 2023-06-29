@@ -8,10 +8,12 @@ body {
   position: fixed;
   box-sizing: border-box;
 }
+
 header {
   z-index: 1;
 }
-.dvh-100{
+
+.dvh-100 {
   // we specify the 100vh as a fallback in case the browser does not
   // know dvh
   height: 100vh !important;
@@ -21,4 +23,10 @@ header {
 .o-self-order-spinner-custom-height {
   height: 1rem;
   width: 1rem;
+}
+
+.o_self_closed_notification {
+  background-color: var(--gray-dark);
+  color: white;
+  padding: 5px;
 }

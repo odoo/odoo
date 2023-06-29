@@ -138,6 +138,11 @@ export class ProductMainView extends Component {
         // If a command line does not have a quantity greater than 0, we consider it deleted
         await this.selfOrder.getPricesFromServer();
         this.selfOrder.currentOrder.lines = lines.filter((o) => o.qty > 0);
-        this.router.back();
+
+        if (this.selfOrder.currentOrder.lines.length === 0) {
+            this.router.navigate("productList");
+        } else {
+            this.router.back();
+        }
     }
 }

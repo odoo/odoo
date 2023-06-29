@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.SelfOrderRoot" owl="1">
+        <div t-if="!selfOrder.ordering" class="o_self_closed_notification w-100 text-center" style="z-index:999">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+            The restaurant is currently closed
+        </div>
         <Router pos_config_id="selfOrder.pos_config_id">
             <t t-set-slot="default" route="`/menu/${selfOrder.pos_config_id}`">
                 <LandingPage />

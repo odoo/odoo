@@ -5,7 +5,7 @@
         <div class="d-flex flex-column dvh-100">
             <t t-set="categories" t-value="Array.from(selfOrder.categoryList)" />
             <header class="bg-white shadow-sm">
-                <NavBar class="shouldNavbarBeShown() ? '' : 'o_self_order_navbar_hide' " />
+                <NavBar class="shouldNavbarBeShown() ? '' : 'o_self_order_navbar_hide' " shadow="false" />
                 <div class="o_self_order_searchbar_filter d-flex justify-content-start align-items-center p-0 m-0 border-bottom">
                     <div t-if="search.isFocused" class="input-group d-flex align-items-center" >
                         <input type="text"

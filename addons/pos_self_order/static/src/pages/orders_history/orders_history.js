@@ -6,7 +6,7 @@ import { ProductCard } from "@pos_self_order/components/product_card/product_car
 import { Lines } from "@pos_self_order/components/lines/lines";
 import { PriceDetails } from "@pos_self_order/components/price_details/price_details";
 import { NavBar } from "@pos_self_order/components/navbar/navbar";
-import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class OrdersHistory extends Component {
     static template = "pos_self_order.OrdersHistory";
@@ -15,6 +15,7 @@ export class OrdersHistory extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        this.router = useService("router");
         this.state = useState({
             loadingProgress: true,
         });
@@ -35,10 +36,6 @@ export class OrdersHistory extends Component {
         if (order.state === "draft") {
             this.selfOrder.editedOrder = order;
             this.router.navigate("productList");
-        } else {
-            this.selfOrder.notification.add(_t("You cannot edit an posted order!"), {
-                type: "danger",
-            });
         }
     }
 }

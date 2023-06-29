@@ -8,11 +8,17 @@ export class NavBar extends Component {
     static props = {
         customText: { type: String, optional: true },
         class: { type: String, optional: true },
+        shadow: { type: Boolean, optional: true },
     };
     static defaultProps = { class: "" };
 
     setup() {
         this.router = useService("router");
         this.selfOrder = useSelfOrder();
+    }
+
+    get navbarClasses() {
+        const shadowClass = this.props.shadow ? " shadow-sm " : "";
+        return this.props.class + shadowClass;
     }
 }
