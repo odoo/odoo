@@ -1277,6 +1277,9 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Specify expense journal to generate accounting entries."))
 
+        if not self.employee_id.address_home_id:
+            raise UserError(_("The private address of the employee is required to post the expense report. Please add it on the employee form."))
+
     def _do_submit(self):
         self.write({'approval_state': 'submit'})
         self.sudo().activity_update()
