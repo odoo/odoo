@@ -463,7 +463,7 @@ class Applicant(models.Model):
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
+                'email_layout_xmlid': 'hr_recruitment.mail_notification_light_without_background'
             })
         return res
 
