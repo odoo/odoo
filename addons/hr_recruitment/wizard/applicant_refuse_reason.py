@@ -47,7 +47,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
             # TDE note: keeping 16.0 behavior, clean me please
             message_values = {
-                'email_layout_xmlid' : 'mail.mail_notification_light',
+                'email_layout_xmlid' : 'hr_recruitment.mail_notification_light_without_background',
             }
             if len(applicants) > 1:
                 applicants.with_context(active_test=True).message_mail_with_source(
