@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductMainView" owl="1">
         <div class="d-flex flex-column dvh-100">
-            <NavBar />
+            <NavBar shadow="true" />
             <div class="bg-white d-flex flex-column pt-3 overflow-auto h-100">
                 <div class="px-3">
                     <img t-if="props.product.has_image"
@@ -22,7 +22,7 @@
                     class="o_self_order_main_desc px-3 pb-3 text-muted"
                     t-esc="props.product.description_sale"
                     />
-                <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100">
+                <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100" t-if="selfOrder.ordering" >
                     <t t-if="props.product.attributes"
                         t-foreach="props.product.attributes"
                         t-as="attribute"

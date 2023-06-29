@@ -8,10 +8,7 @@ registry.category("web_tour.tours").add("self_order_after_each_cart_tour", {
     steps: [
         // Verify if the self is open and My Orders is not displayed because we are in "meal" mode
         PosSelf.check.isNotNotification(),
-        PosSelf.check.isPrimaryBtn("My Orders"),
-        PosSelf.action.clickPrimaryBtn("My Orders"),
-        PosSelf.check.isNoOrderInHistory(),
-        PosSelf.action.clickBack(),
+        PosSelf.check.isNotPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("View Menu"),
 
         // Add some products

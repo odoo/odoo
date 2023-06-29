@@ -8,9 +8,9 @@
             >
             <div class="d-flex flex-column w-100 py-1">
                 <h5 class="mb-0 text-900 fw-bold o_self_product_name" t-esc="props.product.name" />
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row align-items-center">
                     <span
-                        class="me-1 text-primary fw-bolder"
+                        class="me-1 text-primary fw-bolder small"
                         t-if="quantityInCart and selfOrder.ordering"
                         t-esc="`${quantityInCart}x`"
                         />

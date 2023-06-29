@@ -21,7 +21,7 @@
                     class="btn btn-primary py-3 my-2">
                     View Menu
                 </a>
-                <t t-if="selfOrder.ordering and selfOrder.self_order_mode === 'each'">
+                <t t-if="showMyOrderBtn()">
                     <hr class="bg-500"/>
                     <a
                         type="button"

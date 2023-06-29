@@ -46,14 +46,7 @@ export class SelfOrder {
             effect((state) => this.saveOrderToLocalStorage(state.orders), [this]);
         }
 
-        if (!this.has_active_session || this.self_order_mode === "qr_code") {
-            this.closeNotification = this.notification.add(
-                _t(
-                    "The restaurant is closed. You can browse the menu, but ordering is not available."
-                ),
-                { type: "warning" }
-            );
-        } else {
+        if (this.has_active_session && this.self_order_mode !== "qr_code") {
             this.ordering = true;
         }
 
@@ -137,7 +130,7 @@ export class SelfOrder {
             });
 
             this.editedOrder.access_token = order.access_token;
-            this.updateOrdersFromServer([order], [this.access_token]);
+            this.updateOrdersFromServer([order], [order.access_token]);
             this.editedOrder.computelastChangesSent();
 
             if (this.self_order_mode === "each") {

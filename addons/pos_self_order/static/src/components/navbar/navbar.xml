@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.NavBar" owl="1">
-        <nav t-attf-class="{{props.class}} o_self_order_navbar d-flex align-items-center bg-white border-bottom">
+        <nav t-attf-class="{{navbarClasses}} o_self_order_navbar d-flex align-items-center bg-white border-bottom" style="z-index:100">
             <button class="btn btn-link text-dark"
                     t-on-click="() => this.router.back()">
                 <i class="fa fa-fw fa-chevron-left"/>
