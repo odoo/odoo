@@ -277,6 +277,8 @@ class AccountChartTemplate(models.AbstractModel):
                             or (vals.get('tax_dest_id') and not self.ref(vals['tax_dest_id'], raise_if_not_found=False))
                         )
                     ]
+                    if not values['tax_ids']:
+                        del values['tax_ids']
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
