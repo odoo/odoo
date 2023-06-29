@@ -1161,8 +1161,11 @@ class AccountMoveLine(models.Model):
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
-    @api.constrains('account_id', 'journal_id', 'currency_id')
     def _check_constrains_account_id_journal_id(self):
+        # Avoid using api.constrains here as in case of a write on
+        # account move and account move line in the same operation, the check would be done
+        # before all write are complete, causing a false positive
+        self.flush_recordset()
         for line in self.filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
             account = line.account_id
             journal = line.move_id.journal_id
@@ -1424,6 +1427,7 @@ class AccountMoveLine(models.Model):
                 line._check_tax_lock_date()
 
         lines.move_id._synchronize_business_models(['line_ids'])
+        lines._check_constrains_account_id_journal_id()
         return lines
 
     def write(self, vals):
@@ -1500,6 +1504,8 @@ class AccountMoveLine(models.Model):
 
             result = super().write(vals)
             self.move_id._synchronize_business_models(['line_ids'])
+            if any(field in vals for field in ['account_id', 'currency_id']):
+                self._check_constrains_account_id_journal_id()
 
             if not self.env.context.get('tracking_disable', False):
                 # Log changes to move lines on each move
