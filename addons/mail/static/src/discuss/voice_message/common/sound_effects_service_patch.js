@@ -12,13 +12,13 @@ patch(SoundEffects.prototype, "discuss/voice_message/common", {
      * handle stop and start on voice messages
      * @param {import("@mail/discuss/voice_message/voice_analyser").VoiceAnalyser} voiceAnalyser
      */
-    onClickAnalyser(voiceAnalyser) {
+    onClickStartStop(voiceAnalyser) {
         if (
             this.activeAnalyser &&
             this.activeAnalyser !== voiceAnalyser &&
             this.activeAnalyser.state.playing
         ) {
-            this.activeAnalyser.soundEffectsService.onClickAnalyser(this.activeAnalyser);
+            this.activeAnalyser.soundEffectsService.onClickStartStop(this.activeAnalyser);
         }
         this.activeAnalyser = voiceAnalyser;
         if (voiceAnalyser.state.playing) {

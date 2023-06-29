@@ -11,6 +11,7 @@ export class VoiceAnalyser extends Component {
     static props = ["attachment"];
     static template = "mail.VoiceAnalyser";
 
+    canvasWidth;
     duration;
     dataArray;
     startTime;
@@ -29,13 +30,24 @@ export class VoiceAnalyser extends Component {
             paused: false,
             intervalId: false,
             visualTime: this.generateTime(Math.floor(this.duration / 1000)),
+            pointer: 0,
         });
-
         onMounted(async () => {
-            this.primaryColor = getComputedStyle(this.audioRef.el).getPropertyValue("--primary");
-            this.ctx = this.canvasRef.el.getContext("2d");
-            this.ctx.fillStyle = this.primaryColor;
-            this.fillBackground();
+            // this.primaryColor = getComputedStyle(this.audioRef.el).getPropertyValue("--primary");
+            // this.canvasWidth = this.canvasRef.el.width;
+            // this.ctx = this.canvasRef.el.getContext("2d");
+            // this.ctx.fillStyle = this.primaryColor;
+            // this.fillBackground();
+            this.wavesurfer = WaveSurfer.create({
+                container: "#waveform",
+                waveColor: "#137a7f",
+                progressColor: "purple",
+                //audioRate: 2,
+                //splitChannels: true,
+                //normalize: true,
+            });
+
+            this.wavesurfer.load("/mail/static/src/discuss/voice_message/common/audio.wav");
         });
         onWillUnmount(() => {
             this.state.playing = false;
@@ -43,7 +55,19 @@ export class VoiceAnalyser extends Component {
             this.analyser?.disconnect();
             clearInterval(this.state.intervalId);
         });
+        // onWillStart(() => {
+        //     loadJS("/mail/static/src/discuss/voice_message/wavesurfer.js");
+        // });
     }
+
+    playstop = () => {
+        if (this.wavesurfer.isPlaying()) {
+            this.wavesurfer.setCurrentTime(0);
+            this.wavesurfer.pause();
+        } else {
+            this.wavesurfer.play();
+        }
+    };
 
     fillBackground() {
         for (var i = 0; i < this.canvasRef.el.width; i += 6) {
@@ -114,5 +138,10 @@ export class VoiceAnalyser extends Component {
         return (
             (minute < 10 ? "0" + minute : minute) + " : " + (second < 10 ? "0" + second : second)
         );
+    }
+
+    onClickCanvas(ev) {
+        this.state.pointer = ev.offsetX;
+        return ev;
     }
 }

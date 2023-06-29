@@ -7,4 +7,7 @@ patch(Attachment.prototype, "discuss/voice_message/common", {
     get voiceDuration() {
         return this.duration;
     },
+    get isViewable() {
+        return !this.voiceDuration && this._super();
+    },
 });
