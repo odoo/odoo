@@ -63,9 +63,9 @@
                                         <field name="milestone_id" />
                                     </span>
                                     <br />
-                                    <t t-if="record.partner_id.value">
-                                        <field name="partner_id"/>
-                                    </t>
+                                    <span t-if="record.partner_id.value" t-att-title="record.partner_id.value">
+                                        <field name="partner_id" class="text-truncate d-block"/>
+                                    </span>
                                 </div>
                             </div>
                             <div class="o_kanban_record_body">
