@@ -129,6 +129,7 @@ class Savepoint:
         self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
         self.closed = True
 
+
 class _FlushingSavepoint(Savepoint):
     def __init__(self, cr):
         cr.flush()
@@ -139,9 +140,14 @@ class _FlushingSavepoint(Savepoint):
         super().rollback()
 
     def _close(self, rollback):
-        if not rollback:
-            self._cr.flush()
-        super()._close(rollback)
+        try:
+            if not rollback:
+                rollback = True     # trigger rollback in case flush() crashes
+                self._cr.flush()
+                rollback = False
+        finally:
+            super()._close(rollback)
+
 
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
