@@ -32,11 +32,26 @@ export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
             this.$editable = this.options.wysiwyg.getEditable();
         });
     },
+    /**
+     * @override
+     */
+    callPostSnippetDrop: async function ($target) {
+        $target.find('img[loading=lazy]').removeAttr('loading');
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _computeSnippetTemplates: function (html) {
+        const $html = $(`<div>${html}</div>`);
+        $html.find('img').attr('loading', 'lazy');
+        return this._super($html.html().trim());
+    },
     /**
      * @override
      */

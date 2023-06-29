@@ -535,6 +535,7 @@ export class MassMailingHtmlField extends HtmlField {
         for (const img of $container.find("img")) {
             const $img = $(img);
             const src = $img.attr("src");
+            $img.removeAttr('loading');
 
             let m = src.match(/^\/web\/image\/\w+\.s_default_image_(?:theme_[a-z]+_)?(.+)$/);
             if (!m) {
