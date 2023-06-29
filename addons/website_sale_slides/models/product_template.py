@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -15,3 +15,7 @@ class ProductTemplate(models.Model):
         type_mapping = super(ProductTemplate, self)._detailed_type_mapping()
         type_mapping['course'] = 'service'
         return type_mapping
+
+    @api.model
+    def _get_product_types_allow_zero_price(self):
+        return super()._get_product_types_allow_zero_price() + ["course"]
