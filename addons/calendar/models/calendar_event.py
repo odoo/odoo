@@ -1215,7 +1215,7 @@ class Meeting(models.Model):
         return self.name or ''
 
     @api.model
-    def _get_display_time(self, start, stop, zduration, zallday):
+    def _get_display_time(self, start, stop, zduration, zallday, simplified=False):
         """ Return date and time (from to from) based on duration with timezone in string. Eg :
                 1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
                 2) if event all day ,return : AllDay, July-31-2013
@@ -1241,6 +1241,7 @@ class Meeting(models.Model):
             duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
             display_time = _(
+                u"%(day)s, %(start)s to %(end)s (%(timezone)s)" if simplified else
                 u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
                 day=date_str,
                 start=time_str,
@@ -1251,6 +1252,7 @@ class Meeting(models.Model):
             dd_date = to_text(date_deadline.strftime(format_date))
             dd_time = to_text(date_deadline.strftime(format_time))
             display_time = _(
+                u"%(date_start)s, %(time_start)s to\n%(date_end)s, %(time_end)s (%(timezone)s)" if simplified else
                 u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
                 date_start=date_str,
                 time_start=time_str,
