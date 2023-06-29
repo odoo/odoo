@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class CouponProgram(models.Model):
     _inherit = 'coupon.program'
 
-    order_count = fields.Integer(compute='_compute_order_count')
+    order_count = fields.Integer(compute='_compute_order_count', copy=False)
 
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
