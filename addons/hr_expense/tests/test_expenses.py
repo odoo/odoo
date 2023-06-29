@@ -1106,3 +1106,23 @@ class TestExpenses(TestExpenseCommon):
         expense.total_amount = 90
 
         self.assertEqual(expense.unit_amount, 90, 'Unit amount should be the same as total amount was written to')
+
+    def test_expense_from_attachments(self):
+        # avoid passing through extraction when installed
+        if 'hr.expense.extract.words' in self.env:
+            self.env.company.expense_extract_show_ocr_option_selection = 'no_send'
+        self.env.user.employee_id = self.expense_employee.id
+        attachment = self.env['ir.attachment'].create({
+            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+        })
+        product = self.env['product.product'].search([('can_be_expensed', '=', True)])
+        # reproduce the same way we get the product by default
+        if product:
+            product = product.filtered(lambda p: p.default_code == "EXP_GEN") or product[0]
+        product.property_account_expense_id = self.company_data['default_account_payable']
+
+        self.env['hr.expense'].create_expense_from_attachments(attachment.id)
+        expense = self.env['hr.expense'].search([], order='id desc', limit=1)
+        self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
