@@ -11,11 +11,12 @@ import {
 import { Command } from "@mail/../tests/helpers/command";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
 import { browser } from "@web/core/browser/browser";
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("messaging menu");
 
@@ -492,11 +493,13 @@ QUnit.test('"Start a conversation" item selection opens chat', async (assert) =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
     await click("button:contains(Chat)");
     await click("button:contains(Start a conversation)");
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsOnce($, ".o-mail-ChatWindow-name[title='Gandalf']");
@@ -506,22 +509,26 @@ QUnit.test('"New channel" item selection opens channel (existing)', async (asser
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
     await click("button:contains(Channel)");
     await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     assert.containsOnce($, ".o-mail-ChatWindow-name[title='Gryffindors']");
 });
 
 QUnit.test('"New channel" item selection opens channel (new)', async (assert) => {
     patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
     await click("button:contains(Channel)");
     await click("button:contains(New Channel)");
     await insertText("input[placeholder='Add or join a channel']", "slytherins");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     assert.containsOnce($, ".o-mail-ChatWindow-name[title='slytherins']");
 });

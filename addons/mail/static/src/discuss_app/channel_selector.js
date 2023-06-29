@@ -9,6 +9,9 @@ import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { cleanTerm } from "@mail/utils/format";
 import { createLocalId, isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { _t } from "@web/core/l10n/translation";
+import { useDebounced } from "@web/core/utils/timing";
+
+export const DEBOUNCE_FETCH_SUGGESTION_TIME = 500;
 
 export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
@@ -31,6 +34,10 @@ export class ChannelSelector extends Component {
             onMounted(() => this.inputRef.el.focus());
         }
         this.markEventHandled = markEventHandled;
+        this.debouncedFetchSuggestions = useDebounced(
+            this.fetchSuggestions.bind(this),
+            DEBOUNCE_FETCH_SUGGESTION_TIME
+        );
     }
 
     async fetchSuggestions() {
@@ -192,7 +199,7 @@ export class ChannelSelector extends Component {
                 this.props.category.id === "channels"
                     ? "discuss.ChannelSelector.channel"
                     : "discuss.ChannelSelector.chat",
-            options: this.fetchSuggestions(),
+            options: this.debouncedFetchSuggestions(),
         };
     }
 }

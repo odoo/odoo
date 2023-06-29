@@ -10,6 +10,7 @@ import {
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { Command } from "../helpers/command";
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("call");
 
@@ -116,12 +117,14 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
     assert.containsNone($, ".o-mail-DiscussCategoryItem");
 
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
         key: "Enter",
@@ -138,13 +141,17 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
         { name: "Luigi" },
     ]);
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
     assert.containsNone($, ".o-mail-DiscussCategoryItem");
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "luigi"));
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
     await click(".o-mail-ChannelSelector-suggestion");
     await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
         key: "Enter",

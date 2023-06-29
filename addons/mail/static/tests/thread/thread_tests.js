@@ -21,6 +21,7 @@ import {
     patchWithCleanup,
     triggerEvents,
 } from "@web/../tests/helpers/utils";
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("thread");
 
@@ -543,10 +544,13 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce(
@@ -575,13 +579,19 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
             Command.create({ partner_id: partnerId_2 }),
         ],
     });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Te");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:eq(0)");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Te");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
@@ -639,13 +649,19 @@ QUnit.test("mention 2 different channels that have the same name", async (assert
             name: "my channel",
         },
     ]);
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#");
     await insertText(".o-mail-Composer-input", "m");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:eq(0)");
     await insertText(".o-mail-Composer-input", "#");
     await insertText(".o-mail-Composer-input", "m");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
@@ -674,11 +690,14 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const { openDiscuss } = await start();
+        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "email@odoo.com\n");
         await insertText(".o-mail-Composer-input", "@");
         await insertText(".o-mail-Composer-input", "Te");
+        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+        await nextTick();
+        await nextTick();
         await click(".o-mail-Composer-suggestion");
         await click(".o-mail-Composer-send");
         assert.containsOnce(
