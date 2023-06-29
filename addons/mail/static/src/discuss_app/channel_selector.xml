@@ -12,13 +12,14 @@
             t-on-click="(ev) => markEventHandled(ev, 'channelSelector.onClickInput')"
             t-on-keydown="onKeydownInput"
             type="text"
+            maxlength="100"
         />
     </div>
     <NavigableList class="'o-mail-ChannelSelector-list z-index-1'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="discuss.ChannelSelector.channel" owl="1">
-    <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+    <strong class="px-2 py-1 align-self-center flex-shrink-1 text-break">
         <t t-if="option.channelId === '__create__'">
             Create: #
         </t>
