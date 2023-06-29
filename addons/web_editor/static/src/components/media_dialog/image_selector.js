@@ -105,6 +105,31 @@ export class ImageSelector extends FileSelector {
         }
         domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);
+
+        // Optimized images (meaning they are related to an `original_id`) can
+        // only be shown in debug mode as the toggler to make those images
+        // appear is hidden when not in debug mode.
+        // There is thus no point to fetch those optimized images outside debug
+        // mode. Worst, it leads to bugs: it might fetch only optimized images
+        // when clicking on "load more" which will look like it's bugged as no
+        // images will appear on screen (they all will be hidden).
+        if (!this.env.debug) {
+            const subDomain = [false];
+
+            // Particular exception: if the edited image is an optimized
+            // image, we need to fetch it too so it's displayed as the
+            // selected image when opening the media dialog.
+            // We might get a few more optimized image than necessary if the
+            // original image has multiple optimized images but it's not a
+            // big deal.
+            const originalId = this.props.media && this.props.media.dataset.originalId;
+            if (originalId) {
+                subDomain.push(originalId);
+            }
+
+            domain.push(['original_id', 'in', subDomain]);
+        }
+
         return domain;
     }
 
