@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo import fields
@@ -2933,3 +2934,46 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)
+
+    def test_reconcile_cash_basis_lock_date(self):
+        """
+        Test that CABA entries are not blocked or postponed by the Period lock date
+        """
+        self.env.company.tax_exigibility = True
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2016-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'dudu',
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 30.0,
+                'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+            })],
+        })
+
+        invoice.action_post()
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 40,
+            'date': '2016-01-02',
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+
+        # Set the lock date after the journal entry date.
+        invoice.company_id.period_lock_date = fields.Date.from_string('2016-01-04')
+        (payment.move_id + invoice).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_credit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        self.assertEqual(caba_move.date, payment.date, "Caba entry should have the same date as the payment")
+
+        invoice.line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).remove_move_reconcile()
+
+        invoice.company_id.fiscalyear_lock_date = fields.Date.from_string('2016-01-03')
+        with self.assertRaises(UserError), self.cr.savepoint():
+            (payment.move_id + invoice).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
