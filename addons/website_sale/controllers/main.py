@@ -612,7 +612,10 @@ class WebsiteSale(http.Controller):
         ProductCategory = request.env['product.public.category']
 
         if category:
-            category = ProductCategory.browse(int(category)).exists()
+            try:
+                category = ProductCategory.browse(int(category)).exists()
+            except ValueError as e:
+                raise ValidationError(_("Invalid value error")) from e
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
