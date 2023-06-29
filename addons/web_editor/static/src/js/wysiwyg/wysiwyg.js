@@ -147,8 +147,7 @@ const Wysiwyg = Widget.extend({
         let editorCollaborationOptions;
         if (
             options.collaborationChannel &&
-            // Hack: check if mail module is installed.
-            this.getSession()['notification_type']
+            this._hasICEServers()
         ) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             if (this.options.collaborativeTrigger === 'start') {
@@ -2715,7 +2714,10 @@ const Wysiwyg = Widget.extend({
     _bindOnBlur() {
         this.$editable.on('blur', this._onBlur);
     },
-
+    _hasICEServers() {
+        // Hack: check if mail module is installed.
+        return !!this.getSession()['notification_type'];
+    },
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
 Wysiwyg.activeWysiwygs = new Set();
