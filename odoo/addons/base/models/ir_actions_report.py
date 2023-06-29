@@ -643,7 +643,7 @@ class IrActionsReport(models.Model):
             for record in records:
                 stream = None
                 attachment = None
-                if report_sudo.attachment:
+                if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
                     attachment = report_sudo.retrieve_attachment(record)
 
                     # Extract the stream from the attachment.
@@ -801,7 +801,7 @@ class IrActionsReport(models.Model):
         report_sudo = self._get_report(report_ref)
 
         # Generate the ir.attachment if needed.
-        if report_sudo.attachment:
+        if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
             attachment_vals_list = []
             for res_id, stream_data in collected_streams.items():
                 # An attachment already exists.

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+from base64 import b64decode
 
 import odoo
 import odoo.tests
@@ -40,3 +41,61 @@ class TestReports(odoo.tests.TransactionCase):
                     Report._render_qweb_html(report.id, report_records.ids)
             else:
                 continue
+
+    def test_report_reload_from_attachment(self):
+        def get_attachments(res_id):
+            return self.env["ir.attachment"].search([('res_model', "=", "res.partner"), ("res_id", "=", res_id)])
+
+        Report = self.env['ir.actions.report'].with_context(force_report_rendering=True)
+
+        report = Report.create({
+            'name': 'test report',
+            'report_name': 'base.test_report',
+            'model': 'res.partner',
+        })
+
+        self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'name': 'base.test_report',
+            'key': 'base.test_report',
+            'arch': '''
+                <main>
+                    <div class="article" data-oe-model="res.partner" t-att-data-oe-id="docs.id">
+                        <span t-field="docs.display_name" />
+                    </div>
+                </main>
+            '''
+        })
+
+        pdf_text = "0"
+        def _run_wkhtmltopdf(*args, **kwargs):
+            return bytes(pdf_text, "utf-8")
+
+        self.patch(type(Report), "_run_wkhtmltopdf", _run_wkhtmltopdf)
+
+        # sanity check: the report is not set to save attachment
+        # assert that there are no pre-existing attachment
+        partner_id = self.env.user.partner_id.id
+        self.assertFalse(get_attachments(partner_id))
+        pdf = report._render_qweb_pdf(report.id, [partner_id])
+        self.assertFalse(get_attachments(partner_id))
+        self.assertEqual(pdf[0], b"0")
+
+        # set the report to reload from attachment and make one
+        pdf_text = "1"
+        report.attachment = "'test_attach'"
+        report.attachment_use = True
+        report._render_qweb_pdf(report.id, [partner_id])
+        attach_1 = get_attachments(partner_id)
+        self.assertTrue(attach_1.exists())
+
+        # use the context key to not reload from attachment
+        # and not create another one
+        pdf_text = "2"
+        report = report.with_context(report_pdf_no_attachment=True)
+        pdf = report._render_qweb_pdf(report.id, [partner_id])
+        attach_2 = get_attachments(partner_id)
+        self.assertEqual(attach_2.id, attach_1.id)
+
+        self.assertEqual(b64decode(attach_1.datas), b"1")
+        self.assertEqual(pdf[0], b"2")
