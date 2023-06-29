@@ -19,17 +19,9 @@ import {
 import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 
 import { EventBus, toRaw } from "@odoo/owl";
-import { toDomain, toTree, formatValue, normalizeValue } from "@web/core/domain_tree";
-import {
-    createVirtualOperators,
-    extractIdsFromDomain,
-    extractPathsFromDomain,
-    leafToString,
-    useLoadDisplayNames,
-} from "@web/core/domain_selector/utils";
-import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
+import { toDomain, toTree } from "@web/core/domain_tree";
 import { _t } from "@web/core/l10n/translation";
-import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
+import { useGetDomainTreeDescription } from "@web/core/domain_selector/utils";
 
 const { DateTime } = luxon;
 
@@ -157,144 +149,6 @@ function execute(op, source, target) {
             }
         }
     }
-}
-
-/**
- * @param {Tree} tree
- * @returns {tree}
- */
-function simplifyTree(tree, isRoot = true) {
-    if (tree.type === "condition") {
-        return tree;
-    }
-    const processedChildren = tree.children.map((c) => simplifyTree(c, false));
-    if (tree.value === "&") {
-        return { ...tree, children: processedChildren };
-    }
-    const children = [];
-    const childrenByPath = {};
-    for (const child of processedChildren) {
-        if (
-            child.type === "connector" ||
-            typeof child.path !== "string" ||
-            !["=", "in"].includes(child.operator)
-        ) {
-            children.push(child);
-        } else {
-            if (!childrenByPath[child.path]) {
-                childrenByPath[child.path] = [];
-            }
-            childrenByPath[child.path].push(child);
-        }
-    }
-    for (const path in childrenByPath) {
-        if (childrenByPath[path].length === 1) {
-            children.push(childrenByPath[path][0]);
-            continue;
-        }
-        const value = [];
-        for (const child of childrenByPath[path]) {
-            if (child.operator === "=") {
-                value.push(child.value);
-            } else {
-                value.push(...child.value);
-            }
-        }
-        children.push({
-            type: "condition",
-            negate: false,
-            operator: "in",
-            path: path,
-            value: normalizeValue(value),
-        });
-    }
-    if (children.length === 1 && !isRoot) {
-        return { ...children[0] };
-    }
-    return { ...tree, children };
-}
-
-/**
- * @param {Tree} tree
- * @param {Function} getDescription
- * @param {boolean} [isSubExpression=true]
- * @returns {string}
- */
-function getDomainTreeDescription(
-    tree,
-    getFieldDef,
-    getDescription,
-    displayNames,
-    isSubExpression = true
-) {
-    if (tree.type === "connector") {
-        // we assume that the domain tree is normalized (--> there is at least two children)
-        const childDescriptions = tree.children.map((c) =>
-            getDomainTreeDescription(c, getFieldDef, getDescription, displayNames)
-        );
-        const separator = tree.value === "&" ? _t("and") : _t("or");
-        let description = childDescriptions.join(` ${separator} `);
-        if (isSubExpression || tree.negate) {
-            description = `( ${description} )`;
-        }
-        if (tree.negate) {
-            description = `! ${description}`;
-        }
-        return description;
-    }
-    const { negate, operator, path, value } = tree;
-    const fieldDef = getFieldDef(path);
-    const operatorInfo = getOperatorInfo(operator, negate);
-    const { operatorDescription, valueDescription } = leafToString(
-        fieldDef,
-        operatorInfo,
-        value,
-        displayNames[fieldDef?.relation]
-    );
-    let description = `${getDescription(path)} ${operatorDescription} `;
-    if (valueDescription) {
-        const { values, join, addParenthesis } = valueDescription;
-        const jointedValues = values.join(` ${join} `);
-        description += addParenthesis ? `( ${jointedValues} )` : jointedValues;
-    }
-    return description;
-}
-
-function useGetDomainTreeDescription(fieldService, nameService) {
-    const loadFieldInfo = useLoadFieldInfo(fieldService);
-    const loadPathDescription = useLoadPathDescription(fieldService);
-    const loadDisplayNames = useLoadDisplayNames(nameService);
-    return async (resModel, tree) => {
-        tree = simplifyTree(tree);
-        const domain = toDomain(tree);
-        const paths = extractPathsFromDomain(domain);
-        const promises = [];
-        const pathFieldDefs = {};
-        const pathDescriptions = {};
-        for (const path of paths) {
-            promises.push(
-                loadPathDescription(resModel, path).then(({ displayNames }) => {
-                    pathDescriptions[formatValue(path)] = displayNames.join(" 🠒 ");
-                }),
-                loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                    pathFieldDefs[formatValue(path)] = fieldDef;
-                })
-            );
-        }
-        await Promise.all(promises);
-        const getFieldDef = (path) => pathFieldDefs[formatValue(path)];
-        const getDescription = (path) => pathDescriptions[formatValue(path)];
-        const idsByModel = extractIdsFromDomain(domain, getFieldDef);
-        const treeWithVirtualOperators = createVirtualOperators(tree, getFieldDef);
-        const displayNames = await loadDisplayNames(idsByModel);
-        return getDomainTreeDescription(
-            treeWithVirtualOperators,
-            getFieldDef,
-            getDescription,
-            displayNames,
-            false
-        );
-    };
 }
 
 //--------------------------------------------------------------------------
