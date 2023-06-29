@@ -1,8 +1,10 @@
 /* @odoo-module */
 
+import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 import { useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export function useSuggestion() {
     const comp = useComponent();
@@ -124,9 +126,10 @@ export function useSuggestion() {
         state: useState({
             count: 0,
             items: undefined,
+            loading: false,
         }),
         update() {
-            if (!self.search.delimiter) {
+            if (!self.search.delimiter || self.state.loading) {
                 return;
             }
             const suggestions = suggestionService.searchSuggestions(
@@ -150,6 +153,10 @@ export function useSuggestion() {
             self.state.items = { type, mainSuggestions, extraSuggestions };
         },
     };
+    const debouncedFetchSuggestions = useDebounced(
+        (...args) => suggestionService.fetchSuggestions(...args),
+        DEBOUNCE_FETCH_SUGGESTION_TIME
+    );
     useEffect(
         () => {
             self.update();
@@ -157,12 +164,14 @@ export function useSuggestion() {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
-                await suggestionService.fetchSuggestions(self.search, {
+                self.state.loading = true;
+                await debouncedFetchSuggestions(self.search, {
                     thread: self.thread,
                     onFetched() {
                         if (owl.status(comp) === "destroyed") {
                             return;
                         }
+                        self.state.loading = false;
                         self.update();
                     },
                 });
