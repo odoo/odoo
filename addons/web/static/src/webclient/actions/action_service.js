@@ -1081,11 +1081,15 @@ function makeActionManager(env) {
             let success, message;
             env.services.ui.block();
             try {
+                const downloadContext = { ...env.services.user.context };
+                if (action.context) {
+                    Object.assign(downloadContext, action.context);
+                }
                 ({ success, message } = await downloadReport(
                     env.services.rpc,
                     action,
                     type,
-                    env.services.user.context
+                    downloadContext
                 ));
             } finally {
                 env.services.ui.unblock();

@@ -318,10 +318,14 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("context is correctly passed to the client action report", async (assert) => {
-        assert.expect(8);
+        assert.expect(9);
 
         mockDownload((options) => {
             assert.step(options.url);
+            assert.deepEqual(
+                options.data.context,
+                `{"lang":"en","uid":7,"tz":"taht","rabbia":"E Tarantella","active_ids":[99]}`
+            );
             assert.deepEqual(JSON.parse(options.data.data), [
                 "/report/pdf/ennio.morricone/99",
                 "qweb-pdf",
