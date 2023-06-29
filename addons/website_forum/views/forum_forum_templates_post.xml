@@ -52,7 +52,7 @@
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="question"/>
             </t>
-            <span t-field="question.write_date" t-options='{"format": "d MMMM y"}'/>, by <a t-attf-href="/forum/#{slug(question.forum_id)}/user/#{question.create_uid.id}?forum_origin=#{request.httprequest.path}" t-field="question.create_uid" class="d-inline-block fw-bold" t-options='{"widget": "contact", "fields": ["name"]}'/>
+            <span t-field="question.create_date" t-options='{"format": "d MMMM y"}'/>, by <a t-attf-href="/forum/#{slug(question.forum_id)}/user/#{question.create_uid.id}?forum_origin=#{request.httprequest.path}" t-field="question.create_uid" class="d-inline-block fw-bold" t-options='{"widget": "contact", "fields": ["name"]}'/>
         </div>
         <div>
             <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
