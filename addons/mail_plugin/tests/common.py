@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.http import request
 from odoo.tests.common import HttpCase
+from odoo import SUPERUSER_ID
 
 
 @contextmanager
@@ -19,7 +20,7 @@ def mock_auth_method_outlook(login):
     :param login: Login of the user used for the authentication
     """
     def patched_auth_method_outlook(*args, **kwargs):
-        request.update_env(user=request.env['res.users'].search([('login', '=', login)], limit=1))
+        request.update_env(user=request.env['res.users'].with_user(SUPERUSER_ID).search([('login', '=', login)], limit=1))
 
     with patch(
             'odoo.addons.mail_plugin.models.ir_http.IrHttp'

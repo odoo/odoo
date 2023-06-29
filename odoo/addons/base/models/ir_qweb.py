@@ -2425,7 +2425,7 @@ class IrQWeb(models.AbstractModel):
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
-        rtl = self.env['res.lang']._lang_get_direction(self.env.context.get('lang') or self.env.user.lang) == 'rtl'
+        rtl = self.env['res.lang'].sudo()._lang_get_direction(self.env.context.get('lang') or self.env.user.lang) == 'rtl'
         assets_params = self.env['ir.asset']._get_asset_params() # website_id
         debug_assets = debug and 'assets' in debug
 

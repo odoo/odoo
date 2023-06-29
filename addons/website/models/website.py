@@ -975,7 +975,7 @@ class Website(models.Model):
 
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
-        website_id = self._get_current_website_id(domain_name, fallback=fallback)
+        website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
     @tools.ormcache('domain_name', 'fallback')

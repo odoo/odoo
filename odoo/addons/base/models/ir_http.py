@@ -183,7 +183,8 @@ class IrHttp(models.AbstractModel):
         # verify the default language set in the context is valid,
         # otherwise fallback on the company lang, english or the first
         # lang installed
-        request.update_context(lang=get_lang(request.env)._get_cached('code'))
+        env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
+        request.update_context(lang=get_lang(env)._get_cached('code'))
 
     @classmethod
     def _dispatch(cls, endpoint):

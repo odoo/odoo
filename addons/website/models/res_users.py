@@ -60,7 +60,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_signup_invitation_scope(self):
-        current_website = self.env['website'].get_current_website()
+        current_website = self.env['website'].sudo().get_current_website()
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
 
     @classmethod
