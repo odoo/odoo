@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
-                <div attrs="{'invisible':[('country_code', '!=', 'KE')]}">
+                <div invisible="country_code != 'KE'">
                     <block title="Kenya TIMS Integration" id="l10n_ke_cu_details">
                         <setting
                             string="Tremol Device Settings"

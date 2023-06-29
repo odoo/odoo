@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <setting id="delivery" position="inside">
                 <div class="content-group">
-                    <div class="mt8" attrs="{'invisible': [('module_delivery','=',False)]}">
+                    <div class="mt8" invisible="not module_delivery">
                         <button name="%(delivery.action_delivery_carrier_form)d"
                                 type="action"
                                 class="btn-link"

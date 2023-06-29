@@ -39,8 +39,8 @@
                                     <t t-else="">Member</t>
                                 </span>
                                 <field name="is_member" invisible="1"/>
-                                <button type="object" attrs="{'invisible':[('is_member', '=', True)]}" class="btn btn-primary float-end" name="action_join">Join</button>
-                                <button type="object" attrs="{'invisible':[('is_member', '=', False)]}" class="btn btn-secondary float-end" name="action_leave">Leave</button>
+                                <button type="object" invisible="is_member" class="btn btn-primary float-end" name="action_join">Join</button>
+                                <button type="object" invisible="not is_member" class="btn btn-secondary float-end" name="action_leave">Leave</button>
                             </div>
                         </div>
                     </t>
@@ -54,14 +54,14 @@
         <field name="arch" type="xml">
             <form string="Mail Group">
                 <header>
-                    <button type="object" attrs="{'invisible':[('is_member', '=', True)]}"
+                    <button type="object" invisible="is_member"
                         class="btn btn-primary" name="action_join" string="Join"/>
-                    <button type="object" attrs="{'invisible':[('is_member', '=', False)]}"
+                    <button type="object" invisible="not is_member"
                         class="btn btn-secondary" name="action_leave" string="Leave"/>
                     <button name="action_send_guidelines" type="object" class="btn btn-secondary" string="Send Guidelines"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box" groups="base.group_user" attrs="{'invisible': [('can_manage_group', '=', False)]}">
+                    <div class="oe_button_box" name="button_box" groups="base.group_user" invisible="not can_manage_group">
                         <button name="%(mail_group.mail_group_member_action)d"
                                 type="action"
                                 context="{'search_default_mail_group_id': active_id}"
@@ -84,13 +84,13 @@
                                 class="oe_stat_button"
                                 icon="fa-commenting-o"
                                 help="Emails waiting an action for this group"
-                                attrs="{'invisible': [('moderation', '=', False)]}">
+                                invisible="not moderation">
                             <field name="mail_group_message_moderation_count" widget="statinfo" string="To Review"/>
                         </button>
                         <button name="%(mail_group.mail_group_moderation_action)d"
                                 type="action"
                                 context="{'search_default_mail_group_id': active_id}"
-                                attrs="{'invisible': [('moderation', '=', False)]}"
+                                invisible="not moderation"
                                 class="oe_stat_button"
                                 icon="fa-gavel"
                                 help="Moderated emails in this group">
@@ -110,20 +110,21 @@
                             <label for="alias_name" string="Email Alias"/>
                             <div class="oe_inline" name="alias_def">
                                 <field name="alias_id" class="oe_read_only oe_inline"
-                                    string="Email Alias" required="0"
-                                    attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                    string="Email Alias"
+                                    required="0"
+                                    invisible="not alias_domain"/>
                                 <div class="oe_inline" name="edit_alias" style="display: inline;" >
-                                    <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <div class="oe_edit_only" invisible="not alias_domain">
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
-                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" invisible="alias_domain"/>
                                 </div>
                             </div>
                             <field name="description"/>
                             <field name="moderation"/>
                             <td class="o_td_label">
-                                <label for="moderator_ids" string="Moderators" attrs="{'invisible': [('moderation', '=', False)]}"/>
-                                <label for="moderator_ids" string="Responsible Users" attrs="{'invisible': [('moderation', '=', True)]}"/>
+                                <label for="moderator_ids" string="Moderators" invisible="not moderation"/>
+                                <label for="moderator_ids" string="Responsible Users" invisible="moderation"/>
                             </td>
                             <field name="moderator_ids" widget="many2many_tags" class="oe_inline" nolabel="1"/>
                             <field name="is_moderator" invisible="1"/>
@@ -135,23 +136,20 @@
                         <page name="privacy" string="Privacy">
                             <group>
                                 <field name="access_mode" widget="radio"/>
-                                <field name="access_group_id" attrs="{
-                                    'invisible': [('access_mode', '!=', 'groups')],
-                                    'required': [('access_mode', '=', 'groups')],
-                                }"/>
+                                <field name="access_group_id" invisible="access_mode != 'groups'" required="access_mode == 'groups'"/>
                                 <field name="alias_contact" invisible="1"/>
                             </group>
                         </page>
-                        <page name="moderation" string="Notify Members" attrs="{'invisible': [('moderation', '=', False)]}">
+                        <page name="moderation" string="Notify Members" invisible="not moderation">
                             <group>
                                 <field name="moderation_notify"/>
-                                <field attrs="{'invisible': [('moderation_notify', '=', False)], 'required': [('moderation_notify', '=', True)]}" name="moderation_notify_msg"/>
+                                <field invisible="not moderation_notify" required="moderation_notify" name="moderation_notify_msg"/>
                             </group>
                         </page>
                         <page name="guidelines" string="Guidelines">
                             <group>
                                 <field name="moderation_guidelines"/>
-                                <field attrs="{'required':[('moderation_guidelines', '=', True)]}" name="moderation_guidelines_msg"/>
+                                <field required="moderation_guidelines" name="moderation_guidelines_msg"/>
                             </group>
                         </page>
                     </notebook>

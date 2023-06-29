@@ -8,8 +8,9 @@
         <field name="arch" type="xml">
             <data>
                 <field name="notification_type" position="after">
-                    <field name="odoobot_state" readonly="0" groups="base.group_no_one"
-                        attrs="{'invisible': [('share', '=', True)]}"/>
+                    <field name="odoobot_state" groups="base.group_no_one"
+                        readonly="0"
+                        invisible="share"/>
                 </field>
             </data>
         </field>
@@ -23,8 +24,9 @@
         <field name="arch" type="xml">
             <data>
                 <field name="signature" position="before">
-                    <field name="odoobot_state" readonly="0" groups="base.group_no_one"
-                        attrs="{'invisible': [('share', '=', True)]}"/>
+                    <field name="odoobot_state" groups="base.group_no_one"
+                        readonly="0"
+                        invisible="share"/>
                 </field>
             </data>
         </field>

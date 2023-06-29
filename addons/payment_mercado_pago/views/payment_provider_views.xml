@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'mercado_pago')]}">
+                <group invisible="code != 'mercado_pago'">
                     <field name="mercado_pago_access_token"
                            string="Access Token"
-                           attrs="{'required': [('code', '=', 'mercado_pago'), ('state', '!=', 'disabled')]}"
+                           required="code == 'mercado_pago' and state != 'disabled'"
                            password="True"/>
                 </group>
             </group>

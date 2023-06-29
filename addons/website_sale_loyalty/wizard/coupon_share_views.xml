@@ -16,17 +16,17 @@
                     </div>
                     <field name="share_link" widget="CopyClipboardURL" no_label="1"/>
                 </group>
-                <group attrs="{'invisible': [('id', '!=', False)]}">
+                <group invisible="id">
                     <group>
                         <field name="website_id" groups="website.group_multi_website" widget="selection"
-                            attrs="{'invisible': [('program_website_id', '!=', False)]}"/>
+                            invisible="program_website_id"/>
                         <field name="redirect"/>
                     </group>
                 </group>
                 <footer>
                     <button string="Done" class="btn-primary" special="cancel" data-hotkey="x"/>
                     <button string="Generate Short Link" class="btn-secondary" type="object" name="action_generate_short_link"
-                            attrs="{'invisible': ['|', ('website_id', '=', False), ('id', '!=', False)]}" data-hotkey="g"/>
+                            invisible="not website_id or id" data-hotkey="g"/>
                 </footer>
             </form>
         </field>

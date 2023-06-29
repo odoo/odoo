@@ -36,7 +36,7 @@
                 <sheet>
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group id="top-group">
                         <field name="active" invisible="1"/>
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
@@ -57,7 +57,7 @@
         <field name="arch" type="xml">
             <tree string="UTM Campaigns" multi_edit="1" sample="1">
                 <field name="title" string="Name" readonly="1"/>
-                <field name="name" invisible="1"/>
+                <field name="name" column_invisible="True"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="stage_id" decoration-bf="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

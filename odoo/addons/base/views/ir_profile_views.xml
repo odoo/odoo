@@ -39,10 +39,10 @@
                     <field name="session"/>
                     <field name="entry_count"/>
                     <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
-                    <field name="sql_count" attrs="{'invisible': [('sql_count', '=', 0)]}"/>
+                    <field name="sql_count" invisible="sql_count == 0"/>
                     <field name="speedscope_url" widget="url"/>
                 </group>
-                <group attrs="{'invisible': [('qweb','=', False)]}">
+                <group invisible="not qweb">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1" colspan="2"/>
                 </group>
             </form>

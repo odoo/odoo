@@ -12,7 +12,7 @@
                     <field name="user_id" domain="[('share', '=', False)]"/>
                     <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                 </group>
-                <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
+                <group string="Opportunities" invisible="name != 'merge'">
                     <field name="lead_id" invisible="1"/>
                     <field name="duplicated_lead_ids" colspan="2" nolabel="1">
                         <tree>
@@ -20,7 +20,7 @@
                             <field name="name"/>
                             <field name="type"/>
                             <field name="contact_name"/>
-                            <field name="country_id" invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
                             <field name="email_from"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>
@@ -28,10 +28,10 @@
                         </tree>
                     </field>
                 </group>
-                <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customer" col="1">
+                <group name="action" invisible="name != 'convert'" string="Customer" col="1">
                     <field name="action" nolabel="1" widget="radio"/>
                     <group col="2">
-                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" invisible="action != 'exist'" required="action == 'exist'"/>
                     </group>
                 </group>
                 <footer>

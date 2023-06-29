@@ -6,9 +6,10 @@
         <field name="arch" type="xml">
             <tree editable="top" sample="1">
                 <field name="email"
-                    required="1" force_save="1"
-                    attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                <field name="email_normalized" invisible="1" force_save="1"/>
+                    force_save="1"
+                    required="1"
+                    readonly="partner_id"/>
+                <field name="email_normalized" column_invisible="True" force_save="1"/>
                 <field name="partner_id"/>
                 <field name="mail_group_id"/>
             </tree>

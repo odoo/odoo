@@ -12,7 +12,7 @@
                     </div>
                     <field name="alternative_po_ids" nolabel="1" readonly="1">
                         <tree create="0" delete="0" edit="0">
-                            <field name="partner_id"/>
+                            <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
                             <field name="amount_total"/>

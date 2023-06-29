@@ -46,11 +46,11 @@
                         <group>
                             <field name="room_max_capacity" widget="radio" options="{'horizontal': true}"/>
                             <field name="room_lang_id" options="{'no_create': True}"/>
-                            <field name="chat_room_id" required="0" attrs="{'invisible': [('id', '=', False)]}"/>
-                            <field name="room_participant_count" readonly="1" attrs="{'invisible': [('id', '=', False)]}"/>
+                            <field name="chat_room_id" required="0" invisible="not id"/>
+                            <field name="room_participant_count" readonly="1" invisible="not id"/>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': [('id', '=', False)]}">
+                    <notebook invisible="not id">
                         <page name="Reporting" string="Reporting">
                             <group>
                                 <field name="room_last_activity"/>

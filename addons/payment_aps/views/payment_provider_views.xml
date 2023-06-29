@@ -7,21 +7,21 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'aps')]}">
+                <group invisible="code != 'aps'">
                     <field name="aps_merchant_identifier"
                            string="Merchant Identifier"
-                           attrs="{'required': [('code', '=', 'aps'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'aps' and state != 'disabled'"/>
                     <field name="aps_access_code"
                            string="Access Code"
-                           attrs="{'required': [('code', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           required="code == 'aps' and state != 'disabled'"
                            password="True"/>
                     <field name="aps_sha_request"
                            string="SHA Request Phrase"
-                           attrs="{'required': [('code', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           required="code == 'aps' and state != 'disabled'"
                            password="True"/>
                     <field name="aps_sha_response"
                            string="SHA Response Phrase"
-                           attrs="{'required': [('code', '=', 'aps'), ('state', '!=', 'disabled')]}"
+                           required="code == 'aps' and state != 'disabled'"
                            password="True"/>
                 </group>
             </group>

@@ -28,10 +28,10 @@
                           <group>
                             <field name="padding"/>
                             <field name="number_increment"/>
-                            <field name="number_next_actual" string="Next Number" attrs="{'invisible': [('use_date_range', '=', True)]}"/>
+                            <field name="number_next_actual" string="Next Number" invisible="use_date_range"/>
                           </group>
                         </group>
-                        <field name="date_range_ids" attrs="{'invisible': [('use_date_range', '=', False)]}">
+                        <field name="date_range_ids" invisible="not use_date_range">
                             <tree string="Sequences" editable="top">
                                 <field name="date_from"/>
                                 <field name="date_to"/>
@@ -57,7 +57,7 @@
                                 <span colspan="2">Second: %%(sec)s</span>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('use_date_range', '=', False)]}">
+                        <group invisible="not use_date_range">
                             <div>
                                 When subsequences per date range are used, you can prefix variables with 'range_'
                                 to use the beginning of the range instead of the current date, e.g. %%(range_year)s instead of %%(year)s.

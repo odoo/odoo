@@ -8,7 +8,7 @@
                 <group>
                     <field name="orderpoint_ids" invisible="1"/>
                     <field name="predefined_date" widget="radio"/>
-                    <field name="snoozed_until" attrs="{'readonly': [('predefined_date', '!=', 'custom')]}" force_save="1"/>
+                    <field name="snoozed_until" readonly="predefined_date != 'custom'" force_save="1"/>
                 </group>
                 <footer>
                     <button string="Snooze" name="action_snooze" type="object" class="btn-primary" data-hotkey="q"/>

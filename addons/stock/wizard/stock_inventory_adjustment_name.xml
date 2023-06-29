@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <div>
-                    <div attrs="{'invisible': [('show_info', '=', False)]}">
+                    <div invisible="not show_info">
                         Some selected lines don't have any quantities set, they will be ignored.
                     </div>
                     <group>

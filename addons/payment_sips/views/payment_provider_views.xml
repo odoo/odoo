@@ -7,13 +7,13 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'sips')]}">
-                    <field name="sips_merchant_id" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
-                    <field name="sips_secret" string="Secret Key" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="sips_key_version" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}" />
-                    <field name="sips_test_url" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
-                    <field name="sips_prod_url" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
-                    <field name="sips_version" attrs="{'required':[ ('code', '=', 'sips'), ('state', '!=', 'disabled')]}" />
+                <group invisible="code != 'sips'">
+                    <field name="sips_merchant_id" required="code == 'sips' and state != 'disabled'"/>
+                    <field name="sips_secret" string="Secret Key" required="code == 'sips' and state != 'disabled'" password="True"/>
+                    <field name="sips_key_version" required="code == 'sips' and state != 'disabled'" />
+                    <field name="sips_test_url" required="code == 'sips' and state != 'disabled'" groups='base.group_no_one'/>
+                    <field name="sips_prod_url" required="code == 'sips' and state != 'disabled'" groups='base.group_no_one'/>
+                    <field name="sips_version" required="code == 'sips' and state != 'disabled'" />
                 </group>
             </group>
         </field>

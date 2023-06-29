@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <group name="sale_info_group" position="inside">
                 <field name="website_id"
-                       attrs="{'invisible': [('website_id', '=', False)]}"
+                       invisible="not website_id"
                        groups="website.group_multi_website"/>
             </group>
         </field>

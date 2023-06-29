@@ -29,12 +29,14 @@
         <field name="inherit_id" ref="website_slides.slide_slide_partner_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='completed']" position="after">
-                <field name="survey_scoring_success" readonly="1"
-                    attrs="{'invisible': [('slide_category', '!=', 'certification')]}"/>
+                <field name="survey_scoring_success"
+                    readonly="1"
+                    invisible="slide_category != 'certification'"/>
             </xpath>
             <xpath expr="//group[@name='main_content']" position="after">
-                <field name="user_input_ids" mode="tree" readonly="1"
-                    attrs="{'invisible': [('slide_category', '!=', 'certification')]}"/>
+                <field name="user_input_ids" mode="tree"
+                    readonly="1"
+                    invisible="slide_category != 'certification'"/>
             </xpath>
         </field>
     </record>

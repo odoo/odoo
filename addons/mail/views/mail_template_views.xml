@@ -11,7 +11,7 @@
                         <button string="Reset Template"
                                 name="%(mail_template_reset_action)d" type="action"
                                 groups="mail.group_mail_template_editor"
-                                attrs="{'invisible': [('template_fs', '=', False)]}"/>
+                                invisible="not template_fs"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -19,7 +19,7 @@
                             <button class="oe_stat_button"
                                     groups="base.group_no_one"
                                     name="create_action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
+                                    invisible="ref_ir_act_window" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Add</span>
@@ -29,7 +29,7 @@
                             <button name="unlink_action" type="object"
                                     groups="base.group_no_one"
                                     class="oe_stat_button" icon="fa-minus"
-                                    attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
+                                    invisible="not ref_ir_act_window"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Remove</span>
@@ -60,7 +60,7 @@
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html" class="oe-bordered-editor"
                                     options="{'style-inline': true, 'codeview': true, 'dynamic_placeholder': true}"
-                                    attrs="{'readonly': [('can_write', '=', False), ('id', '!=', False)]}"/>
+                                    readonly="not can_write and id"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                             <page string="Email Configuration" name="email_configuration">
@@ -68,11 +68,11 @@
                                     <field name="email_from"
                                             placeholder="Override author's email"/>
                                     <field name="use_default_to"/>
-                                    <field name="email_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                    <field name="email_to" invisible="use_default_to"
                                             placeholder="Comma-separated recipient addresses"/>
-                                    <field name="partner_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                    <field name="partner_to" invisible="use_default_to"
                                             placeholder="Comma-separated ids of recipient partners"/>
-                                    <field name="email_cc" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                    <field name="email_cc" invisible="use_default_to"
                                             placeholder="Comma-separated carbon copy recipients addresses"/>
                                     <field name="reply_to"
                                             placeholder="Email address to which replies will be redirected when sending emails in mass"/>
@@ -100,7 +100,7 @@
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
-                    <field name="mail_server_id" invisible="1"/>
+                    <field name="mail_server_id" column_invisible="True"/>
                     <field name="name"/>
                     <field name="model_id" groups="base.group_no_one"/>
                     <field name="description"/>

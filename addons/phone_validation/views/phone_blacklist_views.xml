@@ -19,13 +19,13 @@
                 <header>
                     <button name="phone_action_blacklist_remove" string="Unblacklist"
                         type="object" class="oe_highlight" context="{'default_phone': number}"
-                        attrs="{'invisible': ['|', ('active', '=', False), ('number', '=', False)]}"/>
+                        invisible="not active or not number"/>
                     <button name="action_add" string="Blacklist"
                         type="object" class="oe_highlight"
-                        attrs="{'invisible': ['|', ('active', '=', True), ('number', '=', False)]}"/>
+                        invisible="active or not number"/>
                 </header>
                 <sheet>
-                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
                             <field name="number"/>

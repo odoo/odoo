@@ -72,9 +72,9 @@
                         <field name="name" />
                         <field name="sequence" />
                         <field name="type"/>
-                        <field name="encoding" attrs="{'invisible': [('type','=', 'alias')]}"/>
+                        <field name="encoding" invisible="type == 'alias'"/>
                         <field name="pattern" />
-                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>
+                        <field name="alias" invisible="type != 'alias'"/>
                     </group>
                 </form>
             </field>

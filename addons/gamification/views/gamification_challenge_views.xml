@@ -19,9 +19,9 @@
         <field name="arch" type="xml">
             <form string="Challenge">
                 <header>
-                    <button string="Start Challenge" type="object" name="action_start" states="draft" class="oe_highlight"/>
-                    <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
-                    <button string="Send Report" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
+                    <button string="Start Challenge" type="object" name="action_start" invisible="state != 'draft'" class="oe_highlight"/>
+                    <button string="Refresh Challenge" type="object" name="action_check" invisible="state != 'inprogress'"/>
+                    <button string="Send Report" type="object" name="action_report_progress" invisible="state not in ('inprogress', 'done')" groups="base.group_no_one"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -37,7 +37,7 @@
                                 name="%(goals_from_challenge_act)d"
                                 class="oe_stat_button"
                                 icon="fa-gift"
-                                attrs="{'invisible': [('state','=','draft')]}">
+                                invisible="state == 'draft'">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Related Goals</span>
                             </div>
@@ -55,13 +55,13 @@
                     </div>
                     <group>
                         <group>
-                            <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="period" readonly="state != 'draft'"/>
                             <field name="visibility_mode" widget="radio" colspan="1" />
                         </group>
                         <group>
                             <field name="manager_id"/>
-                            <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="end_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
                         </group>
                     </group>
                     <notebook>
@@ -79,11 +79,11 @@
                         </page>
                         <page string="Reward" name="reward">
                             <group>
-                                <field name="reward_id" attrs="{'required': [('reward_realtime','=', True)]}" />
+                                <field name="reward_id" required="reward_realtime" />
                                 <field name="reward_first_id" />
-                                <field name="reward_second_id" attrs="{'invisible': [('reward_first_id','=', False)]}" />
-                                <field name="reward_third_id" attrs="{'invisible': ['|',('reward_first_id','=', False),('reward_second_id','=', False)]}" />
-                                <field name="reward_failure" attrs="{'invisible': [('reward_first_id','=', False)]}" />
+                                <field name="reward_second_id" invisible="not reward_first_id" />
+                                <field name="reward_third_id" invisible="not reward_first_id or not reward_second_id" />
+                                <field name="reward_failure" invisible="not reward_first_id" />
                                 <field name="reward_realtime" />
                             </group>
                             <div class="oe_grey">
@@ -100,8 +100,8 @@
                                 </div>
                                 <group colspan="4">
                                     <field name="report_message_frequency"/>
-                                    <field name="report_template_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                                    <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                    <field name="report_template_id" invisible="report_message_frequency == 'never'" />
+                                    <field name="report_message_group_id" invisible="report_message_frequency == 'never'" />
                                 </group>
                             </group>
                             <group string="Reminders for Manual Goals">

@@ -10,10 +10,10 @@
                 <field name="company_id" invisible="1"/>
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
-                     attrs="{'invisible': [('display_complete', '=', False)]}">
+                     invisible="not display_complete">
                         <button class="oe_stat_button" name="action_lot_open_transfers"
                                 type="object" icon="fa-truck" help="Transfers"
-                                attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                                invisible="delivery_count == 0">
                             <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
                         <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" type="object">
@@ -36,20 +36,20 @@
                 <group name="main_group">
                     <group>
                         <field name="product_id" context="{'default_detailed_type': 'product', 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
-                        <label for="product_qty" attrs="{'invisible': [('display_complete', '=', False)]}"/>
-                        <div class="o_row" attrs="{'invisible': [('display_complete', '=', False)]}">
+                        <label for="product_qty" invisible="not display_complete"/>
+                        <div class="o_row" invisible="not display_complete">
                             <field name="product_qty"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="location_id" attrs="{'invisible': [('location_id', '=', False)]}" groups="stock.group_stock_manager"/>
-                        <field name="last_delivery_partner_id" attrs="{'invisible': [('last_delivery_partner_id', '=', False)]}" groups="stock.group_stock_manager"/>
+                        <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
+                        <field name="last_delivery_partner_id" invisible="not last_delivery_partner_id" groups="stock.group_stock_manager"/>
                     </group>
                     <group></group>
                     <field name="lot_properties" nolabel="1" columns="2"/>
                 </group>
-                <notebook attrs="{'invisible': [('display_complete', '=', False)]}">
+                <notebook invisible="not display_complete">
                     <page string="Description" name="description">
                         <field name="note"/>
                     </page>

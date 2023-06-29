@@ -17,24 +17,9 @@
         <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
         <field name="arch" type="xml">
             <field name="l10n_latam_document_number" position="attributes">
-                <attribute name="attrs">{
-                    'invisible': [
-                    '|',
-                        ('l10n_latam_use_documents', '=', False),
-                        ('l10n_latam_manual_document_number', '=', False),
-                    '|', '|',
-                        ('l10n_latam_use_documents', '=', False),
-                        ('highest_name', '!=', False),
-                        ('state', '!=', 'draft'),
-                    '|', '|', '|',
-                        ('l10n_latam_use_documents', '=', False),
-                        ('posted_before', '=', False),
-                        ('state', '!=', 'draft'),
-                        ('country_code', '!=', 'CL')
-                    ],
-                    'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')],
-                    'required': ['|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)]}
-                </attribute>
+                <attribute name="invisible">(not l10n_latam_use_documents or not l10n_latam_manual_document_number) and (not l10n_latam_use_documents or highest_name or state != 'draft') and (not l10n_latam_use_documents or not posted_before or state != 'draft' or country_code != 'CL')</attribute>
+                <attribute name="readonly">posted_before and state != 'draft'</attribute>
+                <attribute name="required">l10n_latam_manual_document_number or not highest_name</attribute>
             </field>
         </field>
     </record>
@@ -45,25 +30,25 @@
         <field name="arch" type="xml">
             <tree decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
                 <field name="l10n_latam_document_type_id_code"/>
-                <field name="l10n_latam_document_number" string="Folio"/>
+                <field name="l10n_latam_document_number" string="Folio" readonly="state != 'draft'"/>
                 <field name="partner_id_vat"/>
-                <field name="partner_id"/>
-                <field name="invoice_date" optional="show"/>
+                <field name="partner_id" readonly="state != 'draft'"/>
+                <field name="invoice_date" optional="show" readonly="state != 'draft'"/>
                 <field name="invoice_date_due" optional="show"/>
-                <field name="date" string="Accounting Date" optional="show"/>
+                <field name="date" string="Accounting Date" optional="show" readonly="state in ['cancel', 'posted']"/>
                 <field name="payment_reference" optional="hide"/>
-                <field name="invoice_user_id" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person"/>
+                <field name="invoice_user_id" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" string="Sales Person"/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="invoice_origin" optional="show" string="Source Document"/>
                 <field name="amount_untaxed_signed" string="Amount Untaxed" sum="Total" optional="show"/>
                 <field name="amount_tax_signed" string="Tax" sum="Total" optional="show"/>
                 <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
                 <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="company_currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
+                <field name="company_currency_id" column_invisible="True"/>
                 <field name="state" optional="show"/>
                 <field name="payment_state" optional="hide"/>
-                <field name="move_type" invisible="context.get('default_move_type', True)"/>
+                <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
             </tree>
         </field>
     </record>

@@ -11,14 +11,14 @@
                 <button name="action_invite_contacts" type="object" string="Invite"
                     class="btn btn-primary"
                     groups="mass_mailing.group_mass_mailing_user"
-                    attrs="{'invisible': [('event_registrations_open', '=', False)]}"/>
+                    invisible="not event_registrations_open"/>
                 <button name="action_invite_contacts" type="object" string="Invite"
                     class="btn btn-secondary"
                     groups="mass_mailing.group_mass_mailing_user"
-                    attrs="{'invisible': [('event_registrations_open', '=', True)]}"/>
+                    invisible="event_registrations_open"/>
                 <button name="action_mass_mailing_attendees" type="object" string="Contact Attendees"
                     groups="mass_mailing.group_mass_mailing_user"
-                    attrs="{'invisible': [('seats_expected', '=', 0)]}"/>
+                    invisible="seats_expected == 0"/>
             </xpath>
         </field>
     </record>

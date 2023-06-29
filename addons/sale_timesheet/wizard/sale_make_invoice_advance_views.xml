@@ -13,8 +13,7 @@
                 <field name="invoicing_timesheet_enabled" invisible="1"/>
                 <group
                     name="timesheet_invoice_date_range"
-                    attrs="{'invisible': ['|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
-                >
+                    invisible="not invoicing_timesheet_enabled or advance_payment_method != 'delivered'">
                     <field
                         name="date_start_invoice_timesheet"
                         widget="daterange"

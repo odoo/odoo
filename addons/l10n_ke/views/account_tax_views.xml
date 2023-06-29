@@ -20,7 +20,7 @@
                 <field name="l10n_ke_item_code_id"
                        string="KRA Item Code"
                        domain="[] if amount_type != 'percent' else [('tax_rate', 'in', ['C','E'] if amount == 0 else ['B'] if amount == 8 else [False])]"
-                       attrs="{'invisible': [('country_code', '!=', 'KE')]}"/>
+                       invisible="country_code != 'KE'"/>
             </xpath>
         </field>
     </record>

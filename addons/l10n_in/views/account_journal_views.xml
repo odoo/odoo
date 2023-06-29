@@ -5,11 +5,11 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <field name='profit_account_id' position="attributes">
-                <attribute name="attrs">{'invisible': ['|', '&amp;', ('country_code', '!=', 'IN'), ('type', '!=', 'cash'), '&amp;', ('country_code', '=', 'IN'), ('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}</attribute>
+            <field name="profit_account_id" position="attributes">
+                <attribute name="invisible">country_code != 'IN' and type != 'cash' or country_code == 'IN' and type not in ['bank', 'cash', 'sale', 'purchase']</attribute>
             </field>
-            <field name='loss_account_id' position="attributes">
-                <attribute name="attrs">{'invisible': ['|', '&amp;', ('country_code', '!=', 'IN'), ('type', '!=', 'cash'), '&amp;', ('country_code', '=', 'IN'), ('type', 'not in', ['bank', 'cash', 'sale', 'purchase'])]}</attribute>
+            <field name="loss_account_id" position="attributes">
+                <attribute name="invisible">country_code != 'IN' and type != 'cash' or country_code == 'IN' and type not in ['bank', 'cash', 'sale', 'purchase']</attribute>
             </field>
         </field>
     </record>

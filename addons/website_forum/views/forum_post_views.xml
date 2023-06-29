@@ -14,7 +14,7 @@
                         </div>
                     </button>
                 </div>
-                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <label for="name"/>
                 <h1>
                     <field name="name" placeholder="e.g. When should I plant my tomatoes?"/>
@@ -24,14 +24,14 @@
                         <field name="active" invisible="1"/>
                         <field name="forum_id"/>
                         <field name="website_id" groups="website.group_multi_website"/>
-                        <field name="parent_id" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                        <field name="parent_id" invisible="not parent_id"/>
                     </group>
                     <group name="post_details">
                         <field name="tag_ids" widget="many2many_tags"/>
                         <field name="state"/>
-                        <field name="closed_reason_id" attrs="{'invisible': [('closed_reason_id', '=', False)]}"/>
-                        <field name="closed_uid" attrs="{'invisible': [('closed_uid', '=', False)]}"/>
-                        <field name="closed_date" attrs="{'invisible': [('closed_date', '=', False)]}"/>
+                        <field name="closed_reason_id" invisible="not closed_reason_id"/>
+                        <field name="closed_uid" invisible="not closed_uid"/>
+                        <field name="closed_date" invisible="not closed_date"/>
                     </group>
                     <group name="creation_details">
                         <field name="create_uid"/>
@@ -40,7 +40,7 @@
                         <field name="write_date"/>
                     </group>
                     <group name="post_statistics">
-                        <field name="is_correct" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                        <field name="is_correct" invisible="not parent_id"/>
                         <field name="views"/>
                         <field name="vote_count"/>
                         <field name="favourite_count"/>
@@ -48,7 +48,7 @@
                         <field name="relevancy"/>
                     </group>
                 </group>
-                <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
+                <group name="answers" string="Answers" invisible="parent_id">
                     <field name="child_ids" nolabel="1" colspan="2">
                         <tree>
                             <field name="create_uid" string="Answered by"/>
@@ -111,7 +111,7 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <tree create="false" type="object" action="go_to_website">
-            <field name="active" invisible="1"/>
+            <field name="active" column_invisible="True"/>
             <field name="name"/>
             <field name="website_url"/>
 

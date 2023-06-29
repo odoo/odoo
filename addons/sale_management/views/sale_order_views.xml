@@ -9,8 +9,8 @@
             <page name="order_lines" position="after">
                 <page string="Optional Products"
                     name="optional_products"
-                    attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}">
-                    <field name="sale_order_option_ids" mode="tree,kanban">
+                    invisible="state not in ['draft', 'sent']">
+                    <field name="sale_order_option_ids" mode="tree,kanban" readonly="state in ['cancel', 'sale']">
                         <form string="Optional Products">
                             <group>
                                 <field name="product_id"
@@ -46,7 +46,7 @@
                                                     class="btn btn-link oe_link fa fa-shopping-cart"
                                                     title="Add to order lines"
                                                     type="object"
-                                                    attrs="{'invisible': [('is_present', '=', True)]}"/>
+                                                    invisible="is_present"/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -82,19 +82,19 @@
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
-                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="product_uom_category_id" column_invisible="True"/>
                             <field name="price_unit"/>
                             <field name="discount"
                                 string="Disc.%"
                                 groups="product.group_discount_per_so_line"
                                 optional="show"/>
-                            <field name="is_present" invisible="1" />
+                            <field name="is_present" column_invisible="True" />
                             <button name="button_add_to_order"
                                 type="object"
                                 class="oe_link"
                                 icon="fa-shopping-cart"
                                 title="Add to order lines"
-                                attrs="{'invisible': [('is_present', '=', True)]}"/>
+                                invisible="is_present"/>
                         </tree>
                     </field>
                 </page>
@@ -104,7 +104,7 @@
                 <field name="sale_order_template_id"
                     options="{'no_create': True}"
                     groups="sale_management.group_sale_order_template"
-                />
+                 readonly="state in ['cancel', 'sale']"/>
             </field>
         </field>
     </record>

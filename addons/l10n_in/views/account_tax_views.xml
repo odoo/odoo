@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <field name="is_base_affected" position="after">
-                <field name="l10n_in_reverse_charge" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('country_code', '!=', 'IN')]}"/>
+                <field name="l10n_in_reverse_charge" invisible="amount_type == 'group' or country_code != 'IN'"/>
             </field>
         </field>
     </record>

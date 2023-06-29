@@ -148,7 +148,7 @@
                         <field name="wishlist_visitor_count" invisible="1"/>
                         <button name="%(website_event_track.website_visitor_action_from_track)d"
                             type="action" class="oe_stat_button" icon="fa-bell"
-                            groups="event.group_event_user" attrs="{'invisible': [('wishlist_visitor_count', '=', 0)]}">
+                            groups="event.group_event_user" invisible="wishlist_visitor_count == 0">
                             <field name="wishlist_visitor_count" string="Wishlisted By" widget="statinfo"/>
                         </button>
                         <field name="is_published" widget="website_redirect_button"/>
@@ -156,7 +156,7 @@
                     <field name="legend_blocked" invisible="1"/>
                     <field name="legend_normal" invisible="1"/>
                     <field name="legend_done" invisible="1"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="d-flex gap-4 mb-3">
                         <div class="flex-grow-1">
                             <label for="name"/>
@@ -188,8 +188,8 @@
                             <group string="Contact Details" class="display-flex justify-content-between">
                                 <group>
                                     <field name="partner_id" context="{'default_phone': contact_phone, 'default_email': contact_email}"/>
-                                    <field name="contact_email" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                    <field name="contact_phone" class="o_force_ltr" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                    <field name="contact_email" readonly="partner_id"/>
+                                    <field name="contact_phone" class="o_force_ltr" readonly="partner_id"/>
                                 </group>
                             </group>
                             <group string="Speaker Bio" class="display-flex justify-content-between">
@@ -216,16 +216,16 @@
                                 <group name="event_track_cta_group">
                                     <field name="website_cta"/>
                                     <field name="website_cta_title" placeholder="e.g. Get Yours Now!"
-                                        attrs="{'invisible': [('website_cta', '=', False)],
-                                                'required': [('website_cta', '=', True)]}"/>
+                                        invisible="not website_cta"
+                                        required="website_cta"/>
                                     <field name="website_cta_url" placeholder="e.g. http://www.example.com"
-                                        attrs="{'invisible': [('website_cta', '=', False)],
-                                                'required': [('website_cta', '=', True)]}"/>
+                                        invisible="not website_cta"
+                                        required="website_cta"/>
                                     <label for="website_cta_delay"
-                                        attrs="{'invisible': [('website_cta', '=', False)]}"/>
-                                    <div attrs="{'invisible': [('website_cta', '=', False)]}">
+                                        invisible="not website_cta"/>
+                                    <div invisible="not website_cta">
                                         <field name="website_cta_delay" class="oe_inline"
-                                            attrs="{'required': [('website_cta', '=', True)]}"/> minutes after Track start
+                                            required="website_cta"/> minutes after Track start
                                     </div>
                                 </group>
                             </group>
@@ -247,12 +247,12 @@
         <field name="arch" type="xml">
             <tree string="Event Track">
                 <field name="name"/>
-                <field name="active" invisible="1"/>
+                <field name="active" column_invisible="True"/>
                 <field name="partner_name"/>
                 <field name="partner_id" optional="hide"/>
                 <field name="partner_email"/>
                 <field name="partner_phone"/>
-                <field name="event_id" invisible="context.get('default_event_id')"/>
+                <field name="event_id" column_invisible="context.get('default_event_id')"/>
                 <field name="wishlisted_by_default" optional="hide"/>
                 <field name="wishlist_visitor_count" optional="hide"/>
                 <field name="stage_id"/>

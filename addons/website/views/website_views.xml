@@ -32,7 +32,7 @@
                             <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
                             <field name="language_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                             <field name="default_lang_id" options="{'no_open': True, 'no_create': True}"
-                                    attrs="{'invisible': [('language_count', '&lt;=', 1)]}"/>
+                                    invisible="language_count &lt;= 1"/>
                         </group>
                         <notebook>
                             <page string="Custom Code" groups="base.group_no_one">

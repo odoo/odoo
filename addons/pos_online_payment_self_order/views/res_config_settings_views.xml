@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='pos_self_order_pay_after']" position="after">
                 <div>
                     <label for="pos_self_order_online_payment_method_id" class="me-2" />
-                    <field name="pos_self_order_online_payment_method_id" attrs="{'required': ['&amp;', ('pos_self_order_table_mode', '=', True), ('pos_self_order_pay_after', '=', 'each')]}" placeholder="Select a payment method" />
+                    <field name="pos_self_order_online_payment_method_id" required="pos_self_order_table_mode and pos_self_order_pay_after == 'each'" placeholder="Select a payment method" />
                     <button name="%(point_of_sale.action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link" />
                 </div>
             </xpath>

@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Tags">
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="applicability"/>
-                            <field name="tax_negate" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="tax_negate" readonly="1" invisible="applicability != 'taxes'"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}" invisible="applicability != 'taxes'"/>
                         </group>
                     </sheet>
                 </form>

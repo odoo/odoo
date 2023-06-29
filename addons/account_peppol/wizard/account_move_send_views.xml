@@ -8,17 +8,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='warnings']" position="inside">
                     <field name="enable_peppol" invisible="1"/>
-                    <div class="alert alert-warning" role="alert" attrs="{
-                                'invisible': ['|',
-                                    ('checkbox_send_peppol', '!=', True),
-                                    ('peppol_warning', '=', False),
-                                ]}">
+                    <div class="alert alert-warning" role="alert" invisible="not checkbox_send_peppol or not peppol_warning">
                         <field name="peppol_warning"/>
                     </div>
                 </xpath>
                 <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <div name="option_peppol"
-                         attrs="{'invisible': [('enable_peppol', '=', False)]}">
+                         invisible="not enable_peppol">
                         <field name="checkbox_send_peppol"/>
                         <b>
                             <label for="checkbox_send_peppol"/>

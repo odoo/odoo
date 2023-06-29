@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page/field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="website_description" invisible="1"/>
+                <field name="website_description" column_invisible="True"/>
             </xpath>
             <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="after">
                 <field name="website_description" invisible="1"/>
@@ -21,7 +21,7 @@
                 <field name="website_description" invisible="1" readonly="1" force_save="1"/>
             </xpath>
             <xpath expr="//page/field[@name='sale_order_option_ids']/tree/field[@name='name']" position="after">
-                <field name="website_description" invisible="1" readonly="1" force_save="1"/>
+                <field name="website_description" readonly="1" column_invisible="True" force_save="1"/>
             </xpath>
 
             <xpath expr="//button[@name='button_add_to_order']" position="after">

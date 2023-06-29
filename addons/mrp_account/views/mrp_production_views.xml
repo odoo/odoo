@@ -26,7 +26,7 @@
                     <button type="object"
                         name="action_view_stock_valuation_layers"
                         class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
-                        attrs="{'invisible': [('show_valuation', '=', False)]}" >
+                        invisible="not show_valuation" >
                         <div class="o_stat_info">
                             <span class="o_stat_text">Valuation</span>
                         </div>
@@ -34,7 +34,7 @@
                     <button class="oe_stat_button" type="object"
                         name="action_view_analytic_accounts"
                         icon="fa-bar-chart-o"
-                        attrs="{'invisible': ['|', ('analytic_distribution', '=', False), ('state', 'in', ['draft', 'cancel'])]}"
+                        invisible="not analytic_distribution or state in ['draft', 'cancel']"
                         groups="analytic.group_analytic_accounting">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Analytic Account</span>

@@ -25,7 +25,7 @@
                                 type="object"
                                 name="action_see_days_allocated"
                                 icon="fa-calendar"
-                                attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('id', '=', False)]}"
+                                invisible="requires_allocation == 'no' or not id"
                                 help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
                             <div class="o_stat_info">
                                 <field name="allocation_count"/>
@@ -36,7 +36,7 @@
                                 type="object"
                                 name="action_see_group_leaves"
                                 icon="fa-calendar"
-                                attrs="{'invisible': [('id', '=', False)]}"
+                                invisible="not id"
                                 help="Count of time off requests for this time off type (approved or waiting for approbation) with a start date in the current year.">
                             <div class="o_stat_info">
                                 <field name="group_days_leave"/>
@@ -47,7 +47,7 @@
                                 type="object"
                                 name="action_see_accrual_plans"
                                 icon="fa-calendar"
-                                attrs="{'invisible': ['|', ('id', '=', False), ('accrual_count', '=', 0)]}"
+                                invisible="not id or accrual_count == 0"
                                 help="Count of plans linked to this time off type.">
                             <div class="o_stat_info">
                                 <field name="accrual_count"/>
@@ -55,7 +55,7 @@
                             </div>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1><field name="name"/></h1>
                     </div>
@@ -66,8 +66,7 @@
                             <field name="responsible_ids"
                                 widget="many2many_tags"
                                 placeholder="Nobody will be notified"
-                                attrs="{
-                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')]}"/>
+                                invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')"/>
                             <field name="request_unit"/>
                             <field name="support_document" string="Allow To Attach Supporting Document" />
                             <field name="time_type" required="1"/>
@@ -75,8 +74,8 @@
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
-                            <field name="employee_requests" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
+                            <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
                         </group>
                     </group>
                     <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
@@ -121,8 +120,7 @@
                 <field name="employee_requests" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
                 <field name="leave_validation_type" optional="hide"/>
-                <field name="responsible_ids" widget="many2many_tags" attrs="{
-                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')]}" optional="hide"/>
+                <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </tree>
         </field>

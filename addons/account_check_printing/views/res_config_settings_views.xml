@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <setting id="print_checks" position="inside">
-                <div class="content-group" attrs="{'invisible': [('module_account_check_printing', '=', False)]}">
+                <div class="content-group" invisible="not module_account_check_printing">
                     <div class="row mt16">
                         <label for="account_check_printing_layout" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_layout" required="True"/>
@@ -23,11 +23,11 @@
                         <label for="account_check_printing_margin_left" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_left"/>
                     </div>
-                    <div class="row" attrs="{'invisible': [('country_code', '!=', 'CA')]}">
+                    <div class="row" invisible="country_code != 'CA'">
                         <label for="account_check_printing_margin_right" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_right"/>
                     </div>
-                    <div class="row" attrs="{'invisible': [('country_code', '!=', 'CA')]}">
+                    <div class="row" invisible="country_code != 'CA'">
                       <label for="account_check_printing_date_label" class="col-lg-4 o_light_label"/>
                       <field name="account_check_printing_date_label"/>
                     </div>

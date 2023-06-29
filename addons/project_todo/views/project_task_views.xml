@@ -122,7 +122,7 @@
                     <field name="state" invisible="1"/>
                 </header>
                 <sheet class="o_todo_form_sheet_bg">
-                    <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="description" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
                 <div class="oe_chatter">

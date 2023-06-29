@@ -6,15 +6,15 @@
         <field name="inherit_id" ref="stock_picking_batch.view_picking_type_form_inherit"/>
         <field name="arch" type="xml">
             <div name="batch_contact" position="after">
-                <span attrs="{'invisible':[('auto_batch', '=', False)]}"/>
-                <div name="batch_carrier" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
+                <span invisible="not auto_batch"/>
+                <div name="batch_carrier" class="o_row" invisible="not auto_batch">
                     <field name="batch_group_by_carrier"/>
                     <label for="batch_group_by_carrier"/>
                 </div>
             </div>
             <field name="batch_auto_confirm" position="before">
-                <label for="batch_max_weight" attrs="{'invisible': [('auto_batch', '=', False)]}"/>
-                <div class="o_row" name="batch_max_weight" attrs="{'invisible': [('auto_batch', '=', False)]}">
+                <label for="batch_max_weight" invisible="not auto_batch"/>
+                <div class="o_row" name="batch_max_weight" invisible="not auto_batch">
                     <field name="batch_max_weight"/>
                     <span><field name="weight_uom_name"/></span>
                 </div>

@@ -11,27 +11,27 @@
                 <field name="microsoft_outlook_refresh_token" invisible="1"/>
                 <field name="microsoft_outlook_access_token" invisible="1"/>
                 <field name="microsoft_outlook_access_token_expiration" invisible="1"/>
-                <div attrs="{'invisible': [('server_type', '!=', 'outlook')]}"
+                <div invisible="server_type != 'outlook'"
                     class="d-flex flex-row align-items-center" colspan="2">
-                    <span attrs="{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}"
+                    <span invisible="server_type != 'outlook' or not microsoft_outlook_refresh_token"
                         class="badge text-bg-success">
                         Outlook Token Valid
                     </span>
                     <button type="object"
                         name="open_microsoft_outlook_uri" class="btn-link px-0"
-                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '!=', False)]}">
+                        invisible="not is_microsoft_outlook_configured or server_type != 'outlook' or microsoft_outlook_refresh_token">
                         <i class="oi oi-arrow-right"/>
                         Connect your Outlook account
                     </button>
                     <button type="object"
                         name="open_microsoft_outlook_uri" class="btn-link px-0 ms-2"
-                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}">
+                        invisible="not is_microsoft_outlook_configured or server_type != 'outlook' or not microsoft_outlook_refresh_token">
                         <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
                     <button class="alert alert-warning d-block mt-2 text-start"
                         icon="oi-arrow-right" type="action" role="alert"
                         name="%(base.res_config_setting_act_window)d"
-                        attrs="{'invisible': ['|', ('is_microsoft_outlook_configured', '=', True), ('server_type', '!=', 'outlook')]}">
+                        invisible="is_microsoft_outlook_configured or server_type != 'outlook'">
                         Setup your Outlook API credentials in the general settings to link a Outlook account.
                     </button>
                 </div>

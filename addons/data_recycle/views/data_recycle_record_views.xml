@@ -6,13 +6,13 @@
             <field name="model">data_recycle.record</field>
             <field name="arch" type="xml">
                 <tree js_class="data_recycle_list" sample="1" create="0" export_xlsx="0">
-                    <field name="active" invisible="1" />
-                    <field name="res_model_name" invisible="1" />
+                    <field name="active" column_invisible="True" />
+                    <field name="res_model_name" column_invisible="True" />
                     <field name="res_id" />
                     <field name="recycle_model_id" string="Recycle Rule" optional="hide" />
                     <field name="name" />
                     <button icon="fa-check" string="Validate" type="object" name="action_validate" />
-                    <button icon="fa-times" string="Discard" type="object" name="action_discard" attrs="{'invisible': [('active', '=', False)]}" />
+                    <button icon="fa-times" string="Discard" type="object" name="action_discard" invisible="not active" />
                 </tree>
             </field>
         </record>

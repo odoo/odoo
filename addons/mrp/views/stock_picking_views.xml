@@ -108,7 +108,7 @@
                 <field name="has_kits" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='description_picking']" position="after">
-                <field name="description_bom_line" optional="show" attrs="{'column_invisible': [('parent.has_kits', '=', False)]}"/>
+                <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
             </xpath>
         </field>
     </record>
@@ -119,7 +119,7 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
-                <field name="description_bom_line" optional="show" attrs="{'column_invisible': [('parent.has_kits', '=', False)]}"/>
+                <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
             </xpath>
         </field>
     </record>
@@ -130,13 +130,13 @@
         <field name="inherit_id" ref="stock.view_picking_type_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='stock_picking_type_lot']" position="after">
-                <group attrs='{"invisible": [("code", "!=", "mrp_operation")]}' string="Traceability" groups="stock.group_production_lot">
+                <group invisible="code != 'mrp_operation'" string="Traceability" groups="stock.group_production_lot">
                     <field name="use_create_components_lots"/>
                     <field name="use_auto_consume_components_lots"/>
                 </group>
             </xpath>
             <field name="auto_show_reception_report" position="after">
-                <field name="auto_show_reception_report" attrs="{'invisible': [('code', '!=', 'mrp_operation')]}" groups="mrp.group_mrp_reception_report"/>
+                <field name="auto_show_reception_report" invisible="code != 'mrp_operation'" groups="mrp.group_mrp_reception_report"/>
             </field>
         </field>
     </record>

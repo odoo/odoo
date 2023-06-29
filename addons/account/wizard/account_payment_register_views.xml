@@ -31,10 +31,10 @@
                     <field name="hide_writeoff_section" invisible="1"/>
                     <field name="untrusted_bank_ids" invisible="1"/>
 
-                    <div role="alert" class="alert alert-info" attrs="{'invisible': [('hide_writeoff_section', '=', False)]}">
+                    <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
                         <p><b>Early Payment Discount applied.</b></p>
                     </div>
-                    <div role="alert" class="alert alert-warning" attrs="{'invisible': [('untrusted_payments_count', '=', 0)]}">
+                    <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
                         <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
                     </div>
                     <group>
@@ -43,17 +43,18 @@
                             <field name="payment_method_line_id"
                                    required="1"  options="{'no_create': True, 'no_open': True}"/>
                             <field name="partner_bank_id"
-                                   attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],
-                                           'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)], 'readonly': [('payment_type', '=', 'inbound')]}"
+                                   invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
+                                   readonly="payment_type == 'inbound'"
+                                   required="require_partner_bank_account and can_edit_wizard and (not can_group_payments or not group_payment)"
                                     context="{'display_account_trust': True}"/>
                             <field name="group_payment"
-                                   attrs="{'invisible': [('can_group_payments', '=', False)]}"/>
+                                   invisible="not can_group_payments"/>
                         </group>
                         <group name="group2">
                             <label for="amount"
-                                   attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
+                                   invisible="not can_edit_wizard or can_group_payments and not group_payment"/>
                             <div name="amount_div" class="o_row"
-                                 attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}">
+                                 invisible="not can_edit_wizard or can_group_payments and not group_payment">
                                 <field name="amount"/>
                                 <field name="currency_id"
                                        required="1"
@@ -62,29 +63,29 @@
                             </div>
                             <field name="payment_date"/>
                             <field name="communication"
-                                   attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
+                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                         </group>
                         <group name="group3"
-                               attrs="{'invisible': ['|', ('payment_difference', '=', 0.0), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}">
+                               invisible="payment_difference == 0.0 or not can_edit_wizard or can_group_payments and not group_payment">
                             <label for="payment_difference"/>
                             <div>
                                 <field name="payment_difference"/>
                                 <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                <div attrs="{'invisible': ['|', ('hide_writeoff_section', '=', True), ('payment_difference_handling','=','open')]}">
+                                <div invisible="hide_writeoff_section or payment_difference_handling == 'open'">
                                     <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
                                     <field name="writeoff_account_id"
                                            string="Post Difference In"
                                            options="{'no_create': True}"
-                                           attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('early_payment_discount_mode', '=', False)]}"/>
+                                           required="payment_difference_handling == 'reconcile' and not early_payment_discount_mode"/>
                                     <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                    <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                    <field name="writeoff_label" required="payment_difference_handling == 'reconcile'"/>
                                 </div>
                             </div>
                         </group>
                     </group>
                     <footer>
-                        <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" attrs="{'invisible': [('total_payments_amount', '=', 1)]}"/>
-                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" attrs="{'invisible': [('total_payments_amount', '!=', 1)]}"/>
+                        <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
+                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount != 1"/>
                         <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>

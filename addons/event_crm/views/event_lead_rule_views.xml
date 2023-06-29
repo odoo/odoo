@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <tree string="Lead Generation Rules">
                 <field name="name"/>
-                <field name="lead_creation_basis" string="Lead Creation Type" invisible="1"/>
+                <field name="lead_creation_basis" string="Lead Creation Type" column_invisible="True"/>
                 <field name="lead_creation_trigger"/>
                 <field name="event_type_ids" widget="many2many_tags"/>
                 <field name="event_id"/>
@@ -36,7 +36,7 @@
         <field name="arch" type="xml">
             <form string="Lead Generation Rule">
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. B2B Fairs"/></h1>

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <div class="oe_button_box" position="inside">
-                <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" attrs="{'invisible': [('debit_note_count', '=', 0)]}">
+                <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" invisible="debit_note_count == 0">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="debit_note_count"/></span>
                         <span class="o_stat_text">Debit Notes</span>
@@ -14,7 +14,7 @@
                 </button>
             </div>
             <field name="invoice_origin" position="after">
-                <field name="debit_origin_id" attrs="{'invisible': [('debit_origin_id', '=', False)]}"/>
+                <field name="debit_origin_id" invisible="not debit_origin_id"/>
             </field>
         </field>
     </record>

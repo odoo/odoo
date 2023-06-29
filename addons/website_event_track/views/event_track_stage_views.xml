@@ -22,8 +22,8 @@
                         <group>
                             <field name="name"/>
                             <field name="mail_template_id"/>
-                            <field name="is_visible_in_agenda" attrs="{'readonly': [('is_cancel', '=', True)]}"/>
-                            <field name="is_fully_accessible" attrs="{'readonly': [('is_cancel', '=', True)]}"/>
+                            <field name="is_visible_in_agenda" readonly="is_cancel"/>
+                            <field name="is_fully_accessible" readonly="is_cancel"/>
                             <field name="is_cancel"/>
                         </group>
                         <group>

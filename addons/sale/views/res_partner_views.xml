@@ -57,7 +57,8 @@
                         <separator string="Warning on the Sales Order" colspan="2"/>
                         <field name="sale_warn" nolabel="1" colspan="2" required="1"/>
                         <field name="sale_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
-                                attrs="{'required':[('sale_warn','!=', False), ('sale_warn','!=','no-message')], 'invisible':[('sale_warn','in',(False,'no-message'))]}"/>
+                                invisible="sale_warn in (False, 'no-message')"
+                                required="sale_warn and sale_warn != 'no-message'"/>
                     </group>
                 </group>
             </xpath>

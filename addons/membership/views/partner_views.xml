@@ -13,7 +13,7 @@
                     <field name="associate_member"/>
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="user_id" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -113,14 +113,14 @@
                                 <div>
                                     <field name="membership_state" class="oe_inline"/>
                                     <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership"
-                                        attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
+                                        invisible="free_member" class="oe_link"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="associate_member" attrs="{'invisible':[('free_member','=',True)]}"/>
-                                <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
-                                <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
-                                <field name="membership_cancel" attrs="{'invisible':[('membership_cancel','=',False)]}"/>
+                                <field name="associate_member" invisible="free_member"/>
+                                <field name="membership_start" invisible="not membership_start"/>
+                                <field name="membership_stop" invisible="not membership_stop"/>
+                                <field name="membership_cancel" invisible="not membership_cancel"/>
                             </group>
                         </group>
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">

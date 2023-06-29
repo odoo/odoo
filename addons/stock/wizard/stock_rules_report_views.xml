@@ -10,7 +10,7 @@
                     <field name="product_has_variants" invisible="1" />
                     <field name="product_id"
                         domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                        attrs="{'readonly': [('product_has_variants', '=', False)]}" options="{'no_create': True}"/>
+                        readonly="not product_has_variants" options="{'no_create': True}"/>
                     <field name="warehouse_ids"
                         groups="stock.group_stock_multi_warehouses"
                         widget="many2many_tags" />

@@ -29,10 +29,10 @@
             <field name="model">account_edi_proxy_client.user</field>
             <field name="arch" type="xml">
                 <tree create="false" delete="false" edit="false">
-                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" column_invisible="True"/>
                     <field name="id_client" readonly="1"/>
                     <field name="edi_identification" readonly="1"/>
-                    <field name="private_key_filename" invisible="1"/>
+                    <field name="private_key_filename" column_invisible="True"/>
                     <field name="private_key" widget="binary" filename="private_key_filename" readonly="1"/>
                     <field name="refresh_token" readonly="1"/>
                 </tree>

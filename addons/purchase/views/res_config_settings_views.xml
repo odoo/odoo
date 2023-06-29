@@ -15,7 +15,7 @@
                     <block title="Orders" name="purchase_setting_container">
                         <setting id="po_order_approval" company_dependent="1" help="Request managers to approve orders above a minimum amount">
                             <field name="po_order_approval"/>
-                            <div class="content-group" attrs="{'invisible': [('po_order_approval', '=', False)]}">
+                            <div class="content-group" invisible="not po_order_approval">
                                 <div class="row mt16">
                                     <label for="po_double_validation_amount" class="col-lg-4 o_light_label"/>
                                     <field name="po_double_validation_amount"/>
@@ -30,7 +30,7 @@
                         </setting>
                         <setting id="manage_purchase_agreements" title="Calls for tenders are when you want to generate requests for quotations with several vendors for a given set of products to compare offers." documentation="/applications/inventory_and_mrp/purchase/manage_deals/agreements.html" help="Manage your purchase agreements (call for tenders, blanket orders)">
                             <field name="module_purchase_requisition"/>
-                            <div class="content-group" attrs="{'invisible': [('module_purchase_requisition', '=', False)]}">
+                            <div class="content-group" invisible="not module_purchase_requisition">
                                 <div id="use_purchase_requisition"/>
                             </div>
                         </setting>
@@ -49,7 +49,7 @@
                     <block title="Products" name="matrix_setting_container">
                         <setting id="variant_options" help="Purchase variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">
                             <field name="group_product_variant"/>
-                            <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
+                            <div class="content-group" invisible="not group_product_variant">
                                 <div class="mt8">
                                     <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                 </div>
@@ -65,7 +65,7 @@
                                  documentation="/applications/inventory_and_mrp/inventory/management/products/uom.html">
                             <field name="group_uom"/>
                             <div class="content-group">
-                                <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                <div class="mt8" invisible="not group_uom">
                                     <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right"
                                             type="action" string="Units Of Measure" class="btn-link"/>
                                 </div>

@@ -12,7 +12,7 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-wrench"
-                        attrs="{'invisible': [('repair_count', '=', 0)]}"
+                        invisible="repair_count == 0"
                         groups="stock.group_stock_user">
                         <field name="repair_count" widget="statinfo" string="Repairs"/>
                     </button>

@@ -22,12 +22,12 @@
                 <header>
                     <button type="object" name="action_send_manual" string="Send Now"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state','=','deactivated')]}" groups="base.group_system"/>
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
                     <button type="object" name="action_deactivate" string="Deactivate"
-                        attrs="{'invisible': [('state','=','deactivated')]}" groups="base.group_system"/>
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state','=','activated')]}" groups="base.group_system"/>
+                        invisible="state == 'activated'" groups="base.group_system"/>
                     <field name="state" widget="statusbar" statusbar_visible="0"/>
                 </header>
                 <sheet>

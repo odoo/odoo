@@ -14,7 +14,7 @@
                                 <div name="landed_cost_info"/>
                             </div>
                         </setting>
-                        <setting attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_invoice" help="Lots &amp; Serial numbers will appear on the invoice">
+                        <setting invisible="not group_stock_production_lot" id="group_lot_on_invoice" help="Lots &amp; Serial numbers will appear on the invoice">
                             <field name="group_lot_on_invoice"/>
                         </setting>
                     </block>

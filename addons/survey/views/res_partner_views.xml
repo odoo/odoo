@@ -17,21 +17,21 @@
                 <button class="oe_stat_button" type="object"
                     icon="fa-trophy" name="action_view_certifications"
                      groups="survey.group_survey_user"
-                    attrs="{'invisible': ['|', ('certifications_count', '=', 0), ('is_company', '=', True)]}">
+                    invisible="certifications_count == 0 or is_company">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="certifications_count" /></span>
-                        <span class="o_stat_text" attrs="{'invisible': [('certifications_count', '&lt;', 2)]}">Certifications</span>
-                        <span class="o_stat_text" attrs="{'invisible': [('certifications_count', '&gt;', 1)]}">Certification</span>
+                        <span class="o_stat_text" invisible="certifications_count &lt; 2">Certifications</span>
+                        <span class="o_stat_text" invisible="certifications_count &gt; 1">Certification</span>
                     </div>
                 </button>
                 <button class="oe_stat_button" type="object"
                     icon="fa-trophy" name="action_view_certifications"
                     groups="survey.group_survey_user"
-                    attrs="{'invisible': ['|', ('certifications_company_count', '=', 0), ('is_company', '=', False)]}">
+                    invisible="certifications_company_count == 0 or not is_company">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="certifications_company_count" /></span>
-                        <span class="o_stat_text" attrs="{'invisible': [('certifications_company_count', '&lt;', 2)]}">Certifications</span>
-                        <span class="o_stat_text" attrs="{'invisible': [('certifications_company_count', '&gt;', 1)]}">Certification</span>
+                        <span class="o_stat_text" invisible="certifications_company_count &lt; 2">Certifications</span>
+                        <span class="o_stat_text" invisible="certifications_company_count &gt; 1">Certification</span>
                     </div>
                 </button>
             </xpath>

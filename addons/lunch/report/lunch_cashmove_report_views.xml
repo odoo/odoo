@@ -34,7 +34,7 @@
         <field name="model">lunch.cashmove.report</field>
         <field name="arch" type="xml">
             <tree string="cashmove tree">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="date"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="description"/>
@@ -48,7 +48,7 @@
         <field name="model">lunch.cashmove.report</field>
         <field name="arch" type="xml">
             <tree string="cashmove tree" create='false'>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="date"/>
                 <field name="description"/>
                 <field name="amount" sum="Total" widget="monetary"/>

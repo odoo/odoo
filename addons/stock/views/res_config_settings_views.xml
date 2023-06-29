@@ -16,7 +16,7 @@
                             <setting id="process_transfers" help="Process transfers in batch per worker"
                                      documentation="/applications/inventory_and_mrp/inventory/management/misc/batch_transfers.html">
                                 <field name="module_stock_picking_batch"/>
-                                <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
+                                <div class="row mt-2" invisible="not module_stock_picking_batch">
                                     <field name="group_stock_picking_wave" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                     <div class="col ps-0">
                                         <label for="group_stock_picking_wave"/>
@@ -30,7 +30,7 @@
                             <setting id="quality_control" help="Add quality checks to your transfer operations"
                                      documentation="/applications/inventory_and_mrp/manufacturing/management/quality_control.html">
                                 <field name="module_quality_control" widget="upgrade_boolean"/>
-                                <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                <div class="row mt-2" invisible="not module_quality_control">
                                     <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                     <div class="col ps-0">
                                         <label for="module_quality_control_worksheet"/>
@@ -97,7 +97,7 @@
                             <setting id="product_attributes" help="Set product attributes (e.g. color, size) to manage variants" documentation="/applications/sales/sales/products_prices/products/variants.html">
                                 <field name="group_product_variant"/>
                                 <div class="content-group">
-                                    <div class="mt8" attrs="{'invisible': [('group_product_variant', '=', False)]}">
+                                    <div class="mt8" invisible="not group_product_variant">
                                         <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                     </div>
                                 </div>
@@ -105,7 +105,7 @@
                             <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure" documentation="/applications/inventory_and_mrp/inventory/management/products/uom.html">
                                 <field name="group_uom"/>
                                 <div class="content-group">
-                                    <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                    <div class="mt8" invisible="not group_uom">
                                         <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@
                             <setting id="manage_product_packaging" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" help="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packaging">
                                 <field name="group_stock_packaging"/>
                                 <div class="content-group">
-                                    <div class="mt8" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
+                                    <div class="mt8" invisible="not group_stock_packaging">
                                         <button name="%(product.action_packaging_view)d" icon="oi-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                         <block title="Traceability" id="production_lot_info">
                             <setting id="full_traceability" help="Get a full traceability from vendors to customers" documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/differences.html">
                                 <field name="group_stock_production_lot"/>
-                                <div class="row mt-2" attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
+                                <div class="row mt-2" invisible="not group_stock_production_lot">
                                     <field name="group_stock_lot_print_gs1" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                     <div class="col ps-0">
                                         <label for="group_stock_lot_print_gs1"/>
@@ -130,11 +130,11 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
+                            <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" invisible="not group_stock_production_lot" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
                                      documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/expiration_dates.html">
                                 <field name="module_product_expiry"/>
                             </setting>
-                            <setting help="Lots &amp; Serial numbers will appear on the delivery slip" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_delivery_slip">
+                            <setting help="Lots &amp; Serial numbers will appear on the delivery slip" invisible="not group_stock_production_lot" id="group_lot_on_delivery_slip">
                                 <field name="group_lot_on_delivery_slip"/>
                             </setting>
                             <setting id="owner_stored_products" help="Set owner on stored products" documentation="/applications/inventory_and_mrp/inventory/management/misc/owned_stock.html">
@@ -145,7 +145,7 @@
                             <setting id="track_product_location" help="Track product location in your warehouse" documentation="/applications/inventory_and_mrp/inventory/management/warehouses/warehouses_locations.html" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
                                 <field name="group_stock_multi_locations"/>
                                 <div class="content-group">
-                                    <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                    <div class="mt8" invisible="not group_stock_multi_locations">
                                         <button name="%(stock.action_location_form)d" icon="oi-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
                                         <button name="stock.action_putaway_tree" icon="oi-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
                                     </div>
@@ -154,14 +154,14 @@
                             <setting id="use_own_routes" help="Use your own routes" documentation="/applications/inventory_and_mrp/inventory/routes/concepts/use_routes.html" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
                                 <field name="group_stock_adv_location"/>
                                 <div class="content-group">
-                                    <div class="mt8" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                                    <div class="mt8" invisible="not group_stock_adv_location">
                                         <button name="%(stock.action_warehouse_form)d" icon="oi-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="categorize_locations" help="Categorize your locations for smarter putaway rules" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                            <setting id="categorize_locations" help="Categorize your locations for smarter putaway rules" invisible="not group_stock_multi_locations">
                                 <field name="group_stock_storage_categories"/>
-                                <div class="content-group" attrs="{'invisible': [('group_stock_storage_categories', '=', False)]}">
+                                <div class="content-group" invisible="not group_stock_storage_categories">
                                     <div class="mt8">
                                         <button name="%(stock.action_storage_category)d" icon="oi-arrow-right" type="action" string="Storage Categories" class="btn-link"/>
                                     </div>

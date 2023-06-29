@@ -55,7 +55,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                            <div class="ribbon ribbon-top-right" invisible="active">
                                 <span class="text-bg-danger">Archived</span>
                             </div>
                             <div class="o_kanban_card_content d-flex">
@@ -102,12 +102,12 @@
                 <field name="user_company_ids" invisible="1"/>
                 <sheet>
                     <div class="alert alert-info text-center" role="alert"
-                        attrs="{'invisible': [('member_warning', '=', False)]}">
+                        invisible="not member_warning">
                         <field name="member_warning"/>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_1920" widget='image' class="oe_avatar"
-                        attrs="{'invisible': [('user_id', '=', False)]}"
+                        invisible="not user_id"
                         options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
                         <label for="user_id" class="oe_edit_only"/>
@@ -121,11 +121,11 @@
                             <field name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </group>
                         <group class="ps-0" name="group_user">
-                            <field name="company_id" attrs="{'invisible': [('user_id', '=', False)]}"
+                            <field name="company_id" invisible="not user_id"
                                 groups="base.group_multi_company"/>
-                            <field name="email" attrs="{'invisible': [('user_id', '=', False)]}"/>
-                            <field name="mobile" attrs="{'invisible': [('user_id', '=', False)]}"/>
-                            <field name="phone" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                            <field name="email" invisible="not user_id"/>
+                            <field name="mobile" invisible="not user_id"/>
+                            <field name="phone" invisible="not user_id"/>
                         </group>
                     </group>
                 </sheet>

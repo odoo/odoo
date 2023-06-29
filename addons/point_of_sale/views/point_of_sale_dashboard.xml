@@ -56,8 +56,8 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <kanban create="false" class="o_kanban_dashboard o_pos_kanban">
-                <field name="current_user_id" invisible="1" />
-                <field name="cash_control" invisible="1"/>
+                <field name="current_user_id" />
+                <field name="cash_control"/>
                 <field name="name"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
@@ -146,7 +146,7 @@
                                             </div>
                                         </div>
 
-                                        <div t-if="record.last_session_closing_date.value" attrs='{"invisible": [("cash_control","=",False)]}' class="row">
+                                        <div t-if="record.last_session_closing_date.value" invisible="not cash_control" class="row">
                                             <div class="col-6">
                                                 <span>Last Closing Cash Balance</span>
                                             </div>

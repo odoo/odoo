@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="invoice_user_id" position="after">
-                <field name="team_id" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+                <field name="team_id" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" optional="hide"/>
             </field>
         </field>
     </record>
@@ -38,7 +38,7 @@
                 <group string="Marketing"
                         name="utm_link"
                         groups="base.group_no_one"
-                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
                     <field name="campaign_id" options="{'create_name_field': 'title'}"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
@@ -49,7 +49,7 @@
                         name="action_view_source_sale_orders"
                         type="object"
                         icon="fa-pencil-square-o"
-                        attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                        invisible="sale_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
                     <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
                 </button>
             </xpath>

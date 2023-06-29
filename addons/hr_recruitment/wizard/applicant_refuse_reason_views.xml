@@ -7,11 +7,11 @@
                 <form string="Refuse Reason">
                     <group col="1">
                         <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
-                        <field name="send_mail" attrs="{'invisible': [('refuse_reason_id', '=', False)]}"/>
-                        <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}" />
+                        <field name="send_mail" invisible="not refuse_reason_id"/>
+                        <field name="template_id" invisible="not send_mail" required="send_mail" />
                         <field name="applicant_ids" invisible="1"/>
                     </group>
-                    <div class="alert alert-danger" role="alert" attrs="{'invisible': [('applicant_without_email', '=', False)]}">
+                    <div class="alert alert-danger" role="alert" invisible="not applicant_without_email">
                         <field name="applicant_without_email" class="mr4"/>
                     </div>
                     <footer>

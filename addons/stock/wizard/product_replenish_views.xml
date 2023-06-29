@@ -19,7 +19,7 @@
                         <field name="company_id" invisible="1"/>
                         <field name="product_id"
                             domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                            attrs="{'readonly': [('product_has_variants', '=', False)]}"
+                            readonly="not product_has_variants"
                             options="{'no_open': 1, 'no_create': 1}"/>
                         <label for="quantity"/>
                         <div class="o_row">

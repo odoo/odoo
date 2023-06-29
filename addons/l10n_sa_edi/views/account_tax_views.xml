@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="l10n_sa_is_retention" attrs="{'invisible': ['|', '|', ('type_tax_use', '!=', 'sale'), ('country_code', '!=', 'SA'), ('amount', '>=', 0)]}"/>
-                <field name="l10n_sa_exemption_reason_code" attrs="{'invisible': ['|', '|', ('type_tax_use', '!=', 'sale'), ('country_code', '!=', 'SA'), ('amount', '!=', 0)]}"/>
+                <field name="l10n_sa_is_retention" invisible="type_tax_use != 'sale' or country_code != 'SA' or amount &gt;= 0"/>
+                <field name="l10n_sa_exemption_reason_code" invisible="type_tax_use != 'sale' or country_code != 'SA' or amount != 0"/>
             </xpath>
         </field>
     </record>

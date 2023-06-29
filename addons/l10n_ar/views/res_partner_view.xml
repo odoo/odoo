@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']/.." position="after">
-                <field name="l10n_ar_afip_responsibility_type_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                <field name="l10n_ar_afip_responsibility_type_id" options="{'no_open': True, 'no_create': True}" readonly="parent_id"/>
             </xpath>
         </field>
     </record>
@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page[@name='accounting']/group" position="inside">
-                <group string="Accounting Documents" name="accounting_documents" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'AR')]}">
+                <group string="Accounting Documents" name="accounting_documents" invisible="'AR'.lower() not in (fiscal_country_codes or '').lower()">
                     <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
                 </group>
             </xpath>
@@ -28,7 +28,7 @@
                 <label for="l10n_ar_gross_income_number" string="Gross Income"/>
                 <div name="gross_income">
                     <field name="l10n_ar_gross_income_type" class="oe_inline"/>
-                    <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'not in', ['multilateral', 'local'])], 'required': [('l10n_ar_gross_income_type', 'in', ['multilateral', 'local'])]}"/>
+                    <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" invisible="l10n_ar_gross_income_type not in ['multilateral', 'local']" required="l10n_ar_gross_income_type in ['multilateral', 'local']"/>
                 </div>
             </field>
 

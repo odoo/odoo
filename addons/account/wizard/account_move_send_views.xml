@@ -23,7 +23,7 @@
                 <div name="warnings">
                     <div class="alert alert-warning"
                         role="alert"
-                        attrs="{'invisible': [('send_mail_warning_message', '=', False)]}">
+                        invisible="not send_mail_warning_message">
                         <field name="send_mail_warning_message"/>
                     </div>
                 </div>
@@ -32,28 +32,28 @@
                 <div name="options" class="row">
                     <div name="standard_options" class="col-3">
                         <div name="option_download"
-                            attrs="{'invisible': [('enable_download', '=', False)]}">
+                            invisible="not enable_download">
                             <field name="checkbox_download"/>
                             <b><label for="checkbox_download"/></b>
                         </div>
                         <div name="option_send_mail"
-                            attrs="{'invisible': [('enable_send_mail', '=', False)]}">
+                            invisible="not enable_send_mail">
                             <field name="checkbox_send_mail"
-                                attrs="{'readonly': [('send_mail_readonly', '=', True)]}"/>
+                                readonly="send_mail_readonly"/>
                             <b><label for="checkbox_send_mail"/></b>
                             <i class="fa fa-question-circle ml4"
                                 role="img"
                                 aria-label="Warning"
                                 title="The email address is unknown on the partner"
-                                attrs="{'invisible': [('send_mail_readonly', '=', False)]}"/>
+                                invisible="not send_mail_readonly"/>
                         </div>
                     </div>
                     <div name="advanced_options" class="col-3"/>
                 </div>
 
                 <!-- Mail -->
-                <div attrs="{'invisible': [('checkbox_send_mail', '=', False)]}">
-                    <group attrs="{'invisible': [('display_mail_composer', '=', False)]}">
+                <div invisible="not checkbox_send_mail">
+                    <group invisible="not display_mail_composer">
                         <label for="mail_partner_ids" string="Recipients"/>
                         <div>
                             <span>Followers of the document and</span>
@@ -64,14 +64,14 @@
                         </div>
                         <field name="mail_subject"
                                placeholder="Subject..."
-                               attrs="{'required': [('checkbox_send_mail', '=', True), ('mode', '=', 'invoice_single')]}"/>
+                               required="checkbox_send_mail and mode == 'invoice_single'"/>
                     </group>
                     <field name="mail_body"
                            class="oe-bordered-editor"
                            options="{'style-inline': true}"
-                           attrs="{'invisible': [('display_mail_composer', '=', False)]}"/>
+                           invisible="not display_mail_composer"/>
                     <group>
-                        <group attrs="{'invisible': [('display_mail_composer', '=', False)]}">
+                        <group invisible="not display_mail_composer">
                             <field name="mail_attachments_widget"
                                    widget="mail_attachments"
                                    string="Attach a file"

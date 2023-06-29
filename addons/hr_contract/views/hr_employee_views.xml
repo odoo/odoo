@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
                 <field name="is_manager" invisible="1"/>
-                <field name="first_contract_date" attrs="{'invisible': [('is_manager', '=', False)]}"/>
+                <field name="first_contract_date" invisible="not is_manager"/>
             </xpath>
         </field>
     </record>

@@ -7,9 +7,9 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers" multi_edit="1">
-                    <field name="active" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="time_cycle_manual" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="time_cycle_manual" column_invisible="True"/>
                     <field name="name"/>
                     <field name="bom_id"/>
                     <field name="workcenter_id"/>
@@ -17,7 +17,7 @@
                     <field name="time_computed_on" optional="hide"/>
                     <field name="time_cycle" widget="float_time" string="Duration (minutes)"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                    <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
+                    <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
                     <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" groups="mrp.group_mrp_workorder_dependencies"/>
                 </tree>
@@ -48,7 +48,7 @@
                     <attribute name="sum">Total Duration</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="attributes">
-                    <attribute name="attrs">{'column_invisible': [('parent.product_id', '!=', False)]}</attribute>
+                    <attribute name="column_invisible">parent.product_id</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
                     <button name="action_archive" class="oe_right" type="object" string="Archive Operation" invisible="context.get('parent_production_id')"/>
@@ -56,8 +56,8 @@
                 <xpath expr="//field[@name='blocked_by_operation_ids']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
-                    <field name="bom_id" invisible="1"/>
-                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" attrs="{'column_invisible': [('parent.allow_operation_dependencies', '=', False)]}"/>
+                    <field name="bom_id" column_invisible="True"/>
+                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" column_invisible="not parent.allow_operation_dependencies"/>
                 </xpath>
             </field>
         </record>
@@ -88,7 +88,7 @@
             <field name="arch" type="xml">
                 <form string="Routing Work Centers">
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group name="description">
                                 <field name="active" invisible="1"/>
@@ -99,18 +99,18 @@
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                                 <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
                                 <field name="allow_operation_dependencies" invisible="1"/>
-                                <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" attrs="{'invisible': [('allow_operation_dependencies', '=', False)]}"/>
+                                <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" invisible="not allow_operation_dependencies"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
-                                <label for="time_mode_batch" attrs="{'invisible': [('time_mode', '=', 'manual')]}"/>
-                                <div attrs="{'invisible': [('time_mode', '=', 'manual')]}">
+                                <label for="time_mode_batch" invisible="time_mode == 'manual'"/>
+                                <div invisible="time_mode == 'manual'">
                                     last
                                     <field name="time_mode_batch" class="oe_inline"/>
                                     work orders
                                 </div>
-                                <label for="time_cycle_manual" attrs="{'invisible': [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}" string="Default Duration"/>
-                                <div attrs="{'invisible':  [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}">
+                                <label for="time_cycle_manual" invisible="time_mode == 'auto' and workorder_count != 0" string="Default Duration"/>
+                                <div invisible="time_mode == 'auto' and workorder_count != 0">
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
                                 <field name="time_cycle" invisible="1"/>
@@ -121,9 +121,9 @@
                             <page string="Work Sheet" name="worksheet">
                                 <group>
                                     <field name="worksheet_type" widget="radio"/>
-                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'pdf')], 'required':  [('worksheet_type', '=', 'pdf')]}"/>
-                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'google_slide')], 'required': [('worksheet_type', '=', 'google_slide')]}"/>
-                                    <field name="note" attrs="{'invisible':  [('worksheet_type', '!=', 'text')]}"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" invisible="worksheet_type != 'pdf'" required="worksheet_type == 'pdf'"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
+                                    <field name="note" invisible="worksheet_type != 'text'"/>
                                 </group>
                             </page>
                         </notebook>

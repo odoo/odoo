@@ -13,7 +13,7 @@
                          <group>
                              <field name="reason"/>
                              <field name="date" string="Debit Note Date"/>
-                             <field name="copy_lines" attrs="{'invisible': [('move_type', 'in', ['in_refund', 'out_refund'])]}"/>
+                             <field name="copy_lines" invisible="move_type in ['in_refund', 'out_refund']"/>
                          </group>
                          <group>
                              <field name="journal_id" domain="[('type', '=', journal_type)]"/>

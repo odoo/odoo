@@ -34,11 +34,11 @@
             <sheet>
                 <field name="active" invisible="1" />
                 <field name="company_id" invisible="1"/>
-                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group>
                     <group name="user_details">
                         <field name="name"/>
-                        <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'invisible': [('resource_type','=','material')]}"/>
+                        <field name="user_id" invisible="resource_type == 'material'" required="resource_type == 'user'"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         <field name="resource_type" />
                     </group>
@@ -58,7 +58,7 @@
         <field name="model">resource.resource</field>
         <field name="arch" type="xml">
             <tree string="Resources" multi_edit="1" default_order="name">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
                 <field name="name" />
                 <field name="user_id" />
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>

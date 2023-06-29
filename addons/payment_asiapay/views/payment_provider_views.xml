@@ -7,20 +7,20 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'asiapay')]}">
+                <group invisible="code != 'asiapay'">
                     <field name="asiapay_brand"
                            string="Brand"
-                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'asiapay' and state != 'disabled'"/>
                     <field name="asiapay_merchant_id"
                            string="Merchant ID"
-                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'asiapay' and state != 'disabled'"/>
                     <field name="asiapay_secure_hash_secret"
                            string="Secure Hash Secret"
-                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"
+                           required="code == 'asiapay' and state != 'disabled'"
                            password="True"/>
                     <field name="asiapay_secure_hash_function"
                            string="Secure Hash Function"
-                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"
+                           required="code == 'asiapay' and state != 'disabled'"
                            groups="base.group_no_one"/>
                 </group>
             </group>

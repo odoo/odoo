@@ -12,9 +12,9 @@
                         <field name="amount" />
                         <field name="pos_order_id" readonly="1"/>
                         <field name="payment_method_id" readonly="1"/>
-                        <field name="card_type" readonly="1" attrs="{'invisible': [('card_type', '=', False)]}"/>
-                        <field name="cardholder_name" readonly="1" attrs="{'invisible': [('cardholder_name', '=', False)]}"/>
-                        <field name="transaction_id" readonly="1" attrs="{'invisible': [('transaction_id', '=', False)]}"/>
+                        <field name="card_type" readonly="1" invisible="not card_type"/>
+                        <field name="cardholder_name" readonly="1" invisible="not cardholder_name"/>
+                        <field name="transaction_id" readonly="1" invisible="not transaction_id"/>
                         <field name="session_id" />
                     </group>
                 </sheet>
@@ -27,7 +27,7 @@
         <field name="model">pos.payment</field>
         <field name="arch" type="xml">
             <tree string="Payments" create="0" delete="0">
-                <field name="currency_id" invisible="1" />
+                <field name="currency_id" column_invisible="True" />
                 <field name="payment_date"/>
                 <field name="payment_method_id" />
                 <field name="pos_order_id" />

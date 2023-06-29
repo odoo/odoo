@@ -13,7 +13,7 @@
                     <a name="preview_self_order_app" 
                         type="object"
                         style="white-space: nowrap;"
-                        attrs="{'invisible': [('self_order_view_mode','=',False)]}">
+                        invisible="not self_order_view_mode">
                         Mobile Menu
                     </a>
                 </div>
@@ -21,7 +21,7 @@
             <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
                 <field name="self_order_table_mode" invisible="1" />
                 <div class="badge text-bg-info o_kanban_inline_block me-2"
-                    attrs="{'invisible': [('self_order_table_mode','=',False)]}">
+                    invisible="not self_order_table_mode">
                     Self Ordering Enabled
                 </div>
             </xpath>

@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="replace">
                 <field name="is_quantity_copy" invisible="1"/>
-                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
+                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" readonly="is_quantity_copy == 'none' or state in ['purchase', 'done', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
             </field>
             <field name="partner_ref" position="after">
                 <field name="requisition_id" domain="[('state', 'in', ('in_progress', 'open', 'ongoing')), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
@@ -25,16 +25,16 @@
                         <group>
                             <p colspan="2">
                                 <button name="action_create_alternative" type="object" class="btn-link d-block" string="Create Alternative" icon="fa-copy"/>
-                                <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" attrs="{'invisible': [('alternative_po_ids', '=', [])]}"/>
+                                <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" invisible="not alternative_po_ids"/>
                             </p>
                         </group>
                     </group>
-                    <field name="alternative_po_ids" attrs="{'readonly': [('id', '=', False)]}" widget="many2many_alt_pos" context="{'quotation_only': True}">
+                    <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
                         <tree string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase', 'done']" decoration-bf="id == parent.id">
                             <control>
                                 <create string="Link to Existing RfQ"/>
                             </control>
-                            <field name="partner_id"/>
+                            <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
                             <field name="amount_total"/>
@@ -63,11 +63,11 @@
         <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="before">
-                <field name="has_alternatives" invisible="1"/>
+                <field name="has_alternatives" column_invisible="True"/>
                 <button class="fa fa-copy"
                     title="Has Alternatives"
                     disabled="1"
-                    attrs="{'invisible': [('has_alternatives', '=', False)]}"/>
+                    invisible="not has_alternatives"/>
             </field>
         </field>
     </record>
@@ -78,11 +78,11 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="before">
-                <field name="has_alternatives" invisible="1"/>
+                <field name="has_alternatives" column_invisible="True"/>
                 <button class="fa fa-copy"
                     title="Has Alternatives"
                     disabled="1"
-                    attrs="{'invisible': [('has_alternatives', '=', False)]}"/>
+                    invisible="not has_alternatives"/>
             </field>
         </field>
     </record>
@@ -111,9 +111,9 @@
                 <field name="price_subtotal" string="Total"/>
                 <field name="currency_id"/>
                 <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
-                    attrs="{'invisible': [('product_qty', '&lt;=', 0.0)]}"/>
+                    invisible="product_qty &lt;= 0.0"/>
                 <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
-                    attrs="{'invisible': ['|', ('product_qty', '&lt;=', 0.0), ('state', 'in', ['cancel', 'purchase', 'done'])]}"/>
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase', 'done']"/>
             </tree>
         </field>
     </record>

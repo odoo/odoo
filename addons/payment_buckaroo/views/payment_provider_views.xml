@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'buckaroo')]}">
-                    <field name="buckaroo_website_key" attrs="{'required':[ ('code', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
-                    <field name="buckaroo_secret_key" string="Secret Key" attrs="{'required':[ ('code', '=', 'buckaroo'), ('state', '!=', 'disabled')]}" password="True"/>
+                <group invisible="code != 'buckaroo'">
+                    <field name="buckaroo_website_key" required="code == 'buckaroo' and state != 'disabled'"/>
+                    <field name="buckaroo_secret_key" string="Secret Key" required="code == 'buckaroo' and state != 'disabled'" password="True"/>
                 </group>
             </group>
         </field>

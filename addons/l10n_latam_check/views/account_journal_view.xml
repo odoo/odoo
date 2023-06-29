@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='check_sequence_id']/.." position="after">
                 <group string="Checks Management" name="check_management"
-                    attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}">
+                    invisible="',check_printing,'.lower() not in (selected_payment_method_codes or '').lower() or type != 'bank'">
                     <field name="l10n_latam_manual_checks"/>
                 </group>
             </xpath>

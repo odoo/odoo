@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div name="landed_cost_info" position="replace">
-                <div class="content-group" attrs="{'invisible': [('module_stock_landed_costs', '=', False)]}">
+                <div class="content-group" invisible="not module_stock_landed_costs">
                     <div class="mt16">
                         <label for="lc_journal_id" class="mr8" string="Default Journal"/>
                         <field name="lc_journal_id"/>

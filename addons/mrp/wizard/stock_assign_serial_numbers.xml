@@ -27,7 +27,7 @@
                 </group>
                 <field name="multiple_lot_components_names" invisible="1"/>
                 <group col="1">
-                    <p class="o_form_label oe_inline text-danger" attrs="{'invisible': [('multiple_lot_components_names', '=', False)]}">
+                    <p class="o_form_label oe_inline text-danger" invisible="not multiple_lot_components_names">
                         Note that components <field name="multiple_lot_components_names" readonly="True"/> have multiple lot reservations.<br/>
                         Do you want to confirm anyway ?
                     </p>
@@ -41,16 +41,16 @@
                     <group>
                         <field name="expected_qty" readonly="True"/>
                     </group>
-                    <p col="1" class="o_form_label oe_inline" attrs="{'invisible': [('show_backorders', '=', False)]}">
+                    <p col="1" class="o_form_label oe_inline" invisible="not show_backorders">
                         You have entered less serial numbers than the quantity to produce.<br/>
                         Create a backorder if you expect to process the remaining quantities later.<br/>
                         Do not create a backorder if you will not process the remaining products.
                     </p>
                 </group>
                 <footer>
-                    <button name="apply" string="Apply" type="object" class="btn-primary" attrs="{'invisible': [('show_apply', '=', False)]}"/>
-                    <button name="create_backorder" string="Create Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}"/>
-                    <button name="no_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_backorders', '=', False)]}"/>
+                    <button name="apply" string="Apply" type="object" class="btn-primary" invisible="not show_apply"/>
+                    <button name="create_backorder" string="Create Backorder" type="object" class="btn-primary" invisible="not show_backorders"/>
+                    <button name="no_backorder" string="No Backorder" type="object" class="btn-primary" invisible="not show_backorders"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>

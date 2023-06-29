@@ -46,26 +46,26 @@
                 <header>
                     <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
                 </header>
-                <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
+                <div class="alert alert-warning text-center" role="alert" invisible="state != 'validated'">
                     Note: Validated work entries cannot be modified.
                 </div>
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" string="Description" placeholder="Work Entry Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
-                            <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" widget="many2one_avatar_user"/>
-                            <field name="work_entry_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="name" string="Description" placeholder="Work Entry Name" readonly="state == 'validated'"/>
+                            <field name="employee_id" readonly="state != 'draft'" widget="many2one_avatar_user"/>
+                            <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group>
-                            <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                            <field name="date_start" readonly="state != 'draft'" />
+                            <field name="date_stop" required="1" readonly="state != 'draft'"/>
                             <label for="duration"/>
                             <div class="o_row mw-50 mw-sm-25">
                                 <field name="duration"
                                     nolabel="1"
                                     widget="float_time"
                                     class="o_hr_narrow_field"
-                                    attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                                    readonly="state != 'draft'" />
                                 <span>Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
@@ -170,7 +170,7 @@
         <field name="arch" type="xml">
             <form string="Work Entry Type" >
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Work Entry Type Name"/>

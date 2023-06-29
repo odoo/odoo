@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='invoicing_settings']" position="after">
-                <block title="Indonesian Localization" id="l10n_cl_section" attrs="{'invisible': [('country_code', '!=', 'ID')]}">
+                <block title="Indonesian Localization" id="l10n_cl_section" invisible="country_code != 'ID'">
                     <setting company_dependent="1">
                         <div class="content-group">
                             <div class="row mt16">

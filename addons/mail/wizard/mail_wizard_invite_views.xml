@@ -15,7 +15,7 @@
                                 placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
                         <field name="notify"/>
-                        <field name="message" attrs="{'invisible': [('notify','!=',True)]}"
+                        <field name="message" invisible="not notify"
                                options="{'style-inline': true, 'no-attachment': true}"
                                class="oe-bordered-editor"/>
                     </group>

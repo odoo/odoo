@@ -39,7 +39,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_prod_environment"
-                                attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
+                                invisible="not prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
                                 class="oe_stat_button"
                                 type="object" icon="fa-play">
                             <div class="o_stat_info o_field_widget">
@@ -49,7 +49,7 @@
                         </button>
                         <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
                         <button name="toggle_prod_environment"
-                                attrs="{'invisible': ['|', '|', ('prod_environment', '=', True), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
+                                invisible="prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
                                 class="oe_stat_button"
                                 type="object" icon="fa-stop">
                             <div class="o_stat_info o_field_widget">
@@ -58,7 +58,7 @@
                             </div>
                         </button>
                         <button name="toggle_debug"
-                                attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', True)]}"
+                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or debug_logging"
                                 class="oe_stat_button"
                                 type="object" icon="fa-code">
                             <div class="o_stat_info o_field_widget">
@@ -66,7 +66,7 @@
                             </div>
                         </button>
                         <button name="toggle_debug"
-                                attrs="{'invisible': ['|', '|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule'), ('debug_logging', '=', False)]}"
+                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or not debug_logging"
                                 class="oe_stat_button"
                                 type="object" icon="fa-code">
                             <div class="o_stat_info o_field_widget">
@@ -74,7 +74,7 @@
                             </div>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title" name="title">
                         <label for="name" string="Shipping Method"/>
                         <h1>
@@ -92,7 +92,7 @@
                                 <field name="delivery_type" />
                                 <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
                             </div>
-                            <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
+                            <field name="integration_level" widget="radio" invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule'"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group name="delivery_details">
@@ -100,35 +100,36 @@
                             <field name="fixed_price"
                                     widget="monetary"
                                     class="oe_inline"
-                                    attrs="{'invisible': [('delivery_type', '!=', 'fixed')]}"/>
+                                    invisible="delivery_type != 'fixed'"/>
                             <field name="margin"
                                     string="Margin on Rate"
                                     widget="percentage"
                                     class="oe_inline"
-                                    attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
+                                    invisible="delivery_type == 'fixed'"/>
                             <field name="fixed_margin"
                                     string="Additional margin"
                                     widget="monetary"
-                                    attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
-                            <label for="free_over" attrs="{'invisible': [('delivery_type', '=', 'base_on_rule')]}"/>
-                            <div name="free_over_amount" attrs="{'invisible': [('delivery_type', '=', 'base_on_rule')]}">
+                                    invisible="delivery_type == 'fixed'"/>
+                            <label for="free_over" invisible="delivery_type == 'base_on_rule'"/>
+                            <div name="free_over_amount" invisible="delivery_type == 'base_on_rule'">
                                 <field name="free_over"/>
                                 <field name="amount"
                                         widget="monetary"
                                         class="oe_inline"
-                                        attrs="{'required': [('free_over', '!=', False)], 'invisible': [('free_over', '=', False)]}"/>
+                                        invisible="not free_over"
+                                        required="free_over"/>
                             </div>
                             <field name="product_id" context="{'default_detailed_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
-                            <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
+                            <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
                             <field name="supports_shipping_insurance" invisible="1"/>
-                            <label for="shipping_insurance" String="Shipping Insurance" attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}"/>
-                            <div attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}">
+                            <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>
+                            <div invisible="not supports_shipping_insurance">
                                 <field name="shipping_insurance" class="oe_inline"/>%
                             </div>
                         </group>
                     </group>
                     <notebook>
-                        <page name="pricing" string="Pricing" attrs="{'invisible': [('delivery_type', '!=', 'base_on_rule')]}">
+                        <page name="pricing" string="Pricing" invisible="delivery_type != 'base_on_rule'">
                             <group name="general">
                                 <field name="price_rule_ids" nolabel="1" colspan="2"/>
                             </group>
@@ -145,16 +146,16 @@
                                     <field name="state_ids"
                                             widget="many2many_tags"
                                             domain="[('country_id', 'in', country_ids)]"
-                                            attrs="{'readonly': [('country_ids', '=', [])]}"
+                                            readonly="not country_ids"
                                             force_save="1"
                                             options="{'no_create': True}"/>
                                     <field name="zip_prefix_ids"
                                             widget="many2many_tags"
-                                            attrs="{'readonly': [('country_ids', '=', [])]}"
+                                            readonly="not country_ids"
                                             force_save="1"
                                             options="{'no_create_edit': True}"/>
                                 </group>
-                                <p class="fst-italic" attrs="{'invisible': [('country_ids', '!=', [])]}">
+                                <p class="fst-italic" invisible="country_ids">
                                     Please select a country before choosing a state or a zip prefix.
                                 </p>
                             </group>

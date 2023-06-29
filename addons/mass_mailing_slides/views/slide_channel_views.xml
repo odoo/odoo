@@ -8,7 +8,7 @@
             <button name="action_channel_enroll" position="before">
                 <field name="members_count" invisible="1"/>
                 <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object"
-                        class="oe_highlight" attrs="{'invisible': [('members_count', '=', 0)]}"
+                        class="oe_highlight" invisible="members_count == 0"
                         groups="mass_mailing.group_mass_mailing_user"/>
             </button>
         </field>

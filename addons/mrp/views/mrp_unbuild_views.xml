@@ -87,15 +87,15 @@
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
                 <form string="Unbuild Orders">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1" readonly="state == 'done'"/>
                     <header>
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_validate" string="Unbuild" type="object" invisible="state != 'draft'" class="oe_highlight" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    type="action" icon="fa-exchange" states="done">
+                                    type="action" icon="fa-exchange" invisible="state != 'done'">
                                     <div class="o_stat_info">
                                         <span class="o_stat_text">Product Moves</span>
                                     </div>
@@ -106,22 +106,22 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" attrs="{'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')]}" force_save="1"/>
+                                <field name="product_id" readonly="mo_id or state == 'done'" force_save="1"/>
                                 <field name="mo_bom_id" invisible="1"/>
-                                <field name="bom_id" attrs="{'required': [('mo_id', '=', False)], 'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')], 'invisible': [('mo_id', '!=', False), ('mo_bom_id', '=', False)]}" force_save="1"/>
+                                <field name="bom_id" invisible="mo_id and not mo_bom_id" readonly="mo_id or state == 'done'" required="not mo_id" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" attrs="{'readonly': ['|', ('has_tracking', '=', 'serial'), ('state', '=', 'done')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': ['|', ('mo_id', '!=', False), ('state', '=', 'done')]}" force_save="1"/>
+                                    <field name="product_qty" readonly="has_tracking == 'serial' or state == 'done'"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="mo_id or state == 'done'" force_save="1"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="mo_id" readonly="state == 'done'"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')], 'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')]}" groups="stock.group_production_lot" force_save="1"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="lot_id" invisible="has_tracking == 'none'" readonly="mo_id or state == 'done'" required="has_tracking != 'none'" groups="stock.group_production_lot" force_save="1"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                             </group>
                         </group>
                     </sheet>
@@ -144,28 +144,28 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="company_id" invisible="1"/>
+                                <field name="company_id" invisible="1" readonly="state == 'done'"/>
                                 <field name="state" invisible="1"/>
-                                <field name="product_id" invisible="1"/>
-                                <field name="bom_id" invisible="1"/>
+                                <field name="product_id" invisible="1" readonly="state == 'done'"/>
+                                <field name="bom_id" invisible="1" readonly="state == 'done'"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
+                                    <field name="product_qty" readonly="has_tracking == 'serial'"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="mo_id" force_save="1"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id" invisible="1"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                <field name="mo_id" invisible="1" readonly="state == 'done'"/>
+                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
+                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" readonly="1" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="lot_id" readonly="1" invisible="has_tracking == 'none'" required="has_tracking != 'none'" groups="stock.group_production_lot"/>
                                 <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             </group>
                         </group>
                     </sheet>
                     <footer class="oe_edit_only">
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="q"/>
+                        <button name="action_validate" string="Unbuild" type="object" invisible="state != 'draft'" class="oe_highlight" data-hotkey="q"/>
                         <button string="Discard" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
@@ -179,15 +179,15 @@
             <field name="arch" type="xml">
                 <tree sample="1">
                     <field name="name" decoration-bf="1"/>
-                    <field name="product_id"/>
-                    <field name="bom_id"/>
-                    <field name="mo_id"/>
+                    <field name="product_id" readonly="state == 'done'"/>
+                    <field name="bom_id" readonly="state == 'done'"/>
+                    <field name="mo_id" readonly="state == 'done'"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom"/>
-                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="product_qty" readonly="state == 'done'"/>
+                    <field name="product_uom_id" groups="uom.group_uom" readonly="state == 'done'"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                     <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                 </tree>
             </field>

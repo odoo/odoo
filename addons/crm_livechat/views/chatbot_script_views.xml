@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button name="action_view_leads" type="object" class="oe_stat_button"
-                        icon="fa-star" attrs="{'invisible': [('lead_count', '=', 0)]}">
+                        icon="fa-star" invisible="lead_count == 0">
                     <field string="Leads" name="lead_count" widget="statinfo" />
                 </button>
             </div>

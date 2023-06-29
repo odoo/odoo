@@ -8,24 +8,24 @@
             <header>
                 <button string="Print Labels" type="object" name="action_open_label_layout"/>
             </header>
-                <field name="product_variant_count" invisible="1"/>
-                <field name="sale_ok" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="cost_currency_id" invisible="1"/>
+                <field name="product_variant_count" column_invisible="True"/>
+                <field name="sale_ok" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="cost_currency_id" column_invisible="True"/>
                 <field name="priority" widget="priority" optional="show" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
                 <field name="product_tag_ids" widget="many2many_tags" optional="show"/>
-                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '!=', 1)]}"/>
+                <field name="barcode" optional="hide" readonly="product_variant_count != 1"/>
                 <field name="company_id" options="{'no_create': True}"
                     groups="base.group_multi_company" optional="hide"/>
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
                 <field name="detailed_type" optional="hide" readonly="1"/>
-                <field name="type" invisible="1"/>
+                <field name="type" column_invisible="True"/>
                 <field name="uom_id" string="Unit" readonly="1" optional="show" groups="uom.group_uom"/>
-                <field name="active" invisible="1"/>
+                <field name="active" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -42,15 +42,15 @@
                 <attribute name="name">Product Template</attribute>
             </xpath>
             <field name="categ_id" position="after">
-                <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                <field name="default_code" invisible="product_variant_count &gt; 1"/>
                 <field name="valid_product_template_attribute_line_ids" invisible="1"/>
-                <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '>', 1), '&amp;', ('product_variant_count', '=', 0), ('valid_product_template_attribute_line_ids', '!=', [])]}"/>
+                <field name="barcode" invisible="product_variant_count &gt; 1 or (product_variant_count == 0 and valid_product_template_attribute_line_ids)"/>
             </field>
 
             <div name="button_box" position="inside">
                 <button name="%(product.product_variant_action)d" type="action"
                     icon="fa-sitemap" class="oe_stat_button"
-                    attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}"
+                    invisible="product_variant_count &lt;= 1"
                     groups="product.group_product_variant">
                     <field string="Variants" name="product_variant_count" widget="statinfo" />
                 </button>
@@ -60,8 +60,8 @@
                 <page name="variants" string="Attributes &amp; Variants" groups="product.group_product_variant">
                     <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">
                         <tree string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
-                            <field name="value_count" invisible="1"/>
-                            <field name="attribute_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="value_count" column_invisible="True"/>
+                            <field name="attribute_id" readonly="id"/>
                             <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}"/>
                             <button string="Configure" class="float-end btn-secondary"
                                 type="object" name="action_open_attribute_values"

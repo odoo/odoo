@@ -7,10 +7,10 @@
     <field name="arch" type="xml">
         <form string="Blog Post">
             <sheet>
-                <div class="oe_button_box" name="button_box" attrs="{'invisible': [('active', '=', False)]}">
+                <div class="oe_button_box" name="button_box" invisible="not active">
                     <field name="is_published" widget="website_redirect_button"/>
                 </div>
-                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group name="blog_details">
                     <field name="blog_id"/>
                     <field name="active" invisible="1"/>
@@ -116,7 +116,7 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
-            <field name="active" invisible="1"/>
+            <field name="active" column_invisible="True"/>
             <field name="name"/>
             <field name="website_url"/>
 

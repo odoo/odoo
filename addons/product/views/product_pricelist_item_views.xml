@@ -57,31 +57,30 @@
                 <!-- Scope = coming from a product/product template -->
                 <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}"/>
                 <field name="name" string="Applied On"/>
-                <field name="company_id" invisible="1"/>
-                <field name="categ_id" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="categ_id" column_invisible="True"/>
                 <field name="product_tmpl_id"
-                  invisible="context.get('active_model')!='product.category'"
-                  attrs="{'required': [('applied_on', '=', '1_product')]}"
+                  column_invisible="context.get('active_model') != 'product.category'"
+                  required="applied_on == '1_product'"
                   domain="[('categ_id', '=', context.get('default_categ_id', True)), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                   options="{'no_create_edit':1, 'no_open': 1}"/>
                 <field name="product_id"
                   groups="product.group_product_variant"
-                  invisible="context.get('product_without_variants', False)"
-                  readonly="context.get('active_model')=='product.product'"
-                  attrs="{'required': [('applied_on', '=', '0_product_variant')]}"
+                  readonly="context.get('active_model') == 'product.product'"
+                  column_invisible="context.get('product_without_variants', False)"
+                  required="applied_on == '0_product_variant'"
                   domain="['|', '|',
                     ('id', '=', context.get('default_product_id', 0)),
                     ('product_tmpl_id', '=', context.get('default_product_tmpl_id', 0)),
                     ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
                   ]"
-                  options="{'no_create_edit':1, 'no_open': 1}"
-                  />
+                  options="{'no_create_edit':1, 'no_open': 1}"/>
                 <field name="min_quantity" colspan="4"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="fixed_price" string="Price" required='1'/>
                 <field name="date_start" optional="show"/>
                 <field name="date_end" optional="show"/>
-                <field name="applied_on" invisible="1"/>
+                <field name="applied_on" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show" options="{'no_create':1, 'no_open': 1}"/>
             </tree>
         </field>
@@ -106,31 +105,28 @@
                     <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
                         <group>
                             <field name="price" invisible="1"/>
-                            <field name="fixed_price" widget="monetary" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}"/>
-                            <label for="percent_price" string="Discount" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>
-                            <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
-                                <field name="percent_price" class="oe_inline" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>%
+                            <field name="fixed_price" widget="monetary" invisible="compute_price != 'fixed'"/>
+                            <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
+                            <div class="o_row" invisible="compute_price != 'percentage'">
+                                <field name="percent_price" class="oe_inline" invisible="compute_price != 'percentage'"/>%
                             </div>
-                            <field name="base" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
-                            <field name="base_pricelist_id" attrs="{
-                                'invisible': ['|', ('compute_price', '!=', 'formula'), ('base', '!=', 'pricelist')],
-                                'required': [('compute_price', '=', 'formula'), ('base', '=', 'pricelist')],
-                                'readonly': [('base', '!=', 'pricelist')]}"/>
-                            <label for="price_discount" string="Discount" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
-                            <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
+                            <field name="base" invisible="compute_price != 'formula'"/>
+                            <field name="base_pricelist_id" invisible="compute_price != 'formula' or base != 'pricelist'" readonly="base != 'pricelist'" required="compute_price == 'formula' and base == 'pricelist'"/>
+                            <label for="price_discount" string="Discount" invisible="compute_price != 'formula'"/>
+                            <div class="o_row" invisible="compute_price != 'formula'">
                                 <field name="price_discount"/>
                                 <span>%</span>
                             </div>
-                            <field name="price_surcharge" widget="monetary" string="Extra Fee" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
-                            <field name="price_round" string="Rounding Method" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
-                            <label string="Margins" for="price_min_margin" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
-                            <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
+                            <field name="price_surcharge" widget="monetary" string="Extra Fee" invisible="compute_price != 'formula'"/>
+                            <field name="price_round" string="Rounding Method" invisible="compute_price != 'formula'"/>
+                            <label string="Margins" for="price_min_margin" invisible="compute_price != 'formula'"/>
+                            <div class="o_row" invisible="compute_price != 'formula'">
                                 <field name="price_min_margin" string="Min. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
                                 <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
                                 <field name="price_max_margin" string="Max. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
                             </div>
                         </group>
-                        <div class="alert alert-info" role="alert" style="white-space: pre;" attrs="{'invisible': [('compute_price', '!=', 'formula')]}">
+                        <div class="alert alert-info" role="alert" style="white-space: pre;" invisible="compute_price != 'formula'">
                             <field name="rule_tip"/>
                         </div>
                     </group>
@@ -138,15 +134,9 @@
                     <group string="Conditions">
                         <group name="pricelist_rule_target">
                             <field name="applied_on" widget="radio"/>
-                            <field name="categ_id" options="{'no_create':1}" attrs="{
-                                'invisible':[('applied_on', '!=', '2_product_category')],
-                                'required':[('applied_on', '=', '2_product_category')]}"/>
-                            <field name="product_tmpl_id" options="{'no_create':1}" attrs="{
-                                'invisible':[('applied_on', '!=', '1_product')],
-                                'required':[('applied_on', '=', '1_product')]}"/>
-                            <field name="product_id" options="{'no_create':1}" attrs="{
-                                'invisible':[('applied_on', '!=', '0_product_variant')],
-                                'required':[('applied_on', '=', '0_product_variant')]}"/>
+                            <field name="categ_id" options="{'no_create':1}" invisible="applied_on != '2_product_category'" required="applied_on == '2_product_category'"/>
+                            <field name="product_tmpl_id" options="{'no_create':1}" invisible="applied_on != '1_product'" required="applied_on == '1_product'"/>
+                            <field name="product_id" options="{'no_create':1}" invisible="applied_on != '0_product_variant'" required="applied_on == '0_product_variant'"/>
                         </group>
                         <group name="pricelist_rule_limits">
                             <field name="min_quantity"/>

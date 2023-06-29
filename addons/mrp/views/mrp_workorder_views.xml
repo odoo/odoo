@@ -67,43 +67,45 @@
                     <button name="button_pending" type="object" string="Pause" class="btn btn-warning text-uppercase"/>
                     <button name="action_mark_as_done" type="object" string="Done" class="btn btn-danger text-uppercase"/>
                 </header>
-                <field name="consumption" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="is_produced" invisible="1"/>
-                <field name="is_user_working" invisible="1"/>
-                <field name="product_uom_id" invisible="1" readonly="0"/>
-                <field name="production_state" invisible="1"/>
-                <field name="production_bom_id" invisible="1"/>
-                <field name="qty_producing" invisible="1"/>
-                <field name="time_ids" invisible="1"/>
-                <field name="working_state" invisible="1"/>
-                <field name="operation_id" invisible="1" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
-                <field name="name" string="Operation"/>
-                <field name="workcenter_id"/>
+                <field name="consumption" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="is_produced" column_invisible="True"/>
+                <field name="is_user_working" column_invisible="True"/>
+                <field name="product_uom_id" readonly="0" column_invisible="True"/>
+                <field name="production_state" column_invisible="True"/>
+                <field name="production_bom_id" column_invisible="True"/>
+                <field name="qty_producing" column_invisible="True"/>
+                <field name="time_ids" column_invisible="True"/>
+                <field name="working_state" column_invisible="True"/>
+                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
+                <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
+                <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
-                <field name="date_start" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
-                <field name="date_finished" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
-                <field name="duration_expected" widget="float_time" sum="expected duration"/>
+                <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
+                <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
+                <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
                 <field name="duration" widget="mrp_timer"
-                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
+                  invisible="production_state == 'draft'"
+                  readonly="is_user_working" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
-                  attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
+                  column_invisible="parent.state == 'draft'"
+                  invisible="production_state == 'draft'"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
-                  attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'cancel')), ('is_user_working', '!=', False)]}"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
                 <button name="button_finish" type="object" string="Done" class="btn-success"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
                 <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked')]}"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked'"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state != 'blocked'"/>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
                         title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
-                <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <field name="show_json_popover" column_invisible="True"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"/>
             </tree>
         </field>
     </record>
@@ -124,7 +126,7 @@
                 <field name="production_id" optional="hide"/>
             </field>
             <field name="state" position="attributes">
-                <attribute name="attrs">{'invisible': [('production_state', '=', 'draft')]}</attribute>
+                <attribute name="invisible">production_state == 'draft'</attribute>
             </field>
         </field>
     </record>
@@ -142,7 +144,7 @@
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="oi-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
+                    <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="oi-arrows-v" invisible="scrap_count == 0">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="scrap_count"/></span>
                             <span class="o_stat_text">Scraps</span>
@@ -156,7 +158,7 @@
                 <group>
                     <group>
                         <field name="name" readonly="1"/>
-                        <field name="workcenter_id"/>
+                        <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                     </group>
                     <group>
                         <field name="product_id" readonly="1"/>
@@ -165,20 +167,20 @@
                     </group>
                 </group>
                 <group>
-                    <group attrs="{'invisible': [('date_start', '=', False)]}">
-                        <label for="date_start" string="Scheduled Date" attrs="{'invisible': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
-                        <label for="date_start" string="Start Date" attrs="{'invisible': [('state', 'not in', ['progress', 'done', 'cancel'])]}"/>
+                    <group invisible="not date_start">
+                        <label for="date_start" string="Scheduled Date" invisible="state in ['progress', 'done', 'cancel']"/>
+                        <label for="date_start" string="Start Date" invisible="state not in ['progress', 'done', 'cancel']"/>
                         <div class="oe_inline">
                             <field name="is_planned" invisible="1"/>
-                            <field name="date_start" class="mr8 oe_inline"/>
+                            <field name="date_start" class="mr8 oe_inline" readonly="state in ['cancel', 'done']"/>
                             <strong class="mr8 oe_inline">to</strong>
-                            <field name="date_finished" class="oe_inline"/>
+                            <field name="date_finished" class="oe_inline" readonly="state in ['cancel', 'done']"/>
                             <field name="show_json_popover" invisible="1"/>
-                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" invisible="not show_json_popover"/>
                         </div>
                         <label for="duration_expected"/>
                         <div class="o_row">
-                            <field name="duration_expected" widget="float_time"/>
+                            <field name="duration_expected" widget="float_time" readonly="state in ['cancel', 'done']"/>
                             <span>minutes</span>
                         </div>
                     </group>
@@ -191,11 +193,11 @@
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <tree editable="bottom">
                                 <field name="user_id"/>
-                                <field name="duration" widget="float_time" sum="Total duration" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                <field name="duration" widget="float_time" sum="Total duration" readonly="id"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="workcenter_id" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
+                                <field name="workcenter_id" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/>
                                 <field name="loss_id" string="Productivity" optional="show"/>
                             </tree>
                             <form>
@@ -219,37 +221,38 @@
                 <page string="Components" name="components">
                     <field name="move_raw_ids" readonly="1">
                         <tree>
-                            <field name="state" invisible="1"/>
-                            <field name="product_type" invisible="1"/>
-                            <field name="product_id"/>
+                            <field name="state" column_invisible="True"/>
+                            <field name="product_type" column_invisible="True"/>
+                            <field name="product_id" readonly="state == 'done'"/>
                             <field name="product_qty" string="To Consume"/>
                             <field name="reserved_availability" string ="Reserved"/>
                             <field name="quantity_done" string="Consumed"/>
-                            <field name="product_qty_available" string="On Hand" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
-                            <field name="product_virtual_available" string="Forecasted" attrs="{'invisible': [('product_type', '!=', 'product')]}"/>
+                            <field name="product_qty_available" string="On Hand" invisible="product_type != 'product'"/>
+                            <field name="product_virtual_available" string="Forecasted" invisible="product_type != 'product'"/>
                         </tree>
                     </field>
                 </page>
-                <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False), ('worksheet_google_slide', '=', False), ('operation_note', '=', False)]}">
+                <page string="Work Instruction" name="workorder_page_work_instruction" invisible="not worksheet and not worksheet_google_slide and not operation_note">
                     <field name="worksheet_type" invisible="1"/>
-                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'pdf')]}"/>
-                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'google_slide')]}"/>
-                    <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
+                    <field name="worksheet" widget="pdf_viewer" invisible="worksheet_type != 'pdf'"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" invisible="worksheet_type != 'google_slide'"/>
+                    <field name="operation_note" invisible="worksheet_type != 'text'"/>
                 </page>
                 <field name="allow_workorder_dependencies" invisible="1"/>
-                <page string="Blocked By" name="dependencies" attrs="{'invisible': [('allow_workorder_dependencies', '=', False)]}">
+                <page string="Blocked By" name="dependencies" invisible="not allow_workorder_dependencies">
                     <field name="blocked_by_workorder_ids" nolabel="1">
                         <tree editable="bottom">
-                            <field name="company_id" invisible="1"/>
-                            <field name="name" string="Operation"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                             <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                            <field name="workcenter_id"/>
+                            <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                             <field name="date_start" readonly="1"/>
                             <field name="date_finished" readonly="1"/>
-                            <field name="duration_expected" widget="float_time" sum="expected duration"/>
-                            <field name="production_state" invisible="1"/>
+                            <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
+                            <field name="production_state" column_invisible="True"/>
                             <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-info="state not in ('progress', 'done', 'cancel')"
-                                attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
+                                column_invisible="parent.state == 'draft'"
+                                invisible="production_state == 'draft'"/>
                             <button class="oe_link float-end" string="View WorkOrder" name="action_open_wizard" type="object"/>
                         </tree>
                     </field>

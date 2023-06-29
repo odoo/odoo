@@ -8,7 +8,7 @@
                 <tree string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="server_type"/>
-                    <field name="user"/>
+                    <field name="user" readonly="state != 'draft'"/>
                     <field name="date"/>
                     <field name="state" widget="badge"
                         decoration-info="state == 'draft'"
@@ -22,25 +22,25 @@
             <field name="model">fetchmail.server</field>
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server">
-                    <header attrs="{'invisible' : [('server_type', '=', 'local')]}">
-                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>
-                        <button string="Reset Confirmation" type="object" name="set_draft" states="done"/>
+                    <header invisible="server_type == 'local'">
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" invisible="state != 'draft'"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" invisible="state != 'done'"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" invisible="state != 'done'"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                     <field name="active" invisible="1"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"/>
+                        invisible="active"/>
                      <group>
                         <group>
                             <field name="name"/>
-                            <field name="server_type" widget="radio" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="server_type" widget="radio" readonly="state == 'done'"/>
                         </group>
                         <group>
-                            <field name="date" attrs="{'invisible': [('date', '=', False)]}"/>
+                            <field name="date" invisible="not date"/>
                             <div class="text-muted fst-italic" colspan="8" role="alert"
-                                attrs="{'invisible': [('server_type_info', '=', False)]}">
+                                invisible="not server_type_info">
                                 <field name="server_type_info"/>
                             </div>
                         </group>
@@ -48,23 +48,25 @@
                      <notebook>
                         <page string="Server &amp; Login" name="server_login_details">
                             <group>
-                                <group attrs="{'invisible' : [('server_type', '=', 'local')]}" string="Server Information">
-                                    <field name="server" attrs="{'required' : [('server_type', '!=', 'local')]}" />
+                                <group invisible="server_type == 'local'" string="Server Information">
+                                    <field name="server" readonly="state != 'draft'" required="server_type != 'local'" />
                                     <field name="port"
                                         required="1"
-                                        attrs="{'required' : [('server_type', '!=', 'local')]}"
+                                        readonly="state != 'draft'"
                                         options="{'format': false}" />
                                     <field name="is_ssl"/>
                                 </group>
-                                <group attrs="{'invisible' : [('server_type', '=', 'local')]}" string="Login Information">
-                                    <field name="user" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
+                                <group invisible="server_type == 'local'" string="Login Information">
+                                    <field name="user" readonly="state != 'draft'" required="server_type != 'local'"/>
                                     <field name="password" password="True"
-                                        attrs="{'required' : [('server_type', 'in', ('imap', 'pop'))], 'invisible' : [('server_type', 'not in', ('imap', 'pop'))]}"/>
+                                        invisible="server_type not in ('imap', 'pop')"
+                                        readonly="state != 'draft'"
+                                        required="server_type in ('imap', 'pop')"/>
                                 </group>
                                 <group string="Actions to Perform on Incoming Mails">
                                     <field name="object_id"/>
                                 </group>
-                                <group attrs="{'invisible' : [('server_type', '!=', 'local')]}" string="Configuration">
+                                <group invisible="server_type != 'local'" string="Configuration">
                                     <field name="configuration"/>
                                     <field name="script" widget="url"/>
                                 </group>
@@ -73,7 +75,7 @@
                         <page string="Advanced" name="advanced_options" groups="base.group_no_one">
                             <group>
                                 <group string="Advanced Options">
-                                    <field name="priority"/>
+                                    <field name="priority" readonly="state != 'draft'"/>
                                     <field name="attach"/>
                                     <field name="original"/>
                                 </group>

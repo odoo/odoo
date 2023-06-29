@@ -16,15 +16,15 @@
                     <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
                     <field name="force_assignment"/>
                 </group>
-                <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
-                <group attrs="{'invisible': [('deduplicate', '=', False)]}">
+                <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" invisible="not deduplicate"/>
+                <group invisible="not deduplicate">
                     <field name="duplicated_lead_ids" colspan="4" nolabel="1" readonly="1">
                         <tree create="false" delete="false">
                             <field name="create_date" widget="date"/>
                             <field name="name"/>
                             <field name="type"/>
                             <field name="contact_name"/>
-                            <field name="country_id" invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
                             <field name="email_from"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>
@@ -32,12 +32,13 @@
                         </tree>
                     </field>
                 </group>
-                <group attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
+                <group invisible="name != 'convert'" string="Customers" col="1">
                     <field name="action" class="oe_inline" widget="radio"/>
                     <group col="2">
                         <field name="partner_id"
                             widget="res_partner_many2one"
-                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                            invisible="action != 'exist'"
+                            required="action == 'exist'"
                             context="{'show_vat': True}"
                             class="oe_inline"/>
                     </group>
