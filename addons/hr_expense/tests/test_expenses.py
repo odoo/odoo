@@ -410,3 +410,20 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
         self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
+
+    def test_expense_from_attachments(self):
+        # avoid passing through extraction when installed
+        if 'hr.expense.extract.words' in self.env:
+            self.env.company.expense_extract_show_ocr_option_selection = 'no_send'
+        self.env.user.employee_id = self.expense_employee.id
+        attachment = self.env['ir.attachment'].create({
+            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+        })
+        product = self.env['product.product'].search([('can_be_expensed', '=', True)], limit=1)
+        product.property_account_expense_id = self.company_data['default_account_payable']
+
+        expense_id = self.env['hr.expense'].create_expense_from_attachments(attachment.id)['res_id']
+        expense = self.env['hr.expense'].browse(expense_id)
+        self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
