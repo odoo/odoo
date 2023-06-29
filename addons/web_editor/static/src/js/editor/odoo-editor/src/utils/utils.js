@@ -871,6 +871,25 @@ export function preserveCursor(document) {
     };
 }
 
+/**
+ * Check if the selection starts inside given selector. This function can be
+ * used as the `isDisabled` property of a command of the PowerBox to disable
+ * a command in the given selectors.
+ * @param {string}: comma separated string with all the desired selectors
+ * @returns {boolean} true selector is within one of the selector
+ * (if the command should be filtered)
+ */
+export function isSelectionInSelectors(selector) {
+    let anchor = document.getSelection().anchorNode;
+    if (anchor && anchor.nodeType && anchor.nodeType !== Node.ELEMENT_NODE) {
+        anchor = anchor.parentElement;
+    }
+    if (anchor && closestElement(anchor, selector)) {
+        return true;
+    }
+    return false;
+}
+
 //------------------------------------------------------------------------------
 // Format utils
 //------------------------------------------------------------------------------
