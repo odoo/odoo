@@ -3538,3 +3538,56 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
                 self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))
+
+    @freeze_time('2023-05-01')
+    def test_caba_with_different_lock_dates(self):
+        """
+        Test the date of the CABA move when reconciling a payment with an invoice
+        with date before fiscalyear_period but after period_lock_date when
+        having accountant rights.
+        """
+        self.env.company.tax_exigibility = True
+
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+
+        self.env['account.move'].search([('state', '=', 'draft')]).unlink()
+
+        self.env.company.fiscalyear_lock_date = fields.Date.from_string('2023-01-01')
+        self.env.company.period_lock_date = fields.Date.from_string('2023-02-01')
+
+        if not self.env.user.user_has_groups('account.group_account_manager'):
+            self.env.user.groups_id = [(4, [self.env.ref('account.group_account_manager').id], 0)]
+
+        invoice = self.init_invoice(move_type='out_invoice', products=self.product_a, invoice_date='2023-01-02', taxes=tax)
+
+        payment = self.env['account.payment'].create({
+            'partner_id': self.partner_a.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'date': '2023-01-30',
+            'amount': invoice.amount_total,
+        })
+
+        (invoice + payment.move_id).action_post()
+
+        (invoice + payment.move_id).line_ids\
+            .filtered(lambda x: x.account_internal_type in ('receivable', 'payable'))\
+            .reconcile()
+
+        caba_move = self.env['account.move'].search([('tax_cash_basis_move_id', '=', invoice.id)])
+
+        self.assertRecordValues(caba_move, [{
+            'date': fields.Date.from_string('2023-01-30'),
+        }])
