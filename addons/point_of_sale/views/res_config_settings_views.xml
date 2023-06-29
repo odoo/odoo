@@ -246,8 +246,10 @@
                                         <field name="pos_rounding_method" attrs="{'required' : [('pos_cash_rounding', '=', True)]}" domain="[('company_id', '=', company_id)]"/>
                                     </div>
                                     <div class="row mt16">
-                                        <label string="Only on cash methods" for="pos_only_round_cash_method" class="col-lg-3 o_light_label" />
-                                        <field name="pos_only_round_cash_method"/>
+                                        <div class="col">
+                                            <field name="pos_only_round_cash_method"/>
+                                            <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mt8">

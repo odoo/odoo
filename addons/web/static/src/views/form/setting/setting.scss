@@ -23,12 +23,13 @@
     }
 
     .o_field_widget {
-      @include media-breakpoint-up(md) {
-         &:not(.o_field_boolean) {
+      &:not(.o_field_boolean) {
+         flex: 0 0 auto;
+
+         @include media-breakpoint-up(md) {
             width: 50%;
          }
       }
-       flex: 0 0 auto;
 
        &.o_field_many2manytags > .o_field_widget {
           flex: 1 0 50px;
