@@ -80,18 +80,20 @@ export class PosStore extends Reactive {
         "number_buffer",
         "barcode_reader",
         "hardware_proxy",
+        "ui",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui }) {
         this.env = env;
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
+        this.ui = ui;
 
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.unwatched = markRaw({});
@@ -120,6 +122,7 @@ export class PosStore extends Reactive {
 
         this.numpadMode = "quantity";
         this.mobile_pane = "right";
+        this.productListView = window.localStorage.getItem("productListView") || "grid";
 
         // Record<orderlineId, { 'qty': number, 'orderline': { qty: number, refundedQty: number, orderUid: string }, 'destinationOrderUid': string }>
         this.toRefundLines = {};
@@ -174,7 +177,9 @@ export class PosStore extends Reactive {
         this.preloadImages();
         this.showScreen("ProductScreen");
     }
-
+    get productListViewMode() {
+        return this.productListView && this.ui.isSmall ? this.productListView : "grid";
+    }
     getDefaultSearchDetails() {
         return {
             fieldName: "RECEIPT_NUMBER",
