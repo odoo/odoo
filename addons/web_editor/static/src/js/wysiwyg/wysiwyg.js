@@ -479,148 +479,6 @@ const Wysiwyg = Widget.extend({
             this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
         }
 
-        // Check wether clientA is before clientB.
-        const isClientFirst = (clientA, clientB) => {
-            if (clientA.startTime === clientB.startTime) {
-                return clientA.id.localeCompare(clientB.id) < 1;
-            } else {
-                return clientA.startTime < clientB.startTime;
-            }
-        };
-        const rpcMutex = new Mutex();
-
-        this._getNewPtp = () => {
-            // Wether or not the history has been sent or received at least once.
-            let historySyncAtLeastOnce = false;
-            let historySyncFinished = false;
-            let historyStepsBuffer = [];
-
-            return new PeerToPeer({
-                peerConnectionConfig: { iceServers: this._iceServers },
-                currentClientId: this._currentClientId,
-                broadcastAll: (rpcData) => {
-                    return rpcMutex.exec(async () => {
-                        return this._rpc({
-                            route: '/web_editor/bus_broadcast',
-                            params: {
-                                model_name: modelName,
-                                field_name: fieldName,
-                                res_id: resId,
-                                bus_data: rpcData,
-                            },
-                        });
-                    });
-                },
-                onRequest: {
-                    get_start_time: () => this._startCollaborationTime,
-                    get_client_name: async () => {
-                        if (!this._userName) {
-                            this._userName = (await this._rpc({
-                                model: "res.users",
-                                method: "search_read",
-                                args: [
-                                    [['id', '=', this.getSession().uid]],
-                                    ['name']
-                                ],
-                            }))[0].name;
-                        }
-                        return this._userName;
-                    },
-                    get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(this.getSession().uid)}`,
-                    get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
-                    get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
-                    get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
-                },
-                onNotification: async ({ fromClientId, notificationName, notificationPayload }) => {
-                    switch (notificationName) {
-                        case 'ptp_remove':
-                            this.odooEditor.multiselectionRemove(notificationPayload);
-                            break;
-                        case 'rtc_signal_description':
-                            const pc = this.ptp.clientsInfos[fromClientId].peerConnection;
-                            if (this._couldBeDisconnected && this._navigatorCheckOnlineWorking && (!pc || pc.connectionState === 'closed')) {
-                                this._signalOnline();
-                            }
-                            break;
-                        case 'ptp_disconnect':
-                            this.ptp.removeClient(fromClientId);
-                            this.odooEditor.multiselectionRemove(fromClientId);
-                            break;
-                        case 'rtc_data_channel_open': {
-                            fromClientId = notificationPayload.connectionClientId;
-                            const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
-                            this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
-                            this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
-                                this.ptp.clientsInfos[fromClientId].clientName = clientName;
-                            });
-                            this.ptp.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
-                                this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
-                            });
-
-                            if (!historySyncAtLeastOnce) {
-                                const localClient = { id: this._currentClientId, startTime: this._startCollaborationTime };
-                                const remoteClient = { id: fromClientId, startTime: remoteStartTime };
-                                if (isClientFirst(localClient, remoteClient)) {
-                                    historySyncAtLeastOnce = true;
-                                } else {
-                                    const { steps, historyIds } = await this.ptp.requestClient(fromClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
-                                    // Ensure that the history hasn't been
-                                    // synced by another client before this
-                                    // `get_history_from_snapshot` finished.
-                                    if (historySyncAtLeastOnce) {
-                                        return;
-                                    }
-                                    const firstStepId = this.odooEditor.historyGetBranchIds()[0];
-                                    const staleDocument = !historyIds.includes(firstStepId);
-                                    if (staleDocument) {
-                                        return false;
-                                    }
-                                    historySyncAtLeastOnce = true;
-                                    this.odooEditor.historyResetFromSteps(steps, historyIds);
-                                    const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
-                                    if (remoteSelection) {
-                                        this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
-                                    }
-                                }
-                                // In case there are steps received in the meantime, process them.
-                                if (historyStepsBuffer.length) {
-                                    this.odooEditor.onExternalHistorySteps(historyStepsBuffer);
-                                    historyStepsBuffer = [];
-                                }
-                                historySyncFinished = true;
-                            } else {
-                                const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
-                                if (remoteSelection) {
-                                    this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
-                                }
-                            }
-                            break;
-                        }
-                        case 'oe_history_step':
-                            // Avoid race condition where the step is received
-                            // before the history has synced at least once.
-                            if (historySyncFinished) {
-                                this.odooEditor.onExternalHistorySteps([notificationPayload]);
-                            } else {
-                                historyStepsBuffer.push(notificationPayload);
-                            }
-                            break;
-                        case 'oe_history_set_selection': {
-                            const client = this.ptp.clientsInfos[fromClientId];
-                            if (!client) {
-                                return;
-                            }
-                            const selection = notificationPayload;
-                            selection.clientName = client.clientName;
-                            selection.clientAvatarUrl = client.clientAvatarUrl;
-                            this.odooEditor.onExternalMultiselectionUpdate(selection);
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-
         this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
 
@@ -2599,6 +2457,142 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     },
+    _getNewPtp() {
+        const rpcMutex = new Mutex();
+        const {collaborationChannel} = this.options;
+        const modelName = collaborationChannel.collaborationModelName;
+        const fieldName = collaborationChannel.collaborationFieldName;
+        const resId = collaborationChannel.collaborationResId;
+
+        // Wether or not the history has been sent or received at least
+        // once.
+        this._historySyncAtLeastOnce = false;
+        this._historySyncFinished = false;
+        this._historyStepsBuffer = [];
+
+        return new PeerToPeer({
+            peerConnectionConfig: { iceServers: this._iceServers },
+            currentClientId: this._currentClientId,
+            broadcastAll: (rpcData) => {
+                return rpcMutex.exec(async () => {
+                    return this._rpc({
+                        route: '/web_editor/bus_broadcast',
+                        params: {
+                            model_name: modelName,
+                            field_name: fieldName,
+                            res_id: resId,
+                            bus_data: rpcData,
+                        },
+                    });
+                });
+            },
+            onRequest: {
+                get_start_time: () => this._startCollaborationTime,
+                get_client_name: async () => {
+                    if (!this._userName) {
+                        this._userName = (await this._rpc({
+                            model: "res.users",
+                            method: "search_read",
+                            args: [
+                                [['id', '=', this.getSession().uid]],
+                                ['name']
+                            ],
+                        }))[0].name;
+                    }
+                    return this._userName;
+                },
+                get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(this.getSession().uid)}`,
+                get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
+                get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
+                get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
+            },
+            onNotification: async ({ fromClientId, notificationName, notificationPayload }) => {
+                switch (notificationName) {
+                    case 'ptp_remove':
+                        this.odooEditor.multiselectionRemove(notificationPayload);
+                        break;
+                    case 'rtc_signal_description':
+                        const pc = this.ptp.clientsInfos[fromClientId].peerConnection;
+                        if (this._couldBeDisconnected && this._navigatorCheckOnlineWorking && (!pc || pc.connectionState === 'closed')) {
+                            this._signalOnline();
+                        }
+                        break;
+                    case 'ptp_disconnect':
+                        this.ptp.removeClient(fromClientId);
+                        this.odooEditor.multiselectionRemove(fromClientId);
+                        break;
+                    case 'rtc_data_channel_open': {
+                        fromClientId = notificationPayload.connectionClientId;
+                        const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
+                        this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
+                        this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
+                            this.ptp.clientsInfos[fromClientId].clientName = clientName;
+                        });
+                        this.ptp.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
+                            this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
+                        });
+
+                        if (!this._historySyncAtLeastOnce) {
+                            const localClient = { id: this._currentClientId, startTime: this._startCollaborationTime };
+                            const remoteClient = { id: fromClientId, startTime: remoteStartTime };
+                            if (isClientFirst(localClient, remoteClient)) {
+                                this._historySyncAtLeastOnce = true;
+                            } else {
+                                const { steps, historyIds } = await this.ptp.requestClient(fromClientId, 'get_history_from_snapshot', undefined, { transport: 'rtc' });
+                                // Ensure that the history hasn't been
+                                // synced by another client before this
+                                // `get_history_from_snapshot` finished.
+                                if (this._historySyncAtLeastOnce) {
+                                    return;
+                                }
+                                const firstStepId = this.odooEditor.historyGetBranchIds()[0];
+                                const staleDocument = !historyIds.includes(firstStepId);
+                                if (staleDocument) {
+                                    return false;
+                                }
+                                this._historySyncAtLeastOnce = true;
+                                this.odooEditor.historyResetFromSteps(steps, historyIds);
+                                const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+                                if (remoteSelection) {
+                                    this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+                                }
+                            }
+                            // In case there are steps received in the meantime, process them.
+                            if (this._historyStepsBuffer.length) {
+                                this.odooEditor.onExternalHistorySteps(this._historyStepsBuffer);
+                                this._historyStepsBuffer = [];
+                            }
+                            this._historySyncFinished = true;
+                        } else {
+                            const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
+                            if (remoteSelection) {
+                                this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
+                            }
+                        }
+                        break;
+                    }
+                    case 'oe_history_step':
+                        if (this._historySyncFinished) {
+                            this.odooEditor.onExternalHistorySteps([notificationPayload]);
+                        } else {
+                            this._historyStepsBuffer.push(notificationPayload);
+                        }
+                        break;
+                    case 'oe_history_set_selection': {
+                        const client = this.ptp.clientsInfos[fromClientId];
+                        if (!client) {
+                            return;
+                        }
+                        const selection = notificationPayload;
+                        selection.clientName = client.clientName;
+                        selection.clientAvatarUrl = client.clientAvatarUrl;
+                        this.odooEditor.onExternalMultiselectionUpdate(selection);
+                        break;
+                    }
+                }
+            }
+        });
+    },
     _stopPeerToPeer: function () {
         this.ptp && this.ptp.stop();
         this._collaborationStopBus && this._collaborationStopBus();
@@ -2735,6 +2729,17 @@ Wysiwyg.setRange = function (startNode, startOffset = 0, endNode = startNode, en
     range.setEnd(endNode, endOffset);
     selection.addRange(range);
 };
+
+
+// Check wether clientA is before clientB.
+function isClientFirst(clientA, clientB) {
+    if (clientA.startTime === clientB.startTime) {
+        return clientA.id.localeCompare(clientB.id) < 1;
+    } else {
+        return clientA.startTime < clientB.startTime;
+    }
+};
+
 return Wysiwyg;
 });
 odoo.define('web_editor.widget', function (require) {
