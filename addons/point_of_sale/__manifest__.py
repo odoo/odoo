@@ -179,8 +179,8 @@
             'web/static/src/views/view_dialogs/select_create_dialog.js',
             # BEGIN copy of web.tests_assets. We don't 'include' it because other modules add their
             # own test helpers in this module that depend on files that they add in assets_backend
-            'web/static/lib/qunit/qunit-2.9.1.css',
-            'web/static/lib/qunit/qunit-2.9.1.js',
+            'web/static/lib/qunit/qunit.css',
+            'web/static/lib/qunit/qunit.js',
             'web/static/tests/legacy/helpers/**/*',
             ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
 
