@@ -2,12 +2,13 @@
 
 import base64
 from datetime import datetime, timedelta
+from http import HTTPStatus
 from os.path import basename, join as opj
 from unittest.mock import patch
 from freezegun import freeze_time
 
 import odoo
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user, tagged, RecordCapturer
 from odoo.tools import config, file_open, image_process
 
 from .test_common import TestHttpBase
@@ -395,6 +396,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(company=self.company2, user=self.user_of_company_of_superuser)
 
 
+@tagged('post_install', '-at_install')
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self, domain=''):
@@ -448,3 +450,63 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         })
         res2.raise_for_status()
         self.assertEqual(res2.status_code, 304, "We should not download the file again.")
+
+
+@tagged('post_install', '-at_install')
+class TestHttpStaticUpload(TestHttpStaticCommon):
+    def test_upload_small_file(self):
+        new_test_user(self.env, 'jackoneill')
+        self.authenticate('jackoneill', 'jackoneill')
+
+        with RecordCapturer(self.env['ir.attachment'], []) as capture, \
+             file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
+            file_content = file.read()
+            file_size = len(file_content)
+            file.seek(0)
+            res = self.opener.post(
+                f'{self.base_url()}/web/binary/upload_attachment',
+                files={'ufile': file},
+                data={
+                    'csrf_token': odoo.http.Request.csrf_token(self),
+                    'model': 'test_http.stargate',
+                    'id': self.env.ref('test_http.earth').id,
+                },
+            )
+        res.raise_for_status()
+
+        self.assertEqual(len(capture.records), 1, "An attachment should have been created")
+        self.assertEqual(capture.records.name, 'gizeh.png')
+        self.assertEqual(capture.records.raw, file_content)
+        self.assertEqual(capture.records.mimetype, 'image/png')
+
+        self.assertEqual(res.json(), [{
+            'filename': 'gizeh.png',
+            'mimetype': 'image/png',
+            'id': capture.records.id,
+            'size': file_size,
+        }])
+
+
+    def test_upload_large_file(self):
+        new_test_user(self.env, 'jackoneill')
+        self.authenticate('jackoneill', 'jackoneill')
+
+        with RecordCapturer(self.env['ir.attachment'], []) as capture, \
+             file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
+            file_size = file.seek(0, 2)
+            file.seek(0)
+            self.env['ir.config_parameter'].sudo().set_param(
+                'web.max_file_upload_size', file_size - 1,
+            )
+            res = self.opener.post(
+                f'{self.base_url()}/web/binary/upload_attachment',
+                files={'ufile': file},
+                data={
+                    'csrf_token': odoo.http.Request.csrf_token(self),
+                    'model': 'test_http.stargate',
+                    'id': self.env.ref('test_http.earth').id,
+                    'callback': 'callmemaybe',
+                },
+            )
+        self.assertFalse(capture.records, "No attachment should have been created")
+        self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
