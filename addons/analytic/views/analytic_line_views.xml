@@ -5,13 +5,13 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <tree string="Analytic Items" multi_edit="1">
-                <field name="company_id" invisible="1"/>
-                <field name="product_uom_category_id" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_uom_category_id" column_invisible="True"/>
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id"/>
                 <field name="plan_id"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="unit_amount" sum="Quantity" optional="hide"/>
                 <field name="product_uom_id" optional="hide"/>
                 <field name="partner_id" optional="hide"/>

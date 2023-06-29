@@ -24,7 +24,7 @@
         <field name="priority">3</field>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="product_id"/>
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
             </field>

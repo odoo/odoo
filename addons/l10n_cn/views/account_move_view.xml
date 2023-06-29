@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='ref']" position="after">
                     <field name="move_type" invisible='1'/>
-                    <field name="fapiao" attrs="{'invisible': ['|', ('country_code','!=', 'CN'),
-                        ('move_type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])]}"/>
+                    <field name="fapiao" invisible="country_code != 'CN' or move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']"/>
                 </xpath>
             </field>
         </record>

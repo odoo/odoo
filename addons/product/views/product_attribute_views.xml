@@ -23,7 +23,7 @@
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_open_related_products"
                             type="object" icon="fa-bars"
-                            attrs="{'invisible': [('number_related_products', '=', [])]}">
+                            invisible="not number_related_products">
                         <div class="o_stat_info">
                             <span class="o_stat_value"><field name="number_related_products"/></span>
                             <span class="o_stat_text">Related Products</span>
@@ -34,7 +34,7 @@
                     <label for="name" string="Attribute Name"/>
                     <field name="name" nolabel="1"/>
                     <field name="display_type" widget="radio"/>
-                    <field name="create_variant" widget="radio" attrs="{'readonly': [('number_related_products', '!=', 0)]}"/>
+                    <field name="create_variant" widget="radio" readonly="number_related_products != 0"/>
                 </group>
                 <notebook>
                     <page string="Attribute Values" name="attribute_values">
@@ -42,9 +42,9 @@
                             <tree string="Values" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
-                                <field name="display_type" invisible="1"/>
+                                <field name="display_type" column_invisible="True"/>
                                 <field name="is_custom" groups="product.group_product_variant"/>
-                                <field name="html_color" attrs="{'column_invisible': [('parent.display_type', '!=', 'color')]}" widget="color"/>
+                                <field name="html_color" column_invisible="parent.display_type != 'color'" widget="color"/>
                             </tree>
                         </field>
                     </page>
@@ -92,10 +92,10 @@
                 <field name="attribute_id" optional="hide"/>
                 <field name="name"/>
                 <field name="display_type" optional="hide"/>
-                <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}" widget="color"/>
+                <field name="html_color" invisible="display_type != 'color'" widget="color"/>
                 <field name="ptav_active" optional="hide"/>
                 <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
             </tree>
         </field>
     </record>
@@ -107,10 +107,10 @@
             <form string="Product Attribute" create="0" delete="0">
                 <sheet>
                     <group>
-                        <field name="ptav_active" readonly="1" attrs="{'invisible': [('ptav_active', '=', True)]}"/>
+                        <field name="ptav_active" readonly="1" invisible="ptav_active"/>
                         <field name="name"/>
                         <field name="display_type" invisible="1"/>
-                        <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}"/>
+                        <field name="html_color" invisible="display_type != 'color'"/>
                         <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="exclude_for" widget="one2many" mode="tree">

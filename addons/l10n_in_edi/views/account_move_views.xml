@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_info_group']" position="inside">
                 <field name="l10n_in_edi_show_cancel" invisible="1"/>
-                <field name="l10n_in_edi_cancel_reason" attrs="{'invisible': ['|', '|', ('country_code', '!=', 'IN'), ('state', '!=', 'posted'), ('l10n_in_edi_show_cancel', '!=', True)]}"/>
-                <field name="l10n_in_edi_cancel_remarks" attrs="{'invisible': ['|', '|', ('country_code', '!=', 'IN'), ('state', '!=', 'posted'), ('l10n_in_edi_show_cancel', '!=', True)]}"/>
+                <field name="l10n_in_edi_cancel_reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
+                <field name="l10n_in_edi_cancel_remarks" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
             </xpath>
         </field>
     </record>

@@ -102,11 +102,13 @@
             <tree string="Vendor Information" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
-                <field name="product_id" readonly="1" optional="hide"
-                    invisible="context.get('product_template_invisible_variant', False)"
+                <field name="product_id" optional="hide"
+                    readonly="1"
+                    column_invisible="context.get('product_template_invisible_variant', False)"
                     groups="product.group_product_variant"/>
-                <field name="product_tmpl_id" string="Product" readonly="1"
-                    invisible="context.get('visible_product_tmpl_id', True)"/>
+                <field name="product_tmpl_id" string="Product"
+                    readonly="1"
+                    column_invisible="context.get('visible_product_tmpl_id', True)"/>
                 <field name="product_name" optional="hide"/>
                 <field name="product_code" optional="hide"/>
                 <field name="date_start" optional="hide"/>

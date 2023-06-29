@@ -22,10 +22,10 @@
                             class="oe_highlight"
                             groups="account.group_account_manager"
                             string="Sign Invoice"
-                            attrs="{'invisible': ['|', '|', ('country_code', '!=', 'EG'), ('l10n_eg_is_signed', '=', True), ('state', '!=', 'posted')]}"/>
+                            invisible="country_code != 'EG' or l10n_eg_is_signed or state != 'posted'"/>
                 </xpath>
                 <notebook position="inside">
-                    <page string="ETA E-Invoice" attrs="{'invisible': [('country_code', '!=', 'EG')]}">
+                    <page string="ETA E-Invoice" invisible="country_code != 'EG'">
                         <group>
                             <group>
                                 <field name="l10n_eg_uuid" readonly="1"/>
@@ -41,7 +41,7 @@
                                         class="oe_link"
                                         icon="fa-clone"
                                         string="Get ETA Invoice PDF"
-                                        attrs="{'invisible': [('edi_state', '!=', 'sent')]}"/>
+                                        invisible="edi_state != 'sent'"/>
                             </group>
                         </group>
                     </page>

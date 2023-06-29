@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='resupply_wh_ids']" position="before">
                     <field name="manufacture_to_resupply"/>
-                    <field name="manufacture_steps" attrs="{'invisible': [('manufacture_to_resupply', '=', False)]}" widget="radio" groups="stock.group_adv_location"/>
+                    <field name="manufacture_steps" invisible="not manufacture_to_resupply" widget="radio" groups="stock.group_adv_location"/>
                 </xpath>
                 <xpath expr="//field[@name='out_type_id']" position="after">
                     <field name="manu_type_id" readonly="True"/>

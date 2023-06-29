@@ -10,7 +10,7 @@
                     <button class="oe_stat_button" type="object" name="action_view_pos_order"
                         groups="point_of_sale.group_pos_user"
                         context="{'default_partner_id': active_id}"
-                        attrs="{'invisible': [('pos_order_count', '=', 0)]}"
+                        invisible="pos_order_count == 0"
                         icon="fa-shopping-bag">
                         <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
                     </button>

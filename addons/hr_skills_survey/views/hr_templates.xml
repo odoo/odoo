@@ -7,9 +7,10 @@
         <field eval="20" name="priority"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='line_type_id']" position="after">
-                <field name="survey_id" readonly="0"
+                <field name="survey_id"
                     domain="[('certification', '=', True)]"
-                    attrs="{'invisible': [('display_type', '!=', 'certification')]}"/>
+                    readonly="0"
+                    invisible="display_type != 'certification'"/>
             </xpath>
         </field>
     </record>

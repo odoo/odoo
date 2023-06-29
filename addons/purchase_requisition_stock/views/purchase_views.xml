@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='alternative_pos']//field[@name='alternative_po_ids']//field[@name='partner_id']" position="after">
-                <field name='on_time_rate_perc' widget="percentage" attrs="{'invisible': [('on_time_rate_perc', '&lt;', 0)]}"/>
+                <field name='on_time_rate_perc' widget="percentage" invisible="on_time_rate_perc &lt; 0"/>
             </xpath>
         </field>
     </record>
@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="purchase_requisition.purchase_order_line_compare_tree"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name='on_time_rate_perc' widget="percentage" attrs="{'invisible': [('on_time_rate_perc', '&lt;', 0)]}"/>
+                <field name='on_time_rate_perc' widget="percentage" invisible="on_time_rate_perc &lt; 0"/>
             </field>
         </field>
     </record>

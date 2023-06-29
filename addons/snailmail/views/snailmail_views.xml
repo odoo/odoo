@@ -8,7 +8,7 @@
                 <field name="attachment_id" string="Document"/>
                 <field name="partner_id"/>
                 <field name="user_id"/>
-                <field name="state" invisible="1"/>
+                <field name="state" column_invisible="True"/>
                 <field name="info_msg" widget="html"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
@@ -21,8 +21,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="snailmail_print" string="Send Now" type="object" states="pending,error" class="oe_highlight"/>
-                    <button name="cancel" string="Cancel" type="object" states="pending,error"/>
+                    <button name="snailmail_print" string="Send Now" type="object" invisible="state not in ('pending', 'error')" class="oe_highlight"/>
+                    <button name="cancel" string="Cancel" type="object" invisible="state not in ('pending', 'error')"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,sent,canceled"/>
                 </header>
                 <sheet>

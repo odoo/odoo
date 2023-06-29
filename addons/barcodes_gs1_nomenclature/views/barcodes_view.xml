@@ -7,12 +7,12 @@
             <field name="arch" type="xml">
                 <!-- Nomenclature form -->
                 <xpath expr="//field[@name='upc_ean_conv']" position="attributes">
-                    <attribute name="attrs">{'invisible':[('is_gs1_nomenclature', '=', True)]}</attribute>
+                    <attribute name="invisible">is_gs1_nomenclature</attribute>
                 </xpath>
                 <xpath expr="//group[@name='general_attributes']" position="after">
                     <group name="gs1_attributes" col="4">
                         <field name="is_gs1_nomenclature"/>
-                        <field name="gs1_separator_fnc1" attrs="{'invisible':[('is_gs1_nomenclature', '!=', True)]}"/>
+                        <field name="gs1_separator_fnc1" invisible="not is_gs1_nomenclature"/>
                     </group>
                 </xpath>
                 <!-- Rules table -->
@@ -20,12 +20,12 @@
                     <attribute name="context">{'is_gs1': is_gs1_nomenclature}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='encoding']" position="attributes">
-                    <attribute name="attrs">{'column_invisible': [('parent.is_gs1_nomenclature', '=', True)]}</attribute>
+                    <attribute name="column_invisible">parent.is_gs1_nomenclature</attribute>
                 </xpath>
                 <xpath expr="//field[@name='pattern']" position="after">
-                    <field name="gs1_content_type" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)]}"/>
-                    <field name="gs1_decimal_usage" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)], 'invisible': [('gs1_content_type', '!=', 'measure')]}"/>
-                    <field name="associated_uom_id" attrs="{'column_invisible': [('parent.is_gs1_nomenclature', '!=', True)], 'invisible': [('gs1_content_type', '!=', 'measure')]}"/>
+                    <field name="gs1_content_type" column_invisible="not parent.is_gs1_nomenclature"/>
+                    <field name="gs1_decimal_usage" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
+                    <field name="associated_uom_id" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
                 </xpath>
             </field>
         </record>
@@ -47,12 +47,12 @@
             <field name="inherit_id" ref="barcodes.view_barcode_rule_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='encoding']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('parent.is_gs1_nomenclature', '=', True), ('type', '=', 'alias')]}</attribute>
+                    <attribute name="invisible">parent.is_gs1_nomenclature or type == 'alias'</attribute>
                 </xpath>
                 <xpath expr="//field[@name='alias']" position="after">
-                    <field name="gs1_content_type" attrs="{'invisible': [('parent.is_gs1_nomenclature', '!=', True)]}"/>
-                    <field name="gs1_decimal_usage" attrs="{'invisible': ['|', ('parent.is_gs1_nomenclature', '!=', True), ('gs1_content_type', '!=', 'measure')]}"/>
-                    <field name="associated_uom_id" attrs="{'invisible': ['|', ('parent.is_gs1_nomenclature', '!=', True), ('gs1_content_type', '!=', 'measure')]}"/>
+                    <field name="gs1_content_type" invisible="not parent.is_gs1_nomenclature"/>
+                    <field name="gs1_decimal_usage" invisible="not parent.is_gs1_nomenclature or gs1_content_type != 'measure'"/>
+                    <field name="associated_uom_id" invisible="not parent.is_gs1_nomenclature or gs1_content_type != 'measure'"/>
                     <field name="is_gs1_nomenclature" invisible="1"/>
                 </xpath>
             </field>

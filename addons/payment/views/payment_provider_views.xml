@@ -30,9 +30,9 @@
                 <sheet>
                     <!-- === Stat Buttons === -->
                     <div class="oe_button_box" name="button_box"
-                         attrs="{'invisible': [('module_state', '!=', 'installed')]}">
+                         invisible="module_state != 'installed'">
                         <button name="action_toggle_is_published"
-                                attrs="{'invisible': [('is_published', '=', False)]}"
+                                invisible="not is_published"
                                 class="oe_stat_button"
                                 type="object"
                                 icon="fa-globe">
@@ -41,7 +41,7 @@
                             </div>
                         </button>
                         <button name="action_toggle_is_published"
-                                attrs="{'invisible': [('is_published', '=', True)]}"
+                                invisible="is_published"
                                 class="oe_stat_button"
                                 type="object"
                                 icon="fa-eye-slash">
@@ -51,29 +51,29 @@
                         </button>
                     </div>
                     <field name="image_128" widget="image" class="oe_avatar"
-                           attrs="{'readonly': [('module_state', '!=', 'installed')]}"/>
-                    <widget name="web_ribbon" title="Disabled" bg_color="text-bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
-                    <widget name="web_ribbon" title="Test Mode" bg_color="text-bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
+                           readonly="module_state != 'installed'"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="text-bg-danger" invisible="module_state != 'installed' or state != 'disabled'"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="text-bg-warning" invisible="module_state != 'installed' or state != 'test'"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
-                        <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
-                            <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
-                            <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                        <div invisible="module_state == 'installed' or not module_id">
+                            <a invisible="not module_to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
+                            <button invisible="module_to_buy" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                         </div>
                     </div>
-                    <div id="provider_creation_warning" attrs="{'invisible': [('id', '!=', False)]}" class="alert alert-warning" role="alert">
+                    <div id="provider_creation_warning" invisible="id" class="alert alert-warning" role="alert">
                         <strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.
                         Please use the <em>Duplicate</em> action instead.
                     </div>
                     <group>
-                        <group name="payment_state" attrs="{'invisible': [('module_state', 'not in', ('installed', False))]}">
-                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <group name="payment_state" invisible="module_state not in ('installed', False)">
+                            <field name="code" groups="base.group_no_one" readonly="id"/>
                             <field name="state" widget="radio"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                        <page string="Credentials" name="credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
+                    <notebook invisible="module_id and module_state != 'installed'">
+                        <page string="Credentials" name="credentials" invisible="code == 'none' or not show_credentials_page">
                             <group name="provider_credentials"/>
                         </page>
                         <page string="Configuration" name="configuration">
@@ -83,10 +83,10 @@
                                     <field name="payment_method_ids"
                                            options="{'no_create': True, 'no_edit': True}"
                                            widget="many2many_tags"
-                                           attrs="{'invisible': [('show_payment_method_ids', '=', False)]}" />
-                                    <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
-                                    <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
-                                    <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
+                                           invisible="not show_payment_method_ids" />
+                                    <field name="allow_tokenization" invisible="not support_tokenization or not show_allow_tokenization"/>
+                                    <field name="capture_manually" invisible="not support_manual_capture"/>
+                                    <field name="allow_express_checkout" invisible="not support_express_checkout or not show_allow_express_checkout"/>
                                 </group>
                                 <group string="Availability" name="availability">
                                     <field name="maximum_amount"/>
@@ -98,7 +98,7 @@
                                                placeholder="Select currencies. Leave empty not to restrict any."
                                                context="{'active_test': False}"
                                                options="{'no_create': True}"
-                                               attrs="{'required': [('require_currency', '=', True), ('state', '!=', 'disabled')]}"/>
+                                               required="require_currency and state != 'disabled'"/>
                                     </div>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
@@ -108,32 +108,32 @@
                                 <group string="Payment Followup" name="payment_followup" invisible="1"/>
                             </group>
                         </page>
-                        <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
+                        <page string="Fees" name="fees" invisible="not support_fees">
                             <group name="payment_fees">
                                 <group class="oe_inline">
                                     <field name="fees_active"/>
                                     <field name="fees_dom_fixed"
-                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                           invisible="not fees_active"/>
                                     <field name="fees_dom_var"
                                            widget="percentage"
-                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                           invisible="not fees_active"/>
                                     <field name="fees_int_fixed"
-                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                           invisible="not fees_active"/>
                                     <field name="fees_int_var"
                                            widget="percentage"
-                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                           invisible="not fees_active"/>
                                 </group>
                             </group>
                         </page>
                         <page string="Messages"
                             name="messages"
-                            attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
+                            invisible="module_id and module_state != 'installed'">
                             <group>
-                                <field name="pre_msg" attrs="{'invisible': [('show_pre_msg', '=', False)]}"/>
-                                <field name="pending_msg" attrs="{'invisible': [('show_pending_msg', '=', False)]}"/>
-                                <field name="auth_msg" attrs="{'invisible': ['|', ('support_manual_capture', '=', False), ('show_auth_msg', '=', False)]}"/>
-                                <field name="done_msg" attrs="{'invisible': [('show_done_msg', '=', False)]}"/>
-                                <field name="cancel_msg" attrs="{'invisible': [('show_cancel_msg', '=', False)]}"/>
+                                <field name="pre_msg" invisible="not show_pre_msg"/>
+                                <field name="pending_msg" invisible="not show_pending_msg"/>
+                                <field name="auth_msg" invisible="not support_manual_capture or not show_auth_msg"/>
+                                <field name="done_msg" invisible="not show_done_msg"/>
+                                <field name="cancel_msg" invisible="not show_cancel_msg"/>
                             </group>
                         </page>
                     </notebook>

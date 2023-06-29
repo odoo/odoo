@@ -29,7 +29,7 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <tree js_class="im_livechat.discuss_channel_list" string="History" create="false" default_order="create_date desc">
-                    <field name="is_member" invisible="1"/>
+                    <field name="is_member" column_invisible="True"/>
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Participants"/>
                     <field name="country_id"/>

@@ -10,8 +10,8 @@
             <group name="main" position="inside">
                 <group string="Sponsorship" name="sponsor">
                     <field name="use_sponsor"/>
-                    <field name="sponsor_type_id" attrs="{'invisible': [('use_sponsor', '=', False)], 'required': [('use_sponsor', '=', True)]}"/>
-                    <field name="exhibitor_type" attrs="{'invisible': [('use_sponsor', '=', False)], 'required': [('use_sponsor', '=', True)]}"/>
+                    <field name="sponsor_type_id" invisible="not use_sponsor" required="use_sponsor"/>
+                    <field name="exhibitor_type" invisible="not use_sponsor" required="use_sponsor"/>
                 </group>
             </group>
         </field>

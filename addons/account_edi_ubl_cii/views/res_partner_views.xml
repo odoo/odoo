@@ -8,9 +8,9 @@
                 <group string="Electronic Invoicing" name="electronic_invoicing">
                     <field name="ubl_cii_format" widget="selection"/>
                     <field name="peppol_eas" widget="selection"
-                           attrs="{'invisible': [('ubl_cii_format', 'in', ('facturx', False))]}"/>
+                           invisible="ubl_cii_format in ('facturx', False)"/>
                     <field name="peppol_endpoint"
-                           attrs="{'invisible': [('ubl_cii_format', 'in', ('facturx', False))]}"/>
+                           invisible="ubl_cii_format in ('facturx', False)"/>
                 </group>
             </xpath>
         </field>

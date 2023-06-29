@@ -8,16 +8,16 @@
                 <field name="program_type" invisible="1"/> 
                 <field name="user_has_debug" invisible="1"/>
                 <sheet>
-                    <group attrs="{'invisible': [('program_type', '!=', 'promo_code')]}">
+                    <group invisible="program_type != 'promo_code'">
                         <group>
-                            <field name="code" attrs="{'required': [('program_type', '=', 'promo_code')]}"/>
+                            <field name="code" required="program_type == 'promo_code'"/>
                         </group>
                     </group>
                     <group>
                         <group>
                             <separator string="Conditions" colspan="2"/>
                             <field name="minimum_qty"/>
-                            <label for="minimum_amount" attrs="{'invisible': [('program_type', '=', 'buy_x_get_y')]}"/>
+                            <label for="minimum_amount" invisible="program_type == 'buy_x_get_y'"/>
                             <div class="d-flex flex-row">
                                 <field name="minimum_amount" class="oe_inline me-1"/>
                                 <span>tax</span>
@@ -29,16 +29,16 @@
                             <field name="product_category_id"/>
                             <field name="product_tag_id"/>
                         </group>
-                        <group attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'not in', ('loyalty', 'buy_x_get_y'))]}">
+                        <group invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
                             <separator string="Point(s)" colspan="2"/>
-                            <span colspan="2" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">Grant the amount of coupon points defined as the coupon value</span>
-                            <label for="reward_point_amount" string="Grant" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}"/>
-                            <div class="d-flex flex-row" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}">
+                            <span colspan="2" invisible="program_type != 'coupons'">Grant the amount of coupon points defined as the coupon value</span>
+                            <label for="reward_point_amount" string="Grant" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"/>
+                            <div class="d-flex flex-row" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')">
                                 <field name="reward_point_amount" class="oe_inline me-1"/>
                                 <field name="reward_point_name" class="w-auto"/>
                             </div>
                             <label for="reward_point_mode" string=""/>
-                            <field name="reward_point_mode" widget="radio" nolabel="1" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}"/>     
+                            <field name="reward_point_mode" widget="radio" nolabel="1" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')"/>     
                         </group>
                     </group>
                 </sheet>
@@ -100,13 +100,13 @@
                                 </t>
                             </div>
 
-                            <div class="o_loyalty_kanban_card_right" attrs="{'invisible': [('user_has_debug', '=', False), ('program_type', 'not in', ('loyalty', 'buy_x_get_y'))]}">
-                                <p class="text-muted" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">
+                            <div class="o_loyalty_kanban_card_right" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
+                                <p class="text-muted" invisible="program_type != 'coupons'">
                                     <span class="fw-bold text-decoration-underline">Grant</span>
                                     <br/>
                                     the value of the coupon
                                 </p>
-                                <p class="text-muted" attrs="{'invisible': [('program_type', 'not in', ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y'))]}">
+                                <p class="text-muted" invisible="program_type not in ('promotion', 'promo_code', 'next_order_coupons', 'loyalty', 'buy_x_get_y')">
                                     <span class="fw-bold text-decoration-underline">Grant</span>
                                     <br/>
                                     <field name="reward_point_amount"/>

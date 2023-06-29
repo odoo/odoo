@@ -10,7 +10,7 @@
                 <field name="related" position="before">
                     <field name="serialization_field_id"
                         domain="[('ttype','=','serialized'), ('model_id','=',parent.model)]"
-                        attrs="{'readonly': [('state','=','base')]}"/>
+                        readonly="state == 'base'"/>
                 </field>
             </field>
         </record>
@@ -23,7 +23,7 @@
                 <field name="related" position="before">
                     <field name="serialization_field_id"
                         context="{'default_model_id': model_id, 'default_ttype': 'serialized'}"
-                        attrs="{'readonly': [('state','=','base')]}"/>
+                        readonly="state == 'base'"/>
                 </field>
             </field>
         </record>

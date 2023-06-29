@@ -22,7 +22,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='lot_producing_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('product_tracking', 'in', ('none', False))], 'required': [('product_tracking', 'not in', ('none', False))]}</attribute>
+                <attribute name="invisible">product_tracking in ('none', False)</attribute>
+                <attribute name="required">product_tracking not in ('none', False)</attribute>
             </xpath>
             <xpath expr="//page[@name='miscellaneous']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -47,8 +48,8 @@
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <footer>
-                    <button name="subcontracting_record_component" attrs="{'invisible': ['|', ('state', '=', 'to_close'), ('qty_producing', '&lt;', 0.001)]}" string="Continue" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="subcontracting_record_component" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Record Production" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button name="subcontracting_record_component" invisible="state == 'to_close' or qty_producing &lt; 0.001" string="Continue" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button name="subcontracting_record_component" invisible="state != 'to_close'" string="Record Production" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button string="Discard" special="cancel" data-hotkey="x" />
                 </footer>
             </xpath>
@@ -67,7 +68,7 @@
                 <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='product_qty']" position="attributes">
-                <attribute name="attrs">{'readonly': True}</attribute>
+                <attribute name="readonly">True</attribute>
             </xpath>
             <xpath expr="//field[@name='lot_producing_id']" position="attributes">
                 <attribute name="domain">[('id', '=', False)]</attribute>

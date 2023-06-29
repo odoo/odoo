@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <form string="Payment Transactions" create="false" edit="false">
                 <header>
-                    <button type="object" name="action_capture" states="authorized" string="Capture Transaction" class="oe_highlight"/>
-                    <button type="object" name="action_void" states="authorized" string="Void Transaction"
+                    <button type="object" name="action_capture" invisible="state != 'authorized'" string="Capture Transaction" class="oe_highlight"/>
+                    <button type="object" name="action_void" invisible="state != 'authorized'" string="Void Transaction"
                             confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -18,7 +18,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-money"
-                                attrs="{'invisible': [('refunds_count', '=', 0)]}">
+                                invisible="refunds_count == 0">
                             <field name="refunds_count" widget="statinfo" string="Refunds"/>
                         </button>
                     </div>
@@ -26,16 +26,16 @@
                         <group name="transaction_details">
                             <field name="reference"/>
                             <field name="source_transaction_id"
-                                   attrs="{'invisible': [('source_transaction_id', '=', False)]}"/>
+                                   invisible="not source_transaction_id"/>
                             <field name="amount"/>
-                            <field name="fees" attrs="{'invisible': [('fees', '=', 0.0)]}"/>
+                            <field name="fees" invisible="fees == 0.0"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="provider_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <!-- Used by some provider-specific views -->
                             <field name="provider_code" invisible="1"/>
                             <field name="provider_reference"/>
-                            <field name="token_id" attrs="{'invisible': [('token_id', '=', False)]}"/>
+                            <field name="token_id" invisible="not token_id"/>
                             <field name="create_date"/>
                             <field name="last_state_change"/>
                             <field name="is_post_processed" groups="base.group_no_one"/>
@@ -55,9 +55,9 @@
                             <field name="partner_lang"/>
                         </group>
                     </group>
-                    <separator string="Child transactions" attrs="{'invisible': [('child_transaction_ids', '=', [])]}"/>
-                    <field name="child_transaction_ids" attrs="{'invisible': [('child_transaction_ids', '=', [])]}"/>
-                    <group string="Message" attrs="{'invisible': [('state_message', '=', False)]}">
+                    <separator string="Child transactions" invisible="not child_transaction_ids"/>
+                    <field name="child_transaction_ids" invisible="not child_transaction_ids"/>
+                    <group string="Message" invisible="not state_message">
                         <field name="state_message" colspan="2" nolabel="1"/>
                     </group>
                 </sheet>
@@ -76,7 +76,7 @@
                 <field name="partner_id"/>
                 <field name="partner_name"/>
                 <!-- Needed to display the currency of the amounts -->
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="amount"/>
                 <field name="fees"/>
                 <field name="state"/>

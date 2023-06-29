@@ -12,23 +12,24 @@
                 <field name="allow_billable" invisible="1"/>
                 <button class="oe_stat_button"
                         type="object" name="action_project_sharing_view_so" icon="fa-dollar"
-                        attrs="{'invisible': [('display_sale_order_button', '=', False)]}">
+                        invisible="not display_sale_order_button">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Sales Order</span>
                         </div>
                 </button>
             </div>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('allow_billable', '=', False)]}</attribute>
+                <attribute name="invisible">not allow_billable</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not partner_id" context="{'create': False, 'edit': False, 'delete': False}"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
                 <field name="allow_billable"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
-                <attribute name="attrs">{'column_invisible': [('parent.allow_billable', '=', False)], 'invisible': [('allow_billable', '=', False)]}</attribute>
+                <attribute name="column_invisible">not parent.allow_billable</attribute>
+                <attribute name="invisible">not allow_billable</attribute>
             </xpath>
         </field>
     </record>

@@ -8,8 +8,8 @@
                 <field name="default_location_dest_id_is_subcontracting_loc" invisible="1"/>
             </field>
             <field name="dest_address_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('default_location_dest_id_usage', '!=', 'customer'), ('default_location_dest_id_is_subcontracting_loc', '=', False)],
-                    'required': ['|', ('default_location_dest_id_usage', '=', 'customer'), ('default_location_dest_id_is_subcontracting_loc', '=', True)]}</attribute>
+                <attribute name="invisible">default_location_dest_id_usage != 'customer' and not default_location_dest_id_is_subcontracting_loc</attribute>
+                <attribute name="required">default_location_dest_id_usage == 'customer' or default_location_dest_id_is_subcontracting_loc</attribute>
             </field>
         </field>
     </record>

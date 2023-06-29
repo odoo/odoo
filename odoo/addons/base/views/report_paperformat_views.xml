@@ -20,8 +20,8 @@
                     <group>
                         <field name="name" />
                         <field name="format" />
-                        <field name="page_height" attrs="{'invisible': [('format','!=','custom')]}" />
-                        <field name="page_width" attrs="{'invisible': [('format','!=','custom')]}" />
+                        <field name="page_height" invisible="format != 'custom'" />
+                        <field name="page_width" invisible="format != 'custom'" />
                         <field name="orientation" />
                         <field name="margin_top" />
                         <field name="margin_bottom" />

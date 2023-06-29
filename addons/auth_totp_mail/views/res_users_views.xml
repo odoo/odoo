@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="auth_totp.view_totp_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_totp_enable_wizard']" position="after">
-                <button groups="base.group_erp_manager" attrs="{'invisible': &quot;[('id', '=', uid)]&quot;}"
+                <button groups="base.group_erp_manager" invisible="id == uid"
                         name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-secondary"/>
             </xpath>
         </field>

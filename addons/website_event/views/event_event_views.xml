@@ -43,9 +43,9 @@
                             <field name="once_per_order" string="Once per Order"/>
                             <field name="question_type" string="Type" />
                             <field name="answer_ids" widget="many2many_tags"
-                                attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
+                                invisible="question_type != 'simple_choice'" />
                             <button name="action_view_question_answers" type="object" class="p-0" icon="fa-bar-chart pe-1" string="Stats"
-                                    title="Answer Breakdown" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'text_box'])]}"/>
+                                    title="Answer Breakdown" invisible="question_type not in ['simple_choice', 'text_box']"/>
                         </tree>
                         <!-- Need to repeat the whole tree form here to be able to create answers properly
                             Without this, the sub-fields of answer_ids are unknown to the web framework.
@@ -62,12 +62,12 @@
                                         <field name="once_per_order"/>
                                     </group>
                                 </group>
-                                <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">
+                                <notebook invisible="question_type != 'simple_choice'">
                                     <page string="Answers" name="answers">
                                         <field name="answer_ids">
                                             <tree editable="bottom">
                                                 <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
-                                                <field name="display_name" invisible="1" />
+                                                <field name="display_name" column_invisible="True" />
                                                 <field name="sequence" widget="handle" />
                                                 <field name="name"/>
                                             </tree>
@@ -82,11 +82,11 @@
               
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
-                <attribute name="attrs">{'invisible': [('website_id', '=', False)]}</attribute>
+                <attribute name="invisible">not website_id</attribute>
             </field>
 
             <field name="tag_ids" position="after">
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" attrs="{'invisible': [('website_id', '!=', False)]}"></field>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" invisible="website_id"></field>
             </field>
             
         </field>
@@ -98,7 +98,7 @@
         <field name="inherit_id" ref="event.view_event_tree"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
                 <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
             </field>
         </field>

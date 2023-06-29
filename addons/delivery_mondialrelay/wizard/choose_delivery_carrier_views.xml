@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form position="inside">
                 <field name="is_mondialrelay" invisible="1"/>
-                <div class="o_zone_widget" attrs="{'invisible': [('is_mondialrelay', '=', False)]}"/>
+                <div class="o_zone_widget" invisible="not is_mondialrelay"/>
                 <field name="mondialrelay_last_selected" widget="mondialrelay_relay"/>
                 <field name="mondialrelay_last_selected_id" invisible="1"/>
                 <field name="mondialrelay_brand" invisible="1"/>

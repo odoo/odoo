@@ -35,7 +35,7 @@
                     <sheet>
                         <field name="active" invisible="1"/>
                         <field name="fiscal_country_codes" invisible="1"/>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name" string="Payment Terms"/>
                             <h1><field name="name" nolabel="1" placeholder="e.g. 30 days"/></h1>
@@ -47,13 +47,13 @@
                                 <field name="early_discount"/>
                                 <field name="discount_percentage"
                                        class="text-end o_field_highlight o_input oe_inline"
-                                       attrs="{'invisible': [('early_discount', '=', False)]}"/>
-                                <span attrs="{'invisible': [('early_discount', '=', False)]}"> % if paid within </span>
+                                       invisible="not early_discount"/>
+                                <span invisible="not early_discount"> % if paid within </span>
                                 <field name="discount_days"
                                        class="text-end o_field_highlight o_input oe_inline"
-                                       attrs="{'invisible': [('early_discount', '=', False)]}"/>
-                                <span attrs="{'invisible': [('early_discount', '=', False)]}"> days</span>
-                                <div attrs="{'invisible': [('early_discount', '=', False)]}">
+                                       invisible="not early_discount"/>
+                                <span invisible="not early_discount"> days</span>
+                                <div invisible="not early_discount">
                                     <span> Reduced tax:
                                         <field name="early_pay_discount_computation" class="w-auto"/>
                                     </span>
@@ -82,9 +82,9 @@
                                 <div colspan="2" style="background:#e0e0e0" class="pt4 pb4">
                                     <field name="note" placeholder="e.g. Payment terms: 30 days after invoice date"/>
                                     <field name="example_preview_discount" class="ps-2"
-                                           attrs="{'invisible': ['|', ('early_discount','=', False), ('display_on_invoice', '=', False)]}"/>
+                                           invisible="not early_discount or not display_on_invoice"/>
                                     <field name="example_preview" class="ps-2"
-                                           attrs="{'invisible': [('display_on_invoice', '=', False)]}"/>
+                                           invisible="not display_on_invoice"/>
                                 </div>
                                 <div colspan="2">
                                     <field name="display_on_invoice" nolabel="1"/>

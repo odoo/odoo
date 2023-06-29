@@ -23,17 +23,17 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
-                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" attrs="{'invisible': [('is_root_company', '=', False)]}">
+                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" invisible="not is_root_company">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">
                                     <div class="mt16">
                                         <div>
                                             <label for="chart_template" string="Package" class="col-2 o_light_label"/>
-                                            <field name="chart_template" attrs="{'readonly': [('has_accounting_entries','!=', False)], 'required': [('chart_template', '!=', False)]}"/>
+                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
                                         </div>
                                         <div class="mt16">
-                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh" attrs="{'invisible': [('has_accounting_entries','=', False)]}"/>
+                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh" invisible="not has_accounting_entries"/>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user"
                                 documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
                                 <field name="tax_exigibility"/>
-                                <div class="content-group" attrs="{'invisible': [('tax_exigibility', '=', False)]}">
+                                <div class="content-group" invisible="not tax_exigibility">
                                     <div class="row mt16">
                                         <label for="tax_cash_basis_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="tax_cash_basis_journal_id"/>
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="update_exchange_rates" attrs="{'invisible': [('group_multi_currency', '=', False)]}" help="Update exchange rates automatically"
+                            <setting id="update_exchange_rates" invisible="not group_multi_currency" help="Update exchange rates automatically"
                                 documentation="/applications/finance/accounting/others/multi_currency.html">
                                 <field name="module_currency_rate_live" widget="upgrade_boolean"/>
                             </setting>
@@ -134,7 +134,7 @@
                                 <div class="mt8">
                                     <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
                                             type="action" string="Cash Roundings" class="btn-link"
-                                            attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
+                                            invisible="not group_cash_rounding"/>
                                 </div>
                             </setting>
                             <setting id="intrastat_statistics" help="Collect information and produce statistics on the trade in goods in Europe with intrastat"
@@ -149,20 +149,20 @@
                             </setting>
                             <setting id="use_invoice_terms" company_dependent="1" help="Add your terms &amp; conditions at the bottom of invoices/orders/quotations">
                                 <field name="use_invoice_terms"/>
-                                <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
+                                <div class="content-group" invisible="not use_invoice_terms">
                                     <div class="mt16">
                                         <field name="terms_type" class="o_light_label" widget="radio"/>
                                         <div>
                                             <field name="invoice_terms"
-                                                    attrs="{'invisible': [('terms_type', '=', 'html')]}"
+                                                    invisible="terms_type == 'html'"
                                                     class="oe_account_terms mt-5 w-100"
                                                     placeholder="Insert your terms &amp; conditions here..."/>
                                         </div>
-                                        <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                                        <div class="mt8" invisible="terms_type != 'html'">
                                             <button name="action_update_terms" icon="oi-arrow-right" type="object" string="Update Terms" class="btn-link"/>
                                         </div>
                                         <field name="preview_ready" invisible="1"/>
-                                        <div class="mt4 ms-1" attrs="{'invisible': [('preview_ready', '=', False)]}">
+                                        <div class="mt4 ms-1" invisible="not preview_ready">
                                             <a class="btn-link" href="/terms" role="button">
                                                 <i class="oi oi-arrow-right"/>
                                                 Preview
@@ -173,7 +173,7 @@
                             </setting>
                             <setting company_dependent="1" help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.">
                                 <field name="account_use_credit_limit"/>
-                                <div class="content-group mt-2" attrs="{'invisible': [('account_use_credit_limit', '=', False)]}">
+                                <div class="content-group mt-2" invisible="not account_use_credit_limit">
                                     <div class="row">
                                         <label for="account_default_credit_limit" class="col-lg-4 o_light_label"/>
                                         <field name="account_default_credit_limit"/>
@@ -196,7 +196,7 @@
                             <setting id="collect_customer_payment" title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates." string="SEPA Direct Debit (SDD)" company_dependent="1" help="Collect customer payments in one-click using Euro SEPA Service"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/batch_sdd.html">
                                 <field name="module_account_sepa_direct_debit" class="oe_inline" widget="upgrade_boolean"/>
-                                <div class="content-group" attrs="{'invisible': [('module_account_sepa_direct_debit', '=', False)]}">
+                                <div class="content-group" invisible="not module_account_sepa_direct_debit">
                                     <div class="text-warning mt16 mb4">
                                         Save this page and come back here to set up the feature.
                                     </div>
@@ -227,7 +227,7 @@
                             <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
                                 documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html">
                                 <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
-                                <div id="msg_invoice_extract" class="content-group" attrs="{'invisible': [('module_account_invoice_extract', '=', False)]}">
+                                <div id="msg_invoice_extract" class="content-group" invisible="not module_account_invoice_extract">
                                     <div class="text-warning mt16 mb4">
                                         Save this page and come back here to set up the feature.
                                     </div>
@@ -237,7 +237,7 @@
 
                         <t groups="account.group_account_user">
                             <block title="Default Accounts" id="default_accounts">
-                                <setting attrs="{'invisible': [('group_multi_currency', '=', False)]}" string="Post Exchange difference entries in:">
+                                <setting invisible="not group_multi_currency" string="Post Exchange difference entries in:">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="currency_exchange_journal_id" class="col-lg-4 o_light_label" string="Journal" />

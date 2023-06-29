@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='enroll']" position="after">
                 <field name="product_id"
-                    attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}"
+                    invisible="enroll != 'payment'"
+                    required="enroll == 'payment'"
                     context="{'default_detailed_type': 'course', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
             </xpath>
             <xpath expr="//button[@name='action_redirect_to_members']" position="after">
@@ -15,7 +16,7 @@
                     type="object"
                     icon="fa-usd"
                     class="oe_stat_button"
-                    attrs="{'invisible': [('enroll', '!=', 'payment')]}"
+                    invisible="enroll != 'payment'"
                     groups="sales_team.group_sale_salesman">
                     <field name="product_sale_revenues" string="Sales" widget="statinfo"/>
                 </button>
@@ -29,7 +30,7 @@
         <field name="inherit_id" ref="website_slides.slide_channel_view_tree_report"/>
         <field name="arch" type="xml">
             <field name="members_completed_count" position="after">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="product_sale_revenues" string="Total Revenues" sum="Total Revenues" widget="monetary"/>
             </field>
         </field>
@@ -41,10 +42,10 @@
         <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='info_avg_rating']" position="after">
-                <div class="d-flex" attrs="{'invisible': [('enroll', '!=', 'payment')]}">
+                <div class="d-flex" invisible="enroll != 'payment'">
                     <span class="me-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
                     <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <field name="currency_id" attrs="{'invisible': True}"/>
+                    <field name="currency_id" invisible="True"/>
                 </div>
             </xpath>
         </field>
@@ -57,7 +58,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allow_comment']" position="after">
                 <field name="enroll" widget="radio" options="{'horizontal': true}" string="Enroll Policy"/>
-                <field name="product_id" attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}"
+                <field name="product_id" invisible="enroll != 'payment'" required="enroll == 'payment'"
                 context="{'default_detailed_type': 'course', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
     		</xpath>
         </field>

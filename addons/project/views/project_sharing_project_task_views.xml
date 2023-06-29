@@ -70,7 +70,7 @@
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
-                                <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}">
+                                <div t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']">
                                     <field name="date_deadline" widget="remaining_days"/>
                                 </div>
                                 <div t-if="record.displayed_image_id.value" groups="base.group_user">
@@ -124,7 +124,7 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
-                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}" />
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
@@ -134,17 +134,17 @@
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" attrs="{'invisible': [('display_parent_task_button', '=', False)]}">
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
                         </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title pe-0">
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="me-3"/>
@@ -159,9 +159,8 @@
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
                                 context="{'default_project_id': project_id}"
-                                attrs="{'invisible': [('allow_milestones', '=', False)]}"
-                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"
-                            />
+                                invisible="not allow_milestones"
+                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
                             <field name="user_ids" invisible="1" />
                             <field name="portal_user_names"
                                 string="Assignees"
@@ -173,8 +172,8 @@
                             <field name="parent_id" invisible="1" />
                             <field name="company_id" invisible="1" />
                             <field name="state" invisible="1" />
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" attrs="{'invisible': [('project_id', '=', False)]}"/>
-                            <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}"/>
+                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
+                            <field name="date_deadline" invisible="state in ['1_done', '1_canceled']"/>
                         </group>
                     </group>
                     <notebook>
@@ -184,28 +183,28 @@
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
-                                    <field name="project_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
+                                    <field name="project_id" column_invisible="True"/>
+                                    <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1"/>
                                     <field name="name"/>
-                                    <field name="allow_milestones" invisible="1"/>
+                                    <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': project_id}"
-                                        attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
-                                    />
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" attrs="{'invisible': [('project_id', '=', False)]}"/>
-                                    <field name="user_ids" invisible="1" />
+                                        column_invisible="not parent.allow_milestones"
+                                        invisible="not allow_milestones"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="show"/>
+                                    <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            attrs="{'invisible': &quot;['|', ('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
+                                            invisible="project_id or project_id != active_id"/>
                                 </tree>
                             </field>
                         </page>

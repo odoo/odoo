@@ -42,18 +42,20 @@
 
             <xpath expr="//div[@name='journal_div']" position="after">
                 <field name="l10n_latam_document_type_id"
-                    attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('partner_id', '!=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': [('posted_before', '=', True)]}"
+                    invisible="not l10n_latam_use_documents"
+                    readonly="posted_before"
+                    required="partner_id and l10n_latam_use_documents"
                     domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
                 <field name="l10n_latam_document_number"
-                    attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_manual_document_number', '=', False), '|', '|', ('l10n_latam_use_documents', '=', False), ('highest_name', '!=', False), ('state', '!=', 'draft')],
-                            'required': [('partner_id', '!=', False), ('l10n_latam_use_documents', '=', True), '|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)],
-                            'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')]}"/>
+                    invisible="(not l10n_latam_use_documents or not l10n_latam_manual_document_number) and (not l10n_latam_use_documents or highest_name or state != 'draft')"
+                    readonly="posted_before and state != 'draft'"
+                    required="partner_id and l10n_latam_use_documents and (l10n_latam_manual_document_number or not highest_name)"/>
             </xpath>
 
             <!-- on latam_documents we use document_number to set name -->
             <field name="name" position="attributes">
-                <attribute name="attrs">{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
-                                         'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)]}</attribute>
+                <attribute name="invisible">name == '/' and not posted_before and not quick_edit_mode</attribute>
+                <attribute name="readonly">state != 'draft' or l10n_latam_use_documents</attribute>
                 <attribute name="force_save">1</attribute>
             </field>
 

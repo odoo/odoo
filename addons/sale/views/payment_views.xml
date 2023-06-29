@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="payment_form" position="inside">
-                <field name="so_reference_type" attrs="{'invisible': [('code', '!=', 'custom')]}"/>
+                <field name="so_reference_type" invisible="code != 'custom'"/>
             </group>
         </field>
     </record>
@@ -20,7 +20,7 @@
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="action_view_sales_orders" type="object"
                         class="oe_stat_button" icon="fa-money"
-                        attrs="{'invisible': [('sale_order_ids_nbr', '=', 0)]}">
+                        invisible="sale_order_ids_nbr == 0">
                     <field name="sale_order_ids_nbr" widget="statinfo" string="Sales Order(s)"/>
                 </button>
             </xpath>

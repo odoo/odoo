@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='community_menu']" position='after'>
-                <span attrs="{'invisible': [('community_menu', '=', False)]}">
+                <span invisible="not community_menu">
                     <label for="meeting_room_allow_creation"/>
                     <field name="meeting_room_allow_creation"/>
                 </span>

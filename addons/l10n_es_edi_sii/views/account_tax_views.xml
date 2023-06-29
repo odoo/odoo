@@ -8,11 +8,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='tax_scope']" position="after">
                     <field name="l10n_es_type"
-                           attrs="{'invisible': [('country_code', '!=', 'ES')]}"/>
+                           invisible="country_code != 'ES'"/>
                     <field name="l10n_es_exempt_reason"
-                           attrs="{'invisible': [('country_code', '!=', 'ES'), ('l10n_es_type', '!=', 'exento')], 'required': [('l10n_es_type', '=', 'exento'), ('type_tax_use', '=', 'sale')]}"/>
+                           invisible="country_code != 'ES' and l10n_es_type != 'exento'"
+                           required="l10n_es_type == 'exento' and type_tax_use == 'sale'"/>
                     <field name="l10n_es_bien_inversion"
-                           attrs="{'invisible': [('country_code', '!=', 'ES'), ('l10n_es_type', '!=', 'exento')], 'required': [('l10n_es_type', '=', 'exento'), ('type_tax_use', '=', 'sale')]}"/>
+                           invisible="country_code != 'ES' and l10n_es_type != 'exento'"
+                           required="l10n_es_type == 'exento' and type_tax_use == 'sale'"/>
                 </xpath>
             </field>
         </record>

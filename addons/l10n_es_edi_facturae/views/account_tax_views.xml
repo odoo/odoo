@@ -7,9 +7,9 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <field name="country_id" position="after">
-                    <field name="country_code" invisible="1"/>
+                    <field name="country_code" column_invisible="True"/>
                     <field name="l10n_es_edi_facturae_tax_type" string="Spanish Tax Type" optional="hide"
-                        attrs="{'invisible': [('country_code', '!=', 'ES')]}"/>
+                        invisible="country_code != 'ES'"/>
                 </field>
             </field>
         </record>
@@ -20,7 +20,7 @@
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
                 <field name="country_id" position="after">
-                    <field name="l10n_es_edi_facturae_tax_type" attrs="{'invisible': [('country_code', '!=', 'ES')]}"/>
+                    <field name="l10n_es_edi_facturae_tax_type" invisible="country_code != 'ES'"/>
                 </field>
             </field>
         </record>

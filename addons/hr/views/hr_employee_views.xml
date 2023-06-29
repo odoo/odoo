@@ -60,17 +60,17 @@
                     <field name="last_activity" invisible="1"/>
                     <field name="work_contact_id" invisible="1"/>
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" attrs="{'invisible': [('active', '=', False)]}"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" invisible="not active"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="avatar_128" invisible="1"/>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
                             <div class="oe_title mw-75 ps-0 pe-2">
                                 <h1 class="d-flex flex-row align-items-center">
-                                    <div attrs="{'invisible':[('user_id', '=', False)]}" class="me-2">
+                                    <div invisible="not user_id" class="me-2">
                                         <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                     </div>
                                     <field name="name" placeholder="Employee's Name"
@@ -85,13 +85,13 @@
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <div id="hr_presence_status" class="d-flex align-items-end fs-6 o_employee_availability">
                                     <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
+                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_present'" aria-label="Present" title="Present"/>
                                     <!-- Employee is not present and it is normal according to his work schedule -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
+                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_absent'" aria-label="Absent" title="Absent" name="presence_absent"/>
                                     <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
+                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_absent_active'" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
                                     <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
+                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" invisible="hr_icon_display != 'presence_to_define'" aria-label="To define" title="To define" name="presence_to_define"/>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                                         <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
                                         </group>
-                                        <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
+                                        <group name="departure" string="Departure" invisible="active">
                                             <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
                                             <field name="departure_description"/>
                                             <field name="departure_date"/>
@@ -132,7 +132,7 @@
                                         <group string="Schedule">
                                             <field name="resource_calendar_id"/>
                                             <field name="id" invisible="1"/>
-                                            <field name="tz" attrs="{'required': [('id', '!=', False)]}"/>
+                                            <field name="tz" required="id"/>
                                         </group>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                         </div>
                                         <field name="private_email" string="Email"/>
                                         <field name="private_phone" string="Phone"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" attrs="{'readonly': [('id', '=', False)]}"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
                                         <field name="lang" string="Language"/>
                                         <label for="km_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
@@ -162,8 +162,8 @@
                                     </group>
                                     <group string="Family Status">
                                         <field name="marital"/>
-                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
-                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="children"/>
                                         <separator name="emergency" string="Emergency"/>
                                         <field name="emergency_contact"/>
@@ -203,8 +203,8 @@
                                         <label for="barcode"/>
                                         <div class="o_row">
                                             <field name="barcode"/>
-                                            <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
-                                            <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
+                                            <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" invisible="barcode"/>
+                                            <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
                                         </div>
                                     </group>
                                     <group string='Payroll' name="payroll_group" invisible="1">
@@ -263,11 +263,11 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
-                    <field name="address_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="address_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/>
                     <field name="work_location_id" optional="hide"/>
-                    <field name="coach_id" invisible="1"/>
-                    <field name="active" invisible="1"/>
+                    <field name="coach_id" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
                 </tree>

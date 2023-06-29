@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
         <field name="arch" type="xml">
             <field name="printer_type" position="after">
-                <field name="epson_printer_ip" attrs="{'invisible': [('printer_type', '!=', 'epson_epos')]}"/>
+                <field name="epson_printer_ip" invisible="printer_type != 'epson_epos'"/>
             </field>
         </field>
     </record>

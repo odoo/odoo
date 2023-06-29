@@ -15,7 +15,7 @@
                 <div id="alert_draft_capture_tx"
                      role="alert"
                      class="alert alert-warning"
-                     attrs="{'invisible': [('has_draft_children', '=', False)]}">
+                     invisible="not has_draft_children">
                     <strong>Warning!</strong> There is a partial capture pending. Please wait a
                     moment for it to be processed. Check your payment provider configuration if
                     the capture is still pending after a few minutes.
@@ -23,9 +23,9 @@
                 <group name="readonly_fields">
                     <field name="authorized_amount"/>
                     <field name="captured_amount"
-                           attrs="{'invisible': [('captured_amount', '&lt;=', 0)]}"/>
+                           invisible="captured_amount &lt;= 0"/>
                     <field name="voided_amount"
-                           attrs="{'invisible': [('voided_amount', '&lt;=', 0)]}"/>
+                           invisible="voided_amount &lt;= 0"/>
                 </group>
                 <hr/>
                 <group name="input_fields">
@@ -33,17 +33,17 @@
                     <div class="o_row">
                         <field name="amount_to_capture"
                                class="oe_inline"
-                               attrs="{'readonly': [('support_partial_capture', '=', 'full_only')]}"/>
+                               readonly="support_partial_capture == 'full_only'"/>
                         <i class="fa fa-info-circle oe_inline"
-                           attrs="{'invisible': [('support_partial_capture', '!=', 'full_only')]}"
+                           invisible="support_partial_capture != 'full_only'"
                            title="Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount."/>
                     </div>
-                    <field name="void_remaining_amount" attrs="{'readonly': [('has_remaining_amount', '=', False)]}"/>
+                    <field name="void_remaining_amount" readonly="not has_remaining_amount"/>
                 </group>
                 <div id="alert_amount_to_capture_above_authorized_amount"
                      role="alert"
                      class="alert alert-warning mb-2"
-                     attrs="{'invisible': [('is_amount_to_capture_valid', '=', True)]}">
+                     invisible="is_amount_to_capture_valid">
                     <strong>Warning!</strong> You can not capture a negative amount nor more
                     than <field name='available_amount' class='oe_inline' widget='monetary'/>.
                 </div>

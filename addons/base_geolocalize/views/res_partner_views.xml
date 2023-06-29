@@ -15,15 +15,15 @@
                                     <br/>
                                     <span>Long: <field name="partner_longitude" nolabel="1" class="oe_inline"/></span>
                                     <br/>
-                                    <span attrs="{'invisible': [('date_localization', '=', False)]}">Updated on:
+                                    <span invisible="not date_localization">Updated on:
                                         <field name="date_localization" nolabel="1" readonly="1" class="oe_inline"/>
                                         <br/>
                                     </span>
                                     <div name="geo_localize_button">
-                                        <button attrs="{'invisible': ['|', ('partner_latitude', '!=', 0), ('partner_longitude', '!=', 0)]}"
+                                        <button invisible="partner_latitude != 0 or partner_longitude != 0"
                                                 icon="fa-gear" string="Compute based on address" title="Compute Localization"
                                                 name="geo_localize" type="object" class="btn btn-link p-0"/>
-                                        <button attrs="{'invisible': [('partner_latitude', '=', 0), ('partner_longitude', '=', 0)]}"
+                                        <button invisible="partner_latitude == 0 and partner_longitude == 0"
                                                 icon="fa-refresh" string="Refresh" title="Refresh Localization"
                                                 name="geo_localize" type="object" class="btn btn-link p-0"/>
                                     </div>

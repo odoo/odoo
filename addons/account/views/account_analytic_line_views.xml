@@ -18,7 +18,7 @@
                         <group/> <!-- put Accounting group under Amount group -->
                         <group name="accounting" string="Accounting">
                             <field name="move_line_id" options="{'no_create': True}" widget="line_open_move_widget"/>
-                            <field name="general_account_id" attrs="{'readonly': [('move_line_id', '!=', False)]}"/>
+                            <field name="general_account_id" readonly="move_line_id"/>
                         </group>
                     </group>
                 </data>
@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='account_id']" position="after">
-                        <field name="ref" invisible="context.get('to_invoice', False)" optional="hide"/>
+                        <field name="ref" column_invisible="context.get('to_invoice', False)" optional="hide"/>
                         <field name="general_account_id" optional="hide"/>
                         <field name="move_line_id" widget="line_open_move_widget" optional="hide"/>
                         <field name="product_id" optional="hide"/>

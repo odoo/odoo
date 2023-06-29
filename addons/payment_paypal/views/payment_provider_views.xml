@@ -7,11 +7,11 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'paypal')]}">
+                <group invisible="code != 'paypal'">
                     <field name="paypal_email_account"
-                           attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'paypal' and state != 'disabled'"/>
                     <field name="paypal_pdt_token"  password="True"
-                           attrs="{'required': [('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'paypal' and state != 'disabled'"/>
                     <a href="https://www.odoo.com/documentation/master/applications/finance/payment_providers/paypal.html"
                        target="_blank"
                        colspan="2">

@@ -9,12 +9,12 @@
             <xpath expr="//field[@name='link_field_id']" position="after">
                 <field name="sms_template_id"
                     context="{'default_model': model_name}"
-                    attrs="{'invisible': [('state', '!=', 'sms')],
-                            'required': [('state', '=', 'sms')]}"/>
+                    invisible="state != 'sms'"
+                    required="state == 'sms'"/>
                 <field name="sms_method"
                        string="Send as"
-                       attrs="{'invisible': [('state', '!=', 'sms')],
-                               'required': [('state', '=', 'sms')]}"/>
+                       invisible="state != 'sms'"
+                       required="state == 'sms'"/>
             </xpath>
         </field>
     </record>

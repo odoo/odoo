@@ -5,11 +5,11 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <field name="identification_id" position="after">
-                <field name="l10n_mx_nss" attrs="{'invisible': [('company_country_code', '!=', 'MX')]}"/>
+                <field name="l10n_mx_nss" invisible="company_country_code != 'MX'"/>
             </field>
             <field name="passport_id" position="after">
-                <field name="l10n_mx_rfc" attrs="{'invisible': [('company_country_code', '!=', 'MX')]}"/>
-                <field name="l10n_mx_curp" attrs="{'invisible': [('company_country_code', '!=', 'MX')]}"/>
+                <field name="l10n_mx_rfc" invisible="company_country_code != 'MX'"/>
+                <field name="l10n_mx_curp" invisible="company_country_code != 'MX'"/>
             </field>
         </field>
     </record>

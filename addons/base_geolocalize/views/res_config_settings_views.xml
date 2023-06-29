@@ -8,10 +8,10 @@
             <xpath expr="//div[@name='base_geolocalize_warning']" position="replace">
                 <div id="geolocalize_params"
                     class="content-group"
-                    attrs="{'invisible': [('module_base_geolocalize', '=', False)]}">
+                    invisible="not module_base_geolocalize">
                     API: <field name="geoloc_provider_id"/>
                     <field name="geoloc_provider_techname" invisible="1"/>
-                    <div attrs="{'invisible': [('geoloc_provider_techname', '!=', 'googlemap')]}">
+                    <div invisible="geoloc_provider_techname != 'googlemap'">
                         Key: <field name='geoloc_provider_googlemap_key'/>
                     </div>
                 </div>

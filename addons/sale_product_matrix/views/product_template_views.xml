@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='variants']" position="inside">
-                <group name="product_mode" attrs="{'invisible': [('has_configurable_attributes', '=', False)]}">
+                <group name="product_mode" invisible="not has_configurable_attributes">
                     <group string="Sales Variant Selection">
                         <field name="has_configurable_attributes" invisible="1"/>
                         <field name="product_add_mode" widget="radio" nolabel="1" colspan="2"/>
@@ -25,7 +25,7 @@
                 <field name="product_add_mode" widget="radio" invisible="1"/>
             </field>
             <field name="optional_product_ids" position="attributes">
-                <attribute name="attrs">{'invisible': [('product_add_mode', '=', 'grid')]}</attribute>
+                <attribute name="invisible">product_add_mode == 'grid'</attribute>
             </field>
         </field>
     </record>

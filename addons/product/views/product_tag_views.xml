@@ -21,7 +21,7 @@
                                    context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
                             />
                         </page>
-                        <page string="All Products" attrs="{'invisible': [('product_ids', '=', [])]}">
+                        <page string="All Products" invisible="not product_ids">
                             <field name="product_ids"
                                    context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
                             />

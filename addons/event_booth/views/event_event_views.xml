@@ -12,7 +12,7 @@
                         type="action" icon="fa-university">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <span attrs="{'invisible': [('event_booth_count', '=', 0)]}">
+                            <span invisible="event_booth_count == 0">
                                 <field name="event_booth_count_available"/> /
                             </span>
                             <field name="event_booth_count"/>

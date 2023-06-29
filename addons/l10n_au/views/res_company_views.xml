@@ -10,15 +10,15 @@
                 <attribute name="nolabel">1</attribute>
             </xpath>
             <field name="vat" position="before">
-                <label for="vat" attrs="{'invisible':[('country_code', '=', 'AU')]}" />
-                <label for="vat" string="ABN" attrs="{'invisible':[('country_code', '!=', 'AU')]}" />
+                <label for="vat" invisible="country_code == 'AU'" />
+                <label for="vat" string="ABN" invisible="country_code != 'AU'" />
             </field>
             <xpath expr="//field[@name='company_registry']" position="attributes">
                 <attribute name="nolabel">1</attribute>
             </xpath>
             <field name="company_registry" position="before">
-                <label for="company_registry" attrs="{'invisible':[('country_code', '=', 'AU')]}" />
-                <label for="company_registry" string="ACN" attrs="{'invisible':[('country_code', '!=', 'AU')]}" />
+                <label for="company_registry" invisible="country_code == 'AU'" />
+                <label for="company_registry" string="ACN" invisible="country_code != 'AU'" />
             </field>
         </field>
     </record>

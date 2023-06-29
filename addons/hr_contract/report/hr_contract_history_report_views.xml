@@ -87,12 +87,12 @@
                                       no_open="1"
                                       create="0" delete="0">
                                     <button name="action_open_contract_form" type="object" icon="fa-external-link" title="Open Contract"/>
-                                    <field name="id" invisible="1"/>
+                                    <field name="id" column_invisible="True"/>
                                     <field name="name" string="Contract Name"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
                                     <field name="resource_calendar_id"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="wage" string="Monthly Wage"/>
                                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                                 </tree>
@@ -147,13 +147,13 @@
                   create="false">
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="date_hired"/>
-                <field name="is_under_contract" invisible="1"/>
+                <field name="is_under_contract" column_invisible="True"/>
                 <field name="name"/>
                 <field name="date_start"/>
                 <field string="Reference Working Time" name="resource_calendar_id" optional="hide"/>
                 <field name="under_contract_state" widget="state_selection" optional="hide"/>
                 <field name="structure_type_id" optional="hide"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="wage" optional="hide"/>
                 <field name="state"
                        widget="badge"

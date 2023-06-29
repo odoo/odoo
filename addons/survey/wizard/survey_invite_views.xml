@@ -17,45 +17,45 @@
                             <field name="lang" invisible="1"/>
                             <field name="render_model" invisible="1"/>
                             <label class="o_survey_label_survey_start_url" for="survey_start_url" string="Survey Link"
-                                 attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
-                            <field name="survey_start_url" nolabel="1" readonly="1" widget="CopyClipboardChar"
-                                 attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
+                                 invisible="survey_access_mode != 'public'"/>
+                            <field name="survey_start_url" nolabel="1" widget="CopyClipboardChar"
+                                 readonly="1"
+                                 invisible="survey_access_mode != 'public'"/>
                             <field string="Send by Email" name="send_email" widget="boolean_toggle" options="{'autosave': False}"
-                                   attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"/>
+                                   invisible="survey_access_mode != 'public'"/>
                             <field name="partner_ids"
-                                required="true"
                                 widget="many2many_tags_email"
                                 placeholder="Add existing contacts..."
                                 context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"
-                                attrs="{'invisible': [('send_email', '=', False)]}"/>
+                                required="True"
+                                invisible="not send_email"/>
                             <field name="emails"
-                                attrs="{
-                                    'invisible': ['|', ('survey_users_login_required', '=', True), ('send_email','=',False)],
-                                }"
+                                invisible="survey_users_login_required or not send_email"
                                 placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
                         </group>
                         <field name="existing_partner_ids" invisible="1"/>
                         <field name="existing_emails" invisible="1"/>
                         <div col="2" class="alert alert-warning" role="alert"
-                            attrs="{'invisible': ['|', ('survey_access_mode', '=', 'public'), ('existing_text', '=', False)]}">
+                            invisible="survey_access_mode == 'public' or not existing_text">
                             <field name="existing_text"/>
                             <group col="2">
                                 <label for="existing_mode" string="Handle existing"/>
                                 <div>
                                     <field name="existing_mode" nolabel="1"/>
-                                    <p attrs="{'invisible': [('existing_mode', '!=', 'resend')]}">Customers will receive the same token.</p>
-                                    <p attrs="{'invisible': [('existing_mode', '!=', 'new')]}">Customers will receive a new token and be able to completely retake the survey.</p>
+                                    <p invisible="existing_mode != 'resend'">Customers will receive the same token.</p>
+                                    <p invisible="existing_mode != 'new'">Customers will receive a new token and be able to completely retake the survey.</p>
                                 </div>
                             </group>
                         </div>
                         <group col="2">
-                            <field name="subject" attrs="{'invisible': [('send_email', '=', False)]}" placeholder="Subject..."/>
+                            <field name="subject" invisible="not send_email" placeholder="Subject..."/>
                         </group>
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
                             options="{'style-inline': true, 'height': 380}"
-                            attrs="{'readonly': [('can_edit_body', '=', False)], 'invisible': [('send_email', '=', False)]}" force_save="1"/>
-                        <group attrs="{'invisible': [('send_email', '=', False)]}">
+                            invisible="not send_email"
+                            readonly="not can_edit_body" force_save="1"/>
+                        <group invisible="not send_email">
                             <group>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </group>
@@ -66,7 +66,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="Send" attrs="{'invisible': [('send_email', '=', False)]}" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>

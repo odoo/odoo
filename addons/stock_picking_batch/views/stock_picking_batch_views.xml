@@ -22,10 +22,10 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="scheduled_date"/>
-                <field name="location_id"/>
+                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                <field name="location_id" readonly="state == 'done'"/>
                 <field name="backorder_id"/>
-                <field name="origin"/>
+                <field name="origin" readonly="state in ['cancel', 'done']"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -42,8 +42,9 @@
                 <attribute name="delete">0</attribute>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
-                <field name="picking_id" required="1"
-                    attrs="{'readonly': [('id', '!=', False)]}"
+                <field name="picking_id"
+                    required="1"
+                    readonly="id"
                     domain="[('id', 'in', parent.picking_ids)]"
                     options="{'no_create_edit': True}"/>
             </xpath>
@@ -58,13 +59,13 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
-                <field name="tracking" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
-                <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
+                <field name="tracking" column_invisible="True"/>
+                <field name="state" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="id"/>
+                <field name="picking_id" required="1" readonly="id"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
-                <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
+                <field name="lot_id" groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -92,45 +93,29 @@
                 <field name="show_set_qty_button" invisible="1"/>
                 <field name="show_clear_qty_button" invisible="1"/>
                 <header>
-                    <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                        attrs="{'invisible': [
-                            '|',
-                                ('state', '!=', 'in_progress'),
-                                '|',
-                                    ('show_check_availability', '=', True),
-                                    ('show_validate', '=', False)]}"/>
+                        invisible="state != 'in_progress' or show_check_availability or not show_validate"/>
                     <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
-                        attrs="{'invisible': [
-                            '|',
-                                ('state', '!=', 'in_progress'),
-                                ('show_check_availability', '=', False)]}"/>
+                        invisible="state != 'in_progress' or not show_check_availability"/>
                     <button name="action_done" string="Validate" type="object"
-                        attrs="{'invisible': [
-                            '|',
-                                ('state', '!=', 'in_progress'),
-                                '|',
-                                    ('show_check_availability', '=', False),
-                                    ('show_validate', '=', False)]}"/>
+                        invisible="state != 'in_progress' or not show_check_availability or not show_validate"/>
                     <button name="action_set_quantities_to_reservation" string="Set quantities" type="object"
-                        attrs="{'invisible': [('show_set_qty_button', '=', False)]}"/>
+                        invisible="not show_set_qty_button"/>
                     <button name="action_clear_quantities_to_zero" string="Clear quantities" type="object"
-                        attrs="{'invisible': [('show_clear_qty_button', '=', False)]}"/>
+                        invisible="not show_clear_qty_button"/>
                     <button name="action_assign" string="Check Availability" type="object"
-                        attrs="{'invisible': [
-                            '|',
-                                ('state', '!=', 'draft'),
-                                ('show_check_availability', '=', False)]}"/>
-                    <button name="action_print" states="in_progress,done" string="Print" type="object"/>
+                        invisible="state != 'draft' or not show_check_availability"/>
+                    <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object"/>
                     <button string="Print Labels" type="object" name="action_open_label_layout"/>
-                    <button name="action_cancel" string="Cancel" type="object" states="in_progress"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state != 'in_progress'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="fa-list"
-                            attrs="{'invisible': [('show_allocation', '=', False)]}"
+                            invisible="not show_allocation"
                             groups="stock.group_reception_report"/>
                     </div>
                     <div class="oe_title">
@@ -138,26 +123,26 @@
                     </div>
                     <group>
                         <group>
-                            <field name="user_id"/>
-                            <field name="picking_type_id"/>
-                            <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('picking_ids', '!=', [])]}" force_save="1"/>
+                            <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="picking_ids" force_save="1"/>
                         </group>
                         <group>
-                            <field name="scheduled_date"/>
+                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Detailed Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
-                            <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}"/>
-                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
+                        <page string="Detailed Operations" invisible="state == 'draft'">
+                            <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}" readonly="state not in ['draft', 'in_progress']"/>
+                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
                         </page>
-                        <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <page string="Operations" invisible="state == 'draft'">
                             <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
                         </page>
                         <page string="Transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
                             <field name="picking_ids" widget="many2many" mode="tree,kanban"
-                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'tree_view_ref': 'stock_picking_batch.view_picking_tree_batch'}"/>
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'tree_view_ref': 'stock_picking_batch.view_picking_tree_batch'}" readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -174,11 +159,11 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <tree string="Stock Batch Transfer" multi_edit="1" sample="1">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
-                <field name="scheduled_date"/>
-                <field name="user_id" widget="many2one_avatar_user"/>
-                <field name="picking_type_id"/>
+                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
+                <field name="picking_type_id" readonly="state != 'draft'"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -204,11 +189,11 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
-                                    <field name="picking_type_id"/>
+                                    <field name="picking_type_id" readonly="state != 'draft'"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <field name="scheduled_date" widget="date"/>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="scheduled_date" widget="date" readonly="state in ['cancel', 'done']"/>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +265,7 @@
                             ('picking_type_id', '=', False),
                     ]"
                     widget="many2one"
-                    context="{'default_picking_type_id': picking_type_id}"/>
+                    context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
             </xpath>
         </field>
     </record>

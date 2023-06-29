@@ -7,11 +7,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='slide_category']" position="after">
                 <field name="survey_id"
-                    attrs="{'invisible': [('slide_category', '!=', 'certification')], 'required': [('slide_category', '=', 'certification')]}"
+                    invisible="slide_category != 'certification'"
+                    required="slide_category == 'certification'"
                     domain="[('certification', '=', True)]" context="{'default_certification': True, 'default_scoring_type': 'scoring_without_answers'}"/>
             </xpath>
             <xpath expr="//field[@name='is_preview']" position="attributes">
-                <attribute name="attrs">{'invisible': [('slide_category', '=', 'certification')]}</attribute>
+                <attribute name="invisible">slide_category == 'certification'</attribute>
             </xpath>
         </field>
     </record>

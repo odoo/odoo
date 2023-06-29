@@ -36,9 +36,9 @@
                 <field name="origin_ref" options="{'no_create': True}" required="1"/>
                 <field name="reason"/>
                 <field name="user_id" widget="many2one_avatar_user" string="Karma Owner"
-                     attrs="{'readonly': [('id', '!=', False)]}"/>
+                     readonly="id"/>
                 <field name="old_value" string="Previous Total" optional="hidden"/>
-                <field name="gain" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="gain" readonly="id"/>
                 <field name="new_value" string="Total"  optional="show" readonly="1"/>
             </tree>
         </field>
@@ -52,9 +52,9 @@
                 <sheet>
                     <group>
                         <field name="user_id" widget="many2one_avatar_user" string="Karma Owner"
-                            attrs="{'readonly': [('id', '!=', False)]}"/>
+                            readonly="id"/>
                         <field name="tracking_date"/>
-                        <field name="gain" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="gain" readonly="id"/>
                         <field name="old_value"/>
                         <field name="new_value" readonly="1"/>
                         <field name="consolidated"/>

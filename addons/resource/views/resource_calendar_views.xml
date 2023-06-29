@@ -20,11 +20,11 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"/>
-                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"/>
+                    <button name="switch_calendar_type" invisible="two_weeks_calendar" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"/>
+                    <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"/>
                 </header>
                 <sheet string="Working Time">
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
                                 icon="fa-plane"
@@ -57,7 +57,7 @@
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours">
-                            <field name="two_weeks_explanation" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}"/>
+                            <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
                             <field name="attendance_ids" widget="section_one2many"/>
                         </page>
                     </notebook>

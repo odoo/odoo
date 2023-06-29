@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_test_script" type="object" class="btn btn-secondary" string="Test"
-                    attrs="{'invisible': ['|', ('active', '!=', True), ('script_step_ids', '=', [])]}"/>
+                    invisible="not active or not script_step_ids"/>
             </xpath>
         </field>
     </record>

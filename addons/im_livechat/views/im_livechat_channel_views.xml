@@ -55,7 +55,7 @@
                                         </div>
                                     </div>
                                     <div class="o_kanban_record_bottom">
-                                        <field class="oe_kanban_bottom_left" name="available_operator_ids" widget="many2many_avatar_user" attrs="{'readonly': True}"/>
+                                        <field class="oe_kanban_bottom_left" name="available_operator_ids" widget="many2many_avatar_user" readonly="True"/>
                                         <div t-if="record.rating_count.raw_value > 0" class="oe_kanban_bottom_right">
                                             <a name="action_view_rating" type="object" tabindex="10">
                                                 <i class="fa fa-smile-o text-success" title="Percentage of happy ratings" role="img" aria-label="Happy face"/> <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
@@ -76,21 +76,21 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
-                        <button type="object" name="action_quit" class="btn btn-primary" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                        <button type="object" name="action_join" class="oe_highlight" string="Join Channel" invisible="are_you_inside"/>
+                        <button type="object" name="action_quit" class="btn btn-primary" string="Leave Channel" invisible="not are_you_inside"/>
                         <field name="are_you_inside" invisible="1"/>
                     </header>
                     <sheet>
                         <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="fa-android"
-                                attrs="{'invisible': [('chatbot_script_count', '=', 0)]}">
+                                invisible="chatbot_script_count == 0">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
-                            <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
+                            <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                             </button>
-                            <button name="action_view_rating" attrs="{'invisible':[('rating_count', '=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                            <button name="action_view_rating" invisible="rating_count == 0" class="oe_stat_button" type="object" icon="fa-smile-o">
                                 <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                             </button>
                         </div>
@@ -159,10 +159,10 @@
                                 <div class="text-muted" colspan="2">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</div>
                             </page>
                             <page string="Widget" name="configuration_widget">
-                                <div class="alert alert-warning mt4 mb16" role="alert" attrs='{"invisible": [["web_page", "!=", False]]}'>
+                                <div class="alert alert-warning mt4 mb16" role="alert" invisible="web_page">
                                     Save your Channel to get your configuration widget.
                                 </div>
-                                <div attrs='{"invisible": [["web_page", "=", False]]}'>
+                                <div invisible="not web_page">
                                     <separator string="How to use the Website Live Chat widget?"/>
                                     <p>
                                         Copy and paste this code into your website, within the &lt;head&gt; tag:
@@ -234,18 +234,18 @@
                     <sheet>
                         <group>
                             <field name="action" widget="radio"/>
-                            <label for="chatbot_script_id" string="Chatbot" attrs="{'invisible': [('action', '=', 'hide_button')]}"/>
-                            <div attrs="{'invisible': [('action', '=', 'hide_button')]}">
+                            <label for="chatbot_script_id" string="Chatbot" invisible="action == 'hide_button'"/>
+                            <div invisible="action == 'hide_button'">
                                 <field name="chatbot_script_id" class="oe_inline" style="width: 60% !important;"
                                        options="{'no_create': True, 'no_open': True}"/>
                             </div>
-                            <label for="chatbot_only_if_no_operator" class="oe_inline" attrs="{'invisible': [('chatbot_script_id', '=', False)]}" string="Enabled only if no operator"/>
-                            <div class="oe_inline" attrs="{'invisible': [('chatbot_script_id', '=', False)]}">
+                            <label for="chatbot_only_if_no_operator" class="oe_inline" invisible="not chatbot_script_id" string="Enabled only if no operator"/>
+                            <div class="oe_inline" invisible="not chatbot_script_id">
                                 <field name="chatbot_only_if_no_operator"/>
                             </div>
                             <field name="regex_url" placeholder="e.g. /contactus"/>
-                            <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
-                            <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
+                            <label for="auto_popup_timer" class="oe_inline" invisible="action != 'auto_popup'"/>
+                            <div class="oe_inline" invisible="action != 'auto_popup'">
                                 <field name="auto_popup_timer" class="oe_inline"/> seconds
                             </div>
                             <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>

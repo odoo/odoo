@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
                 <button name="%(crm_lead_action_from_event)d" class="oe_stat_button" type="action" icon="fa-star"
-                    attrs="{'invisible': [('lead_count', '=' , 0)]}" groups="sales_team.group_sale_salesman">
+                    invisible="lead_count == 0" groups="sales_team.group_sale_salesman">
                     <div class="o_stat_info">
                         <field name="lead_count"/>
                         <span class="o_stat_text"> Leads</span>

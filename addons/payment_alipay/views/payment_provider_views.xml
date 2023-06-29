@@ -9,16 +9,17 @@
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('code', '!=', 'alipay')]}">
+                     invisible="code != 'alipay'">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Asiapay</strong>.
                 </div>
             </xpath>
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'alipay')]}">
+                <group invisible="code != 'alipay'">
                     <field name="alipay_payment_method" widget="radio"/>
                     <field name="alipay_seller_email"
-                           attrs="{'invisible': [('alipay_payment_method', '=', 'standard_checkout')], 'required': [('code', '=', 'alipay'), ('alipay_payment_method', '=', 'express_checkout')]}"/>
+                           invisible="alipay_payment_method == 'standard_checkout'"
+                           required="code == 'alipay' and alipay_payment_method == 'express_checkout'"/>
                     <field name="alipay_merchant_partner_id"/>
                     <field name="alipay_md5_signature_key" password="True"/>
                 </group>

@@ -11,7 +11,7 @@
                         <strong><field name="location_id" readonly="True"/></strong>.
                     </span>
                 </div>
-                <div attrs="{'invisible': [('quant_ids', '=', [])]}">
+                <div invisible="not quant_ids">
                     <br/>
                     <strong>Current Inventory: </strong>
                     <field name="quant_ids" style="margin-top:10px;">

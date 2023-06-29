@@ -9,19 +9,19 @@
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('code', '!=', 'payulatam')]}">
+                     invisible="code != 'payulatam'">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Mercado Pago</strong>.
                 </div>
             </xpath>
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'payulatam')]}">
+                <group invisible="code != 'payulatam'">
                     <field name="payulatam_merchant_id"
-                           attrs="{'required':[('code', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'payulatam' and state != 'disabled'"/>
                     <field name="payulatam_account_id"
-                           attrs="{'required':[('code', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>
+                           required="code == 'payulatam' and state != 'disabled'"/>
                     <field name="payulatam_api_key"
-                           attrs="{'required':[('code', '=', 'payulatam'), ('state', '!=', 'disabled')]}"
+                           required="code == 'payulatam' and state != 'disabled'"
                            password="True"/>
                 </group>
             </group>

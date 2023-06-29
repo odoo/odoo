@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
-                <field name="assignment_enabled" invisible="1"/>
+                <field name="assignment_enabled" column_invisible="True"/>
                 <field name="assignment_optout"/>
                 <field name="assignment_max"/>
                 <field name="lead_month_count"/>
@@ -24,11 +24,11 @@
                 <field name="assignment_enabled" invisible="1"/>
                 <field name="assignment_optout" invisible="1"/>
                 <div class="o_member_assignment"
-                        attrs="{'invisible': ['|', ('assignment_enabled', '=', False), ('assignment_optout', '=', True)]}">
+                        invisible="not assignment_enabled or assignment_optout">
                     <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
                         options="{'max_field': 'assignment_max'}"
-                        attrs="{'invisible': [('assignment_max', '=', 0)]}"/>
+                        invisible="assignment_max == 0"/>
                 </div>
             </xpath>
         </field>
@@ -40,11 +40,11 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='member_partner_info']" position="after">
-                <group name="group_assign" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
+                <group name="group_assign" invisible="not assignment_enabled">
                     <field name="assignment_enabled" invisible="1"/>
                     <field name="assignment_optout"/>
-                    <label for="lead_month_count" attrs="{'invisible': [('assignment_optout', '=', True)]}"/>
-                    <div attrs="{'invisible': [('assignment_optout', '=', True)]}">
+                    <label for="lead_month_count" invisible="assignment_optout"/>
+                    <div invisible="assignment_optout">
                         <field name="lead_month_count" class="oe_inline"/>
                         <span class="oe_inline"> / </span>
                         <field name="assignment_max" class="oe_inline"/>
@@ -52,7 +52,7 @@
                     </div>
                     <field name="assignment_domain" string="Domain" widget="domain"
                         options="{'model': 'crm.lead'}"
-                        attrs="{'invisible': ['|', ('assignment_max', '=', 0), ('assignment_optout', '=', True)]}"/>
+                        invisible="assignment_max == 0 or assignment_optout"/>
                 </group>
             </xpath>
         </field>

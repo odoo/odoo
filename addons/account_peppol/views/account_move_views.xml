@@ -11,19 +11,19 @@
                         type="object"
                         class="btn btn-secondary"
                         string="Cancel PEPPOL"
-                        attrs="{'invisible': ['|', ('peppol_move_state', '!=', 'to_send'), ('state', '=', 'draft')]}"/>
+                        invisible="peppol_move_state != 'to_send' or state == 'draft'"/>
             </header>
 
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="peppol_move_state"
-                       attrs="{'invisible': ['|', ('peppol_move_state', '=', False), ('state', '=', 'draft')]}"/>
+                       invisible="not peppol_move_state or state == 'draft'"/>
                 <div name="peppol_div"
                      class="d-flex"
-                     attrs="{'invisible': ['|', ('peppol_move_state', '=', False), ('state', '=', 'draft')]}">
+                     invisible="not peppol_move_state or state == 'draft'">
 
                     <field name="peppol_move_state" class="oe_inline"/>
                     <span class="text-muted mx-3"
-                          attrs="{'invisible': [('peppol_move_state', '!=', 'to_send')]}">
+                          invisible="peppol_move_state != 'to_send'">
                         The invoice will be sent automatically to PEPPOL
                     </span>
                 </div>

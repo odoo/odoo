@@ -25,13 +25,13 @@
                     <page string="Questions" name="questions">
                         <field name="registration_answer_ids" widget="one2many">
                             <tree editable="bottom">
-                                <field name="event_id" invisible="1" />
+                                <field name="event_id" column_invisible="True" />
                                 <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
                                 <field name="question_type" string="Type" />
                                 <field name="value_answer_id"
-                                    attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}"
+                                    invisible="question_type != 'simple_choice'"
                                     domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                <field name="value_text_box" attrs="{'invisible': [('question_type', '=', 'simple_choice')]}" />
+                                <field name="value_text_box" invisible="question_type == 'simple_choice'" />
                             </tree>
                         </field>
                     </page>

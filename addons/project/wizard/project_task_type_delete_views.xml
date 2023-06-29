@@ -7,18 +7,18 @@
             <form string="Delete Stage">
                 <field name="tasks_count" invisible="1" />
                 <field name="stages_active" invisible="1" />
-                <div attrs="{'invisible': [('tasks_count', '>', 0)]}">
+                <div invisible="tasks_count &gt; 0">
                     <p>Are you sure you want to delete these stages?</p>
                 </div>
-                <div attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}">
+                <div invisible="not stages_active or tasks_count == 0">
                     <p>You cannot delete stages containing tasks. You can either archive them or first delete all of their tasks.</p>
                 </div>
-                <div attrs="{'invisible': ['|', ('stages_active', '=', True), ('tasks_count', '=', 0)]}">
+                <div invisible="stages_active or tasks_count == 0">
                     <p>You cannot delete stages containing tasks. You should first delete all of their tasks.</p>
                 </div>
                 <footer>
-                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}" data-hotkey="q"/>
-                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('tasks_count', '>', 0)]}" data-hotkey="w"/>
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or tasks_count == 0" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="tasks_count &gt; 0" data-hotkey="w"/>
                     <button string="Discard" special="cancel" data-hotkey="x" />
                 </footer>
             </form>

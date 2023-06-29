@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <sheet position="inside">
                 <field name="display_qr_setting" invisible="1" />
-                <group string="EMV QR Configuration" attrs="{'invisible': [('display_qr_setting', '=', False)]}">
+                <group string="EMV QR Configuration" invisible="not display_qr_setting">
                     <field name="country_code" invisible="1" />
                     <field name="proxy_type"/>
                     <field name="proxy_value"/>

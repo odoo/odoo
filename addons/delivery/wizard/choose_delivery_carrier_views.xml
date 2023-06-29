@@ -20,17 +20,17 @@
                         <field name='delivery_price' invisible="1"/>
                         <label for="display_price"/>
                         <div class="o_row">
-                            <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('carrier_id','=', False)]}"/>
-                            <button name="update_price" type="object" attrs="{'invisible': [('delivery_type','in', ('fixed', 'base_on_rule'))]}">
+                            <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
+                            <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule')">
                                 <i class="oi oi-arrow-right me-1"/>Get rate
                             </button>
                         </div>
                     </group>
                 </group>
-                <div role="alert" class="alert alert-warning" attrs="{'invisible': [('invoicing_message', '=', '')]}">
+                <div role="alert" class="alert alert-warning" invisible="invoicing_message == ''">
                     <field name="invoicing_message" nolabel="1"/>
                 </div>
-                <div role="alert" class="alert alert-info" attrs="{'invisible': [('delivery_message', '=', False)]}">
+                <div role="alert" class="alert alert-info" invisible="not delivery_message">
                     <field name="delivery_message" nolabel="1"/>
                 </div>
                 <footer>

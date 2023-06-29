@@ -8,8 +8,8 @@
             <form string="Merge Mass Mailing List">
                 <group>
                     <field name="merge_options" widget="selection"/>
-                    <field name="new_list_name" attrs="{'invisible': [('merge_options', '=', 'existing')], 'required': [('merge_options', '=', 'new')]}"/>
-                    <field name="dest_list_id" attrs="{'invisible': [('merge_options', '=', 'new')], 'required': [('merge_options', '=', 'existing')]}"/>
+                    <field name="new_list_name" invisible="merge_options == 'existing'" required="merge_options == 'new'"/>
+                    <field name="dest_list_id" invisible="merge_options == 'new'" required="merge_options == 'existing'"/>
                     <field name="archive_src_lists"/>
                 </group>
                 <field name="src_list_ids">

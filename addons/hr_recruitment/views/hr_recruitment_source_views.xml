@@ -25,8 +25,8 @@
                                     </div>
                                     <div class="o_kanban_record_body mt-3">
                                         <div class="text-end">
-                                            <field name="email" attrs="{'invisible': [('has_domain', '=', False)]}" widget="email"/>
-                                            <button name="create_alias" class="btn btn-primary mb-2" type="object" attrs="{'invisible': ['|', ('has_domain', '=', False), ('email', '!=', False)]}">Generate Email</button>
+                                            <field name="email" invisible="not has_domain" widget="email"/>
+                                            <button name="create_alias" class="btn btn-primary mb-2" type="object" invisible="not has_domain or email">Generate Email</button>
                                         </div>
                                     </div>
                                 </div>
@@ -42,13 +42,13 @@
             <field name="model">hr.recruitment.source</field>
             <field name="arch" type="xml">
                 <tree string="Sources of Applicants" editable="top" sample="1">
-                    <field name="has_domain" invisible="1"/>
-                    <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                    <field name="has_domain" column_invisible="True"/>
+                    <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id"/>
                     <field name="medium_id" optional="hidden"/>
-                    <field name="job_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                    <field name="job_id" readonly="id"/>
                     <field name="email" widget="email"
-                           attrs="{'invisible': ['|', ('email', '=', False), ('has_domain', '=', False)]}"/>
-                    <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" attrs="{'invisible': ['|', ('has_domain', '=', False), ('email', '!=', False)]}"/>
+                           invisible="not email or not has_domain"/>
+                    <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" invisible="not has_domain or email"/>
                 </tree>
             </field>
         </record>

@@ -18,10 +18,10 @@
                                 <setting id="active_user_setting">
                                     <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
                                     <field name='active_user_count' class="w-auto ps-3 fw-bold"/>
-                                    <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&gt;', '1')]}">
+                                    <span class='o_form_label' invisible="active_user_count &gt; '1'">
                                         Active User
                                     </span>
-                                    <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&lt;=', '1')]}">
+                                    <span class='o_form_label' invisible="active_user_count &lt;= '1'">
                                         Active Users
                                     </span>
                                     <a href="https://www.odoo.com/documentation/master/applications/general/users.html" title="Documentation" class="o_doc_link" target="_blank"></a>
@@ -37,10 +37,10 @@
                                     <!-- TODO This is not an ideal solution but it looks ok on the interface -->
                                     <div class="w-50">
                                         <field name="language_count" class="w-auto ps-1 fw-bold"/>
-                                        <span class='o_form_label' attrs="{'invisible':[('language_count', '&gt;', '1')]}">
+                                        <span class='o_form_label' invisible="language_count &gt; '1'">
                                             Language
                                         </span>
-                                        <span class='o_form_label' attrs="{'invisible':[('language_count', '&lt;=', '1')]}">
+                                        <span class='o_form_label' invisible="language_count &lt;= '1'">
                                             Languages
                                         </span>
                                     </div>
@@ -66,10 +66,10 @@
                                 </setting>
                                 <setting id="companies_setting">
                                     <field name='company_count' nolabel="1" class="w-auto ps-1 fw-bold"/>
-                                    <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
+                                    <span class='o_form_label' invisible="company_count &gt; '1'">
                                         Company
                                     </span>
-                                    <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
+                                    <span class='o_form_label' invisible="company_count &lt;= '1'">
                                         Companies
                                     </span>
                                     <br/>
@@ -93,7 +93,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <setting id="inter_company" string="Inter-Company Transactions" company_dependent="1" help="Automatically generate counterpart documents for orders/invoices between companies" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
                                     <field name="module_account_inter_company_rules" widget="upgrade_boolean"/>
-                                    <div class="content-group" attrs="{'invisible': [('module_account_inter_company_rules','=',False)]}" id="inter_companies_rules">
+                                    <div class="content-group" invisible="not module_account_inter_company_rules" id="inter_companies_rules">
                                         <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                     </div>
                                 </setting>
@@ -113,7 +113,7 @@
                     <block title="Permissions" id="user_default_rights">
                         <setting string="Default Access Rights" help="Set custom access rights for new users" title="By default, new users get highest access rights for all installed apps." id="access_rights">
                             <field name="user_default_rights"/>
-                            <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
+                            <div class="content-group" invisible="not user_default_rights">
                                 <div class="mt8">
                                     <button type="object" name="open_default_user" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
                                 </div>
@@ -136,50 +136,50 @@
                             </setting>
                             <setting string="Outlook Calendar" documentation="/applications/productivity/calendar/outlook.html" help="Synchronize your calendar with Outlook" id="sync_outlook_calendar_setting">
                                 <field name="module_microsoft_calendar" />
-                                <div class="content-group" attrs="{'invisible': [('module_microsoft_calendar', '=', False)]}" id="msg_module_microsoft_calendar">
+                                <div class="content-group" invisible="not module_microsoft_calendar" id="msg_module_microsoft_calendar">
                                     <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </setting>
                             <setting string="Google Calendar" documentation="/applications/productivity/calendar/google.html" help="Synchronize your calendar with Google Calendar" id="sync_google_calendar_setting">
                                 <field name="module_google_calendar"/>
-                                <div class="content-group" attrs="{'invisible': [('module_google_calendar','=',False)]}" id="msg_module_google_calendar">
+                                <div class="content-group" invisible="not module_google_calendar" id="msg_module_google_calendar">
                                     <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </setting>
                             <div id="product_get_pic_setting"/>
                             <setting string="OAuth Authentication" help="Use external accounts to log in (Google, Facebook, etc.)" id="module_auth_oauth">
                                 <field name="module_auth_oauth" />
-                                <div class="content-group mt16" attrs="{'invisible': [('module_auth_oauth','=',False)]}" id="msg_module_auth_oauth">
+                                <div class="content-group mt16" invisible="not module_auth_oauth" id="msg_module_auth_oauth">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </setting>
                             <setting string="LDAP Authentication" help="Use LDAP credentials to log in" documentation="/applications/general/auth/ldap.html" id="module_auth_ldap">
                                 <field name="module_auth_ldap"/>
-                                <div class="content-group" attrs="{'invisible': [('module_auth_ldap','=',False)]}" id="auth_ldap_warning">
+                                <div class="content-group" invisible="not module_auth_ldap" id="auth_ldap_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </setting>
                             <setting documentation="/applications/websites/website/optimize/unsplash.html" help="Find free high-resolution images from Unsplash" id="unsplash">
                                 <field name="module_web_unsplash"/>
-                                <div class="content-group" attrs="{'invisible': [('module_web_unsplash', '=', False)]}" id="web_unsplash_warning">
+                                <div class="content-group" invisible="not module_web_unsplash" id="web_unsplash_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </setting>
                             <setting string="Geo Localization" help="GeoLocalize your partners" id="base_geolocalize">
                                 <field name="module_base_geolocalize"/>
-                                <div class="content-group" attrs="{'invisible': [('module_base_geolocalize','=', False)]}" name="base_geolocalize_warning">
+                                <div class="content-group" invisible="not module_base_geolocalize" name="base_geolocalize_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to choose your Geo Provider.</div>
                                 </div>
                             </setting>
                             <setting help="Protect your forms from spam and abuse." id="recaptcha">
                                 <field name="module_google_recaptcha"/>
-                                <div class="content-group" attrs="{'invisible': [('module_google_recaptcha', '=', False)]}" id="recaptcha_warning">
+                                <div class="content-group" invisible="not module_google_recaptcha" id="recaptcha_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up reCaptcha.</div>
                                 </div>
                             </setting>
                             <setting help="Protect your forms with CF Turnstile." id="cf-turnstile">
                                 <field name="module_website_cf_turnstile"/>
-                                <div class="content-group" attrs="{'invisible': [('module_website_cf_turnstile', '=', False)]}" id="turnstile_warning">
+                                <div class="content-group" invisible="not module_website_cf_turnstile" id="turnstile_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up Cloudflare turnstile.</div>
                                 </div>
                             </setting>

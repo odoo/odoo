@@ -12,14 +12,14 @@
                         <block title="Operations" name="process_operations_setting_container">
                             <setting id="work_order" string="Work Orders" help="Process operations at specific work centers" documentation="/applications/inventory_and_mrp/manufacturing/management/bill_configuration.html#adding-a-routing" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
                                 <field name="group_mrp_routings"/>
-                                <div id="workorder_settings_workcenters" class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                <div id="workorder_settings_workcenters" class="content-group" invisible="not group_mrp_routings">
                                     <div class="mt8">
                                         <div>
                                             <button name="%(mrp.mrp_workcenter_action)d" icon="oi-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="workorder_settings_dependencies" class="row mt-2" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                <div id="workorder_settings_dependencies" class="row mt-2" invisible="not group_mrp_routings">
                                     <field name="group_mrp_workorder_dependencies" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                     <div class="col ps-0">
                                         <label for="group_mrp_workorder_dependencies"/>
@@ -37,7 +37,7 @@
                             </setting>
                             <setting id="quality_control_mrp" help="Add quality checks to your work orders">
                                 <field name="module_quality_control" widget="upgrade_boolean"/>
-                                <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                <div class="row mt-2" invisible="not module_quality_control">
                                     <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
                                     <div class="col ps-0">
                                         <label for="module_quality_control_worksheet"/>
@@ -63,7 +63,7 @@
                             </setting>
                             <setting id="security_lead_time" string="Security Lead Time" company_dependent="1" help="Schedule manufacturing orders earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html">
                                 <field name="use_manufacturing_lead"/>
-                                <div class="content-group" attrs="{'invisible': [('use_manufacturing_lead','=',False)]}">
+                                <div class="content-group" invisible="not use_manufacturing_lead">
                                     <div class="mt16" >
                                         <field name="manufacturing_lead" class="oe_inline"/> days
                                     </div>

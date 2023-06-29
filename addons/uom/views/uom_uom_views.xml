@@ -24,21 +24,21 @@
                              <field name="category_id"/>
                              <field name="uom_type" readonly="1"/>
                              <label for="factor"
-                                attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <div attrs="{'invisible':[('uom_type','!=','smaller')]}">
+                                invisible="uom_type != 'smaller'"/>
+                            <div invisible="uom_type != 'smaller'">
                                 <field name="factor"
                                     digits="[42,5]"
-                                    attrs="{'readonly':[('uom_type','=','bigger')]}"/>
+                                    readonly="uom_type == 'bigger'"/>
                                 <span class="oe_grey oe_inline">
                                     e.g: 1*(reference unit)=ratio*(this unit)
                                 </span>
                             </div>
                             <label for="factor_inv"
-                                attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
-                            <div attrs="{'invisible':[('uom_type','!=','bigger')]}">
+                                invisible="uom_type != 'bigger'"/>
+                            <div invisible="uom_type != 'bigger'">
                                 <field name="factor_inv"
                                     digits="[42,5]"
-                                    attrs="{'readonly':[('uom_type','!=','bigger')]}"/>
+                                    readonly="uom_type != 'bigger'"/>
                                 <span class="oe_grey oe_inline">
                                     e.g: 1*(this unit)=ratio*(reference unit)
                                 </span>
@@ -100,9 +100,9 @@
                                 <tree editable="bottom">
                                     <field name="name" decoration-bf="uom_type == 'reference'"/>
                                     <field name="uom_type" decoration-bf="uom_type == 'reference'"/>
-                                    <field name="factor" invisible="1"/>
-                                    <field name="factor_inv" invisible="1"/>
-                                    <field name="ratio" string="Ratio" attrs="{'readonly': [('uom_type', '=', 'reference')]}" digits="[42,5]"/>
+                                    <field name="factor" column_invisible="True"/>
+                                    <field name="factor_inv" column_invisible="True"/>
+                                    <field name="ratio" string="Ratio" readonly="uom_type == 'reference'" digits="[42,5]"/>
                                     <field name="active"/>
                                     <field name="rounding" digits="[42, 5]"/>
                                 </tree>

@@ -21,7 +21,7 @@
                     <field name="can_edit" invisible="1"/>
                 </field>
                 <xpath expr="//field[@name='odoobot_state']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('can_edit', '=', False)]}</attribute>
+                    <attribute name="readonly">not can_edit</attribute>
                 </xpath>
             </field>
         </record>

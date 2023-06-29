@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
         <field name="arch" type="xml">
             <group name="reward_type_group" position="after">
-                <group id="shipping" string="Free shipping" attrs="{'invisible': [('reward_type', '!=', 'shipping')]}">
+                <group id="shipping" string="Free shipping" invisible="reward_type != 'shipping'">
                     <field name="discount_max_amount"/>
                 </group>
             </group>

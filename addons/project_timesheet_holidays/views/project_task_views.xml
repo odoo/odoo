@@ -10,7 +10,8 @@
                 <field name="is_timeoff_task" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']" position="attributes">
-                <attribute name="attrs">{'invisible': [('analytic_account_active', '=', False)], 'readonly': [('is_timeoff_task', '=', True)]}</attribute>
+                <attribute name="invisible">not analytic_account_active</attribute>
+                <attribute name="readonly">is_timeoff_task</attribute>
             </xpath>
         </field>
     </record>

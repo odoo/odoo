@@ -27,7 +27,7 @@
                         <group>
                             <field name="parent_id"/>
                             <field name="default_applicability"
-                                   attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                                   invisible="parent_id"/>
                         <field name="color" widget="color_picker"/>
                         </group>
                         <group>
@@ -37,7 +37,7 @@
 
                     <notebook>
                         <page string="Applicability" name="applicability"
-                              attrs="{'invisible': [('parent_id', '!=', False)]}">
+                              invisible="parent_id">
                             <field name="applicability_ids">
                                 <tree editable="bottom">
                                     <field name="business_domain"/>

@@ -18,7 +18,7 @@
                         <group>
                             <label for="interval_nbr"/>
                             <div class="o_row">
-                                <field name="interval_nbr" attrs="{'invisible': [('interval_unit', '=', 'now')], 'readonly': [('interval_unit', '=', 'now')]}"/>
+                                <field name="interval_nbr" invisible="interval_unit == 'now'" readonly="interval_unit == 'now'"/>
                                 <field name="interval_unit"/>
                             </div>
                             <field name="interval_type"/>

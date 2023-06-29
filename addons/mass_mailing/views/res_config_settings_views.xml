@@ -14,7 +14,7 @@
                             </setting>
                             <setting name="dedicated_server_setting_container" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails." help="Pick a dedicated outgoing mail server for your mass mailings">
                                 <field name="mass_mailing_outgoing_mail_server"/>
-                                <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                <div class="content-group" invisible="not mass_mailing_outgoing_mail_server">
                                     <div class="mt16">
                                         <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"
                                                 placeholder="Default Server"/>

@@ -22,7 +22,7 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets"/>
                 </xpath>
                 <xpath expr="//group[@name='group_time_managment']" position="attributes">
                     <attribute name="invisible">0</attribute>
@@ -41,7 +41,7 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" attrs="{'invisible' : [('allocated_hours', '=', 0)]}"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="allocated_hours == 0"/>
                 </xpath>
             </field>
         </record>

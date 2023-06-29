@@ -12,7 +12,7 @@
                         class="btn btn-primary"
                         type="object"
                         name="action_accept_driver_change"
-                        attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
+                        invisible="not future_driver_id"/>
                     <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -39,7 +39,7 @@
                             class="oe_stat_button"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
-                            attrs="{'invisible': [('service_activity', '!=', 'none')]}"
+                            invisible="service_activity != 'none'"
                             help="show the services logs for this vehicle">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
@@ -48,7 +48,7 @@
                             class="oe_stat_button text-danger"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
-                            attrs="{'invisible': [('service_activity', '!=', 'overdue')]}"
+                            invisible="service_activity != 'overdue'"
                             help="show the services logs for this vehicle">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
@@ -57,7 +57,7 @@
                             class="oe_stat_button text-warning"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
-                            attrs="{'invisible': [('service_activity', '!=', 'today')]}"
+                            invisible="service_activity != 'today'"
                             help="show the services logs for this vehicle">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
@@ -67,11 +67,11 @@
                             icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
                             help="show the odometer logs for this vehicle"
-                            attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                            invisible="vehicle_type != 'car'">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="model_id"/>
@@ -91,19 +91,19 @@
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar"/>
                             <field name="future_driver_id" widget="many2one_avatar"/>
-                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'"/>
+                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'"/>
                             <field name="next_assignation_date"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Vehicle">
                             <field name="category_id"/>
                             <field name="order_date"/>
-                            <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <field name="write_off_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                            <field name="acquisition_date" invisible="vehicle_type != 'car'"/>
+                            <field name="write_off_date" invisible="vehicle_type != 'car'"/>
                             <field name="vin_sn"/>
-                            <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <div class="o_row o_hr_narrow_field" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                            <label for="odometer" invisible="vehicle_type != 'car'"/>
+                            <div class="o_row o_hr_narrow_field" invisible="vehicle_type != 'car'">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
@@ -137,15 +137,15 @@
                                     <field name="model_year"/>
                                     <field name="transmission"/>
                                     <field name="color"/>
-                                    <field name="seats" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                                    <field name="doors" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                                    <field name="trailer_hook" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                                    <field name="frame_type" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
-                                    <label for="frame_size" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
-                                    <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
+                                    <field name="seats" invisible="vehicle_type != 'car'"/>
+                                    <field name="doors" invisible="vehicle_type != 'car'"/>
+                                    <field name="trailer_hook" invisible="vehicle_type != 'car'"/>
+                                    <field name="frame_type" invisible="vehicle_type != 'bike'"/>
+                                    <label for="frame_size" invisible="vehicle_type != 'bike'"/>
+                                    <div class="o_row" invisible="vehicle_type != 'bike'">
                                         <field name="frame_size" /><span>cm</span>
                                     </div>
-                                    <field name="electric_assistance" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                                    <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
                                 <group string="Engine">
                                     <field name="horsepower"/>
@@ -185,22 +185,22 @@
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
                 sample="1">
-                <field name="active" invisible="1"/>
+                <field name="active" column_invisible="True"/>
                 <field name="license_plate" readonly="1"/>
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
                 <field name="category_id"/>
                 <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
                 <field name="driver_id" widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
-                <field name="log_drivers" invisible="1"/>
+                <field name="log_drivers" column_invisible="True"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
-                <field name="contract_renewal_due_soon" invisible="1"/>
-                <field name="contract_renewal_overdue" invisible="1"/>
-                <field name="contract_renewal_total" invisible="1"/>
+                <field name="contract_renewal_due_soon" column_invisible="1"/>
+                <field name="contract_renewal_overdue" column_invisible="1"/>
+                <field name="contract_renewal_total" column_invisible="1"/>
                 <field name="vehicle_properties"/>
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
                     decoration-danger="contract_state == 'expired'" optional="hide"/>

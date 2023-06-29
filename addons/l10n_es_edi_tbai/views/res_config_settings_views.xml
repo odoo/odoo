@@ -11,10 +11,10 @@
             <xpath expr="//block[@name='spain_localization']/setting/div[hasclass('content-group')]/div[hasclass('mt16')]/*" position="before">
                 <label for="l10n_es_tbai_tax_agency" class="o_light_label"/>
                 <field name="l10n_es_tbai_tax_agency"/>
-                <div class="text-muted" attrs="{'invisible': [('l10n_es_tbai_tax_agency', '!=', False)]}">
+                <div class="text-muted" invisible="l10n_es_tbai_tax_agency">
                     No tax agency selected: TicketBAI not activated.
                 </div>
-                <div class="text-muted" attrs="{'invisible': [('l10n_es_tbai_tax_agency', '=', False)]}">
+                <div class="text-muted" invisible="not l10n_es_tbai_tax_agency">
                     Tax agency selected: TicketBAI is activated.
                 </div>
                 <br/>

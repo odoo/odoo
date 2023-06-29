@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='bill']" position="before">
-                <group string="Reordering" attrs="{'invisible': [('type','!=','service')]}">
+                <group string="Reordering" invisible="type != 'service'">
                     <div class="o_td_label d-inline-flex">
                         <label for='service_to_purchase'/>
                         <field name="service_to_purchase"/>
