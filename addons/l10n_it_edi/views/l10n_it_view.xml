@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//page[@name='advanced_options']" position="inside">
-                <group attrs="{'invisible': [('country_code', '!=', 'IT')]}">
+                <group invisible="country_code != 'IT'">
                     <group>
                         <field name="l10n_it_vat_due_date"/>
                         <field name="l10n_it_has_exoneration"/>
-                        <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+                        <field name="l10n_it_kind_exoneration" invisible="not l10n_it_has_exoneration"/>
                         <field name="l10n_it_law_reference"/>
                     </group>
                 </group>
@@ -29,9 +29,9 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="l10n_it_pec_email" attrs="{'invisible': ['|', ('fiscal_country_codes', 'not ilike', 'IT'), ('parent_id', '!=', False)]}"/>
-                <field name="l10n_it_codice_fiscale" attrs="{'invisible': ['|', ('fiscal_country_codes', 'not ilike', 'IT'), ('parent_id', '!=', False)]}"/>
-                <field name="l10n_it_pa_index" attrs="{'invisible': ['|', ('fiscal_country_codes', 'not ilike', 'IT'), ('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_pec_email" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
+                <field name="l10n_it_codice_fiscale" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
+                <field name="l10n_it_pa_index" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
             </xpath>
         </data>
         </field>
@@ -45,11 +45,11 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
-                <field name="l10n_it_tax_system" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+                <field name="l10n_it_codice_fiscale" invisible="country_code != 'IT'"/>
+                <field name="l10n_it_tax_system" invisible="country_code != 'IT'"/>
             </xpath>
             <xpath expr="//page" position="after">
-                <page string="Electronic Invoicing" name="electronic_invoicing" attrs="{'invisible': [('country_code', '!=', 'IT')]}">
+                <page string="Electronic Invoicing" name="electronic_invoicing" invisible="country_code != 'IT'">
                     <group>
                         <separator string="Economic and Administrative Index" colspan="4"/>
                         <div colspan="4">
@@ -59,11 +59,11 @@
                         </div>
                         <group>
                             <field name="l10n_it_has_eco_index" string="Company listed on the register of companies"/>
-                            <field name="l10n_it_eco_index_office" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
-                            <field name="l10n_it_eco_index_number" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
-                            <field name="l10n_it_eco_index_share_capital" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
-                            <field name="l10n_it_eco_index_sole_shareholder" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
-                            <field name="l10n_it_eco_index_liquidation_state" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_office" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_number" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_share_capital" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_sole_shareholder" invisible="not l10n_it_has_eco_index"/>
+                            <field name="l10n_it_eco_index_liquidation_state" invisible="not l10n_it_has_eco_index"/>
                         </group>
                     </group>
                     <group>
@@ -74,7 +74,7 @@
                         </div>
                         <group>
                             <field name="l10n_it_has_tax_representative" string="Company have a tax representative"/>
-                            <field name="l10n_it_tax_representative_partner_id" attrs="{'invisible': [('l10n_it_has_tax_representative', '=', False)]}"/>
+                            <field name="l10n_it_tax_representative_partner_id" invisible="not l10n_it_has_tax_representative"/>
                         </group>
                     </group>
                 </page>
@@ -154,13 +154,14 @@
             <xpath expr="//page[@name='other_info']" position="after">
                 <page string="Electronic Invoicing"
                     name="electronic_invoicing"
-                    attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('country_code', '!=', 'IT')]}">
+                    invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or country_code != 'IT'">
                     <group>
                         <group>
                             <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
-                            <field name="l10n_it_stamp_duty"/>
+                            <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                             <field name="l10n_it_ddt_id"
-                                   attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                                   invisible="move_type not in ('out_invoice', 'out_refund')"
+                                   readonly="state != 'draft'"/>
                         </group>
                     </group>
                 </page>

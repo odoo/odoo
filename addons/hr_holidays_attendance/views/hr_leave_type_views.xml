@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='request_unit']" position="after">
                 <field name="hr_attendance_overtime" invisible="1" />
-                <field name="overtime_deductible" attrs="{'invisible': [('hr_attendance_overtime', '=', False)]}"/>
+                <field name="overtime_deductible" invisible="not hr_attendance_overtime"/>
             </xpath>
         </field>
     </record>

@@ -17,7 +17,7 @@
                 <field name="parent_location_id" invisible="1"/>
                 <field name="original_location_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
-                <div class="oe_grey" attrs="{'invisible': [('move_dest_exists', '=', False)]}">
+                <div class="oe_grey" invisible="not move_dest_exists">
                     <p>This picking appears to be chained with another operation. Later, if you receive the goods you are returning now, make sure to <b>reverse</b> the returned picking in order to avoid logistic rules to be applied again (which would create duplicated operations)</p>
                 </div>
                 <field name="product_return_moves">
@@ -25,7 +25,7 @@
                         <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
                         <field name="quantity"/>
                         <field name="uom_id" groups="uom.group_uom"/>
-                        <field name="move_id" invisible="1"/>
+                        <field name="move_id" column_invisible="True"/>
                     </tree>
                 </field>
                 <group>

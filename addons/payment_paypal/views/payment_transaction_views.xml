@@ -9,7 +9,7 @@
             <field name="provider_reference" position="after">
                 <field name="paypal_type"
                        readonly="1"
-                       attrs="{'invisible': [('provider_code', '!=', 'paypal')]}"
+                       invisible="provider_code != 'paypal'"
                        groups="base.group_no_one"/>
             </field>
         </field>

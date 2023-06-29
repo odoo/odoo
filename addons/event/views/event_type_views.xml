@@ -21,7 +21,7 @@
                            <label for="has_seats_limitation" string="Limit Registrations"/>
                            <div>
                                <field name="has_seats_limitation"/>
-                               <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
+                               <span invisible="not has_seats_limitation" required="not has_seats_limitation">
                                    to <field name="seats_max" class="oe_inline o_input_9ch"/>
                                    Confirmed Attendees
                                </span>
@@ -45,9 +45,9 @@
                            <field name="event_type_mail_ids" class="w-100">
                                <tree string="Communication" editable="bottom">
                                    <field name="notification_type"/>
-                                   <field name="template_model_id" invisible="1"/>
+                                   <field name="template_model_id" column_invisible="True"/>
                                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
-                                   <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
+                                   <field name="interval_nbr" readonly="interval_unit == 'now'"/>
                                    <field name="interval_unit"/>
                                     <field name="interval_type"/>
                                </tree>

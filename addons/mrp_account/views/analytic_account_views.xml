@@ -9,12 +9,12 @@
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="action_view_mrp_production"
                     groups="mrp.group_mrp_user"
-                    icon="fa-wrench" attrs="{'invisible': [('production_count', '=', 0)]}">
+                    icon="fa-wrench" invisible="production_count == 0">
                     <field string="Manufacturing Orders" name="production_count" widget="statinfo"/>
                 </button>
                 <button class="oe_stat_button" type="object" name="action_view_mrp_bom"
                     groups="mrp.group_mrp_user"
-                    icon="fa-flask" attrs="{'invisible': [('bom_count', '=', 0)]}">
+                    icon="fa-flask" invisible="bom_count == 0">
                     <field string="Bills of Materials" name="bom_count" widget="statinfo"/>
                 </button>
             </div>

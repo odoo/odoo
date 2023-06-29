@@ -55,7 +55,7 @@
                 <field name="is_blacklisted" string="Email Blacklisted"/>
                 <field name="country_id" optional="hide"/>
                 <field name="message_bounce" sum="Total Bounces" readonly="1"/>
-                <field name="opt_out" invisible="'default_list_ids' not in context" readonly="1"/>
+                <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
                 <field name="list_ids" widget="many2many_tags" optional="hide"/>
             </tree>
         </field>
@@ -131,7 +131,7 @@
                                  <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                     title="This email is blacklisted for mass mailings. Click to unblacklist."
                                     type="object" context="{'default_email': email}" groups="base.group_user"
-                                    attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
+                                    invisible="not is_blacklisted"/>
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
@@ -140,8 +140,8 @@
                             <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                         <group>
-                            <field name="create_date" attrs="{'invisible': [('id', '=', False)]}" readonly="1"/>
-                            <field name="message_bounce" attrs="{'invisible': [('id', '=', False)]}" readonly="1"/>
+                            <field name="create_date" readonly="1" invisible="not id"/>
+                            <field name="message_bounce" readonly="1" invisible="not id"/>
                         </group>
                     </group>
                     <field name="subscription_list_ids">

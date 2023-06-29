@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="arch" type="xml">
         <xpath expr="//page[@name='description']" position="before">
-            <page string="Dates" name="expiration_dates" attrs="{'invisible': [('use_expiration_date', '=', False)]}">
+            <page string="Dates" name="expiration_dates" invisible="not use_expiration_date">
                 <field name="use_expiration_date" invisible="1"/>
                 <group>
                     <group>
@@ -22,7 +22,7 @@
         </xpath>
         <xpath expr="//div[hasclass('oe_title')]" position="inside">
             <field name="product_expiry_alert" invisible="1"/>
-            <span class="badge text-bg-danger" attrs="{'invisible': [('product_expiry_alert', '=', False)]}">Expiration Alert</span>
+            <span class="badge text-bg-danger" invisible="not product_expiry_alert">Expiration Alert</span>
         </xpath>
         </field>
     </record>
@@ -44,8 +44,8 @@
         <field name="inherit_id" ref="stock.view_production_lot_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
-                <field name="product_qty" invisible="1"/>
-                <field name="alert_date" optional="hide" widget='remaining_days' attrs="{'invisible': [('product_qty', '&lt;=', 0)]}"/>
+                <field name="product_qty" column_invisible="True"/>
+                <field name="alert_date" optional="hide" widget='remaining_days' invisible="product_qty &lt;= 0"/>
                 <field name="use_date" optional="hide"/>
                 <field name="removal_date" optional="hide"/>
                 <field name="expiration_date" optional="hide"/>
@@ -62,11 +62,11 @@
                 <field name="product_qty" invisible="1"/>
                 <field name="product_expiry_alert" invisible="1"/>
                 <field name="expiration_date" invisible="1"/>
-                <span title="Alert" class="fa fa-exclamation-triangle text-danger ms-2" attrs="{'invisible': ['|', '|', ('product_qty', '&lt;=', 0), ('product_expiry_alert', '=', False), ('expiration_date', '=', False)]}"/>
+                <span title="Alert" class="fa fa-exclamation-triangle text-danger ms-2" invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
                 <field name="alert_date" widget='remaining_days' class="ms-2"/>
             </xpath>
             <xpath expr="//div[@name='product_name']" position="after">
-                <div attrs="{'invisible': [('expiration_date', '=', False)]}">
+                <div invisible="not expiration_date">
                     <div>
                         <label for="expiration_date">Expiration: </label>
                         <field class="ms-2" name="expiration_date"/>

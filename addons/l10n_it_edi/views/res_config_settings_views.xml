@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
-                <block title="Electronic Document Invoicing" attrs="{'invisible':[('country_code', '!=', 'IT')]}" id='account_edi'>
+                <block title="Electronic Document Invoicing" invisible="country_code != 'IT'" id='account_edi'>
                     <setting>
                         <div class="group-content">
                             <field name="l10n_it_edi_proxy_current_state" invisible="1"/>
@@ -25,7 +25,7 @@
                                     widget="radio"
                                     options="{'horizontal': true}"/>
                         </div>
-                        <div class="mt8 content-group" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','=','active'), '&amp;', ('l10n_it_edi_proxy_current_state','=','demo'), ('l10n_it_edi_sdicoop_demo_mode','=','demo')]}">
+                        <div class="mt8 content-group" invisible="l10n_it_edi_proxy_current_state == 'active' or l10n_it_edi_proxy_current_state == 'demo' and l10n_it_edi_sdicoop_demo_mode == 'demo'">
                             <span class="o_form_label">Allow Odoo to process invoices</span>
                             <div class="text-muted">
                                 By checking this box, I accept that Odoo may process my invoices.
@@ -35,10 +35,10 @@
                             </div>
 
                         </div>
-                        <div class="text-success mt8" attrs="{'invisible': [('l10n_it_edi_proxy_current_state','in', ['inactive', 'demo'])]}">
+                        <div class="text-success mt8" invisible="l10n_it_edi_proxy_current_state in ['inactive', 'demo']">
                             An Official or Test service has been registered.
                         </div>
-                        <div class="text-success mt8" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','!=', 'demo'), ('l10n_it_edi_sdicoop_demo_mode', '!=', 'demo')]}">
+                        <div class="text-success mt8" invisible="l10n_it_edi_proxy_current_state != 'demo' or l10n_it_edi_sdicoop_demo_mode != 'demo'">
                             A Demo service is in use.
                         </div>
                     </setting>

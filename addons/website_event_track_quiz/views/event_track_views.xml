@@ -9,14 +9,14 @@
                 <field name="quiz_id" invisible="1"/>
                 <button name="action_add_quiz"
                     type="object" class="btn btn-primary" string="Add Quiz"
-                    attrs="{'invisible': [('quiz_id', '!=', False)]}"
+                    invisible="quiz_id"
                     groups="event.group_event_user">
                 </button>
             </field>
             <field name='is_published' position="before">
                 <button name="action_view_quiz" type="object" class="oe_stat_button"
                     string="Go to Quiz" icon="fa-question-circle" widget="stat_info"
-                    attrs="{'invisible': [('quiz_id', '=', False)]}"
+                    invisible="not quiz_id"
                     groups="event.group_event_user">
                 </button>
             </field>

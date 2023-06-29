@@ -10,7 +10,7 @@
                     type="object"
                     class="oe_stat_button"
                     icon="fa-pencil-square-o"
-                    attrs="{'invisible': [('bill_count', '=', 0)]}"
+                    invisible="bill_count == 0"
                     help="show the vendor bills for this vehicle">
                     <field name="bill_count" widget="statinfo" string="Bills"/>
                 </button>

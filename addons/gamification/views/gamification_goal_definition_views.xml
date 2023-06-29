@@ -47,21 +47,23 @@
 
                             <!-- Hide the fields below if manually -->
                             <field name="model_id" class="oe_inline"
-                                attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
+                                invisible="computation_mode not in ('sum', 'count')"
+                                required="computation_mode in ('sum', 'count')"/>
                             <field name="model_inherited_ids" invisible="1"/>
                             <field name="field_id" class="oe_inline" options="{'no_create': True}"
-                                attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
-                            <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
-                            <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
+                                invisible="computation_mode != 'sum'"
+                                required="computation_mode == 'sum'"/>
+                            <field name="field_date_id" class="oe_inline" invisible="computation_mode not in ('sum', 'count')"/>
+                            <field name="domain" invisible="computation_mode not in ('sum', 'count')" required="computation_mode in ('sum', 'count')" class="oe_inline"/>
+                            <field name="compute_code" invisible="computation_mode != 'python'" required="computation_mode == 'python'"/>
                             <field name="condition" widget="radio"/>
                         </group>
-                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', 'not in', ('sum', 'count'))]}">
+                        <group string="Optimisation" name="optimisation" invisible="computation_mode not in ('sum', 'count')">
                             <field name="batch_mode" />
                             <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
-                            <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"
+                            <field name="batch_distinctive_field" invisible="not batch_mode" required="batch_mode"
                                 domain="[('model_id', '=', model_id)]" class="oe_inline" />
-                            <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
+                            <field name="batch_user_expression" invisible="not batch_mode" required="batch_mode" class="oe_inline"
                                 placeholder="e.g. user.partner_id.id"/>
                         </group>
                         <group string="Formatting Options" name="format_options">
@@ -69,9 +71,9 @@
                             <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
                             <field name="monetary"/>
                         </group>
-                        <group string="Clickable Goals" name="clickable_goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
+                        <group string="Clickable Goals" name="clickable_goals" invisible="computation_mode == 'manually'">
                             <field name="action_id"  class="oe_inline"/>
-                            <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
+                            <field name="res_id_field"  invisible="not action_id" class="oe_inline"/>
                         </group>
 
                 </sheet>

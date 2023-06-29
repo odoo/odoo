@@ -12,10 +12,10 @@
                     <header>
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
-                    <field name="company_currency_id" invisible="1"/>
-                    <field name="suitable_journal_ids" invisible="1"/>
-                    <field name="available_payment_method_line_ids" invisible="1"/>
-                    <field name="date"/>
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="suitable_journal_ids" column_invisible="True"/>
+                    <field name="available_payment_method_line_ids" column_invisible="True"/>
+                    <field name="date" readonly="state in ['cancel', 'posted']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -153,26 +153,25 @@
                 <form string="Register Payment">
                     <header>
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="q"/>
+                                invisible="state != 'draft'" data-hotkey="q"/>
                         <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
-                                attrs="{'invisible': [('show_reset_to_draft_button', '=', False)]}"
+                                invisible="not show_reset_to_draft_button"
                                 groups="account.group_account_invoice" data-hotkey="w"/>
                         <button name="action_cancel" string="Cancel" type="object"
-                                attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}" data-hotkey="x"/>
+                                invisible="not id or state != 'draft'" data-hotkey="x"/>
                         <button string="Request Cancel"
                                 name="button_request_cancel"
                                 type="object"
                                 groups="account.group_account_invoice"
-                                attrs="{'invisible' : ['|', '|', ('state', '!=', 'posted'), ('show_reset_to_draft_button', '=', True), ('need_cancel_request', '=', False)]}"
+                                invisible="state != 'posted' or show_reset_to_draft_button or not need_cancel_request"
                                 data-hotkey="w"/>
                         <button name="mark_as_sent" string="Mark as Sent" type="object" data-hotkey="v"
-                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}"/>
+                                invisible="state != 'posted' or is_move_sent or payment_method_code != 'manual'"/>
                         <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
-                                attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}"/>
+                                invisible="state != 'posted' or not is_move_sent or payment_method_code != 'manual'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
-                    <div class="alert alert-warning text-center" role="alert" attrs="{
-                            'invisible': ['|', '|', ('is_internal_transfer','=',False), ('require_partner_bank_account', '=', False), ('partner_bank_id', '!=', False)]}">
+                    <div class="alert alert-warning text-center" role="alert" invisible="not is_internal_transfer or not require_partner_bank_account or partner_bank_id">
                         The selected payment method requires a bank account but none is set on
                         <button class="oe_link alert-link" type="object" name="action_open_destination_journal" style="padding: 0; vertical-align: baseline;">the destination journal</button>.
                     </div>
@@ -203,12 +202,12 @@
                             <!-- Invoice stat button -->
                             <button name="button_open_invoices" type="object"
                                     class="oe_stat_button" icon="fa-bars"
-                                    attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}">
+                                    invisible="reconciled_invoices_count == 0">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_text">
                                         <field name="reconciled_invoices_count"/>
-                                        <span attrs="{'invisible': [('reconciled_invoices_type', '!=', 'invoice')]}"> Invoice</span>
-                                        <span attrs="{'invisible': [('reconciled_invoices_type', '=', 'invoice')]}"> Credit Note</span>
+                                        <span invisible="reconciled_invoices_type != 'invoice'"> Invoice</span>
+                                        <span invisible="reconciled_invoices_type == 'invoice'"> Credit Note</span>
                                     </span>
                                 </div>
                             </button>
@@ -216,7 +215,7 @@
                             <!-- Bill stat button -->
                             <button name="button_open_bills" type="object"
                                     class="oe_stat_button" icon="fa-bars"
-                                    attrs="{'invisible': [('reconciled_bills_count','=', 0)]}">
+                                    invisible="reconciled_bills_count == 0">
                                 <div class="o_form_field o_stat_info">
                                     <span class="o_stat_text">
                                         <field name="reconciled_bills_count"/>
@@ -228,7 +227,7 @@
                             <!-- Statement stat button -->
                             <button name="button_open_statement_lines" type="object"
                                     class="oe_stat_button" icon="fa-bars"
-                                    attrs="{'invisible': [('reconciled_statement_lines_count','=', 0)]}">
+                                    invisible="reconciled_statement_lines_count == 0">
                                 <div class="o_form_field o_stat_info">
                                     <field name="reconciled_statement_lines_count"/>
                                     <span class="o_stat_text">Transaction</span>
@@ -249,88 +248,83 @@
 
                         <widget name="web_ribbon" text="Invoicing App Legacy"
                                 bg_color="text-bg-info"
-                                attrs="{'invisible': [('state', '!=', 'invoicing_legacy')]}"
-                                tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."
-                        />
+                                invisible="state != 'invoicing_legacy'"
+                                tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 
                         <div class="oe_title">
-                            <h1 attrs="{'invisible': [('state', '!=', 'draft')]}"><span>Draft</span></h1>
-                            <h1 attrs="{'invisible': [('state', '=', 'draft')]}"><field name="name" readonly="1"/></h1>
+                            <h1 invisible="state != 'draft'"><span>Draft</span></h1>
+                            <h1 invisible="state == 'draft'"><field name="name" readonly="1"/></h1>
                         </div>
 
                         <group name="main_group">
                             <group name="group1">
                                 <label for="is_internal_transfer"/>
                                 <div>
-                                    <field name="is_internal_transfer" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <span attrs="{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}"
+                                    <field name="is_internal_transfer" readonly="state != 'draft'"/>
+                                    <span invisible="paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'"
                                           class="fst-italic">
                                         A second payment will be created in the destination journal.
                                     </span>
                                 </div>
                                 <field name="payment_type" widget="radio" options="{'horizontal': True}"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       readonly="state != 'draft'"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        options="{'no_quick_create': True}"
-                                       attrs="{'readonly':[('state', '!=', 'draft')],
-                                             'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
+                                       invisible="partner_type != 'customer' or is_internal_transfer"
+                                       readonly="state != 'draft'"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                        options="{'no_quick_create': True}"
-                                       attrs="{'readonly':[('state', '!=', 'draft')],
-                                               'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
+                                       invisible="partner_type != 'supplier' or is_internal_transfer"
+                                       readonly="state != 'draft'"/>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"
-                                           attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                           readonly="state != 'draft'"/>
                                     <field name="currency_id"
                                            options="{'no_create': True, 'no_open': True}"
                                            required="1"
-                                           attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                           readonly="state != 'draft'"
                                            groups="base.group_multi_currency"/>
                                 </div>
                                 <field name="date"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       readonly="state != 'draft'"/>
                                 <field name="ref" string="Memo"/>
                             </group>
                             <group name="group2">
                                 <field name="journal_id"
                                        domain="[('id', 'in', available_journal_ids)]"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
-                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       readonly="state != 'draft'"/>
+                                <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"
+                                       required="1"
+                                       readonly="state != 'draft'"/>
 
                                 <field name="partner_bank_id" string="Customer Bank Account"
                                       context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        attrs="{
-                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
-                                            'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                        }"/>
+                                        invisible="not show_partner_bank_account or partner_type != 'customer' or is_internal_transfer or payment_type == 'inbound'"
+                                        required="require_partner_bank_account and not is_internal_transfer"/>
 
                                 <field name="partner_bank_id" string="Vendor Bank Account"
                                         context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        attrs="{
-                                            'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
-                                            'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                        }"/>
+                                        invisible="not show_partner_bank_account or partner_type != 'supplier' or is_internal_transfer or payment_type == 'inbound'"
+                                        required="require_partner_bank_account and not is_internal_transfer"/>
 
                                 <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                                 fields readonly condition in the framework, preventing the modification of these fields -->
                                 <field name="partner_bank_id" string="Company Bank Account"
                                         context="{'default_partner_id': partner_id, 'display_account_trust': True}"
-                                        attrs="{
-                                            'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
-                                            'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                        }"/>
+                                        invisible="not show_partner_bank_account or is_internal_transfer or payment_type == 'outbound'"
+                                        required="require_partner_bank_account and not is_internal_transfer"/>
 
                                 <field name="destination_journal_id"
                                        placeholder="e.g. Cash"
                                        context="{'default_partner_id': partner_id}"
-                                       attrs="{'invisible': [('is_internal_transfer', '=', False)],
-                                       'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True),('state', '=', 'draft')]}"/>
+                                       invisible="not is_internal_transfer"
+                                       readonly="state != 'draft'"
+                                       required="is_internal_transfer and state == 'draft'"/>
                             </group>
                             <group>
                                 <field name="qr_code" invisible="1"/>
-                                <div attrs="{'invisible': [('qr_code', '=', False)]}" colspan="2" class="text-center">
+                                <div invisible="not qr_code" colspan="2" class="text-center">
                                     <field name="qr_code" widget="html"/>
                                 </div>
                             </group>

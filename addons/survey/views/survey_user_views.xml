@@ -37,8 +37,8 @@
             <form string="Survey User inputs" create="false">
                 <header>
                     <button name="action_resend" string="Resend Invitation" type="object" class="oe_highlight"
-                        attrs="{'invisible': ['|', ('state', '=', 'done'), '&amp;', ('partner_id', '=', False), ('email', '=', False)]}"/>
-                    <button name="action_print_answers" states="done" string="Print" type="object"  class="oe_highlight"/>
+                        invisible="state == 'done' or not partner_id and not email"/>
+                    <button name="action_print_answers" invisible="state != 'done'" string="Print" type="object"  class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -47,26 +47,26 @@
                         <button name="action_redirect_to_attempts"
                             type="object"
                             class="oe_stat_button"
-                            attrs="{'invisible': [('attempts_count', '=', 1)]}"
+                            invisible="attempts_count == 1"
                             icon="fa-files-o">
                             <field string="Attempts" name="attempts_count" widget="statinfo"/>
                         </button>
                     </div>
                     <field name="test_entry" invisible="1"/>
                     <widget name="web_ribbon" title="Test Entry" bg_color="text-bg-info"
-                        attrs="{'invisible': [('test_entry', '!=', True)]}"/>
+                        invisible="not test_entry"/>
                     <widget name="web_ribbon" title="Failed" bg_color="text-bg-danger"
-                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', True)]}"/>
+                        invisible="test_entry or scoring_type == 'no_scoring' or scoring_success"/>
                     <widget name="web_ribbon" title="Passed"
-                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', False)]}"/>
+                        invisible="test_entry or scoring_type == 'no_scoring' or not scoring_success"/>
                     <group col="2">
                         <group>
                             <field name="survey_id"/>
                             <field name="create_date"/>
-                            <field name="deadline" attrs="{'invisible': [('state', '=', 'done'), ('deadline', '=', False)]}"/>
+                            <field name="deadline" invisible="state == 'done' and not deadline"/>
                             <field name="is_attempts_limited" invisible="1"/>
-                            <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
-                            <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}" class="d-inline-flex">
+                            <label for="attempts_number" string="Attempt n°" invisible="not is_attempts_limited or test_entry or state != 'done'"/>
+                            <div invisible="not is_attempts_limited or test_entry or state != 'done'" class="d-inline-flex">
                                 <field name="attempts_number" nolabel="1"/>
                                  / 
                                 <field name="attempts_limit" nolabel="1"/>
@@ -76,8 +76,8 @@
                         <group>
                             <field name="scoring_type" invisible="1"/>
                             <field name="scoring_success" invisible="1"/>
-                            <label for="scoring_percentage" string="Score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
-                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" class="d-inline-flex">
+                            <label for="scoring_percentage" string="Score" invisible="scoring_type == 'no_scoring'"/>
+                            <div invisible="scoring_type == 'no_scoring'" class="d-inline-flex">
                                 <field name="scoring_percentage" nolabel="1"/>
                                 <span>%</span>
                             </div>
@@ -88,9 +88,9 @@
                     </group>
                     <notebook>
                         <page string="Answers">
-                            <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}" no_label="1">
+                            <field name="user_input_line_ids" mode="tree" readonly="True" no_label="1">
                                 <tree decoration-muted="skipped == True">
-                                    <field name="question_sequence" invisible="1"/>
+                                    <field name="question_sequence" column_invisible="True"/>
                                     <field name="create_date" optional="hidden"/>
                                     <field name="page_id" optional="hidden"/>
                                     <field name="question_id"/>
@@ -125,7 +125,7 @@
                 <field name="email" optional="show"/>
                 <field name="attempts_number"/>
                 <field name="deadline"/>
-                <field name="test_entry" invisible="True"/>
+                <field name="test_entry" column_invisible="True"/>
                 <field name="scoring_success"/>
                 <field name="scoring_percentage"/>
                 <field name="state" widget="badge"
@@ -201,13 +201,13 @@
                         <field name="answer_score" groups="base.group_no_one"/>
                     </group>
                     <group>
-                        <field name="value_char_box" colspan='2' attrs="{'invisible': [('answer_type','!=','char_box')]}"/>
-                        <field name="value_numerical_box" colspan='2' attrs="{'invisible': [('answer_type','!=','numerical_box')]}"/>
-                        <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
-                        <field name="value_datetime" colspan='2' attrs="{'invisible': [('answer_type','!=','datetime')]}"/>
-                        <field name="value_text_box" colspan='2' attrs="{'invisible': [('answer_type','!=','text_box')]}"/>
+                        <field name="value_char_box" colspan='2' invisible="answer_type != 'char_box'"/>
+                        <field name="value_numerical_box" colspan='2' invisible="answer_type != 'numerical_box'"/>
+                        <field name="value_date" colspan='2' invisible="answer_type != 'date'"/>
+                        <field name="value_datetime" colspan='2' invisible="answer_type != 'datetime'"/>
+                        <field name="value_text_box" colspan='2' invisible="answer_type != 'text_box'"/>
                         <field name="matrix_row_id" colspan='2' />
-                        <field name="suggested_answer_id" colspan='2' attrs="{'invisible': [('answer_type','!=','suggestion')]}"/>
+                        <field name="suggested_answer_id" colspan='2' invisible="answer_type != 'suggestion'"/>
                     </group>
                 </sheet>
             </form>

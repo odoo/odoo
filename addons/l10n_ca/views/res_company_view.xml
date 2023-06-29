@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="after">
-                    <field name="l10n_ca_pst" attrs="{'invisible': [('country_code', '!=', 'CA')]}"/>
+                    <field name="l10n_ca_pst" invisible="country_code != 'CA'"/>
                 </xpath>
             </field>
         </record>

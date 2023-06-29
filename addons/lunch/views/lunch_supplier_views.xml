@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name" string="Vendor"/>
                         <h1><field name="name" required="1" placeholder="e.g. The Pizzeria Inn"/></h1>
@@ -38,10 +38,10 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="email" attrs="{'required': [('send_by', '=', 'mail')]}"/>
-                            <field name="phone" class="o_force_ltr" attrs="{'required': [('send_by', '=', 'phone')]}"/>
+                            <field name="email" required="send_by == 'mail'"/>
+                            <field name="phone" class="o_force_ltr" required="send_by == 'phone'"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" groups="base.group_no_one" domain="[('share', '=', False)]"/>
+                            <field name="responsible_id" required="send_by == 'mail'" groups="base.group_no_one" domain="[('share', '=', False)]"/>
                         </group>
                     </group>
                     <group>
@@ -56,8 +56,8 @@
                             <field name="delivery"/>
                             <field name="available_location_ids" widget="many2many_tags"/>
                             <field name="send_by" widget="radio"/>
-                            <label for="automatic_email_time" attrs="{'invisible': [('send_by', '!=', 'mail')]}"/>
-                            <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                            <label for="automatic_email_time" invisible="send_by != 'mail'"/>
+                            <div class="o_row" invisible="send_by != 'mail'"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
                         </group>
                     </group>
                     <group>
@@ -70,8 +70,8 @@
                             <field name="topping_ids_1" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
                                 </tree>
                             </field>
@@ -84,8 +84,8 @@
                             <field name="topping_ids_2" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
                                 </tree>
                             </field>
@@ -98,8 +98,8 @@
                             <field name="topping_ids_3" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
                                 </tree>
                             </field>

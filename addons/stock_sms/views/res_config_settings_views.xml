@@ -13,11 +13,11 @@
                 <attribute name="string">SMS Confirmation</attribute>
             </xpath>
             <xpath expr="//setting[@id='stock_sms']" position="inside">
-                <div class="row mt16" attrs="{'invisible': [('stock_move_sms_validation', '=', False)]}">
+                <div class="row mt16" invisible="not stock_move_sms_validation">
                     <label for="stock_sms_confirmation_template_id" string="SMS Template" class="col-lg-4 o_light_label"/>
-                    <field name="stock_sms_confirmation_template_id" class="oe_inline" attrs="{'required': [('stock_move_sms_validation', '=', True)]}" context="{'default_model': 'stock.picking'}"/>
+                    <field name="stock_sms_confirmation_template_id" class="oe_inline" required="stock_move_sms_validation" context="{'default_model': 'stock.picking'}"/>
                 </div>
-                <widget name="iap_buy_more_credits" service_name="sms" attrs="{'invisible': [('stock_move_sms_validation', '=', False)]}"/>
+                <widget name="iap_buy_more_credits" service_name="sms" invisible="not stock_move_sms_validation"/>
             </xpath>
         </field>
     </record>

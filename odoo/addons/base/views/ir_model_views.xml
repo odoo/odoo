@@ -37,9 +37,9 @@
                         <group>
                             <field name="id" invisible="1"/>
                             <field name="name"/>
-                            <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="model" readonly="id"/>
                             <field name="order"/>
-                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="transient" readonly="id" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="state" readonly="1" groups="base.group_no_one"/>
@@ -81,38 +81,37 @@
                                                 </group>
                                                 <group>
                                                     <field name="translate"
-                                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
-                                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
+                                                        invisible="ttype not in ['char', 'text', 'html']"
+                                                        readonly="ttype not in ['char', 'text', 'html']"/>
                                                     <field name="size" groups="base.group_no_one"
-                                                        attrs="{'readonly': [('ttype','not in',['char','reference'])],
-                                                                'invisible': [('ttype','not in',['char','reference'])]}"/>
+                                                        invisible="ttype not in ['char', 'reference']"
+                                                        readonly="ttype not in ['char', 'reference']"/>
                                                     <field name="relation"
-                                                        attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
-                                                                'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
-                                                                'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                                        invisible="ttype not in ['many2one', 'one2many', 'many2many']"
+                                                        readonly="ttype not in ['many2one', 'one2many', 'many2many']"
+                                                        required="ttype in ['many2one', 'one2many', 'many2many']"/>
                                                     <field name="on_delete" groups="base.group_no_one"
-                                                        attrs="{'readonly': [('ttype','!=','many2one')],
-                                                                'invisible': [('ttype','!=','many2one')]}"/>
+                                                        invisible="ttype != 'many2one'"
+                                                        readonly="ttype != 'many2one'"/>
                                                     <field name="relation_field"
-                                                        attrs="{'required': [('ttype','=','one2many')],
-                                                                'readonly': [('ttype','!=','one2many')],
-                                                                'invisible': [('ttype','!=','one2many')]}"/>
+                                                        invisible="ttype != 'one2many'"
+                                                        readonly="ttype != 'one2many'"
+                                                        required="ttype == 'one2many'"/>
                                                     <field name="relation_table" groups="base.group_no_one"
-                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                        invisible="ttype != 'many2many' or state != 'manual'"
+                                                        readonly="ttype != 'many2many' or state != 'manual'"/>
                                                     <field name="column1" groups="base.group_no_one"
-                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                        invisible="ttype != 'many2many' or state != 'manual'"
+                                                        readonly="ttype != 'many2many' or state != 'manual'"/>
                                                     <field name="column2" groups="base.group_no_one"
-                                                        attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                                'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                                        invisible="ttype != 'many2many' or state != 'manual'"
+                                                        readonly="ttype != 'many2many' or state != 'manual'"/>
                                                     <field name="domain" groups="base.group_no_one"
-                                                        attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
-                                                                'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                                        invisible="ttype not in ['many2one', 'one2many', 'many2many']"
+                                                        readonly="ttype not in ['many2one', 'one2many', 'many2many']"/>
                                                 </group>
                                             </group>
-                                            <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
-                                                           'invisible': [('ttype','not in',['selection','reference'])]}">
+                                            <group invisible="ttype not in ['selection', 'reference']" readonly="ttype not in ['selection', 'reference']">
                                                 <field name="selection_ids">
                                                     <tree editable="bottom">
                                                         <field name="sequence" widget="handle"/>
@@ -123,7 +122,7 @@
                                             </group>
                                             <group string="Advanced Properties" groups="base.group_no_one">
                                                 <field name="related"/>
-                                                <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
+                                                <field name="depends" required="compute not in [False, '']"/>
                                                 <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                             </group>
                                             <div groups="base.group_no_one">
@@ -254,7 +253,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="field_description"/>
-                                <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                                <field name="model_id" readonly="state != 'manual'"/>
                             </group>
                             <group>
                                 <field name="ttype"/>
@@ -273,45 +272,44 @@
                                     </group>
                                     <group>
                                         <field name="translate"
-                                            attrs="{'readonly': [('ttype','not in',['char','text','html'])],
-                                                    'invisible': [('ttype','not in',['char','text','html'])]}"/>
+                                            invisible="ttype not in ['char', 'text', 'html']"
+                                            readonly="ttype not in ['char', 'text', 'html']"/>
                                         <field name="size" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','not in',['char','reference'])],
-                                                    'invisible': [('ttype','not in',['char','reference'])]}"/>
+                                            invisible="ttype not in ['char', 'reference']"
+                                            readonly="ttype not in ['char', 'reference']"/>
                                         <field name="relation"
-                                            attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
-                                                    'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
-                                                    'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                            invisible="ttype not in ['many2one', 'one2many', 'many2many']"
+                                            readonly="ttype not in ['many2one', 'one2many', 'many2many']"
+                                            required="ttype in ['many2one', 'one2many', 'many2many']"/>
                                         <field name="group_expand" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','not in', ['many2one', 'selection'])],
-                                                    'invisible': [('ttype','not in', ['many2one', 'selection'])]}"/>
+                                            invisible="ttype not in ['many2one', 'selection']"
+                                            readonly="ttype not in ['many2one', 'selection']"/>
                                         <field name="on_delete" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','!=','many2one')],
-                                                    'invisible': [('ttype','!=','many2one')]}"/>
+                                            invisible="ttype != 'many2one'"
+                                            readonly="ttype != 'many2one'"/>
                                         <field name="relation_field"
-                                            attrs="{'required': [('ttype','=','one2many')],
-                                                    'readonly': [('ttype','!=','one2many')],
-                                                    'invisible': [('ttype','!=','one2many')]}"/>
+                                            invisible="ttype != 'one2many'"
+                                            readonly="ttype != 'one2many'"
+                                            required="ttype == 'one2many'"/>
                                         <field name="relation_table" groups="base.group_no_one"
-                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                            invisible="ttype != 'many2many' or state != 'manual'"
+                                            readonly="ttype != 'many2many' or state != 'manual'"/>
                                         <field name="column1" groups="base.group_no_one"
-                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                            invisible="ttype != 'many2many' or state != 'manual'"
+                                            readonly="ttype != 'many2many' or state != 'manual'"/>
                                         <field name="column2" groups="base.group_no_one"
-                                            attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
-                                                    'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
+                                            invisible="ttype != 'many2many' or state != 'manual'"
+                                            readonly="ttype != 'many2many' or state != 'manual'"/>
                                         <field name="domain" groups="base.group_no_one"
-                                            attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
-                                                    'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                            invisible="ttype not in ['many2one', 'one2many', 'many2many']"
+                                            readonly="ttype not in ['many2one', 'one2many', 'many2many']"/>
                                         <field name="currency_field"
-                                            attrs="{'required': [('ttype','=','monetary')],
-                                                    'readonly': [('ttype','!=','monetary')],
-                                                    'invisible': [('ttype','!=','monetary')]}"/>
+                                            invisible="ttype != 'monetary'"
+                                            readonly="ttype != 'monetary'"
+                                            required="ttype == 'monetary'"/>
                                     </group>
                                 </group>
-                                <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],
-                                               'invisible': [('ttype','not in',['selection','reference'])]}">
+                                <group invisible="ttype not in ['selection', 'reference']" readonly="ttype not in ['selection', 'reference']">
                                     <field name="selection_ids">
                                         <tree editable="bottom">
                                             <field name="sequence" widget="handle"/>
@@ -322,7 +320,7 @@
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
                                     <field name="related"/>
-                                    <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
+                                    <field name="depends" required="compute not in [False, '']"/>
                                     <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                 </group>
                                 <div groups="base.group_no_one">
@@ -499,7 +497,7 @@
                     <field name="complete_name"/>
                     <field name="display_name"/>
                     <field name="model" groups="base.group_no_one"/>
-                    <field name="module" invisible="1"/>
+                    <field name="module" column_invisible="True"/>
                     <field name="res_id"/>
                 </tree>
             </field>

@@ -10,14 +10,14 @@
                     type="object"
                     icon="fa-pencil-square-o"
                     class="oe_stat_button"
-                    attrs="{'invisible': [('state', '=', 'draft')]}">
+                    invisible="state == 'draft'">
                     <field name="sale_quotation_count" string="Quotations" widget="statinfo"/>
                 </button>
                 <button name="action_redirect_to_invoiced"
                     type="object"
                     icon="fa-dollar"
                     class="oe_stat_button"
-                    attrs="{'invisible': [('state', '=', 'draft')]}" >
+                    invisible="state == 'draft'" >
                     <field name="sale_invoiced_amount" string="Invoiced" widget="statinfo"/>
                 </button>
     		</xpath>

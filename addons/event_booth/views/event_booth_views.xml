@@ -11,7 +11,7 @@
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <div class="oe_button_box" name="button_box" invisible="not id"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Name"/>
                         <h1><field name="name" placeholder="e.g. First Booth Alley 1"/></h1>

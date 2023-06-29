@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/sheet" position="before">
                 <field name="has_an_online_payment_provider" invisible="1"/>
-                <div class="alert alert-danger mb-0" role="alert" attrs="{'invisible': ['|', ('is_online_payment', '=', False), ('has_an_online_payment_provider', '=', True)]}">
+                <div class="alert alert-danger mb-0" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
                     You have not activated any <bold><a type="action" name="%(payment.action_payment_provider)d" class="alert-link" role="button">payment provider</a></bold> to allow online payments.
                 </div>
             </xpath>
@@ -15,16 +15,17 @@
                 <field name="is_online_payment"/>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_online_payment', '=', True)]}</attribute>
+                <attribute name="invisible">is_online_payment</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='journal_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_online_payment', '=', True)], 'required': ['&amp;', ('is_online_payment', '=', False), ('split_transactions', '=', False)]}</attribute>
+                <attribute name="invisible">is_online_payment</attribute>
+                <attribute name="required">not is_online_payment and not split_transactions</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='receivable_account_id']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('is_online_payment', '=', True), ('split_transactions', '=', True)]}</attribute>
+                <attribute name="invisible">is_online_payment or split_transactions</attribute>
             </xpath>
             <xpath expr="//form/sheet/group[@name='Payment methods']/group" position="after">
-                <group attrs="{'invisible': [('is_online_payment', '=', False)]}">
+                <group invisible="not is_online_payment">
                     <div colspan="2">
                         <label for="online_payment_provider_ids"/>
                         <field name="online_payment_provider_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="All available providers" />
@@ -45,7 +46,7 @@
             </xpath>
             <xpath expr="//tree" position="inside">
                 <field name="is_online_payment" optional="hide"/>
-                <field name="has_an_online_payment_provider" invisible="1"/>
+                <field name="has_an_online_payment_provider" column_invisible="True"/>
             </xpath>
         </field>
     </record>

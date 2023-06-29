@@ -65,10 +65,10 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
-                <group name="pos" string="Point of Sale" attrs="{'invisible': [('sale_ok','=',False)]}">
+                <group name="pos" string="Point of Sale" invisible="not sale_ok">
                     <field name="available_in_pos"/>
-                    <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
-                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
+                    <field name="to_weight" invisible="not available_in_pos"/>
+                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" invisible="not available_in_pos" string="Category"/>
                     <field name="combo_ids" widget="many2many_tags" options="{'no_create': True}"/>
                 </group>
             </xpath>

@@ -16,8 +16,8 @@
                             <field name="color_secondary" widget="color" nolabel="1"/>
                         </div>
                         <field name="show_contact"/>
-                        <field name="show_others" attrs="{'invisible': [('can_show_others', '=', False)]}"/>
-                        <field name="show_skills" attrs="{'invisible': [('can_show_skills', '=', False)]}"/>
+                        <field name="show_others" invisible="not can_show_others"/>
+                        <field name="show_skills" invisible="not can_show_skills"/>
                     </group>
                 </group>
                 <footer>

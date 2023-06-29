@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="loyalty.loyalty_mail_view_tree"/>
         <field name="arch" type="xml">
             <field name="mail_template_id" position="after">
-                <field name="pos_report_print_id" attrs="{'invisible': [('trigger', '!=', 'create')]}"/>
+                <field name="pos_report_print_id" invisible="trigger != 'create'"/>
             </field>
         </field>
     </record>

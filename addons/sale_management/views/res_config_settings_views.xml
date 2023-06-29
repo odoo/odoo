@@ -9,7 +9,7 @@
             <setting id="order_default_values" position="after">
                 <setting id="standardized_offers_setting" help="Create standardized offers with default products" documentation="/applications/sales/sales/send_quotations/quote_template.html">
                     <field name="group_sale_order_template"/>
-                    <div class="content-group" attrs="{'invisible': [('group_sale_order_template', '=', False)]}">
+                    <div class="content-group" invisible="not group_sale_order_template">
                         <div class="mt16">
                             <label for="company_so_template_id" class="o_light_label mr8"/>
                             <field name="company_so_template_id" class="oe_inline"/>
@@ -22,20 +22,20 @@
                         </div>
                     </div>
                     <div class="mt16 oe_inline"
-                         attrs="{'invisible': [('group_sale_order_template', '=', False)]}"
+                         invisible="not group_sale_order_template"
                          id="module_sale_quotation_builder">
                         <field name="module_sale_quotation_builder" class="col-lg-4 oe_inline"/>
                         <label for="module_sale_quotation_builder"/>
                     </div>
                     <div class="text-muted"
-                         attrs="{'invisible': [('group_sale_order_template', '=', False)]}"
+                         invisible="not group_sale_order_template"
                          id="module_sale_quotation_builder_description">
                         Design your quotation templates using building blocks
                     </div>
                 </setting>
             </setting>
             <xpath expr="//div[@id='order_default_values_div']" position="before">
-                <div attrs="{'invisible': [('group_sale_order_template', '=', False)]}"
+                <div invisible="not group_sale_order_template"
                      class="container text-info text-center border border-info">
                     Default values will be overwritten by values provided by the quotation template.
                 </div>

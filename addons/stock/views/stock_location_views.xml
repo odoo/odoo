@@ -26,7 +26,7 @@
                                 class="oe_stat_button"
                                 icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <label for="name"/>
                     <h1><field name="name" placeholder="e.g. Spare Stock"/></h1>
                     <label for="location_id"/>
@@ -36,16 +36,16 @@
                         <group string="Additional Information" name="additional_info">
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
-                            <field name="storage_category_id" attrs="{'invisible': [('usage', '!=', 'internal')]}" groups="stock.group_stock_storage_categories"/>
+                            <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_storage_categories"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
+                            <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
                             <field name="return_location"/>
-                            <field name="replenish_location" attrs="{'invisible': [('usage', '!=', 'internal')]}"/>
+                            <field name="replenish_location" invisible="usage != 'internal'"/>
                         </group>
-                        <group string="Cyclic Counting" attrs="{'invisible': ['|', ('usage', 'not in', ('internal', 'transit')), ('company_id', '=', False)]}">
+                        <group string="Cyclic Counting" invisible="usage not in ('internal', 'transit') or not company_id">
                             <field name="cyclic_inventory_frequency"/>
                             <field name="last_inventory_date"/>
-                            <field name="next_inventory_date" attrs="{'invisible': [('active', '=', False)]}"/>
+                            <field name="next_inventory_date" invisible="not active"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
@@ -97,11 +97,11 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" multi_edit="1">
-                <field name="company_id" invisible="1"/>
-                <field name="active" invisible="1"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="active" column_invisible="True"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
-                <field name="storage_category_id" attrs="{'readonly': [('usage', '!=', 'internal')]}" groups="stock.group_stock_storage_categories"/>
+                <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_storage_categories"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -171,7 +171,7 @@
                 <tree string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -185,7 +185,7 @@
                 <form string="Route">
                     <field name="company_id" invisible="1"/>
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. Two-steps reception"/></h1>
@@ -211,7 +211,7 @@
                                 <field name="warehouse_selectable" class="oe_inline" nolabel="1"/>
                                 <field name="warehouse_domain_ids" invisible="1"/>
                                 <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
-                                       attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
+                                       invisible="not warehouse_selectable"/>
                             </div>
                         </group>
                     </group>

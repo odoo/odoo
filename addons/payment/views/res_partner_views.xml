@@ -13,7 +13,7 @@
                         icon="fa-credit-card-alt"
                         name="%(payment.action_payment_token)d"
                         context="{'search_default_partner_id': active_id, 'create': False, 'edit': False}"
-                        attrs="{'invisible': [('payment_token_count', '=', 0)]}">
+                        invisible="payment_token_count == 0">
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_value">
                             <field name="payment_token_count" widget="statinfo" nolabel="1"/>

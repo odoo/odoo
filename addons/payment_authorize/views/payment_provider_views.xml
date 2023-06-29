@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
-                <group attrs="{'invisible': [('code', '!=', 'authorize')]}">
-                    <field name="authorize_login" attrs="{'required':[('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
-                    <field name="authorize_transaction_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
-                    <field name="authorize_signature_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+                <group invisible="code != 'authorize'">
+                    <field name="authorize_login" required="code == 'authorize' and state != 'disabled'"/>
+                    <field name="authorize_transaction_key" password="True" required="code == 'authorize' and state != 'disabled'"/>
+                    <field name="authorize_signature_key" password="True" required="code == 'authorize' and state != 'disabled'"/>
                     <label for="authorize_client_key"/>
                     <div class="o_row" col="2">
                         <field name="authorize_client_key"/>
@@ -25,13 +25,14 @@
             </group>
             <field name="display_as" position="before">
                 <field name="authorize_payment_method_type"
-                       attrs="{'invisible': [('code', '!=', 'authorize')], 'required':[('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+                       invisible="code != 'authorize'"
+                       required="code == 'authorize' and state != 'disabled'"/>
             </field>
             <div name="available_currencies" position="inside">
                 <button string="Set Account Currency"
                         type="object"
                         name="action_update_merchant_details"
-                        attrs="{'invisible': [('code', '!=', 'authorize')]}"
+                        invisible="code != 'authorize'"
                         icon="fa-refresh"
                         class="oe_link"/>
             </div>

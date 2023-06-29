@@ -137,7 +137,7 @@
             <field name="arch" type="xml">
                 <form string="Currency">
                     <field name="is_current_company_currency" invisible="1"/>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': [('is_current_company_currency','=',False)]}">
+                    <div class="alert alert-info text-center" role="alert" invisible="not is_current_company_currency">
                         This is your company's currency.
                     </div>
                     <sheet>
@@ -155,7 +155,7 @@
 
                         <group groups="base.group_no_one">
                             <group string="Price Accuracy">
-                                <field name="rounding" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                <field name="rounding" readonly="id"/>
                                 <field name="decimal_places"/>
                             </group>
 
@@ -164,7 +164,7 @@
                                 <field name="position"/>
                             </group>
                         </group>
-                        <notebook class="o_currency_rate_list" attrs="{'invisible': [('is_current_company_currency','=',True)]}">
+                        <notebook class="o_currency_rate_list" invisible="is_current_company_currency">
                             <page string="Rates" name="rates">
                                 <field name="rate_ids" widget="one2many">
                                     <tree string="Rates"  editable="top" limit="25">

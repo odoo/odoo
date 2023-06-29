@@ -17,14 +17,14 @@
                 <xpath expr="//label[@for='date_deadline']" position="before" groups="hr_timesheet.group_hr_timesheet_user">
                     <field name="encode_uom_in_days" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
-                    <label for="planned_hours" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
-                    <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <label for="planned_hours" invisible="not allow_timesheets"/>
+                    <div class="text-nowrap" invisible="not allow_timesheets">
                         <field name="planned_hours" class="oe_inline o_field_float_time" widget="timesheet_uom_no_toggle"/>
-                        <span attrs="{'invisible': [('subtask_count', '=', 0)]}">
+                        <span invisible="subtask_count == 0">
                             (incl. <field name="subtask_planned_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
                         </span>
-                        <span attrs="{'invisible': [('project_id', '=', False)]}">(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
+                        <span invisible="not project_id">(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
                     </div>
                 </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
@@ -32,45 +32,47 @@
                     <t groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
-                    <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
-                        <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
+                    <page string="Timesheets" id="timesheets_tab" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
+                        <group name="timesheet_error" invisible="analytic_account_active">
                             <div class="alert alert-warning mb-n4 mt-3" role="alert" colspan="2">
                                 You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
-                    <field name="timesheet_ids" mode="tree,kanban" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
+                    <field name="timesheet_ids" mode="tree,kanban" invisible="not analytic_account_active" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
-                            <field name="readonly_timesheet" invisible="1"/>
-                            <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                            <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
-                                attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
-                                attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                            <field name="name" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                            <field name="readonly_timesheet" column_invisible="True"/>
+                            <field name="date" readonly="readonly_timesheet"/>
+                            <field name="user_id" column_invisible="True"/>
+                            <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
+                                required="1"
+                                readonly="readonly_timesheet"/>
+                            <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
+                                required="1"
+                                readonly="readonly_timesheet"/>
+                            <field name="name" required="0" readonly="readonly_timesheet"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"
-                                attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                            <field name="project_id" invisible="1"/>
-                            <field name="task_id" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
+                                readonly="readonly_timesheet"/>
+                            <field name="project_id" column_invisible="True"/>
+                            <field name="task_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
-                            <field name="readonly_timesheet" invisible="1"/>
+                            <field name="readonly_timesheet"/>
                             <field name="date"/>
                             <field name="user_id"/>
                             <field name="name"/>
                             <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
-                            <field name="task_id" invisible="1"/>
+                            <field name="task_id"/>
                             <templates>
                                 <t t-name="kanban-box">
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6">
                                                 <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
-                                                       attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                                       readonly="readonly_timesheet"/>
                                                 <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
-                                                       attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                                       readonly="readonly_timesheet"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
@@ -95,15 +97,17 @@
                             <sheet>
                                  <group>
                                     <field name="readonly_timesheet" invisible="1"/>
-                                    <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                    <field name="user_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
-                                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
-                                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                    <field name="name" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                    <field name="date" readonly="readonly_timesheet"/>
+                                    <field name="user_id" invisible="1" readonly="readonly_timesheet"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
+                                        required="1"
+                                        readonly="readonly_timesheet"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
+                                        required="1"
+                                        readonly="readonly_timesheet"/>
+                                    <field name="name" required="0" readonly="readonly_timesheet"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"
-                                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                        readonly="readonly_timesheet"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="task_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
@@ -111,45 +115,45 @@
                             </sheet>
                         </form>
                     </field>
-                    <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
+                    <group invisible="not analytic_account_active">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <span class="o_td_label float-start">
-                                <label class="fw-bold" for="effective_hours" string="Hours Spent" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                <label class="fw-bold" for="effective_hours" string="Days Spent" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                <label class="fw-bold" for="effective_hours" string="Hours Spent" invisible="encode_uom_in_days"/>
+                                <label class="fw-bold" for="effective_hours" string="Days Spent" invisible="not encode_uom_in_days"/>
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
-                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}">
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
+                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" invisible="subtask_effective_hours == 0.0">
+                                <span class="text-nowrap" invisible="encode_uom_in_days">Hours Spent on Sub-tasks:</span>
+                                <span class="text-nowrap" invisible="not encode_uom_in_days">Days Spent on Sub-tasks:</span>
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
-                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
-                            <span attrs="{'invisible': [('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start my-1">
+                                   invisible="subtask_effective_hours == 0.0" nolabel="1"/>
+                            <span invisible="subtask_effective_hours == 0.0" class="o_td_label float-start my-1">
                                 <label class="fw-bold" for="total_hours_spent" string="Total Hours"
-                                       attrs="{'invisible': ['|', ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
+                                       invisible="subtask_effective_hours == 0.0 or encode_uom_in_days"/>
                                 <label class="fw-bold" for="total_hours_spent" string="Total Days"
-                                       attrs="{'invisible': ['|', ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', False)]}"/>
+                                       invisible="subtask_effective_hours == 0.0 or not encode_uom_in_days"/>
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
-                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
+                                   invisible="subtask_effective_hours == 0.0" />
                             <span class="o_td_label float-start my-1">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
+                                       invisible="planned_hours == 0.0 or encode_uom_in_days or remaining_hours &lt; 0"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
+                                       invisible="planned_hours == 0.0 or not encode_uom_in_days or remaining_hours &lt; 0"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       invisible="planned_hours == 0.0 or encode_uom_in_days or remaining_hours &gt;= 0"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       invisible="planned_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
-                                   attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1" decoration-danger="remaining_hours &lt; 0"/>
+                                   invisible="planned_hours == 0.0" nolabel="1" decoration-danger="remaining_hours &lt; 0"/>
                         </group>
                     </group>
                 </page>
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='company_id']" position="after">
-                    <field name="progress" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" column_invisible="True" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
@@ -166,14 +170,14 @@
             <field name="inherit_id" ref="project.project_task_view_tree_main_base" />
             <field name="arch" type="xml">
                 <field name="date_deadline" position="before">
-                    <field name="progress" invisible="1"/>
-                    <field name="effective_hours" invisible="1"/>
-                    <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" attrs="{'invisible' : [('planned_hours', '=', 0)]}" optional="hide"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'invisible' : [('effective_hours', '=', 0)]}"/>
+                    <field name="progress" column_invisible="True"/>
+                    <field name="effective_hours" column_invisible="True"/>
+                    <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="planned_hours == 0" optional="hide"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
-                    <field name="progress" widget="progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}" options="{'overflow_class': 'bg-danger'}" />
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" invisible="planned_hours == 0"/>
+                    <field name="progress" widget="progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="planned_hours == 0" options="{'overflow_class': 'bg-danger'}" />
                 </field>
             </field>
         </record>

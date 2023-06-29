@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <field name="product_code" position="after">
                 <field name="purchase_requisition_id"
-                    attrs="{'invisible': [('purchase_requisition_id', '=', False)]}"/>
+                    invisible="not purchase_requisition_id"/>
             </field>
         </field>
     </record>

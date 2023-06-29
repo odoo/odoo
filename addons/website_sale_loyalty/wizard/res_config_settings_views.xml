@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <setting id="promotion_coupon_programs" position="inside">
                 <div class="content-group">
-                    <div class="mt8" attrs="{'invisible': [('module_loyalty', '=', False)]}">
+                    <div class="mt8" invisible="not module_loyalty">
                         <button name="%(loyalty.loyalty_program_discount_loyalty_action)d"
                             type="action"
                             string="Loyalty Programs"

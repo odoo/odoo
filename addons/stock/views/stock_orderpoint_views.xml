@@ -39,21 +39,21 @@
         <field name="model">stock.warehouse.orderpoint</field>
         <field name="arch" type="xml">
             <tree string="Reordering Rules" editable="bottom" js_class="stock_orderpoint_list" sample="1" multi_edit="1" export_xlsx="0">
-                <field name="active" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="product_category_id" invisible="1"/>
-                <field name="product_tmpl_id" invisible="1"/>
-                <field name="unwanted_replenish" invisible="1"/>
-                <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1" context="{'default_detailed_type': 'product'}"/>
+                <field name="active" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_category_id" column_invisible="True"/>
+                <field name="product_tmpl_id" column_invisible="True"/>
+                <field name="unwanted_replenish" column_invisible="True"/>
+                <field name="product_id" readonly="product_id" force_save="1" context="{'default_detailed_type': 'product'}"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>
                 <field name="qty_forecast" force_save="1"/>
-                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" attrs="{'invisible': ['|', ('id', '=', False), ('unwanted_replenish', '=', True)]}"/>
-                <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" attrs="{'invisible': ['|', ('id', '=', False), ('unwanted_replenish', '=', False)]}"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" invisible="not id or unwanted_replenish"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" invisible="not id or not unwanted_replenish"/>
                 <field name="visibility_days" optional="hidden"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden"/>
-                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
@@ -63,11 +63,11 @@
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
-                    attrs="{'invisible': [('qty_to_order', '&lt;=', 0.0)]}"/>
+                    invisible="qty_to_order &lt;= 0.0"/>
                 <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="fa-refresh"
-                    attrs="{'invisible': ['|', ('qty_to_order', '&lt;=', 0.0), ('trigger', '=', 'auto')]}"/>
+                    invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'"/>
                 <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="fa-bell-slash"
-                    attrs="{'invisible': [('trigger', '!=', 'manual')]}" context="{'default_orderpoint_ids': [id]}"/>
+                    invisible="trigger != 'manual'" context="{'default_orderpoint_ids': [id]}"/>
             </tree>
         </field>
     </record>
@@ -134,7 +134,7 @@
                     <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
                 </div>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name"/>
@@ -150,7 +150,7 @@
                             <div class="o_row">
                                 <field name="product_min_qty"/>
                                 <field name="product_uom_name"/>
-                                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
+                                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" invisible="not id"/>
                             </div>
                             <label for="product_max_qty"/>
                             <div class="o_row">

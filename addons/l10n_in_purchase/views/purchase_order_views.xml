@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="country_code" invisible="1"/>
-                <field name="l10n_in_gst_treatment" attrs="{'invisible': [('country_code', '!=', 'IN')], 'required': [('country_code', '=', 'IN')]}"/>
+                <field name="l10n_in_gst_treatment" invisible="country_code != 'IN'" required="country_code == 'IN'"/>
             </xpath>
         </field>
     </record>

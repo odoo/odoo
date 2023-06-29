@@ -6,19 +6,17 @@
         <field name="inherit_id" ref="stock.view_picking_type_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='default_location_dest_id']" position="after">
-                <field name="default_remove_location_dest_id" options="{'no_create': True}" attrs="{'invisible': [('code', '!=', 'repair_operation')],'required': [('code', '=', 'repair_operation')]}"/>
-                <field name="default_recycle_location_dest_id" options="{'no_create': True}" attrs="{'invisible': [('code', '!=', 'repair_operation')],'required': [('code', '=', 'repair_operation')]}"/>
+                <field name="default_remove_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
+                <field name="default_recycle_location_dest_id" options="{'no_create': True}" invisible="code != 'repair_operation'" required="code == 'repair_operation'"/>
             </xpath>
             <xpath expr="//group[@name='locations']" position="after">
                 <field name="return_type_of_ids" invisible="1"/>
-                <group string="Repairs" attrs="{'invisible': ['|', ('code', '!=', 'incoming'), ('return_type_of_ids', '=', [])]}">
+                <group string="Repairs" invisible="code != 'incoming' or not return_type_of_ids">
                     <field name="is_repairable"/>
                 </group>
             </xpath>
             <field name="create_backorder" position="attributes">
-                <attribute name="attrs">
-                  {'invisible': [('code', '=', 'repair_operation')]}
-                </attribute>
+                <attribute name="invisible">code == 'repair_operation'</attribute>
             </field>
         </field>
     </record>
@@ -30,13 +28,13 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="after">
                 <field name="is_repairable" invisible="1"/>
-                <button string="Repair" name="action_repair_return" type="object" attrs="{'invisible': [('is_repairable', '=', False)]}" data-hotkey="shift+k"/>
+                <button string="Repair" name="action_repair_return" type="object" invisible="not is_repairable" data-hotkey="shift+k"/>
             </xpath>
             <xpath expr="//button[@name='action_see_packages']" position="after">
                 <field name="repair_ids" invisible="1"/>
                 <button name="action_view_repairs" type="object"
                         class="oe_stat_button" icon="fa-wrench"
-                        attrs="{'invisible': [('nbr_repairs', '=', 0)]}">
+                        invisible="nbr_repairs == 0">
                         <field name="nbr_repairs" string="Repair Orders" widget="statinfo"/>
                 </button>
             </xpath>

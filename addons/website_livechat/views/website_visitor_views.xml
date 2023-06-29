@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <t t-else="">
-                    <br attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
+                    <br invisible="livechat_operator_id or not is_connected"/>
                 </t>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
@@ -74,14 +74,14 @@
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_chat_request" type="object"
                         class="btn btn-secondary"
-                        attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}">
+                        invisible="livechat_operator_id or not is_connected">
                         Chat
                 </button>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
                 <button name="action_send_chat_request" type="object"
                         class="btn btn-secondary"
-                        attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}">
+                        invisible="livechat_operator_id or not is_connected">
                         Chat
                 </button>
             </xpath>
@@ -95,16 +95,16 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_send_chat_request" string="Send chat request" type="object" class="oe_highlight"
-                attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
+                invisible="livechat_operator_id or not is_connected"/>
             </xpath>
             <xpath expr="//group[@id='general_info']" position="before">
-                <group id="livechat_info" attrs="{'invisible': [('livechat_operator_id', '=', False)]}">
+                <group id="livechat_info" invisible="not livechat_operator_id">
                     <field name="livechat_operator_id" widget="many2one_avatar"/>
                 </group>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="fa-comment"
-                        attrs="{'invisible': [('session_count', '=', 0)]}">
+                        invisible="session_count == 0">
                     <field name="session_count" widget="statinfo" string="Chats"/>
                 </button>
             </xpath>
@@ -119,7 +119,7 @@
             <xpath expr="//field[@name='email']" position="after">
                 <field name="livechat_operator_id" optional="hide"/>
                 <button name="action_send_chat_request" string="Chat" type="object" icon="fa-comments"
-                        attrs="{'invisible': ['|', ('livechat_operator_id', '!=', False), ('is_connected', '=', False)]}"/>
+                        invisible="livechat_operator_id or not is_connected"/>
             </xpath>
         </field>
     </record>

@@ -30,8 +30,8 @@
                         </group>
                         <group string="Voice">
                             <field name="use_push_to_talk"/>
-                            <field name="push_to_talk_key" placeholder="e.g. true.true..f" attrs="{'invisible': [('use_push_to_talk', '=', False)]}"/>
-                            <field name="voice_active_duration" attrs="{'invisible': [('use_push_to_talk', '=', True)]}"/>
+                            <field name="push_to_talk_key" placeholder="e.g. true.true..f" invisible="not use_push_to_talk"/>
+                            <field name="voice_active_duration" invisible="use_push_to_talk"/>
                         </group>
                     </group>
                     <notebook colspan="4">

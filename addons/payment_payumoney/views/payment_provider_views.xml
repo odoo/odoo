@@ -9,15 +9,15 @@
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('code', '!=', 'payumoney')]}">
+                     invisible="code != 'payumoney'">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Razorpay</strong>.
                 </div>
             </xpath>
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'payumoney')]}">
-                    <field name="payumoney_merchant_key" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
-                    <field name="payumoney_merchant_salt" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
+                <group invisible="code != 'payumoney'">
+                    <field name="payumoney_merchant_key" required="code == 'payumoney' and state != 'disabled'"/>
+                    <field name="payumoney_merchant_salt" required="code == 'payumoney' and state != 'disabled'" password="True"/>
                 </group>
             </group>
         </field>

@@ -15,18 +15,18 @@
             </field>
             <field name="detailed_type" position="after">
                 <field name="invoice_policy" required="1"/>
-                <field name="expense_policy" widget="radio" attrs="{'invisible': [('visible_expense_policy', '=', False)]}"/>
+                <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
             </field>
             <field name="product_tooltip" position="after">
                 <label for="product_tooltip" string=""
-                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/>
-                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"
+                    invisible="type not in ('product', 'consu') or invoice_policy != 'order'"/>
+                <div invisible="type not in ('product', 'consu') or invoice_policy != 'order'"
                     class="fst-italic text-muted">
                     You can invoice them before they are delivered.
                 </div>
                 <label for="product_tooltip" string=""
-                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/>
-                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"
+                    invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"/>
+                <div invisible="type not in ('product', 'consu') or invoice_policy != 'delivery'"
                     class="fst-italic text-muted">
                     Invoice after delivery, based on quantities delivered, not ordered.
                 </div>
@@ -47,7 +47,7 @@
                     icon="fa-signal"
                     help="Sold in the last 365 days"
                     groups="sales_team.group_sale_salesman"
-                    attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    invisible="not sale_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -62,7 +62,8 @@
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1" colspan="2"/>
                         <field name="sale_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
-                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                                readonly="sale_line_warn == 'no-message'"
+                                required="sale_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>
@@ -80,7 +81,7 @@
                     type="object" icon="fa-signal"
                     help="Sold in the last 365 days"
                     groups="sales_team.group_sale_salesman"
-                    attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    invisible="not sale_ok">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -95,7 +96,9 @@
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" string="Warning"/>
                         <field name="sale_line_warn_msg" string="Message" placeholder="Type a message..."
-                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
+                                invisible="sale_line_warn == 'no-message'"
+                                readonly="sale_line_warn == 'no-message'"
+                                required="sale_line_warn != 'no-message'"/>
                     </group>
                 </t>
             </group>

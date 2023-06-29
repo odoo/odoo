@@ -6,7 +6,7 @@
             <field name="model">slide.channel.invite</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" class="o_mail_composer_form">
-                    <div class="alert alert-warning text-center mb-0" role="alert" attrs="{'invisible': ['|', ('channel_published', '=', True), ('channel_id', '=', False)]}">
+                    <div class="alert alert-warning text-center mb-0" role="alert" invisible="channel_published or not channel_id">
                         This course is not published. Attendees may not be able to access its contents.
                     </div>
                     <sheet>
@@ -15,25 +15,25 @@
                         <field name="channel_visibility" invisible="1"/>
                         <field name="enroll_mode" invisible="1"/>
                         <group col="1">
-                            <group col="2" attrs="{'invisible':['|', ('enroll_mode', '=', True), ('channel_visibility', '!=', 'public')]}">
+                            <group col="2" invisible="enroll_mode or channel_visibility != 'public'">
                                 <field name="channel_invite_url" readonly="1" widget="CopyClipboardChar"/>
                                 <field name="send_email" widget="boolean_toggle" options="{'autosave': False}"/>
                             </group>
-                            <group col="2" attrs="{'invisible':[('send_email', '=', False)]}">
+                            <group col="2" invisible="not send_email">
                                 <field name="partner_ids"
                                     widget="many2many_tags_email"
                                     placeholder="Add contacts..."
-                                    attrs="{'required':[('send_email', '=', True)]}"
+                                    required="send_email"
                                     context="{'force_email':True, 'show_email':True, 'no_create_edit': True, 'no_quick_create': True}"/>
                             </group>
-                            <group col="2" attrs="{'invisible':[('send_email', '=', False)]}">
+                            <group col="2" invisible="not send_email">
                                 <field name="lang" invisible="1"/>
                                 <field name="render_model" invisible="1"/>
                                 <field name="subject" placeholder="Subject..."/>
                             </group>
                             <field name="can_edit_body" invisible="1"/>
-                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)], 'invisible':[('send_email', '=', False)]}" force_save="1"/>
-                            <group attrs="{'invisible':[('send_email', '=', False)]}">
+                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true}" invisible="not send_email" readonly="not can_edit_body" force_save="1"/>
+                            <group invisible="not send_email">
                                 <group>
                                     <field name="attachment_ids" widget="many2many_binary"/>
                                 </group>
@@ -44,9 +44,9 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string="Send" attrs="{'invisible':[('send_email', '=', False)]}" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Close" attrs="{'invisible':[('send_email', '=', True)]}" class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        <button string="Cancel" attrs="{'invisible':[('send_email', '=', False)]}" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Close" invisible="send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Cancel" invisible="not send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

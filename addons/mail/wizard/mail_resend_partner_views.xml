@@ -8,7 +8,7 @@
             <form string="Partner">
                 <header>
                     <button name="action_resend" type="object" string="Resend" class="oe_highlight"
-                        attrs="{'invisible': [('failure_reason', '=', False)]}"/>
+                        invisible="not failure_reason"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -21,7 +21,7 @@
                             <field name="notification_id" invisible="1"/>
                             <field name="partner_readonly" invisible="1"/>
                             <field name="name" readonly="1" required="1"/>
-                            <field name="email" attrs="{'readonly': [('partner_readonly', '=', True)]}"/>
+                            <field name="email" readonly="partner_readonly"/>
                         </group>
                     </group>
                     <notebook>

@@ -10,23 +10,23 @@
                 </header>
                 <field name="first_step_warning" invisible="1"/>
                 <div class="alert alert-info text-center" role="alert"
-                    attrs="{'invisible': [('first_step_warning', '!=', 'first_step_operator')]}">
+                    invisible="first_step_warning != 'first_step_operator'">
                     <span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>
                     <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>
                 </div>
                 <div class="alert alert-info text-center" role="alert"
-                    attrs="{'invisible': [('first_step_warning', '!=', 'first_step_invalid')]}">
+                    invisible="first_step_warning != 'first_step_invalid'">
                     <span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...).</span>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_livechat_channels" type="object" class="oe_stat_button"
-                                icon="fa-comments" attrs="{'invisible': [('livechat_channel_count', '=', 0)]}">
+                                icon="fa-comments" invisible="livechat_channel_count == 0">
                             <field name="livechat_channel_count" string="Channels" widget="statinfo"/>
                         </button>
                     </div>
                     <field name="active" invisible="1"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="title" string="Chatbot Name"/>

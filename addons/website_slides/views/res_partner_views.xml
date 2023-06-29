@@ -10,7 +10,7 @@
                 <button class="oe_stat_button" type="object"
                     icon="fa-graduation-cap" name="action_view_courses"
                     groups="website_slides.group_website_slides_officer"
-                    attrs="{'invisible': ['|', ('slide_channel_count', '=', 0), ('is_company', '=', True)]}">
+                    invisible="slide_channel_count == 0 or is_company">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="slide_channel_count"/></span>
                         <span class="o_stat_text">Courses</span>
@@ -19,7 +19,7 @@
                 <button class="oe_stat_button" type="object"
                     icon="fa-graduation-cap" name="action_view_courses"
                     groups="website_slides.group_website_slides_officer"
-                    attrs="{'invisible': ['|', ('slide_channel_company_count', '=', 0), ('is_company', '=', False)]}">
+                    invisible="slide_channel_company_count == 0 or not is_company">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="slide_channel_company_count" /></span>
                         <span class="o_stat_text">Courses</span>

@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='advanced_options']" position="inside">
                 <group>
-                    <field name="l10n_it_withholding_type"  attrs="{'readonly': [('amount', '&gt;=', 0.0)]}"/>
-                    <field name="l10n_it_withholding_reason" attrs="{'invisible': [('l10n_it_withholding_type', '=', False)]}"/>
+                    <field name="l10n_it_withholding_type"  readonly="amount &gt;= 0.0"/>
+                    <field name="l10n_it_withholding_reason" invisible="not l10n_it_withholding_type"/>
                     <field name="l10n_it_pension_fund_type"/>
                 </group>
             </xpath>

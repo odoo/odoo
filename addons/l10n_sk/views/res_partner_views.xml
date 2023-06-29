@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
              <xpath expr="//field[@name='company_registry']" position="replace">
-                <field name="company_registry" attrs="{'invisible': [('fiscal_country_codes', 'ilike', 'SK')]}"/>
+                <field name="company_registry" invisible="'SK'.lower() in (fiscal_country_codes or '').lower()"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="company_registry" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'SK')]}"/>
+                <field name="company_registry" invisible="'SK'.lower() not in (fiscal_country_codes or '').lower()"/>
             </xpath>
         </field>
     </record>

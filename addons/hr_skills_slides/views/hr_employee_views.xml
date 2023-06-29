@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='line_type_id']" position="after">
-                <field name="course_url" invisible="1"/>
+                <field name="course_url" column_invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='company_country_code']" position="after">
                 <field name="user_id" invisible="1"/>
@@ -19,7 +19,7 @@
                     groups="website_slides.group_website_slides_officer"
                     icon="fa-graduation-cap"
                     type="object"
-                    attrs="{'invisible': ['|', ('user_id', '=', False), ('has_subscribed_courses', '=', False)]}">
+                    invisible="not user_id or not has_subscribed_courses">
                     <field name="courses_completion_text" widget="statinfo" string="Courses"/>
                 </button>
             </xpath>

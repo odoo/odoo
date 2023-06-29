@@ -48,7 +48,7 @@
                 <field name="date_to"/>
                 <field name="state"/>
                 <field name="name"/>
-                <field name="active_employee" invisible="1"/>
+                <field name="active_employee" column_invisible="True"/>
             </tree>
         </field>
     </record>
@@ -80,8 +80,8 @@
                         <group>
                             <field name="employee_id"/>
                             <field name="name"/>
-                            <field name="allocation_id" attrs="{'invisible': [('allocation_id', '=', False)]}"/>
-                            <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)]}"/>
+                            <field name="allocation_id" invisible="not allocation_id"/>
+                            <field name="leave_id" invisible="not leave_id"/>
                             <field name="leave_type" />
                             <field name="category_id"/>
                             <field name="state"/>

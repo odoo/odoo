@@ -50,11 +50,11 @@
         <field name="arch" type="xml">
             <form string="Badge">
                 <header>
-                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
+                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" invisible="remaining_sending == 0" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name"/>
@@ -72,17 +72,17 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="rule_auth" widget="radio"/>
-                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
-                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
-                            <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                            <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
+                            <field name="rule_auth_user_ids" invisible="rule_auth != 'users'" widget="many2many_tags" />
+                            <field name="rule_auth_badge_ids" invisible="rule_auth != 'having'" widget="many2many_tags" />
+                            <field name="rule_max" invisible="rule_auth == 'nobody'" />
+                            <field name="rule_max_number" invisible="not rule_max or rule_auth == 'nobody'"/>
                             <label for="stat_my_monthly_sending"/>
                             <div>
-                                <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                                <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
+                                <field name="stat_my_monthly_sending" invisible="rule_auth == 'nobody'" />
+                                <div invisible="remaining_sending == -1" class="oe_grey">
                                     You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
                                 </div>
-                                <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
+                                <div invisible="remaining_sending != -1" class="oe_grey">
                                     No monthly sending limit
                                 </div>
                             </div>

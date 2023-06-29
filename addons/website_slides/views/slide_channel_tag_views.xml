@@ -33,7 +33,7 @@
         <field name="arch" type="xml">
             <tree string="Course Tags" editable="top">
                 <field name="sequence" widget="handle"/>
-                <field name="group_sequence" invisible="1"/>
+                <field name="group_sequence" column_invisible="True"/>
                 <field name="name"/>
                 <field name="group_id"/>
             </tree>
@@ -74,7 +74,7 @@
                         <field name="tag_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
                                 <field name="sequence" widget="handle"/>
-                                <field name="group_sequence" invisible="1"/>
+                                <field name="group_sequence" column_invisible="True"/>
                                 <field name="name" string="Tag Name"/>
                                 <field name="color" string="Color" widget="color_picker"/>
                                 <control>

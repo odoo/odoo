@@ -11,7 +11,7 @@
                 <div id="alert_delayed_capture_tx"
                      role="alert"
                      class="alert alert-info mb-2"
-                     attrs="{'invisible': [('has_adyen_tx', '=', False)]}">
+                     invisible="not has_adyen_tx">
                     The capture or void of the transaction might take a few minutes to be
                     processed by Adyen and reflected in Odoo.
                 </div>

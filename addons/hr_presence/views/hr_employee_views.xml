@@ -40,8 +40,8 @@
                 <div class="oe_kanban_content d-flex flex-column gap-1">
                     <div class="oe_kanban_row d-flex gap-1">
                         <field name="hr_presence_state" invisible="1"/>
-                        <button name="action_set_present" type="object" class="btn btn-success btn-sm fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}"> </button>
-                        <button name="action_set_absent" type="object" class="btn btn-warning btn-sm fa fa-times" title="Set as absent" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}"> </button>
+                        <button name="action_set_present" type="object" class="btn btn-success btn-sm fa fa-check" title="Set as present" invisible="hr_presence_state == 'present'"> </button>
+                        <button name="action_set_absent" type="object" class="btn btn-warning btn-sm fa fa-times" title="Set as absent" invisible="hr_presence_state != 'present'"> </button>
                         <button name="action_open_leave_request" type="object" class="btn btn-secondary btn-sm">Time Off</button>
                     </div>
                     <div class="oe_kanban_row d-flex gap-1">

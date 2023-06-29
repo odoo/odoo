@@ -6,29 +6,29 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_submit" type="object" string="Submit" states="draft" class="oe_highlight" invisible="context.get('is_modal')"/>
-                    <button name="action_submit" type="object" string="Retry" states="error" class="oe_highlight" invisible="context.get('is_modal')"/>
+                    <button name="action_submit" type="object" string="Submit" class="oe_highlight" invisible="context.get('is_modal') or state != 'draft'"/>
+                    <button name="action_submit" type="object" string="Retry" class="oe_highlight" invisible="context.get('is_modal') or state != 'error'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done" invisible="context.get('is_modal')"/>
                 </header>
-                <div class="alert alert-danger text-center my-0" role="alert" attrs="{'invisible': [('error_type', '=', False)]}">
+                <div class="alert alert-danger text-center my-0" role="alert" invisible="not error_type">
                     <field name="error_type" invisible="1"/>
                     <field name="lead_type" invisible="1"/>
-                    <span attrs="{'invisible': [('error_type', '!=', 'credits')]}">
+                    <span invisible="error_type != 'credits'">
                         <span>You do not have enough credits to submit this request.
                             <button name="action_buy_credits" type="object" class="oe_inline p-0 border-0 align-top text-primary">Buy credits.</button>
                         </span>
                     </span>
-                    <span attrs="{'invisible': [('error_type', '!=', 'no_result')]}">Your request did not return any result (no credits were used). Try removing some filters.</span>
+                    <span invisible="error_type != 'no_result'">Your request did not return any result (no credits were used). Try removing some filters.</span>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="fa-star" context="{'create': False}" attrs="{'invisible': ['|', ('lead_type', '!=', 'opportunity'), ('state', '!=' , 'done')]}">
+                        <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="fa-star" context="{'create': False}" invisible="lead_type != 'opportunity' or state != 'done'">
                             <div class="o_stat_info">
                                 <field name="lead_count"/>
                                 <span class="o_stat_text">Opportunities</span>
                             </div>
                         </button>
-                        <button name="action_get_lead_action" class="oe_stat_button" type="object" icon="fa-star" groups="crm.group_use_lead" context="{'create': False}" attrs="{'invisible': ['|', ('lead_type', '!=', 'lead'), ('state', '!=' , 'done')]}">
+                        <button name="action_get_lead_action" class="oe_stat_button" type="object" icon="fa-star" groups="crm.group_use_lead" context="{'create': False}" invisible="lead_type != 'lead' or state != 'done'">
                             <div class="o_stat_info">
                                 <field name="lead_count"/>
                                 <span class="o_stat_text">Leads</span>
@@ -52,51 +52,52 @@
                     <group name="requests">
                         <group>
                             <div  class="o_row py-3">
-                                <field name="lead_number" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline pe-2 o_input_3ch o_field_highlight"/>
-                                <field name="search_type" widget="selection" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline o_field_highlight"/>
+                                <field name="lead_number" readonly="state == 'done'" nolabel="1" class="oe_inline pe-2 o_input_3ch o_field_highlight"/>
+                                <field name="search_type" widget="selection" readonly="state == 'done'" nolabel="1" class="oe_inline o_field_highlight"/>
                             </div>
                         </group>
                     </group>
 
                     <group>
                         <group name="companies">
-                            <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="country_ids" widget="many2many_tags" required="True" readonly="state == 'done'" options="{'no_create': True, 'no_open': True}"/>
                             <field name="available_state_ids" invisible="1"/>
                             <field name="state_ids" widget="many2many_tags" placeholder="Pick States..."
-                                attrs="{'invisible': ['|', ('country_ids', '=', []), ('available_state_ids', '=', [])], 'readonly': [('state', '=', 'done')]}"
+                                invisible="not country_ids or not available_state_ids"
+                                readonly="state == 'done'"
                                 domain="[('id', 'in', available_state_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}" class="o_industry o_field_highlight" required="1"/>
-                            <field name="filter_on_size" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
-                            <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                            <field name="industry_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" class="o_industry o_field_highlight" required="1" readonly="state == 'done'"/>
+                            <field name="filter_on_size" readonly="state == 'done'"/>
+                            <label for="company_size_min" invisible="not filter_on_size"/>
+                            <div invisible="not filter_on_size">
                                 From
-                                <field name="company_size_min" class="oe_inline px-2 o_input_5ch" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
+                                <field name="company_size_min" class="oe_inline px-2 o_input_5ch" readonly="state == 'done'" required="filter_on_size"/>
                                 to
-                                <field name="company_size_max" class="oe_inline px-2 o_input_7ch" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '=', 'done')]}"/>
+                                <field name="company_size_max" class="oe_inline px-2 o_input_7ch" readonly="state == 'done'" required="filter_on_size"/>
                                 employees
                             </div>
 
                         </group>
                         <group name="lead_info">
-                            <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <field name="team_id" no_create="1" no_open="1" attrs="{'readonly': [('state', '=', 'done')]}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                            <field name="user_id" no_create="1" no_open="1" attrs="{'readonly': [('state', '=', 'done')]}" widget="many2one_avatar_user"/>
-                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" readonly="state == 'done'"/>
+                            <field name="team_id" no_create="1" no_open="1" readonly="state == 'done'" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                            <field name="user_id" no_create="1" no_open="1" readonly="state == 'done'" widget="many2one_avatar_user"/>
+                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="state == 'done'"/>
                         </group>
                     </group>
 
-                    <group name="contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                    <group name="contacts" invisible="search_type != 'people'">
                         <div colspan="2" class="py-3">
-                             <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="oe_inline pe-2 col-md-1 o_input_2ch"/>
+                             <field name="contact_number" readonly="state == 'done'" required="search_type == 'people'" nolabel="1" class="oe_inline pe-2 col-md-1 o_input_2ch"/>
                              <span class="col-md-6">Extra contacts per Company</span>
                         </div>
                     </group>
-                    <group attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                    <group invisible="search_type != 'people'">
                         <group>
-                            <field name="contact_filter_type" widget="radio" attrs="{'readonly': [('state', '=', 'done')]}" options="{'horizontal': true}"/>
-                            <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" attrs="{'invisible': [('contact_filter_type','!=', 'role')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'role')], 'readonly': [('state', '=', 'done')]}"/>
-                            <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')], 'readonly': [('state', '=', 'done')]}"/>
-                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')], 'readonly': [('state', '=', 'done')]}"/>
+                            <field name="contact_filter_type" widget="radio" readonly="state == 'done'" options="{'horizontal': true}"/>
+                            <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'role'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'role'"/>
+                            <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'" readonly="state == 'done'"/>
+                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'seniority'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'seniority'"/>
                         </group>
                     </group>
                     <footer>

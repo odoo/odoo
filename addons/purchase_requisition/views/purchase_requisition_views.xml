@@ -44,7 +44,7 @@
         <field name="arch" type="xml">
             <form string="Purchase Agreement Types">
             <sheet>
-                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group>
                     <group string="Agreement Type">
                         <field name="name"/>
@@ -106,23 +106,23 @@
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"
                     context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
-                    attrs="{'invisible': [('state', '!=', 'open')]}"/>
+                    invisible="state != 'open'"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
                     context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
-                    attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
-                <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
-                <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
-                <button name="action_done" states="open,ongoing" string="Close" type="object" class="btn-primary"/>
-                <button name="action_draft" states="cancel" string="Reset to Draft" type="object"/>
-                <button name="action_cancel" states="draft,in_progress,ongoing" string="Cancel" type="object"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" attrs="{'invisible': [('is_quantity_copy', '=', 'none')]}"/>
-                <field name="state_blanket_order" widget="statusbar" statusbar_visible="draft,ongoing,done" attrs="{'invisible': [('is_quantity_copy', '!=', 'none')]}"/>
+                    invisible="state not in ('in_progress', 'ongoing')"/>
+                <button name="action_in_progress" invisible="state != 'draft'" string="Confirm" type="object" class="btn-primary"/>
+                <button name="action_open" invisible="state != 'in_progress'" string="Validate" type="object" class="btn-primary"/>
+                <button name="action_done" invisible="state not in ('open', 'ongoing')" string="Close" type="object" class="btn-primary"/>
+                <button name="action_draft" invisible="state != 'cancel'" string="Reset to Draft" type="object"/>
+                <button name="action_cancel" invisible="state not in ('draft', 'in_progress', 'ongoing')" string="Cancel" type="object"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" invisible="is_quantity_copy == 'none'"/>
+                <field name="state_blanket_order" widget="statusbar" statusbar_visible="draft,ongoing,done" invisible="is_quantity_copy != 'none'"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                        attrs="{'invisible': [('state', '=', 'draft')]}" context="{'default_currency_id': currency_id}">
+                        invisible="state == 'draft'" context="{'default_currency_id': currency_id}">
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
@@ -135,30 +135,30 @@
                 <group>
                     <group>
                         <field name="is_quantity_copy" invisible='1'/>
-                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}" domain="[('share', '=', False)]"/>
-                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}"/>
-                        <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
+                        <field name="user_id" readonly="state not in ('draft', 'in_progress', 'open')" domain="[('share', '=', False)]"/>
+                        <field name="type_id" readonly="state != 'draft'"/>
+                        <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" readonly="state in ['ongoing', 'done']" required="is_quantity_copy == 'none'"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
                     <group>
-                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
-                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
-                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
-                        <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="date_end" readonly="state not in ('draft', 'in_progress', 'open', 'ongoing')"/>
+                        <field name="ordering_date" readonly="state not in ('draft', 'in_progress', 'open', 'ongoing')"/>
+                        <field name="schedule_date" readonly="state not in ('draft', 'in_progress', 'open', 'ongoing')"/>
+                        <field name="origin" placeholder="e.g. PO0025" readonly="state != 'draft'"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state not in 'draft'"/>
                     </group>
                 </group>
                 <notebook>
                     <page string="Products" name="products">
-                        <field name="line_ids">
+                        <field name="line_ids" readonly="state == 'done'">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', '=', '')]}"/>
+                                <field name="product_description_variants" invisible="product_description_variants == ''"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show"/>
-                                <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                <field name="product_uom_category_id" column_invisible="True"/>
+                                <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" required="product_id"/>
                                 <field name="schedule_date" optional="hide"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                        optional="hide"
@@ -183,7 +183,7 @@
                             </form>
                         </field>
                         <separator string="Terms and Conditions"/>
-                        <field name="description" class="oe-bordered-editor" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="description" class="oe-bordered-editor" readonly="state not in ('draft', 'in_progress', 'open')"/>
                     </page>
                 </notebook>
             </sheet>
@@ -200,13 +200,13 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <tree string="Purchase Agreements" sample="1">
-                <field name="message_needaction" invisible="1"/>
+                <field name="message_needaction" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="user_id" optional="show" widget='many2one_avatar_user'/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="ordering_date" optional="show"/>
                 <field name="schedule_date" optional="hide"/>
-                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" attrs="{'invisible': [('state','in', ('done', 'cancel'))]}"/>
+                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
                 <field name="origin" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>

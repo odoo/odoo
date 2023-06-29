@@ -9,16 +9,16 @@
                 <field name="sale_order_ids" invisible="1"/>
                 <field name="sale_orders_count" invisible="1"/>
                 <field name="has_confirmed_order" invisible="1"/>
-                <div attrs="{'invisible':[('has_confirmed_order', '=', False)]}">
+                <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
                         Some confirmed sale orders are selected. Their related documents might be
                         affected by the cancellation.
                     </p>
                 </div>
-                <div attrs="{'invisible': [('sale_orders_count', '>', 1)]}">
+                <div invisible="sale_orders_count &gt; 1">
                     Are you sure you want to cancel the selected quotation?
                 </div>
-                <div attrs="{'invisible': [('sale_orders_count', '=', 1)]}">
+                <div invisible="sale_orders_count == 1">
                     Are you sure you want to cancel the <field name="sale_orders_count"/> selected
                     quotations?
                 </div>

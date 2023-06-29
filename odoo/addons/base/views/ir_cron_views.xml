@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='create_action']" position="replace">
-                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'code')]}"/>
+                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" invisible="state != 'code'"/>
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                 </xpath>
@@ -44,7 +44,7 @@
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="numbercall"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="user_id" column_invisible="True"/>
                     <field name="active"/>
                 </tree>
             </field>

@@ -9,10 +9,10 @@
         <field name="priority">100</field>
         <field name="arch" type="xml">
             <field name="delay" position="after">
-                <field name="show_set_supplier_button" invisible="1"/>
+                <field name="show_set_supplier_button" column_invisible="True"/>
                 <field name="last_purchase_date"/>
                 <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-link"
-                        attrs="{'invisible': [('show_set_supplier_button', '=', False)]}"/>
+                        invisible="not show_set_supplier_button"/>
             </field>
             <xpath expr="//tree" position="attributes">
                 <attribute name="decoration-bf">parent.supplierinfo_id == id</attribute>

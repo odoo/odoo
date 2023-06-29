@@ -152,15 +152,13 @@
         <field name = "priority" eval="20" />
         <field name="arch" type="xml">
             <xpath expr="//div[@id='hr_presence_status']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', '|', ('last_activity', '=', False), ('user_id', '=', False), ('id', '=', False)]}
-                </attribute>
+                <attribute name="invisible">not last_activity or not user_id or not id</attribute>
             </xpath>
             <xpath expr="//div[@id='hr_presence_status']" position="inside">
                 <!-- Employee is absent, in holiday but he is connected -->
-                <div role="img" class="fa fa-fw fa-plane text-success o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}" aria-label="Present but on leave" title="Present but on leave" name="presence_absent_active"/>
+                <div role="img" class="fa fa-fw fa-plane text-success o_button_icon hr_presence" invisible="hr_icon_display != 'presence_holiday_present'" aria-label="Present but on leave" title="Present but on leave" name="presence_absent_active"/>
                 <!-- Employee is on holiday, not present and not connected -->
-                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}"  aria-label="On Time Off" title="On Time Off" name="presence_absent"/>
+                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" invisible="hr_icon_display != 'presence_holiday_absent'"  aria-label="On Time Off" title="On Time Off" name="presence_absent"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" widget="many2one_avatar_user"/>
@@ -176,10 +174,10 @@
                         type="object"
                         class="oe_stat_button"
                         context="{'search_default_employee_ids': active_id}"
-                        attrs="{'invisible': [('is_absent', '=', False)]}">
-                        <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}"
+                        invisible="not is_absent">
+                        <div invisible="hr_icon_display != 'presence_holiday_present'"
                               role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Off Till" title="Off Till"/>
-                        <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
+                        <div invisible="hr_icon_display != 'presence_holiday_absent'" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">
@@ -194,11 +192,11 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-calendar"
-                        attrs="{'invisible': [('show_leaves','=', False)]}"
+                        invisible="not show_leaves"
                         context="{'search_default_employee_ids': active_id}"
                         groups="base.group_user"
                         help="Remaining leaves">
-                    <div class="o_field_widget o_stat_info" attrs="{'invisible': [('allocation_display', '=', '0')]}">
+                    <div class="o_field_widget o_stat_info" invisible="allocation_display == '0'">
                         <span class="o_stat_value">
                             <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
                         </span>
@@ -206,7 +204,7 @@
                             Time Off
                         </span>
                     </div>
-                    <div class="o_field_widget o_stat_info" attrs="{'invisible': [('allocation_display', '!=', '0')]}">
+                    <div class="o_field_widget o_stat_info" invisible="allocation_display != '0'">
                         <span class="o_stat_text">
                            Time Off
                         </span>
@@ -242,10 +240,10 @@
                 <field name="hr_icon_display" invisible="1"/>
                 <button disabled="1"
                         class="oe_stat_button"
-                        attrs="{'invisible': [('is_absent', '=', False)]}">
-                        <div role="img" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}"
+                        invisible="not is_absent">
+                        <div role="img" invisible="hr_icon_display != 'presence_holiday_present'"
                              class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Off Till" title="Off Till"/>
-                        <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
+                        <div invisible="hr_icon_display != 'presence_holiday_absent'" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">
@@ -276,7 +274,7 @@
                 class="btn btn-primary"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="leave_manager_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                <field name="leave_manager_id" readonly="not can_edit"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -288,12 +286,11 @@
                 <field name="hr_icon_display" invisible="1"/>
                 <button name="%(hr_leave_action_new_request)d" type="action"
                         class="oe_stat_button"
-                        invisible="context.get('from_my_profile', False)"
-                        attrs="{'invisible': [('is_absent', '=', False)]}">
-                        <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}"
+                        invisible="context.get('from_my_profile', False) or not is_absent">
+                        <div invisible="hr_icon_display != 'presence_holiday_present'"
                              role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Off Till"
                              title="Off Till"/>
-                        <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}"
+                        <div invisible="hr_icon_display != 'presence_holiday_absent'"
                              role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till"
                              title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
@@ -309,7 +306,7 @@
                         type="action"
                         class="oe_stat_button"
                         icon="fa-calendar"
-                        attrs="{'invisible': [('show_leaves','=', False)]}"
+                        invisible="not show_leaves"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">

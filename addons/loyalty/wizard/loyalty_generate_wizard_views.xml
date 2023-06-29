@@ -11,22 +11,22 @@
                             <field name="program_id" invisible="1"/>
                             <field name="will_send_mail" invisible="1"/>
                             <field name="program_type" invisible="1"/>
-                            <field name="mode" widget="radio" attrs="{'invisible': [('program_type', '=', 'ewallet')]}"/>
-                            <field name="customer_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}"/>
-                            <field name="customer_tag_ids" widget="many2many_tags" attrs="{'invisible': [('mode', '=', 'anonymous')]}" options="{'color_field': 'color'}"/>
-                            <field name="coupon_qty" string="Quantity to generate" attrs="{'readonly': [('mode', '=', 'selected')], 'required': [('mode', '=', 'anonymous')]}"/>
-                            <label string="Coupon value" for="points_granted" groups="base.group_no_one" attrs="{'invisible': [('program_type', '!=', 'coupons')]}"/>
-                            <span class="d-inline-block" groups="base.group_no_one" attrs="{'invisible': [('program_type', '!=', 'coupons')]}">
+                            <field name="mode" widget="radio" invisible="program_type == 'ewallet'"/>
+                            <field name="customer_ids" widget="many2many_tags" invisible="mode == 'anonymous'"/>
+                            <field name="customer_tag_ids" widget="many2many_tags" invisible="mode == 'anonymous'" options="{'color_field': 'color'}"/>
+                            <field name="coupon_qty" string="Quantity to generate" readonly="mode == 'selected'" required="mode == 'anonymous'"/>
+                            <label string="Coupon value" for="points_granted" groups="base.group_no_one" invisible="program_type != 'coupons'"/>
+                            <span class="d-inline-block" groups="base.group_no_one" invisible="program_type != 'coupons'">
                                 <field name="points_granted" class="oe_inline"/>
                                 <field name="points_name" class="oe_inline"/>
                             </span>
-                            <label string="Gift Card value" for="points_granted" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}"/>
-                            <span class="d-inline-block" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}">
+                            <label string="Gift Card value" for="points_granted" invisible="program_type != 'gift_card'"/>
+                            <span class="d-inline-block" invisible="program_type != 'gift_card'">
                                 <field name="points_granted" class="w-auto oe_inline me-1"/>
                                 <field name="points_name" class="d-inline" no_label="1"/>
                             </span>
-                            <label string="eWallet value" for="points_granted" attrs="{'invisible': [('program_type', '!=', 'ewallet')]}"/>
-                            <span class="d-inline-block" attrs="{'invisible': [('program_type', '!=', 'ewallet')]}">
+                            <label string="eWallet value" for="points_granted" invisible="program_type != 'ewallet'"/>
+                            <span class="d-inline-block" invisible="program_type != 'ewallet'">
                                 <field name="points_granted" class="w-auto oe_inline me-1"/>
                                 <field name="points_name" class="d-inline" no_label="1"/>
                             </span>
@@ -36,10 +36,10 @@
                 </sheet>
                 <footer>
                     <button name="generate_coupons" type="object" class="btn-primary" data-hotkey="q">
-                        <span attrs="{'invisible': [('will_send_mail', '=', False)]}">
+                        <span invisible="not will_send_mail">
                             Generate and Send 
                         </span>
-                        <span attrs="{'invisible': [('will_send_mail', '=', True)]}">
+                        <span invisible="will_send_mail">
                             Generate 
                         </span>
                         <field name="program_type" nolabel="1"/>

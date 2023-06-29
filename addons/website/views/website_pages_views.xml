@@ -49,8 +49,8 @@
                         <field name="is_published" string="Published" widget="boolean_toggle"/>
                         <field name="date_publish" widget="datetime"/>
                         <field name="visibility"/>
-                        <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')], 'required': [('visibility', '=', 'password')]}" password="True" string="Password"/>
-                        <field name="groups_id" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" string="Authorized Groups" widget="many2many_tags"/>
+                        <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
+                        <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
                     </group>
                 </page>
             </notebook>
@@ -64,17 +64,17 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
-            <field name="is_homepage" invisible="1"/>
+            <field name="is_homepage" column_invisible="True"/>
             <field name="name" string="Page Title"/>
             <field name="website_url" string="Page URL"/>
-            <field name="view_id" invisible="1"/>
+            <field name="view_id" column_invisible="True"/>
 
             <field name="website_indexed"/>
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
 
-            <field name="create_uid" invisible="1"/>
+            <field name="create_uid" column_invisible="True"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>
             <field name="write_date" optional="hide"/>
             <field name="track" optional="hide"/>
@@ -83,7 +83,7 @@
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
-            <field name="website_id" invisible="1"/>
+            <field name="website_id" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
 
             <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
@@ -185,21 +185,21 @@
             <label for="key"/>
             <div class='o_row'>
                 <field name="key"/>
-                <button title="Show site map" attrs="{'invisible': [('type', '!=', 'qweb')]}" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
+                <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
             </div>
             <field name="page_ids" invisible="1" />
-            <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
-            <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
-            <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True" string="Visibility Password" />
+            <field name="first_page_id" invisible="not page_ids" />
+            <field name="visibility" invisible="type != 'qweb'" />
+            <field name="visibility_password_display" invisible="visibility != 'password'" password="True" string="Visibility Password" />
         </field>
         <sheet position="before">
             <header>
                 <button type="action" name="website.action_website_pages_list"
-                    string="Go to Page Manager" attrs="{'invisible': [('page_ids', '=', [])]}"/>
+                    string="Go to Page Manager" invisible="not page_ids"/>
             </header>
         </sheet>
         <field name="active" position="after">
-            <field name="track" attrs="{'invisible': [('type', '!=', 'qweb')]}" widget="boolean_toggle"/>
+            <field name="track" invisible="type != 'qweb'" widget="boolean_toggle"/>
         </field>
     </field>
 </record>
@@ -212,7 +212,7 @@
             <attribute name="decoration-muted">not active</attribute>
         </tree>
         <field name="name" position="after">
-            <field name="active" invisible="1"/>
+            <field name="active" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
         </field>
         <field name="xml_id" position="before">

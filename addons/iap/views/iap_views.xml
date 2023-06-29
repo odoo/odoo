@@ -19,31 +19,25 @@
                             <label for="account_token" />
                             <div class="o_row">
                                 <field name="account_token" password="False"
-                                    attrs="{'invisible': [('show_token', '=', False)]}"
-                                />
+                                    invisible="not show_token"/>
                                 <field name="account_token" password="True"
-                                    attrs="{'invisible': [('show_token', '=', True)]}"
-                                />
+                                    invisible="show_token"/>
                                 <button name="action_toggle_show_token" icon="fa-eye"
                                     type="object"
                                     class="oe_stat_button"
-                                    attrs="{'invisible': [('show_token', '=', True)]}"
-                                    title="Show Token"
-                                />
+                                    invisible="show_token"
+                                    title="Show Token"/>
                                 <button name="action_toggle_show_token" icon="fa-eye-slash"
                                     type="object"
                                     class="oe_stat_button"
-                                    attrs="{'invisible': [('show_token', '=', False)]}"
-                                    title="Hide Token"
-                                />
+                                    invisible="not show_token"
+                                    title="Hide Token"/>
                             </div>
                             <field name="warn_me" />
                             <field name="warning_threshold"
-                                attrs="{'invisible':[('warn_me','=',False)]}"
-                            />
+                                invisible="not warn_me"/>
                             <field name="warning_email"
-                                attrs="{'invisible':[('warn_me','=',False)]}"
-                            />
+                                invisible="not warn_me"/>
                         </group>
                         <group class="d-flex flex-column">
                             <group class="d-flex">

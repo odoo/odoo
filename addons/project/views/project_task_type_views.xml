@@ -21,17 +21,17 @@
                 <form string="Task Stage" delete="0">
                     <field name="active" invisible="1" />
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
                                 <field name="rating_template_id" placeholder="Task: Rating Request" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
-                                <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}" groups="project.group_project_rating">
+                                <div class="alert alert-warning" role="alert" colspan='2' invisible="not rating_template_id or not disabled_rating_warning" groups="project.group_project_rating">
                                     <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
                                     <field name="disabled_rating_warning" class="mb-0" />
                                 </div>
-                                <field name="auto_validation_state" attrs="{'invisible': [('rating_template_id','=', False)]}" groups="project.group_project_rating"/>
+                                <field name="auto_validation_state" invisible="not rating_template_id" groups="project.group_project_rating"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                             <group>
@@ -51,7 +51,7 @@
                 <form string="Task Stage" delete="0">
                     <field name="active" invisible="1" />
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                         <group>
                             <group>
                                 <field name="name"/>

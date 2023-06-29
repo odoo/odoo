@@ -75,67 +75,67 @@
                             string="Request EDI Cancellation"
                             type="object"
                             groups="account.group_account_invoice"
-                            attrs="{'invisible' : [('edi_show_cancel_button', '=', False)]}"/>
+                            invisible="not edi_show_cancel_button"/>
                     <button name="button_abandon_cancel_posted_posted_moves"
                             string="Call off EDI Cancellation"
                             type="object"
                             groups="account.group_account_invoice"
-                            attrs="{'invisible' : [('edi_show_abandon_cancel_button', '=', False)]}"/>
+                            invisible="not edi_show_abandon_cancel_button"/>
                 </xpath>
                 <xpath expr="//header" position="after">
                     <field name="edi_blocking_level" invisible="1" />
                     <field name="edi_error_count" invisible="1" />
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
+                        invisible="edi_web_services_to_process in ['', False] or state == 'draft'">
                          <div>The invoice will soon be sent to
                              <field name="edi_web_services_to_process" class="w-auto"/> -
                              <button name="button_process_edi_web_services" type="object" class="oe_link ps-0 text-decoration-underline" string="Process now"/>
                          </div>
                     </div>
                     <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'error')]}">
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'error'">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
                             <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
                         </div>
                     </div>
                     <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'warning')]}">
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'warning'">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
                         </div>
                     </div>
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'info')]}">
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'info'">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
                         </div>
                     </div>
                 </xpath>
                 <xpath expr="//div[@name='journal_div']" position="after">
-                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
+                    <field name="edi_state" invisible="not edi_state or state == 'draft'"/>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
                     <page id="edi_documents"
                           string="EDI Documents"
                           groups="base.group_no_one"
-                          attrs="{'invisible': [('edi_document_ids', '=', [])]}">
+                          invisible="not edi_document_ids">
                         <field name="edi_document_ids">
                             <tree create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>
-                                <field name="error" invisible="1"/>
-                                <field name="blocking_level" invisible="1"/>
+                                <field name="error" column_invisible="True"/>
+                                <field name="blocking_level" column_invisible="True"/>
                                 <button name="action_export_xml"
                                         type="object"
                                         class="oe_link oe_inline"
                                         string="Download"
                                         groups="base.group_no_one"
-                                        attrs="{'invisible': ['|', ('error', '=', False), ('blocking_level', '=', 'info')]}"/>
+                                        invisible="not error or blocking_level == 'info'"/>
                             </tree>
                         </field>
                     </page>
