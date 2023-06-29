@@ -146,7 +146,7 @@ class AccountBankStatement(models.Model):
             lines = stmt.line_ids.filtered(lambda x: x.state == 'posted')
             stmt.balance_end = stmt.balance_start + sum(lines.mapped('amount'))
 
-    @api.depends('balance_start')
+    @api.depends('balance_end')
     def _compute_balance_end_real(self):
         for stmt in self:
             stmt.balance_end_real = stmt.balance_end
