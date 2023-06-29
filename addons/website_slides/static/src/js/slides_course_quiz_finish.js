@@ -19,13 +19,13 @@ var SlideQuizFinishModal = Dialog.extend({
         this.quiz = options.quiz;
         this.hasNext = options.hasNext;
         this.userId = options.userId;
-        options = Object.assign({
+        options = Object.assign(options || {}, {
             size: 'medium',
             dialogClass: 'd-flex p-0',
             technical: false,
             renderHeader: false,
             renderFooter: false
-        }, options || {});
+        });
         this._super.apply(this, arguments);
         this.opened(function () {
             self._animateProgressBar();
