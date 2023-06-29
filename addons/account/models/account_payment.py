@@ -934,6 +934,8 @@ class AccountPayment(models.Model):
 
     def action_cancel(self):
         ''' draft -> cancelled '''
+        if self.move_id.state != 'draft':
+            self.move_id.button_draft()
         self.move_id.button_cancel()
 
     def action_draft(self):

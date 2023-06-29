@@ -1002,3 +1002,34 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             {'account_id': bank_2.inbound_payment_method_line_ids.payment_account_id.id},
             {'account_id': transfer_account.id},
         ])
+
+    def test_invoice_payment_state_on_payment_cancel(self):
+        payment = self.env['account.payment'].create({
+            'amount': 50.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'destination_account_id': self.company_data['default_account_receivable'].id,
+        })
+        _liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': '50 to pay',
+                'price_unit': 50.0,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids':[],
+            })],
+        })
+
+        payment.action_post()
+        invoice.action_post()
+
+        (counterpart_lines + invoice.line_ids.filtered(lambda line: line.account_type == 'asset_receivable'))\
+            .reconcile()
+
+        self.assertEqual(invoice.payment_state, 'paid')
+        payment.action_cancel()
+        self.assertEqual(invoice.payment_state, 'not_paid')
