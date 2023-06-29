@@ -601,8 +601,8 @@
                                         <span invisible="context.get('default_project_id', False)" style="display: block; margin-top: 4px;">
                                             <field name="project_id" options="{'no_open': True}"/>
                                         </span>
-                                        <span t-if="record.partner_id.value" style="display: block; margin-top: 4px;">
-                                            <field name="partner_id"/>
+                                        <span t-if="record.partner_id.value" t-att-title="record.partner_id.value" style="display: block; margin-top: 4px;">
+                                            <field name="partner_id" class="text-truncate d-block"/>
                                         </span>
                                         <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
                                             <field name="milestone_id" options="{'no_open': True}" />
