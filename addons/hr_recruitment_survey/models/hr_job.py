@@ -13,7 +13,6 @@ class Job(models.Model):
     def action_test_survey(self):
         self.ensure_one()
         action = self.survey_id.action_test_survey()
-        action['target'] = 'new'
         return action
 
     def action_new_survey(self):
