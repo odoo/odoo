@@ -472,10 +472,10 @@ QUnit.test("iframe: both popper and target inside", async (assert) => {
     const iframe = document.createElement("iframe");
     Object.assign(iframe.style, IFRAME_STYLE);
     iframe.srcdoc = `<div id="inner-container" />`;
-    const def = makeDeferred();
+    let def = makeDeferred();
     iframe.onload = def.resolve;
     container.appendChild(iframe);
-    await def;
+    await def; // wait for the iframe to be loaded
     const iframeBody = iframe.contentDocument.body;
     Object.assign(iframeBody.style, {
         ...FLEXBOX_STYLE,
@@ -484,7 +484,9 @@ QUnit.test("iframe: both popper and target inside", async (assert) => {
         overflowX: "hidden",
     });
 
+    def = makeDeferred();
     const iframeSheet = iframe.contentDocument.createElement("style");
+    iframeSheet.onload = def.resolve;
     iframeSheet.textContent = `
             #popper {
                 background-color: plum;
@@ -493,6 +495,7 @@ QUnit.test("iframe: both popper and target inside", async (assert) => {
             }
         `;
     iframe.contentDocument.head.appendChild(iframeSheet);
+    await def; // wait for the iframe's stylesheet to be loaded
 
     const innerContainer = iframe.contentDocument.getElementById("inner-container");
     Object.assign(innerContainer.style, {
