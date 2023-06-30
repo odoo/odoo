@@ -360,7 +360,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            self.assert_tax_totals(invoice._values['tax_totals'], {
+            self.assert_tax_totals(invoice.tax_totals, {
                 'amount_untaxed': 1000,
                 'amount_total': 1090,
                 'groups_by_subtotal': {
@@ -545,7 +545,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            self.assert_tax_totals(invoice._values['tax_totals'], {
+            self.assert_tax_totals(invoice.tax_totals, {
                 'amount_untaxed': 100,
                 'amount_total': 120.58,
                 'groups_by_subtotal': {

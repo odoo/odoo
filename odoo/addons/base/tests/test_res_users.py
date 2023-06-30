@@ -328,13 +328,13 @@ class TestUsers2(TransactionCase):
         user_form.login = "Test"
         self.assertFalse(user_form.share)
 
-        setattr(user_form, group_field_name, group_portal.id)
+        user_form[group_field_name] = group_portal.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
-        setattr(user_form, group_field_name, group_user.id)
+        user_form[group_field_name] = group_user.id
         self.assertFalse(user_form.share, 'The groups_id onchange should have been triggered')
 
-        setattr(user_form, group_field_name, group_public.id)
+        user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
 
@@ -450,16 +450,13 @@ class TestUsersGroupWarning(TransactionCase):
         # 549 runbot enterprise
         with self.assertQueryCount(__system__=436), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm._values[self.sales_categ_field] = False
-            UserForm._perform_onchange(self.sales_categ_field)
-
+            UserForm[self.sales_categ_field] = False
             self.assertEqual(
                 UserForm.user_group_warning,
                 'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator"'
             )
 
-            UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange(self.sales_categ_field)
+            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning(self):
@@ -472,16 +469,13 @@ class TestUsersGroupWarning(TransactionCase):
         # 549 runbot enterprise
         with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm._values[self.sales_categ_field] = self.group_sales_user.id
-            UserForm._perform_onchange(self.sales_categ_field)
-
+            UserForm[self.sales_categ_field] = self.group_sales_user.id
             self.assertEqual(
                 UserForm.user_group_warning,
                 'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator"'
             )
 
-            UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange(self.sales_categ_field)
+            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning_multi(self):
@@ -496,18 +490,14 @@ class TestUsersGroupWarning(TransactionCase):
         # 553 runbot enterprise
         with self.assertQueryCount(__system__=438), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm._values[self.sales_categ_field] = self.group_sales_user.id
-            UserForm._values[self.project_categ_field] = self.group_project_user.id
-            UserForm._perform_onchange(self.sales_categ_field)
-
+            UserForm[self.sales_categ_field] = self.group_sales_user.id
+            UserForm[self.project_categ_field] = self.group_project_user.id
             self.assertTrue(
                 UserForm.user_group_warning,
                 'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator", Project: Administrator"',
             )
 
-            UserForm._values[self.sales_categ_field] = self.group_sales_administrator.id
-            UserForm._perform_onchange(self.sales_categ_field)
-
+            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
             self.assertEqual(
                 UserForm.user_group_warning,
                 'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Project: Administrator"'
@@ -524,16 +514,13 @@ class TestUsersGroupWarning(TransactionCase):
         # 550 runbot enterprise
         with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
-            UserForm._perform_onchange(self.timesheets_categ_field)
-
+            UserForm[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
             self.assertEqual(
                 UserForm.user_group_warning,
                 'Since Test Group User is a/an "Project: Administrator", they will at least obtain the right "Timesheets: User: all timesheets"'
             )
 
-            UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_all_timesheet.id
-            UserForm._perform_onchange(self.timesheets_categ_field)
+            UserForm[self.timesheets_categ_field] = self.group_timesheets_user_all_timesheet.id
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_parent_inheritance_no_warning(self):
@@ -545,7 +532,5 @@ class TestUsersGroupWarning(TransactionCase):
         # 534 runbot enterprise
         with self.assertQueryCount(__system__=420), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm._values[self.field_service_categ_field] = self.group_field_service_user.id
-            UserForm._perform_onchange(self.field_service_categ_field)
-
+            UserForm[self.field_service_categ_field] = self.group_field_service_user.id
             self.assertFalse(UserForm.user_group_warning)
