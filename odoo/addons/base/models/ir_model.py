@@ -1941,6 +1941,13 @@ class IrModelAccess(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.call_cache_clearing_methods()
+        for ima in vals_list:
+            if "group_id" in ima and not ima["group_id"] and any([
+                    ima.get("perm_read"),
+                    ima.get("perm_write"),
+                    ima.get("perm_create"),
+                    ima.get("perm_unlink")]):
+                _logger.warning("Rule %s has no group, this is a deprecated feature. Every access-granting rule should specify a group.", ima['name'])
         return super(IrModelAccess, self).create(vals_list)
 
     def write(self, values):
