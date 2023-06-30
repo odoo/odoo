@@ -81,6 +81,10 @@ class AccountEdiFormat(models.Model):
         if not invoice.company_id.mapped('l10n_es_tbai_tax_agency')[0]:
             errors.append(_("Please specify a tax agency on your company for TicketBAI."))
 
+        # Ensure a vat is available.
+        if not invoice.company_id.vat:
+            errors.append(_("Please configure the Tax ID on your company for TicketBAI."))
+
         # Check the refund reason
         if invoice.move_type == 'out_refund':
             if not invoice.l10n_es_tbai_refund_reason:
