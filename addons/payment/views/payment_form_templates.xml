@@ -37,7 +37,8 @@
         <t t-set="display_submit_button"
            t-value="True if display_submit_button is None else display_submit_button"
         />
-        <form name="o_payment_form" class="o_payment_form"
+        <form id="o_payment_form"
+              class="o_payment_form"
               t-att-data-reference-prefix="reference_prefix"
               t-att-data-amount="amount"
               t-att-data-currency-id="currency and currency.id"
