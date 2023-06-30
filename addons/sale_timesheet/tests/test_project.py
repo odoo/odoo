@@ -176,3 +176,18 @@ class TestProject(TestCommonSaleTimesheet):
         })
 
         self.assertEqual(self.project_global.analytic_account_balance, expected_analytic_account_balance)
+
+    def test_allow_billable_in_project_change(self):
+        projects = self.so.project_ids
+        self.assertEqual(len(projects), 2)
+        projects.allow_billable = False
+        self.assertFalse(projects.partner_id)
+        self.assertFalse(projects.sale_line_id)
+        self.assertFalse(projects.tasks.partner_id)
+        self.assertFalse(projects.tasks.sale_line_id)
+
+        projects.allow_billable = True
+        self.assertFalse(projects.partner_id)
+        self.assertFalse(projects.sale_line_id)
+        self.assertFalse(projects.tasks.partner_id)
+        self.assertFalse(projects.tasks.sale_line_id)
