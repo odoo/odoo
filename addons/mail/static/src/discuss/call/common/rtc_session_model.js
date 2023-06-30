@@ -21,6 +21,8 @@ export class RtcSession {
     audioError;
     videoError;
     isTalking;
+    /** @type {number|undefined} */
+    negotiationTimeoutId;
     localVolume;
     /** @type {RTCPeerConnection} */
     peerConnection;

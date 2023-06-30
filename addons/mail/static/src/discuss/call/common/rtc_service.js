@@ -689,20 +689,7 @@ export class Rtc {
             this.recover(session, RECOVERY_TIMEOUT, "ice candidate error");
         };
         peerConnection.onnegotiationneeded = async (event) => {
-            const offer = await peerConnection.createOffer();
-            try {
-                await peerConnection.setLocalDescription(offer);
-            } catch (error) {
-                // Possibly already have a remote offer here: cannot set local description
-                this.log(session, "couldn't setLocalDescription", { error });
-                return;
-            }
-            this.log(session, "sending notification: offer", {
-                step: "sending offer",
-            });
-            await this.notify([session], "offer", {
-                sdp: peerConnection.localDescription,
-            });
+            this.sendOffer(session);
         };
         peerConnection.ontrack = ({ transceiver, track }) => {
             this.log(session, `received ${track.kind} track`);
@@ -992,6 +979,8 @@ export class Rtc {
             peerConnection.close();
             delete session.peerConnection;
         }
+        browser.clearTimeout(session.negotiationTimeoutId);
+        delete session.negotiationTimeoutId;
         browser.clearTimeout(this.state.recoverTimeouts.get(session.id));
         this.state.recoverTimeouts.delete(session.id);
         this.state.outgoingSessions.delete(session.id);
@@ -1102,6 +1091,38 @@ export class Rtc {
         await this.notify(Object.values(this.state.channel.rtcSessions), "raise_hand", {
             active: this.state.selfSession.raisingHand,
         });
+    }
+
+    async sendOffer(session) {
+        const pc = session.peerConnection;
+        if (!pc) {
+            return;
+        }
+        if (session.negotiationTimeoutId) {
+            return;
+        }
+        if (pc.signalingState !== "stable") {
+            // If the signaling state is not stable, it means that there is another transaction in progress.
+            // Although, this transaction may not have captured the latest state of the peer connection.
+            if (pc.signalingState !== "have-remote-offer") {
+                // If we have a remote offer, the resulting upcoming answer will represent the latest state,
+                // so we do not need to schedule another offer.
+                session.negotiationTimeoutId = browser.setTimeout(() => {
+                    session.negotiationTimeoutId = undefined;
+                    this.sendOffer(session);
+                }, 200);
+            }
+            return;
+        }
+        const offer = await pc.createOffer();
+        try {
+            await pc.setLocalDescription(offer);
+        } catch (error) {
+            this.log(session, "couldn't setLocalDescription", { error });
+            return;
+        }
+        this.log(session, "sending notification: offer", { step: "sending offer" });
+        await this.notify([session], "offer", { sdp: pc.localDescription });
     }
 
     /**
