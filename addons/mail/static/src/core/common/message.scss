@@ -23,7 +23,7 @@
 .o-mail-Message-body > p {
     margin-bottom: 0;
 
-    &:last-of-type {
+    &:last-of-type:has(~ .o-mail-Message-edited) {
         display: inline-block;
     }
 }
