@@ -94,7 +94,7 @@
                                                 <t t-else="">
                                                     <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
                                                     <t t-if="message.body" t-out="message.body"/>
-                                                    <small t-if="message.editDate" class="ms-2 fst-italic text-muted" t-att-title="message.editDatetimeHuge">(edited)</small>
+                                                    <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small>
                                                     <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
                                                 </t>
                                             </div>
