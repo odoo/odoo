@@ -3188,6 +3188,12 @@ const SnippetOptionWidget = Widget.extend({
      * @type {boolean}
      */
     displayOverlayOptions: false,
+    /**
+     * Forces the target to be duplicable.
+     *
+     * @type {boolean}
+     */
+    forceDuplicateButton: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3245,9 +3251,13 @@ const SnippetOptionWidget = Widget.extend({
      * menu. Note: this is called after the start and onFocus methods.
      *
      * @abstract
+     * @param {Object} options
+     * @param {boolean} options.isCurrent
+     *        true if the main element has been built (so not when a child of
+     *        the main element has been built).
      * @returns {Promise|undefined}
      */
-    async onBuilt() {},
+    async onBuilt(options) {},
     /**
      * Called when the parent edition overlay is removed from the associated
      * snippet (another snippet enters edition for example).
@@ -8589,7 +8599,8 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                         classes: 'btn-primary',
                         close: true,
                         click: () => {
-                            const snippetKey = this.$target[0].dataset.snippet;
+                            const isButton = this.$target[0].matches("a.btn");
+                            const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
                             let thumbnailURL;
                             this.trigger_up('snippet_thumbnail_url_request', {
                                 key: snippetKey,
@@ -8603,9 +8614,15 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 reloadEditor: true,
                                 invalidateSnippetCache: true,
                                 onSuccess: async () => {
-                                    const defaultSnippetName = _t("Custom %s", this.data.snippetName);
+                                    const defaultSnippetName = !isButton
+                                        ? _t("Custom %s", this.data.snippetName)
+                                        : _t("Custom Button");
                                     const targetCopyEl = this.$target[0].cloneNode(true);
                                     delete targetCopyEl.dataset.name;
+                                    if (isButton) {
+                                        targetCopyEl.classList.remove("mb-2");
+                                        targetCopyEl.classList.add("o_snippet_drop_in_only", "s_custom_button");
+                                    }
                                     // By the time onSuccess is called after request_save, the
                                     // current widget has been destroyed and is orphaned, so this._rpc
                                     // will not work as it can't trigger_up. For this reason, we need
