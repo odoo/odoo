@@ -1455,7 +1455,7 @@
                                        t-att-value="line.product_uom_qty"/>
                             </t>
                         </div>
-                        <div class="o_cart_product_price h6 mb-0 fw-bold text-end">
+                        <div class="o_cart_product_price h6 mb-0 fw-bold text-end" name="line_price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
                             <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
 
