@@ -14,29 +14,29 @@ registry.category("web_tour.tours").add('account_tour', {
     steps: [
     ...stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
     {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
+        trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
         content: _t("Start by checking your company's data."),
         position: "bottom",
-        skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+        skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
     }, {
-        trigger: "button[name=action_save_onboarding_company_step]",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
+        trigger: "button.o_form_button_save",
+        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
         content: _t("Looks good. Let's continue."),
         position: "bottom",
-        skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+        skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
     }, {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
+        trigger: "a.o_onboarding_step_action[data-method=action_open_step_base_document_layout]",
         content: _t("Customize your layout."),
         position: "bottom",
-        skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
+        skip_trigger: 'a[data-method=action_open_step_base_document_layout].o_onboarding_step_action__done',
     }, {
         trigger: "button[name=document_layout_save]",
-        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
+        extra_trigger: "a.o_onboarding_step_action[data-method=action_open_step_base_document_layout]",
         content: _t("Once everything is as you want it, validate."),
         position: "top",
-        skip_trigger: 'a[data-method=action_open_base_document_layout].o_onboarding_step_action__done',
+        skip_trigger: 'a[data-method=action_open_step_base_document_layout].o_onboarding_step_action__done',
     }, {
-        trigger: "a.o_onboarding_step_action[data-method=action_open_account_onboarding_create_invoice]",
+        trigger: "a[data-method=action_open_step_create_invoice]",
         content: _t("Now, we'll create your first invoice."),
         position: "bottom",
     }, {

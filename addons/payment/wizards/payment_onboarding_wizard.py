@@ -134,12 +134,9 @@ class PaymentWizard(models.TransientModel):
         if payment_method == 'stripe':
             return self._start_stripe_onboarding()
 
-        # the user clicked `apply` and not cancel so we can assume this step is done.
-        self._set_payment_provider_onboarding_step_done()
+        # the user clicked `apply` and not cancel, so we can assume this step is done.
+        self.env['onboarding.onboarding.step'].sudo().action_validate_step_payment_provider()
         return {'type': 'ir.actions.act_window_close'}
-
-    def _set_payment_provider_onboarding_step_done(self):
-        self.env.company.sudo().set_onboarding_step_done('payment_provider_onboarding_state')
 
     def _start_stripe_onboarding(self):
         """ Start Stripe Connect onboarding. """

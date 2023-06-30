@@ -20,11 +20,6 @@ class PaymentWizard(models.TransientModel):
         ('paypal', "PayPal"),
         ('manual', "Custom payment instructions"),
     ], default=_get_default_payment_method)
-    #
-
-    def _set_payment_provider_onboarding_step_done(self):
-        """ Override. """
-        self.env.company.sudo().set_onboarding_step_done('sale_onboarding_order_confirmation_state')
 
     def add_payment_methods(self):
         self.env.company.sale_onboarding_payment_method = self.payment_method
