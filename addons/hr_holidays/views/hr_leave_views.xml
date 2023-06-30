@@ -55,7 +55,7 @@
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
-                <filter name="filter_date_from" date="date_from"/>
+                <filter name="filter_date_from" date="date_from" default_period="this_year" string="Current Year"/>
                 <separator/>
                 <filter name="active_time_off" string="Active"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
@@ -772,11 +772,41 @@
         </field>
     </record>
 
+    <record id="view_holiday_list" model="ir.ui.view">
+        <field name="name">hr.holidays.report_list</field>
+        <field name="model">hr.leave</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Time Off Summary" sample="1">
+                <field name="employee_id"/>
+                <field name="number_of_days" string="Number of Days" type="measure"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_search_view" model="ir.ui.view">
+        <field name="name">he.leave.report.search.view</field>
+        <field name="inherit_id" ref="view_hr_holidays_filter"/>
+        <field name="mode">primary</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <filter name="active_employee" position="replace"/>
+            <filter name="archive" position="replace"/>
+            <filter name="active_time_off" position="replace"/>
+        </field>
+    </record>
+
     <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
         <field name="name">Time Off Analysis</field>
         <field name="res_model">hr.leave</field>
-        <field name="view_mode">graph,pivot,calendar,form</field>
-        <field name="context">{'search_default_year': 1, 'search_default_active_employee': 2, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
+        <field name="view_mode">tree,graph,pivot,calendar,form</field>
+        <field name="search_view_id" ref="hr_leave_report_search_view"/>
+        <field name="context">{'search_default_filter_date_from': 1, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
+        <field name="domain">[('active', '=', True), ('active_employee','=',True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
@@ -784,8 +814,15 @@
         </field>
     </record>
 
+    <record id="action_window_leave_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_holiday_list"/>
+        <field name="act_window_id" ref="action_hr_available_holidays_report"/>
+    </record>
+
     <record id="action_window_leave_graph" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="10"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="view_holiday_graph"/>
         <field name="act_window_id" ref="action_hr_available_holidays_report"/>
