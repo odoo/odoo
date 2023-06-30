@@ -32,11 +32,8 @@ export function formatDate(interval, value) {
  * @returns {number}
  */
 export function getNumberOfPivotFormulas(formula) {
-    return getOdooFunctions(formula, [
-        "ODOO.PIVOT",
-        "ODOO.PIVOT.HEADER",
-        "ODOO.PIVOT.POSITION",
-    ]).filter((fn) => fn.isMatched).length;
+    return getOdooFunctions(formula, ["ODOO.PIVOT", "ODOO.PIVOT.HEADER", "ODOO.PIVOT.POSITION"])
+        .length;
 }
 
 /**
@@ -47,11 +44,7 @@ export function getNumberOfPivotFormulas(formula) {
  * @returns {import("../helpers/odoo_functions_helpers").OdooFunctionDescription|undefined}
  */
 export function getFirstPivotFunction(formula) {
-    return getOdooFunctions(formula, [
-        "ODOO.PIVOT",
-        "ODOO.PIVOT.HEADER",
-        "ODOO.PIVOT.POSITION",
-    ]).find((fn) => fn.isMatched);
+    return getOdooFunctions(formula, ["ODOO.PIVOT", "ODOO.PIVOT.HEADER", "ODOO.PIVOT.POSITION"])[0];
 }
 
 /**
