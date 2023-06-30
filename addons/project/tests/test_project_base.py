@@ -178,7 +178,8 @@ class TestProjectBase(TestProjectCommon):
 
     def test_change_project_or_partner_company(self):
         """ Tests that it is impossible to change the company of a project
-            if the company of the partner is different and vice versa.
+            if the company of the partner is different and vice versa if the company of the project is set.
+            If the company of the project is not set, there are no restriction on its partner company-wise.
         """
         company_1 = self.env.company
         company_2 = self.env['res.company'].create({'name': 'Company 2'})
@@ -186,18 +187,51 @@ class TestProjectBase(TestProjectCommon):
             'name': 'Partner',
         })
         self.project_pigs.partner_id = partner
-        # Can change the company of a project if the company of the partner is not set
+
+        # Neither the partner nor the project have a company. Their companies can be updated.
         self.assertFalse(partner.company_id)
-        self.project_pigs.company_id = company_2
-        self.project_pigs.partner_id.company_id = company_2
+        self.assertFalse(self.project_pigs.company_id)
+        self.project_pigs.company_id = company_1
+        self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
+        self.project_pigs.company_id = False
+        partner.company_id = company_1
 
-        with self.assertRaises(UserError):
-            # Cannot change the company of a partner if the company of the project is different
-            partner.company_id = company_1
-
+        # The partner has a company, but the project has none. The partner can have any new company, but the project can only be set to False/partner.company
         with self.assertRaises(UserError):
             # Cannot change the company of a project if the company of the partner is different
-            self.project_pigs.company_id = company_1
+            self.project_pigs.company_id = company_2
+        partner.company_id = company_2
+        partner.company_id = False
+        partner.company_id = company_1
+        self.project_pigs.company_id = company_1
+        self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
+
+        # The partner has a company and the project has a company. The project can only be set to False, the partner can not be changed
+        with self.assertRaises(UserError):
+            # Cannot change the company of a project if both the project and its partner have a company
+            self.project_pigs.company_id = company_2
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner if both the project and its partner have a company
+            partner.company_id = company_2
+        with self.assertRaises(UserError):
+            # Cannot set the company of a partner to False if both the project and its partner have a company
+            partner.company_id = False
+        self.project_pigs.company_id = False
+        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
+        partner.company_id = False
+        self.project_pigs.company_id = company_1
+
+        # The project has a company, but the partner has none. The partner can only be set to False/project.company but the project can have any new company.
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner if both the project and its partner have a company
+            partner.company_id = company_2
+        self.project_pigs.company_id = company_2
+        self.assertEqual(self.project_pigs.company_id, company_2, "The company of the project should have been updated.")
+        self.project_pigs.company_id = False
+        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
+        self.project_pigs.company_id = company_1
+        partner.company_id = company_1
+        self.assertEqual(partner.company_id, company_1, "The company of the partner should have been updated.")
 
     def test_search_project_root_id(self):
         project = self.env['project.project'].create({

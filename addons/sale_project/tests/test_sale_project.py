@@ -451,3 +451,51 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order.action_confirm()
         self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")
         self.assertNotIn(default_task, sale_order.tasks_ids, "SO should link to the default task from the context")
+
+    def test_project_creation_on_so_confirm_with_account(self):
+        # Ensures that the company of the account of the SO is propagated to the project.
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        analytic_account_company = self.env['account.analytic.account'].create({
+            'name': 'Account with company',
+            'plan_id': self.analytic_plan.id,
+            'company_id': self.env.company.id,
+        })
+        sale_order.analytic_account_id = analytic_account_company
+        self.env['sale.order.line'].create({
+            'name': self.product_order_service2.name,
+            'product_id': self.product_order_service3.id,
+            'order_id': sale_order.id,
+        })
+        self.assertTrue(sale_order.analytic_account_id, "The SO should have an analytic account before it is confirmed.")
+        sale_order.action_confirm()
+        self.assertEqual(self.env.company, sale_order.analytic_account_id.company_id, "The company of the account should be the company of the SO.")
+        self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")
+        self.assertEqual(self.env.company, sale_order.project_ids.company_id, "The project created for the SO should have the same company as its account.")
+
+    def test_project_creation_on_so_confirm_with_default_plan_with_company_in_setting(self):
+         #This test ensures that the plan of the created account is the default plan of the setting, and that the company is correctly propagated
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        self.env['sale.order.line'].create({
+            'name': self.product_order_service2.name,
+            'product_id': self.product_order_service3.id,
+            'order_id': sale_order.id,
+        })
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Plan 1',
+            'default_applicability': 'optional',
+            'company_id': self.env.company.id,
+        })
+        self.env['ir.config_parameter'].sudo().set_param("default_analytic_plan_id_%s" % self.env.company.id, analytic_plan.id)
+        self.assertFalse(sale_order.analytic_account_id, "The SO should not have any analytic account before it is confirmed.")
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.analytic_account_id.company_id, analytic_plan.company_id, "The company_id of the account created should be the company of the default analytic plan of the setting.")
+        self.assertEqual(sale_order.analytic_account_id.plan_id, analytic_plan, "The plan of the account created should be the default analytic plan of the setting")
+        self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")

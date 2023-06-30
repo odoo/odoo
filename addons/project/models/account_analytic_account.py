@@ -19,12 +19,6 @@ class AccountAnalyticAccount(models.Model):
         for account in self:
             account.project_count = mapping.get(account.id, 0)
 
-    @api.constrains('company_id')
-    def _check_company_id(self):
-        for record in self:
-            if record.company_id and not all(record.company_id == c for c in record.project_ids.mapped('company_id')):
-                raise UserError(_('You cannot change the company of an analytic account if it is related to a project.'))
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_existing_tasks(self):
         projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])

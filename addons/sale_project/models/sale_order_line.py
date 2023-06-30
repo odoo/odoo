@@ -80,7 +80,7 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
-                    planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
+                    planned_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)
                     line.task_id.write({'planned_hours': planned_hours})
         return result
 
@@ -95,11 +95,11 @@ class SaleOrderLine(models.Model):
         """Generate project values"""
         account = self.order_id.analytic_account_id
         if not account:
-            service_products = self.order_id.order_line.product_id.filtered(lambda p: p.type == 'service' and p.default_code)
+            service_products = self.order_id.order_line.product_id.filtered(
+                lambda p: p.type == 'service' and p.default_code)
             default_code = service_products.default_code if len(service_products) == 1 else None
             self.order_id._create_analytic_account(prefix=default_code)
             account = self.order_id.analytic_account_id
-
         # create the project or duplicate one
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,

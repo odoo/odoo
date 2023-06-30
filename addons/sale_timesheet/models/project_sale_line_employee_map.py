@@ -18,8 +18,7 @@ class ProjectProductEmployeeMap(models.Model):
             ('is_service', '=', True),
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
-            ('order_partner_id', '=?', partner_id),
-            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
+            ('order_partner_id', '=?', partner_id)]""")
     sale_order_id = fields.Many2one(related="project_id.sale_order_id")
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
     partner_id = fields.Many2one(related='project_id.partner_id')

@@ -181,6 +181,12 @@ class AccountAnalyticLine(models.Model):
                 continue
             employee_in_id = vals.get('employee_id', self._context.get('default_employee_id', False))
             if employee_in_id:
+                company = False
+                if not vals.get('company_id'):
+                    company = self.env['hr.employee'].browse(employee_in_id).company_id
+                    vals['company_id'] = company.id
+                if not vals.get('product_uom_id'):
+                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
                 if employee_in_id in valid_employee_per_id:
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
@@ -200,6 +206,12 @@ class AccountAnalyticLine(models.Model):
             if employee_out_id:
                 vals['employee_id'] = employee_out_id
                 vals['user_id'] = user_id
+                company = False
+                if not vals.get('company_id'):
+                    company = self.env['hr.employee'].browse(employee_out_id).company_id
+                    vals['company_id'] = company.id
+                if not vals.get('product_uom_id'):
+                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
             else:  # ...and raise an error if they fail
                 raise ValidationError(error_msg)
 
@@ -221,6 +233,8 @@ class AccountAnalyticLine(models.Model):
                 raise UserError(_('You cannot set an archived employee to the existing timesheets.'))
         if 'name' in values and not values.get('name'):
             values['name'] = '/'
+        if 'company_id' in values and not values.get('company_id'):
+            del values['company_id']
         result = super(AccountAnalyticLine, self).write(values)
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)

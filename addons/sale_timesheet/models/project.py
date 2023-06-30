@@ -405,14 +405,25 @@ class Project(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type'],
-            ['amount:sum', 'id:array_agg'])
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id'],
+            ['amount:sum', 'id:array_agg'],
+        )
         can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
         revenues_dict = {}
         costs_dict = {}
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
-        for invoice_type, amount, ids in aa_line_read_group:
+        dict_rate_per_currency = {}
+        today = fields.Date.context_today(self)
+        convert_company = self.company_id or self.env.company
+        for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
+            if currency != self.currency_id:
+                rate = dict_rate_per_currency.get(currency.id, False)
+                if not rate:
+                    rate = currency._get_conversion_rate(currency, self.currency_id, convert_company, today)
+                    dict_rate_per_currency[currency.id] = rate
+                amount = self.currency_id.round(amount * rate)
+            invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
             revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})
             if amount < 0:  # cost
@@ -424,7 +435,6 @@ class Project(models.Model):
             if can_see_timesheets and invoice_type not in ['other_costs', 'other_revenues']:
                 cost.setdefault('record_ids', []).extend(ids)
                 revenue.setdefault('record_ids', []).extend(ids)
-
         action_name = None
         if can_see_timesheets:
             action_name = 'action_profitability_items'
@@ -591,7 +601,7 @@ class ProjectTask(models.Model):
         if not self.partner_id.commercial_partner_id or not self.allow_billable:
             return False
         domain = [
-            ('company_id', '=', self.company_id.id),
+            ('company_id', '=?', self.company_id.id),
             ('is_service', '=', True),
             ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
             ('is_expense', '=', False),

@@ -25,7 +25,7 @@ class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
 
-    project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
+    project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False)]")
     project_root_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True, recursive=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related="project_root_id.allow_timesheets", help="Timesheets can be logged on this task.", readonly=True, recursive=True)

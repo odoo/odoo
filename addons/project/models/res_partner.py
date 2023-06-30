@@ -11,7 +11,7 @@ class ResPartner(models.Model):
     _check_company_auto = True
 
     project_ids = fields.One2many('project.project', 'partner_id', string='Projects', check_company=True)
-    task_ids = fields.One2many('project.task', 'partner_id', string='Tasks')
+    task_ids = fields.One2many('project.task', 'partner_id', string='Tasks', check_company=True)
     task_count = fields.Integer(compute='_compute_task_count', string='# Tasks')
 
     def _compute_task_count(self):

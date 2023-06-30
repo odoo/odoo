@@ -5,6 +5,7 @@ import json
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
+from collections import defaultdict
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -48,6 +49,12 @@ class Project(models.Model):
             action["res_id"] = expense_ids[0]
         return action
 
+    def _get_add_purchase_items_domain(self):
+        return expression.AND([
+            super()._get_add_purchase_items_domain(),
+            [('expense_id', '=', False)],
+        ])
+
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name == 'expenses':
             return self._get_expense_action(domain, [res_id] if res_id else [])
@@ -83,20 +90,38 @@ class Project(models.Model):
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
         query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query_string, query_param = query.select('array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        query_string, query_param = query.select('currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount) as untaxed_amount')
+        query_string = f"{query_string} GROUP BY currency_id"
         self._cr.execute(query_string, query_param)
         expenses_read_group = [expense for expense in self._cr.dictfetchall()]
         if not expenses_read_group or not expenses_read_group[0].get('ids'):
             return {}
-        expense_data = expenses_read_group[0]
+        expense_ids = []
+        amount_billed = 0.0
+        dict_amount_per_currency = defaultdict(lambda: 0.0)
+        set_currency_ids = {self.currency_id.id}
+        for res in expenses_read_group:
+            if can_see_expense:
+                expense_ids.extend(res['ids'])
+            set_currency_ids.add(res['currency_id'])
+            dict_amount_per_currency[res['currency_id']] += res['untaxed_amount']
+        rate_per_currency_id = self.env['res.currency'].browse(set_currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
+        project_currency_rate = rate_per_currency_id[self.currency_id.id]
+        for currency_id, amount in dict_amount_per_currency.items():
+            if currency_id == self.currency_id.id:
+                amount_billed += amount
+                continue
+            rate = project_currency_rate / rate_per_currency_id[currency_id]
+            amount_billed += self.currency_id.round(amount * rate)
+
         section_id = 'expenses'
         expense_profitability_items = {
-            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
+            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -amount_billed, 'to_bill': 0.0},
         }
         if can_see_expense:
-            args = [section_id, [('id', 'in', expense_data['ids'])]]
-            if expense_data['ids']:
-                args.append(expense_data['ids'])
+            args = [section_id, [('id', 'in', expense_ids)]]
+            if expense_ids:
+                args.append(expense_ids)
             action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
             expense_profitability_items['action'] = action
         return expense_profitability_items

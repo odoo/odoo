@@ -9,7 +9,7 @@ from datetime import timedelta
 from odoo import api, Command, fields, models, _, _lt
 from odoo.addons.rating.models import rating_data
 from odoo.tools.misc import get_lang
-
+from odoo.exceptions import UserError
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
 
@@ -19,7 +19,6 @@ class Project(models.Model):
     _inherit = ['portal.mixin', 'mail.alias.mixin', 'rating.parent.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
-    _check_company_auto = True
 
     def _compute_attached_docs_count(self):
         self.env.cr.execute(
@@ -102,11 +101,11 @@ class Project(models.Model):
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10)
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
+    company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", check_company=True,
         help="Analytic account to which this project, its tasks and its timesheets are linked. \n"
             "Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "This analytic account can be changed on each task individually if necessary.\n"
@@ -123,8 +122,7 @@ class Project(models.Model):
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', string='Working Time',
-        related='company_id.resource_calendar_id')
+        'resource.calendar', string='Working Time', compute='_compute_resource_calendar_id')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
@@ -236,6 +234,36 @@ class Project(models.Model):
     def _compute_allow_rating(self):
         self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
+    @api.depends('analytic_account_id.company_id')
+    def _compute_company_id(self):
+        for project in self:
+            # if a new restriction is put on the account, the restriction on the project is updated.
+            if project.analytic_account_id.company_id:
+                project.company_id = project.analytic_account_id.company_id
+
+    @api.depends_context('company')
+    @api.depends('company_id', 'company_id.resource_calendar_id')
+    def _compute_resource_calendar_id(self):
+        for project in self:
+            project.resource_calendar_id = project.company_id.resource_calendar_id or self.env.company.resource_calendar_id
+
+    def _inverse_company_id(self):
+        """
+        Ensures that the new company of the project is valid for the account. If not set back the previous company, and raise a user Error.
+        Ensures that the new company of the project is valid for the partner
+        """
+        for project in self:
+            account = project.analytic_account_id
+            if project.partner_id and project.partner_id.company_id and project.company_id and project.company_id != project.partner_id.company_id:
+                raise UserError(_('The project and the associated partner must be linked to the same company.'))
+            if not account or not account.company_id:
+                continue
+            # if the account of the project has more than one company linked to it, or if it has aal, do not update the account, and set back the old company on the project.
+            if (account.project_count > 1 or account.line_ids) and project.company_id != account.company_id:
+                raise UserError(
+                    _("The project's company cannot be changed if its analytic account has analytic lines or if more than one project is linked to it."))
+            account.company_id = project.company_id
+
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
         periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
@@ -280,6 +308,13 @@ class Project(models.Model):
         mapped_count = {project.id: count for project, count in read_group}
         for project in self:
             project.is_milestone_exceeded = bool(mapped_count.get(project.id, 0))
+
+    @api.depends_context('company')
+    @api.depends('company_id')
+    def _compute_currency_id(self):
+        default_currency_id = self.env.company.currency_id
+        for project in self:
+            project.currency_id = project.company_id.currency_id or default_currency_id
 
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):
@@ -790,22 +825,42 @@ class Project(models.Model):
 
     @api.model
     def _create_analytic_account_from_values(self, values):
-        company = self.env['res.company'].browse(values.get('company_id')) if values.get('company_id') else self.env.company
+        company = self.env['res.company'].browse(values.get('company_id', False))
+        plan = company.analytic_plan_id
+        if not plan:
+            plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)], limit=1)
+            if not plan:
+                plan = self.env['account.analytic.plan'].sudo().create({
+                    'name': _('Default'),
+                    'company_id': False,
+                })
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
             'company_id': company.id,
             'partner_id': values.get('partner_id'),
-            'plan_id': company.analytic_plan_id.id,
+            'plan_id': plan.id,
         })
         return analytic_account
 
     def _create_analytic_account(self):
+        default_plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)], limit=1)
         for project in self:
+            company_id = False
+            if project.company_id:
+                plan = project.company_id.analytic_plan_id
+                company_id = project.company_id.id
+            elif default_plan:
+                plan = default_plan
+            else:
+                plan = self.env['account.analytic.plan'].create({
+                    'name': _('Default'),
+                    'company_id': False,
+                })
             analytic_account = self.env['account.analytic.account'].create({
                 'name': project.name,
-                'company_id': project.company_id.id,
+                'company_id': company_id,
                 'partner_id': project.partner_id.id,
-                'plan_id': project.company_id.analytic_plan_id.id,
+                'plan_id': plan.id,
                 'active': True,
             })
             project.write({'analytic_account_id': analytic_account.id})

@@ -36,7 +36,19 @@ class TestProjectProfitabilityCommon(TransactionCase):
             'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
             'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
         }
-
+        cls.foreign_currency = cls.env['res.currency'].create({
+            'name': 'Chaos orb',
+            'symbol': '☺',
+            'rounding': 0.001,
+            'position': 'after',
+            'currency_unit_label': 'Chaos',
+            'currency_subunit_label': 'orb',
+        })
+        cls.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'rate': '5.0',
+            'currency_id': cls.foreign_currency.id,
+        })
 
 class TestProfitability(TestProjectProfitabilityCommon):
     def test_project_profitability(self):

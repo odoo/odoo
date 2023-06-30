@@ -135,6 +135,9 @@ class ProjectCustomerPortal(CustomerPortal):
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
         return request.render("project.portal_my_project", values)
 
+    def _get_project_sharing_company(self, project):
+        return project.company_id or request.env.user.company_id
+
     def _prepare_project_sharing_session_info(self, project, task=None):
         session_info = request.env['ir.http'].session_info()
         user_context = dict(request.env.context) if request.session.uid else {}
@@ -150,7 +153,8 @@ class ProjectCustomerPortal(CustomerPortal):
             "translations": translation_hash,
         }
 
-        project_company = project.company_id
+        project_company = self._get_project_sharing_company(project)
+
         session_info.update(
             cache_hashes=cache_hashes,
             action_name=project.action_project_sharing(),

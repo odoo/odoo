@@ -12,6 +12,7 @@ class TestAnalyticAccount(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.analytic_plan_offset = cls.env['account.analytic.plan'].search_count([('company_id', '=', False)])
         cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({
             'name': 'Plan 1',
             'default_applicability': 'unavailable',
@@ -75,17 +76,17 @@ class TestAnalyticAccount(TransactionCase):
         """ Test that the plans with the good appliability are returned without if no options are given """
         kwargs = {}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(1, len(plans_json), "Only the Default plan should be available")
+        self.assertEqual(1, len(plans_json) - self.analytic_plan_offset, "Only the Default plan and the demo data plans should be available")
 
         self.analytic_plan_1.write({'default_applicability': 'mandatory'})
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(2, len(plans_json), "All root plans should be available")
+        self.assertEqual(2, len(plans_json) - self.analytic_plan_offset, "All root plans should be available")
 
     def test_get_plans_with_option(self):
         """ Test the plans returned with applicability rules and options """
         kwargs = {'business_domain': 'general'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(1, len(plans_json), "Only the Default plan should be available")
+        self.assertEqual(1, len(plans_json) - self.analytic_plan_offset, "Only the Default plan and the demo data plans should be available")
 
         applicability = self.env['account.analytic.applicability'].create({
             'business_domain': 'general',
@@ -93,20 +94,20 @@ class TestAnalyticAccount(TransactionCase):
             'applicability': 'mandatory'
         })
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(2, len(plans_json), "All root plans should be available")
+        self.assertEqual(2, len(plans_json) - self.analytic_plan_offset, "All root plans should be available")
 
         self.analytic_plan_1.write({'default_applicability': 'mandatory'})
         applicability.write({'applicability': 'unavailable'})
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(1, len(plans_json), "Plan 1 should be unavailable")
+        self.assertEqual(1, len(plans_json) - self.analytic_plan_offset, "Plan 1 should be unavailable")
 
         kwargs = {'business_domain': 'purchase_order'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(2, len(plans_json), "Both plans should be available")
+        self.assertEqual(2, len(plans_json) - self.analytic_plan_offset, "Both plans should be available")
 
         kwargs = {'applicability': 'optional'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
-        self.assertEqual(2, len(plans_json), "All root plans should be available")
+        self.assertEqual(2, len(plans_json) - self.analytic_plan_offset, "All root plans should be available")
 
     def test_analytic_distribution_model(self):
         """ Test the distribution returned from the distribution model """
@@ -187,5 +188,5 @@ class TestAnalyticAccount(TransactionCase):
         })
         self.analytic_account_1 = self.env['account.analytic.account'].create({'name': 'Child Account', 'plan_id': self.analytic_sub_sub_plan.id})
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
-        self.assertEqual(2, len(plans_json),
+        self.assertEqual(2, len(plans_json) - self.analytic_plan_offset,
                          "The parent plan should be available even if the analytic account is set on child of third generation")
