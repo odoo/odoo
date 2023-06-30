@@ -6,6 +6,7 @@ from unittest.mock import patch
 import odoo
 from odoo.tests import HttpCase
 from odoo import http
+from odoo.exceptions import AccessError
 
 class TestAuthSignupFlow(HttpCase):
 
@@ -52,3 +53,13 @@ class TestAuthSignupFlow(HttpCase):
             self.assertTrue(new_user)
             mail = self.env['mail.message'].search([('message_type', '=', 'email'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
             self.assertTrue(mail, "The new user must be informed of his registration")
+
+    def test_compute_signup_url(self):
+        user = self.env.ref('base.user_demo')
+        user.groups_id -= self.env.ref('base.group_partner_manager')
+
+        partner = self.env.ref('base.partner_demo_portal')
+        partner.signup_prepare()
+
+        with self.assertRaises(AccessError):
+            partner.with_user(user.id).signup_url
