@@ -32,6 +32,8 @@ import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
+import { Domain } from "@web/core/domain";
+
 const { isDefined } = helpers;
 
 export default class PivotCorePlugin extends CorePlugin {
@@ -181,7 +183,7 @@ export default class PivotCorePlugin extends CorePlugin {
         return {
             colGroupBys: [...def.metaData.colGroupBys],
             context: { ...def.searchParams.context },
-            domain: [...def.searchParams.domain],
+            domain: def.searchParams.domain,
             id,
             measures: [...def.metaData.activeMeasures],
             model: def.metaData.resModel,
@@ -266,7 +268,6 @@ export default class PivotCorePlugin extends CorePlugin {
             definition,
             fieldMatching,
         };
-
         this.history.update("pivots", pivots);
     }
 
@@ -438,6 +439,7 @@ export default class PivotCorePlugin extends CorePlugin {
             data.pivots[id] = JSON.parse(JSON.stringify(this.getPivotDefinition(id)));
             data.pivots[id].measures = data.pivots[id].measures.map((elt) => ({ field: elt }));
             data.pivots[id].fieldMatching = this.pivots[id].fieldMatching;
+            data.pivots[id].domain = new Domain(data.pivots[id].domain).toJson();
         }
         data.pivotNextId = this.nextId;
     }

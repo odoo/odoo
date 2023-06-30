@@ -536,6 +536,39 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.deepEqual(model.exportData().pivots, spreadsheetData.pivots);
     });
 
+    QUnit.test("can import (export) contextual domain", async (assert) => {
+        const spreadsheetData = {
+            pivots: {
+                1: {
+                    id: "1",
+                    colGroupBys: [],
+                    domain: '[("foo", "=", uid)]',
+                    measures: [{ field: "probability" }],
+                    model: "partner",
+                    rowGroupBys: [],
+                    name: "A pivot",
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, args) {
+                if (args.method === "read_group") {
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.step("read_group");
+                }
+            },
+        });
+        setCellContent(model, "A1", '=ODOO.PIVOT(1, "probability")'); // load the data (and check the rpc domain)
+        await nextTick();
+        assert.strictEqual(
+            model.exportData().pivots[1].domain,
+            '[("foo", "=", uid)]',
+            "the domain is exported with the dynamic parts"
+        );
+        assert.verifySteps(["read_group"]);
+    });
+
     QUnit.test("Can group by many2many field ", async (assert) => {
         const { model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `

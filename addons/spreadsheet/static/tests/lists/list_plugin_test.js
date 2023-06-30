@@ -584,6 +584,37 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         }
     );
 
+    QUnit.test("can import (export) contextual domain", async function (assert) {
+        const spreadsheetData = {
+            lists: {
+                1: {
+                    id: 1,
+                    columns: ["foo", "contact_name"],
+                    domain: '[("foo", "=", uid)]',
+                    model: "partner",
+                    orderBy: [],
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, args) {
+                if (args.method === "search_read") {
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.step("search_read");
+                }
+            },
+        });
+        setCellContent(model, "A1", '=ODOO.LIST("1", "1", "foo")');
+        await nextTick();
+        assert.strictEqual(
+            model.exportData().lists[1].domain,
+            '[("foo", "=", uid)]',
+            "the domain is exported with the dynamic parts"
+        );
+        assert.verifySteps(["search_read"]);
+    });
+
     QUnit.test(
         "Load list spreadsheet with models that cannot be accessed",
         async function (assert) {

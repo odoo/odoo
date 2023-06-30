@@ -25,6 +25,7 @@ import { useGetDomainTreeDescription } from "@web/core/domain_selector/utils";
 const { DateTime } = luxon;
 
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
+/** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 /** @typedef {import("../views/utils").OrderTerm} OrderTerm */
 
 /**
@@ -413,13 +414,20 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * @returns {DomainListRepr} should be imported from domain.js?
+     * @returns {DomainListRepr}
      */
     get domain() {
         if (!this._domain) {
             this._domain = this._getDomain();
         }
         return deepCopy(this._domain);
+    }
+
+    /**
+     * @returns {string}
+     */
+    get domainString() {
+        return this._getDomain({ raw: true }).toString();
     }
 
     get domainEvalContext() {
