@@ -2,7 +2,7 @@
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
-const { parse } = spreadsheet;
+const { parse, iterateAstNodes } = spreadsheet;
 
 /**
  * @typedef {Object} OdooFunctionDescription
@@ -47,24 +47,7 @@ export function getOdooFunctions(formula, functionNames) {
  * @returns {Array<OdooFunctionDescription>}
  */
 function _getOdooFunctionsFromAST(ast, functionNames) {
-    switch (ast.type) {
-        case "UNARY_OPERATION":
-            return _getOdooFunctionsFromAST(ast.operand, functionNames);
-        case "BIN_OPERATION": {
-            return _getOdooFunctionsFromAST(ast.left, functionNames).concat(
-                _getOdooFunctionsFromAST(ast.right, functionNames)
-            );
-        }
-        case "FUNCALL": {
-            const functionName = ast.value.toUpperCase();
-
-            if (functionNames.includes(functionName)) {
-                return [{ functionName, args: ast.args, isMatched: true }];
-            } else {
-                return ast.args.map((arg) => _getOdooFunctionsFromAST(arg, functionNames)).flat();
-            }
-        }
-        default:
-            return [];
-    }
+    return iterateAstNodes(ast)
+        .filter((ast) => ast.type === "FUNCALL" && functionNames.includes(ast.value.toUpperCase()))
+        .map((ast) => ({ functionName: ast.value.toUpperCase(), args: ast.args, isMatched: true }));
 }
