@@ -12,7 +12,7 @@
             <field name="limit_categories">False</field>
         </record>
 
-        <function model="pos.config" name="_set_tips_after_payment_if_country_custom">
+        <function model="pos.config" name="_setup_main_restaurant_defaults">
             <value eval="[ref('pos_config_main_restaurant')]"/>
         </function>
     </data>

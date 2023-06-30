@@ -5,7 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.osv.expression import OR
 from odoo.exceptions import ValidationError, UserError
 
@@ -668,6 +668,34 @@ class PosConfig(models.Model):
         if self.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
         return domain
+
+    def _link_same_non_cash_payment_methods_if_exists(self, source_config_ref_id):
+        src_cfg = self.env.ref(source_config_ref_id, raise_if_not_found=False)
+        if src_cfg and src_cfg.company_id == self.company_id:
+            self._link_same_non_cash_payment_methods(src_cfg)
+
+    def _link_same_non_cash_payment_methods(self, source_config):
+        pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
+        if pms:
+            self.payment_method_ids = [Command.link(pm.id) for pm in pms]
+
+    def _ensure_cash_payment_method(self, journal_code, name):
+        self.ensure_one()
+        if not self.company_id.chart_template or self.payment_method_ids.filtered('is_cash_count'):
+            return
+        company_id = self.company_id.id
+        cash_journal = self.env['account.journal'].create({
+            'name': name,
+            'code': journal_code,
+            'type': 'cash',
+            'company_id': company_id,
+        })
+        cash_pm = self.env['pos.payment.method'].create({
+            'name': name,
+            'journal_id': cash_journal.id,
+            'company_id': company_id,
+        })
+        self.payment_method_ids = [Command.link(cash_pm.id)]
 
     def get_limited_products_loading(self, fields):
         tables, where_clause, params = self.env['product.product']._where_calc(
