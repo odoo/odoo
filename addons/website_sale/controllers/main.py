@@ -857,9 +857,10 @@ class WebsiteSale(http.Controller):
                 'suggested_products': order._cart_accessories()
             }
         )
-        values['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render_template(
-            "website_sale.short_cart_summary", {
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            "website_sale.total", {
                 'website_sale_order': order,
+                'no_rowspan': 1,
             }
         )
 
