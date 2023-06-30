@@ -184,6 +184,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -511,6 +520,14 @@ msgstr ""
 msgid ""
 "<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
 "'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid ""
+"<span attrs=\"{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}\" class=\"fst-italic\">\n"
+"                                        A second payment will be created in the destination journal.\n"
+"                                    </span>"
 msgstr ""
 
 #. module: account
@@ -993,11 +1010,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
-msgid "<strong>Total Rounded</strong>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -1128,12 +1140,6 @@ msgid "A second payment has been created:"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-msgid ""
-"A second payment will be created automatically in the destination journal."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -1210,6 +1216,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
 msgid "Account Currency"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
+msgid "Account Dashboard Onboarding"
 msgstr ""
 
 #. module: account
@@ -1290,11 +1301,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Account Number"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
-msgid "Account Onboarding Create Invoice State Flag"
 msgstr ""
 
 #. module: account
@@ -1557,8 +1563,8 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-#: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
+#: code:addons/account/models/onboarding_onboarding_step.py:0
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
 #, python-format
 msgid "Accounting Periods"
 msgstr ""
@@ -1801,7 +1807,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_bank_account
 msgid "Add a bank account"
 msgstr ""
 
@@ -2318,7 +2324,7 @@ msgid "Applicability"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
+#: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "Apply"
 msgstr ""
@@ -2606,7 +2612,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
-#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_bank_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
 msgstr ""
@@ -2651,7 +2657,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.ui.menu,name:account.menu_account_supplier_accounts
-#: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Bank Accounts"
 msgstr ""
@@ -3036,10 +3041,10 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
+#: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -3279,6 +3284,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Cash basis transition account"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Cash: Balance"
@@ -3356,11 +3369,11 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
+#: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_account_form
 #: model:ir.model.fields,field_description:account.field_account_report__chart_template
 #: model:ir.ui.menu,name:account.menu_action_account_form
-#: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
 #, python-format
 msgid "Chart of Accounts"
 msgstr ""
@@ -3376,8 +3389,8 @@ msgid "Chart of accounts"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
-msgid "Chart of accounts set."
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_chart_of_accounts
+msgid "Chart of accounts set!"
 msgstr ""
 
 #. module: account
@@ -3443,8 +3456,8 @@ msgid "Children Taxes"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
-#: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_sales_tax
+#: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 msgid "Choose a default sales tax for your products."
 msgstr ""
 
@@ -3456,12 +3469,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "Close"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__closed
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__closed
-msgid "Closed"
 msgstr ""
 
 #. module: account
@@ -3611,6 +3618,11 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: account
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
+msgid "Company Data"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
 msgstr ""
@@ -3679,8 +3691,15 @@ msgid "Configuration review"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Configure your document layout"
 msgstr ""
 
 #. module: account
@@ -3695,17 +3714,12 @@ msgid "Confirm"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "Congratulations! You are all set."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Connect"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_bank_account
 msgid "Connect your financial accounts in seconds."
 msgstr ""
 
@@ -3864,8 +3878,8 @@ msgid "Coverage"
 msgstr ""
 
 #. module: account
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_create_invoice
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Create"
 msgstr ""
@@ -3881,7 +3895,7 @@ msgid "Create Entry"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_create_invoice
 msgid "Create Invoice"
 msgstr ""
 
@@ -4003,7 +4017,9 @@ msgid "Create a vendor credit note"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_open_account_onboarding_create_invoice
+#. odoo-python
+#: code:addons/account/models/onboarding_onboarding_step.py:0
+#, python-format
 msgid "Create first invoice"
 msgstr ""
 
@@ -4034,7 +4050,7 @@ msgid "Create the first cash rounding"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_create_invoice
 msgid "Create your first invoice."
 msgstr ""
 
@@ -4423,6 +4439,8 @@ msgid "Customer Payment Terms"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_payments
+#: model:ir.ui.menu,name:account.menu_action_account_payments_receivable
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Customer Payments"
@@ -4484,13 +4502,13 @@ msgid "Customers"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_base_document_layout
 msgid "Customize"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
-msgid "Customize the look of your invoices."
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_base_document_layout
+msgid "Customize the look of your documents."
 msgstr ""
 
 #. module: account
@@ -4541,8 +4559,8 @@ msgid "Data consistency check"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -4620,6 +4638,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__nb_days
 msgid "Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__days_sales_outstanding
+#: model:ir.model.fields,field_description:account.field_res_users__days_sales_outstanding
+msgid "Days Sales Outstanding (DSO)"
 msgstr ""
 
 #. module: account
@@ -4805,8 +4829,8 @@ msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
-msgid "Define your fiscal years &amp; tax returns periodicity."
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
+msgid "Define your fiscal years & tax returns periodicity."
 msgstr ""
 
 #. module: account
@@ -5177,6 +5201,11 @@ msgid "Document Digitization"
 msgstr ""
 
 #. module: account
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
+msgid "Documents Layout"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr ""
@@ -5193,16 +5222,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_send__mode__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_invoice_layout_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_sale_tax_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bank_data_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bill_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_taxes_state__done
 msgid "Done"
 msgstr ""
 
@@ -5648,8 +5667,8 @@ msgid "Example:"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -5680,8 +5699,8 @@ msgid "Expects a Chart of Accounts"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__expense
@@ -5859,7 +5878,7 @@ msgid "First New Sequence"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_create_invoice
 msgid "First invoice sent!"
 msgstr ""
 
@@ -6104,6 +6123,34 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Foreign tax account (%s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Foreign tax account advance payment (%s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Foreign tax account payable (%s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Foreign tax account receivable (%s)"
 msgstr ""
 
 #. module: account
@@ -6691,6 +6738,11 @@ msgid "Import Template for Journal Items"
 msgstr ""
 
 #. module: account
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
+msgid "Import Vendor Bills"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
 msgid "Import in .csv, .xls, and .xlsx format"
 msgstr ""
@@ -6897,11 +6949,6 @@ msgid "Insert your terms & conditions here..."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
-msgid "Install new module"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__integer
 msgid "Integer"
@@ -7017,11 +7064,6 @@ msgid "Invalid fiscal year last day"
 msgstr ""
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr ""
@@ -7097,11 +7139,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
-msgid "Invoice Layout"
 msgstr ""
 
 #. module: account
@@ -7327,8 +7364,14 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding,name:account.onboarding_onboarding_account_invoice
+msgid "Invoicing Onboarding"
 msgstr ""
 
 #. module: account
@@ -7468,8 +7511,8 @@ msgid "Journal Currency"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -7488,8 +7531,8 @@ msgid "Journal Entries by Date"
 msgstr ""
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -7710,20 +7753,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__6
 msgid "June"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_invoice_layout_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_sale_tax_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bank_data_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bill_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__just_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_taxes_state__just_done
-msgid "Just done"
 msgstr ""
 
 #. module: account
@@ -7993,10 +8022,20 @@ msgid "Let your customers pay their invoices online"
 msgstr ""
 
 #. module: account
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_setup_bill
+msgid "Let's do it"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Let's send the invoice."
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_company_data
+msgid "Let's start!"
 msgstr ""
 
 #. module: account
@@ -8052,6 +8091,11 @@ msgid "Load More Limit"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
+msgid "Lock Date Message"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
@@ -8078,7 +8122,8 @@ msgid "Looks good. Let's continue."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_base_document_layout
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_company_data
 msgid "Looks great!"
 msgstr ""
 
@@ -8435,12 +8480,6 @@ msgid "Monetary"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__monetary_without_symbol
-#: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__monetary_without_symbol
-msgid "Monetary Without Symbol"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__money_transfer_service
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__money_transfer_service
 msgid "Money Transfer Service"
@@ -8536,6 +8575,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_root__name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_name
 #: model:ir.model.fields,field_description:account.field_account_tax_group__name
+#: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Name"
 msgstr ""
@@ -8603,16 +8643,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: account
@@ -8716,13 +8746,6 @@ msgid "No possible action found with the selected lines."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
-msgid ""
-"No tax template found for this country. Please install the corresponding "
-"localization module."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
 msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
@@ -8795,20 +8818,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
 msgid "Not Paid"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_invoice_layout_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_sale_tax_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bank_data_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_bill_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_coa_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_fy_data_state__not_done
-#: model:ir.model.fields.selection,name:account.selection__res_company__account_setup_taxes_state__not_done
-msgid "Not done"
 msgstr ""
 
 #. module: account
@@ -9003,6 +9012,53 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
+msgid "Onboarding Accounting Periods"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_bank_account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_chart_of_accounts
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_sales_tax
+msgid "Onboarding Bank Account"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
+msgid "Onboarding Company Data"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_create_invoice
+msgid "Onboarding Create Invoice"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
+msgid "Onboarding Documents Layout"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_setup_bill
+msgid "Onboarding Step Image"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
+msgid "Onboarding Taxes"
 msgstr ""
 
 #. module: account
@@ -9381,11 +9437,17 @@ msgid "PDF File"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "PROFORMA"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_paid
 #: model:mail.message.subtype,name:account.mt_invoice_paid
@@ -9459,6 +9521,7 @@ msgid "Partial Reconcile"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__partial
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 msgid "Partially Paid"
 msgstr ""
@@ -9715,6 +9778,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_term__name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__payment_id
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -9810,13 +9874,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#: model:ir.actions.act_window,name:account.action_account_payments
-#: model:ir.actions.act_window,name:account.action_account_payments_payable
 #: model:ir.model,name:account.model_account_payment
 #: model:ir.model.fields,field_description:account.field_account_move__payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_ids
-#: model:ir.ui.menu,name:account.menu_action_account_payments_payable
-#: model:ir.ui.menu,name:account.menu_action_account_payments_receivable
 #: model:ir.ui.menu,name:account.root_payment_menu
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
@@ -10049,6 +10109,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
 msgid "Preceding Subtotal"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
+msgid "Prefix Groups Threshold"
 msgstr ""
 
 #. module: account
@@ -10317,19 +10382,6 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
 msgstr ""
 
 #. module: account
@@ -10784,6 +10836,7 @@ msgid "Reverse and Create Invoice"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10791,8 +10844,8 @@ msgid "Reversed"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
-#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_default_taxes
 msgid "Review"
 msgstr ""
 
@@ -10817,7 +10870,11 @@ msgid "Round per Line"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__rounding
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+#, python-format
 msgid "Rounding"
 msgstr ""
 
@@ -10945,13 +11002,15 @@ msgid "Sales Receipt Created"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
+#: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
+#. odoo-python
+#: code:addons/account/models/onboarding_onboarding_step.py:0
+#, python-format
 msgid "Sales tax"
 msgstr ""
 
@@ -10974,6 +11033,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Sample data"
@@ -11397,13 +11457,30 @@ msgid "Set as Checked"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_default_taxes
 msgid "Set default Taxes for sales and purchase transactions."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
+#: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_sales_tax
 msgid "Set taxes"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
+msgid "Set up your chart of accounts and record initial balances."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Set your company data"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_company_data
+msgid "Set your company's data for documents header/footer."
 msgstr ""
 
 #. module: account
@@ -11424,11 +11501,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
 msgid "Setup"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
-msgid "Setup your chart of accounts and record initial balances."
 msgstr ""
 
 #. module: account
@@ -11644,56 +11716,6 @@ msgid "Starting Balance"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
-msgid "State of the account dashboard onboarding panel"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
-msgid "State of the account invoice onboarding panel"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
-msgid "State of the onboarding Taxes step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
-msgid "State of the onboarding bank data step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
-msgid "State of the onboarding bill step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
-msgid "State of the onboarding charts of account step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
-msgid "State of the onboarding create invoice step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
-msgid "State of the onboarding fiscal year step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
-msgid "State of the onboarding invoice layout step"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
-msgid "State of the onboarding sale tax step"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_id
 #: model:ir.model.fields,field_description:account.field_account_move__statement_id
@@ -11781,10 +11803,15 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
-#: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
-#: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_bank_account
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_setup_bill
 msgid "Step Completed!"
+msgstr ""
+
+#. module: account
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_fiscal_year
+msgid "Step completed!"
 msgstr ""
 
 #. module: account
@@ -12198,14 +12225,14 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/company.py:0
+#: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__tax_ids
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__taxes
 #: model:ir.ui.menu,name:account.menu_action_tax_form
-#: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
-#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_default_taxes
+#: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_sales_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -12228,8 +12255,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
-msgid "Taxes set."
+#: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_default_taxes
+msgid "Taxes set!"
 msgstr ""
 
 #. module: account
@@ -12291,7 +12318,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Terms"
 msgstr ""
 
@@ -12344,15 +12370,6 @@ msgid ""
 "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
 "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-#, python-format
-msgid ""
-"%s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
 
 #. module: account
@@ -12620,14 +12637,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
-"The Journal Entry will be accounted on %(accounting_date)s upon posting."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "The date of some related entries is protected by a lock date"
+"The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
 
 #. module: account
@@ -13629,7 +13639,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
@@ -13703,13 +13712,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Residual in Currency"
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
-#, python-format
-msgid "Total Rounded"
 msgstr ""
 
 #. module: account
@@ -14356,6 +14358,8 @@ msgid "Vendor Payment Terms"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_payments_payable
+#: model:ir.ui.menu,name:account.menu_action_account_payments_payable
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -14410,6 +14414,7 @@ msgid "Warning for %s"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
@@ -14631,13 +14636,6 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
 msgstr ""
 
 #. module: account
@@ -15221,6 +15219,7 @@ msgid "You must specify the Profit Account (company dependent)"
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
@@ -15264,6 +15263,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_to
 msgid "Zip Range To"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner__days_sales_outstanding
+#: model:ir.model.fields,help:account.field_res_users__days_sales_outstanding
+msgid ""
+"[(Total Receivable/Total Revenue) * number of days since the first invoice] "
+"for this customer"
 msgstr ""
 
 #. module: account
@@ -15379,6 +15386,11 @@ msgid "e.g. Bank Fees"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "e.g. Cash"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
 msgstr ""
@@ -15483,11 +15495,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
-msgid "name"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr ""
@@ -15517,11 +15524,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
-msgid "paid"
 msgstr ""
 
 #. module: account
