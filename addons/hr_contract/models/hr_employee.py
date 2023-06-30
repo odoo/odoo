@@ -98,7 +98,7 @@ class Employee(models.Model):
         return self.search(['|', ('active', '=', True), ('active', '=', False)])._get_contracts(date_from, date_to, states=states)
 
     def _get_unusual_days(self, date_from, date_to=None):
-        employee_contracts = self.env['hr.contract'].search([
+        employee_contracts = self.env['hr.contract'].sudo().search([
             ('state', '!=', 'cancel'),
             ('employee_id', '=', self.id),
             ('date_start', '<=', date_to),
