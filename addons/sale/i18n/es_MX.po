@@ -290,7 +290,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        ola,\n"
+"        Hola,\n"
 "        <br><br>\n"
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
 "        Se ha confirmado su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
@@ -518,7 +518,7 @@ msgstr ""
 "            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> está disponible.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            cotización<span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"           <t t-out=\"doc_name or ''\"> cotización</t><span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -4250,7 +4250,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr "El token de acceso es inválido."
+msgstr "El token de acceso no es válido."
 
 #. module: sale
 #. odoo-python
@@ -4392,7 +4392,7 @@ msgstr ""
 "\n"
 "Los motivos de este comportamiento pueden ser:\n"
 "- Debe entregar sus productos antes de facturarlos.\n"
-"- Debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\" y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades pedidas\". Para Servicios, debe modificar la política de facturación de servicios a \"Prepagado\"."
+"- Debe modificar la política de facturación de su producto: Abra el producto, vaya a la pestaña \"Ventas\" y modifique la política de facturación de \"cantidades entregadas\" a \"cantidades ordenadas\". Para servicios, debe modificar la política de facturación de servicios a \"Prepagado\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

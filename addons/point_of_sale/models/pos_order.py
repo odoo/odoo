@@ -735,9 +735,6 @@ class PosOrder(models.Model):
                         'display_type': 'rounding',
                     })
 
-                total_amount_currency += amount_currency
-                total_balance += balance
-
         # Stock.
         if self.company_id.anglo_saxon_accounting and self.picking_ids.ids:
             stock_moves = self.env['stock.move'].sudo().search([
@@ -765,15 +762,26 @@ class PosOrder(models.Model):
                     'balance': -balance,
                 })
 
-        # Payment terms.
-        pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
-        aml_vals_list_per_nature['payment_terms'].append({
-            'name': f"{pos_receivable_account.code} {pos_receivable_account.code}",
-            'account_id': pos_receivable_account.id,
-            'currency_id': self.currency_id.id,
-            'amount_currency': -total_amount_currency,
-            'balance': -total_balance,
-        })
+        for payment_id in self.payment_ids:
+            is_split_transaction = payment_id.payment_method_id.split_transactions
+            if is_split_transaction:
+                reversed_move_receivable_account_id = self.partner_id.property_account_receivable_id
+            else:
+                reversed_move_receivable_account_id = payment_id.payment_method_id.receivable_account_id or self.company_id.account_default_pos_receivable_account_id
+
+            aml_vals_entry_found = [aml_entry for aml_entry in aml_vals_list_per_nature['payment_terms'] if aml_entry['account_id'] == reversed_move_receivable_account_id.id]
+            if aml_vals_entry_found and not is_split_transaction:
+                aml_vals_entry_found[0]['amount_currency'] += self.session_id._amount_converter(payment_id.amount, self.date_order, False)
+                aml_vals_entry_found[0]['balance'] += payment_id.amount
+            else:
+                aml_vals_list_per_nature['payment_terms'].append({
+                    'partner_id': self.partner_id.id if is_split_transaction else False,
+                    'name': f"{reversed_move_receivable_account_id.code} {reversed_move_receivable_account_id.code}",
+                    'account_id': reversed_move_receivable_account_id.id,
+                    'currency_id': self.currency_id.id,
+                    'amount_currency': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
+                    'balance': payment_id.amount,
+                })
 
         return aml_vals_list_per_nature
 
@@ -1166,6 +1174,11 @@ class PosOrderLine(models.Model):
                     pl[2]['id'] = pl[2]['server_id']
                     del pl[2]['server_id']
         return super().write(values)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_order_state(self):
+        if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
+            raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
 
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):
