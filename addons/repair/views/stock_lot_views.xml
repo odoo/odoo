@@ -9,19 +9,28 @@
                 <button class="oe_stat_button" name="action_view_ro" type="object" icon="fa-wrench" help="Repair Orders"
                         attrs="{'invisible': ['|', ('repair_order_count', '=', 0), ('display_complete', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="repair_order_count" widget="statinfo" nolabel="1" class="mr4"/>
-                            <span class="o_stat_text">Used</span>
-                        </span>
-                        <span class="o_stat_text">In Repairs</span>
+                        <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                            <span class="o_stat_text">RO Parts:</span>
+                            <span class="o_stat_value">
+                                <field name="repair_order_count" widget="statinfo" nolabel="1" class="mr4"/>
+                            </span>
+                        </div>
                     </div>
                 </button>
                 <button name="action_lot_open_repairs" icon="fa-wrench" class="oe_stat_button" type="object">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="repaired_count" widget="statinfo" nolabel="1" class="mr4"/>
-                        </span>
-                        <span class="o_stat_text">Repaired</span>
+                        <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                          <span class="o_stat_text">Todo:</span>
+                          <span class="o_stat_value">
+                              <field name="in_repair_count" widget="statinfo" nolabel="1" class="mr4"/>
+                          </span>
+                        </div>
+                        <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                          <span class="o_stat_text">Done:</span>
+                          <span class="o_stat_value">
+                              <field name="repaired_count" widget="statinfo" nolabel="1" class="mr4"/>
+                          </span>
+                        </div>
                     </div>
                 </button>
             </xpath>

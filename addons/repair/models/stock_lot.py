@@ -8,6 +8,7 @@ class StockLot(models.Model):
 
     repair_order_ids = fields.Many2many('repair.order', string="Repair Orders", compute="_compute_repair_order_ids")
     repair_order_count = fields.Integer('Repair order count', compute="_compute_repair_order_ids")
+    in_repair_count = fields.Integer('In repair count', compute="_compute_in_repair_count")
     repaired_count = fields.Integer('Repaired count', compute='_compute_repaired_count')
 
     @api.depends('name')
@@ -19,9 +20,17 @@ class StockLot(models.Model):
             lot.repair_order_ids = repair_orders[lot.id]
             lot.repair_order_count = len(lot.repair_order_ids)
 
-    def _compute_repaired_count(self):
+    def _compute_in_repair_count(self):
+        lot_data = self.env['repair.order']._read_group([('lot_id', 'in', self.ids), ('state', 'not in', ('done', 'cancel'))], ['lot_id'], ['__count'])
+        result = {lot.id: count for lot, count in lot_data}
         for lot in self:
-            lot.repaired_count = len(self.env['repair.order'].search([('lot_id', '=', self.id), ('state', '=', 'done')]))
+            lot.in_repair_count = result.get(lot.id, 0)
+
+    def _compute_repaired_count(self):
+        lot_data = self.env['repair.order']._read_group([('lot_id', 'in', self.ids), ('state', '=', 'done')], ['lot_id'], ['__count'])
+        result = {lot.id: count for lot, count in lot_data}
+        for lot in self:
+            lot.repaired_count = result.get(lot.id, 0)
 
     def action_lot_open_repairs(self):
         action = self.env["ir.actions.actions"]._for_xml_id("repair.action_repair_order_tree")
