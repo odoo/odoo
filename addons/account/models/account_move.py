@@ -1747,7 +1747,7 @@ class AccountMove(models.Model):
             if move.invoice_cash_rounding_id.strategy == 'add_invoice_line' and not move.invoice_cash_rounding_id.profit_account_id:
                 return {'warning': {
                     'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
-                    'message': _("You must specifiy the Profit Account (company dependent)")
+                    'message': _("You must specify the Profit Account (company dependent)")
                 }}
 
     # -------------------------------------------------------------------------
