@@ -3,6 +3,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { Domain } from "@web/core/domain";
 
 const { CorePlugin } = spreadsheet;
 
@@ -140,6 +141,9 @@ export default class OdooChartCorePlugin extends CorePlugin {
                 for (const figure of sheet.figures) {
                     if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
                         figure.data.fieldMatching = this.getChartFieldMatch(figure.id);
+                        figure.data.searchParams.domain = new Domain(
+                            figure.data.searchParams.domain
+                        ).toJson();
                     }
                 }
             }

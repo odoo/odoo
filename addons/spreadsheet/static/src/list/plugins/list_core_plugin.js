@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
+import { Domain } from "@web/core/domain";
 
 /**
  * @typedef {Object} ListDefinition
@@ -182,7 +183,7 @@ export default class ListCorePlugin extends CorePlugin {
         const def = this.lists[id].definition;
         return {
             columns: [...def.metaData.columns],
-            domain: [...def.searchParams.domain],
+            domain: def.searchParams.domain,
             model: def.metaData.resModel,
             context: { ...def.searchParams.context },
             orderBy: [...def.searchParams.orderBy],
@@ -415,6 +416,7 @@ export default class ListCorePlugin extends CorePlugin {
         data.lists = {};
         for (const id in this.lists) {
             data.lists[id] = JSON.parse(JSON.stringify(this.getListDefinition(id)));
+            data.lists[id].domain = new Domain(data.lists[id].domain).toJson();
             data.lists[id].fieldMatching = this.lists[id].fieldMatching;
         }
         data.listNextId = this.nextId;

@@ -226,6 +226,21 @@ QUnit.module("domain", {}, () => {
         );
     });
 
+    QUnit.test("toJson", function (assert) {
+        assert.deepEqual(new Domain([]).toJson(), []);
+        assert.deepEqual(new Domain("[]").toJson(), []);
+        assert.deepEqual(new Domain([["a", "=", 3]]).toJson(), [["a", "=", 3]]);
+        assert.deepEqual(new Domain('[("a", "=", 3)]').toJson(), [["a", "=", 3]]);
+        assert.strictEqual(
+            new Domain('[("user_id", "=", uid)]').toJson(),
+            '[("user_id", "=", uid)]'
+        );
+        assert.strictEqual(
+            new Domain('[("date", "=", context_today())]').toJson(),
+            '[("date", "=", context_today())]'
+        );
+    });
+
     QUnit.test("implicit &", function (assert) {
         const domain = new Domain([
             ["a", "=", 3],

@@ -172,6 +172,30 @@ export class Domain {
     toList(context) {
         return evaluate(this.ast, context);
     }
+
+    /**
+     * Converts the domain into a human-readable format for JSON representation.
+     * If the domain does not contain any contextual value, it is converted to a list.
+     * Otherwise, it is returned as a string.
+     *
+     * The string format is less readable due to escaped double quotes.
+     * Example: "[\"&\",[\"user_id\",\"=\",uid],[\"team_id\",\"!=\",false]]"
+     * @returns {DomainListRepr | string}
+     */
+    toJson() {
+        try {
+            // Attempt to evaluate the domain without context
+            const evaluatedAsList = this.toList({});
+            const evaluatedDomain = new Domain(evaluatedAsList);
+            if (evaluatedDomain.toString() === this.toString()) {
+                return evaluatedAsList;
+            }
+            return this.toString();
+        } catch {
+            // The domain couldn't be evaluated due to contextual values
+            return this.toString();
+        }
+    }
 }
 
 /**
