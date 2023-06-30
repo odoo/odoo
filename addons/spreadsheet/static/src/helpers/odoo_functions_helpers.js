@@ -8,7 +8,6 @@ const { parse, iterateAstNodes } = spreadsheet;
  * @typedef {Object} OdooFunctionDescription
  * @property {string} functionName Name of the function
  * @property {Array<string>} args Arguments of the function
- * @property {boolean} isMatched True if the function is matched by the matcher function
  */
 
 /**
@@ -49,5 +48,5 @@ export function getOdooFunctions(formula, functionNames) {
 function _getOdooFunctionsFromAST(ast, functionNames) {
     return iterateAstNodes(ast)
         .filter((ast) => ast.type === "FUNCALL" && functionNames.includes(ast.value.toUpperCase()))
-        .map((ast) => ({ functionName: ast.value.toUpperCase(), args: ast.args, isMatched: true }));
+        .map((ast) => ({ functionName: ast.value.toUpperCase(), args: ast.args }));
 }
