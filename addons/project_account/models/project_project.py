@@ -2,22 +2,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from datetime import date
+from collections import defaultdict
 
-from odoo import models, _lt
+from odoo import models, _lt, fields
 
 
 class Project(models.Model):
     _inherit = 'project.project'
 
     def _add_purchase_items(self, profitability_items, with_action=True):
-        domain = [
+        domain = self._get_add_purchase_items_domain()
+        with_action = with_action and self.user_has_groups('account.group_account_invoice, account.group_account_readonly')
+        self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
+
+    def _get_add_purchase_items_domain(self):
+        return [
             ('move_type', 'in', ['in_invoice', 'in_refund']),
             ('parent_state', 'in', ['draft', 'posted']),
             ('price_subtotal', '>', 0)
         ]
-        with_action = with_action and self.user_has_groups('account.group_account_invoice, account.group_account_readonly')
-        self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
 
     def _get_costs_items_from_purchase(self, domain, profitability_items, with_action=True):
         """ This method is used in sale_project and project_purchase. Since project_account is the only common module (except project), we create the method here. """
@@ -31,10 +34,10 @@ class Project(models.Model):
         self._cr.execute(query_string, query_param)
         bills_move_line_read = self._cr.dictfetchall()
         if bills_move_line_read:
-            # Get conversion rate from currencies to currency of the project
+            # Get conversion rate from currencies to currency of the current company
             currency_ids = {bml['currency_id'] for bml in bills_move_line_read + [{'currency_id': self.currency_id.id}]}
-            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
-            conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
+            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
+            conversion_rates = {cid: self.currency_id.rate / rate_from for cid, rate_from in rates.items()}
             amount_invoiced = amount_to_invoice = 0.0
             move_ids = set()
             for moves_read in bills_move_line_read:
@@ -122,27 +125,42 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
-        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False)]
+        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
-        aal_other_search = self.env['account.analytic.line'].sudo().search_read(domain, ['id', 'amount'])
+        aal_other_search = self.env['account.analytic.line'].sudo().search_read(domain, ['id', 'amount', 'currency_id'])
         if not aal_other_search:
             return {
                 'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
                 'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},
             }
-        total_revenues = total_costs = 0.0
+        # dict of form  { company : {costs : float, revenues: float}}
+        dict_amount_per_currency_id = defaultdict(lambda: {'costs': 0.0, 'revenues': 0.0})
+        set_currency_ids = {self.currency_id.id}
         cost_ids = []
         revenue_ids = []
         for aal in aal_other_search:
+            set_currency_ids.add(aal['currency_id'][0])
             aal_amount = aal['amount']
             if aal_amount < 0.0:
-                total_costs += aal_amount
+                dict_amount_per_currency_id[aal['currency_id'][0]]['costs'] += aal_amount
                 cost_ids.append(aal['id'])
             else:
-                total_revenues += aal_amount
+                dict_amount_per_currency_id[aal['currency_id'][0]]['revenues'] += aal_amount
                 revenue_ids.append(aal['id'])
+
+        total_revenues = total_costs = 0.0
+        rates_per_currency_id = self.env['res.currency'].browse(set_currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
+        project_currency_rate = rates_per_currency_id[self.currency_id.id]
+        for currency_id, dict_amounts in dict_amount_per_currency_id.items():
+            if currency_id == self.currency_id.id:
+                total_revenues += dict_amounts['revenues']
+                total_costs += dict_amounts['costs']
+                continue
+            rate = project_currency_rate / rates_per_currency_id[currency_id]
+            total_revenues += self.currency_id.round(dict_amounts['revenues'] * rate)
+            total_costs += self.currency_id.round(dict_amounts['costs'] * rate)
 
         # we dont know what part of the numbers has already been billed or not, so we have no choice but to put everything under the billed/invoiced columns.
         # The to bill/to invoice ones will simply remain 0

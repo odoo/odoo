@@ -176,14 +176,13 @@ class AccountAnalyticPlan(models.Model):
 
     def _get_default(self):
         plan = self.env['account.analytic.plan'].sudo().search(
-            ['|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)],
-            limit=1)
+            [('company_id', '=', False)], limit=1)
         if plan:
             return plan
         else:
             return self.env['account.analytic.plan'].create({
                 'name': 'Default',
-                'company_id': self.env.company.id,
+                'company_id': False,
             })
 
 

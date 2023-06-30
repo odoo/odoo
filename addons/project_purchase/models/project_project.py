@@ -89,13 +89,14 @@ class Project(models.Model):
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('purchase.group_purchase_user'):
+            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'credit-card',
                 'text': _lt('Purchase Orders'),
-                'number': self.purchase_orders_count,
+                'number': self_sudo.purchase_orders_count,
                 'action_type': 'object',
                 'action': 'action_open_project_purchase_orders',
-                'show': self.purchase_orders_count > 0,
+                'show': self_sudo.purchase_orders_count > 0,
                 'sequence': 36,
             })
         return buttons
@@ -138,10 +139,10 @@ class Project(models.Model):
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and self.user_has_groups('purchase.group_purchase_user, account.group_account_invoice, account.group_account_readonly')
             if purchase_order_line_read:
-
-                # Get conversion rate from currencies to currency of the project
+                # Get conversion rate from currencies to currency of the current company
+                convert_company = self.company_id or self.env.company
                 currency_ids = {pol['currency_id'] for pol in purchase_order_line_read + [{'currency_id': self.currency_id.id}]}
-                rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
+                rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(convert_company, date.today())
                 conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
 
                 amount_invoiced = amount_to_invoice = 0.0
