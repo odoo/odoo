@@ -208,6 +208,7 @@ return AbstractRenderer.extend({
         this.hideDate = params.hideDate;
         this.hideTime = params.hideTime;
         this.canDelete = params.canDelete;
+        this.canEdit = params.canEdit;
         this.canCreate = params.canCreate;
         this.scalesInfo = params.scalesInfo;
         this._isInDOM = false;
@@ -849,6 +850,7 @@ return AbstractRenderer.extend({
             event: eventData,
             modelName: this.model,
             canDelete: this.canDelete,
+            canEdit: this.canEdit,
             popoverFields: this.popoverFields,
         };
 

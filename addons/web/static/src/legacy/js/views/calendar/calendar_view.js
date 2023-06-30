@@ -187,6 +187,7 @@ var CalendarView = AbstractView.extend({
         this.rendererParams.hideDate = utils.toBoolElse(attrs.hide_date || '', false);
         this.rendererParams.hideTime = utils.toBoolElse(attrs.hide_time || '', false);
         this.rendererParams.canDelete = this.controllerParams.activeActions.delete;
+        this.rendererParams.canEdit = this.controllerParams.activeActions.edit;
         this.rendererParams.canCreate = this.controllerParams.activeActions.create;
         this.rendererParams.scalesInfo = scalesInfo;
 
