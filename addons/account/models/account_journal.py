@@ -93,7 +93,7 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False),"
-               "('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
+               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
