@@ -27,11 +27,17 @@ if (searchParams) {
     snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names') || '';
     snippetsNames = snippetsNames.split(',');
 }
+const dropInOnlySnippets = {
+    's_button': '.btn',
+    's_image': '.img',
+    's_video': '.media_iframe_video',
+};
 let steps = [];
 let n = 0;
 for (const snippet of snippetsNames) {
     n++;
-    const isModal = ['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)
+    const isModal = ['s_popup', 's_newsletter_subscribe_popup'].includes(snippet);
+    const isDropInOnlySnippet = Object.keys(dropInOnlySnippets).includes(snippet);
     const snippetSteps = [{
         content: `Drop ${snippet} snippet [${n}/${snippetsNames.length}]`,
         trigger: `#oe_snippets .oe_snippet:has( > [data-snippet='${snippet}']) .oe_snippet_thumbnail`,
@@ -61,7 +67,7 @@ for (const snippet of snippetsNames) {
             content: 'Close API Key popup',
             trigger: "iframe .modal-footer .btn-secondary",
         });
-    } else if (['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)) {
+    } else if (isModal) {
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,
@@ -70,6 +76,10 @@ for (const snippet of snippetsNames) {
             content: `Make sure ${snippet} is hidden`,
             trigger: "iframe body:not(.modal-open)",
         });
+    } else if (isDropInOnlySnippet) {
+        // The 'drop in only' snippets have their 'data-snippet' attribute
+        // removed once they are dropped, so we need to use a different selector.
+        snippetSteps[1]['trigger'] = `iframe #wrap.o_editable ${dropInOnlySnippets[snippet]}`;
     }
     steps = steps.concat(snippetSteps);
 }

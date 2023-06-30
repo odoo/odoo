@@ -140,6 +140,15 @@
             <div id="snippet_content" class="o_panel">
                 <div class="o_panel_header">Inner content</div>
                 <div class="o_panel_body">
+                    <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg">
+                        <keywords>button, action</keywords>
+                    </t>
+                    <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg">
+                        <keywords>image, picture, photo</keywords>
+                    </t>
+                    <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg">
+                        <keywords>video, youtube, vimeo, dailymotion, youku</keywords>
+                    </t>
                     <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg">
                         <keywords>separator, divider</keywords>
                     </t>
@@ -541,6 +550,15 @@
         </we-row>
     </div>
 
+    <t t-set="so_submit_button_selector" t-translation="off">
+        .s_donation_donate_btn, .s_website_form_send
+    </t>
+
+    <!-- Button -->
+    <div data-js="Button"
+        data-selector="a.btn"
+        t-att-data-exclude="so_submit_button_selector"/>
+
     <!-- Columns only -->
     <div data-js="layout_column"
         data-selector="section.s_features_grid, section.s_process_steps"
@@ -683,15 +701,20 @@
         <!-- /!\ drop-in here is partly duplicated for s_popup (see dedicated options) -->
         <!-- TODO should be improved -->
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment</t>
+    <t t-set="so_content_addition_selector" t-translation="off">
+        blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
+        .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
+        .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only
+    </t>
+
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
-        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div:not(.o_grid_item_image) > img, #{so_content_addition_selector}"
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}"
         data-drop-in="nav"/>
 
     <div data-js="SnippetSave"
-        data-selector="[data-snippet]"
-        data-exclude=".o_no_save">
+        data-selector="[data-snippet], a.btn"
+        t-attf-data-exclude=".o_no_save, #{so_submit_button_selector}">
         <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""
