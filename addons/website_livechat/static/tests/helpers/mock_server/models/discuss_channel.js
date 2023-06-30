@@ -19,13 +19,16 @@ patch(MockServer.prototype, "website_livechat/models/discuss_channel", {
                 const visitor = this.getRecords("website.visitor", [
                     ["id", "=", channel.livechat_visitor_id],
                 ])[0];
+                const partner = this.getRecords("res.partner", [
+                    ["id", "=", visitor.partner_id],
+                ])[0];
                 const country = this.getRecords("res.country", [
                     ["id", "=", visitor.country_id],
                 ])[0];
                 channelInfo.visitor = {
                     country_code: country && country.code,
                     country_id: country && country.id,
-                    display_name: visitor.display_name,
+                    display_name: partner?.name ?? partner?.display_name ?? visitor.display_name,
                     history: visitor.history, // TODO should be computed
                     id: visitor.id,
                     is_connected: visitor.is_connected,

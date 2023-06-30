@@ -13,17 +13,11 @@ patch(PersonaService.prototype, "website_livechat", {
             persona.langName = data.lang_name ?? persona.langName;
             persona.name = data.display_name ?? persona.name;
             persona.websiteName = data.website_name ?? persona.websiteName;
-            if (data.country_id) {
-                persona.country = persona.country ?? {};
-                persona.country.id = data.country_id;
-                persona.country.code = data.country_code ?? persona.country.code;
-            }
-            if (data.partner_id) {
-                persona.partner = this.insert({
-                    id: data.partner_id,
-                    type: "partner",
-                });
-            }
+        }
+        if (data.country_id) {
+            persona.country = persona.country ?? {};
+            persona.country.id = data.country_id;
+            persona.country.code = data.country_code ?? persona.country.code;
         }
     },
 });
