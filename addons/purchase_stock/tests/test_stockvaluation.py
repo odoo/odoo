@@ -1942,51 +1942,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertTrue(full_reconcile)
         self.assertTrue(all(aml.full_reconcile_id == full_reconcile for aml in input_amls))
 
-    def test_invoice_on_ordered_qty_with_backorder_and_different_currency(self):
-        """Create a PO with currency different from the company currency. Set the
-        product to be invoiced on ordered quantities. Receive partially the products
-        and create a backorder. Create an invoice for the ordered quantity. Then
-        receive the backorder. Check if the valuation layer is correctly created.
-        """
-        usd_currency = self.env.ref('base.USD')
-        self.env.company.currency_id = usd_currency.id
-        self.product1.categ_id.property_cost_method = 'fifo'
-        self.product1.purchase_method = 'purchase'
-
-        price_unit_EUR = 100
-        price_unit_USD = self.env.ref('base.EUR')._convert(price_unit_EUR, usd_currency, self.env.company, fields.Date.today(), round=False)
-        po = self.env['purchase.order'].create({
-            'partner_id': self.partner_id.id,
-            'currency_id': self.env.ref('base.EUR').id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product1.name,
-                    'product_id': self.product1.id,
-                    'product_qty': 12.0,
-                    'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                }),
-            ],
-        })
-        po.button_confirm()
-        picking = po.picking_ids[0]
-        move = picking.move_ids[0]
-        move.quantity_done = 10
-        res_dict = picking.button_validate()
-        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
-        wizard.process()
-        self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, price_unit_USD)
-
-        po.action_create_invoice()
-
-        picking2 = po.picking_ids.filtered(lambda p: p.backorder_id)
-        move2 = picking2.move_ids[0]
-        move2.quantity_done = 2
-        picking2.button_validate()
-        self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
-
     def test_pdiff_and_credit_notes(self):
         """
         Auto FIFO
@@ -2484,3 +2439,93 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         svls = self.product1.stock_valuation_layer_ids
         self.assertEqual(svls.mapped('remaining_value'), [13.0, 12.0, 0.0, 0.0, 0.0, 0.0])
         self.assertEqual(svls.mapped('value'), [10.0, 10.0, 1.0, 2.0, -1.0, 3.0])
+
+    def test_invoice_on_ordered_qty_with_backorder_and_different_currency_automated(self):
+        """Create a PO with currency different from the company currency. Set the
+        product to be invoiced on ordered quantities. Receive partially the products
+        and create a backorder. Create an invoice for the ordered quantity. Then
+        receive the backorder. Check if the valuation layer is correctly created.
+        """
+        usd_currency = self.env.ref('base.USD')
+        self.env.company.currency_id = usd_currency.id
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+
+        price_unit_EUR = 100
+        price_unit_USD = self.env.ref('base.EUR')._convert(price_unit_EUR, usd_currency, self.env.company, fields.Date.today(), round=False)
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': self.env.ref('base.EUR').id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 12.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        move = picking.move_ids[0]
+        move.quantity_done = 10
+        res_dict = picking.button_validate()
+        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard.process()
+        self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, price_unit_USD)
+
+        po.action_create_invoice()
+
+        picking2 = po.picking_ids.filtered(lambda p: p.backorder_id)
+        move2 = picking2.move_ids[0]
+        move2.quantity_done = 2
+        picking2.button_validate()
+        self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
+
+    def test_invoice_on_ordered_qty_with_backorder_and_different_currency_manual(self):
+        """Same test as test_invoice_on_ordered_qty_with_backorder_and_different_currency_automated with manual_periodic valuation
+        Ensure that the absence of account_move_id on the layers does not generate an Exception
+        """
+        usd_currency = self.env.ref('base.USD')
+        self.env.company.currency_id = usd_currency.id
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'manual_periodic'
+        self.product1.purchase_method = 'purchase'
+
+        price_unit_EUR = 100
+        price_unit_USD = self.env.ref('base.EUR')._convert(price_unit_EUR, usd_currency, self.env.company, fields.Date.today(), round=False)
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': self.env.ref('base.EUR').id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 12.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        move = picking.move_ids[0]
+        move.quantity_done = 10
+        res_dict = picking.button_validate()
+        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard.process()
+        self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, price_unit_USD)
+
+        po.action_create_invoice()
+
+        picking2 = po.picking_ids.filtered(lambda p: p.backorder_id)
+        move2 = picking2.move_ids[0]
+        move2.quantity_done = 2
+        picking2.button_validate()
+        self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
