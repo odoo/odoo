@@ -6,9 +6,9 @@
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
                 <pivot string="Stock Moves Analysis" sample="1">
-                    <field name="product_id" type="row"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
-                    <field name="product_uom_qty" type="measure"/>
+                    <field name="picking_type_id" type="col"/>
+                    <field name="date" interval="month" type="row"/>
                 </pivot>
             </field>
         </record>
@@ -389,6 +389,7 @@
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
                     <group expand="0" string="Group By">
                         <filter string="Product" name="by_product" domain="[]"  context="{'group_by': 'product_id'}"/>
+                        <filter string="Operation Type" name="groupby_picking_type_id" domain="[]"  context="{'group_by': 'picking_type_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by': 'picking_id'}"/>
                         <filter string="Source Location" name="groupby_location_id" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Destination Location" name="groupby_dest_location_id" domain="[]" context="{'group_by': 'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
@@ -401,11 +402,13 @@
         </record>
 
         <record id="stock_move_action" model="ir.actions.act_window">
-            <field name="name">Stock Moves</field>
+            <field name="name">Move Analysis</field>
             <field name="res_model">stock.move</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_done': 1}</field>
+            <field name="context">{'search_default_done': 1,
+                'pivot_measures': ['quantity_done', '__count__'],
+                }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stock move found
@@ -418,7 +421,7 @@
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="3"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="act_window_id" ref="stock_move_action"/>
@@ -432,7 +435,7 @@
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_pivot_all">
-            <field name="sequence" eval="3"/>
+            <field name="sequence" eval="1"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_move_pivot"/>
             <field name="act_window_id" ref="stock_move_action"/>
@@ -479,6 +482,6 @@
             </field>
         </record>
 
-    <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="230" groups="base.group_no_one"/>
+    <menuitem action="stock_move_action" id="stock_move_menu" name="Move Analysis" parent="stock.menu_warehouse_report" sequence="230"/>
 
 </odoo>
