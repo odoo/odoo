@@ -1925,8 +1925,8 @@ var SnippetsMenu = Widget.extend({
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
-            defs.push(this._updateInvisibleDOM());
             await this._loadSnippetsTemplates();
+            defs.push(this._updateInvisibleDOM());
             this.$el.find('.o_we_website_top_actions').removeClass('d-none');
             this.$('.o_snippet_search_filter').addClass('d-none');
             this.$('#o_scroll').addClass('d-none');
