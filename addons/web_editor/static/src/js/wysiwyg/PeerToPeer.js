@@ -173,8 +173,8 @@ export class PeerToPeer {
     }
 
     stop() {
-        this._stopped = true;
         this.closeAllConnections();
+        this._stopped = true;
     }
 
     getConnectedClientIds() {
