@@ -51,5 +51,4 @@ class Task(models.Model):
             'res_model': 'project.task',
             'res_id': self.id,
             'type': 'ir.actions.act_window',
-            'target': 'main',
         }
