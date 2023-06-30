@@ -33,10 +33,11 @@ class DiscussChannel(models.Model):
         for channel in self.filtered('livechat_visitor_id'):
             visitor = channel.livechat_visitor_id
             try:
+                country_id = visitor.partner_id.country_id or visitor.country_id
                 channel_infos_dict[channel.id]['visitor'] = {
-                    'display_name': visitor.display_name,
-                    'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
-                    'country_id': visitor.country_id.id,
+                    'display_name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name,
+                    'country_code': country_id.code.lower() if country_id else False,
+                    'country_id': country_id.id,
                     'id': visitor.id,
                     'is_connected': visitor.is_connected,
                     'history': self.sudo()._get_visitor_history(visitor),
