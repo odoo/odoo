@@ -197,6 +197,58 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.strictEqual(m1.getters.getChartRuntime(chartId).chartJsConfig.type, "line");
     });
 
+    QUnit.test("can import (export) contextual domain", async function (assert) {
+        const chartId = "1";
+        const spreadsheetData = {
+            sheets: [
+                {
+                    figures: [
+                        {
+                            id: chartId,
+                            x: 10,
+                            y: 10,
+                            width: 536,
+                            height: 335,
+                            tag: "chart",
+                            data: {
+                                type: "odoo_line",
+                                title: "Partners",
+                                legendPosition: "top",
+                                searchParams: {
+                                    domain: '[("foo", "=", uid)]',
+                                    groupBy: [],
+                                    orderBy: [],
+                                },
+                                metaData: {
+                                    groupBy: ["foo"],
+                                    measure: "__count",
+                                    resModel: "partner",
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, args) {
+                if (args.method === "web_read_group") {
+                    assert.deepEqual(args.kwargs.domain, [["foo", "=", 7]]);
+                    assert.step("web_read_group");
+                }
+            },
+        });
+        model.getters.getChartRuntime(chartId).chartJsConfig.data; // force loading the chart data
+        await nextTick();
+        assert.strictEqual(
+            model.exportData().sheets[0].figures[0].data.searchParams.domain,
+            '[("foo", "=", uid)]',
+            "the domain is exported with the dynamic parts"
+        );
+        assert.verifySteps(["web_read_group"]);
+    });
+
     QUnit.test("Can undo/redo an Odoo chart creation", async (assert) => {
         const model = await createModelWithDataSource();
         insertChartInSpreadsheet(model, "odoo_line");

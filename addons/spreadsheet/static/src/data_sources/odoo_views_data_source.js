@@ -28,9 +28,14 @@ export class OdooViewsDataSource extends LoadableDataSource {
         this._metaData = JSON.parse(JSON.stringify(params.metaData));
         /** @protected */
         this._initialSearchParams = JSON.parse(JSON.stringify(params.searchParams));
+        const userContext = this._orm.user.context;
+        this._initialSearchParams.domain = new Domain(this._initialSearchParams.domain).toList({
+            ...this._initialSearchParams.context,
+            ...userContext,
+        });
         this._initialSearchParams.context = omit(
             this._initialSearchParams.context || {},
-            ...Object.keys(this._orm.user.context)
+            ...Object.keys(userContext)
         );
         /** @private */
         this._customDomain = this._initialSearchParams.domain;
