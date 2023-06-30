@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
 from lxml import etree
@@ -143,8 +144,8 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         })
 
         # create project in both companies
-        Project = cls.env['project.project'].with_context({'mail_create_nolog': True, 'tracking_disable': True})
-        cls.project_company_a = Project.create({
+        cls.Project = cls.env['project.project'].with_context({'mail_create_nolog': True, 'tracking_disable': True})
+        cls.project_company_a = cls.Project.create({
             'name': 'Project Company A',
             'alias_name': 'project+companya',
             'partner_id': cls.partner_1.id,
@@ -160,7 +161,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 })
             ]
         })
-        cls.project_company_b = Project.create({
+        cls.project_company_b = cls.Project.create({
             'name': 'Project Company B',
             'alias_name': 'project+companyb',
             'partner_id': cls.partner_1.id,
@@ -196,7 +197,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 'name': 'Project Company A',
                 'partner_id': self.partner_1.id,
             })
-            self.assertEqual(project.company_id, self.env.user.company_id, "A newly created project should be in the current user company")
+            self.assertFalse(project.company_id, "A newly created project should have a company set to False by default")
 
             with self.switch_company(self.company_b):
                 with self.assertRaises(AccessError, msg="Manager can not create project in a company in which he is not allowed"):
@@ -220,7 +221,124 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
                 self.project_company_a._create_analytic_account()
 
-                self.assertEqual(self.project_company_a.company_id, self.project_company_a.analytic_account_id.company_id, "The analytic account created from a project should be in the same company")
+                self.assertEqual(self.project_company_a.company_id, self.project_company_a.analytic_account_id.company_id, "The analytic account created from a project should be in the same company.")
+
+        project_no_company = self.Project.create({'name': 'Project no company'})
+        plans = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)])
+        #ensures that all the existing plan have a company_id
+        plans.company_id = self.env.company
+        project_no_company._create_analytic_account()
+        self.assertFalse(project_no_company.analytic_account_id.company_id, "The analytic account created from a project without company_id should have its company_id field set to False.")
+        self.assertFalse(project_no_company.analytic_account_id.plan_id.company_id, "The analytic plan created from a project without company_id should have its company_id field set to False.")
+        plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)])
+        self.assertEqual(1, len(plan), "Only one analytic plan should have been created.")
+
+        project_no_company_2 = self.Project.create({'name': 'Project no company 2'})
+        project_no_company_2._create_analytic_account()
+        self.assertNotEqual(project_no_company_2.analytic_account_id, project_no_company.analytic_account_id, "The analytic account created should be different from the account created for the 1st project.")
+        self.assertEqual(project_no_company_2.analytic_account_id.plan_id, project_no_company.analytic_account_id.plan_id, "No new analytic should have been created.")
+
+    def test_analytic_account_company_consistency(self):
+        """
+            This test ensures that the following invariant is kept:
+            If the company of an analytic account is set, all of its project must have the same company.
+            If the company of an analytic account is not set, its project can either have a company set, or none.
+        """
+        project_no_company = self.Project.create({'name': 'Project no company'})
+        project_no_company._create_analytic_account()
+        account_no_company = project_no_company.analytic_account_id
+        self.project_company_a._create_analytic_account()
+        account_a = self.project_company_a.analytic_account_id
+
+        # Set the account of the project to a new account without company_id
+        self.project_company_a.analytic_account_id = account_no_company
+        self.assertEqual(self.project_company_a.analytic_account_id, account_no_company, "The new account should be set on the project.")
+        self.assertFalse(account_no_company.company_id, "The company of the account should not have been updated.")
+        self.project_company_a.analytic_account_id = account_a
+
+        # Set the account of the project to a new account with a company_id
+        project_no_company.analytic_account_id = account_a
+        self.assertEqual(project_no_company.company_id, self.company_a, "The company of the project should have been updated to the company of its new account.")
+        self.assertEqual(project_no_company.analytic_account_id, account_a, "The account of the project should have been updated.")
+        project_no_company.analytic_account_id = account_no_company
+        project_no_company.company_id = False
+
+        # Neither the project nor its account have a company_id
+        # set the company of the project
+        project_no_company.company_id = self.company_a
+        self.assertEqual(project_no_company.company_id, self.company_a, "The company of the project should have been updated.")
+        self.assertFalse(account_no_company.company_id, "The company of the account should not have been updated for the company of the project was False before its update.")
+        project_no_company.company_id = False
+        # set the company of the account
+        account_no_company.company_id = self.company_a
+        self.assertEqual(project_no_company.company_id, self.company_a, "The company of the project should have been updated to the company of its new account.")
+        self.assertEqual(account_no_company.company_id, self.company_a, "The company of the account should have been updated.")
+
+        # The project and its account have the same company (company A)
+        account_a.plan_id.company_id = False
+        # set the company of the project to False
+        self.project_company_a.company_id = False
+        self.assertFalse(self.project_company_a.company_id, "The company of the project should have been updated.")
+        self.assertFalse(account_a.company_id, "The company of the account should be set to False, as it only has one project linked to it and the company of the project was set from company A to False")
+        account_a.company_id = self.company_a
+        # set the company of the project to company B
+        self.project_company_a.company_id = self.company_b
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The company of the project should have been updated.")
+        self.assertEqual(account_a.company_id, self.company_b, "The company of the account should have been updated, for its company was the same as the one of its project and the company of the project was set before the update.")
+        # set the company of the account to company A
+        account_a.company_id = self.company_a
+        self.assertEqual(self.project_company_a.company_id, self.company_a, "The company of the project should have been updated to the company of its account.")
+        self.assertEqual(account_a.company_id, self.company_a, "The company of the account should have been updated.")
+        # set the company of the account to False
+        account_a.company_id = False
+        self.assertEqual(self.project_company_a.company_id, self.company_a, "The company of the project should not have been updated for the company of its account has been set to False.")
+        self.assertFalse(account_a.company_id, "The company of the account should have been updated.")
+
+        # The project has a company_id set, but not its account
+        # set the company of the account to company B (!= project.company_id)
+        account_a.company_id = self.company_b
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The company of the project should have been updated to the company of its account even if the new company set on the account is a different one than the one the project.")
+        self.assertEqual(account_a.company_id, self.company_b, "The company of the account should have been updated.")
+        account_a.company_id = False
+        self.project_company_a.company_id = self.company_a
+        # set the company of the account to company A (== project.company_id)
+        account_a.company_id = self.company_a
+        self.assertEqual(self.project_company_a.company_id, self.company_a, "The company of the project should have been updated to the company of its account.")
+        self.assertEqual(account_a.company_id, self.company_a, "The company of the account should have been updated.")
+        account_a.company_id = False
+        # set the company of the project to company B
+        self.project_company_a.company_id = self.company_b
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The company of the project should have been updated.")
+        self.assertFalse(account_a.company_id, "The company of the account should not have been updated for it is was set to False.")
+        # set the company of the project to False
+        self.project_company_a.company_id = False
+        self.assertFalse(self.project_company_a.company_id, "The company of the project should have been updated.")
+        self.assertFalse(account_a.company_id, "The company of the account should not have been updated for it was set to False.")
+
+        account_a.plan_id.company_id = self.company_b
+        account_a.company_id = self.company_b
+        with self.assertRaises(UserError):
+            self.project_company_a.company_id = self.company_a
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The company of the project is set to a different company from the company of the plan of its account, an error should be raised.")
+        account_a.plan_id.company_id = False
+
+        # creates an AAL for the account_a
+        aal = self.env['account.analytic.line'].create({
+            'name': 'other revenues line',
+            'account_id': account_a.id,
+            'company_id': self.company_b.id,
+            'amount': 100,
+        })
+        with self.assertRaises(UserError):
+            self.project_company_a.company_id = self.company_a
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The account of the project contains AAL, its company can not be updated.")
+        aal.unlink()
+
+        project_no_company.analytic_account_id = account_a
+        self.assertEqual(project_no_company.company_id, account_a.company_id)
+        with self.assertRaises(UserError):
+            self.project_company_a.company_id = self.company_a
+        self.assertEqual(self.project_company_a.company_id, self.company_b, "The account of the project is linked to more than one project, its company can not be updated.")
 
     def test_create_task(self):
         with self.sudo('employee-a'):
@@ -231,6 +349,64 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             task = task_form.save()
 
             self.assertEqual(task.company_id, self.project_company_a.company_id, "The company of the task should be the one from its project.")
+
+    def test_update_company_id(self):
+        """ this test ensures that:
+        - All the tasks of a project with a company set have the same company as their project. Updating the task set the task to a private state.
+        Updating the company the project update all the tasks even if the company of the project is set to False.
+        - The tasks of a project without company can have any company set. Updating a task does not update the company of its project. Updating the project update
+        all the tasks even if these tasks had a company set.
+        """
+        project = self.Project.create({'name': 'Project'})
+        task = self.env['project.task'].create({
+            'name': 'task no company',
+            'project_id': project.id,
+        })
+        self.assertFalse(task.company_id, "Creating a task in a project without company set its company_id to False.")
+
+        with self.debug_mode():
+            task_form = Form(task)
+            task_form.company_id = self.company_a
+            task = task_form.save()
+        self.assertFalse(project.company_id, "Setting a new company on a task should not update the company of its project.")
+        self.assertEqual(task.company_id, self.company_a, "The company of the task should have been updated.")
+
+        project.company_id = self.company_b
+        self.assertEqual(project.company_id, self.company_b, "The company of the project should have been updated.")
+        self.assertEqual(task.company_id, self.company_b, "The company of the task should have been updated.")
+
+
+        with self.debug_mode():
+            task_form = Form(task)
+            task_form.company_id = self.company_a
+            task = task_form.save()
+        self.assertEqual(task.company_id, self.company_a, "The company of the task should have been updated.")
+        self.assertFalse(task.project_id, "The task should now be a private task.")
+        self.assertEqual(project.company_id, self.company_b, "the company of the project should not have been updated.")
+
+        task_1, task_2, task_3 = self.env['project.task'].create([{
+            'name': 'task 1',
+            'project_id': project.id,
+        }, {
+            'name': 'task 2',
+            'project_id': project.id,
+        }, {
+            'name': 'task 3',
+            'project_id': project.id,
+        }])
+        project.company_id = False
+        for task in project.task_ids:
+            self.assertFalse(task.company_id, "The tasks should not have a company_id set.")
+        task_1.company_id = self.company_a
+        task_2.company_id = self.company_b
+        self.assertEqual(task_1.company_id, self.company_a, "The company of task_1 should have been set to company A.")
+        self.assertEqual(task_2.company_id, self.company_b, "The company of task_2 should have been set to company B.")
+        self.assertFalse(task_3.company_id, "The company of the task_3 should not have been updated.")
+        self.assertFalse(project.company_id, "The company of the project should not have been updated.")
+        company_c = self.env['res.company'].create({'name': 'company C'})
+        project.company_id = company_c
+        for task in project.tasks:
+            self.assertEqual(task.company_id, company_c, "The company of the tasks should have been updated to company C.")
 
     def test_move_task(self):
         with self.sudo('employee-a'):

@@ -115,7 +115,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             'partner_id': self.partner_id.id,
             'analytic_account_id': self.project_id.analytic_account_id.id,
             'client_order_ref': self.project_id.name,
-            'company_id': self.project_id.company_id.id,
+            'company_id': self.project_id.company_id.id or self.env.company.id,
         })
         # rewrite the user as the onchange_partner_id erases it
         sale_order.write({'user_id': self.project_id.user_id.id})

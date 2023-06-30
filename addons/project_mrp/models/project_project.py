@@ -65,16 +65,29 @@ class Project(models.Model):
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
         mrp_category = 'manufacturing_order'
-        count, amount_sum = self.env['account.analytic.line'].sudo()._read_group(
+        mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
             [('account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
-            aggregates=['__count', 'amount:sum'],
-        )[0]
-        if count:
+            ['currency_id'],
+            ['amount:sum'],
+        )
+        if mrp_aal_read_group:
             can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
+            total_amount = 0
+            currency_ids = {currency.id for currency, amount in mrp_aal_read_group}
+            currency_ids.add(self.currency_id.id)
+            rate_per_currency_id = self.env['res.currency'].browse(currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
+            project_currency_rate = rate_per_currency_id[self.currency_id.id]
+            for currency, amount_summed in mrp_aal_read_group:
+                if currency != self.currency_id:
+                    rate = project_currency_rate / rate_per_currency_id[currency.id]
+                    total_amount += self.currency_id.round(amount_summed * rate)
+                else:
+                    total_amount += amount_summed
+
             mrp_costs = {
                 'id': mrp_category,
                 'sequence': self._get_profitability_sequence_per_invoice_type()[mrp_category],
-                'billed': amount_sum,
+                'billed': total_amount,
                 'to_bill': 0.0,
             }
             if can_see_manufactoring_order:
@@ -87,22 +100,23 @@ class Project(models.Model):
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('mrp.group_mrp_user'):
+            self_sudo = self.sudo()
             buttons.extend([{
                 'icon': 'flask',
                 'text': _lt('Bills of Materials'),
-                'number': self.bom_count,
+                'number': self_sudo.bom_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_bom',
-                'show': self.bom_count > 0,
+                'show': self_sudo.bom_count > 0,
                 'sequence': 35,
             },
             {
                 'icon': 'wrench',
                 'text': _lt('Manufacturing Orders'),
-                'number': self.production_count,
+                'number': self_sudo.production_count,
                 'action_type': 'object',
                 'action': 'action_view_mrp_production',
-                'show': self.production_count > 0,
+                'show': self_sudo.production_count > 0,
                 'sequence': 46,
             }])
         return buttons

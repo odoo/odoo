@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
+from datetime import date
 
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import Query
-
-from datetime import date
 from functools import reduce
 
 from odoo.addons.project.models.project_task import CLOSED_STATES
@@ -20,7 +20,7 @@ class Project(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id)]",
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -38,9 +38,12 @@ class Project(models.Model):
         defaults['sale_line_id'] = False
         return defaults
 
-    @api.depends('allow_billable')
+    @api.depends('allow_billable', 'partner_id.company_id')
     def _compute_partner_id(self):
-        self.filtered(lambda project: not project.allow_billable).partner_id = False
+        for project in self:
+            # Ensures that the partner_id and its project do not have different companies set
+            if not project.allow_billable or (project.company_id and project.partner_id.company_id and project.company_id != project.partner_id.company_id):
+                project.partner_id = False
 
     @api.depends('partner_id')
     def _compute_sale_line_id(self):
@@ -394,11 +397,12 @@ class Project(models.Model):
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         if sale_line_read_group:
             # Get conversion rate from currencies of the sale order lines to currency of project
+            convert_company = self.company_id or self.env.company
             currency_ids = list(set([currency_id.id for currency_id, *_ in sale_line_read_group] + [self.currency_id.id]))
-            rates = self.env['res.currency'].browse(currency_ids)._get_rates(self.company_id, date.today())
+            rates = self.env['res.currency'].browse(currency_ids)._get_rates(convert_company, date.today())
             conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
 
-            sols_per_product = {}
+            sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
             downpayment_amount_invoiced = 0
             downpayment_sol_ids = []
             for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
@@ -406,13 +410,9 @@ class Project(models.Model):
                     downpayment_amount_invoiced += untaxed_amount_invoiced * conversion_rates[currency.id]
                     downpayment_sol_ids += sol_ids
                 else:
-                    sols_total_amounts = sols_per_product.setdefault(product.id, (0, 0, []))
-                    sols_current_amounts = (
-                        untaxed_amount_to_invoice * conversion_rates[currency.id],
-                        untaxed_amount_invoiced * conversion_rates[currency.id],
-                        sol_ids,
-                    )
-                    sols_per_product[product.id] = tuple(reduce(lambda x, y: x + y, pair) for pair in zip(sols_total_amounts, sols_current_amounts))
+                    sols_per_product[product.id][0] += convert_company.currency_id.round(untaxed_amount_to_invoice * conversion_rates[currency.id])
+                    sols_per_product[product.id][1] += convert_company.currency_id.round(untaxed_amount_invoiced * conversion_rates[currency.id])
+                    sols_per_product[product.id][2] += sol_ids
             if downpayment_amount_invoiced:
                 downpayments_data = {
                     'id': 'downpayments',
@@ -521,10 +521,9 @@ class Project(models.Model):
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         if invoices_move_line_read:
-
-            # Get conversion rate from currencies to currency of the project
+            # Get conversion rate from currencies to currency of the current company
             currency_ids = {iml['currency_id'] for iml in invoices_move_line_read + [{'currency_id': self.currency_id.id}]}
-            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
+            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
             conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
 
             move_ids = set()
@@ -602,33 +601,36 @@ class Project(models.Model):
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'dollar',
                 'text': _lt('Sales Orders'),
-                'number': self.sale_order_count,
+                'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
-                'show': self.sale_order_count > 0,
+                'show': self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
         if self.user_has_groups('account.group_account_readonly'):
+            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
                 'text': _lt('Invoices'),
-                'number': self.invoice_count,
+                'number': self_sudo.invoice_count,
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',
-                'show': bool(self.analytic_account_id) and self.invoice_count > 0,
+                'show': bool(self.analytic_account_id) and self_sudo.invoice_count > 0,
                 'sequence': 30,
             })
         if self.user_has_groups('account.group_account_readonly'):
+            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
                 'text': _lt('Vendor Bills'),
-                'number': self.vendor_bill_count,
+                'number': self_sudo.vendor_bill_count,
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',
-                'show': self.vendor_bill_count > 0,
+                'show': self_sudo.vendor_bill_count > 0,
                 'sequence': 38,
             })
         return buttons
@@ -701,10 +703,9 @@ class ProjectTask(models.Model):
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
         domain="""[
-            ('company_id', '=', company_id),
             '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
                  ('order_partner_id', '=?', partner_id),
-            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale')
+            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
         ]""",
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"

@@ -19,7 +19,7 @@ class ResCompany(models.Model):
             default_plan = self.env['ir.config_parameter'].with_company(company).sudo().get_param("default_analytic_plan_id_%s" % company.id)
             company.analytic_plan_id = int(default_plan) if default_plan else False
             if not company.analytic_plan_id:
-                company.analytic_plan_id = self.env['account.analytic.plan'].with_company(company)._get_default()
+                company.analytic_plan_id = self.env['account.analytic.plan']._get_default()
 
     def write(self, values):
         for company in self:

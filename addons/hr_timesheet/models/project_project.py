@@ -14,13 +14,13 @@ class Project(models.Model):
     analytic_account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
-            '|', ('company_id', '=', False), ('company_id', '=', company_id),
+            '|', ('company_id', '=', False), ('company_id', '=?', company_id),
             ('partner_id', '=?', partner_id),
         ]"""
     )
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
@@ -32,6 +32,12 @@ class Project(models.Model):
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+
+    @api.depends('company_id', 'company_id.timesheet_encode_uom_id')
+    @api.depends_context('company')
+    def _compute_timesheet_encode_uom_id(self):
+        for project in self:
+            project.timesheet_encode_uom_id = project.company_id.timesheet_encode_uom_id or self.env.company.timesheet_encode_uom_id
 
     @api.depends('analytic_account_id')
     def _compute_allow_timesheets(self):
@@ -118,14 +124,13 @@ class Project(models.Model):
             if project.allow_timesheets and not project.analytic_account_id:
                 raise ValidationError(_('You cannot use timesheets without an analytic account.'))
 
-    @api.depends('timesheet_ids')
+    @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
     def _compute_total_timesheet_time(self):
         timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
             ['project_id', 'product_uom_id'],
             ['unit_amount:sum'],
         )
-
         timesheet_time_dict = defaultdict(list)
         for project, product_uom, unit_amount_sum in timesheets_read_group:
             timesheet_time_dict[project.id].append((product_uom, unit_amount_sum))

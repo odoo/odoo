@@ -77,7 +77,6 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
-    _check_company_auto = True
     _track_duration_field = 'stage_id'
 
     @api.model
@@ -104,7 +103,7 @@ class Task(models.Model):
     def _default_company_id(self):
         if self._context.get('default_project_id'):
             return self.env['project.project'].browse(self._context['default_project_id']).company_id
-        return self.env.company
+        return False
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -155,8 +154,7 @@ class Task(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project',
-        index=True, tracking=True, check_company=True, change_default=True)
+    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]", index=True, tracking=True, change_default=True)
     project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', search='_search_project_root_id', recursive=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     planned_hours = fields.Float("Allocated Time", tracking=True)
@@ -182,13 +180,10 @@ class Task(models.Model):
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
         help="The current user's personal task stage.")
     partner_id = fields.Many2one('res.partner',
-        string='Customer', recursive=True, tracking=True,
-        compute='_compute_partner_id', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
+        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
-    company_id = fields.Many2one(
-        'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True,
-        required=True, copy=True, default=_default_company_id)
+    company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -258,7 +253,7 @@ class Task(models.Model):
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
+        domain="[('company_id', '=?', company_id)]",
         help="Analytic account to which this task and its timesheets are linked.\n"
             "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
@@ -275,6 +270,13 @@ class Task(models.Model):
     _sql_constraints = [
         ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
     ]
+
+    @api.constrains('company_id', 'partner_id')
+    def _ensure_company_consistency_with_partner(self):
+        """ Ensures that the company of the task is valid for the partner. """
+        for task in self:
+            if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id != task.partner_id.company_id:
+                raise ValidationError(_('The task and the associated partner must be linked to the same company.'))
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -608,7 +610,7 @@ class Task(models.Model):
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
-        if self.project_id.company_id != self.company_id:
+        if self.project_id.company_id and self.project_id.company_id != self.company_id:
             self.project_id = False
 
     @api.depends('project_id.company_id', 'parent_id.company_id')
@@ -957,7 +959,7 @@ class Task(models.Model):
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
-                ).company_id.id or self.env.company.id
+                ).company_id.id
             if not project_id and ("stage_id" in vals or self.env.context.get('default_stage_id')):
                 vals["stage_id"] = False
 
