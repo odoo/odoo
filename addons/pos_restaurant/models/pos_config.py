@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 import json
 from collections import defaultdict
 
@@ -93,6 +93,7 @@ class PosConfig(models.Model):
         self = self.sudo()
         if not companies:
             companies = self.env['res.company'].search([])
+        super(PosConfig, self).post_install_pos_localisation(companies)
         for company in companies.filtered('chart_template'):
             pos_configs = self.search([
                 *self.env['account.journal']._check_company_domain(company),
@@ -109,4 +110,21 @@ class PosConfig(models.Model):
 
             })
             pos_configs.setup_defaults(company)
-            super(PosConfig, self).post_install_pos_localisation(companies)
+
+    def setup_defaults(self, company):
+        main_restaurant = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
+        main_restaurant_is_present = main_restaurant and self.filtered(lambda cfg: cfg.id == main_restaurant.id)
+        if main_restaurant_is_present:
+            non_main_restaurant_configs = self - main_restaurant
+            non_main_restaurant_configs.assign_payment_journals(company)
+            main_restaurant._setup_main_restaurant_defaults()
+            self.generate_pos_journal(company)
+            self.setup_invoice_journal(company)
+        else:
+            super().setup_defaults(company)
+
+    def _setup_main_restaurant_defaults(self):
+        self.ensure_one()
+        self._set_tips_after_payment_if_country_custom()
+        self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
+        self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
