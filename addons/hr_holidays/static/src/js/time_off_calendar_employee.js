@@ -21,8 +21,8 @@ odoo.define('hr_holidays.employee.dashboard.views', function(require) {
         init: function (parent, eventInfo) {
             this._super.apply(this, arguments);
             const state = this.event.extendedProps.record.state;
-            this.canDelete = state && ['validate', 'refuse'].indexOf(state) === -1;
-            this.canEdit = state !== undefined;
+            this.canDelete = this.canDelete && state && ['validate', 'refuse'].indexOf(state) === -1;
+            this.canEdit = this.canEdit && state !== undefined;
             this.displayFields = [];
 
             if (this.modelName === "hr.leave.report.calendar") {
