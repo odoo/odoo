@@ -1567,7 +1567,7 @@ class DynamicList extends DataPoint {
                 } else {
                     let isSaved;
                     try {
-                        isSaved = await editedRecord.save();
+                        isSaved = await editedRecord._save();
                     } catch (e) {
                         this.editedRecord = editedRecord;
                         this.model.notify();
