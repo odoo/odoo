@@ -4,9 +4,12 @@
     <template id="payment.form" name="Payment Form">
         <!-- Form customization parameters:
             - mode: The operation mode of the form: `payment` or `validation`; default: `payment`.
+            - allow_token_selection: Whether tokens can be selected for payment or assignation (if
+                                     the `assign_route` parameter is provided); default: `True`.
+            - default_token_id: The id of the token that should be pre-selected; default: `None`.
             - show_tokenize_input_mapping: For each provider, whether the tokenization checkbox is
                                            shown.
-            - display_submit_button: Whether the submit button is displayed; default: `False`.
+            - display_submit_button: Whether the submit button is displayed; default: `True`.
         -->
         <!-- Transaction context:
             - reference_prefix: The custom prefix to compute the full transaction reference.
@@ -17,10 +20,20 @@
                                     recordset.
             - tokens_sudo: The available payment tokens, as a sudoed `payment.token` recordset.
             - transaction_route: The route to call to create the transaction.
+            - assign_token_route: The route to call to assign a new or existing token to a record.
             - landing_route: The route the user is redirected to after payment.
             - access_token: The access token used to authenticate the partner.
         -->
         <t t-set="mode" t-value="mode or 'payment'"/>
+        <t t-set="allow_token_selection"
+           t-value="True if allow_token_selection is None else allow_token_selection"
+        />
+        <t t-set="selected_token_id"
+           t-value="allow_token_selection and (default_token_id or tokens_sudo[:1].id)"
+        />
+        <t t-set="selected_method_id"
+           t-value="not selected_token_id and len(payment_methods_sudo) == 1 and payment_methods_sudo[:1].id"
+        />
         <t t-set="display_submit_button"
            t-value="True if display_submit_button is None else display_submit_button"
         />
@@ -30,6 +43,7 @@
               t-att-data-currency-id="currency and currency.id"
               t-att-data-partner-id="partner_id"
               t-att-data-transaction-route="transaction_route"
+              t-att-data-assign-token-route="assign_token_route"
               t-att-data-landing-route="landing_route"
               t-att-data-access-token="access_token"
         >
@@ -59,7 +73,9 @@
                                 <t t-foreach="tokens_sudo" t-as="token_sudo">
                                     <li class="list-group-item d-flex flex-column gap-2 py-3">
                                         <t t-call="payment.token_form">
-                                            <t t-set="is_checked" t-value="false"/>  <!-- TODO ANV -->
+                                            <t t-set="is_selected"
+                                               t-value="token_sudo.id == selected_token_id"
+                                            />
                                         </t>
                                     </li>
                                 </t>
@@ -96,7 +112,11 @@
                                        t-value="' rounded-bottom o_last_payment_method' if pm_sudo_last else ''"
                                     />
                                     <li t-attf-class="list-group-item d-flex flex-column gap-2 py-3 {{extra_classes}}">
-                                        <t t-call="payment.method_form"/>
+                                        <t t-call="payment.method_form">
+                                            <t t-set="is_selected"
+                                               t-value="pm_sudo.id == selected_method_id"
+                                            />
+                                        </t>
                                     </li>
                                 </t>
                             </ul>
@@ -116,7 +136,9 @@
     <template id="payment.token_form" name="Payment Token Form">
         <!-- Parameters description:
             - token_sudo: The token to display, as a sudoed `payment.token` recordset.
-            - is_checked: Whether the radio button of the token should be checked.
+            - allow_token_selection: Whether tokens can be selected for payment or assignation (if
+                                     the `assign_route` parameter is provided); default: `True`.
+            - is_selected: Whether the radio button of the token should be checked.
         -->
         <t t-set="provider_sudo" t-value="token_sudo.provider_id"/>
         <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
@@ -125,21 +147,13 @@
         <div class="d-flex gap-3">
             <div class="row flex-column flex-md-row flex-grow-1 gap-lg-3">
                 <div class="col col-lg-5">
-                    <!-- 
-                        TODO ANV when all the radios of tokens are hidden
-                         apply "ps-0" on form-check
-                    -->
-                    <div class="form-check mb-0 ps-0">
+                    <div t-att-class="'form-check mb-0' + (' ps-0' if not allow_token_selection else '')">
                         <!-- === Radio button === -->
-                        <!-- 
-                            TODO ANV when all the radios of tokens are hidden
-                             apply d-none on input
-                        -->
                         <input t-attf-id="o_payment_token_{{token_sudo.id}}"
                                name="o_payment_radio"
                                type="radio"
-                               class="form-check-input d-none"
-                               t-att-checked="is_checked"
+                               t-att-checked="is_selected"
+                               t-att-class="'form-check-input' + (' d-none' if not allow_token_selection else '')"
                         />
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <!-- === Token label === -->
@@ -185,18 +199,23 @@
                 <t t-set="title" t-value="token_sudo.payment_method_id.name"/>
             </div>
             <!-- === Delete button === -->
-            <!-- TODO ANV button only visible in 'validation' mode -->
-            <button name="o_payment_delete_token" class="btn btn-link align-self-start py-0 px-2 z-index-1">
-                <i class="fa fa-trash"/>
+            <button name="o_payment_delete_token"
+                    t-att-class="'btn btn-link align-self-start py-0 px-2 z-index-1' + (' d-none' if mode != 'validation' else '')"
+            >
+                <i class="fa fa-trash"
+                   title="Delete payment method"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
+                   data-bs-delay="0"
+                />
             </button>
         </div>
         <!-- === Inline form === -->
         <div t-if="inline_form_xml_id"
              t-attf-id="o_payment_token_inline_form_{{token_sudo.id}}"
              name="o_payment_inline_form"
-             class="position-relative"
+             class="position-relative d-none"
         >
-            <!-- TODO ANV d-none by default -->
             <t t-call="{{inline_form_xml_id}}"/>
         </div>
     </template>
@@ -204,8 +223,9 @@
     <template id="payment.method_form" name="Payment Method Form">
         <!-- Parameters description:
             - pm_sudo: The payment method to display, as a sudoed `payment.method` recordset.
+            - is_selected: Whether the radio button of the payment method should be checked.
         -->
-        <t t-set="provider_sudo" t-value="pm_sudo.provider_ids[0]"/>
+        <t t-set="provider_sudo" t-value="pm_sudo.provider_ids[:1]"/>
         <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
         <t t-set="pms_to_display_sudo" t-value="pm_sudo.child_payment_method_ids or pm_sudo"/>
@@ -219,6 +239,7 @@
                     <input t-attf-id="o_payment_method_{{pm_sudo.id}}"
                            name="o_payment_radio"
                            type="radio"
+                           t-att-checked="is_selected"
                            class="form-check-input position-absolute"
                            t-att-data-payment-option-id="provider_sudo.id"
                            t-att-data-provider="provider_sudo.code"
@@ -266,9 +287,8 @@
         <!-- === Inline form === -->
         <div t-attf-id="o_payment_method_inline_form_{{pm_sudo.id}}"
              name="o_payment_inline_form"
-             class="position-relative"
+             class="position-relative d-none"
         >
-            <!-- TODO ANV d-none by default -->
             <t t-if="inline_form_xml_id and provider_sudo._should_build_inline_form(is_validation=mode == 'validation')"
                t-call="{{inline_form_xml_id}}"
             >
@@ -293,7 +313,6 @@
             - color_name: The class name of the color (`warning`, `danger`...).
             - title: The title to display on hover.
         -->
-        <!-- TODO BDR make smaller? nicer? more padding?... But please keep them there^^ -->
         <i t-attf-class="fa fa-{{icon_name}} text-{{color_name}} position-relative z-index-1"
            t-att-title="title"
            data-bs-toggle="tooltip"

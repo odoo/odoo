@@ -122,14 +122,14 @@ class PaymentPortal(portal.CustomerPortal):
         request.env['payment.token'].sudo().search([]).unlink()
         demo_provider = request.env['payment.provider'].search([('code', '=', 'demo')], limit=1)
         stripe_provider = request.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
-        request.env['payment.token'].sudo().create({
+        token_1 = request.env['payment.token'].sudo().create({
             'provider_id': demo_provider.id,
             'payment_method_id': demo_provider.payment_method_ids[0].id,
             'payment_details': 'some bullshit test data',
             'partner_id': partner_sudo.id,
             'provider_ref': 'nope',
         })
-        request.env['payment.token'].sudo().create({
+        token_2 = request.env['payment.token'].sudo().create({
             'provider_id': stripe_provider.id,
             'payment_method_id': stripe_provider.payment_method_ids[0].id,
             'payment_details': '1234',
@@ -159,6 +159,9 @@ class PaymentPortal(portal.CustomerPortal):
         }
         payment_form_values = {
             'mode': 'payment',
+            # 'mode': 'validation',  # TODO remove me
+            # 'allow_token_selection': False,  # TODO remove me
+            # 'default_token_id': token_1.id,  # TODO remove me
             'show_tokenize_input_mapping': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
