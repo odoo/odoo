@@ -200,6 +200,10 @@ class IrFieldsConverter(models.AbstractModel):
             msg = _("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
 
+    def _str_to_properties(self, model, field, value):
+        msg = _("Unable to import field type '%s'  ", field.type)
+        raise self._format_import_error(ValueError, msg)
+
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
@@ -394,7 +398,7 @@ class IrFieldsConverter(models.AbstractModel):
         :param model: model to which the field belongs
         :param field: relational field for which references are provided
         :param subfield: a relational subfield allowing building of refs to
-                         existing records: ``None`` for a name_get/name_search,
+                         existing records: ``None`` for a name_search,
                          ``id`` for an external id and ``.id`` for a database
                          id
         :param value: value of the reference to match to an actual record
@@ -538,7 +542,7 @@ class IrFieldsConverter(models.AbstractModel):
         :return: the record subfield to use for referencing and a list of warnings
         :rtype: str, list
         """
-        # Can import by name_get, external id or database id
+        # Can import by display_name, external id or database id
         fieldset = set(record)
         if fieldset - REFERENCING_FIELDS:
             raise ValueError(

@@ -7,7 +7,7 @@ from itertools import chain
 from pytz import utc
 
 from odoo import fields
-from odoo.osv.expression import normalize_domain, NOT_OPERATOR, DOMAIN_OPERATORS
+from odoo.osv.expression import normalize_domain, is_leaf, NOT_OPERATOR
 from odoo.tools.float_utils import float_round
 
 # Default hour per day value. The one should
@@ -52,7 +52,7 @@ def _boundaries(intervals, opening, closing):
             yield (start, opening, recs)
             yield (stop, closing, recs)
 
-def filter_domain_leaf(domain, leaf_check):
+def filter_domain_leaf(domain, field_check, field_name_mapping=None):
     """
     filter_domain_lead only keep the leaves of a domain that verify a given check. Logical operators that involves
     a leaf that is undetermined (because it does not pass the check) are ignored.
@@ -63,34 +63,51 @@ def filter_domain_leaf(domain, leaf_check):
 
     params:
         - domain: the domain that needs to be filtered
-        - leaf_check: the function that the field used in the leaf needs to verify to keep the leaf
+        - field_check: the function that the field name used in the leaf needs to verify to keep the leaf
+        - field_name_mapping: dictionary of the form {'field_name': 'new_field_name', ...}. Occurences of 'field_name'
+          in the first element of domain leaves will be replaced by 'new_field_name'. This is usefull when adapting a
+          domain from one model to another when some field names do not match the names of the corresponding fields in
+          the new model.
     returns: The filtered version of the domain
     """
-    def _filter_domain_leaf_recursive(domain, leaf_check, operator=False):
-        """
-        return domain, rest_domain -> rest_domain should be empty if the operation is finished
-        """
-        if len(domain) == 0:
-            return ([], [])
-        if not operator:
-            first_elem = domain[0]
-            if first_elem not in DOMAIN_OPERATORS: #End of a current leaf
-                return ([], domain[1:]) if not leaf_check(first_elem[0]) else ([first_elem], domain[1:])
-            operator = first_elem
-            domain = domain[1:]
-
-        leaf_1, rest_domain = _filter_domain_leaf_recursive(domain, leaf_check)
-        if operator == NOT_OPERATOR:
-            return ([operator, *leaf_1], rest_domain) if leaf_1 else ([], rest_domain)
-        leaf_2, rest_domain = _filter_domain_leaf_recursive(rest_domain, leaf_check)
-        if leaf_1 == [] or leaf_2 == []:
-            return ((leaf_1 or leaf_2), rest_domain)
-        return  ([operator, *leaf_1, *leaf_2], rest_domain)
-
     domain = normalize_domain(domain)
-    operator = domain[0] if len(domain) > 1 else False
-    domain = domain[1:] if len(domain) > 1 else domain
-    return _filter_domain_leaf_recursive(domain, leaf_check, operator=operator)[0]
+    field_name_mapping = field_name_mapping or {}
+
+    stack = [] # stack of elements (leaf or operator) to conserve (reversing it gives a domain)
+    ignored_elems = [] # history of ignored elements in the domain (not added to the stack)
+    # if the top of the stack ignored_elems is:
+    # - True: indicates that the last browsed elem has been ignored
+    # - False: indicates that the last browsed elem has been added to the stack
+    # When an operator is applied to some elements, they are removed from the ignored_elems stack
+    # (and replaced by the ignored_elems flag of the operator)
+    while domain:
+        next_elem = domain.pop() # Browsing the domain backward simplifies the filtering
+        if is_leaf(next_elem):
+            field_name, op, value = next_elem
+            field_name = field_name_mapping.get(field_name, field_name)
+            if field_check(field_name):
+                stack.append((field_name, op, value))
+                ignored_elems.append(False)
+            else:
+                ignored_elems.append(True)
+        elif next_elem == NOT_OPERATOR:
+            ignore_operation = ignored_elems.pop()
+            if not ignore_operation:
+                stack.append(NOT_OPERATOR)
+                ignored_elems.append(False)
+            else:
+                ignored_elems.append(True)
+        else: # OR/AND operation
+            ignore_operand1 = ignored_elems.pop()
+            ignore_operand2 = ignored_elems.pop()
+            if not ignore_operand1 and not ignore_operand2:
+                stack.append(next_elem)
+                ignored_elems.append(False)
+            elif ignore_operand1 and ignore_operand2:
+                ignored_elems.append(True)
+            else:
+                ignored_elems.append(False) # the AND/OR operation is replaced by one of its operand which cannot be ignored
+    return list(reversed(stack))
 
 class Intervals(object):
     """ Collection of ordered disjoint intervals with some associated records.

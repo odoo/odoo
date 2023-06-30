@@ -27,10 +27,6 @@ input.o_field_property_input[type=number] {
 }
 
 .o_field_property_many2many_value {
-    .o_tag {
-        color: nth($o-colors, 1) !important;
-        box-shadow: inset 0 0 0 1px !important;
-    }
     .o_delete {
         line-height: 1;
         margin-right: 5px;
@@ -71,5 +67,12 @@ input.o_field_property_input[type=number] {
 
     select:not(:hover) {
         background: none !important;
+    }
+
+    // Many2one and Many2many avatar
+    .o_field_property_many2one_value img,
+    .o_m2m_avatar {
+        height: var(--Avatar-size, #{$o-avatar-size});
+        aspect-ratio: 1;
     }
 }

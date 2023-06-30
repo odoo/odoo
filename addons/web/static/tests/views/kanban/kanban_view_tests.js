@@ -4809,11 +4809,11 @@ QUnit.module("Views", (hooks) => {
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "name_get",
+            "read",
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "name_get",
+            "read",
         ]);
     });
 
@@ -5303,6 +5303,52 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_group:last-child .o_kanban_record",
             3,
             "last column should contain 3 records"
+        );
+    });
+
+    QUnit.test("Ensuring each progress bar has some space", async (assert) => {
+        serverData.models.partner.records = [
+            ({
+                id: 1,
+                foo: "blip",
+                state: "def",
+            }),
+            ({
+                id: 2,
+                foo: "blip",
+                state: "abc",
+            }),
+        ];
+        
+        for (let i = 0; i < 20; i++) {
+            serverData.models.partner.records.push({
+                id: 3 + i,
+                foo: "blip",
+                state: "ghi",
+            });
+        }
+        
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <div><field name="foo" /></div>
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["foo"],
+        });
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["5%", "5%", "90%"]
         );
     });
 
@@ -10764,7 +10810,7 @@ QUnit.module("Views", (hooks) => {
         nameInput.focus();
 
         const addButton = target.querySelector(".o_kanban_add");
-        const event = triggerEvent(nameInput, null, "keydown", { key: "Tab" }, { fast: true });
+        const event = triggerEvent(nameInput, null, "keydown", { key: "Tab" }, { sync: true });
         assert.strictEqual(getNextTabableElement(target), addButton);
         assert.ok(!event.defaultPrevented);
         addButton.focus();
@@ -13102,7 +13148,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(content.scrollLeft, 0);
 
         // Cancel drag: click outside
-        await triggerEvent(content, ".o_kanban_renderer", "mousedown");
+        await triggerEvent(content, ".o_kanban_renderer", "pointerdown");
 
         assert.containsNone(target, ".o_kanban_record.o_dragged");
     });

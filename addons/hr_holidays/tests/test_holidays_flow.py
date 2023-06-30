@@ -134,6 +134,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_requests': 'no',
                 'allocation_validation_type': 'officer',
                 'leave_validation_type': 'both',
+                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)]
             })
             HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
 

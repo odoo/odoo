@@ -656,7 +656,11 @@ class SurveyUserInputLine(models.Model):
     answer_score = fields.Float('Score')
     answer_is_correct = fields.Boolean('Correct')
 
-    @api.depends('answer_type')
+    @api.depends(
+        'answer_type', 'value_text_box', 'value_numerical_box',
+        'value_char_box', 'value_date', 'value_datetime',
+        'suggested_answer_id.value', 'matrix_row_id.value',
+    )
     def _compute_display_name(self):
         for line in self:
             if line.answer_type == 'char_box':
@@ -671,9 +675,7 @@ class SurveyUserInputLine(models.Model):
                 line.display_name = fields.Datetime.to_string(line.value_datetime)
             elif line.answer_type == 'suggestion':
                 if line.matrix_row_id:
-                    line.display_name = '%s: %s' % (
-                        line.suggested_answer_id.value,
-                        line.matrix_row_id.value)
+                    line.display_name = f'{line.suggested_answer_id.value}: {line.matrix_row_id.value}'
                 else:
                     line.display_name = line.suggested_answer_id.value
 

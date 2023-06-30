@@ -941,14 +941,14 @@ class Field(MetaField('DummyField', (object,), {})):
         convert = self.convert_to_record
         return [convert(value, record) for value, record in zip(values, records)]
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
 
         :param value:
         :param record:
-        :param bool use_name_get: when True, the value's display name will be
-            computed using :meth:`BaseModel.name_get`, if relevant for the field
+        :param bool use_display_name: when True, the value's display name will be
+            computed using `display_name`, if relevant for the field
         """
         return False if value is None else value
 
@@ -1441,7 +1441,7 @@ class Integer(Field):
     def convert_to_record(self, value, record):
         return value or 0
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
         # so we have to pass them as floats :-(
         if value and value > MAXINT:
@@ -1642,7 +1642,7 @@ class Monetary(Field):
     def convert_to_record(self, value, record):
         return value or 0.0
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         return value
 
     def convert_to_write(self, value, record):
@@ -2028,8 +2028,8 @@ class Html(_String):
             r = r.decode()
         return r and Markup(r)
 
-    def convert_to_read(self, value, record, use_name_get=True):
-        r = super().convert_to_read(value, record, use_name_get)
+    def convert_to_read(self, value, record, use_display_name=True):
+        r = super().convert_to_read(value, record, use_display_name)
         if isinstance(r, bytes):
             r = r.decode()
         return r and Markup(r)
@@ -2778,7 +2778,7 @@ class Reference(Selection):
             return record.env[res_model].browse(int(res_id))
         return None
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value, record):
@@ -2993,9 +2993,9 @@ class Many2one(_Relational):
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
-    def convert_to_read(self, value, record, use_name_get=True):
-        if use_name_get and value:
-            # evaluate name_get() as superuser, because the visibility of a
+    def convert_to_read(self, value, record, use_display_name=True):
+        if use_display_name and value:
+            # evaluate display_name as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
@@ -3304,10 +3304,12 @@ class Properties(Field):
     #           'value': [1337, 'Bob'],
     #       }]
     #
-    def convert_to_read(self, value, record, use_name_get=True):
-        return self.convert_to_read_multi([value], record, use_name_get)[0]
+    def convert_to_read(self, value, record, use_display_name=True):
+        return self.convert_to_read_multi([value], record, use_display_name)[0]
 
-    def convert_to_read_multi(self, values, records, use_name_get=True):
+    def convert_to_read_multi(self, values, records, use_display_name=True):
+        if not records:
+            return values
         assert len(values) == len(records)
 
         # each value is either None or a dict
@@ -3320,13 +3322,13 @@ class Properties(Field):
                 assert isinstance(value, dict), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
 
-        res_ids_per_model = self._get_res_ids_per_model(records, result, use_name_get)
+        res_ids_per_model = self._get_res_ids_per_model(records, result, use_display_name)
 
         # value is in record format
         for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
 
-        if use_name_get:
+        if use_display_name:
             for value in result:
                 self._add_display_name(value, records.env)
 
@@ -3351,7 +3353,7 @@ class Properties(Field):
             record._cache[self.definition_record] = snapshot[self.definition_record].id or None
         return super().convert_to_onchange(value, record, names)
 
-    def _get_res_ids_per_model(self, records, values_list, use_name_get=True):
+    def _get_res_ids_per_model(self, records, values_list, use_display_name=True):
         """Read everything needed in batch for the given records.
 
         To retrieve relational properties names, or to check their existence,
@@ -3388,7 +3390,7 @@ class Properties(Field):
             recs = records.env[model].browse(ids).exists()
             res_ids_per_model[model] = set(recs.ids)
 
-            if use_name_get:
+            if use_display_name:
                 for record in recs:
                     # read a field to pre-fetch the recordset
                     try:
@@ -3419,7 +3421,7 @@ class Properties(Field):
         definition_changed = any(
             definition.get('definition_changed')
             or definition.get('definition_deleted')
-            for definition in value
+            for definition in (value or [])
         )
         if definition_changed:
             value = [
@@ -3509,7 +3511,7 @@ class Properties(Field):
 
     @classmethod
     def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):
-        """Add the "name_get" for each many2one / many2many properties.
+        """Add the "display_name" for each many2one / many2many properties.
 
         Modify in place "values_list".
 
@@ -3758,7 +3760,7 @@ class PropertiesDefinition(Field):
         This method accepts a list properties definition.
 
         The relational properties (many2one / many2many) default value
-        might contain the name_get of those records (and will be removed).
+        might contain the display_name of those records (and will be removed).
 
         [{
             'name': '3adf37f3258cfe40',
@@ -3863,12 +3865,12 @@ class PropertiesDefinition(Field):
 
         return result
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         # record format -> read format (list of dicts with display names)
         if not value:
             return value
 
-        if use_name_get:
+        if use_display_name:
             Properties._add_display_name(value, record.env, value_keys=('default',))
 
         return value
@@ -4144,7 +4146,7 @@ class _RelationalMulti(_Relational):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 
-    def convert_to_read(self, value, record, use_name_get=True):
+    def convert_to_read(self, value, record, use_display_name=True):
         return value.ids
 
     def convert_to_write(self, value, record):
@@ -4189,7 +4191,7 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_export(self, value, record):
-        return ','.join(name for id, name in value.name_get()) if value else ''
+        return ','.join(value.mapped('display_name')) if value else ''
 
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()

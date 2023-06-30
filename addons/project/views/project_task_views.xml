@@ -240,7 +240,6 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks" js_class="project_task_form">
-                    <field name="allow_recurring_tasks" invisible="1" />
                     <field name="recurrence_id" invisible="1" />
                     <field name="allow_task_dependencies" invisible="1" />
                     <field name="rating_last_value" invisible="1"/>
@@ -285,7 +284,7 @@
                             </div>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id}">
+                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="subtask_count" widget="statinfo" nolabel="1"/>
@@ -295,10 +294,9 @@
                         </button>
                         <button name="action_dependent_tasks" type="object" attrs="{'invisible': [('dependent_tasks_count', '=', 0)]}" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Blocking</span>
+                                <span class="o_stat_text">Blocking Tasks</span>
                                 <span class="o_stat_value ">
                                     <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
-                                    Tasks
                                 </span>
                             </div>
                         </button>
@@ -312,8 +310,11 @@
                                 <field name="priority" widget="priority_switch" class="me-3"/>
                                 <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                             </div>
-                            <div class="d-flex justify-content-end o_state_container">
-                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            <div class="d-flex justify-content-end o_state_container" attrs="{'invisible': [('active', '=', False)]}">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
+                            </div>
+                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" attrs="{'invisible': [('active', '=', True)]}">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                             </div>
                         </h1>
                     </div>
@@ -343,7 +344,7 @@
                                 <field name="date_deadline" nolabel="1"/>
                                 <field name="recurring_task" nolabel="1" class="ms-0" style="width: fit-content;"
                                        widget="boolean_icon" options="{'icon': 'fa-repeat'}"
-                                       attrs="{'invisible': ['|', '|', ('allow_recurring_tasks', '=', False), ('active', '=', False), ('parent_id', '!=', False)]}"
+                                       attrs="{'invisible': ['|', ('active', '=', False), ('parent_id', '!=', False)]}"
                                        groups="project.group_project_recurring_tasks"
                                 />
                             </div>
@@ -392,7 +393,7 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" invisible="1"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide"/>
+                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide" decoration-danger="date_deadline &lt; current_date"/>
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                      <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
@@ -428,7 +429,7 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" invisible="1"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide" />
+                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide" decoration-danger="date_deadline &lt; current_date"/>
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
@@ -523,7 +524,7 @@
                     quick_create_view="project.quick_create_task_form"
                     examples="project"
                     js_class="project_task_kanban" sample="1"
-                    default_order="priority desc, state, date_deadline asc, sequence, id desc"
+                    default_order="priority desc, sequence, state, date_deadline asc, id desc"
                 >
                     <field name="color"/>
                     <field name="priority"/>
@@ -578,7 +579,7 @@
                                         <span t-if="record.partner_id.value" style="display: block; margin-top: 4px;">
                                             <field name="partner_id"/>
                                         </span>
-                                        <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
+                                        <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
                                             <field name="milestone_id" options="{'no_open': True}" />
                                         </span>
                                     </div>
@@ -595,13 +596,13 @@
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">
                                     <div class="oe_kanban_bottom_left" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                         <field name="priority" widget="priority" style="margin-right: 5px;"/>
-                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px;"/>
+                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px; margin-right: 2px"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
                                             <span class="fa fa-fw fa-smile-o text-success rating_face" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
                                             <span class="fa fa-fw fa-meh-o text-warning rating_face" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                             <span class="fa fa-fw fa-frown-o text-danger rating_face" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
-                                        <a t-if="!record.project_id.raw_value" class="text-muted" style="font-size: 17px; padding-top: 1.5px;">
+                                        <a t-if="!record.project_id.raw_value" class="text-muted" style="font-size: 17px; padding-top: 1.5px; margin-left: 1.5px">
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
                                         <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value">
@@ -624,7 +625,7 @@
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
                                     </div>
                                 </div>
-                                <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value">
+                                <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value">
                                     <div class="kanban_bottom_subtasks_section"/>
                                 </t>
                             </div>
@@ -641,7 +642,7 @@
             <field name="name">project.task.view.tree.main.base</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Tasks" sample="1" default_order="priority desc, state, date_deadline asc, sequence, id desc">
+                <tree string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
                     <field name="company_id" invisible="1"/>
                     <field name="is_private" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -720,15 +721,16 @@
                           js_class="project_calendar"
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
+                    <field name="is_private" invisible="1"/>
                     <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
-                    <field name="date_deadline"/>
                     <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" attrs="{'invisible': ['|', ('is_private', '=', True), ('stage_id', '=', False)]}"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
+                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('is_private', '=', False), ('personal_stage_id', '=', False)]}"/>
                 </calendar>
             </field>
         </record>

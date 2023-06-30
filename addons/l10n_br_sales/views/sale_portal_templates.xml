@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_brazil" inherit_id="sale.sale_order_portal_content" primary="True">
+        <!-- hide the taxes th -->
+        <th id="taxes_header" position="replace"/>
+        <!-- hide the taxes td -->
+        <td id="taxes" position="replace"/>
+        <!-- hide the "Tax excl." th -->
+        <th id="subtotal_header" position="replace"/>
+        <!-- hide the "Tax excl." td -->
+        <td id='subtotal' position="replace"/>
+        <xpath expr="//th[@id='total_header']/span" position="replace">
+            <span>Total</span>
+        </xpath>
+    </template>
+</odoo>

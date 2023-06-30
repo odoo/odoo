@@ -23,7 +23,7 @@ export class PromoCodeButton extends Component {
         if (confirmed) {
             code = code.trim();
             if (code !== "") {
-                this.pos.globalState.get_order().activateCode(code);
+                this.pos.get_order().activateCode(code);
             }
         }
     }
@@ -32,7 +32,7 @@ export class PromoCodeButton extends Component {
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
-        return this.pos.globalState.programs.some((p) =>
+        return this.pos.programs.some((p) =>
             ["coupons", "promotion", "gift_card", "promo_code"].includes(p.program_type)
         );
     },

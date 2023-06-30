@@ -28,7 +28,7 @@ class HrPlanWizard(models.TransientModel):
                 ], limit=1)
 
     plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
-        domain="[('company_id', '=', company_id), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
+        domain="[('company_id', 'in', [False, company_id]), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     employee_ids = fields.Many2many(
         'hr.employee', 'hr_employee_hr_plan_wizard_rel', 'employee_id', 'plan_wizard_id', string='Employee', required=True,
@@ -36,6 +36,7 @@ class HrPlanWizard(models.TransientModel):
     )
     company_id = fields.Many2one('res.company', 'Company', compute='_compute_company_id', required=True)
     warning = fields.Html(compute='_compute_warning')
+    due_date = fields.Date(string="Due Date")
 
     @api.depends('employee_ids')
     def _compute_department_id(self):
@@ -95,8 +96,7 @@ class HrPlanWizard(models.TransientModel):
                         record = self.env['hr.plan.employee.activity'].sudo().create({
                             'employee_id': employee.id,
                         })
-
-                date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id) if not self.due_date else self.due_date
                 record.activity_schedule(
                     activity_type_id=activity_type.activity_type_id.id,
                     summary=activity_type.summary,

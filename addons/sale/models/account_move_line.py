@@ -76,15 +76,28 @@ class AccountMoveLine(models.Model):
                 continue
 
             # raise if the sale order is not currently open
-            if sale_order.state != 'sale':
-                message_unconfirmed = _('The Sales Order %s linked to the Analytic Account %s must be validated before registering expenses.')
-                messages = {
-                    'draft': message_unconfirmed,
-                    'sent': message_unconfirmed,
-                    'done': _('The Sales Order %s linked to the Analytic Account %s is currently locked. You cannot register an expense on a locked Sales Order. Please create a new SO linked to this Analytic Account.'),
-                    'cancel': _('The Sales Order %s linked to the Analytic Account %s is cancelled. You cannot register an expense on a cancelled Sales Order.'),
-                }
-                raise UserError(messages[sale_order.state] % (sale_order.name, sale_order.analytic_account_id.name))
+            if sale_order.state in ('draft', 'sent'):
+                raise UserError(_(
+                    "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
+                    " validated before registering expenses.",
+                    order=sale_order.name,
+                    account=sale_order.analytic_account_id.name,
+                ))
+            elif sale_order.state == 'cancel':
+                raise UserError(_(
+                    "The Sales Order %(order)s linked to the Analytic Account %(account)s is cancelled."
+                    " You cannot register an expense on a cancelled Sales Order.",
+                    order=sale_order.name,
+                    account=sale_order.analytic_account_id.name,
+                ))
+            elif sale_order.locked:
+                raise UserError(_(
+                    "The Sales Order %(order)s linked to the Analytic Account %(account)s is currently locked."
+                    " You cannot register an expense on a locked Sales Order."
+                    " Please create a new SO linked to this Analytic Account.",
+                    order=sale_order.name,
+                    account=sale_order.analytic_account_id.name,
+                ))
 
             price = move_line._sale_get_invoice_price(sale_order)
 
@@ -155,7 +168,8 @@ class AccountMoveLine(models.Model):
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
-        taxes = fpos.map_tax(self.product_id.taxes_id)
+        product_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == order.company_id)
+        taxes = fpos.map_tax(product_taxes)
 
         return {
             'order_id': order.id,

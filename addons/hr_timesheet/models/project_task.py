@@ -65,12 +65,12 @@ class Task(models.Model):
     def _compute_effective_hours(self):
         if not any(self._ids):
             for task in self:
-                task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+                task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
         timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
         timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
         for task in self:
-            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
+            task.effective_hours = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
@@ -124,8 +124,8 @@ class Task(models.Model):
             'planned_hours': r'\s(\d+(?:\.\d+)?)[hH]',
         }
 
-    def _get_groups_patterns(self):
-        return ['(?:%s)*' % self._get_group_pattern()['planned_hours']] + super()._get_groups_patterns()
+    def _prepare_pattern_groups(self):
+        return [self._get_group_pattern()['planned_hours']] + super()._prepare_pattern_groups()
 
     def _get_cannot_start_with_patterns(self):
         return super()._get_cannot_start_with_patterns() + [r'(?!\d+(?:\.\d+)?(?:h|H))']
@@ -181,13 +181,15 @@ class Task(models.Model):
 
         return res
 
-    def name_get(self):
+    @api.depends('allow_timesheets', 'planned_hours', 'encode_uom_in_days', 'remaining_hours')
+    @api.depends_context('hr_timesheet_display_remaining_hours')
+    def _compute_display_name(self):
+        super()._compute_display_name()
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
-            name_mapping = dict(super().name_get())
             for task in self:
                 if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
                     days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + days_left
+                    task.display_name = task.display_name + "\u00A0" + days_left
                 elif task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
                     hours_left = _(
@@ -196,9 +198,7 @@ class Task(models.Model):
                         hours=hours,
                         minutes=mins,
                     )
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + hours_left
-            return list(name_mapping.items())
-        return super().name_get()
+                    task.display_name = task.display_name + "\u00A0" + hours_left
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):

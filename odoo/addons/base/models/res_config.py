@@ -639,12 +639,11 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             return actions.read()[0]
         return {}
 
-    def name_get(self):
-        """ Override name_get method to return an appropriate configuration wizard
+    def _compute_display_name(self):
+        """ Override display_name method to return an appropriate configuration wizard
         name, and not the generated name."""
         action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
-        name = action.name or self._name
-        return [(record.id, name) for record in self]
+        self.display_name = action.name or self._name
 
     @api.model
     def get_option_path(self, menu_xml_id):
@@ -762,7 +761,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         template_user = self.env['res.users'].browse(template_user_id)
         if not template_user.exists():
-            raise ValueError(_('Invalid template user. It seems it has been deleted.'))
+            raise UserError(_('Invalid template user. It seems it has been deleted.'))
         action['res_id'] = template_user_id
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action

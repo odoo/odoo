@@ -561,6 +561,13 @@ $line-height-truncate: 1.25em;
             }
         }
 
+        .o_wslides_lesson_aside_list_links i {
+            padding-right: 10px;
+            &.fa-flag {
+                padding-right: 6px;
+            }
+        }
+
         .o_wslides_lesson_aside_list {
             .o_wslides_lesson_aside_list_link {
                 @include o-hover-text-color($gray-600, $headings-color );
@@ -577,7 +584,7 @@ $line-height-truncate: 1.25em;
                 line-height: unset;
             }
             .o_wslides_button_complete {
-                margin-left: 5px;
+                margin-left: 3px;
             }
             button.o_wslides_button_complete i {
                 color: $gray-600;
@@ -612,10 +619,20 @@ $line-height-truncate: 1.25em;
     }
 }
 
-// Enforce the height of the lesson header, so the DOM element size do not change
-// when the completion progressbar become visible / hidden
-.o_wslides_lesson_header_container {
-    height: 80px;
+.hidden-progressbar-completed-tag {
+    visibility: hidden;
+    @include media-breakpoint-down(sm) {
+        display: none !important;
+    }
+}
+
+.o_wslides_fs_sidebar_section {
+    a[aria-expanded="true"] i.fa-caret-left{
+        display: none;
+    }
+    a[aria-expanded="false"] i.fa-caret-down{
+        display: none;
+    }
 }
 
 // Modals

@@ -16,7 +16,7 @@
                     Customer
                 </t>
             </button>
-            <button class="button pay validation pay-order-button" t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.globalState.get_order().pay()">
+            <button class="button pay validation pay-order-button" t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.get_order().pay()">
                 <div class="pay-circle" t-att-class="{ 'highlight': this.highlightPay }">
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 </div>

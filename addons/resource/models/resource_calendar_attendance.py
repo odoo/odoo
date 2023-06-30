@@ -64,13 +64,14 @@ class ResourceCalendarAttendance(models.Model):
         # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
         return int(math.floor((date.toordinal() - 1) / 7) % 2)
 
+    @api.depends('week_type')
     def _compute_display_name(self):
         super()._compute_display_name()
         this_week_type = str(self.get_week_type(fields.Date.context_today(self)))
         section_names = {'0': _('First week'), '1': _('Second week')}
         section_info = {True: _('this week'), False: _('other week')}
         for record in self.filtered(lambda l: l.display_type == 'line_section'):
-            section_name = "%s (%s)" % (section_names[record.week_type], section_info[this_week_type == record.week_type])
+            section_name = f"{section_names[record.week_type]} ({section_info[this_week_type == record.week_type]})"
             record.display_name = section_name
 
     def _copy_attendance_vals(self):

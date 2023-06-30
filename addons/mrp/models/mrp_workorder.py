@@ -272,14 +272,13 @@ class MrpWorkorder(models.Model):
         if not self._check_m2m_recursion('blocked_by_workorder_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
-    def name_get(self):
-        res = []
+    @api.depends('production_id', 'product_id')
+    def _compute_display_name(self):
         for wo in self:
             if len(wo.production_id.workorder_ids) == 1:
-                res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
+                wo.display_name = f"{wo.production_id.name} - {wo.product_id.name} - {wo.name}"
             else:
-                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo._origin.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
-        return res
+                wo.display_name = f"{wo.production_id.workorder_ids.ids.index(wo._origin.id) + 1} - {wo.production_id.name} - {wo.product_id.name} - {wo.name}"
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
@@ -783,6 +782,18 @@ class MrpWorkorder(models.Model):
         for wo1, wo2 in self.env.cr.fetchall():
             res[wo1].append(wo2)
         return res
+
+    def _get_operation_values(self):
+        self.ensure_one()
+        ratio = 1 / self.qty_production
+        if self.operation_id.bom_id:
+            ratio = self.production_id._get_ratio_between_mo_and_bom_quantities(self.operation_id.bom_id)
+        return {
+            'company_id': self.company_id.id,
+            'name': self.name,
+            'time_cycle_manual': self.duration_expected * ratio,
+            'workcenter_id': self.workcenter_id.id,
+        }
 
     def _prepare_timeline_vals(self, duration, date_start, date_end=False):
         # Need a loss in case of the real time exceeding the expected

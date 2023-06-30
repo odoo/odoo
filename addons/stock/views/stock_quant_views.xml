@@ -28,6 +28,7 @@
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <field name="lot_properties"/>
                 <group expand='0' string='Filters'>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
@@ -37,6 +38,7 @@
                     <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
                     <filter name="priority_products" string="Starred Products" domain="[('priority', '=', 1)]"/>
                     <separator/>
+                    <filter name="conflicts" string="Conflicts" domain="[('is_outdated', '=', True)]"/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                     <separator/>
@@ -145,6 +147,7 @@
                 <button name="%(action_view_inventory_tree)d" title="Inventory Adjustment" type="action" class="btn-link" icon="fa-pencil" context="{'search_default_product_id': product_id, 'default_product_id': product_id}"/>
                 <field name="reserved_quantity" optional="show" sum="Total Reserved"/>
                 <field name="product_uom_id" string="Unit" groups="uom.group_uom"/>
+                <field name="lot_properties" optional="hide"/>
                 <button name="action_view_stock_moves" string="History" type="object" class="btn-link" icon="fa-history"/>
                 <button name="action_view_orderpoints" string="Replenishment" type="object" context="{'default_product_id': product_id, 'search_default_location_id': location_id}" class="btn-link" icon="fa-refresh"/>
             </tree>
@@ -449,6 +452,7 @@ in this location. That leads to a negative stock.
                 <field name="inventory_date" optional="show"/>
                 <field name="user_id" string="User" optional="show"/>
                 <field name='company_id' groups="base.group_multi_company" optional="hide"/>
+                <field name="lot_properties" optional="hide"/>
                 <button name="action_inventory_history" type="object" class="btn btn-link text-info" icon="fa-history" string="History"/>
                 <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link" icon="fa-save" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
                 <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': [('inventory_quantity_set', '=', True)]}"/>
@@ -458,7 +462,7 @@ in this location. That leads to a negative stock.
     </record>
 
     <record model="ir.actions.server" id="action_view_set_quants_tree">
-        <field name="name">Set</field>
+        <field name="name">Set to quantity on hand</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
         <field name="binding_view_types">list</field>
@@ -466,6 +470,18 @@ in this location. That leads to a negative stock.
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = records.action_set_inventory_quantity()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_view_set_to_zero_quants_tree">
+        <field name="name">Set to 0</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="binding_model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = records.action_set_inventory_quantity_zero()
         </field>
     </record>
 

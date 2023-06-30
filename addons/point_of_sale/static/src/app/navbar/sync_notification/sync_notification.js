@@ -10,12 +10,12 @@ export class SyncNotification extends Component {
         this.pos = usePos();
     }
     get sync() {
-        return this.pos.globalState.synch;
+        return this.pos.synch;
     }
     onClick() {
-        if (this.pos.globalState.synch.status !== "connected") {
-            this.pos.globalState.showOfflineWarning = true;
+        if (this.pos.synch.status !== "connected") {
+            this.pos.showOfflineWarning = true;
         }
-        this.pos.globalState.push_orders({ show_error: true });
+        this.pos.push_orders({ show_error: true });
     }
 }

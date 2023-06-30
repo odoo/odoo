@@ -147,20 +147,19 @@ class Alias(models.Model):
             vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
         return super(Alias, self).write(vals)
 
-    def name_get(self):
+    @api.depends('alias_domain', 'alias_name')
+    def _compute_display_name(self):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
            e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
         """
-        res = []
         for record in self:
             if record.alias_name and record.alias_domain:
-                res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+                record.display_name = f"{record.alias_name}@{record.alias_domain}"
             elif record.alias_name:
-                res.append((record['id'], "%s" % (record.alias_name)))
+                record.display_name = record.alias_name
             else:
-                res.append((record['id'], _("Inactive Alias")))
-        return res
+                record.display_name = _("Inactive Alias")
 
     def _clean_and_check_unique(self, names):
         """When an alias name appears to already be an email, we keep the local

@@ -516,7 +516,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         def = makeDeferred();
-        doAction(webClient, 4, { clearBreadcrumbs: true });
+        doAction(webClient, 4);
         await nextTick();
         assert.containsOnce(target, ".o_list_view", "should still contain the list view");
         await switchView(target, "kanban");
@@ -549,7 +549,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
-        doAction(webClient, 4, { clearBreadcrumbs: true });
+        doAction(webClient, 4);
         await nextTick();
         await switchView(target, "kanban");
         def.resolve();

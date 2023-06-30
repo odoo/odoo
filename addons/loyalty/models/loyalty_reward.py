@@ -38,8 +38,10 @@ class LoyaltyReward(models.Model):
             ('per_order', _('%s per order', symbol))
         ]
 
-    def name_get(self):
-        return [(reward.id, '%s - %s' % (reward.program_id.name, reward.description)) for reward in self]
+    @api.depends('program_id', 'description')
+    def _compute_display_name(self):
+        for reward in self:
+            reward.display_name = f'{reward.program_id.name} - {reward.description}'
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')

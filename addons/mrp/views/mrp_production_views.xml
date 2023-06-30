@@ -241,8 +241,18 @@
                             </div>
                             <label for="bom_id" name="bom_label"/>
                             <div class='o_row' name="bom_div">
+                                <field name='is_outdated_bom' invisible='1'/>
                                 <field name="bom_id"
-                                    context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    context="{'default_product_tmpl_id': product_tmpl_id}"
+                                    attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', '!=', 'draft'), ('bom_id', '=', False)]}"/>
+                                <button name="action_generate_bom" type="object" icon="fa-plus"
+                                    title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
+                                    attrs="{'invisible': ['|', '|', ('bom_id', '!=', False), ('product_id', '=', False), ('move_raw_ids', '=', [])]}">
+                                    <span class="ms-2">Generate BOM</span>
+                                </button>
+                                <button name="action_update_bom" string="Update BoM" type="object"
+                                    title="Note that another version of this BOM is available." class="text-danger"
+                                    attrs="{'invisible': ['|', ('is_outdated_bom', '=', False), ('state', 'not in', ['draft', 'confirmed'])]}"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
@@ -409,6 +419,7 @@
                                     <field name="operation_id" invisible="1"/>
                                     <field name="is_done" invisible="1"/>
                                     <field name="bom_line_id" invisible="1"/>
+                                    <field name="byproduct_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>

@@ -26,6 +26,7 @@ from psycopg2.pool import PoolError
 from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
 
+import odoo
 from . import tools
 from .tools.func import frame_codeinfo, locked
 
@@ -43,8 +44,8 @@ _logger_conn = _logger.getChild("connection")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
 
 sql_counter = 0
 
@@ -95,6 +96,7 @@ class Savepoint:
         self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
         self.closed = True
 
+
 class _FlushingSavepoint(Savepoint):
     def __init__(self, cr):
         cr.flush()
@@ -105,9 +107,15 @@ class _FlushingSavepoint(Savepoint):
         super().rollback()
 
     def _close(self, rollback):
-        if not rollback:
-            self._cr.flush()
-        super()._close(rollback)
+        try:
+            if not rollback:
+                self._cr.flush()
+        except Exception:
+            rollback = True
+            raise
+        finally:
+            super()._close(rollback)
+
 
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
@@ -246,6 +254,7 @@ class Cursor(BaseCursor):
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
         self.sql_log_count = 0
+        self._sql_table_tracking = False
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
@@ -331,21 +340,24 @@ class Cursor(BaseCursor):
         for hook in getattr(current_thread, 'query_hooks', ()):
             hook(self, query, params, start, delay)
 
-        # advanced stats only if logging.DEBUG is enabled
-        if _logger.isEnabledFor(logging.DEBUG):
+        # advanced stats
+        if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
             delay *= 1E6
 
-            query_lower = self._obj.query.decode().lower()
-            res_from = re_from.match(query_lower)
-            if res_from:
-                self.sql_from_log.setdefault(res_from.group(1), [0, 0])
-                self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query_lower)
+            decoded_query = self._obj.query.decode()
+            res_into = re_into.search(decoded_query)
+            # prioritize `insert` over `select` so `select` subqueries are not
+            # considered when inside a `insert`
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
                 self.sql_into_log[res_into.group(1)][1] += delay
+            else:
+                res_from = re_from.search(decoded_query)
+                if res_from:
+                    self.sql_from_log.setdefault(res_from.group(1), [0, 0])
+                    self.sql_from_log[res_from.group(1)][0] += 1
+                    self.sql_from_log[res_from.group(1)][1] += delay
         return res
 
     def split_for_in_conditions(self, ids, size=None):
@@ -388,6 +400,15 @@ class Cursor(BaseCursor):
             yield
         finally:
             _logger.setLevel(level)
+
+    @contextmanager
+    def _enable_table_tracking(self):
+        try:
+            old = self._sql_table_tracking
+            self._sql_table_tracking = True
+            yield
+        finally:
+            self._sql_table_tracking = old
 
     def close(self):
         if not self.closed:
@@ -751,7 +772,10 @@ _Pool = None
 def db_connect(to, allow_uri=False):
     global _Pool
     if _Pool is None:
-        _Pool = ConnectionPool(int(tools.config['db_maxconn']))
+        _Pool = ConnectionPool(int(
+            odoo.evented and tools.config['db_maxconn_gevent']
+            or tools.config['db_maxconn']
+        ))
 
     db, info = connection_info_for(to)
     if not allow_uri and db != to:

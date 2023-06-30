@@ -187,30 +187,6 @@ class SaleOrderLine(models.Model):
             lines._action_launch_stock_rule(previous_product_uom_qty)
         return res
 
-    @api.depends('order_id.state')
-    def _compute_invoice_status(self):
-        def check_moves_state(moves):
-            # All moves states are either 'done' or 'cancel', and there is at least one 'done'
-            at_least_one_done = False
-            for move in moves:
-                if move.state not in ['done', 'cancel']:
-                    return False
-                at_least_one_done = at_least_one_done or move.state == 'done'
-            return at_least_one_done
-        super(SaleOrderLine, self)._compute_invoice_status()
-        for line in self:
-            # We handle the following specific situation: a physical product is partially delivered,
-            # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
-            # products sold by weight, where the delivered quantity rarely matches exactly the
-            # quantity ordered.
-            if line.order_id.state == 'done'\
-                    and line.invoice_status == 'no'\
-                    and line.product_id.type in ['consu', 'product']\
-                    and line.product_id.invoice_policy == 'delivery'\
-                    and line.move_ids \
-                    and check_moves_state(line.move_ids):
-                line.invoice_status = 'invoiced'
-
     @api.depends('move_ids')
     def _compute_product_updatable(self):
         super()._compute_product_updatable()
@@ -305,7 +281,7 @@ class SaleOrderLine(models.Model):
         procurements = []
         for line in self:
             line = line.with_company(line.company_id)
-            if line.state != 'sale' or not line.product_id.type in ('consu', 'product'):
+            if line.state != 'sale' or line.order_id.locked or not line.product_id.type in ('consu', 'product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:

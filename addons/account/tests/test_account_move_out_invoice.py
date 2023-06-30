@@ -3344,6 +3344,55 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.amount_tax, 17.36)
         self.assertEqual(len(invoice.invoice_line_ids), 2)
 
+    def test_quick_edit_total_amount_with_mixed_epd(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2022-01-01')
+
+        # Quick edit total amount activated
+        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        # 21% sale tax
+        self.env.company.account_sale_tax_id = self.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21,
+            'type_tax_use': 'sale',
+        })
+        # Create a payment term with early payment discount of 2%  and computation set to mixed (Always (upon invoice))
+        epd_payment_term = self.env['account.payment.term'].create({
+            'name': "2/7 Term",
+            'discount_days': 7,
+            'discount_percentage': 2,
+            'early_discount': True,
+            'early_pay_discount_computation': 'mixed',
+        })
+        # Set the payment term to the one we just created
+        move_form.invoice_payment_term_id = epd_payment_term
+
+        invoice = move_form.save()
+
+        # Invoice of one item of price 100, discount 2% and tax 21%:
+        # 21% tax = 100 * (1 - 0.2) * 0.21 = 20.58
+        # total_amount = 100 + 20.58 = 120.58
+
+        # Make sure the quick edit added one line with the correct values
+        with Form(invoice) as move_form:
+            move_form.quick_edit_total_amount = 120.58
+        self.assertRecordValues(invoice, [{'amount_total': 120.58, 'amount_untaxed': 100, 'amount_tax': 20.58}])
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Modify one invoice line
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                line_form.price_unit = 70
+        self.assertRecordValues(invoice, [{'amount_total': 84.41, 'amount_untaxed': 70, 'amount_tax': 14.41}])
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Suggest the new amount such that the total is equal to the quick amount
+        with Form(invoice) as move_form:
+            with move_form.invoice_line_ids.new() as line_form:
+                self.assertEqual(line_form.price_unit, 30)
+        self.assertRecordValues(invoice, [{'amount_total': 120.58, 'amount_untaxed': 100, 'amount_tax': 20.58}])
+        self.assertEqual(len(invoice.invoice_line_ids), 2)
+
     def test_out_invoice_depreciated_account(self):
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -3389,14 +3438,50 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.currency_id, self.currency_data['currency'])
         self.assertRecordValues(move.line_ids, [
             {
+                'display_type': 'product',
+                'currency_id': self.currency_data['currency'].id,
                 'debit': 0.0,
-                'credit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+                'credit': 375.0,
             },
             {
-                'debit': self.currency_data['currency']._convert(750.0, self.company_data['currency'], self.env.company, fields.Date.today()),
+                'display_type': 'payment_term',
+                'currency_id': self.currency_data['currency'].id,
+                'debit': 375.0,
                 'credit': 0.0,
             },
         ])
+
+        move.currency_id = self.company_data['currency']
+        with Form(move) as move_form:
+            move_form.currency_id = self.currency_data['currency']
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            move_form.currency_id = self.currency_data['currency']
+            self.assertEqual(move_form.currency_id, self.currency_data['currency'])
+
+    def test_change_journal_currency(self):
+        second_journal = self.company_data['default_journal_sale'].copy({
+            'currency_id': self.currency_data['currency'].id,
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                    'tax_ids': False,
+                })
+            ],
+        })
+
+        self.assertEqual(move.currency_id, self.company_data['currency'])
+        move.journal_id = second_journal
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
 
     @freeze_time('2019-01-01')
     def test_date_reversal_exchange_move(self):
@@ -3473,3 +3558,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self.assertEqual(invoice.name, 'INV1/2023/00010')
+
+    def test_invoice_mass_posting(self):
+        """
+        With some particular setup (in this case, rounding issue), partner get mixed up in the
+        invoice lines after mass posting.
+        """
+        currency = self.company_data['currency']
+        currency.rounding = 0.0001
+        invoice1 = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', products=self.product_a)
+        invoice1.invoice_line_ids.price_unit = 12.36
+        invoice2 = self.init_invoice(move_type='out_invoice', partner=self.partner_b, invoice_date='2016-01-20', products=self.product_a)
+
+        vam = self.env["validate.account.move"].create({"force_post": True})
+        vam.with_context(active_model='account.move', active_ids=[invoice2.id, invoice1.id]).validate_move()
+
+        for aml in invoice1.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_a)
+        for aml in invoice2.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_b)

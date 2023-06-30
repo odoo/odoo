@@ -12,6 +12,32 @@ import { unique } from "@web/core/utils/arrays";
 
 const qweb = core.qweb;
 const _t = core._t;
+let currentActionName;
+
+const allFormsInfo = new Map();
+const clearAllFormsInfo = () => {
+    allFormsInfo.clear();
+};
+/**
+ * Returns the domain of a field.
+ *
+ * @private
+ * @param {HTMLElement} formEl
+ * @param {String} name
+ * @param {String} type
+ * @param {String} relation
+ * @returns {Object|false}
+ */
+function _getDomain(formEl, name, type, relation) {
+    // We need this because the field domain is in formInfo in the
+    // WebsiteFormEditor but we need it in the WebsiteFieldEditor.
+    if (!allFormsInfo.get(formEl) || !name || !type || !relation) {
+        return false;
+    }
+    const field = allFormsInfo.get(formEl).fields
+        .find(el => el.name === name && el.type === type && el.relation === relation);
+    return field && field.domain;
+}
 
 const FormEditor = options.Class.extend({
     //----------------------------------------------------------------------
@@ -335,6 +361,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
+        currentActionName = this.activeForm.website_form_label;
         // Create the Form Action select
         this.selectActionEl = document.createElement('we-select');
         this.selectActionEl.setAttribute('string', 'Action');
@@ -605,6 +632,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (!formInfo || !formInfo.fields) {
             return;
         }
+        allFormsInfo.set(this.$target[0], formInfo);
         const proms = formInfo.fields.map(field => this._fetchFieldRecords(field));
         return Promise.all(proms).then(() => {
             formInfo.fields.forEach(field => {
@@ -734,6 +762,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             }
             this.$target.find('.s_website_form_field').remove();
             this.activeForm = this.models.find(model => model.id === modelId);
+            currentActionName = this.activeForm.website_form_label;
         }
         const formKey = this.activeForm.website_form_key;
         const formInfo = FormEditorRegistry.get(formKey);
@@ -846,7 +875,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.fields = {};
             for (const [fieldName, field] of Object.entries(fields)) {
                 field.name = fieldName;
-                field.domain = field.domain || [];
+                const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
+                field.domain = fieldDomain || field.domain || [];
                 this.fields[fieldName] = field;
             }
             // Create the buttons for the type we-select
@@ -1199,7 +1229,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             case 'hidden_condition_opt':
                 return this.$target[0].classList.contains('s_website_form_field_hidden_if');
             case 'char_input_type_opt':
-                return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
+                return !this.$target[0].classList.contains('s_website_form_custom') &&
+                    ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type) &&
+                    !this.$target[0].classList.contains('s_website_form_model_required');
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
             case 'required_opt':
@@ -1536,9 +1568,28 @@ options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
 // Disable delete button for model required fields
 options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
     start: function () {
-        this.disableButton('remove', _t('This field is mandatory for this Action. You cannot remove it.'));
+        this.disableButton("remove", _t(
+            "This field is mandatory for this action. You cannot remove it. Try hiding it with the"
+            + " 'Visibility' option instead and add it a default value."
+        ));
         return this._super.apply(this, arguments);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const fieldName = this.$target[0]
+            .querySelector("input.s_website_form_input").getAttribute("name");
+        const spanEl = document.createElement("span");
+        spanEl.innerText = sprintf(_t(
+            "The field '%s' is mandatory for the action '%s'."), fieldName, currentActionName);
+        uiFragment.querySelector("we-alert").appendChild(spanEl);
+    },
 });
 
 // Disable delete and duplicate button for submit
@@ -1566,3 +1617,7 @@ options.registry.DeviceVisibility.include({
             && !this.$target.hasClass('s_website_form_field_hidden');
     },
 });
+
+export default {
+    clearAllFormsInfo,
+};

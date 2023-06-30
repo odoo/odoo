@@ -329,13 +329,7 @@ export class FormController extends Component {
                 description: this.env._t("Archive"),
                 icon: "oi oi-archive",
                 callback: () => {
-                    const dialogProps = {
-                        body: this.env._t("Are you sure that you want to archive this record?"),
-                        confirmLabel: this.env._t("Archive"),
-                        confirm: () => this.model.root.archive(),
-                        cancel: () => {},
-                    };
-                    this.dialogService.add(ConfirmationDialog, dialogProps);
+                    this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
                 },
             },
             unarchive: {
@@ -360,6 +354,15 @@ export class FormController extends Component {
                 callback: () => this.deleteRecord(),
                 skipSave: true,
             },
+        };
+    }
+
+    get archiveDialogProps() {
+        return {
+            body: this.env._t("Are you sure that you want to archive this record?"),
+            confirmLabel: this.env._t("Archive"),
+            confirm: () => this.model.root.archive(),
+            cancel: () => {},
         };
     }
 

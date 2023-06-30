@@ -1948,7 +1948,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
-        so.action_cancel()
+        so._action_cancel()
         so.action_draft()
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")

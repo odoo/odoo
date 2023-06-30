@@ -62,6 +62,7 @@ class ProductProduct(models.Model):
                 )
         return attributes
 
+    # FIXME: this method should be verified about price computation (pricelist taxes....)
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
     ) -> Dict[str, float]:
@@ -98,9 +99,9 @@ class ProductProduct(models.Model):
                 "has_image": bool(product.image_1920),
                 "attributes": product._get_attributes(pos_config),
                 "name": product._get_name(),
-                "product_id": product.id,
+                "id": product.id,
                 "description_sale": product.description_sale,
-                "tag": product.pos_categ_id.name if product.pos_categ_id else "Other",
+                "pos_categ_ids": product.pos_categ_ids.mapped("name") or ["Other"],
                 "is_pos_groupable": product.uom_id.is_pos_groupable,
             }
             for product in self

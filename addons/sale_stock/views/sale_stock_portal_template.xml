@@ -38,10 +38,15 @@
                                         t-options="{'date_only': True}"/>
                                 </div>
                             </div>
-                            <span t-if="picking.state == 'done'"
-                                class="small badge text-bg-success orders_label_text_align">
-                                <i class="fa fa-fw fa-truck"/> <b>Shipped</b>
-                            </span>
+                            <div t-if="picking.state == 'done'">
+                                <span class="small badge text-bg-success orders_label_text_align">
+                                    <i class="fa fa-fw fa-truck"/> <b>Shipped</b>
+                                </span>
+                                <a class="badge text-bg-secondary orders_label_text_align" target="_blank"
+                                   t-att-href="'/my/picking/return/pdf/%s?%s' % (picking.id, keep_query())">
+                                    RETURN
+                                </a>
+                            </div>
                             <span t-elif="picking.state == 'cancel'"
                                 class="small badge text-bg-danger orders_label_text_align">
                                 <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
@@ -49,6 +54,48 @@
                             <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
                                 class="small badge text-bg-info orders_label_text_align">
                                 <i class="fa fa-fw fa-clock-o"/> <b>Preparation</b>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <t t-set="returns" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'incoming')"/>
+            <t t-if="returns">
+                <div class="mt-4">
+                    <strong>Returns</strong>
+                </div>
+                <div>
+                    <t t-foreach="returns" t-as="picking">
+                        <t t-set="delivery_report_url"
+                           t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div name="return"
+                            class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div name="return_details">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-esc="picking.name"/>
+                                </a>
+                                <div class="small d-lg-inline-block ms-3">
+                                    Date:
+                                    <span class="text-muted"
+                                        t-field="picking.date_done"
+                                        t-options="{'date_only': True}"/>
+                                    <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                        class="text-muted"
+                                        t-field="picking.scheduled_date"
+                                        t-options="{'date_only': True}"/>
+                                </div>
+                            </div>
+                            <span t-if="picking.state == 'done'"
+                                  class="small badge text-bg-success orders_label_text_align">
+                                <i class="fa fa-fw fa-truck"/> <b>Received</b>
+                            </span>
+                            <span t-elif="picking.state == 'cancel'"
+                                class="small badge text-bg-danger orders_label_text_align">
+                                <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
+                            </span>
+                            <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                class="small badge text-bg-info orders_label_text_align">
+                                <i class="fa fa-fw fa-clock-o"/> <b>Awaiting arrival</b>
                             </span>
                         </div>
                     </t>

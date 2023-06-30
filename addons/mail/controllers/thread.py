@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import suppress
+from datetime import datetime
 from markupsafe import Markup
+from psycopg2 import OperationalError
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -64,6 +67,11 @@ class ThreadController(http.Controller):
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
         if context:
             request.update_context(**context)
+        if "canned_response_ids" in post_data:
+            canned_response_ids = request.env['mail.shortcode'].browse(post_data.pop('canned_response_ids'))
+            # Ignore concurrency errors when saving last used date
+            with suppress(OperationalError):
+                canned_response_ids.write({'last_used': datetime.now()})
         thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
@@ -75,7 +83,7 @@ class ThreadController(http.Controller):
         return message_data
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
-    def mail_message_update_content(self, message_id, body, attachment_ids):
+    def mail_message_update_content(self, message_id, body, attachment_ids, partner_ids):
         guest = request.env["mail.guest"]._get_guest_from_request(request)
         message_sudo = guest.env["mail.message"].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
@@ -83,5 +91,5 @@ class ThreadController(http.Controller):
         if not message_sudo.model or not message_sudo.res_id:
             raise NotFound()
         request.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
-            message_sudo, body, attachment_ids=attachment_ids
+            message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )

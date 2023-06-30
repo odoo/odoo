@@ -97,8 +97,8 @@ export class DebugWidget extends Component {
             ),
         });
         if (confirmed) {
-            this.pos.globalState.db.remove_all_orders();
-            this.pos.globalState.set_synch("connected", 0);
+            this.pos.db.remove_all_orders();
+            this.pos.set_synch("connected", 0);
         }
     }
     async deleteUnpaidOrders() {
@@ -109,7 +109,7 @@ export class DebugWidget extends Component {
             ),
         });
         if (confirmed) {
-            this.pos.globalState.db.remove_all_unpaid_orders();
+            this.pos.db.remove_all_unpaid_orders();
             window.location = "/";
         }
     }
@@ -123,7 +123,7 @@ export class DebugWidget extends Component {
     // The implementation can be better.
     preparePaidOrders() {
         try {
-            this.paidOrdersBlob = this._createBlob(this.pos.globalState.export_paid_orders());
+            this.paidOrdersBlob = this._createBlob(this.pos.export_paid_orders());
             this.state.isPaidOrdersReady = true;
         } catch (error) {
             console.warn(error);
@@ -139,7 +139,7 @@ export class DebugWidget extends Component {
     // FIXME POSREF why is this two steps?
     prepareUnpaidOrders() {
         try {
-            this.unpaidOrdersBlob = this._createBlob(this.pos.globalState.export_unpaid_orders());
+            this.unpaidOrdersBlob = this._createBlob(this.pos.export_unpaid_orders());
             this.state.isUnpaidOrdersReady = true;
         } catch (error) {
             console.warn(error);
@@ -155,7 +155,7 @@ export class DebugWidget extends Component {
     async importOrders(event) {
         const file = event.target.files[0];
         if (file) {
-            const report = this.pos.globalState.import_orders(await file.text());
+            const report = this.pos.import_orders(await file.text());
             await this.popup.add(OrderImportPopup, { report });
         }
     }

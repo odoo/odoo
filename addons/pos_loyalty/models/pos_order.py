@@ -60,6 +60,7 @@ class PosOrder(models.Model):
 
         It will also return the points of all concerned coupons to be updated in the cache.
         """
+        get_partner_id = lambda partner_id: partner_id and self.env['res.partner'].browse(partner_id).exists() and partner_id or False
         # Keys are stringified when using rpc
         coupon_data = {int(k): v for k, v in coupon_data.items()}
         # Map negative id to newly created ids.
@@ -69,7 +70,7 @@ class PosOrder(models.Model):
         coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
         coupon_create_vals = [{
             'program_id': p['program_id'],
-            'partner_id': p.get('partner_id', False),
+            'partner_id': get_partner_id(p.get('partner_id', False)),
             'code': p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
             'source_pos_order_id': self.id,
@@ -86,7 +87,7 @@ class PosOrder(models.Model):
             gift_card.write({
                 'points': coupon_vals['points'],
                 'source_pos_order_id': self.id,
-                'partner_id': coupon_vals.get('partner_id', False),
+                'partner_id': get_partner_id(coupon_vals.get('partner_id', False)),
             })
             updated_gift_cards |= gift_card
 

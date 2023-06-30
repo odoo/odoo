@@ -155,8 +155,10 @@ class IrUiMenu(models.Model):
         # to be consistent with search() above
         return len(self.search(domain, limit=limit))
 
-    def name_get(self):
-        return [(menu.id, menu._get_full_name()) for menu in self]
+    @api.depends('parent_id')
+    def _compute_display_name(self):
+        for menu in self:
+            menu.display_name = menu._get_full_name()
 
     @api.model_create_multi
     def create(self, vals_list):

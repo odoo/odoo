@@ -164,15 +164,16 @@ class Project(models.Model):
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
-    def name_get(self):
-        res = super().name_get()
+    @api.depends('is_internal_project', 'company_id')
+    @api.depends_context('allowed_company_ids')
+    def _compute_display_name(self):
+        super()._compute_display_name()
         if len(self.env.context.get('allowed_company_ids', [])) <= 1:
-            return res
-        name_mapping = dict(res)
+            return
+
         for project in self:
             if project.is_internal_project:
-                name_mapping[project.id] = f'{name_mapping[project.id]} - {project.company_id.name}'
-        return list(name_mapping.items())
+                project.display_name = f'{project.display_name} - {project.company_id.name}'
 
     @api.model
     def _init_data_analytic_account(self):
@@ -200,3 +201,8 @@ class Project(models.Model):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id
         return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
+
+    def action_project_timesheets(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
+        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        return action

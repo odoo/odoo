@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict
-from itertools import product as cartesian_product
+
 import json
 import logging
 
@@ -110,6 +109,9 @@ class WebsiteSaleForm(WebsiteForm):
             return json.dumps({'error_fields': e.args[0]})
 
         order = request.website.sale_get_order()
+        if not order:
+            return json.dumps({'error': "No order found; please add a product to your cart."})
+
         if data['record']:
             order.write(data['record'])
 
@@ -246,52 +248,7 @@ class WebsiteSale(http.Controller):
                                                                                order=self._get_search_order(post),
                                                                                options=options)
         search_result = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
-        if attrib_set:
-            # Attributes value per attribute
-            attribute_values = request.env['product.attribute.value'].browse(attrib_set)
-            values_per_attribute = defaultdict(lambda: request.env['product.attribute.value'])
-            # In case we have only one value per attribute we can check for a combination using those attributes directly
-            multi_value_attribute = False
-            for value in attribute_values:
-                values_per_attribute[value.attribute_id] |= value
-                if len(values_per_attribute[value.attribute_id]) > 1:
-                    multi_value_attribute = True
 
-            def filter_template(template, attribute_values_list):
-                # Transform product.attribute.value to product.template.attribute.value
-                attribute_value_to_ptav = dict()
-                for ptav in template.attribute_line_ids.product_template_value_ids:
-                    attribute_value_to_ptav[ptav.product_attribute_value_id] = ptav.id
-                possible_combinations = False
-                for attribute_values in attribute_values_list:
-                    ptavs = request.env['product.template.attribute.value'].browse(
-                        [attribute_value_to_ptav[val] for val in attribute_values if val in attribute_value_to_ptav]
-                    )
-                    if len(ptavs) < len(attribute_values):
-                        # In this case the template is not compatible with this specific combination
-                        continue
-                    if len(ptavs) == len(template.attribute_line_ids):
-                        if template._is_combination_possible(ptavs):
-                            return True
-                    elif len(ptavs) < len(template.attribute_line_ids):
-                        if len(attribute_values_list) == 1:
-                            if any(template._get_possible_combinations(necessary_values=ptavs)):
-                                return True
-                        if not possible_combinations:
-                            possible_combinations = template._get_possible_combinations()
-                        if any(len(ptavs & combination) == len(ptavs) for combination in possible_combinations):
-                            return True
-                return False
-
-            # If multi_value_attribute is False we know that we have our final combination (or at least a subset of it)
-            if not multi_value_attribute:
-                possible_attrib_values_list = [attribute_values]
-            else:
-                # Cartesian product from dict keys and values
-                possible_attrib_values_list = [request.env['product.attribute.value'].browse([v.id for v in values]) for
-                                               values in cartesian_product(*values_per_attribute.values())]
-
-            search_result = search_result.filtered(lambda tmpl: filter_template(tmpl, possible_attrib_values_list))
         return fuzzy_search_term, product_count, search_result
 
     def _shop_get_query_url_kwargs(self, category, search, min_price, max_price, attrib=None, order=None, **post):
@@ -999,12 +956,30 @@ class WebsiteSale(http.Controller):
         error = dict()
         error_message = []
 
-        # prevent name change if invoices exist
         if data.get('partner_id'):
-            partner = request.env['res.partner'].browse(int(data['partner_id']))
-            if partner.exists() and partner.sudo().name and not partner.sudo().can_edit_vat() and 'name' in data and (data['name'] or False) != (partner.sudo().name or False):
+            partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
+            name_change = partner_su and 'name' in data and data['name'] != partner_su.name
+            email_change = partner_su and 'email' in data and data['email'] != partner_su.email
+
+            # Prevent changing the partner name if invoices have been issued.
+            if name_change and not partner_su.can_edit_vat():
                 error['name'] = 'error'
-                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+                error_message.append(_(
+                    "Changing your name is not allowed once invoices have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+
+            # Prevent change the partner name or email if it is an internal user.
+            if (name_change or email_change) and not all(partner_su.user_ids.mapped('share')):
+                error.update({
+                    'name': 'error' if name_change else None,
+                    'email': 'error' if email_change else None,
+                })
+                error_message.append(_(
+                    "If you are ordering for an external person, please place your order via the"
+                    " backend. If you wish to change your name or email address, please do so in"
+                    " the account settings or contact your administrator."
+                ))
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
@@ -1616,7 +1591,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
         if order and not order.amount_total and not tx_sudo:
-            order.with_context(send_email=True).action_confirm()
+            order.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
             return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
@@ -1838,6 +1813,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
+
+    def _get_payment_values(self, order_sudo, website_id=None, **kwargs):
+       """ Override of `sale` to inject the `website_id` into the kwargs.
+
+       :param sale.order order_sudo: The sales order being paid.
+       :param int website_id: The website on which the order was made, if any, as a `website` id.
+       :param dict kwargs: Locally unused keywords arguments.
+       :return: The payment-specific values.
+       :rtype: dict
+       """
+       website_id = website_id or order_sudo.website_id.id
+       return super()._get_payment_values(order_sudo, website_id=website_id, **kwargs)
+
     def _sale_reorder_get_line_context(self):
         return {}
 
@@ -1861,19 +1849,34 @@ class CustomerPortal(sale_portal.CustomerPortal):
         for line in sale_order.order_line:
             if line.display_type:
                 continue
+            if line._is_delivery():
+                continue
+            combination = line.product_id.product_template_attribute_value_ids | line.product_no_variant_attribute_value_ids
             res = {
                 'product_template_id': line.product_id.product_tmpl_id.id,
                 'product_id': line.product_id.id,
+                'combination': combination.ids,
+                'no_variant_attribute_values': [
+                    { # Same input format as provided by product configurator
+                        'value': ptav.id,
+                    } for ptav in line.product_no_variant_attribute_value_ids
+                ],
+                'product_custom_attribute_values': [
+                    { # Same input format as provided by product configurator
+                        'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
+                        'custom_value': pcav.custom_value,
+                    } for pcav in line.product_custom_attribute_value_ids
+                ],
                 'type': line.product_id.type,
-                'name': line.product_id.name,
-                'description_sale': line.product_id.description_sale,
+                'name': line.name_short,
+                'description_sale': line.product_id.description_sale or '' + line._get_sale_order_line_multiline_description_variants(),
                 'qty': line.product_uom_qty,
                 'add_to_cart_allowed': line.with_user(request.env.user).sudo()._is_reorder_allowed(),
                 'has_image': bool(line.product_id.image_128),
             }
             if res['add_to_cart_allowed']:
                 res['combinationInfo'] = line.product_id.product_tmpl_id.with_context(**self._sale_reorder_get_line_context())\
-                    ._get_combination_info([], res['product_id'], res['qty'], pricelist)
+                    ._get_combination_info(combination, res['product_id'], res['qty'], pricelist)
             else:
                 res['combinationInfo'] = {}
             result['products'].append(res)

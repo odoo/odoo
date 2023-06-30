@@ -449,7 +449,8 @@ function classToStyle($editable, cssRules) {
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            writes.push(() => { node.appendChild(document.createTextNode('&nbsp;')); });
+            // Append non-breaking spaces to empty table cells.
+            writes.push(() => { node.appendChild(document.createTextNode('\u00A0')); });
         }
         // Outlook
         if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
@@ -696,6 +697,11 @@ async function toInline($editable, cssRules, $iframe) {
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
     }
+
+    attachmentThumbnailToLinkImg($editable);
+    fontToImg($editable);
+    await svgToPng($editable);
+
     // Fix img-fluid for Outlook.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
         const width = _getWidth(image);
@@ -707,9 +713,6 @@ async function toInline($editable, cssRules, $iframe) {
         _hideForOutlook(image);
     }
 
-    attachmentThumbnailToLinkImg($editable);
-    fontToImg($editable);
-    await svgToPng($editable);
     classToStyle($editable, cssRules);
     bootstrapToTable(editable);
     cardToTable(editable);
@@ -1201,7 +1204,7 @@ function normalizeRem($editable, rootFontSize=16) {
  * @param {JQuery} $editable
  */
 async function svgToPng($editable) {
-    for (const svg of $editable.find('img[src$=".svg"]')) {
+    for (const svg of $editable.find('img[src*=".svg"]')) {
         // Make sure the svg is loaded before we convert it.
         await new Promise(resolve => {
             svg.onload = () => resolve();

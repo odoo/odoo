@@ -35,11 +35,10 @@ class L10nLatamDocumentType(models.Model):
         self.ensure_one()
         return document_number
 
-    def name_get(self):
-        result = []
+    @api.depends('code')
+    def _compute_display_name(self):
         for rec in self:
             name = rec.name
             if rec.code:
-                name = '(%s) %s' % (rec.code, name)
-            result.append((rec.id, name))
-        return result
+                name = f'({rec.code}) {name}'
+            rec.display_name = name

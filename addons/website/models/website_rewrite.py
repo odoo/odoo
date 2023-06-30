@@ -103,12 +103,10 @@ class WebsiteRewrite(models.Model):
                 except ValueError as e:
                     raise ValidationError(_('"URL to" is invalid: %s') % e)
 
-    def name_get(self):
-        result = []
+    @api.depends('redirect_type')
+    def _compute_display_name(self):
         for rewrite in self:
-            name = "%s - %s" % (rewrite.redirect_type, rewrite.name)
-            result.append((rewrite.id, name))
-        return result
+            rewrite.display_name = f"{rewrite.redirect_type} - {rewrite.name}"
 
     @api.model_create_multi
     def create(self, vals_list):

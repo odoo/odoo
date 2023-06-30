@@ -1,6 +1,7 @@
 /** @odoo-module alias=purchase_stock.purchase_steps **/
 
 import core from "web.core";
+import "web.legacy_tranlations_loaded";
 
 var _t = core._t;
 import PurchaseAdditionalTourSteps from "purchase.purchase_steps";

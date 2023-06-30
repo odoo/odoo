@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+import re
 from werkzeug.exceptions import NotFound
 
 from odoo import http, tools, _
@@ -84,6 +85,8 @@ class LivechatController(http.Controller):
         # find the first matching rule for the given country and url
         matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
         if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
+            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
+            matching_rule = matching_rule.with_context(lang=frontend_lang)
             rule = {
                 'action': matching_rule.action,
                 'auto_popup_timer': matching_rule.auto_popup_timer,
@@ -152,7 +155,8 @@ class LivechatController(http.Controller):
 
         chatbot_script = False
         if chatbot_script_id:
-            chatbot_script = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
+            chatbot_script = request.env['chatbot.script'].sudo().with_context(lang=frontend_lang).browse(chatbot_script_id)
 
         return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_discuss_channel(
             anonymous_name,
@@ -161,6 +165,22 @@ class LivechatController(http.Controller):
             user_id=user_id,
             country_id=country_id,
             persisted=persisted
+        )
+
+    def _post_feedback_message(self, channel, rating, reason):
+        body = Markup('''
+            <div class="o_mail_notification o_hide_author">
+                %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/><br> %(reason)s
+            </div>
+        ''') % {
+            'rating': _('Rating'),
+            'rating_url': rating.rating_image_url,
+            'reason': reason,
+        }
+        channel.message_post(
+            body=Markup(re.sub(r'\r\n|\r|\n', '<br>', body)),
+            message_type='notification',
+            subtype_xmlid='mail.mt_comment'
         )
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
@@ -189,6 +209,7 @@ class LivechatController(http.Controller):
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)
+            self._post_feedback_message(channel, rating, reason)
             return rating.id
         return False
 

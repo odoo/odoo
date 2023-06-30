@@ -366,15 +366,13 @@ class PosConfig(models.Model):
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for config in self:
             last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
             if (not last_session) or (last_session.state == 'closed'):
-                result.append((config.id, _("%(pos_name)s (not used)", pos_name=config.name)))
+                config.display_name = _("%(pos_name)s (not used)", pos_name=config.name)
             else:
-                result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
-        return result
+                config.display_name = f"{config.name} ({last_session.user_id.name})"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -395,6 +393,7 @@ class PosConfig(models.Model):
         pos_configs = super().create(vals_list)
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
+        pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
@@ -406,16 +405,25 @@ class PosConfig(models.Model):
             else:
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
+    def _update_preparation_printers_menuitem_visibility(self):
+        prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
+        if prepa_printers_menuitem:
+            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
+
     def write(self, vals):
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
+
+        bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
 
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
+                    if bypass_categories_forbidden_change and key in ('limit_categories', 'iface_available_categ_ids'):
+                        continue
                     if key == 'use_pricelist' and vals[key]:
                         continue
                     if key == 'available_pricelist_ids':
@@ -434,6 +442,8 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
+        if 'is_order_printer' in vals:
+            self._update_preparation_printers_menuitem_visibility()
         return result
 
     def _get_forbidden_change_fields(self):
@@ -654,7 +664,10 @@ class PosConfig(models.Model):
                         t.available_in_pos
                     AND t.sale_ok
                     AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
-                    AND %(available_categ_ids)s IS NULL OR t.pos_categ_id=ANY(%(available_categ_ids)s)
+                    AND (%(available_categ_ids)s IS NULL OR EXISTS (
+                        SELECT 1 FROM pos_category_product_template_rel
+                        WHERE product_template_id = t.id
+                        AND pos_category_id = ANY(%(available_categ_ids)s)))
                 )    OR p.id=%(tip_product_id)s
              ORDER BY t.priority DESC,
                       t.detailed_type DESC,

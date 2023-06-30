@@ -39,9 +39,10 @@ export class PartnerListScreen extends Component {
         this.state = useState({
             query: null,
             selectedPartner: this.props.partner,
-            detailIsShown: false,
+            detailIsShown: this.props.editModeProps ? true : false,
             editModeProps: {
-                partner: null,
+                partner: this.props.editModeProps ? this.props.partner : null,
+                missingFields: this.props.missingFields ? this.props.missingFields : null,
             },
             previousQuery: "",
             currentOffset: 0,
@@ -51,14 +52,31 @@ export class PartnerListScreen extends Component {
         this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
     }
     // Lifecycle hooks
-    back() {
-        if (this.state.detailIsShown) {
+    back(force = false) {
+        if (this.state.detailIsShown && !force) {
             this.state.detailIsShown = false;
         } else {
             this.props.resolve({ confirmed: false, payload: false });
             this.pos.closeTempScreen();
         }
     }
+
+    goToOrders() {
+        this.back(true);
+        const partner = this.state.editModeProps.partner;
+        const partnerHasActiveOrders = this.pos
+            .get_order_list()
+            .some((order) => order.partner?.id === partner.id);
+        const ui = {
+            searchDetails: {
+                fieldName: "PARTNER",
+                searchTerm: partner.name,
+            },
+            filter: partnerHasActiveOrders ? "" : "SYNCED",
+        };
+        this.pos.showScreen("TicketScreen", { ui });
+    }
+
     confirm() {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
@@ -69,15 +87,15 @@ export class PartnerListScreen extends Component {
     // Getters
 
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
 
     get partners() {
         let res;
         if (this.state.query && this.state.query.trim() !== "") {
-            res = this.pos.globalState.db.search_partner(this.state.query.trim());
+            res = this.pos.db.search_partner(this.state.query.trim());
         } else {
-            res = this.pos.globalState.db.get_partners_sorted(1000);
+            res = this.pos.db.get_partners_sorted(1000);
         }
         res.sort(function (a, b) {
             return (a.name || "").localeCompare(b.name || "");
@@ -147,15 +165,14 @@ export class PartnerListScreen extends Component {
     }
     createPartner() {
         // initialize the edit screen with default details about country & state
-        const { country_id, state_id } = this.pos.globalState.company;
+        const { country_id, state_id } = this.pos.company;
         this.state.editModeProps.partner = { country_id, state_id };
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
-        const { globalState } = this.pos;
         const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await globalState.load_new_partners();
-        this.state.selectedPartner = globalState.db.get_partner_by_id(partnerId);
+        await this.pos.load_new_partners();
+        this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
         this.confirm();
     }
     async searchPartner() {
@@ -163,7 +180,7 @@ export class PartnerListScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.getNewPartners();
-        this.pos.globalState.addPartners(result);
+        this.pos.addPartners(result);
         if (this.state.previousQuery == this.state.query) {
             this.state.currentOffset += result.length;
         } else {

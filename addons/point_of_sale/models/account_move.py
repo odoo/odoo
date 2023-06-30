@@ -9,6 +9,7 @@ class AccountMove(models.Model):
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
+    pos_refunded_invoice_ids = fields.Many2many('account.move', 'refunded_invoices', 'refund_account_move', 'original_account_move')
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()

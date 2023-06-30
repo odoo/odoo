@@ -13,7 +13,7 @@ export class SaveButton extends Component {
         this.notification = useService("pos_notification");
     }
     onClick() {
-        const orderline = this.pos.globalState.get_order().get_selected_orderline();
+        const orderline = this.pos.get_order().get_selected_orderline();
         if (!orderline) {
             this.notification.add(this.env._t("You cannot save an empty order"), 3000);
             return;
@@ -22,14 +22,13 @@ export class SaveButton extends Component {
         this.notification.add(this.env._t("Order saved for later"), 3000);
     }
     _selectEmptyOrder() {
-        const { globalState } = this.pos;
-        const orders = globalState.get_order_list();
+        const orders = this.pos.get_order_list();
         const emptyOrders = orders.filter((order) => order.is_empty());
         if (emptyOrders.length > 0) {
-            globalState.sendDraftToServer();
-            globalState.set_order(emptyOrders[0]);
+            this.pos.sendDraftToServer();
+            this.pos.set_order(emptyOrders[0]);
         } else {
-            globalState.add_new_order();
+            this.pos.add_new_order();
         }
     }
 }
@@ -37,6 +36,6 @@ export class SaveButton extends Component {
 ProductScreen.addControlButton({
     component: SaveButton,
     condition: function () {
-        return this.pos.globalState.config.trusted_config_ids.length > 0;
+        return this.pos.config.trusted_config_ids.length > 0;
     },
 });

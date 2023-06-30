@@ -55,7 +55,9 @@ class ProductAttributeValue(models.Model):
         for pav in self:
             pav.is_used_on_products = bool(pav.pav_attribute_line_ids)
 
-    def name_get(self):
+    @api.depends('attribute_id')
+    @api.depends_context('show_attribute')
+    def _compute_display_name(self):
         """Override because in general the name of the value is confusing if it
         is displayed without the name of the corresponding attribute.
         Eg. on product list & kanban views, on BOM form view
@@ -65,8 +67,9 @@ class ProductAttributeValue(models.Model):
         on every value.
         """
         if not self.env.context.get('show_attribute', True):
-            return super().name_get()
-        return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
+            return super()._compute_display_name()
+        for value in self:
+            value.display_name = f"{value.attribute_id.name}: {value.name}"
 
     def write(self, values):
         if 'attribute_id' in values:

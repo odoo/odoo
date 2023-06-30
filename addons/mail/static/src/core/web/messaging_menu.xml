@@ -24,7 +24,7 @@
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
         </div>
-        <div t-if="!env.inDiscussApp or ['chat', 'channel'].includes(store.discuss.activeTab)" class="d-flex flex-column overflow-auto flex-grow-1">
+        <div t-if="!env.inDiscussApp or ['chat', 'channel'].includes(store.discuss.activeTab)" class="list-group-flush d-flex flex-column overflow-auto flex-grow-1">
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
@@ -39,7 +39,6 @@
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                 </NotificationItem>
-                <hr t-if="!notificationRequest.isLast" class="my-0"/>
             </t>
             <t t-if="store.discuss.activeTab === 'all'">
                 <t t-foreach="failures" t-as="failure" t-key="failure.id">
@@ -53,7 +52,6 @@
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                     />
-                    <hr t-if="threads.length !== 0 or !failure_last" class="my-0"/>
                 </t>
             </t>
             <t t-foreach="threads" t-as="thread" t-key="thread.localId">
@@ -81,7 +79,6 @@
                         </t>
                     </t>
                 </NotificationItem>
-                <hr t-if="!thread_last" class="my-0"/>
             </t>
         </div>
     </div>

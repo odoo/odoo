@@ -65,23 +65,15 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(string="Readonly Timesheet", compute="_compute_readonly_timesheet")
 
-    def name_get(self):
-        result = super().name_get()
-        timesheets_read = self.env[self._name].search_read([('project_id', '!=', False), ('id', 'in', self.ids)], ['id', 'project_id', 'task_id'])
-        if not timesheets_read:
-            return result
-        def _get_display_name(project_id, task_id):
-            """ Get the display name of the timesheet based on the project and task
-                :param project_id: tuple containing the id and the display name of the project
-                :param task_id: tuple containing the id and the display name of the task if a task exists in the timesheet
-                              otherwise False.
-                :returns: the display name of the timesheet
-            """
-            if task_id:
-                return '%s - %s' % (project_id[1], task_id[1])
-            return project_id[1]
-        timesheet_dict = {res['id']: _get_display_name(res['project_id'], res['task_id']) for res in timesheets_read}
-        return list({**dict(result), **timesheet_dict}.items())
+    @api.depends('project_id', 'task_id')
+    def _compute_display_name(self):
+        analytic_line_with_project = self.filtered('project_id')
+        super(AccountAnalyticLine, self - analytic_line_with_project)._compute_display_name()
+        for analytic_line in analytic_line_with_project:
+            if analytic_line.task_id:
+                analytic_line.display_name = f"{analytic_line.project_id.display_name} - {analytic_line.task_id.display_name}"
+            else:
+                analytic_line.display_name = analytic_line.project_id.display_name
 
     def _is_readonly(self):
         self.ensure_one()

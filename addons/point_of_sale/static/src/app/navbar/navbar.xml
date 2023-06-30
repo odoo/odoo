@@ -12,7 +12,7 @@
                 <div class="status-buttons">
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
-                    <ProxyStatus t-if="pos.globalState.config.use_proxy" />
+                    <ProxyStatus t-if="pos.config.use_proxy" />
                     <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                     <SyncNotification />
                 </div>
@@ -29,7 +29,7 @@
                                         <span>Orders</span>
                                     </div>
                                 </li>
-                                <li t-if="props.showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
+                                <li t-if="showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
                                     <span>Cash In/Out</span>
                                 </li>
                                 <CustomerFacingDisplayButton t-if="CustomerFacingDisplayButtonIsShown"/>

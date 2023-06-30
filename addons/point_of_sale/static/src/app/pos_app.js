@@ -6,7 +6,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { reactive, Component, onMounted } from "@odoo/owl";
+import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -19,7 +19,7 @@ export class Chrome extends Component {
         this.pos = usePos();
         this.popup = useService("popup");
 
-        const reactivePos = reactive(this.pos.globalState);
+        const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
 
@@ -30,13 +30,14 @@ export class Chrome extends Component {
             }
         });
 
+        onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
     }
 
     // GETTERS //
 
     get showCashMoveButton() {
-        return Boolean(this.pos.globalState?.config?.cash_control);
+        return Boolean(this.pos?.config?.cash_control);
     }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate

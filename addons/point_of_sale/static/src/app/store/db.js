@@ -118,7 +118,10 @@ export class PosDB {
             if (!self.category_childs[parent_id]) {
                 self.category_childs[parent_id] = [];
             }
-            self.category_childs[parent_id].push(cat.id);
+
+            if (!self.category_childs[parent_id].includes(cat.id)) {
+                self.category_childs[parent_id].push(cat.id);
+            }
         });
         function make_ancestors(cat_id, ancestors) {
             self.category_ancestors[cat_id] = ancestors;
@@ -133,16 +136,42 @@ export class PosDB {
         }
         make_ancestors(this.root_category_id, []);
     }
-    category_contains(categ_id, product_id) {
-        var product = this.product_by_id[product_id];
-        if (product) {
-            var cid = product.pos_categ_id[0];
-            while (cid && cid !== categ_id) {
-                cid = this.category_parent[cid];
+    /**
+     * Removes all categories specified by their id.
+     * @param {integer[]} categories_id
+     */
+    remove_categories(categories_id) {
+        categories_id = categories_id.filter((cat_id) => cat_id !== this.root_category_id);
+        categories_id.forEach((cat_id) => {
+            if (cat_id === undefined || cat_id === null) {
+                return;
             }
-            return !!cid;
+            const cat = this.category_by_id[cat_id];
+            if (!cat) {
+                return;
+            }
+
+            const parent_id = this.category_parent[cat.id];
+            if (this.category_childs[parent_id]) {
+                this._remove_all_occurrences_from_array(this.category_childs[parent_id], cat.id);
+                if (this.category_childs[parent_id].length === 0) {
+                    delete this.category_childs[parent_id];
+                }
+            }
+            delete this.category_parent[cat.id];
+
+            delete this.category_by_id[cat_id];
+        });
+        const removed_categories_id = new Set(categories_id);
+        for (const cat_id_str in this.category_ancestors) {
+            if (removed_categories_id.has(Number(cat_id_str))) {
+                delete this.category_ancestors[cat_id_str];
+            } else {
+                this.category_ancestors[cat_id_str] = this.category_ancestors[cat_id_str].filter(
+                    (anc_id_str) => !removed_categories_id.has(Number(anc_id_str))
+                );
+            }
         }
-        return false;
     }
     /* loads a record store from the database. returns default if nothing is found */
     load(store, deft) {
@@ -193,38 +222,106 @@ export class PosDB {
             }
             if (product.available_in_pos) {
                 var search_string = unaccent(this._product_search_string(product));
-                var categ_id = product.pos_categ_id
-                    ? product.pos_categ_id[0]
-                    : this.root_category_id;
+                const all_categ_ids = product.pos_categ_ids.length
+                    ? product.pos_categ_ids
+                    : [this.root_category_id];
                 product.product_tmpl_id = product.product_tmpl_id[0];
-                if (!stored_categories[categ_id]) {
-                    stored_categories[categ_id] = [];
-                }
-                stored_categories[categ_id].push(product.id);
-
-                if (this.category_search_string[categ_id] === undefined) {
-                    this.category_search_string[categ_id] = "";
-                }
-                this.category_search_string[categ_id] += search_string;
-
-                var ancestors = this.get_category_ancestors_ids(categ_id) || [];
-
-                for (var j = 0, jlen = ancestors.length; j < jlen; j++) {
-                    var ancestor = ancestors[j];
-                    if (!stored_categories[ancestor]) {
-                        stored_categories[ancestor] = [];
+                for (const categ_id of all_categ_ids) {
+                    if (!stored_categories[categ_id]) {
+                        stored_categories[categ_id] = [];
                     }
-                    stored_categories[ancestor].push(product.id);
+                    stored_categories[categ_id].push(product.id);
 
-                    if (this.category_search_string[ancestor] === undefined) {
-                        this.category_search_string[ancestor] = "";
+                    if (this.category_search_string[categ_id] === undefined) {
+                        this.category_search_string[categ_id] = "";
                     }
-                    this.category_search_string[ancestor] += search_string;
+                    this.category_search_string[categ_id] += search_string;
+
+                    var ancestors = this.get_category_ancestors_ids(categ_id) || [];
+
+                    for (var j = 0, jlen = ancestors.length; j < jlen; j++) {
+                        var ancestor = ancestors[j];
+                        if (!stored_categories[ancestor]) {
+                            stored_categories[ancestor] = [];
+                        }
+                        stored_categories[ancestor].push(product.id);
+
+                        if (this.category_search_string[ancestor] === undefined) {
+                            this.category_search_string[ancestor] = "";
+                        }
+                        this.category_search_string[ancestor] += search_string;
+                    }
                 }
             }
             this.product_by_id[product.id] = product;
             if (product.barcode) {
                 this.product_by_barcode[product.barcode] = product;
+            }
+        }
+    }
+    /**
+     * Removes all products specified by their id.
+     * @param {integer[]} products_id
+     */
+    remove_products(products_id) {
+        if (!(products_id instanceof Array)) {
+            products_id = [products_id];
+        }
+        products_id.forEach((product_id) => {
+            if (product_id === undefined || product_id === null) {
+                return;
+            }
+            const product = this.product_by_id[product_id];
+            if (!product) {
+                return;
+            }
+            if (product.available_in_pos) {
+                const product_search_string = unaccent(this._product_search_string(product));
+                const all_categ_ids = product.pos_categ_ids.length
+                    ? product.pos_categ_ids
+                    : [this.root_category_id];
+
+                for (const categ_id of all_categ_ids) {
+                    this.remove_product_from_category(product.id, product_search_string, categ_id);
+                    const categ_ancestors_id = this.get_category_ancestors_ids(categ_id) || [];
+                    categ_ancestors_id.forEach((ancestor_id) => {
+                        this.remove_product_from_category(
+                            product.id,
+                            product_search_string,
+                            ancestor_id
+                        );
+                    });
+                }
+            }
+            delete this.product_by_id[product.id];
+            if (product.barcode) {
+                delete this.product_by_barcode[product.barcode];
+            }
+        });
+    }
+    remove_product_from_category(product_id, product_search_string, categ_id) {
+        const stored_categories = this.product_by_category_id;
+        if (stored_categories[categ_id]) {
+            this._remove_all_occurrences_from_array(stored_categories[categ_id], product_id);
+            if (stored_categories[categ_id].length === 0) {
+                delete stored_categories[categ_id];
+            }
+        }
+
+        if (this.category_search_string[categ_id]) {
+            this.category_search_string[categ_id] = this.category_search_string[categ_id].replace(
+                product_search_string,
+                ""
+            );
+        }
+        if (!this.category_search_string[categ_id]) {
+            delete this.category_search_string[categ_id];
+        }
+    }
+    _remove_all_occurrences_from_array(array, element) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (array[i] === element) {
+                array.splice(i, 1);
             }
         }
     }
@@ -408,13 +505,18 @@ export class PosDB {
         }
         return undefined;
     }
+
+    shouldAddProduct(product, list) {
+        return product.active && product.available_in_pos && !list.includes(product);
+    }
+
     get_product_by_category(category_id) {
         var product_ids = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
                 const product = this.product_by_id[product_ids[i]];
-                if (!(product.active && product.available_in_pos)) {
+                if (!this.shouldAddProduct(product, list)) {
                     continue;
                 }
                 list.push(product);
@@ -441,7 +543,7 @@ export class PosDB {
             if (r) {
                 var id = Number(r[1]);
                 const product = this.get_product_by_id(id);
-                if (!(product.active && product.available_in_pos)) {
+                if (!this.shouldAddProduct(product, results)) {
                     continue;
                 }
                 results.push(product);
@@ -451,22 +553,41 @@ export class PosDB {
         }
         return results;
     }
-    /* from a product id, and a list of category ids, returns
-     * true if the product belongs to one of the provided category
+    /**
+     * returns true if the product belongs to one of the provided categories
      * or one of its child categories.
+     * @param {number[]} category_ids
+     * @param {number} product_id
+     * @returns {boolean}
      */
     is_product_in_category(category_ids, product_id) {
-        let cat = this.get_product_by_id(product_id).pos_categ_id[0];
-        while (cat) {
-            for (const cat_id of category_ids) {
-                if (cat == cat_id) {
-                    // The == is important, ids may be strings
-                    return true;
-                }
-            }
-            cat = this.get_category_parent_id(cat);
-        }
-        return false;
+        const product_categ_ids = this.get_product_by_id(product_id).pos_categ_ids;
+        return this.any_of_is_subcategory(product_categ_ids, category_ids);
+    }
+
+    /**
+     * Recursively check if any of `subcategory_ids` belongs to any of the `category_ids`
+     * @param {number[]} subcategory_ids
+     * @param {number[]} category_ids
+     * @returns {boolean}
+     */
+    any_of_is_subcategory(subcategory_ids, category_ids) {
+        return subcategory_ids.some((subcategory_id) =>
+            this.is_subcategory(subcategory_id, category_ids)
+        );
+    }
+    /**
+     * Recursively check if a `subcategory_id` a child of any of the provided `category_ids`.
+     * @param {number} subcategory_id
+     * @param {number[]} category_ids
+     * @returns {boolean}
+     */
+    is_subcategory(subcategory_id, category_ids) {
+        const check = (categ_id) => categ_id && this.is_subcategory(categ_id, category_ids);
+        return (
+            category_ids.includes(Number(subcategory_id)) ||
+            check(this.get_category_parent_id(subcategory_id))
+        );
     }
 
     /* paid orders */
@@ -567,11 +688,13 @@ export class PosDB {
      * @param {object} order object.
      */
     set_order_to_remove_from_server(order) {
-        if (order.server_id !== undefined) {
-            var to_remove = this.load("unpaid_orders_to_remove", []);
-            to_remove.push(order.server_id);
-            this.save("unpaid_orders_to_remove", to_remove);
+        if (order.server_id === undefined) {
+            return;
         }
+        const to_remove = new Set(
+            [this.load("unpaid_orders_to_remove", []), order.server_id].flat()
+        );
+        this.save("unpaid_orders_to_remove", [...to_remove]);
     }
     /**
      * Get a list of server_ids of orders to be removed.

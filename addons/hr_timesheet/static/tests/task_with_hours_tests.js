@@ -28,7 +28,7 @@ QUnit.module("hr_timesheet", (hooks) => {
         await click(target, ".o_list_many2one[name=task_id] input");
         await clickDropdown(target, "task_id");
         const testFunction = visible ? assert.containsOnce : assert.containsNone;
-        testFunction(target, '.o_list_many2one[name=task_id] .dropdown ul li:contains("Create and edit...")');
+        testFunction(target, '.o_list_many2one[name=task_id] .dropdown ul li:contains(Create "NonExistingTask")');
     }
 
     QUnit.test("quick create is enabled when project_id is set", async function (assert) {

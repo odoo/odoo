@@ -160,7 +160,6 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
@@ -175,8 +174,8 @@ class Project(models.Model):
     rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
     allow_rating = fields.Boolean('Allow Customer Ratings', compute="_compute_allow_rating", default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
-        [('stage', 'Rating when changing stage'),
-         ('periodic', 'Periodic rating')
+        [('stage', 'when reaching a given stage'),
+         ('periodic', 'on a periodic basis')
         ], 'Customer Ratings Status', default="stage", required=True,
         help="Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the corresponding stages.\n"
              "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
@@ -434,9 +433,6 @@ class Project(models.Model):
 
         res = super(Project, self).write(vals) if vals else True
 
-        if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
-            self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
-
         if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
 
@@ -568,10 +564,9 @@ class Project(models.Model):
         action['context'] = context
         return action
 
+    # TODO to remove in master
     def action_project_timesheets(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
-        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
-        return action
+        pass
 
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
@@ -584,6 +579,8 @@ class Project(models.Model):
         action['context'] = {
             'default_project_id': self.id,
             'delete': False,
+            'search_default_open_tasks': True,
+            'active_id_chatter': self.id,
         }
         action['display_name'] = self.name
         return action
@@ -615,7 +612,7 @@ class Project(models.Model):
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project and activate default filters"""
         action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
-        action['display_name'] = _("%(name)s's Rating", name=self.name),
+        action['display_name'] = _("%(name)s's Rating", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_rating_last_30_days'] = 1
@@ -632,7 +629,7 @@ class Project(models.Model):
     def action_view_tasks_analysis(self):
         """ return the action to see the tasks analysis report of the project """
         action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_task_user_tree')
-        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name),
+        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
@@ -812,6 +809,9 @@ class Project(models.Model):
                 'active': True,
             })
             project.write({'analytic_account_id': analytic_account.id})
+
+    def _get_projects_to_make_billable_domain(self):
+        return [('partner_id', '!=', False)]
 
     # ---------------------------------------------------
     # Rating business

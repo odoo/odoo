@@ -7,6 +7,7 @@ from . import test_stock_location_search
 from . import test_quant
 from . import test_quant_inventory_mode
 from . import test_generate_serial_numbers
+from . import test_immediate
 from . import test_inventory
 from . import test_move
 from . import test_move2

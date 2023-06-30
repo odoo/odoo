@@ -30,12 +30,11 @@ class Bank(models.Model):
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
-    def name_get(self):
-        result = []
+    @api.depends('bic')
+    def _compute_display_name(self):
         for bank in self:
             name = (bank.name or '') + (bank.bic and (' - ' + bank.bic) or '')
-            result.append((bank.id, name))
-        return result
+            bank.display_name = name
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -113,9 +112,10 @@ class ResPartnerBank(models.Model):
         """
         return 'bank'
 
-    def name_get(self):
-        return [(acc.id, '{} - {}'.format(acc.acc_number, acc.bank_id.name) if acc.bank_id else acc.acc_number)
-                for acc in self]
+    @api.depends('acc_number', 'bank_id')
+    def _compute_display_name(self):
+        for acc in self:
+            acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

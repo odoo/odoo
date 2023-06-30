@@ -645,7 +645,8 @@ class Meeting(models.Model):
 
         return True
 
-    def name_get(self):
+    @api.depends('privacy', 'user_id')
+    def _compute_display_name(self):
         """ Hide private events' name for events which don't belong to the current user
         """
         hidden = self.filtered(
@@ -654,11 +655,8 @@ class Meeting(models.Model):
                 evt.user_id.id != self.env.uid and
                 self.env.user.partner_id not in evt.partner_ids
         )
-
-        shown = self - hidden
-        shown_names = super(Meeting, shown).name_get()
-        obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
-        return shown_names + obfuscated_names
+        hidden.display_name = _('Busy')
+        super(Meeting, self - hidden)._compute_display_name()
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

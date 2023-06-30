@@ -466,6 +466,15 @@
         <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" title="Remove Slide"/>
     </div>
 
+    <div data-js="GalleryElement"
+        data-selector=".s_image_gallery img, .s_carousel .carousel-item">
+        <we-row string="Re-order" data-no-preview="true">
+            <we-button class="fa fa-fw fa-angle-double-left" title="Move to first" data-position="first"/>
+            <we-button class="fa fa-fw fa-angle-left" title="Move to previous" data-position="prev"/>
+            <we-button class="fa fa-fw fa-angle-right" title="Move to next" data-position="next"/>
+            <we-button class="fa fa-fw fa-angle-double-right" title="Move to last" data-position="last"/>
+        </we-row>
+    </div>
     <!-- Accordion -->
     <div data-js="collapse"
          data-selector='.accordion > .card'
@@ -1481,7 +1490,7 @@
 
     <!-- Theme options -->
     <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
-        <we-alert class="o_old_color_system_warning d-none">
+        <we-alert class="o_old_color_system_warning d-none mt-2">
             It appears your website is still using the old color system of
             Odoo 13.0 in some places. We made sure it is still working but
             we recommend you to try to use the new color system, which is

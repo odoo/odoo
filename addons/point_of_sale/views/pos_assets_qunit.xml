@@ -6,7 +6,7 @@
         <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
         <t t-set="title">Point of Sale Tests</t>
         <t t-set="head">
-            <!-- we need session_info in order to properly instantiate PosGlobalState -->
+            <!-- we need session_info in order to properly instantiate PosStore-->
             <script type="text/javascript">
                 var odoo = <t t-out="json.dumps({
                     'csrf_token': request.csrf_token(None),

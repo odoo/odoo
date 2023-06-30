@@ -52,17 +52,17 @@ class Menu(models.Model):
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
-    def name_get(self):
+    @api.depends('website_id')
+    @api.depends_context('display_website')
+    def _compute_display_name(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
-            return super(Menu, self).name_get()
+            return super()._compute_display_name()
 
-        res = []
         for menu in self:
             menu_name = menu.name
             if menu.website_id:
-                menu_name += ' [%s]' % menu.website_id.name
-            res.append((menu.id, menu_name))
-        return res
+                menu_name += f' [{menu.website_id.name}]'
+            menu.display_name = menu_name
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -161,7 +161,10 @@ class Menu(models.Model):
         - query string parameters should be the same to be considered equal, as
           those could drasticaly alter a page result
         """
-        if not request:
+        if not request or self.is_mega_menu:
+            # There is no notion of `active` if we don't have a request to
+            # compare the url to.
+            # Also, mega menu are never considered active.
             return False
 
         request_url = url_parse(request.httprequest.url)

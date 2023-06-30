@@ -60,7 +60,7 @@ patch(Message.prototype, "mail/core/web", {
             case "boolean":
                 return trackingValue.value ? _t("Yes") : _t("No");
             /**
-             * many2one formatter exists but is expecting id/name_get or data
+             * many2one formatter exists but is expecting id/display_name or data
              * object but only the target record name is known in this context.
              *
              * Selection formatter exists but requires knowing all

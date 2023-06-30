@@ -1968,15 +1968,6 @@ const Wysiwyg = Widget.extend({
             selection.addRange(range);
             // Always hide the unlink button on media.
             this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
-            // Show the floatingtoolbar on the topleft of the media.
-            if (this.odooEditor.autohideToolbar && !this.odooEditor.isMobile) {
-                const imagePosition = this.lastMediaClicked.getBoundingClientRect();
-                this.toolbar.$el.css({
-                    visibility: 'visible',
-                    top: imagePosition.top + 10 + 'px',
-                    left: imagePosition.left + 10 + 'px',
-                });
-            }
             // Toggle the 'active' class on the active image tool buttons.
             for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
                 button.classList.toggle('active', $(e.target).hasClass(button.id));
@@ -2657,10 +2648,10 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.historyReset();
             return;
         }
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
-        this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
+        this.odooEditor.historyReset();
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();
         } else if (this.options.collaborativeTrigger === 'focus') {

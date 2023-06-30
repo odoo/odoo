@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -51,8 +51,8 @@ function parseAccountingQuarter(dateRange) {
     return found
         ? {
               rangeType: "quarter",
-              year: toNumber(found[2]),
-              quarter: toNumber(found[1]),
+              year: Number(found[2]),
+              quarter: Number(found[1]),
           }
         : undefined;
 }
@@ -66,8 +66,8 @@ function parseAccountingMonth(dateRange) {
     return found
         ? {
               rangeType: "month",
-              year: toNumber(found[2]),
-              month: toNumber(found[1]),
+              year: Number(found[2]),
+              month: Number(found[1]),
           }
         : undefined;
 }
@@ -76,8 +76,8 @@ function parseAccountingMonth(dateRange) {
  * @param {string} dateRange
  * @returns {YearDateRange | undefined}
  */
-function parseAccountingYear(dateRange) {
-    const dateNumber = toNumber(dateRange);
+function parseAccountingYear(dateRange, locale) {
+    const dateNumber = toNumber(dateRange, locale);
     // This allows a bit of flexibility for the user if they were to input a
     // numeric value instead of a year.
     // Users won't need to fetch accounting info for year 3000 before a long time
@@ -93,13 +93,13 @@ function parseAccountingYear(dateRange) {
  * @param {string} dateRange
  * @returns {DayDateRange}
  */
-function parseAccountingDay(dateRange) {
-    const dateNumber = toNumber(dateRange);
+function parseAccountingDay(dateRange, locale) {
+    const dateNumber = toNumber(dateRange, locale);
     return {
         rangeType: "day",
-        year: functionRegistry.get("YEAR").compute(dateNumber),
-        month: functionRegistry.get("MONTH").compute(dateNumber),
-        day: functionRegistry.get("DAY").compute(dateNumber),
+        year: functionRegistry.get("YEAR").compute.bind({ locale })(dateNumber),
+        month: functionRegistry.get("MONTH").compute.bind({ locale })(dateNumber),
+        day: functionRegistry.get("DAY").compute.bind({ locale })(dateNumber),
     };
 }
 
@@ -107,14 +107,14 @@ function parseAccountingDay(dateRange) {
  * @param {string | number} dateRange
  * @returns {DateRange}
  */
-export function parseAccountingDate(dateRange) {
+export function parseAccountingDate(dateRange, locale) {
     try {
         dateRange = toString(dateRange).trim();
         return (
             parseAccountingQuarter(dateRange) ||
             parseAccountingMonth(dateRange) ||
-            parseAccountingYear(dateRange) ||
-            parseAccountingDay(dateRange)
+            parseAccountingYear(dateRange, locale) ||
+            parseAccountingDay(dateRange, locale)
         );
     } catch {
         throw new Error(
@@ -129,18 +129,21 @@ export function parseAccountingDate(dateRange) {
 }
 
 const ODOO_FIN_ARGS = () => [
-    arg("account_codes (string)", _t("The prefix of the accounts.")),
+    arg("account_codes (string)", _lt("The prefix of the accounts.")),
     arg(
         "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        _lt(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
-    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
-    arg("include_unposted (boolean, default=FALSE)", _t("Set to TRUE to include unposted entries.")),
+    arg("offset (number, default=0)", _lt("Year offset applied to date_range.")),
+    arg("company_id (number, optional)", _lt("The company to target (Advanced).")),
+    arg(
+        "include_unposted (boolean, default=FALSE)",
+        _lt("Set to TRUE to include unposted entries.")
+    ),
 ];
 
 functionRegistry.add("ODOO.CREDIT", {
-    description: _t("Get the total credit for the specified account(s) and period."),
+    description: _lt("Get the total credit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -151,8 +154,8 @@ functionRegistry.add("ODOO.CREDIT", {
         includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
-        offset = toNumber(offset);
-        dateRange = parseAccountingDate(dateRange);
+        offset = toNumber(offset, this.locale);
+        dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted);
         return this.getters.getAccountPrefixCredit(
             accountCodes,
@@ -174,7 +177,7 @@ functionRegistry.add("ODOO.CREDIT", {
 });
 
 functionRegistry.add("ODOO.DEBIT", {
-    description: _t("Get the total debit for the specified account(s) and period."),
+    description: _lt("Get the total debit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -185,8 +188,8 @@ functionRegistry.add("ODOO.DEBIT", {
         includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
-        offset = toNumber(offset);
-        dateRange = parseAccountingDate(dateRange);
+        offset = toNumber(offset, this.locale);
+        dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted);
         return this.getters.getAccountPrefixDebit(
             accountCodes,
@@ -208,7 +211,7 @@ functionRegistry.add("ODOO.DEBIT", {
 });
 
 functionRegistry.add("ODOO.BALANCE", {
-    description: _t("Get the total balance for the specified account(s) and period."),
+    description: _lt("Get the total balance for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
@@ -219,8 +222,8 @@ functionRegistry.add("ODOO.BALANCE", {
         includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
-        offset = toNumber(offset);
-        dateRange = parseAccountingDate(dateRange);
+        offset = toNumber(offset, this.locale);
+        dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted);
         return (
             this.getters.getAccountPrefixDebit(
@@ -251,44 +254,49 @@ functionRegistry.add("ODOO.BALANCE", {
 });
 
 functionRegistry.add("ODOO.FISCALYEAR.START", {
-    description: _t("Returns the starting date of the fiscal year encompassing the provided date."),
+    description: _lt(
+        "Returns the starting date of the fiscal year encompassing the provided date."
+    ),
     args: [
-        arg("date (date)", _t("Reference date.")),
-        arg("company_id (number, optional)", _t("The company.")),
+        arg("date (date)", _lt("Reference date.")),
+        arg("company_id (number, optional)", _lt("The company.")),
     ],
     returns: ["NUMBER"],
-    computeFormat: () => "m/d/yyyy",
+    computeFormat: function () {
+        return this.locale.dateFormat;
+    },
     compute: function (date, companyId = null) {
         const startDate = this.getters.getFiscalStartDate(
-            toJsDate(date),
-            companyId === null ? null : toNumber(companyId)
+            toJsDate(date, this.locale),
+            companyId === null ? null : toNumber(companyId, this.locale)
         );
-        return toNumber(startDate);
+        return toNumber(startDate, this.locale);
     },
 });
 
 functionRegistry.add("ODOO.FISCALYEAR.END", {
-    description: _t("Returns the ending date of the fiscal year encompassing the provided date."),
+    description: _lt("Returns the ending date of the fiscal year encompassing the provided date."),
     args: [
-        arg("date (date)", _t("Reference date.")),
-        arg("company_id (number, optional)", _t("The company.")),
+        arg("date (date)", _lt("Reference date.")),
+        arg("company_id (number, optional)", _lt("The company.")),
     ],
     returns: ["NUMBER"],
-    computeFormat: () => "m/d/yyyy",
+    computeFormat: function () {
+        return this.locale.dateFormat;
+    },
     compute: function (date, companyId = null) {
         const endDate = this.getters.getFiscalEndDate(
-            toJsDate(date),
-            companyId === null ? null : toNumber(companyId)
+            toJsDate(date, this.locale),
+            companyId === null ? null : toNumber(companyId, this.locale)
         );
-        return toNumber(endDate);
+        return toNumber(endDate, this.locale);
     },
 });
 
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
-    description: _t("Returns the account ids of a given group."),
-    args: [arg("type (string)", _t("Account type."))],
+    description: _lt("Returns the account ids of a given group."),
+    args: [arg("type (string)", _lt("Account type."))],
     returns: ["NUMBER"],
-    computeFormat: () => "m/d/yyyy",
     compute: function (accountType) {
         const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));
         return accountTypes.join(",");

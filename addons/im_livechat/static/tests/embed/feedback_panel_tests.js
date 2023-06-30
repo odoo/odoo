@@ -2,7 +2,7 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { RATING, RATING_TO_EMOJI } from "@im_livechat/embed/core/livechat_service";
+import { RATING } from "@im_livechat/embed/core/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { afterNextRender, click, insertText } from "@mail/../tests/helpers/test_utils";
@@ -47,7 +47,6 @@ QUnit.test("Close without feedback", async (assert) => {
 QUnit.test("Feedback with rating and comment", async (assert) => {
     await startServer();
     await loadDefaultConfig();
-    let messageCount = 0;
     await start({
         mockRPC(route, args) {
             if (route === "/im_livechat/visitor_leave_session") {
@@ -55,18 +54,8 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
             }
             if (route === "/im_livechat/feedback") {
                 assert.step(route);
-            }
-            if (route === "/im_livechat/chat_post") {
-                if (messageCount === 1) {
-                    assert.strictEqual(
-                        args.message_content,
-                        `Rating: ${RATING_TO_EMOJI[RATING.GOOD]}`
-                    );
-                } else if (messageCount === 2) {
-                    assert.strictEqual(args.message_content, "Rating reason: Good job!");
-                }
-                messageCount++;
-                assert.step(route);
+                assert.ok(args.reason.includes("Good job!"));
+                assert.strictEqual(args.rate, RATING.GOOD);
             }
         },
     });
@@ -74,18 +63,13 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.verifySteps(["/im_livechat/chat_post"]);
     await click("[title='Close Chat Window']");
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send)");
     assert.containsOnce($, "p:contains(Thank you for your feedback)");
-    assert.verifySteps([
-        "/im_livechat/feedback",
-        "/im_livechat/chat_post",
-        "/im_livechat/chat_post",
-    ]);
+    assert.verifySteps(["/im_livechat/feedback"]);
 });
 
 QUnit.test("Closing folded chat window should open it with feedback", async (assert) => {
@@ -95,7 +79,7 @@ QUnit.test("Closing folded chat window should open it with feedback", async (ass
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
-    await click(".o-mail-ChatWindow-header");
+    await click("[title='Fold']");
     assert.containsOnce($, ".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");
     assert.containsNone($, ".o-mail-ChatWindow.o-folded");

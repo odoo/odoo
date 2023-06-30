@@ -17,9 +17,9 @@ class PeopleRole(models.Model):
         ('name_uniq', 'unique (name)', 'Role name already exists!'),
     ]
 
-    @api.depends('name')
-    def name_get(self):
-        return [(role.id, role.name.replace('_', ' ').title()) for role in self]
+    def _compute_display_name(self):
+        for role in self:
+            role.display_name = role.name.replace('_', ' ').title()
 
 
 class PeopleSeniority(models.Model):
@@ -34,6 +34,6 @@ class PeopleSeniority(models.Model):
         ('name_uniq', 'unique (name)', 'Name already exists!'),
     ]
 
-    @api.depends('name')
-    def name_get(self):
-        return [(seniority.id, seniority.name.replace('_', ' ').title()) for seniority in self]
+    def _compute_display_name(self):
+        for seniority in self:
+            seniority.display_name = seniority.name.replace('_', ' ').title()

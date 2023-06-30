@@ -21,6 +21,34 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     },
 
     /**
+     * Collapse the next category when the current one has just been completed
+     */
+    collapseNextCategory: function (nextCategoryId) {
+        const $categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
+        const $categorySlides = document.querySelector(`ul[id=collapse-${nextCategoryId}]`);
+        if ($categorySection.getAttribute('aria-expanded') === 'false' && !$categorySlides.classList.contains('show')) {
+            $categorySection.setAttribute('aria-expanded', true);
+            $categorySlides.classList.add('show')
+        }
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        // TODO: we need to clean this code and make the changes in the view in master
+        const $completed = $('.o_wslides_channel_completion_completed');
+        const $progressbar = $('.o_wslides_channel_completion_progressbar');
+        if($progressbar.hasClass('d-none')){
+            $progressbar.removeClass('d-none').addClass('d-flex').addClass('hidden-progressbar-completed-tag');
+        }
+        if($completed.hasClass('d-none')){
+            $completed.removeClass('d-none').addClass('hidden-progressbar-completed-tag');
+        }
+        return this._super.apply(this, arguments)
+    },
+
+    /**
      * Greens up the bullet when the slide is completed
      *
      * @public
@@ -36,6 +64,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         const newButton = QWeb.render('website.slides.sidebar.done.button', {
             slideId: slide.id,
+            slideIcon: $button.data('slideIcon') ?? 'fa-file-o',
             slideCompleted: completed,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
@@ -58,12 +87,12 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         if (completion < 100) {
             // Hide the "Completed" text and show the progress bar
-            $completed.addClass('d-none');
-            $progressbar.removeClass('d-none').addClass('d-flex');
+            $completed.addClass('hidden-progressbar-completed-tag');
+            $progressbar.removeClass('hidden-progressbar-completed-tag');
         } else {
             // Hide the progress bar and show the "Completed" text
-            $completed.removeClass('d-none');
-            $progressbar.addClass('d-none').removeClass('d-flex');
+            $completed.removeClass('hidden-progressbar-completed-tag');
+            $progressbar.addClass('hidden-progressbar-completed-tag');
         }
 
         $progressbar.find('.progress-bar').css('width', `${completion}%`);
@@ -96,6 +125,9 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         this.toggleCompletionButton(slide, completed);
         this.updateProgressbar(data.channel_completion);
+        if (data.next_category_id) {
+            this.collapseNextCategory(data.next_category_id);
+        }
     },
     /**
      * Retrieve the slide data corresponding to the slide id given in argument.

@@ -665,3 +665,31 @@ class TestTimesheet(TestCommonTimesheet):
 
         with self.assertRaises(UserError):
             self.task1.write({'project_id': False, 'parent_id': False})
+
+    def test_percentage_of_planned_hours(self):
+        """ Test the percentage of planned hours on a task. """
+        self.task1.planned_hours = 11/60
+        self.assertEqual(self.task1.effective_hours, 0, 'No timesheet should be created yet.')
+        self.assertEqual(self.task1.progress, 0, 'No timesheet should be created yet.')
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 3/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            },
+        ])
+        self.assertEqual(self.task1.progress, 100, 'The percentage of planned hours should be 100%.')

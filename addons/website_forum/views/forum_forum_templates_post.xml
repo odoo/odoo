@@ -293,11 +293,11 @@
                     </a>
                 </div>
 
-                <t t-if="question.state != 'close' and question.active != False and question.can_answer and not request.env.user.forum_waiting_posts_count">
+                <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum and not forum.has_pending_post">
                     <div id="post_reply" class="collapse answer_collapse" t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions')">
                         <t t-call="website_forum.post_answer"/>
                     </div>
-                    <div t-elif="uid and request.env.user.forum_waiting_posts_count" class="alert alert-info text-center">
+                    <div t-elif="uid and has_pending_post" class="alert alert-info text-center">
                         <b class="d-block">You have a pending post</b>
                         Please wait for a moderator to validate your previous post to be allowed replying questions.
                     </div>

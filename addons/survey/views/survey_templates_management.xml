@@ -73,6 +73,24 @@
         </t>
     </template>
 
+    <!-- Access error survey page -->
+    <template id="survey_access_error" name="Survey: access error">
+        <t t-call="survey.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Survey Access Error</h1>
+                        <p>Oopsie! We could not let you open this survey. Make sure you are using the correct link and are allowed to
+                        participate or get in touch with its organizer.</p>
+                        <a class="btn btn-secondary" href="/">
+                            Leave
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- ============================================================ -->
     <!--                       Tools / Utilities                      -->
     <!-- ============================================================ -->

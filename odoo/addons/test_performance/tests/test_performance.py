@@ -216,6 +216,17 @@ class TestPerformance(SavepointCaseWithUserDemo):
                 expected,
             )
 
+    @warmup
+    def test_name_search(self):
+        """ Test that `name` is fetch in the same query than the search
+        to compute `display_name` without any additional query """
+        Model = self.env['test_performance.base']
+        record = Model.create({'name': 'blablu'})
+        record.invalidate_recordset()
+
+        with self.assertQueryCount(1):
+            Model.name_search('blablu')
+
     @users('__system__', 'demo')
     @warmup
     def test_write_base(self):
@@ -614,7 +625,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         } for partner in partners]
 
     @users('__system__', 'demo')
-    def test_read_group_with_name_get(self):
+    def test_read_group_with_display_name(self):
         model = self.env['test_performance.base']
         expected = self.expected_read_group()
         # use read_group and check the expected result

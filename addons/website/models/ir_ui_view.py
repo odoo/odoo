@@ -69,19 +69,19 @@ class View(models.Model):
                     raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
         return super().create(vals_list)
 
-    def name_get(self):
+    @api.depends('website_id', 'key')
+    @api.depends_context('display_key', 'display_website')
+    def _compute_display_name(self):
         if not (self._context.get('display_key') or self._context.get('display_website')):
-            return super(View, self).name_get()
+            return super()._compute_display_name()
 
-        res = []
         for view in self:
             view_name = view.name
             if self._context.get('display_key'):
                 view_name += ' <%s>' % view.key
             if self._context.get('display_website') and view.website_id:
                 view_name += ' [%s]' % view.website_id.name
-            res.append((view.id, view_name))
-        return res
+            view.display_name = view_name
 
     def write(self, vals):
         '''COW for ir.ui.view. This way editing websites does not impact other

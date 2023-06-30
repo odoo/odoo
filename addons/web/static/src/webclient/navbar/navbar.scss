@@ -3,6 +3,7 @@
 // ============================================================================
 .o_main_navbar {
     @include print-variable(o-navbar-height, $o-navbar-height);
+    --Dropdown_menu-margin-y: 0;
 
     display: flex;
     height: var(--o-navbar-height);
@@ -27,34 +28,33 @@
     .o_nav_entry, .dropdown-toggle {
         @extend %-main-navbar-entry-base;
         @extend %-main-navbar-entry-spacing;
-        border: 0;
+        border-color: transparent;
     }
 
     .o_menu_sections {
         .o_nav_entry, .dropdown-toggle {
-            @extend %-main-navbar-entry-bg-hover;
+            @extend %-main-navbar-entry-bg-hover !optional;
         }
 
         .dropdown.show > .dropdown-toggle {
-            @extend %-main-navbar-entry-active;
+            @extend %-main-navbar-entry-active !optional;
         }
     }
 
     @if (not $o-navbar-use-pills) {
         .o_menu_systray {
             .o_nav_entry, .dropdown-toggle {
-                @extend %-main-navbar-entry-bg-hover;
+                @extend %-main-navbar-entry-bg-hover !optional;
             }
 
             .dropdown.show > .dropdown-toggle {
-                @extend %-main-navbar-entry-active;
+                @extend %-main-navbar-entry-active !optional;
             }
         }
     }
 
     .dropdown-menu {
-        border-top: 0;
-        margin-top: $o-navbar-dropdown-menu-margin-top;
+        border-top: $o-navbar-dropdown-menu-border-top;
         border-radius: $o-navbar-dropdown-menu-border-radius;
     }
 
@@ -107,6 +107,9 @@
     }
 
     .o_menu_systray {
+        --NavBar-entry-padding-left: #{$o-navbar-entry-padding-h * 0.5};
+        --NavBar-entry-padding-right: #{$o-navbar-entry-padding-h * 0.5};
+
         .badge {
             margin-right: -.5em;
             border: 0;

@@ -10,6 +10,24 @@ from lxml import etree
 from unittest import SkipTest
 
 
+def instantiate_accountman(cls):
+    cls.user = cls.env['res.users'].create({
+        'name': 'Because I am accountman!',
+        'login': 'accountman',
+        'password': 'accountman',
+        'groups_id': [
+            Command.set(cls.env.user.groups_id.ids),
+            Command.link(cls.env.ref('account.group_account_manager').id),
+            Command.link(cls.env.ref('account.group_account_user').id),
+        ],
+    })
+    cls.user.partner_id.email = 'accountman@test.com'
+
+    # Shadow the current environment/cursor with one having the report user.
+    # This is mandatory to test access rights.
+    cls.env = cls.env(user=cls.user)
+    cls.cr = cls.env.cr
+
 class AccountTestInvoicingCommon(TransactionCase):
 
     @classmethod
@@ -28,7 +46,8 @@ class AccountTestInvoicingCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        super(AccountTestInvoicingCommon, cls).setUpClass()
+        super().setUpClass()
+        instantiate_accountman(cls)
 
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
@@ -38,28 +57,10 @@ class AccountTestInvoicingCommon(TransactionCase):
             if template_module.state != 'installed':
                 raise SkipTest(f"Module required for the test is not installed ({template_module.name})")
 
-        # Create user.
-        user = cls.env['res.users'].create({
-            'name': 'Because I am accountman!',
-            'login': 'accountman',
-            'password': 'accountman',
-            'groups_id': [
-                (6, 0, cls.env.user.groups_id.ids),
-                (4, cls.env.ref('account.group_account_manager').id),
-                (4, cls.env.ref('account.group_account_user').id),
-            ],
-        })
-        user.partner_id.email = 'accountman@test.com'
-
-        # Shadow the current environment/cursor with one having the report user.
-        # This is mandatory to test access rights.
-        cls.env = cls.env(user=user)
-        cls.cr = cls.env.cr
-
         cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template_ref)
         cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template_ref)
 
-        user.write({
+        cls.user.write({
             'company_ids': [Command.set((cls.company_data['company'] + cls.company_data_2['company']).ids)],
             'company_id': cls.company_data['company'].id,
         })
@@ -443,7 +444,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'debit': -balance if balance < 0.0 else 0.0,
                     'credit': balance if balance > 0.0 else 0.0,
                     'amount_currency': -amount_currency,
-                    'account_id': self.revenue_account.id,
+                    'account_id': self.company_data['default_account_revenue'].id,
                     'currency_id': currency.id,
                     'partner_id': partner.id if partner else None,
                 }),

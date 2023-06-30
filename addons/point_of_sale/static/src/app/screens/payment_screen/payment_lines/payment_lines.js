@@ -31,7 +31,7 @@ export class PaymentScreenPaymentLines extends Component {
                 title: this.env._t("New amount"),
                 startingValue: parseFloat(paymentline.amount),
                 isInputSelected: true,
-                nbrDecimal: this.pos.globalState.currency.decimal_places,
+                nbrDecimal: this.pos.currency.decimal_places,
             });
 
             if (confirmed) {

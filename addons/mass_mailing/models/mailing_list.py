@@ -120,8 +120,10 @@ class MassMailingList(models.Model):
 
         return super(MassMailingList, self).write(vals)
 
-    def name_get(self):
-        return [(list.id, "%s (%s)" % (list.name, list.contact_count)) for list in self]
+    @api.depends('contact_count')
+    def _compute_display_name(self):
+        for mailing_list in self:
+            mailing_list.display_name = f"{mailing_list.name} ({mailing_list.contact_count})"
 
     def copy(self, default=None):
         self.ensure_one()

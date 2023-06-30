@@ -252,6 +252,7 @@ class MrpProduction(models.Model):
     allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
     show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
+    is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -897,6 +898,31 @@ class MrpProduction(models.Model):
                     copied_workorder.blocked_by_workorder_ids = dependencies
         return res
 
+    def action_generate_bom(self):
+        """ Generates a new Bill of Material based on the Manufacturing Order's product, components,
+        workorders and by-products, and assigns it to the MO. Returns a new BoM's form view action.
+        """
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('mrp.mrp_bom_form_action')
+        action['view_mode'] = 'form'
+        action['views'] = [(False, 'form')]
+        action['target'] = 'new'
+
+        bom_lines_vals, byproduct_vals, operations_vals = self._get_bom_values()
+        action['context'] = {
+            'default_bom_line_ids': bom_lines_vals,
+            'default_byproduct_ids': byproduct_vals,
+            'default_code': _("New BoM from %(mo_name)s", mo_name=self.display_name),
+            'default_company_id': self.company_id.id,
+            'default_operation_ids': operations_vals,
+            'default_product_id': self.product_id.id,
+            'default_product_qty': self.product_qty,
+            'default_product_tmpl_id': self.product_id.product_tmpl_id.id,
+            'default_product_uom_id': self.product_uom_id.id,
+            'parent_production_id': self.id,  # Used to assign the new BoM to the current MO.
+        }
+        return action
+
     def action_view_mo_delivery(self):
         """ Returns an action that display picking related to manufacturing order.
         It can either be a list view or in a form view (if there is only one picking to show).
@@ -930,6 +956,54 @@ class MrpProduction(models.Model):
         if warehouse:
             action['context']['warehouse'] = warehouse.id
         return action
+
+    def action_update_bom(self):
+        for production in self:
+            if production.bom_id:
+                production._link_bom(production.bom_id)
+        self.is_outdated_bom = False
+
+    def _get_bom_values(self, ratio=1):
+        """ Returns the BoM lines, by-products and operations values needed to
+        create a new BoM from this Manufacturing Order.
+        :return: A tuple containing the BoM lines, by-products and operations values, in this order
+        :rtype: tuple(dict, dict, dict)
+        """
+        self.ensure_one()
+
+        def get_uom_and_quantity(move):
+            # Use the BoM line/by-product's UoM if the move is linked to one of them.
+            target_uom = (move.bom_line_id or move.byproduct_id).product_uom_id or move.product_uom
+            # In order to be able to multiply the move quantity by the ratio, we
+            # have to be sure they both express in the same UoM.
+            qty = move.quantity_done or move.product_uom_qty
+            qty = move.product_uom._compute_quantity(qty * ratio, target_uom)
+            return (target_uom, qty)
+
+        # BoM lines values.
+        bom_lines_values = []
+        for move_raw in self.move_raw_ids:
+            uom, qty = get_uom_and_quantity(move_raw)
+            bom_line_vals = {
+                'product_id': move_raw.product_id.id,
+                'product_qty': qty,
+                'product_uom_id': uom.id,
+            }
+            bom_lines_values.append(Command.create(bom_line_vals))
+        # By-Product lines values.
+        byproduct_values = []
+        for move_byproduct in self.move_byproduct_ids:
+            uom, qty = get_uom_and_quantity(move_byproduct)
+            bom_byproduct_vals = {
+                'cost_share': move_byproduct.cost_share,
+                'product_id': move_byproduct.product_id.id,
+                'product_qty': qty,
+                'product_uom_id': uom.id,
+            }
+            byproduct_values.append(Command.create(bom_byproduct_vals))
+        # Operations values.
+        operations_values = [Command.create(wo._get_operation_values()) for wo in self.workorder_ids]
+        return (bom_lines_values, byproduct_values, operations_values)
 
     @api.model
     def _get_default_picking_type_id(self, company_id):
@@ -1164,22 +1238,7 @@ class MrpProduction(models.Model):
 
     def _set_lot_producing(self):
         self.ensure_one()
-        if self.product_id.tracking == 'lot':
-            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
-            exist_lot = self.env['stock.lot'].search([
-                ('product_id', '=', self.product_id.id),
-                ('company_id', '=', self.company_id.id),
-                ('name', '=', name),
-            ], limit=1)
-            if exist_lot:
-                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        else:
-            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        self.lot_producing_id = self.env['stock.lot'].create({
-            'product_id': self.product_id.id,
-            'company_id': self.company_id.id,
-            'name': name,
-        })
+        self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
@@ -1231,6 +1290,25 @@ class MrpProduction(models.Model):
             'view_mode': 'tree,form',
         }
 
+    def _prepare_stock_lot_values(self):
+        self.ensure_one()
+        if self.product_id.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        else:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        return {
+            'product_id': self.product_id.id,
+            'company_id': self.company_id.id,
+            'name': name,
+        }
+
     def action_generate_serial(self):
         self.ensure_one()
         self._set_lot_producing()
@@ -1275,7 +1353,10 @@ class MrpProduction(models.Model):
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids:
-                workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id) for operation_id in workorder.operation_id.blocked_by_operation_ids]
+                workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
+                                                      for operation_id in
+                                                      workorder.operation_id.blocked_by_operation_ids
+                                                      if operation_id in workorder_per_operation]
                 if not workorder.needed_by_workorder_ids:
                     last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         else:
@@ -1508,9 +1589,8 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                if move.quantity_done:
-                    continue
-                move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
+                if not move.quantity_done:
+                    move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
                 if move.has_tracking != 'none' and order.lot_producing_id:
                     move.move_line_ids.lot_id = order.lot_producing_id
             # workorder duration need to be set to calculate the price of the product
@@ -2093,6 +2173,145 @@ class MrpProduction(models.Model):
     def _has_workorders(self):
         return self.workorder_ids
 
+    def _link_bom(self, bom):
+        """ Links the given BoM to the MO. Assigns BoM's lines, by-products and operations
+        to the corresponding MO's components, by-products and workorders.
+        """
+        self.ensure_one()
+        moves_to_unlink = self.env['stock.move']
+        workorders_to_unlink = self.env['mrp.workorder']
+        # For draft MO, all the work will be done by compute methods.
+        # For cancelled and done MO, we don't want to do anything more than assinging the BoM.
+        if self.state == 'draft' and self.bom_id == bom:
+            # Empties `bom_id` field so when the BoM is reassigns to this field, depending computes
+            # will be triggered (doesn't happen if the field's value doesn't change).
+            self.bom_id = False
+        if self.state in ['cancel', 'done', 'draft']:
+            if self.state == 'draft':
+                # Don't straight delete the moves/workorders to avoid to cancel the MO, those will
+                # be deleted once the BoM is assigned (and thus after new moves/WO were created).
+                moves_to_unlink = self.move_raw_ids
+                workorders_to_unlink = self.workorder_ids
+            self.bom_id = bom
+            moves_to_unlink.unlink()
+            workorders_to_unlink.unlink()
+            return
+
+        def operation_key_values(record):
+            return tuple(record[key] for key in ('company_id', 'name', 'workcenter_id'))
+
+        def filter_by_attributes(record):
+            product_attribute_ids = self.product_id.product_template_attribute_value_ids.ids
+            return not record.bom_product_template_attribute_value_ids or\
+                   any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
+
+        ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
+        bom_lines_by_id = {(bom_line.id, bom_line.product_id.id): bom_line for bom_line in bom.bom_line_ids.filtered(filter_by_attributes)}
+        bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
+        operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
+
+        # Compares the BoM's operations to the MO's workoders.
+        for workorder in self.workorder_ids:
+            operation = operations_by_id.pop(workorder.operation_id.id, False)
+            if not operation:
+                for operation_id in operations_by_id:
+                    _operation = operations_by_id[operation_id]
+                    if operation_key_values(_operation) == operation_key_values(workorder):
+                        operation = operations_by_id.pop(operation_id)
+                        break
+            if operation and workorder.operation_id != operation:
+                workorder.operation_id = operation
+        # Creates a workorder for each remaining operation.
+        workorders_values = []
+        for operation in operations_by_id.values():
+            workorder_vals = {
+                'name': operation.name,
+                'operation_id': operation.id,
+                'product_uom_id': self.product_uom_id.id,
+                'production_id': self.id,
+                'state': 'pending',
+                'workcenter_id': operation.workcenter_id.id,
+            }
+            workorders_values.append(workorder_vals)
+        self.workorder_ids += self.env['mrp.workorder'].create(workorders_values)
+
+        # Compares the BoM's lines to the MO's components.
+        for move_raw in self.move_raw_ids:
+            bom_line = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), False)
+            # If the move isn't already linked to a BoM lines, search for a compatible line.
+            if not bom_line:
+                for _bom_line in bom_lines_by_id.values():
+                    if move_raw.product_id == _bom_line.product_id:
+                        bom_line = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
+                        if bom_line:
+                            break
+            move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
+                move_raw.product_uom_qty * ratio, bom_line.product_uom_id
+            )
+            if bom_line and (
+                    not move_raw.bom_line_id or
+                    move_raw.bom_line_id.bom_id != bom or
+                    move_raw.operation_id != bom_line.operation_id or
+                    bom_line.product_qty != move_raw_qty
+                ):
+                move_raw.bom_line_id = bom_line
+                move_raw.product_id = bom_line.product_id
+                move_raw.product_uom_qty = bom_line.product_qty / ratio
+                move_raw.product_uom = bom_line.product_uom_id
+                if move_raw.operation_id != bom_line.operation_id:
+                    move_raw.operation_id = bom_line.operation_id
+                    move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
+            elif not bom_line:
+                moves_to_unlink |= move_raw
+        # Creates a raw moves for each remaining BoM's lines.
+        raw_moves_values = []
+        for bom_line in bom_lines_by_id.values():
+            raw_move_vals = self._get_move_raw_values(
+                bom_line.product_id,
+                bom_line.product_qty / ratio,
+                bom_line.product_uom_id,
+                bom_line=bom_line
+            )
+            raw_moves_values.append(raw_move_vals)
+        self.env['stock.move'].create(raw_moves_values)
+
+        # Compares the BoM's and the MO's by-products.
+        for move_byproduct in self.move_byproduct_ids:
+            bom_byproduct = bom_byproducts_by_id.pop(move_byproduct.byproduct_id.id, False)
+            if not bom_byproduct:
+                for _bom_byproduct in bom_byproducts_by_id.values():
+                    if move_byproduct.product_id == _bom_byproduct.product_id:
+                        bom_byproduct = bom_byproducts_by_id.pop(_bom_byproduct.id)
+                        break
+            move_byproduct_qty = bom_byproduct and move_byproduct.product_uom._compute_quantity(
+                move_byproduct.product_uom_qty * ratio, bom_byproduct.product_uom_id
+            )
+            if bom_byproduct and (
+                    not move_byproduct.byproduct_id or
+                    bom_byproduct.product_id != move_byproduct.product_id or
+                    bom_byproduct.product_qty != move_byproduct_qty
+                ):
+                move_byproduct.byproduct_id = bom_byproduct
+                move_byproduct.cost_share = bom_byproduct.cost_share
+                move_byproduct.product_uom_qty = bom_byproduct.product_qty / ratio
+                move_byproduct.product_uom = bom_byproduct.product_uom_id
+            elif not bom_byproduct:
+                moves_to_unlink |= move_byproduct
+        # For each remaining BoM's by-product, creates a move finished.
+        byproduct_values = []
+        for bom_byproduct in bom_byproducts_by_id.values():
+            qty = bom_byproduct.product_qty * ratio
+            move_byproduct_vals = self._get_move_finished_values(
+                bom_byproduct.product_id.id, qty, bom_byproduct.product_uom_id.id,
+                bom_byproduct.operation_id.id, bom_byproduct.id, bom_byproduct.cost_share
+            )
+            byproduct_values.append(move_byproduct_vals)
+        self.move_finished_ids += self.env['stock.move'].create(byproduct_values)
+
+        moves_to_unlink._action_cancel()
+        moves_to_unlink.unlink()
+        self.bom_id = bom
+
     @api.model
     def _prepare_procurement_group_vals(self, values):
         return {'name': values['name']}
@@ -2100,6 +2319,13 @@ class MrpProduction(models.Model):
     def _get_quantity_to_backorder(self):
         self.ensure_one()
         return max(self.product_qty - self.qty_producing, 0)
+
+    def _get_ratio_between_mo_and_bom_quantities(self, bom):
+        self.ensure_one()
+        bom_product_uom = (bom.product_id or bom.product_tmpl_id).uom_id
+        bom_qty = bom.product_uom_id._compute_quantity(bom.product_qty, bom_product_uom)
+        ratio = bom_qty / self.product_uom_qty
+        return ratio
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """

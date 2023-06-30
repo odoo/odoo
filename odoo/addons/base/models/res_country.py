@@ -193,8 +193,7 @@ class CountryState(models.Model):
             if state_id not in first_state_ids
         ]
 
-    def name_get(self):
-        result = []
+    @api.depends('country_id')
+    def _compute_display_name(self):
         for record in self:
-            result.append((record.id, "{} ({})".format(record.name, record.country_id.code)))
-        return result
+            record.display_name = f"{record.name} ({record.country_id.code})"

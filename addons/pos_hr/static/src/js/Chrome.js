@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Chrome.prototype, "pos_hr.Chrome", {
     get showCashMoveButton() {
-        const { cashier } = this.pos.globalState;
+        const { cashier } = this.pos;
         return this._super(...arguments) && (!cashier || cashier.role == "manager");
     },
 });

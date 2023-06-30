@@ -38,7 +38,8 @@ chartRegistry.add("odoo_bar", {
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
-    const chartJsConfig = getBarConfiguration(chart, labels);
+    const locale = getters.getLocale();
+    const chartJsConfig = getBarConfiguration(chart, labels, locale);
     const colors = new ChartColors();
     for (const { label, data } of datasets) {
         const color = colors.next();
@@ -54,9 +55,9 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getBarConfiguration(chart, labels) {
+function getBarConfiguration(chart, labels, locale) {
     const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor);
+    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,

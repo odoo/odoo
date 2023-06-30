@@ -91,10 +91,4 @@ class TestLivechatCommon(tests.TransactionCase):
         res_model_id = self.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
         rating = self.env['rating.rating'].search([('res_id', '=', channel.id), ('res_model_id', '=', res_model_id)])
         self.assertEqual(rating.rating, rating_value, "The rating is not correct.")
-
-        message = "Rating: %s" % rating_to_emoji[rating_value]
-        if reason:
-            message += " \n%s" % reason
-
-        self._send_message(channel, visitor.display_name, message, author_id=False)
         self.assertEqual(len(channel.message_ids), channel_messages_count + 1)

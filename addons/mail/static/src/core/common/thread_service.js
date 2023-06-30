@@ -10,7 +10,7 @@ import {
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId, onChange } from "@mail/utils/common/misc";
+import { assignDefined, createLocalId, onChange, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -70,6 +70,20 @@ export class ThreadService {
                 serverData.create_uid === this.store.user?.user?.id,
         });
         return thread;
+    }
+
+    /**
+     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {number} id
+     * @returns {Promise<Thread>}
+     */
+    async fetchChannel(id) {
+        const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+        return this.insert({
+            ...channelData,
+            model: "discuss.channel",
+            type: channelData.channel.channel_type,
+        });
     }
 
     async fetchChannelMembers(thread) {
@@ -316,13 +330,16 @@ export class ThreadService {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
-            thread.messages = messages.reverse().map((message) =>
-                this.messageService.insert({
+            thread.messages = messages.reverse().map((message) => {
+                if (message.parentMessage?.body) {
+                    message.parentMessage.body = markup(message.parentMessage.body);
+                }
+                return this.messageService.insert({
                     ...message,
                     body: message.body ? markup(message.body) : message.body,
-                })
-            );
-            thread.loadNewer = true;
+                });
+            });
+            thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
                 const olderMessagesCount = messages.filter(({ id }) => id < messageId).length;
@@ -332,6 +349,7 @@ export class ThreadService {
                     thread.loadNewer = false;
                 }
             }
+            this._enrichMessagesWithTransient(thread);
             // Give some time to the UI to update.
             await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
@@ -417,6 +435,7 @@ export class ThreadService {
                     }
                 }
             }
+            this._enrichMessagesWithTransient(thread);
         } catch {
             // handled in fetchMessages
         }
@@ -434,6 +453,9 @@ export class ThreadService {
     }
 
     unpin(thread) {
+        if (this.store.discuss.threadLocalId === thread.localId) {
+            this.router.replaceState({ active_id: undefined });
+        }
         if (thread.model !== "discuss.channel") {
             return;
         }
@@ -577,15 +599,32 @@ export class ThreadService {
         });
     }
 
-    async notifyThreadNameToServer(thread, name) {
-        if (thread.type === "channel" || thread.type === "group") {
-            thread.name = name;
-            await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], { name });
-        } else if (thread.type === "chat") {
-            thread.customName = name;
-            await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
-                name,
-            });
+    /**
+     * @param {Thread} thread
+     * @param {string} name
+     */
+    async renameThread(thread, name) {
+        if (!thread) {
+            return;
+        }
+        const newName = name.trim();
+        if (
+            newName !== thread.displayName &&
+            ((newName && thread.type === "channel") ||
+                thread.type === "chat" ||
+                thread.type === "group")
+        ) {
+            if (thread.type === "channel" || thread.type === "group") {
+                thread.name = newName;
+                await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], {
+                    name: newName,
+                });
+            } else if (thread.type === "chat") {
+                thread.customName = newName;
+                await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
+                    name: newName,
+                });
+            }
         }
     }
 
@@ -687,6 +726,7 @@ export class ThreadService {
             }
             thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
             if (thread.model === "discuss.channel" && serverData.channel) {
+                nullifyClearCommands(serverData.channel);
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
             }
 
@@ -842,11 +882,16 @@ export class ThreadService {
      * @param {Thread} thread
      * @param {string} body
      */
-    async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
+    async post(
+        thread,
+        body,
+        { attachments = [], isNote = false, parentId, rawMentions, cannedResponseIds }
+    ) {
         let tmpMsg;
         const params = await this.getMessagePostParams({
             attachments,
             body,
+            cannedResponseIds,
             isNote,
             rawMentions,
             thread,
@@ -930,7 +975,14 @@ export class ThreadService {
     /**
      * Get the parameters to pass to the message post route.
      */
-    async getMessagePostParams({ attachments, body, isNote, rawMentions, thread }) {
+    async getMessagePostParams({
+        attachments,
+        body,
+        cannedResponseIds,
+        isNote,
+        rawMentions,
+        thread,
+    }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
             ? this.messageService.getMentionsFromText(rawMentions, body)
@@ -949,6 +1001,7 @@ export class ThreadService {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
+                canned_response_ids: cannedResponseIds,
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
@@ -1075,6 +1128,28 @@ export class ThreadService {
             channel_id: threadId,
             data,
         });
+    }
+
+    /**
+     * Following a load more or load around, listing of messages contains persistent messages.
+     * Transient messages are missing, so this function puts known transient messages at the
+     * right place in message list of thread.
+     *
+     * @param {Thread} thread
+     */
+    _enrichMessagesWithTransient(thread) {
+        for (const message of thread.transientMessages) {
+            if (message.id < thread.oldestPersistentMessage && !thread.loadOlder) {
+                thread.messages.unshift(message);
+            } else if (message.id > thread.newestPersistentMessage && !thread.loadNewer) {
+                thread.messages.push(message);
+            } else {
+                const afterIndex = thread.messages.findIndex(
+                    (msg) => msg.id > message.id && !msg.isTransient
+                );
+                thread.messages.splice(afterIndex - 1, 0, message);
+            }
+        }
     }
 }
 

@@ -15,6 +15,7 @@ import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 
 const { toString, toNumber, toBoolean } = spreadsheet.helpers;
+const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
@@ -109,7 +110,7 @@ export function parsePivotFormulaFieldValue(field, groupValue) {
         case "monetary":
         case "many2one":
         case "many2many":
-            return toNumber(groupValueString);
+            return toNumber(groupValueString, DEFAULT_LOCALE);
         default:
             throwUnsupportedFieldError(field);
     }
@@ -117,7 +118,7 @@ export function parsePivotFormulaFieldValue(field, groupValue) {
 
 /**
  * This class is an extension of PivotModel with some additional information
- * that we need in spreadsheet (name_get, isUsedInSheet, ...)
+ * that we need in spreadsheet (display_name, isUsedInSheet, ...)
  */
 export class SpreadsheetPivotModel extends PivotModel {
     /**
@@ -314,7 +315,7 @@ export class SpreadsheetPivotModel extends PivotModel {
         const undef = _t("None");
         if (this._isDateField(field)) {
             if (value && aggregateOperator === "day") {
-                return toNumber(value);
+                return toNumber(value, DEFAULT_LOCALE);
             }
             return formatDate(aggregateOperator, value);
         }
@@ -519,7 +520,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @returns {number | boolean | string}
      */
     _parsePivotFormulaWithPosition(field, groupValueString, cols, rows) {
-        const position = toNumber(groupValueString) - 1;
+        const position = toNumber(groupValueString, DEFAULT_LOCALE) - 1;
         let tree;
         if (this._isCol(field)) {
             tree = this.data.colGroupTree;

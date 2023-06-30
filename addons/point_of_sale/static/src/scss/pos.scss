@@ -485,7 +485,7 @@ td {
     justify-content: center;
     flex-direction: column;
     border: none;
-    
+
     h1 {
         font-size: 20px;
         margin: 0;
@@ -889,7 +889,7 @@ td {
         color: white;
         border: solid 1px $primary;
     }
-    
+
 }
 
 .pos .product-list-scroller{
@@ -2078,6 +2078,13 @@ td {
     box-sizing: border-box;
     min-width: 100px;
 }
+
+.pos .partnerlist-screen .partner-details input.border-red,
+.pos .partnerlist-screen .partner-details select.border-red
+{
+    border-color: red;
+}
+
 .pos .partnerlist-screen .partner-details input.partner-name {
     font-size: 24px;
     line-height: 24px;
@@ -2755,6 +2762,7 @@ td {
     text-align: right;
 }
 .pos .popup input:focus,
+.pos .popup-input:focus-within,
 .pos .popup-input.active {
     outline: none;
     box-shadow: 0px 0px 0px 3px $primary;
@@ -2944,7 +2952,7 @@ td {
     font-size: 12px;
     font-weight: bold;
     margin: 5px;
-    
+
     div {
         margin: 0;
     }
@@ -3718,6 +3726,8 @@ td {
     padding: 10px 0;
     cursor: pointer;
     font-size: large;
+	color: #017e84;
+    font-weight: bold;
 }
 
 .info-load-product-message {
@@ -3900,7 +3910,7 @@ td {
 
             .menu-item {
                 padding: 10px;
-                
+
                 span, i {
                     color: black;
                     inline-size: 196px;

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.tools import formatLang
 
 class PurchaseBillUnion(models.Model):
@@ -40,8 +40,9 @@ class PurchaseBillUnion(models.Model):
                     invoice_status in ('to invoice', 'no')
             )""")
 
-    def name_get(self):
-        result = []
+    @api.depends('currency_id', 'reference', 'amount', 'purchase_order_id')
+    @api.depends_context('show_total_amount')
+    def _compute_display_name(self):
         for doc in self:
             name = doc.name or ''
             if doc.reference:
@@ -50,5 +51,4 @@ class PurchaseBillUnion(models.Model):
             if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
                 amount = 0.0
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
-            result.append((doc.id, name))
-        return result
+            doc.display_name = name

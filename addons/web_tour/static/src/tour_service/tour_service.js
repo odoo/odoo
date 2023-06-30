@@ -54,37 +54,51 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @typedef {"manual" | "auto"} TourMode
  */
 
-/** @type {() => { [k: string]: Tour }} */
-function extractRegisteredTours() {
-    const tours = {};
-    for (const [name, tour] of registry.category("web_tour.tours").getEntries()) {
-        tours[name] = {
-            name: tour.saveAs || name,
-            steps: tour.steps.map((step) => {
-                step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
-                return step;
-            }),
-            shadow_dom: tour.shadow_dom,
-            url: tour.url,
-            rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
-            rainbowManMessage: tour.rainbowManMessage,
-            fadeout: tour.fadeout || "medium",
-            sequence: tour.sequence || 1000,
-            test: tour.test,
-            wait_for: tour.wait_for || Promise.resolve(),
-            checkDelay: tour.checkDelay,
-        };
-    }
-    return tours;
-}
-
 export const tourService = {
-    dependencies: ["orm", "effect", "ui"],
+    // localization dependency to make sure translations used by tours are loaded
+    dependencies: ["orm", "effect", "ui", "localization"],
     start: async (_env, { orm, effect, ui }) => {
         await whenReady();
+        await odoo.ready("web.legacy_tranlations_loaded");
+
+        /** @type {{ [k: string]: Tour }} */
+        const tours = {};
+        const tourRegistry = registry.category("web_tour.tours");
+        function register(name, tour) {
+            tours[name] = {
+                name: tour.saveAs || name,
+                get steps() {
+                    return tour.steps.map((step) => {
+                        step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
+                        return step;
+                    });
+                },
+                shadow_dom: tour.shadow_dom,
+                url: tour.url,
+                rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
+                rainbowManMessage: tour.rainbowManMessage,
+                fadeout: tour.fadeout || "medium",
+                sequence: tour.sequence || 1000,
+                test: tour.test,
+                wait_for: tour.wait_for || Promise.resolve(),
+                checkDelay: tour.checkDelay,
+            };
+        }
+        for (const [name, tour] of tourRegistry.getEntries()) {
+            register(name, tour);
+        }
+        tourRegistry.addEventListener("UPDATE", ({ detail: { key, value } }) => {
+            if (tourRegistry.contains(key)) {
+                register(key, value);
+                if (tourState.getActiveTourNames().includes(key)) {
+                    resumeTour(key);
+                }
+            } else {
+                delete tours[value];
+            }
+        });
 
         const bus = new EventBus();
-        const tours = extractRegisteredTours();
         const macroEngine = new MacroEngine({ target: document });
         const consumedTours = new Set(session.web_tours);
 
@@ -130,7 +144,9 @@ export const tourService = {
             const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
             const getEdition = () =>
                 session.server_version_info.slice(-1)[0] === "e" ? "enterprise" : "community";
-            const correctEdition = isDefined("edition", step) ? step.edition === getEdition() : true;
+            const correctEdition = isDefined("edition", step)
+                ? step.edition === getEdition()
+                : true;
             const correctDevice = isDefined("mobile", step) ? step.mobile === ui.isSmall : true;
             return (
                 !correctEdition ||
@@ -248,6 +264,7 @@ export const tourService = {
                 mode: "auto",
                 startUrl: "",
                 showPointerDuration: 0,
+                redirect: true,
             };
             options = Object.assign(defaultOptions, options);
             const tour = tours[tourName];
@@ -265,7 +282,7 @@ export const tourService = {
             });
             const macro = convertToMacro(tour, pointer, options);
             const willUnload = callWithUnloadCheck(() => {
-                if (tour.url && tour.url !== options.startUrl) {
+                if (tour.url && tour.url !== options.startUrl && options.redirect) {
                     window.location.href = window.location.origin + tour.url;
                 }
             });
@@ -303,15 +320,17 @@ export const tourService = {
             activateMacro(macro, mode);
         }
 
+        function getSortedTours() {
+            return Object.values(tours).sort((t1, t2) => {
+                return t1.sequence - t2.sequence || (t1.name < t2.name ? -1 : 1);
+            });
+        }
+
         if (!window.frameElement) {
             // Resume running tours.
             for (const tourName of tourState.getActiveTourNames()) {
                 if (tourName in tours) {
                     resumeTour(tourName);
-                } else {
-                    // If a tour found in the local storage is not found in the `tours` map,
-                    // then it is an outdated tour state. It should be cleared.
-                    tourState.clear(tourName);
                 }
             }
         }
@@ -319,14 +338,21 @@ export const tourService = {
         odoo.startTour = startTour;
         odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
 
+        // Auto start unconsumed tours if tour is not disabled and if the user is not on mobile.
+        const isTourEnabled = "tour_disable" in session && !session.tour_disable;
+        if (isTourEnabled && !ui.isSmall) {
+            const sortedTours = getSortedTours().filter((tour) => !consumedTours.has(tour.name));
+            for (const tour of sortedTours) {
+                odoo.isTourReady(tour.name).then(() => {
+                    startTour(tour.name, { mode: "manual", redirect: false });
+                });
+            }
+        }
+
         return {
             bus,
             startTour,
-            getSortedTours() {
-                return Object.values(tours).sort((t1, t2) => {
-                    return t1.sequence - t2.sequence || (t1.name < t2.name ? -1 : 1);
-                });
-            },
+            getSortedTours,
         };
     },
 };

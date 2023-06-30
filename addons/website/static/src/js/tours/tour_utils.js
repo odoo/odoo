@@ -1,6 +1,7 @@
 /** @odoo-module alias=website.tour_utils **/
 
 import {_t} from "web.core";
+import "web.legacy_tranlations_loaded";
 import {Markup} from "web.utils";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -20,7 +21,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
         auto: true,
         run: function () {
             const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
-            if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
+            if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
                 throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
             }
         },

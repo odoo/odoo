@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder" inherit_id="sale.report_saleorder">
+        <xpath expr='//t[@t-call="sale.report_saleorder_document"]' position="after">
+            <t t-elif="doc._get_name_sale_report() == 'l10n_br_sales.report_saleorder_document_brazil'"
+                t-call="l10n_br_sales.report_saleorder_document_brazil" t-lang="doc.partner_id.lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document" primary="True">
+        <th name="th_taxes" position="replace"/>
+        <td name="td_taxes" position="replace"/>
+        <th name="th_subtotal" position="replace"/>
+        <td name="td_subtotal" position="replace"/>
+        <xpath expr="//th[@name='th_total']/span" position="replace">
+            <span>Total</span>
+        </xpath>
+    </template>
+</odoo>

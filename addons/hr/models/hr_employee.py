@@ -37,6 +37,7 @@ class HrEmployeePrivate(models.Model):
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(tracking=True)
+    department_id = fields.Many2one(tracking=True)
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
@@ -159,14 +160,16 @@ class HrEmployeePrivate(models.Model):
         super()._compute_avatar_128()
 
     def _compute_avatar(self, avatar_field, image_field):
+        employee_wo_user_or_image_ids = []
         for employee in self:
+            if not (employee.user_id or employee._origin[image_field]):
+                employee_wo_user_or_image_ids.append(employee.id)
+                continue
             avatar = employee._origin[image_field]
-            if not avatar:
-                if employee.user_id:
-                    avatar = employee.user_id[avatar_field]
-                else:
-                    avatar = base64.b64encode(employee._avatar_get_placeholder())
+            if not avatar and employee.user_id:
+                avatar = employee.user_id[avatar_field]
             employee[avatar_field] = avatar
+        super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
 
     def action_create_user(self):
         self.ensure_one()
@@ -188,10 +191,11 @@ class HrEmployeePrivate(models.Model):
             })
         }
 
-    def name_get(self):
+    def _compute_display_name(self):
         if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).name_get()
-        return self.env['hr.employee.public'].browse(self.ids).name_get()
+            return super()._compute_display_name()
+        for employee_private, employee_public in zip(self, self.env['hr.employee.public'].browse(self.ids)):
+            employee_private.display_name = employee_public.display_name
 
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         if self.check_access_rights('read', raise_exception=False):
@@ -527,12 +531,8 @@ class HrEmployeePrivate(models.Model):
 
     def _get_unusual_days(self, date_from, date_to=None):
         # Checking the calendar directly allows to not grey out the leaves taken
-        # by the employee
-        # Prevents a traceback when loading calendar views and no employee is linked to the user.
-        if not self:
-            return {}
-        self.ensure_one()
-        return self.resource_calendar_id._get_unusual_days(
+        # by the employee or fallback to the company calendar
+        return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
             datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )

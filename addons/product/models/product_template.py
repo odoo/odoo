@@ -6,10 +6,11 @@ import logging
 from collections import defaultdict
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
-from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
+PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
 
 
 class ProductTemplate(models.Model):
@@ -178,9 +179,10 @@ class ProductTemplate(models.Model):
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
+    @api.depends('company_id')
     @api.depends_context('company')
     def _compute_cost_currency_id(self):
-        self.cost_currency_id = self.env.company.currency_id.id
+        self.cost_currency_id = self.company_id.currency_id or self.env.company.currency_id.id
 
     def _compute_template_field_from_variant_field(self, fname, default=False):
         """Sets the value of the given field based on the template variant values
@@ -483,11 +485,10 @@ class ProductTemplate(models.Model):
             default['name'] = _("%s (copy)", self.name)
         return super(ProductTemplate, self).copy(default=default)
 
-    def name_get(self):
-        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        self.fetch(['name', 'default_code'])
-        return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
-                for template in self]
+    @api.depends('name', 'default_code')
+    def _compute_display_name(self):
+        for template in self:
+            template.display_name = '{}{}'.format(template.default_code and '[%s] ' % template.default_code or '', template.name)
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -527,7 +528,7 @@ class ProductTemplate(models.Model):
             domain2 = expression.AND([domain, [('id', 'in', tmpl_without_variant.ids)]])
             searched_ids |= set(super()._name_search(name, domain2, operator, limit, order))
 
-        # re-apply product.template order + name_get
+        # re-apply product.template order + display_name
         domain = [('id', 'in', list(searched_ids))]
         return super()._name_search('', domain, 'ilike', limit, order)
 
@@ -1339,6 +1340,4 @@ class ProductTemplate(models.Model):
 
         This method is meant to be overriden in other standard modules.
         """
-        if self._context.get('pricelist'):
-            return self.env['product.pricelist'].browse(self._context.get('pricelist'))
-        return self.env['product.pricelist']
+        return self.env['product.pricelist'].browse(self.env.context.get('pricelist'))

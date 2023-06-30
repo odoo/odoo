@@ -14,7 +14,7 @@ export class SetPricelistButton extends Component {
         this.popup = useService("popup");
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get currentPricelistName() {
         const order = this.currentOrder;
@@ -24,7 +24,7 @@ export class SetPricelistButton extends Component {
         // Create the list to be passed to the SelectionPopup.
         // Pricelist object is passed as item in the list because it
         // is the object that will be returned when the popup is confirmed.
-        const selectionList = this.pos.globalState.pricelists.map((pricelist) => ({
+        const selectionList = this.pos.pricelists.map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
             isSelected:
@@ -32,7 +32,7 @@ export class SetPricelistButton extends Component {
             item: pricelist,
         }));
 
-        if (!this.pos.globalState.default_pricelist) {
+        if (!this.pos.default_pricelist) {
             selectionList.push({
                 id: null,
                 label: this.env._t("Default Price"),
@@ -55,7 +55,7 @@ export class SetPricelistButton extends Component {
 ProductScreen.addControlButton({
     component: SetPricelistButton,
     condition: function () {
-        const { config, pricelists } = this.pos.globalState;
+        const { config, pricelists } = this.pos;
         return config.use_pricelist && pricelists.length > 0;
     },
 });

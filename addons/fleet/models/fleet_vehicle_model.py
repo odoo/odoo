@@ -53,14 +53,13 @@ class FleetVehicleModel(models.Model):
             domain = expression.AND([name_domain, domain])
         return self._search(domain, limit=limit, order=order)
 
-    def name_get(self):
-        res = []
+    @api.depends('brand_id')
+    def _compute_display_name(self):
         for record in self:
             name = record.name
             if record.brand_id.name:
-                name = record.brand_id.name + '/' + name
-            res.append((record.id, name))
-        return res
+                name = f"{record.brand_id.name}/{name}"
+            record.display_name = name
 
     def _compute_vehicle_count(self):
         group = self.env['fleet.vehicle']._read_group(

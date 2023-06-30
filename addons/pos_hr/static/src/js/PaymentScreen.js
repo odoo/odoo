@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, "pos_hr.PaymentScreen", {
     async _finalizeValidation() {
-        this.currentOrder.cashier = this.pos.globalState.get_cashier();
+        this.currentOrder.cashier = this.pos.get_cashier();
         await this._super(...arguments);
     },
 });

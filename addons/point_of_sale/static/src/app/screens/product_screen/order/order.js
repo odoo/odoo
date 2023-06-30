@@ -30,7 +30,7 @@ export class OrderWidget extends Component {
         );
     }
     get order() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get orderlinesArray() {
         return this.order ? this.order.get_orderlines() : [];

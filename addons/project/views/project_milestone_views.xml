@@ -11,7 +11,6 @@
                                 type="action"
                                 class="oe_stat_button"
                                 icon="fa-tasks"
-                                attrs="{'invisible': [('task_count', '=', 0)]}"
                                 context="{'default_project_id': project_id}"
                                 groups="project.group_project_milestone"
                                 close="1"
@@ -21,7 +20,7 @@
                                     <field name="task_count" nolabel="1"/>
                                     <span class="text-secondary fw-normal"> Tasks</span>
                                 </span>
-                                <span class="o_stat_value">
+                                <span class="o_stat_value" attrs="{'invisible': [('done_task_count', '=', 0)]}">
                                     <field name="done_task_count" nolabel="1"/>
                                     <span class="text-secondary fw-normal"> Done</span>
                                 </span>

@@ -117,14 +117,13 @@ class LunchSupplier(models.Model):
          'Automatic Email Sending Time should be between 0 and 12'),
     ]
 
-    def name_get(self):
-        res = []
+    @api.depends('phone')
+    def _compute_display_name(self):
         for supplier in self:
             if supplier.phone:
-                res.append((supplier.id, '%s %s' % (supplier.name, supplier.phone)))
+                supplier.display_name = f'{supplier.name} {supplier.phone}'
             else:
-                res.append((supplier.id, supplier.name))
-        return res
+                supplier.display_name = supplier.name
 
     def _sync_cron(self):
         for supplier in self:

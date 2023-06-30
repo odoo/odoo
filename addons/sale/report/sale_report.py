@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
 
 class SaleReport(models.Model):
@@ -13,7 +14,7 @@ class SaleReport(models.Model):
 
     @api.model
     def _get_done_states(self):
-        return ['sale', 'done']
+        return ['sale']
 
     # sale.order fields
     name = fields.Char(string="Order Reference", readonly=True)
@@ -23,14 +24,7 @@ class SaleReport(models.Model):
     pricelist_id = fields.Many2one(comodel_name='product.pricelist', readonly=True)
     team_id = fields.Many2one(comodel_name='crm.team', string="Sales Team", readonly=True)
     user_id = fields.Many2one(comodel_name='res.users', string="Salesperson", readonly=True)
-    state = fields.Selection(
-        selection=[
-            ('draft', 'Draft Quotation'),
-            ('sent', 'Quotation Sent'),
-            ('sale', 'Sales Order'),
-            ('done', 'Sales Done'),
-            ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True)
+    state = fields.Selection(selection=SALE_ORDER_STATE, string="Status", readonly=True)
     analytic_account_id = fields.Many2one(
         comodel_name='account.analytic.account', string="Analytic Account", readonly=True)
     invoice_status = fields.Selection(
@@ -104,22 +98,22 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END AS qty_to_invoice,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
                 / {self._case_value_or_one('s.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS price_total,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
                 / {self._case_value_or_one('s.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS price_subtotal,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_to_invoice
                 / {self._case_value_or_one('s.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS untaxed_amount_to_invoice,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_invoiced
                 / {self._case_value_or_one('s.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS untaxed_amount_invoiced,
             COUNT(*) AS nbr,
@@ -148,7 +142,7 @@ class SaleReport(models.Model):
             l.discount AS discount,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
                 / {self._case_value_or_one('s.currency_rate')}
-                / {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('currency_table.rate')}
                 ) ELSE 0
             END AS discount_amount,
             concat('sale.order', ',', s.id) AS order_reference"""

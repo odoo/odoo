@@ -495,7 +495,6 @@ QUnit.module("SettingsFormView", (hooks) => {
         });
 
         await click(target.querySelector(".o_field_char .btn.o_field_translate")); // Transalte
-        await click(target.querySelector(".modal-footer .btn-primary")); // Warning dialog (OK)
         await click(target.querySelectorAll(".modal-footer .btn")[1]); // Discard
         await click(target.querySelector(".o_control_panel .o_form_button_save")); // Save Settings
     });
@@ -934,6 +933,76 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.containsNone(document.body, ".modal", "should not open a warning dialog");
         }
     );
+
+    QUnit.test("header field don't dirty settings", async (assert) => {
+        assert.expect(6);
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            4: {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[2, "list"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                <form string="Settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <setting type="header" string="Foo">
+                            <field name="foo" title="Foo?."/>
+                        </setting>
+                        <button name="4" string="Execute action" type="action"/>
+                    </app>
+                </form>`,
+            "task,2,list": '<tree><field name="display_name"/></tree>',
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method === "create") {
+                assert.deepEqual(
+                    args.args[0],
+                    { foo: true },
+                    "should create a record with foo=true"
+                );
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+
+        await click(target.querySelector(".o_field_boolean input"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+
+        assert.containsNone(
+            target,
+            ".modal-title",
+            "should not say that there are unsaved changes"
+        );
+
+        await click(target.querySelector("button[name='4']"));
+        assert.containsNone(document.body, ".modal", "should not open a warning dialog");
+
+        assert.containsOnce(target, ".o_list_view", "should be open list view");
+    });
 
     QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
         registry.category("services").add(
@@ -1496,6 +1565,59 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
+    QUnit.test("Settings with createLabelFromField", async function (assert) {
+        serverData.models["res.config.settings"].fields.baz.string = "Zab";
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Title of group Bar">
+                            <setting>
+                                <label for="baz"/>
+                                <field name="baz"/>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
+        });
+
+        await editSearch(target, "__comp__.props.record");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            []
+        );
+
+        await editSearch(target, "baz");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            []
+        );
+
+        await editSearch(target, "zab");
+        await execTimeouts();
+        assert.strictEqual(
+            target.querySelector(".highlighter").textContent,
+            "Zab",
+            "Zab word highlighted"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Zab"]
+        );
+    });
+
     QUnit.test("standalone field labels with string inside a settings page", async (assert) => {
         let compiled = undefined;
         patchWithCleanup(SettingsFormCompiler.prototype, {
@@ -1529,7 +1651,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         const expectedCompiled = `
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
-                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
+                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                     </SearchableSetting>

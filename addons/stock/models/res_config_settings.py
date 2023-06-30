@@ -48,6 +48,7 @@ class ResConfigSettings(models.TransientModel):
     annual_inventory_month = fields.Selection(related='company_id.annual_inventory_month', readonly=False)
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
     group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
+    module_stock_dropshipping = fields.Boolean("Dropshipping")
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):

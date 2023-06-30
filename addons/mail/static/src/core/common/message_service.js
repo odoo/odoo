@@ -40,6 +40,7 @@ export class MessageService {
                 .concat(message.attachments.map(({ id }) => id)),
             body: await prettifyMessageContent(body, validMentions),
             message_id: message.id,
+            partner_ids: validMentions?.partners.map((partner) => partner.id),
         });
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc(
@@ -218,7 +219,8 @@ export class MessageService {
         } else {
             message = new Message();
             message._store = this.store;
-            message = this.store.messages[data.id] = message;
+            this.store.messages[data.id] = message;
+            message = this.store.messages[data.id];
         }
         this.update(message, data);
         // return reactive version
@@ -239,10 +241,13 @@ export class MessageService {
             linkPreviews = message.linkPreviews,
             message_type: type = message.type,
             model: resModel = message.resModel,
+            module_icon,
             notifications = message.notifications,
             parentMessage,
             recipients = message.recipients,
+            record_name,
             res_id: resId = message.resId,
+            res_model_name,
             subtype_description: subtypeDescription = message.subtypeDescription,
             ...remainingData
         } = data;
@@ -262,11 +267,12 @@ export class MessageService {
             type,
         });
         // origin thread before other information (in particular notification insert uses it)
-        if (data.record_name) {
-            message.originThread.name = data.record_name;
-        }
-        if (data.res_model_name) {
-            message.originThread.modelName = data.res_model_name;
+        if (message.originThread) {
+            assignDefined(message.originThread, {
+                modelName: res_model_name || undefined,
+                module_icon: module_icon || undefined,
+                name: record_name || undefined,
+            });
         }
         replaceArrayWithCompare(
             message.attachments,

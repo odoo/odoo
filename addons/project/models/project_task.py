@@ -69,7 +69,7 @@ class Task(models.Model):
     _date_name = "date_assign"
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
-    _order = "priority desc, date_deadline asc, sequence, id desc"
+    _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
     _check_company_auto = True
 
@@ -114,7 +114,7 @@ class Task(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    description = fields.Html(string='Description')
+    description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High'),
@@ -233,7 +233,6 @@ class Task(models.Model):
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
 
     # recurrence fields
-    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
@@ -397,11 +396,6 @@ class Task(models.Model):
     def _onchange_project_id(self):
         if self.state != '04_waiting_normal':
             self.state = '01_in_progress'
-
-    @api.depends('state')
-    def _compute_is_closed(self):
-        for task in self:
-            task.is_closed = task.state in CLOSED_STATES
 
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
@@ -664,14 +658,19 @@ class Task(models.Model):
     def _get_group_pattern(self):
         return {
             'tags_and_users': r'\s([#@]%s[^\s]+)',
-            'priority': r'\s(!)$',
+            'priority': r'\s(!)',
         }
 
-    def _get_groups_patterns(self):
-        group_pattern = self._get_group_pattern()
+    def _prepare_pattern_groups(self):
+        group = self._get_group_pattern()
         return [
-            r'(?:%s)*' % (group_pattern['tags_and_users'] % ''),
-            r'(?:%s)?' % group_pattern['priority'],
+            group['tags_and_users'] % '',
+            group['priority'],
+        ]
+
+    def _get_groups_patterns(self):
+        return [
+            r'(?:%s)*' % ('|').join(self._prepare_pattern_groups()),
         ]
 
     def _get_cannot_start_with_patterns(self):
@@ -1088,8 +1087,8 @@ class Task(models.Model):
                 if task.allow_task_dependencies:
                     if task.is_blocked_by_dependences() and vals['state'] not in CLOSED_STATES and vals['state'] != '04_waiting_normal':
                         task.state = '04_waiting_normal'
-            if vals['state'] in CLOSED_STATES:
-                task.date_last_stage_update = now
+                if vals['state'] in CLOSED_STATES:
+                    task.date_last_stage_update = now
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
@@ -1172,12 +1171,8 @@ class Task(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        if self.date_deadline:
-            render_context['subtitles'].append(
-                _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
-        elif self.date_assign:
-            render_context['subtitles'].append(
-                _('Assigned On: %s', self.date_assign.strftime(get_lang(self.env).date_format)))
+        if self.stage_id:
+            render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
         return render_context
 
     @api.model
@@ -1400,6 +1395,12 @@ class Task(models.Model):
         if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
             self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
+
+    def _get_projects_to_make_billable_domain(self, additional_domain=None):
+        return expression.AND([
+            [('partner_id', '!=', False)],
+            additional_domain or [],
+        ])
 
     def _get_all_subtasks(self):
         return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))

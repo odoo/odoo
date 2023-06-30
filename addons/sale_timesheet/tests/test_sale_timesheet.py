@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
-
+from odoo.tests.common import Form
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheet(TestCommonSaleTimesheet):
@@ -755,6 +755,106 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         items = project._get_profitability_items(with_action=False)
         self.assertEqual(items['revenues']['data'][0]['to_invoice'], 2*product_price, "The quantity to_invoice should be equal to twice the price of the product")
 
+    def test_sale_order_with_multiple_project_templates(self):
+        """Test when creating multiple projects for one sale order every project has its own allocated hours"""
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+
+        project_template_1, project_template_2 = self.env['project.project'].create([
+            {'name': 'Template 1'},
+            {'name': 'Template 1'},
+        ])
+
+        product_1, product_2 = self.env['product.product'].create([
+            {
+                'name': "Service with template 1",
+                'standard_price': 10,
+                'list_price': 20,
+                'type': 'service',
+                'invoice_policy': 'order',
+                'uom_id': self.uom_hour.id,
+                'uom_po_id': self.uom_hour.id,
+                'default_code': 'c1',
+                'service_tracking': 'task_in_project',
+                'project_id': False,  # will create a project,
+                'project_template_id': project_template_1.id,
+            }, {
+                'name': "Service with template 2",
+                'standard_price': 10,
+                'list_price': 20,
+                'type': 'service',
+                'invoice_policy': 'order',
+                'uom_id': self.uom_hour.id,
+                'uom_po_id': self.uom_hour.id,
+                'default_code': 'c2',
+                'service_tracking': 'task_in_project',
+                'project_id': False,  # will create a project,
+                'project_template_id': project_template_2.id,
+            },
+        ])
+
+        sale_order_line_template_1, sale_order_line_template_2 = self.env['sale.order.line'].create([
+            {
+                'order_id': sale_order.id,
+                'name': product_1.name,
+                'product_id': product_1.id,
+                'product_uom_qty': 10,
+                'product_uom': product_1.uom_id.id,
+                'price_unit': product_1.list_price,
+            }, {
+                'order_id': sale_order.id,
+                'name': product_2.name,
+                'product_id': product_2.id,
+                'product_uom_qty': 5,
+                'product_uom': product_2.uom_id.id,
+                'price_unit': product_2.list_price,
+            },
+        ])
+
+        sale_order.action_confirm()
+        self.assertEqual(10, sale_order_line_template_1.project_id.allocated_hours)
+        self.assertEqual(5, sale_order_line_template_2.project_id.allocated_hours)
+
+    def test_onchange_uom_service_product(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+
+        # Create product (consumable that will be switch to service)
+        product_1 = self.env['product.template'].create([
+            {
+                'name': "Consumable to convert to service 1",
+                'standard_price': 10,
+            },
+        ])
+        product_2 = self.env['product.product'].create({
+                'name': "Consumable to convert to service 2",
+                'standard_price': 15,
+        })
+
+        # Initial uom should be unit
+        self.assertEqual([product_1.uom_id.id, product_2.uom_id.id], [uom_unit.id]*2)
+        products = [product_1, product_2] #perform the tests for both product and variants
+        for product in products:
+            # 1. product.template form: [uom: unit] --> change to service --> [uom: hour]
+            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+                product_form.detailed_type = 'service'
+                product_form.service_policy = 'delivered_timesheet'
+                self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
+
+            # 2. product.template form: [uom: kgm] --> change to service --> [uom: hour] --> change to consumable --> [uom: kgm]
+            product.write({
+                'detailed_type': 'consu',
+                'uom_id': uom_kg.id,
+            })
+            with Form(product.with_context({'tracking_disable': True}), view="sale_timesheet.view_product_timesheet_form") as product_form:
+                product_form.detailed_type = 'service'
+                product_form.service_policy = 'delivered_timesheet'
+                self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
+                product_form.detailed_type = 'consu'
+                self.assertEqual(product_form.uom_id.id, uom_kg.id)
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):

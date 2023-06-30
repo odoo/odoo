@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrdersHistory" owl="1">
+        <NavBar customText="'Orders'" />
+        <div class="overflow-auto dvh-100 pb-5">
+            <t t-if="state.loadingProgress">
+                <div class="d-flex align-items-center h-100 justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </t>
+            <div t-else="">
+                <t t-foreach="orders" t-as="order" t-key="order.pos_reference">
+                    <div class="o_so_order d-flex flex-column">
+                        <div class="o_so_order_header p-3 bg-white" t-on-click="() => this.editOrder(order)">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h6 class="m-0"
+                                    t-esc="order.pos_reference"/>
+                                <span class="badge p-2 text-bg-primary"
+                                    t-esc="order.state"/>
+                            </div>
+                            <p class="small m-0 fst-italic text-muted"
+                                t-esc="order.date"/>
+                        </div>
+                        <div class="o_so_order_body p-3 bg-300">
+                            <Lines t-if="order.lines" order="order" />
+                            <div class="d-flex flex-column align-items-center px-3 pt-3 bg-white">
+                                <PriceDetails tax="order.amount_tax" total="order.amount_total"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div t-if="orders.length === 0" class="d-flex justify-content-center mt-3">
+                    <div>No order found</div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

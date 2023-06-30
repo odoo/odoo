@@ -16,7 +16,7 @@ export class TableGuestsButton extends Component {
         this.popup = useService("popup");
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get nGuests() {
         return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
@@ -51,6 +51,6 @@ export class TableGuestsButton extends Component {
 ProductScreen.addControlButton({
     component: TableGuestsButton,
     condition: function () {
-        return this.pos.globalState.config.module_pos_restaurant;
+        return this.pos.config.module_pos_restaurant;
     },
 });

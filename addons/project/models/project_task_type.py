@@ -19,7 +19,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids,
+        default=lambda self: self._get_default_project_ids(),
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
     mail_template_id = fields.Many2one(
@@ -27,8 +27,7 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
-    fold = fields.Boolean(string='Folded in Kanban',
-        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
+    fold = fields.Boolean(string='Folded in Kanban')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',

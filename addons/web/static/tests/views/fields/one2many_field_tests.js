@@ -275,7 +275,7 @@ QUnit.module("Fields", (hooks) => {
             await clickCreate(target);
 
             // change the int_field through drag and drop
-            // that way, we'll trigger the sorting and the name_get
+            // that way, we'll trigger the sorting and the display_name read
             // of the lines of "p"
             await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
@@ -1728,11 +1728,11 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, args) {
-                    if (checkRPC && args.method === "name_get") {
+                    if (checkRPC && args.method === "read" && args.args[1].length === 1 && args.args[1][0] === "display_name") {
                         assert.deepEqual(
                             args.args[0],
                             [37],
-                            "should only fetch the name_get of the unknown record"
+                            "should only fetch the display_name of the unknown record"
                         );
                     }
                 },
@@ -2516,6 +2516,42 @@ QUnit.module("Fields", (hooks) => {
         );
         // save
         await clickSave(target);
+    });
+
+    QUnit.test("When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'", async function (assert) {
+        assert.expect(1);
+        serverData.views = {
+            "turtle,false,form": `
+                <form>
+                    <h3>Data</h3>
+                </form>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-att-class="'oe_kanban_global_click'">
+                                        <h3>Record 1</h3>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        // Opening the record to see the footer buttons
+        await click(target.querySelector(".o_kanban_record"));
+
+        assert.strictEqual(target.querySelector('.o_btn_remove').textContent, 'Delete');
     });
 
     QUnit.test("open a record in a one2many kanban (mode 'readonly')", async function (assert) {
@@ -8758,7 +8794,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "one2many with sequence field, fetch name_get from empty list, field text",
+        "one2many with sequence field, fetch display from empty list, field text",
         async function (assert) {
             // There was a bug where a RPC would fail because no route was set.
             // The scenario is:
@@ -8767,7 +8803,7 @@ QUnit.module("Fields", (hooks) => {
             //     - a handle field
             //     - a many2one, which is not required, and we will leave it empty
             // - reorder the lines with the handle
-            // -> This will call a resequence, which calls a name_get.
+            // -> This will call a resequence, which calls a display_name read.
             // -> With the bug that would fail, if it's ok the test will pass.
 
             // This test will also make sure lists with
@@ -11088,7 +11124,7 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
     });
 
-    QUnit.test("do not call name_get if display_name already known", async function (assert) {
+    QUnit.test("do not call read if display_name already known", async function (assert) {
         serverData.models.partner.fields.product_id.default = 37;
         serverData.models.partner.onchanges = {
             trululu: function (obj) {
@@ -11914,7 +11950,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);
@@ -11992,7 +12028,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);
@@ -12155,7 +12191,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), firstCreateActionLink);
             assert.ok(!event.defaultPrevented);
@@ -12193,7 +12229,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), secondCreateActionLink);
             assert.ok(!event.defaultPrevented);
@@ -12207,7 +12243,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);

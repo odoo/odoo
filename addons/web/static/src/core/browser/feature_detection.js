@@ -7,12 +7,14 @@ import { browser } from "./browser";
 // -----------------------------------------------------------------------------
 
 /**
- * true if the browser is based on Chromium (Google Chrome, Opera, Edge)
- *
- * @returns {boolean}
+ * True if the browser is based on Chromium (Google Chrome, Opera, Edge).
  */
 export function isBrowserChrome() {
-    return browser.navigator.userAgent.includes("Chrome");
+    return /Chrome/i.test(browser.navigator.userAgent);
+}
+
+export function isBrowserFirefox() {
+    return /Firefox/i.test(browser.navigator.userAgent);
 }
 
 export function isAndroid() {
@@ -31,7 +33,7 @@ export function isOtherMobileOS() {
 }
 
 export function isMacOS() {
-    return Boolean(browser.navigator.userAgent.match(/Mac/i));
+    return /Mac/i.test(browser.navigator.userAgent);
 }
 
 export function isMobileOS() {

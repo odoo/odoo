@@ -39,28 +39,6 @@ var ColorpickerWidget = Widget.extend({
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = '';
 
-        // Needs to be bound on document to work in all possible cases.
-        const $document = $(
-            parent.options.ownerDocument ||
-            (parent.el && parent.el.parentElement && parent.el.ownerDocument)
-            || (parent.options && parent.options.$editable && parent.options.$editable[0] && parent.options.$editable[0].ownerDocument)
-            || document);
-
-        this.throttleOnMouseMove = throttleForAnimation((ev) => {
-            this._onMouseMovePicker(ev);
-            this._onMouseMoveSlider(ev);
-            this._onMouseMoveOpacitySlider(ev);
-        });
-        $document.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
-        $document.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
-            if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
-                this._colorSelected();
-            }
-            this.pickerFlag = false;
-            this.sliderFlag = false;
-            this.opacitySliderFlag = false;
-        }, 10));
-
         this.options = Object.assign({}, options);
     },
     /**
@@ -100,6 +78,33 @@ var ColorpickerWidget = Widget.extend({
         });
         resizeObserver.observe(this.el);
 
+        // Need to be bound on all documents to work in all possible cases (we
+        // have to be able to start dragging/moving from the colorpicker to
+        // anywhere on the screen, crossing iframes).
+        this.$documents = $([window.top, ...Array.from(window.top.frames).filter(frame => {
+            try {
+                const document = frame.document;
+                return !!document;
+            } catch {
+                // We cannot access the document (cross origin).
+                return false;
+            }
+        })].map(w => w.document));
+        this.throttleOnMouseMove = throttleForAnimation((ev) => {
+            this._onMouseMovePicker(ev);
+            this._onMouseMoveSlider(ev);
+            this._onMouseMoveOpacitySlider(ev);
+        });
+        this.$documents.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
+        this.$documents.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
+            if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
+                this._colorSelected();
+            }
+            this.pickerFlag = false;
+            this.sliderFlag = false;
+            this.opacitySliderFlag = false;
+        }, 10));
+
         this.previewActive = true;
         return this._super.apply(this, arguments);
     },
@@ -108,8 +113,8 @@ var ColorpickerWidget = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(document).off(`.${this.uniqueId}`);
-        if (this.throttleOnMouseMove)  {
+        if (this.throttleOnMouseMove) {
+            this.$documents.off(`.${this.uniqueId}`);
             this.throttleOnMouseMove.cancel();
         }
     },

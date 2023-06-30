@@ -9,12 +9,12 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 const VALID_SEARCH_TAGS = new Set(["date", "customer", "client", "name", "order"]);
 const FIELD_MAP = {
     date: "date_order",
-    customer: "partner_id.display_name",
-    client: "partner_id.display_name",
+    customer: "partner_id.complete_name",
+    client: "partner_id.complete_name",
     name: "name",
     order: "name",
 };
-const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
+const SEARCH_FIELDS = ["name", "partner_id.complete_name", "date_order"];
 
 /**
  * @emits search
@@ -28,7 +28,7 @@ export class SaleOrderManagementControlPanel extends Component {
         this.saleOrderFetcher = useService("sale_order_fetcher");
         useAutofocus();
 
-        const currentPartner = this.pos.globalState.get_order().get_partner();
+        const currentPartner = this.pos.get_order().get_partner();
         if (currentPartner) {
             this.pos.orderManagement.searchString = currentPartner.name;
         }
@@ -64,7 +64,7 @@ export class SaleOrderManagementControlPanel extends Component {
      *      '|',
      *      '|',
      *      ['pos_reference', 'ilike', '%Customer 1%'],
-     *      ['partner_id.display_name', 'ilike', '%Customer 1%'],
+     *      ['partner_id.complete_name', 'ilike', '%Customer 1%'],
      *      ['date_order', 'ilike', '%Customer 1%']
      *   ]
      * ```
@@ -81,7 +81,7 @@ export class SaleOrderManagementControlPanel extends Component {
      * ```
      *   searchString = 'customer: Steward, date: 2020-05-01'
      *   result = [
-     *      ['partner_id.display_name', 'ilike', '%Steward%'],
+     *      ['partner_id.complete_name', 'ilike', '%Steward%'],
      *      ['date_order', 'ilike', '%2020-05-01%']
      *   ]
      * ```

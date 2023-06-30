@@ -160,14 +160,15 @@ class TestSaleOrder(SaleCommon):
             so_copy.with_user(self.sale_user).unlink()
         self.assertTrue(so_copy.unlink(), 'Sale: deleting a cancelled SO should be possible')
 
-        # SO in state 'sale' or 'done' cannot be deleted
+        # SO in state 'sale' cannot be deleted
         self.sale_order.action_confirm()
         self.assertTrue(self.sale_order.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
-        self.sale_order.action_done()
-        self.assertTrue(self.sale_order.state == 'done', 'Sale: SO should be in state "done"')
+        self.sale_order.action_lock()
+        self.assertTrue(self.sale_order.state == 'sale')
+        self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.unlink()
 
@@ -289,7 +290,7 @@ class TestSaleOrder(SaleCommon):
             "No validity date must be specified if the company validity duration is 0")
 
     def test_so_names(self):
-        """Test custom context key for name_get & name_search.
+        """Test custom context key for display_name & name_search.
 
         Note: this key is used in sale_expense & sale_timesheet modules.
         """
@@ -301,7 +302,7 @@ class TestSaleOrder(SaleCommon):
         self.assertNotIn(self.sale_order.partner_id.name, self.sale_order.display_name)
         self.assertIn(
             self.sale_order.partner_id.name,
-            self.sale_order.with_context(sale_show_partner_name=True).name_get()[0][1])
+            self.sale_order.with_context(sale_show_partner_name=True).display_name)
 
     def test_state_changes(self):
         """Test some untested state changes methods & logic."""
@@ -312,7 +313,8 @@ class TestSaleOrder(SaleCommon):
 
         self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.action_confirm()
-        self.assertEqual(self.sale_order.state, 'done', "The order wasn't automatically locked at confirmation.")
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertTrue(self.sale_order.locked)
         with self.assertRaises(UserError):
             self.sale_order.action_confirm()
 

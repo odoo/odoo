@@ -14,6 +14,7 @@ Then it can be made specific at the product level.
     'depends': [
         'website_sale',
         'sale_stock',
+        'stock_delivery',
     ],
     'data': [
         'views/product_template_views.xml',
@@ -36,6 +37,7 @@ Then it can be made specific at the product level.
         'web.assets_tests': [
             'website_sale_stock/static/tests/tours/website_sale_stock_multilang.js',
             'website_sale_stock/static/tests/tours/website_sale_stock_stock_notification.js',
+            'website_sale_stock/static/tests/tours/website_sale_stock_message_after_close_configurator_modal.js'
         ],
     },
     'license': 'LGPL-3',

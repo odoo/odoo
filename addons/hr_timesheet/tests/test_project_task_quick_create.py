@@ -14,8 +14,8 @@ class TestProjectTaskQuickCreate(TestCommonTimesheet):
     def test_create_task_with_valid_expressions(self):
         # tuple format = (display name, [expected name, expected tags count, expected users count, expected priority, expected planned hours])
         valid_expressions = {
-            'task A 30H 2.5h #tag1 @user_employee2 !': ('task A', 1, 1, "1", 32.5),
-            'task A 30.H 2.h 2.13h': ('task A 30.H 2.h', 0, 0, "0", 2.13),
+            'task A 30H 2.5h #tag1 @user_employee2 2H #tag2 @user_employee 5h !': ('task A', 2, 2, "1", 39.5),
+            'task A 30.H 2.h 1H #tag2 ! @user_employee ! @user_employee2 2.13h !': ('task A 30.H 2.h', 1, 2, "1", 3.13),
         }
 
         for expression, values in valid_expressions.items():

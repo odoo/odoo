@@ -51,6 +51,7 @@ export class Discuss extends Component {
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
         this.root = useRef("root");
+        this.state = useState({ jumpThreadPresent: 0 });
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
@@ -92,19 +93,11 @@ export class Discuss extends Component {
         this.notification.add(_t("The avatar has been updated!"), { type: "success" });
     }
 
-    async renameThread({ value: name }) {
-        const newName = name.trim();
-        if (
-            newName !== this.thread.displayName &&
-            ((newName && this.thread.type === "channel") ||
-                this.thread.type === "chat" ||
-                this.thread.type === "group")
-        ) {
-            await this.threadService.notifyThreadNameToServer(this.thread, newName);
-        }
+    async renameThread(name) {
+        await this.threadService.renameThread(this.thread, name);
     }
 
-    async updateThreadDescription({ value: description }) {
+    async updateThreadDescription(description) {
         const newDescription = description.trim();
         if (!newDescription && !this.thread.description) {
             return;
@@ -114,7 +107,7 @@ export class Discuss extends Component {
         }
     }
 
-    async renameGuest({ value: name }) {
+    async renameGuest(name) {
         const newName = name.trim();
         if (this.store.guest?.name !== newName) {
             await this.personaService.updateGuestName(this.store.self, newName);

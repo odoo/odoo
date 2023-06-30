@@ -43,16 +43,16 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         }, true);
         await mountListAndAssert(() => {
             useDraggable({
-                ref: useRef("root"),
-            });
-        }, true);
-        await mountListAndAssert(() => {
-            useDraggable({
                 elements: ".item",
             });
         }, true);
 
         // Correct params
+        await mountListAndAssert(() => {
+            useDraggable({
+                ref: useRef("root"),
+            });
+        }, false);
         await mountListAndAssert(() => {
             useDraggable({
                 ref: {},

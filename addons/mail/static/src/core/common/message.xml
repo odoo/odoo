@@ -14,7 +14,7 @@
             >
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-center': props.squashed }">
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight and !props.squashed, 'align-items-center justify-content-center': props.squashed }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded o_object_fit_cover" t-att-src="authorAvatarUrl"/>
                         </div>
@@ -79,7 +79,7 @@
                                     <t t-else="">
                                         <div class="position-relative">
                                             <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                'border': state.isEditing,
+                                                'border': state.isEditing and !message.isNote,
                                                 'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
                                                 'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
                                                 'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
@@ -90,7 +90,7 @@
                                                         'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
                                                         'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                         }" t-ref="body">
-                                                <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
+                                                <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                 <t t-else="">
                                                     <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
                                                     <t t-if="message.body" t-out="message.body"/>
@@ -131,7 +131,7 @@
                                         <t t-set-slot="default">
                                             <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>View Reactions</DropdownItem>
                                             <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-fw fa-check pe-2"/>Mark as Read</DropdownItem>
-                                            <DropdownItem t-if="canUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
+                                            <DropdownItem t-if="showUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
                                             <DropdownItem t-if="props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-fw fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
                                             <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-fw fa-pencil pe-2"/>Edit</DropdownItem>
                                             <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-fw fa-trash pe-2"/>Delete</DropdownItem>

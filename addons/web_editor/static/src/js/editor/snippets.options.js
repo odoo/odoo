@@ -20,6 +20,7 @@ const {
     backgroundImageCssToParts,
     backgroundImagePartsToCss,
     DEFAULT_PALETTE,
+    isBackgroundImageAttribute,
 } = weUtils;
 import weWidgets from "wysiwyg.widgets";
 import {
@@ -1611,11 +1612,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            options.ownerDocument = wysiwyg.el.ownerDocument;
-            options.editable = wysiwyg.$editable[0];
-        }
+
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {
@@ -6542,22 +6539,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         this.$target.off('.BackgroundOptimize');
         return this._super(...arguments);
     },
-    /**
-     * Marks the target for creation of an attachment and copies data attributes
-     * to the target so that they can be restored on this.img in later editions.
-     *
-     * @override
-     */
-    async cleanForSave() {
-        const img = this._getImg();
-        if (img.matches('.o_modified_image_to_save')) {
-            this.$target.addClass('o_modified_image_to_save');
-            Object.entries(img.dataset).forEach(([key, value]) => {
-                this.$target[0].dataset[key] = value;
-            });
-            this.$target[0].dataset.bgSrc = img.getAttribute('src');
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -6582,15 +6563,18 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     async _loadImageInfo() {
         this.img = new Image();
-        Object.entries(this.$target[0].dataset).filter(([key]) =>
-            // Avoid copying dynamic editor attributes
-            !['oeId','oeModel', 'oeField', 'oeXpath', 'noteId'].includes(key)
-        ).forEach(([key, value]) => {
-            this.img.dataset[key] = value;
-        });
-        const src = getBgImageURL(this.$target[0]);
-        // Don't set the src if not relative (ie, not local image: cannot be modified)
-        this.img.src = src.startsWith('/') ? src : '';
+        const targetEl = this.$target[0].classList.contains("oe_img_bg")
+            ? this.$target[0] : this.$target[0].querySelector(".oe_img_bg");
+        if (targetEl) {
+            Object.entries(targetEl.dataset).filter(([key]) =>
+                isBackgroundImageAttribute(key)).forEach(([key, value]) => {
+                this.img.dataset[key] = value;
+            });
+            const src = getBgImageURL(targetEl);
+            // Don't set the src if not relative (ie, not local image: cannot be
+            // modified)
+            this.img.src = src.startsWith("/") ? src : "";
+        }
         return await this._super(...arguments);
     },
     /**
@@ -6611,6 +6595,21 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         parts.url = `url('${img.getAttribute('src')}')`;
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
+        // Apply modification on the DOM HTML element that is currently being
+        // modified.
+        this.$target[0].classList.add("o_modified_image_to_save");
+        // First delete the data attributes relative to the image background
+        // from the target as a data attribute could have been be removed (ex:
+        // glFilter).
+        for (const attribute in this.$target[0].dataset) {
+            if (isBackgroundImageAttribute(attribute)) {
+                delete this.$target[0].dataset[attribute];
+            }
+        }
+        Object.entries(img.dataset).forEach(([key, value]) => {
+            this.$target[0].dataset[key] = value;
+        });
+        this.$target[0].dataset.bgSrc = img.getAttribute("src");
     },
 
     //--------------------------------------------------------------------------
@@ -6822,12 +6821,29 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      */
     setTarget: function () {
         // When we change the target of this option we need to transfer the
-        // background-image from the old target to the new one.
+        // background-image and the dataset information relative to this image
+        // from the old target to the new one.
         const oldBgURL = getBgImageURL(this.$target);
+        const isModifiedImage = this.$target[0].classList.contains("o_modified_image_to_save");
+        const filteredOldDataset = Object.entries(this.$target[0].dataset).filter(([key]) => {
+            return isBackgroundImageAttribute(key);
+        });
+        // Delete the dataset information relative to the background-image of
+        // the old target.
+        filteredOldDataset.forEach(([key]) => {
+            delete this.$target[0].dataset[key];
+        });
+        // It is important to delete ".o_modified_image_to_save" from the old
+        // target as its image source will be deleted.
+        this.$target[0].classList.remove("o_modified_image_to_save");
         this._setBackground('');
         this._super(...arguments);
         if (oldBgURL) {
             this._setBackground(oldBgURL);
+            filteredOldDataset.forEach(([key, value]) => {
+                this.$target[0].dataset[key] = value;
+            });
+            this.$target[0].classList.toggle("o_modified_image_to_save", isModifiedImage);
         }
 
         // TODO should be automatic for all options as equal to the start method
@@ -6957,6 +6973,16 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
     },
+    /**
+     * Shows/Hides the shape on mobile.
+     *
+     * @see this.selectClass for params
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            return {showOnMobile: !this._getShapeData().showOnMobile};
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -6985,6 +7011,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // Compat: flip classes are no longer used but may be present in client db
                 const hasFlipClass = this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
                 return hasFlipClass || this._getShapeData().flip.includes('y');
+            }
+            case 'showOnMobile': {
+                return this._getShapeData().showOnMobile;
             }
         }
         return this._super(...arguments);
@@ -7106,7 +7135,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         // Updates/removes the shape container as needed and gives it the
         // correct background shape
         const json = target.dataset.oeShapeData;
-        const {shape, colors, flip = [], animated = 'false'} = json ? JSON.parse(json) : {};
+        const {shape, colors, flip = [], animated = 'false', showOnMobile} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
             return this._insertShapeContainer(null);
@@ -7139,6 +7168,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             $(shapeContainer).css('background-image', '');
             $(shapeContainer).css('background-position', '');
         }
+        shapeContainer.classList.toggle('o_shape_show_mobile', !!showOnMobile);
         if (previewMode === false) {
             this.prevShapeContainer = shapeContainer.cloneNode(true);
             this.prevShape = target.dataset.oeShapeData;
@@ -7214,6 +7244,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             shape: '',
             colors: this._getDefaultColors($(target)),
             flip: [],
+            showOnMobile: false,
         };
         const json = target.dataset.oeShapeData;
         return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
@@ -7306,12 +7337,23 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             if (!shapeToSelect) {
                 shapeToSelect = possibleShapes[1];
             }
+            // Only show on mobile by default if toggled from mobile view
+            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+            const isMobileView = this.$target[0].ownerDocument
+                .defaultView.frameElement.clientWidth < mobileViewThreshold;
+            const showOnMobile = isMobileView;
             this.trigger_up('snippet_edition_request', {exec: () => {
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();
             }});
             this._createShapeContainer(shapeToSelect);
-            return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
+            return this._handlePreviewState(false, () => (
+                {
+                    shape: shapeToSelect,
+                    colors: this._getImplicitColors(shapeToSelect),
+                    showOnMobile,
+                }
+            ));
         }
     },
 });
@@ -8199,6 +8241,103 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             await this._getTemplate(xmlid);
         });
         this._templatesLoading = Promise.all(proms);
+    },
+});
+
+/*
+ * Abstract option to be extended by the Carousel and gallery options (through
+ * the "CarouselHandler" option) that handles all the common parts (reordering
+ * of elements).
+ */
+registry.GalleryHandler = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles reodering of items.
+     *
+     * @override
+     */
+    notify(name, data) {
+        this._super(...arguments);
+        if (name === "reoder_items") {
+            const itemsEls = this._getItemsGallery();
+            const oldPosition = itemsEls.indexOf(data.itemEl);
+            itemsEls.splice(oldPosition, 1);
+            switch (data.position) {
+                case "first":
+                    itemsEls.unshift(data.itemEl);
+                    break;
+                case "prev":
+                    itemsEls.splice(Math.max(oldPosition - 1, 0), 0, data.itemEl);
+                    break;
+                case "next":
+                    itemsEls.splice(oldPosition + 1, 0, data.itemEl);
+                    break;
+                case "last":
+                    itemsEls.push(data.itemEl);
+                    break;
+            }
+            this._reorderItems(itemsEls, itemsEls.indexOf(data.itemEl));
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called to get the items of the gallery sorted by index if any (see
+     * gallery option) or by the order on the DOM otherwise.
+     *
+     * @abstract
+     * @returns {HTMLElement[]}
+     */
+    _getItemsGallery() {},
+    /**
+     * Called to reorder the items of the gallery.
+     *
+     * @abstract
+     * @param {HTMLElement[]} itemsEls - the items to reorder.
+     * @param {integer} newItemPosition - the new position of the moved items.
+     */
+    _reorderItems(itemsEls, newItemPosition) {},
+});
+
+/*
+ * Abstract option to be extended by the Carousel and gallery options that
+ * handles the update of the carousel indicator.
+ */
+registry.CarouselHandler = registry.GalleryHandler.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Update the carousel indicator.
+     *
+     * @private
+     * @param {integer} position - the position of the indicator to activate on
+     * the carousel.
+     */
+    _updateIndicatorAndActivateSnippet(position) {
+        const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
+            : this.$target[0].querySelector(".carousel");
+        carouselEl.classList.remove("slide");
+        $(carouselEl).carousel(position);
+        for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators li")) {
+            indicatorEl.classList.remove("active");
+        }
+        this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
+                    .classList.add("active");
+        this.trigger_up("activate_snippet", {
+            $snippet: $(this.$target[0].querySelector(".carousel-item.active")),
+            ifInactiveOptions: true,
+        });
+        carouselEl.classList.add("slide");
     },
 });
 

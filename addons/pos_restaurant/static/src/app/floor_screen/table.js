@@ -45,7 +45,7 @@ export class Table extends Component {
             boxShadow = "none";
         }
 
-        if (this.pos.globalState.floorPlanStyle == "kanban") {
+        if (this.pos.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
             const minWidth = 100 + 20;
@@ -87,28 +87,31 @@ export class Table extends Component {
         }
     }
     get fill() {
-        const customerCount = this.pos.globalState.getCustomerCount(this.props.table.id);
+        const customerCount = this.pos.getCustomerCount(this.props.table.id);
         return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
     }
     get orderCount() {
         const table = this.props.table;
-        const unsynced_orders = this.pos.globalState.getTableOrders(table.id).filter(
+        const unsynced_orders = this.pos.getTableOrders(table.id).filter(
             (o) =>
                 o.server_id === undefined &&
                 (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
                 // do not count the orders that are already finalized
                 !o.finalized
         );
+        let result;
         if (table.changes_count > 0) {
-            return table.changes_count;
+            result = table.changes_count;
         } else if (table.skip_changes > 0) {
-            return table.skip_changes;
+            result = table.skip_changes;
+        } else {
+            result = table.order_count + unsynced_orders.length;
         }
-        return table.order_count + unsynced_orders.length;
+        return !Number.isNaN(result) ? result : 0;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
-        if (this.pos.globalState.orderPreparationCategories.size) {
+        if (this.pos.orderPreparationCategories.size) {
             const notifications = this._getNotifications();
             countClass["notify-printing"] = notifications.printing;
             countClass["notify-skipped"] = notifications.skipped;
@@ -116,7 +119,7 @@ export class Table extends Component {
         return countClass;
     }
     get customerCountDisplay() {
-        return `${this.pos.globalState.getCustomerCount(this.props.table.id)}/${
+        return `${this.pos.getCustomerCount(this.props.table.id)}/${
             this.props.table.seats
         }`;
     }
@@ -130,7 +133,7 @@ export class Table extends Component {
     }
     isOccupied() {
         return (
-            this.pos.globalState.getCustomerCount(this.props.table.id) > 0 ||
+            this.pos.getCustomerCount(this.props.table.id) > 0 ||
             this.props.table.order_count > 0
         );
     }

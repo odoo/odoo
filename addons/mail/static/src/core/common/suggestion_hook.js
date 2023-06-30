@@ -13,6 +13,9 @@ export function useSuggestion() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
+        clearCannedReponses() {
+            comp.props.composer.cannedResponseIds.clear();
+        },
         clearSearch() {
             Object.assign(self.search, {
                 delimiter: undefined,
@@ -39,9 +42,7 @@ export function useSuggestion() {
             if (selectionStart > 0) {
                 candidatePositions.push(selectionStart - 1);
             }
-            const supportedDelimiters = suggestionService.getSupportedDelimiters(
-                comp.props.composer.thread
-            );
+            const supportedDelimiters = suggestionService.getSupportedDelimiters(self.thread);
             for (const candidatePosition of candidatePositions) {
                 if (candidatePosition < 0 || candidatePosition >= content.length) {
                     continue;
@@ -70,6 +71,9 @@ export function useSuggestion() {
             }
             self.clearSearch();
         },
+        get thread() {
+            return comp.props.composer.thread || comp.props.composer.message.originThread;
+        },
         fetch: {
             inProgress: false,
             rpcFunction: undefined,
@@ -89,6 +93,9 @@ export function useSuggestion() {
             }
             if (option.thread) {
                 comp.props.composer.rawMentions.threadIds.add(option.thread.id);
+            }
+            if (option.cannedResponse) {
+                comp.props.composer.cannedResponseIds.add(option.cannedResponse.id);
             }
             self.clearSearch();
             comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
@@ -119,12 +126,12 @@ export function useSuggestion() {
             items: undefined,
         }),
         update() {
-            if (!self.search.delimiter || !comp.props.composer.thread) {
+            if (!self.search.delimiter) {
                 return;
             }
             const suggestions = suggestionService.searchSuggestions(
                 self.search,
-                { thread: comp.props.composer.thread },
+                { thread: self.thread },
                 true
             );
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
@@ -150,11 +157,8 @@ export function useSuggestion() {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
-                if (!comp.props.composer.thread) {
-                    return;
-                }
                 await suggestionService.fetchSuggestions(self.search, {
-                    thread: comp.props.composer.thread,
+                    thread: self.thread,
                     onFetched() {
                         if (owl.status(comp) === "destroyed") {
                             return;

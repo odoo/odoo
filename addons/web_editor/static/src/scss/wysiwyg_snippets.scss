@@ -275,6 +275,10 @@
                       // browser default font, we should use a SVG instead.
         display: inline-block;
         margin-right: 0.4em;
+
+        .o_rtl & {
+            transform: scaleX(-1);
+        }
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
@@ -509,7 +513,33 @@
             .btn {
                 @extend %we-generic-button;
                 display: flex;
-                padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2);
+                padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2.5);
+            }
+
+            #font-size > button {
+                &:focus-within {
+                    @extend %we-generic-text-input;
+                    // Cancel the height of the border:
+                    margin-top: -1px;
+                    margin-bottom: -1px;
+
+                    input {
+                        padding: 0 !important;
+                        width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2} - #{$o-we-sidebar-content-field-border-width * 2});
+                    }
+                }
+                &.dropdown-toggle::after {
+                    display: none;
+                }
+
+                input {
+                    background-color: unset;
+                    border: none;
+                    color: unset;
+                    padding: 0;
+                    text-align: center;
+                    width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2});
+                }
             }
 
             we-customizeblock-option {
@@ -1001,7 +1031,10 @@
                     border-right-width: ($o-we-item-spacing - 1px);
                 }
             }
-            &:not(.o_we_so_color_palette) + we-button:not(:hover):not(.o_we_image_shape_remove) {
+            // Special buttons (e.g. remove/position) next to the we-select
+            // should be toned down. Also makes sure that only one button is
+            // targeted, and that should be the last one.
+            &:not(.o_we_so_color_palette) ~ we-button:not(:hover):not(.o_we_image_shape_remove):last-child {
                 background: none;
             }
 
@@ -1703,7 +1736,12 @@
                     content: '\f0da';
                     position: static;
                     transform: none;
+
+                    .o_rtl & {
+                        transform: scaleX(-1);
+                    }
                 }
+
                 &.active {
 
                     &::after {

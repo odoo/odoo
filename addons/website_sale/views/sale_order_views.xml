@@ -7,7 +7,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <filter name="my_sale_orders_filter" position="before">
-                <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <filter string="Confirmed" name="order_confirmed" domain="[('state', '=', 'sale')]"/>
                 <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent')]"/>
                 <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
@@ -125,7 +125,7 @@
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="domain">[('state', 'in', ('sale', 'done')), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
+        <field name="domain">[('state', '=', 'sale'), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">

@@ -105,7 +105,7 @@ class StockMove(models.Model):
                 'show_lots_text': False,
             })
         elif self.env.user.has_group('base.group_portal'):
-            if self.picking_type_id.show_reserved:
+            if self.show_reserved:
                 action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_operations').id, 'form')]
             else:
                 action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_nosuggest_operations').id, 'form')]

@@ -88,7 +88,6 @@ def slug(value):
     try:
         if not value.id:
             raise ValueError("Cannot slug non-existent record %s" % value)
-        # [(id, name)] = value.name_get()
         identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
     except AttributeError:
         # assume name_search result tuple
@@ -640,7 +639,7 @@ class IrHttp(models.AbstractModel):
         code, values = cls._get_exception_code_values(exception)
 
         request.cr.rollback()
-        if code == 403:
+        if code in (404, 403):
             try:
                 response = cls._serve_fallback()
                 if response:

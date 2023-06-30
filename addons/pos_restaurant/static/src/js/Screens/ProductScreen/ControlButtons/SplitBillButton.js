@@ -11,7 +11,7 @@ export class SplitBillButton extends Component {
         this.pos = usePos();
     }
     _isDisabled() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         return (
             order
                 .get_orderlines()
@@ -26,6 +26,6 @@ export class SplitBillButton extends Component {
 ProductScreen.addControlButton({
     component: SplitBillButton,
     condition: function () {
-        return this.pos.globalState.config.iface_splitbill;
+        return this.pos.config.iface_splitbill;
     },
 });

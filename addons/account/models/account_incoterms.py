@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountIncoterms(models.Model):
@@ -18,6 +18,7 @@ class AccountIncoterms(models.Model):
         'Active', default=True,
         help="By unchecking the active field, you may hide an INCOTERM you will not use.")
 
-    def name_get(self):
-        return [(incoterm.id, '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name))
-                for incoterm in self]
+    @api.depends('code')
+    def _compute_display_name(self):
+        for incoterm in self:
+            incoterm.display_name = '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name)

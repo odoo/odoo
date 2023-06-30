@@ -106,7 +106,7 @@ patch(ThreadService.prototype, "mail/core/web", {
             type: "chatter",
         });
         if (resId === false) {
-            const tmpId = `virtual${this.nextId++}`;
+            const tmpId = this.messageService.getNextTemporaryId();
             const tmpData = {
                 id: tmpId,
                 author: { id: this.store.self.id },
@@ -169,19 +169,16 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
         thread.suggestedRecipients = recipients;
     },
+    async leaveChannel(channel) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
+    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive || this.ui.isSmall) {
-            const chatWindow = this.chatWindowService.insert({
-                folded: false,
-                thread,
-                replaceNewMessageChatWindow,
-            });
-            chatWindow.autofocus++;
-            if (thread) {
-                thread.state = "open";
-            }
-            this.chatWindowService.notifyState(chatWindow);
-            return;
+            this.chatWindowService.open(thread, replaceNewMessageChatWindow);
         }
         this._super(thread, replaceNewMessageChatWindow);
     },
@@ -198,6 +195,13 @@ patch(ThreadService.prototype, "mail/core/web", {
             follower.followedThread.followers.splice(index, 1);
         }
         delete this.store.followers[follower.id];
+    },
+    unpin(thread) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow);
+        }
+        this._super(...arguments);
     },
 });
 

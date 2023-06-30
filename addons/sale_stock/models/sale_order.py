@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
-        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', False)]},
+        states={'sale': [('readonly', True)], 'cancel': [('readonly', False)]},
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')

@@ -48,9 +48,8 @@ class SaleOrder(models.Model):
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
-        super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
-            return
+            return super()._compute_field_value(field)
 
         # Get SOs which their state is not equal to upselling and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
         upsellable_orders = self.filtered(lambda so:
@@ -59,12 +58,14 @@ class SaleOrder(models.Model):
             and so.id
             and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
         )
+        super(SaleOrder, upsellable_orders.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
         for order in upsellable_orders:
             upsellable_lines = order._get_prepaid_service_lines_to_upsell()
             if upsellable_lines:
                 order._create_upsell_activity()
                 # We want to display only one time the warning for each SOL
                 upsellable_lines.write({'has_displayed_warning_upsell': True})
+        super(SaleOrder, self - upsellable_orders)._compute_field_value(field)
 
     def _compute_show_hours_recorded_button(self):
         show_button_ids = self._get_order_with_valid_service_product()
@@ -74,7 +75,7 @@ class SaleOrder(models.Model):
     def _get_order_with_valid_service_product(self):
         return self.env['sale.order.line']._read_group([
             ('order_id', 'in', self.ids),
-            ('state', 'in', ['sale', 'done']),
+            ('state', '=', 'sale'),
             ('is_service', '=', True),
             '|',
                 ('product_id.service_type', 'not in', ['milestones', 'manual']),
@@ -156,12 +157,12 @@ class SaleOrderLine(models.Model):
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', 'Timesheets')
 
-    def name_get(self):
-        res = super(SaleOrderLine, self).name_get()
+    @api.depends('remaining_hours_available', 'remaining_hours')
+    @api.depends_context('with_remaining_hours', 'company')
+    def _compute_display_name(self):
+        super()._compute_display_name()
         with_remaining_hours = self.env.context.get('with_remaining_hours')
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
-            names = dict(res)
-            result = []
             company = self.env.company
             encoding_uom = company.timesheet_encode_uom_id
             is_hour = is_day = False
@@ -173,7 +174,6 @@ class SaleOrderLine(models.Model):
                 is_day = True
                 unit_label = _('days remaining')
             for line in self:
-                name = names.get(line.id)
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
@@ -197,12 +197,10 @@ class SaleOrderLine(models.Model):
                             unit=unit_label
                         )
                     name = '{name}{remaining_time}'.format(
-                        name=name,
+                        name=line.display_name,
                         remaining_time=remaining_time
                     )
-                result.append((line.id, name))
-            return result
-        return res
+                    line.display_name = name
 
     @api.depends('product_id.service_policy')
     def _compute_remaining_hours_available(self):
@@ -281,7 +279,7 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         for line in self.order_id.order_line:
             product_type = line.product_id.service_tracking
-            if line.is_service and (product_type == 'task_in_project' or product_type == 'project_only'):
+            if line.is_service and (product_type == 'task_in_project' or product_type == 'project_only') and line.product_id.project_template_id == self.product_id.project_template_id:
                 if uom_per_id.get(line.product_uom.id) or line.product_uom.id == uom_unit.id:
                     allocated_hours += line.product_uom_qty * uom_per_id.get(line.product_uom.id, project_uom).factor_inv * uom_hour.factor
 

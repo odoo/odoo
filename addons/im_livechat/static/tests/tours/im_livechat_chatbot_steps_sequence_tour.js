@@ -114,42 +114,8 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             run: () => {},
         },
         {
-            trigger: 'tr:contains("Step 5") .o_row_handle',
-            run: () => {
-                // move 'step 5' between 'step 1' and 'step 2'
-                const from = document.querySelector(
-                    'div[name="script_step_ids"] tr:nth-child(5) .o_row_handle'
-                );
-                const fromPosition = from.getBoundingClientRect();
-                fromPosition.x += from.offsetWidth / 2;
-                fromPosition.y += from.offsetHeight / 2;
-
-                const to = document.querySelector(
-                    'div[name="script_step_ids"] tr:nth-child(2) .o_row_handle'
-                );
-                from.dispatchEvent(new Event("mouseenter", { bubbles: true }));
-                from.dispatchEvent(
-                    new MouseEvent("mousedown", {
-                        bubbles: true,
-                        which: 1,
-                        button: 0,
-                        clientX: fromPosition.x,
-                        clientY: fromPosition.y,
-                    })
-                );
-                from.dispatchEvent(
-                    new MouseEvent("mousemove", {
-                        bubbles: true,
-                        which: 1,
-                        button: 0,
-                        // dragging is only enabled when the mouse have moved from at least 10 pixels from the original position
-                        clientX: fromPosition.x + 20,
-                        clientY: fromPosition.y + 20,
-                    })
-                );
-                to.dispatchEvent(new Event("mouseenter", { bubbles: true }));
-                from.dispatchEvent(new Event("mouseup", { bubbles: true }));
-            },
+            trigger: 'div[name="script_step_ids"] tr:nth-child(5) .o_row_handle',
+            run: 'drag_and_drop_native div[name="script_step_ids"] tr:nth-child(2)',
         },
         {
             trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',

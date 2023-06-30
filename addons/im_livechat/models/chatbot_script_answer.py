@@ -21,21 +21,17 @@ class ChatbotScriptAnswer(models.Model):
         'chatbot.script.step', string='Script Step', required=True, ondelete='cascade')
     chatbot_script_id = fields.Many2one(related='script_step_id.chatbot_script_id')
 
-    def name_get(self):
+    @api.depends('script_step_id')
+    @api.depends_context('chatbot_script_answer_display_short_name')
+    def _compute_display_name(self):
         if self._context.get('chatbot_script_answer_display_short_name'):
-            return super().name_get()
+            return super()._compute_display_name()
 
-        result = []
         for answer in self:
             answer_message = answer.script_step_id.message.replace('\n', ' ')
             shortened_message = textwrap.shorten(answer_message, width=26, placeholder=" [...]")
 
-            result.append((
-                answer.id,
-                "%s: %s" % (shortened_message, answer.name)
-            ))
-
-        return result
+            answer.display_name = f"{shortened_message}: {answer.name}"
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

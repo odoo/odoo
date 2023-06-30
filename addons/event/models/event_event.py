@@ -589,11 +589,12 @@ class EventEvent(models.Model):
             self.message_subscribe([vals['organizer_id']])
         return res
 
-    def name_get(self):
+    @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
+    @api.depends_context('name_with_seats_availability')
+    def _compute_display_name(self):
         """Adds ticket seats availability if requested by context."""
         if not self.env.context.get('name_with_seats_availability'):
-            return super().name_get()
-        res = []
+            return super()._compute_display_name()
         for event in self:
             # event or its tickets are sold out
             if event.event_registrations_sold_out:
@@ -606,8 +607,7 @@ class EventEvent(models.Model):
                 )
             else:
                 name = event.name
-            res.append((event.id, name))
-        return res
+            event.display_name = name
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

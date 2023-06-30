@@ -31,9 +31,6 @@ export class Attachment {
     }
 
     get isDeletable() {
-        if (this.message && this.originThread?.model === "discuss.channel") {
-            return this.message.editable;
-        }
         return true;
     }
 

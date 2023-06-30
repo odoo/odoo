@@ -124,6 +124,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await createWebClient({ serverData });
         await testUtils.nextTick(); // wait for the navbar to be updated
+        await testUtils.nextTick(); // wait for the action to be displayed
 
         assert.containsOnce(target, ".test_client_action");
         assert.strictEqual(target.querySelector(".o_menu_brand").innerText, "App1");
@@ -198,6 +199,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: "HelloWorldTest",
         });
         await testUtils.nextTick();
+        await testUtils.nextTick();
         assert.strictEqual(
             $(target).find(".o_client_action_test").text(),
             "Hello World",
@@ -237,6 +239,7 @@ QUnit.module("ActionManager", (hooks) => {
             id: 2,
             model: "partner",
         });
+        await testUtils.nextTick();
         await testUtils.nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
@@ -687,6 +690,7 @@ QUnit.module("ActionManager", (hooks) => {
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1 },
         };
         const webClient = await createWebClient({ serverData });
+        await nextTick();
         assert.containsOnce(target, ".o_kanban_view"); // action 1 (default app)
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         await loadState(webClient, { action: 3 });
@@ -964,11 +968,16 @@ QUnit.module("ActionManager", (hooks) => {
         browser.location.hash = "#action=myAction";
 
         const webClient = await createWebClient({ serverData });
+        assert.verifySteps([]);
+        await nextTick();
         assert.verifySteps(["myAction mounted"]);
         assert.containsOnce(target, ".not-here");
 
         // hashchange event isn't trigerred synchronously, so we have to wait for it
         await hashchangeDef;
+        await nextTick();
+        assert.containsNone(target, ".not-here");
+        assert.containsNone(target, ".test_client_action");
         await nextTick();
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");
@@ -980,7 +989,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("concurrent hashchange during action mounting -- 2", async (assert) => {
-        assert.expect(5);
+        assert.expect(6);
 
         const baseURL = new URL(browser.location.href).toString();
 
@@ -999,8 +1008,11 @@ QUnit.module("ActionManager", (hooks) => {
 
         browser.location.hash = "#action=myAction";
         const webClient = await createWebClient({ serverData });
+        assert.verifySteps([]);
+        await nextTick();
         assert.verifySteps(["myAction mounted"]);
 
+        await nextTick();
         await nextTick();
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");

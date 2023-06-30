@@ -25,7 +25,6 @@ class Applicant(models.Model):
     _order = "priority desc, id desc"
     _inherit = ['mail.thread.cc', 'mail.thread.main.attachment', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
-    _primary_email = 'email_from'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
@@ -34,7 +33,7 @@ class Applicant(models.Model):
         inverse='_inverse_partner_email', store=True, index='trigram')
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
-    create_date = fields.Datetime("Creation Date", readonly=True)
+    create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
                                domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
@@ -280,7 +279,7 @@ class Applicant(models.Model):
                 applicant.date_closed = False
 
     def _check_interviewer_access(self):
-        if self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer'):
+        if self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer') and not self.user_has_groups('hr_recruitment.group_hr_recruitment_user'):
             raise AccessError(_('You are not allowed to perform this action.'))
 
     @api.model_create_multi
@@ -367,19 +366,20 @@ class Applicant(models.Model):
 
     def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """
-            Do not notify members of the Recruitment Interviewer group, as this
+            Do not notify members of the Recruitment Interviewer group that are not part of
+            Recruitment User group as well, as this
             might leak some data they shouldn't have access to.
         """
         recipients = super()._notify_get_recipients(message, msg_vals, **kwargs)
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
-        return [recipient for recipient in recipients if interviewer_group not in recipient['groups']]
+        user_group = self.env.ref('hr_recruitment.group_hr_recruitment_user').id
+        return [recipient for recipient in recipients if not (interviewer_group in recipient['groups'] and user_group not in recipient['groups'])]
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
-
         if not self.partner_id:
             if not self.partner_name:
                 raise UserError(_('You must define a Contact Name for this applicant.'))
@@ -392,11 +392,20 @@ class Applicant(models.Model):
                 'mobile': self.partner_mobile
             })
 
-        partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
+        partners = self.partner_id | self.department_id.manager_id.user_id.partner_id
+        if self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer') and not self.user_has_groups('hr_recruitment.group_hr_recruitment_user'):
+            partners |= self.env.user.partner_id
+        else:
+            partners |= self.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
+        # As we are redirected from the hr.applicant, calendar checks rules on "hr.applicant",
+        # in order to decide whether to allow creation of a meeting.
+        # As interviewer does not have create right on the hr.applicant, in order to allow them
+        # to create a meeting for an applicant, we pass 'create': True to the context.
         res['context'] = {
+            'create': True,
             'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
@@ -495,13 +504,13 @@ class Applicant(models.Model):
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
-    def name_get(self):
-        if self.env.context.get('show_partner_name'):
-            return [
-                (applicant.id, applicant.partner_name or applicant.name)
-                for applicant in self
-            ]
-        return super().name_get()
+    @api.depends('partner_name')
+    @api.depends_context('show_partner_name')
+    def _compute_display_name(self):
+        if not self.env.context.get('show_partner_name'):
+            return super()._compute_display_name()
+        for applicant in self:
+            applicant.display_name = applicant.partner_name or applicant.name
 
     @api.model
     def message_new(self, msg, custom_values=None):
@@ -517,11 +526,11 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
-        val = msg.get('from').split('<')[0]
+        partner_name, email_from = self.env['res.partner']._parse_partner_name(msg.get('from'))
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
+            'partner_name': partner_name or email_from,
+            'email_from': email_from,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):

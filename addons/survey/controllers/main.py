@@ -151,6 +151,8 @@ class Survey(http.Controller):
             return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
+        elif error_key in ['answer_wrong_user', 'token_wrong']:
+            return request.render("survey.survey_access_error", {'survey': survey_sudo})
 
         return request.redirect("/")
 

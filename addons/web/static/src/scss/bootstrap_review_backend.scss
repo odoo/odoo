@@ -42,6 +42,22 @@
     }
 }
 
+@each $-name, $-value in $o-btns-bs-override {
+    .btn-fill-#{$-name} {
+        @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+        );
+    }
+}
+
 // 2. Render '$theme-colors' buttons excluding the ones already generated
 //    using the custom maps.
 @each $-name, $-color in $theme-colors {
@@ -75,7 +91,7 @@
         }
 
         &:not(:first-child) {
-            margin-left: $btn-border-width;
+            margin-left: var(--btn-group-gap, $btn-border-width); 
         }
     }
 }
@@ -111,7 +127,7 @@ $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
 
     @each $-name, $-color in $-o-theme-text-colors{
         &.btn-#{$-name}, &.text-#{$-name} {
-            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+            @include o-btn-link-variant($o-gray-600!important, o-text-color($-name) or $-color!important);
         }
     }
 }
@@ -246,7 +262,7 @@ $-o-bg-colors-custom: null;
 .btn-link {
     @each $-name, $-color in $o-text-colors-custom{
         &.btn-#{$-name}, &.text-#{$-name} {
-            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+            @include o-btn-link-variant($o-gray-600!important, o-text-color($-name) or $-color!important);
         }
     }
 }

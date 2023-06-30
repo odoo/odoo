@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class FleetVehicleAssignationLog(models.Model):
@@ -14,5 +14,7 @@ class FleetVehicleAssignationLog(models.Model):
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
 
-    def name_get(self):
-        return [(rec.id, f'{rec.vehicle_id.name} - {rec.driver_id.name}') for rec in self]
+    @api.depends('driver_id', 'vehicle_id')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f'{rec.vehicle_id.name} - {rec.driver_id.name}'

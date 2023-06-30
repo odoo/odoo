@@ -325,14 +325,14 @@ QUnit.module("Fields", (hooks) => {
         const popover = target.querySelector(".o_property_field_popover");
         assert.ok(popover, "Should have opened the definition popover");
 
-        const label = popover.querySelector(".o_field_property_definition_header input");
+        const label = popover.querySelector(".o_field_property_definition_header");
         assert.strictEqual(label.value, "My Char");
 
         const type = popover.querySelector(".o_field_property_definition_type input");
         assert.strictEqual(type.value, "Text");
 
         // Change the property type to "Date & Time"
-        await editInput(target, ".o_field_property_definition_header input", "My Datetime");
+        await editInput(target, ".o_field_property_definition_header", "My Datetime");
         await changeType(target, "datetime");
         assert.strictEqual(type.value, "Date & Time", "Should have changed the property type");
 
@@ -353,7 +353,7 @@ QUnit.module("Fields", (hooks) => {
         await closePopover(target);
 
         // Check that the type change have been propagated
-        const datetimeLabel = field.querySelector(".o_field_property_label b");
+        const datetimeLabel = field.querySelector(".o_field_property_label");
         assert.strictEqual(
             datetimeLabel.innerText,
             "My Datetime",
@@ -419,7 +419,7 @@ QUnit.module("Fields", (hooks) => {
         const popover = target.querySelector(".o_property_field_popover");
         assert.ok(popover, "Should have opened the definition popover");
 
-        const label = popover.querySelector(".o_field_property_definition_header input");
+        const label = popover.querySelector(".o_field_property_definition_header");
         assert.strictEqual(label.value, "Property 3", "Should have added a default label");
 
         const type = popover.querySelector(".o_field_property_definition_type input");
@@ -562,7 +562,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(options.length, 4, "Should not remove any options");
 
         // Remove the second option
-        await click(target, ".o_field_property_selection_option:nth-child(2) .fa-times");
+        await click(target, ".o_field_property_selection_option:nth-child(2) .fa-trash-o");
         options = popover.querySelectorAll(".o_field_property_selection_option");
         assert.strictEqual(options.length, 3, "Should have removed the second option");
         const optionValues = [...options].map((option) => option.querySelector("input").value);
@@ -1357,6 +1357,58 @@ QUnit.module("Fields", (hooks) => {
         assert.equal(items.length, 2);
     });
 
+    QUnit.test("properties: kanban view with date and datetime property fields", async function (assert) {
+        serverData.models.partner.records.push({
+            id: 40,
+            display_name: "fifth partner",
+            properties: [
+                {
+                    name: "property_1",
+                    string: "My Date",
+                    type: "date",
+                    value: "2019-01-01",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_2",
+                    string: "My DateTime",
+                    type: "datetime",
+                    value: "2019-01-01 10:00:00",
+                    view_in_kanban: true,
+                },
+            ],
+            company_id: 37,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="company_id"/> <hr/>
+                            <field name="display_name"/> <hr/>
+                            <field name="properties" widget="properties"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        // check fifth card
+        const property1 = target.querySelector(
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) span"
+        );
+        assert.equal(property1.innerText, "01/01/2019");
+        const property2 = target.querySelector(
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) span"
+        );
+        assert.equal(property2.innerText, "01/01/2019 11:00:00");
+    });
+
     QUnit.test(
         "properties: kanban view with multiple sources of properties definitions",
         async function (assert) {
@@ -1411,11 +1463,116 @@ QUnit.module("Fields", (hooks) => {
                     "Company 1 second partner char valueCchar value 4",
                     "Company 1 third partner ",
                     "Company 1 fourth partner ",
-                    "Company 2 other partner 1",
+                    "Company 2 other partner My Integer1",
                 ]
             );
         }
     );
+
+    /**
+     * To check label for int, float, boolean, date and datetime fields.
+     *  Also check if border class is applied to boolean field or not.
+     */
+    QUnit.test("properties: kanban view with label and border", async function (assert) {
+        serverData.models.partner.records.push({
+            id: 12,
+            display_name: "fifth partner",
+            properties: [
+                {
+                    name: "property_integer",
+                    string: "My Integer",
+                    type: "integer",
+                    value: 12,
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_float",
+                    string: "My Float",
+                    type: "float",
+                    value: 12.2,
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_date",
+                    string: "My Date",
+                    type: "date",
+                    value: "2023-06-05",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_datetime",
+                    string: "My Datetime",
+                    type: "datetime",
+                    value: "2023-06-05 11:05:00",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_checkbox",
+                    string: "My Checkbox",
+                    type: "boolean",
+                    value: true,
+                    view_in_kanban: true,
+                },
+            ],
+            company_id: 37,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="company_id"/> <hr/>
+                                <field name="display_name"/> <hr/>
+                                <field name="properties" widget="properties"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        // check for label in integer, float, date and datetime field
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) label"
+            ).innerText,
+            "My Integer"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) label"
+            ).innerText,
+            "My Float"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(3) label"
+            ).innerText,
+            "My Date"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(4) label"
+            ).innerText,
+            "My Datetime"
+        );
+
+        //check that label and border class is present for checkbox field
+        assert.containsOnce(
+            target,
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) .border"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) label"
+            ).innerText,
+            "My Checkbox"
+        );
+    });
 
     /**
      * Check that the properties are shown when switching view.

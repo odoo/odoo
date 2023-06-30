@@ -81,10 +81,9 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_occurrence(self, occurrence_from):
         self.ensure_one()
-        if occurrence_from.allow_recurring_tasks:
-            self.env['project.task'].sudo().create(
-                self._create_next_occurrence_values(occurrence_from)
-            )
+        self.env['project.task'].sudo().create(
+            self._create_next_occurrence_values(occurrence_from)
+        )
 
     def _create_next_occurrence_values(self, occurrence_from):
         self.ensure_one()

@@ -59,12 +59,12 @@ class HolidaysType(models.Model):
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_ids = fields.Many2many(
-        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Responsible Time Off Officer',
+        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
                              ('share', '=', False),
                              ('company_ids', 'in', self.env.company.id)],
                              auto_join=True,
-        help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
+        help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
@@ -537,26 +537,26 @@ class HolidaysType(models.Model):
             if leave_type.employee_requests == 'no':
                 leave_type.allocation_validation_type = 'officer'
 
-    def requested_name_get(self):
-        return self._context.get('holiday_status_name_get', True) and self._context.get('employee_id')
+    def requested_display_name(self):
+        return self._context.get('holiday_status_display_name', True) and self._context.get('employee_id')
 
-    def name_get(self):
-        if not self.requested_name_get():
+    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'request_unit')
+    @api.depends_context('holiday_status_display_name', 'employee_id', 'from_manager_leave_form')
+    def _compute_display_name(self):
+        if not self.requested_display_name():
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
-            return super(HolidaysType, self).name_get()
-        res = []
+            return super()._compute_display_name()
         for record in self:
             name = record.name
             if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
-                name = "%(name)s (%(count)s)" % {
-                    'name': name,
-                    'count': _('%g remaining out of %g') % (
+                name = "{name} ({count})".format(
+                    name=name,
+                    count=_('%g remaining out of %g') % (
                         float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
                         float_round(record.max_leaves, precision_digits=2) or 0.0,
-                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
-                }
-            res.append((record.id, name))
-        return res
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days')),
+            )
+            record.display_name = name
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

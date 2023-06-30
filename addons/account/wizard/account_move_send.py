@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, fields, models, tools, Command
+from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
 
@@ -366,7 +366,7 @@ class AccountMoveSend(models.Model):
         # note: Binary is used for security reason
         invoice.message_main_attachment_id = self.env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
         invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-        self.env.add_to_compute(invoice._fields['is_move_sent'], invoice)
+        invoice.is_move_sent = True
 
     def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
         """ Process errors found so far when generating the documents.
@@ -404,7 +404,7 @@ class AccountMoveSend(models.Model):
         partner_ids = kwargs.get('partner_ids', [])
         mail_template = self.mail_template_id
 
-        move\
+        new_message = move\
             .with_context(
                 no_new_invoice=True,
                 mail_notify_author=self.env.user.partner_id.id in partner_ids,
@@ -421,6 +421,12 @@ class AccountMoveSend(models.Model):
                 },
             )
 
+        # Prevent duplicated attachments linked to the invoice.
+        new_message.attachment_ids.write({
+            'res_model': new_message._name,
+            'res_id': new_message.id,
+        })
+
     def _get_mail_params(self, move):
         self.ensure_one()
 
@@ -429,17 +435,25 @@ class AccountMoveSend(models.Model):
 
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
-        attachment_ids = list(set([
-            x['id']
-            for x in self.mail_attachments_widget + self._get_invoice_extra_attachments_data(self.move_ids)
-            if not x.get('placeholder')
-        ]))
+        seen_attachment_ids = set()
+        for attachment_data in self._get_invoice_extra_attachments_data(self.move_ids) + self.mail_attachments_widget:
+            try:
+                attachment_id = int(attachment_data['id'])
+            except ValueError:
+                continue
+
+            seen_attachment_ids.add(attachment_id)
+
+        mail_attachments = [
+            (attachment.name, attachment.raw)
+            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids))
+        ]
 
         return {
             'body': self.mail_body,
             'subject': self.mail_subject,
             'partner_ids': self.mail_partner_ids.ids,
-            'attachment_ids': attachment_ids,
+            'attachments': mail_attachments,
         }
 
     def _send_mails(self, moves_data):
@@ -454,7 +468,8 @@ class AccountMoveSend(models.Model):
                 continue
 
             if move_data.get('proforma_pdf_attachment'):
-                mail_params['attachment_ids'].append(move_data['proforma_pdf_attachment'].id)
+                attachment = move_data['proforma_pdf_attachment']
+                mail_params['attachments'].append((attachment.name, attachment.raw))
 
             mail_lang = form.mail_lang
             email_from = form._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
@@ -468,8 +483,22 @@ class AccountMoveSend(models.Model):
                 **mail_params,
             )
 
-    def _call_web_service(self, invoices_data):
+    def _can_commit(self):
+        """ Helper to know if we can commit the current transaction or not.
+
+        :return: True if commit is accepted, False otherwise.
+        """
+        self.ensure_one()
+        return not tools.config['test_enable'] and not modules.module.current_test
+
+    def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # TO OVERRIDE
+        # call a web service before the pdfs are rendered
+        self.ensure_one()
+
+    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
+        # TO OVERRIDE
+        # call a web service after the pdfs are rendered
         self.ensure_one()
 
     def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
@@ -494,7 +523,7 @@ class AccountMoveSend(models.Model):
             if not invoice_data.get('error')
         }
         if invoices_data_web_service:
-            self._call_web_service(invoices_data_web_service)
+            self._call_web_service_before_invoice_pdf_render(invoices_data_web_service)
 
         invoices_data_pdf = {
             invoice: invoice_data
@@ -507,6 +536,15 @@ class AccountMoveSend(models.Model):
                 form._prepare_invoice_pdf_report(invoice, invoice_data)
                 form._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
                 form._link_invoice_documents(invoice, invoice_data)
+
+        # check for errors again
+        invoices_data_web_service = {
+            invoice: invoice_data
+            for invoice, invoice_data in invoices_data.items()
+            if not invoice_data.get('error')
+        }
+        if invoices_data_web_service:
+            self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
 
     def _generate_invoice_fallback_documents(self, invoices_data):
         """ Generate the invoice PDF and electronic documents.

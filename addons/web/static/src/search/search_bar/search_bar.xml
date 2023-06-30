@@ -12,9 +12,9 @@
                 >
                 <div class="o_searchview_facet_label rounded-start-2"
                     t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
-                    t-att-role="facet.type != 'groupBy' ? 'button' : 'img'"
+                    t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
-                        'text-bg-action d-flex align-items-center': facet.type == 'groupBy',
+                        'text-bg-action d-flex align-items-center': facet.type == 'groupBy' || facet.type == 'comparison',
                         'btn btn-primary rounded-end-0 p-0': facet.type == 'field' || facet.type == 'filter',
                         'btn btn-favourite rounded-end-0 p-0': facet.type == 'favorite'
                     }"

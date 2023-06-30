@@ -19,7 +19,7 @@
                     <field name="subtask_count" invisible="1"/>
                     <label for="planned_hours" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                     <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
-                        <field name="planned_hours" class="oe_inline" widget="float_time"/>
+                        <field name="planned_hours" class="oe_inline o_field_float_time" widget="timesheet_uom_no_toggle"/>
                         <span attrs="{'invisible': [('subtask_count', '=', 0)]}">
                             (incl. <field name="subtask_planned_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
@@ -34,7 +34,7 @@
                     </t>
                     <page string="Timesheets" id="timesheets_tab" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
-                            <div class="alert alert-warning" role="alert" colspan="2">
+                            <div class="alert alert-warning mb-n4 mt-3" role="alert" colspan="2">
                                 You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
@@ -124,7 +124,7 @@
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
                                    attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
-                            <span attrs="{'invisible': [('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start">
+                            <span attrs="{'invisible': [('subtask_effective_hours', '=', 0.0)]}" class="o_td_label float-start my-1">
                                 <label class="fw-bold" for="total_hours_spent" string="Total Hours"
                                        attrs="{'invisible': ['|', ('subtask_effective_hours', '=', 0.0), ('encode_uom_in_days', '=', True)]}"/>
                                 <label class="fw-bold" for="total_hours_spent" string="Total Days"
@@ -132,7 +132,7 @@
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
-                            <span class="o_td_label float-start">
+                            <span class="o_td_label float-start my-1">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
                                        attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
@@ -170,9 +170,9 @@
                     <field name="effective_hours" invisible="1"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" attrs="{'invisible' : [('planned_hours', '=', 0)]}" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'invisible' : [('effective_hours', '=', 0)]}"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom" optional="hide"/>
-                    <field name="total_hours_spent" widget="timesheet_uom" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}" options="{'overflow_class': 'bg-danger'}" />
                 </field>
             </field>
@@ -197,7 +197,7 @@
                         <t t-set="badge" t-value="'bg-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                         <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                         <t t-set="title" t-value="'Remaining hours'" t-else=""/>
-                        <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                        <div t-attf-class="oe_kanban_align badge {{ badge }} me-0" t-att-title="title">
                             <field name="remaining_hours" widget="timesheet_uom" />
                         </div>
                    </t>

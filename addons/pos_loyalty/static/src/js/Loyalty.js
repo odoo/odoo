@@ -1,23 +1,19 @@
 /** @odoo-module **/
 
-import { Order, Orderline, PosGlobalState } from "@point_of_sale/app/store/models";
+import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
 import concurrency from "web.concurrency";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { Domain, InvalidDomainError } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 // FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
 // > This might require thorough investigation on how _updateRewards work.
 // > If successful, we can fully get rid of the legacy concurrency module.
 const dropPrevious = new concurrency.MutexedDropPrevious(); // Used for queuing reward updates
 const mutex = new Mutex(); // Used for sequential cache updates
-
-const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
@@ -79,204 +75,6 @@ function computeFreeQuantity(numberItems, n, m) {
     const adjustment = x <= charged && charged < y ? charged - x : 0;
     return Math.floor(free + adjustment);
 }
-
-patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
-    //@override
-    async _processData(loadedData) {
-        this.couponCache = {};
-        this.partnerId2CouponIds = {};
-        this.rewards = loadedData["loyalty.reward"] || [];
-
-        for (const reward of this.rewards) {
-            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
-        }
-
-        await this._super(loadedData);
-        this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
-        this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
-        this.rules = loadedData["loyalty.rule"] || [];
-        this._loadLoyaltyData();
-    },
-
-    _loadProductProduct(products) {
-        this._super(...arguments);
-
-        for (const reward of this.rewards) {
-            this.compute_discount_product_ids(reward, products);
-        }
-
-        this.rewards = this.rewards.filter(Boolean);
-    },
-
-    compute_discount_product_ids(reward, products) {
-        const reward_product_domain = JSON.parse(reward.reward_product_domain);
-        if (!reward_product_domain) {
-            return;
-        }
-
-        const domain = new Domain(reward_product_domain);
-
-        try {
-            products
-                .filter((product) => domain.contains(product))
-                .forEach((product) => reward.all_discount_product_ids.add(product.id));
-        } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
-                throw error;
-            }
-            const index = this.rewards.indexOf(reward);
-            if (index != -1) {
-                this.pos.env.services.popup.add(ErrorPopup, {
-                    title: _t("A reward could not be loaded"),
-                    body: sprintf(
-                        _t(
-                            'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client'
-                        ),
-                        this.rewards[index].description
-                    ),
-                });
-                this.rewards[index] = null;
-            }
-        }
-    },
-
-    _loadLoyaltyData() {
-        this.program_by_id = {};
-        this.reward_by_id = {};
-
-        for (const program of this.programs) {
-            this.program_by_id[program.id] = program;
-            if (program.date_from) {
-                program.date_from = new Date(program.date_from);
-            }
-            if (program.date_to) {
-                program.date_to = new Date(program.date_to);
-            }
-            program.rules = [];
-            program.rewards = [];
-        }
-        for (const rule of this.rules) {
-            rule.valid_product_ids = new Set(rule.valid_product_ids);
-            rule.program_id = this.program_by_id[rule.program_id[0]];
-            rule.program_id.rules.push(rule);
-        }
-        for (const reward of this.rewards) {
-            this.reward_by_id[reward.id] = reward;
-            reward.program_id = this.program_by_id[reward.program_id[0]];
-            reward.discount_line_product_id = this.db.get_product_by_id(
-                reward.discount_line_product_id[0]
-            );
-            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
-            reward.program_id.rewards.push(reward);
-        }
-    },
-    async load_server_data() {
-        await this._super(...arguments);
-        if (this.selectedOrder) {
-            this.selectedOrder._updateRewards();
-        }
-    },
-    set_order(order) {
-        const result = this._super(...arguments);
-        // FIXME - JCB: This is a temporary fix.
-        // When an order is selected, it doesn't always contain the reward lines.
-        // And the list of active programs are not always correct. This is because
-        // of the use of DropPrevious in _updateRewards.
-        if (order) {
-            order._updateRewards();
-        }
-        return result;
-    },
-    /**
-     * Fetches `loyalty.card` records from the server and adds/updates them in our cache.
-     *
-     * @param {domain} domain For the search
-     * @param {int} limit Default to 1
-     */
-    async fetchCoupons(domain, limit = 1) {
-        const result = await this.env.services.orm.searchRead(
-            "loyalty.card",
-            domain,
-            ["id", "points", "code", "partner_id", "program_id"],
-            { limit }
-        );
-        if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
-            this.couponCache = {};
-            this.partnerId2CouponIds = {};
-            // Make sure that the current order has no invalid data.
-            if (this.selectedOrder) {
-                this.selectedOrder.invalidCoupons = true;
-            }
-        }
-        const couponList = [];
-        for (const dbCoupon of result) {
-            const coupon = new PosLoyaltyCard(
-                dbCoupon.code,
-                dbCoupon.id,
-                dbCoupon.program_id[0],
-                dbCoupon.partner_id[0],
-                dbCoupon.points
-            );
-            this.couponCache[coupon.id] = coupon;
-            this.partnerId2CouponIds[coupon.partner_id] =
-                this.partnerId2CouponIds[coupon.partner_id] || new Set();
-            this.partnerId2CouponIds[coupon.partner_id].add(coupon.id);
-            couponList.push(coupon);
-        }
-        return couponList;
-    },
-    /**
-     * Fetches a loyalty card for the given program and partner, put in cache afterwards
-     *  if a matching card is found in the cache, that one is used instead.
-     * If no card is found a local only card will be created until the order is validated.
-     *
-     * @param {int} programId
-     * @param {int} partnerId
-     */
-    async fetchLoyaltyCard(programId, partnerId) {
-        for (const coupon of Object.values(this.couponCache)) {
-            if (coupon.partner_id === partnerId && coupon.program_id === programId) {
-                return coupon;
-            }
-        }
-        const fetchedCoupons = await this.fetchCoupons([
-            ["partner_id", "=", partnerId],
-            ["program_id", "=", programId],
-        ]);
-        const dbCoupon = fetchedCoupons.length > 0 ? fetchedCoupons[0] : null;
-        return dbCoupon || new PosLoyaltyCard(null, null, programId, partnerId, 0);
-    },
-    getLoyaltyCards(partner) {
-        const loyaltyCards = [];
-        if (this.partnerId2CouponIds[partner.id]) {
-            this.partnerId2CouponIds[partner.id].forEach((couponId) =>
-                loyaltyCards.push(this.couponCache[couponId])
-            );
-        }
-        return loyaltyCards;
-    },
-    addPartners(partners) {
-        const result = this._super(partners);
-        // cache the loyalty cards of the partners
-        for (const partner of partners) {
-            for (const [couponId, { code, program_id, points }] of Object.entries(
-                partner.loyalty_cards || {}
-            )) {
-                this.couponCache[couponId] = new PosLoyaltyCard(
-                    code,
-                    parseInt(couponId, 10),
-                    program_id,
-                    partner.id,
-                    points
-                );
-                this.partnerId2CouponIds[partner.id] =
-                    this.partnerId2CouponIds[partner.id] || new Set();
-                this.partnerId2CouponIds[partner.id].add(couponId);
-            }
-        }
-        return result;
-    },
-});
 
 patch(Orderline.prototype, "pos_loyalty.Orderline", {
     export_as_JSON() {
@@ -397,18 +195,17 @@ patch(Order.prototype, "pos_loyalty.Order", {
             (line) => line.getEWalletGiftCardProgramType() === "ewallet"
         );
         if (eWalletLine && !this.get_partner()) {
-            const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
                 title: _t("Customer needed"),
                 body: _t("eWallet requires a customer to be selected"),
             });
             if (confirmed) {
                 const { confirmed, payload: newPartner } =
-                    await this.pos.env.services.pos.showTempScreen("PartnerListScreen", {
+                    await this.env.services.pos.showTempScreen("PartnerListScreen", {
                         partner: null,
                     });
                 if (confirmed) {
                     this.set_partner(newPartner);
-                    this.updatePricelist(newPartner);
                 }
             }
         } else {
@@ -797,22 +594,46 @@ patch(Order.prototype, "pos_loyalty.Order", {
         for (const rule of program.rules) {
             for (const line of rewardLines) {
                 const reward = this.pos.reward_by_id[line.reward_id];
-                if (reward.reward_type !== "product") {
-                    continue;
-                }
-                if (rule.reward_point_mode === "order") {
-                    res += rule.reward_point_amount;
-                } else if (rule.reward_point_mode === "money") {
-                    res -= roundPrecision(
-                        rule.reward_point_amount * line.get_price_with_tax(),
-                        0.01
-                    );
-                } else if (rule.reward_point_mode === "unit") {
-                    res += rule.reward_point_amount * line.get_quantity();
+                if (this._validForPointsCorrection(reward, line, rule)) {
+                    if (rule.reward_point_mode === "order") {
+                        res += rule.reward_point_amount;
+                    } else if (rule.reward_point_mode === "money") {
+                        res -= roundPrecision(
+                            rule.reward_point_amount * line.get_price_with_tax(),
+                            0.01
+                        );
+                    } else if (rule.reward_point_mode === "unit") {
+                        res += rule.reward_point_amount * line.get_quantity();
+                    }
                 }
             }
         }
         return res;
+    },
+    /**
+     * Checks if a reward line is valid for points correction.
+     *
+     * The function evaluates three conditions:
+     * 1. The reward type must be 'product'.
+     * 2. The reward line must be part of the rule.
+     * 3. The reward line and the rule must be associated with the same program.
+     */
+    _validForPointsCorrection(reward, line, rule) {
+        // Check if the reward type is free product
+        if (reward.reward_type !== "product") {
+            return false;
+        }
+
+        // Check if the reward line is part of the rule
+        if (!(rule.any_product || rule.valid_product_ids.has(line.reward_product_id))) {
+            return false;
+        }
+
+        // Check if the reward line and the rule are associated with the same program
+        if (rule.program_id.id !== reward.program_id.id) {
+            return false;
+        }
+        return true;
     },
     /**
      * @returns {number} The points that are left for the given coupon for this order.
@@ -1205,7 +1026,10 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     _createLineFromVals(vals) {
         vals["lst_price"] = vals["price"];
-        const line = new Orderline({}, { pos: this.pos, order: this, product: vals["product"] });
+        const line = new Orderline(
+            { env: this.env },
+            { pos: this.pos, order: this, product: vals["product"] }
+        );
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);
         return line;
@@ -1305,7 +1129,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             } else if (line.reward_id) {
                 const lineReward = this.pos.reward_by_id[line.reward_id];
                 if (lineReward.id === reward.id) {
-                    continue;
+                    linesToDiscount.push(line);
                 }
                 if (!discountLinesPerReward[line.reward_identifier_code]) {
                     discountLinesPerReward[line.reward_identifier_code] = [];
@@ -1655,7 +1479,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customer = this.get_partner();
-            const { successful, payload } = await this.pos.env.services.orm.call(
+            const { successful, payload } = await this.env.services.orm.call(
                 "pos.config",
                 "use_coupon_code",
                 [[this.pos.config.id], code, this.creation_date, customer ? customer.id : false]
@@ -1664,7 +1488,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.pos.program_by_id[payload.program_id];
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+                    const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
                         title: _t("Unpaid gift card"),
                         body: _t(
                             "This gift card is not linked to any order. Do you really want to apply its reward?"
@@ -1702,7 +1526,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             return sprintf(
                 _t("Gift Card: %s\nBalance: %s"),
                 code,
-                this.pos.env.utils.formatCurrency(coupon.balance)
+                this.env.utils.formatCurrency(coupon.balance)
             );
         }
         return true;
@@ -1710,7 +1534,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     async activateCode(code) {
         const res = await this._activateCode(code);
         if (res !== true) {
-            this.pos.env.services.pos_notification.add(res, 5000);
+            this.env.services.pos_notification.add(res, 5000);
         }
     },
     isProgramsResettable() {

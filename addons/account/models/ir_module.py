@@ -1,7 +1,7 @@
 from importlib import import_module
-from inspect import getmembers, ismodule, isclass, isfunction, getsourcelines
+from inspect import getmembers, ismodule, isclass, isfunction
 
-from odoo import models, fields
+from odoo import api, models, fields
 from odoo.tools import get_flag
 
 
@@ -25,6 +25,7 @@ class IrModule(models.Model):
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 
+    @api.depends('state')
     def _compute_account_templates(self):
         chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
         ChartTemplate = self.env['account.chart.template']
@@ -36,25 +37,24 @@ class IrModule(models.Model):
                 except ModuleNotFoundError:
                     templates = {}
                 else:
-                    #This will allow to get the order of the init file, This will be useful for locations with several
-                    #templates, one or more of which you want to prioritize.
-                    module_order = {w: i for i, w in enumerate(''.join(getsourcelines(python_module)[0]).split())}
                     templates = {
                         fct._l10n_template[0]: {
                             'name': fct(ChartTemplate).get('name'),
                             'parent': fct(ChartTemplate).get('parent'),
+                            'sequence': fct(ChartTemplate).get('sequence', 1),
                             'country': fct(ChartTemplate).get('country', ''),
                             'visible': fct(ChartTemplate).get('visible', True),
+                            'installed': module.state == "installed",
                             'module': module.name,
                         }
-                        for _name, mdl in sorted(getmembers(python_module, template_module), key=(lambda mdl: module_order[mdl[0]]))
+                        for _name, mdl in getmembers(python_module, template_module)
                         for _name, cls in getmembers(mdl, template_class)
                         for _name, fct in getmembers(cls, template_function)
                     }
 
             module.account_templates = {
                 code: templ(self.env, code, **vals)
-                for code, vals in templates.items()
+                for code, vals in sorted(templates.items(), key=lambda kv: kv[1]['sequence'])
             }
 
     def write(self, vals):

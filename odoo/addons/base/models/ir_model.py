@@ -371,11 +371,11 @@ class IrModel(models.Model):
     @api.model
     def name_create(self, name):
         """ Infer the model from the name. E.g.: 'My New Model' should become 'x_my_new_model'. """
-        vals = {
+        ir_model = self.create({
             'name': name,
             'model': 'x_' + '_'.join(name.lower().split(' ')),
-        }
-        return self.create(vals).name_get()[0]
+        })
+        return ir_model.id, ir_model.display_name
 
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
@@ -546,6 +546,7 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+    currency_field = fields.Char(string="Currency field", help="Name of the Many2one field holding the res.currency")
 
     @api.depends('relation', 'relation_field')
     def _compute_relation_field_id(self):
@@ -691,6 +692,24 @@ class IrModelFields(models.Model):
         for rec in self:
             if rec.relation_table:
                 models.check_pg_name(rec.relation_table)
+
+    @api.constrains('currency_field')
+    def _check_currency_field(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.ttype == 'monetary':
+                if not rec.currency_field:
+                    currency_field = self._get(rec.model, 'currency_id') or self._get(rec.model, 'x_currency_id')
+                    if not currency_field:
+                        raise ValidationError(_("Currency field is empty and there is no fallback field in the model"))
+                else:
+                    currency_field = self._get(rec.model, rec.currency_field)
+                    if not currency_field:
+                        raise ValidationError(_("Unknown field name '%s' in currency_field") % (rec.currency_field))
+
+                if currency_field.ttype != 'many2one':
+                    raise ValidationError(_("Currency field does not have type many2one"))
+                if currency_field.relation != 'res.currency':
+                    raise ValidationError(_("Currency field should have a res.currency relation"))
 
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
@@ -1023,11 +1042,10 @@ class IrModelFields(models.Model):
             self.clear_caches()
         return res
 
-    def name_get(self):
-        res = []
+    @api.depends('field_description', 'model')
+    def _compute_display_name(self):
         for field in self:
-            res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
-        return res
+            field.display_name = f'{field.field_description} ({field.model})'
 
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
@@ -1054,6 +1072,7 @@ class IrModelFields(models.Model):
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
+            'currency_field': field.currency_field if field.type == 'monetary' else None,
         }
 
     def _reflect_fields(self, model_names):
@@ -1185,8 +1204,12 @@ class IrModelFields(models.Model):
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
-        elif field_data['ttype'] == 'monetary' and not self.pool.loaded:
-            return
+        elif field_data['ttype'] == 'monetary':
+            # be sure that custom monetary field are always instanciated
+            if not self.pool.loaded and \
+                not (field_data['currency_field'] and field_data['currency_field'].startswith('x_')):
+                return
+            attrs['currency_field'] = field_data['currency_field']
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
@@ -1974,22 +1997,15 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
-    def name_get(self):
-        model_id_name = defaultdict(dict)       # {res_model: {res_id: name}}
-        for xid in self:
-            model_id_name[xid.model][xid.res_id] = None
-
-        # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in model_id_name.items():
-            try:
-                ng = self.env[model].browse(id_name).name_get()
-                id_name.update(ng)
-            except Exception:
-                pass
-
-        # return results, falling back on complete_name
-        return [(xid.id, model_id_name[xid.model][xid.res_id] or xid.complete_name)
-                for xid in self]
+    @api.depends('res_id', 'model')
+    def _compute_display_name(self):
+        for model, model_data_records in self.grouped('model').items():
+            records = self.env[model].browse(model_data_records.mapped('res_id'))
+            for xid, target_record in zip(model_data_records, records):
+                try:
+                    xid.display_name = target_record.display_name or xid.complete_name
+                except Exception:  # pylint: disable=broad-except
+                    xid.display_name = xid.complete_name
 
     # NEW V8 API
     @api.model

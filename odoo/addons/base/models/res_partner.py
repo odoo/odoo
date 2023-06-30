@@ -128,25 +128,24 @@ class PartnerCategory(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You can not create recursive tags.'))
 
-    def name_get(self):
+    @api.depends('parent_id')
+    def _compute_display_name(self):
         """ Return the categories' display name, including their direct
             parent by default.
         """
-        res = []
         for category in self:
             names = []
             current = category
             while current:
                 names.append(current.name)
                 current = current.parent_id
-            res.append((category.id, ' / '.join(reversed(names))))
-        return res
+            category.display_name = ' / '.join(reversed(names))
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         domain = domain or []
         if name:
-            # Be sure name_search is symetric to name_get
+            # Be sure name_search is symetric to display_name
             name = name.split(' / ')[-1]
             domain = [('name', operator, name)] + domain
         return self._search(domain, limit=limit, order=order)
@@ -165,8 +164,11 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
-    _order = "display_name, id"
-    _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
+    _order = "complete_name, id"
+    _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
+
+    # the partner types that must be added to a partner's complete name, like "Delivery"
+    _complete_name_displayed_types = ('invoice', 'delivery', 'other')
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -189,7 +191,7 @@ class Partner(models.Model):
         return values
 
     name = fields.Char(index=True, default_export_compatible=True)
-    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
+    complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -332,12 +334,22 @@ class Partner(models.Model):
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
-    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name', 'commercial_company_name')
-    def _compute_display_name(self):
-        # retrieve name_get() without any fancy feature
-        names = dict(self.with_context({}).name_get())
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
+    def _compute_complete_name(self):
+        displayed_types = self._complete_name_displayed_types
+        # determine the labels of partner types to be included
+        # as 'displayed_types' (without user lang to avoid context dependency)
+        type_description = dict(self._fields['type']._description_selection(self.with_context({}).env))
+
         for partner in self:
-            partner.display_name = names.get(partner.id)
+            name = partner.name or ''
+            if partner.company_name or partner.parent_id:
+                if not name and partner.type in displayed_types:
+                    name = type_description[partner.type]
+                if not partner.is_company:
+                    name = f"{partner.commercial_company_name or partner.sudo().parent_id.name}, {name}"
+
+            partner.complete_name = name.strip()
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -803,39 +815,25 @@ class Partner(models.Model):
                 'target': 'new',
                 }
 
-    def _get_contact_name(self, partner, name):
-        return "%s, %s" % (partner.commercial_company_name or partner.sudo().parent_id.name, name)
-
-    def _get_name(self):
-        """ Utility method to allow name_get to be overrided without re-browse the partner """
-        partner = self
-        name = partner.name or ''
-
-        if partner.company_name or partner.parent_id:
-            if not name and partner.type in ['invoice', 'delivery', 'other']:
-                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
-            if not partner.is_company:
-                name = self._get_contact_name(partner, name)
-        if self._context.get('show_address'):
-            name = name + "\n" + partner._display_address(without_company=True)
-        name = re.sub(r'\s+\n', '\n', name)
-        if self._context.get('partner_show_db_id'):
-            name = "%s (%s)" % (name, partner.id)
-        if self._context.get('address_inline'):
-            splitted_names = name.split("\n")
-            name = ", ".join([n for n in splitted_names if n.strip()])
-        if self._context.get('show_email') and partner.email:
-            name = "%s <%s>" % (name, partner.email)
-        if self._context.get('show_vat') and partner.vat:
-            name = "%s ‒ %s" % (name, partner.vat)
-        return name.strip()
-
-    def name_get(self):
-        res = []
+    @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat')
+    def _compute_display_name(self):
         for partner in self:
-            name = partner._get_name()
-            res.append((partner.id, name))
-        return res
+            name = partner.complete_name
+            if partner._context.get('show_address'):
+                name = name + "\n" + partner._display_address(without_company=True)
+            name = re.sub(r'\s+\n', '\n', name)
+            if partner._context.get('partner_show_db_id'):
+                name = f"{name} ({partner.id})"
+            if partner._context.get('address_inline'):
+                splitted_names = name.split("\n")
+                name = ", ".join([n for n in splitted_names if n.strip()])
+            if partner._context.get('show_email') and partner.email:
+                name = f"{name} <{partner.email}>"
+            if partner._context.get('show_vat') and partner.vat:
+                name = f"{name} ‒ {partner.vat}"
+
+            partner.display_name = name.strip()
 
     def _parse_partner_name(self, text):
         """ Parse partner name (given by text) in order to find a name and an
@@ -891,7 +889,7 @@ class Partner(models.Model):
         if email:  # keep default_email in context
             create_values['email'] = email
         partner = self.create(create_values)
-        return partner.name_get()[0]
+        return partner.id, partner.display_name
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

@@ -82,7 +82,7 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
-        if self.env.context.get('holiday_status_name_get', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
+        if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
 
             if lt:
@@ -324,12 +324,6 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.all_employee_ids = leave.employee_id | leave.employee_ids
 
-    @api.constrains('holiday_status_id', 'number_of_days')
-    def _check_allocation_duration(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
-
     @api.depends_context('uid')
     def _compute_description(self):
         self.check_access_rights('read')
@@ -364,12 +358,6 @@ class HolidaysRequest(models.Model):
     def _compute_state(self):
         for leave in self:
             leave.state = 'confirm' if leave.validation_type != 'no_validation' else 'draft'
-
-    @api.depends('holiday_status_id.requires_allocation', 'validation_type', 'employee_id', 'date_from', 'date_to')
-    def _compute_from_holiday_status_id(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        self.holiday_allocation_id = False
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                  'request_unit_half', 'request_unit_hours', 'employee_id')
@@ -784,21 +772,14 @@ class HolidaysRequest(models.Model):
     # ORM Overrides methods
     ####################################################
 
-    @api.depends('employee_id', 'holiday_status_id')
+    @api.depends(
+        'tz', 'date_from', 'date_to', 'employee_id',
+        'holiday_status_id', 'number_of_hours_display',
+        'leave_type_request_unit', 'number_of_days', 'mode_company_id',
+        'category_id', 'department_id',
+    )
+    @api.depends_context('short_name', 'hide_employee_name', 'groupby')
     def _compute_display_name(self):
-        super()._compute_display_name()
-
-    def onchange(self, values, field_name, field_onchange):
-        # Try to force the leave_type name_get when creating new records
-        # This is called right after pressing create and returns the name_get for
-        # most fields in the view.
-        if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
-            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
-            self = self.with_context(employee_id=employee_id)
-        return super().onchange(values, field_name, field_onchange)
-
-    def name_get(self):
-        res = []
         for leave in self:
             user_tz = timezone(leave.tz)
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
@@ -807,13 +788,9 @@ class HolidaysRequest(models.Model):
             if self.env.context.get('short_name'):
                 short_leave_name = leave.name or time_off_type_display or _('Time Off')
                 if leave.leave_type_request_unit == 'hour':
-                    res.append((
-                        leave.id,
-                        _("%s: %.2f hours") % (short_leave_name, leave.number_of_hours_display)))
+                    leave.display_name = _("%s: %.2f hours", short_leave_name, leave.number_of_hours_display)
                 else:
-                    res.append((
-                        leave.id,
-                        _("%s: %.2f days") % (short_leave_name, leave.number_of_days)))
+                    leave.display_name = _("%s: %.2f days", short_leave_name, leave.number_of_days)
             else:
                 if leave.holiday_type == 'company':
                     target = leave.mode_company_id.name
@@ -828,82 +805,60 @@ class HolidaysRequest(models.Model):
                 display_date = format_date(self.env, date_from_utc) or ""
                 if leave.leave_type_request_unit == 'hour':
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-                        res.append((
-                            leave.id,
-                            _("%(leave_type)s: %(duration).2f hours on %(date)s",
-                                leave_type=time_off_type_display,
-                                duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(date_from_utc) or "",
-                            )
-                        ))
+                        leave.display_name = _("%(leave_type)s: %(duration).2f hours on %(date)s",
+                            leave_type=time_off_type_display,
+                            duration=leave.number_of_hours_display,
+                            date=fields.Date.to_string(date_from_utc) or "",
+                        )
                     elif not time_off_type_display:
-                        res.append((
-                            leave.id,
-                            _("%(person)s: %(duration).2f hours on %(date)s",
-                                person=target,
-                                duration=leave.number_of_hours_display,
-                                date=display_date,
-                            )
-                        ))
+                        leave.display_name = _("%(person)s: %(duration).2f hours on %(date)s",
+                            person=target,
+                            duration=leave.number_of_hours_display,
+                            date=display_date,
+                        )
                     else:
-                        res.append((
-                            leave.id,
-                            _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
-                                person=target,
-                                leave_type=time_off_type_display,
-                                duration=leave.number_of_hours_display,
-                                date=display_date,
-                            )
-                        ))
+                        leave.display_name = _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
+                            person=target,
+                            leave_type=time_off_type_display,
+                            duration=leave.number_of_hours_display,
+                            date=display_date,
+                        )
                 else:
                     if leave.number_of_days > 1 and date_from_utc and date_to_utc:
                         display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
                     if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-                        res.append((
-                            leave.id,
-                            _("%(leave_type)s: %(duration).2f days (%(start)s)",
-                                leave_type=time_off_type_display,
-                                duration=leave.number_of_days,
-                                start=display_date,
-                            )
-                        ))
+                        leave.display_name = _("%(leave_type)s: %(duration).2f days (%(start)s)",
+                            leave_type=time_off_type_display,
+                            duration=leave.number_of_days,
+                            start=display_date,
+                        )
                     elif not time_off_type_display:
-                        res.append((
-                            leave.id,
-                            _("%(person)s: %(duration).2f days (%(start)s)",
-                                person=target,
-                                duration=leave.number_of_days,
-                                start=display_date,
-                            )
-                        ))
+                        leave.display_name = _("%(person)s: %(duration).2f days (%(start)s)",
+                            person=target,
+                            duration=leave.number_of_days,
+                            start=display_date,
+                        )
                     else:
-                        res.append((
-                            leave.id,
-                            _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
-                                person=target,
-                                leave_type=time_off_type_display,
-                                duration=leave.number_of_days,
-                                start=display_date,
-                            )
-                        ))
-        return res
+                        leave.display_name = _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
+                            person=target,
+                            leave_type=time_off_type_display,
+                            duration=leave.number_of_days,
+                            start=display_date,
+                        )
+
+    def onchange(self, values, field_name, field_onchange):
+        # Try to force the leave_type display_name when creating new records
+        # This is called right after pressing create and returns the display_name for
+        # most fields in the view.
+        if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
+            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
+            self = self.with_context(employee_id=employee_id)
+        return super().onchange(values, field_name, field_onchange)
 
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
-
-    @api.constrains('holiday_allocation_id')
-    def _check_allocation_id(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
-
-    @api.constrains('holiday_allocation_id', 'date_to', 'date_from')
-    def _check_leave_type_validity(self):
-        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
-        # TODO: remove in master
-        return
 
     @api.constrains('date_from', 'date_to')
     def _check_stress_day(self):
@@ -1397,18 +1352,16 @@ class HolidaysRequest(models.Model):
 
     def _notify_manager(self):
         leaves = self.filtered(lambda hol: (hol.validation_type == 'both' and hol.state in ['validate1', 'validate']) or (hol.validation_type == 'manager' and hol.state == 'validate'))
-        holiday_names = self.name_get()
         for holiday in leaves:
             responsible = holiday.employee_id.leave_manager_id.partner_id.ids
             if responsible:
-                holiday_name = list(filter(lambda h: holiday.id in h, holiday_names))[0][1]
                 self.env['mail.thread'].sudo().message_notify(
                     partner_ids=responsible,
                     model_description='Time Off',
                     subject=_('Refused Time Off'),
                     body=_(
                         '%(holiday_name)s has been refused.',
-                        holiday_name=holiday_name,
+                        holiday_name=holiday.display_name,
                     ),
                     email_layout_xmlid='mail.mail_notification_light',
                 )
@@ -1421,7 +1374,6 @@ class HolidaysRequest(models.Model):
         self._force_cancel(reason, 'mail.mt_note')
 
     def _force_cancel(self, reason, msg_subtype='mail.mt_comment'):
-        leave_names = self.name_get()
         recs = self.browse() if self.env.context.get(MODULE_UNINSTALL_FLAG) else self
         for leave in recs:
             leave.message_post(
@@ -1442,14 +1394,13 @@ class HolidaysRequest(models.Model):
                 responsibles |= leave.holiday_status_id.responsible_ids.partner_id
 
             if responsibles:
-                leave_name = list(filter(lambda h: leave.id in h, leave_names))[0][1]
                 self.env['mail.thread'].sudo().message_notify(
                     partner_ids=responsibles.ids,
                     model_description='Time Off',
                     subject=_('Canceled Time Off'),
                     body=_(
                         "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s.",
-                        leave_name=leave_name,
+                        leave_name=leave.display_name,
                         reason=reason
                     ),
                     email_layout_xmlid='mail.mail_notification_light',
@@ -1588,8 +1539,7 @@ class HolidaysRequest(models.Model):
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids
-            else:
-                responsible = self.env.ref('hr_holidays.group_hr_holidays_user').users.filtered(lambda u: self.holiday_status_id.company_id in u.company_ids)
+
         return responsible
 
     def activity_update(self):
@@ -1604,16 +1554,17 @@ class HolidaysRequest(models.Model):
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':
-                user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
-                for user_id in user_ids:
-                    activity_vals.append({
-                        'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
-                        'automated': True,
-                        'note': note,
-                        'user_id': user_id,
-                        'res_id': holiday.id,
-                        'res_model_id': self.env.ref('hr_holidays.model_hr_leave').id,
-                    })
+                if holiday.holiday_status_id.responsible_ids:
+                    user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    for user_id in user_ids:
+                        activity_vals.append({
+                            'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
+                            'automated': True,
+                            'note': note,
+                            'user_id': user_id,
+                            'res_id': holiday.id,
+                            'res_model_id': self.env.ref('hr_holidays.model_hr_leave').id,
+                        })
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':

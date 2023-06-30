@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import * as utils from "@mail/js/utils";
+import { addLink, parseAndTransform } from "@mail/utils/common/format";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Mail utils");
@@ -21,7 +21,7 @@ QUnit.test("add_link utility function", function (assert) {
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
-        const output = utils.parseAndTransform(content, utils.addLink);
+        const output = parseAndTransform(content, addLink);
         if (willLinkify) {
             assert.strictEqual(output.indexOf("<a "), 0);
             assert.strictEqual(output.indexOf("</a>"), output.length - 4);
@@ -55,14 +55,14 @@ QUnit.test("addLink: utility function and special entities", function (assert) {
     };
 
     for (const [content, result] of Object.entries(testInputs)) {
-        const output = utils.parseAndTransform(content, utils.addLink);
+        const output = parseAndTransform(content, addLink);
         assert.strictEqual(output, result);
     }
 });
 
 QUnit.test("addLink: linkify inside text node (1 occurrence)", function (assert) {
     const content = "<p>some text https://somelink.com</p>";
-    const linkified = utils.parseAndTransform(content, utils.addLink);
+    const linkified = parseAndTransform(content, addLink);
     assert.ok(linkified.startsWith("<p>some text <a"));
     assert.ok(linkified.endsWith("</a></p>"));
 
@@ -83,7 +83,7 @@ QUnit.test("addLink: linkify inside text node (2 occurrences)", function (assert
     // stringified representation, we continue deeper assertion with query
     // selectors.
     const content = "<p>some text https://somelink.com and again https://somelink2.com ...</p>";
-    const linkified = utils.parseAndTransform(content, utils.addLink);
+    const linkified = parseAndTransform(content, addLink);
     const fragment = document.createDocumentFragment();
     const div = document.createElement("div");
     fragment.appendChild(div);
@@ -155,4 +155,18 @@ QUnit.test("url with ellipsis at the end", async (assert) => {
     await click("button:contains(Send)");
     assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
     assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+});
+
+QUnit.test("url with number in subdomain", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/web";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce(
+        $,
+        `.o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/web)`
+    );
 });

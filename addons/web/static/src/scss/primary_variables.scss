@@ -3,6 +3,9 @@
 /// They are available in every asset bundle.
 ///
 
+// Contrast ratio
+$o-frontend-min-contrast-ratio: 2.9 !default;
+
 // Color-scheme
 $o-webclient-color-scheme: bright !default;
 
@@ -168,7 +171,6 @@ $o-horizontal-padding: $o-spacer !default;
 $o-innergroup-rpadding: 45px !default;
 $o-dropdown-hpadding: 20px !default;
 $o-dropdown-vpadding: 3px !default;
-$o-dropdown-box-shadow: 0 1rem 1.1rem rgba(#000, .1) !default;
 
 $o-sheet-vpadding: 24px !default;
 
@@ -259,8 +261,8 @@ $o-btns-bs-override: map-merge((
         border: $o-white,
         color: $o-gray-700,
 
-        hover-background: $o-gray-100,
-        hover-border: $o-gray-100,
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-200,
         hover-color: $o-gray-900,
 
         active-background: $o-component-active-bg,
@@ -270,3 +272,18 @@ $o-btns-bs-override: map-merge((
 ), $o-btns-bs-override);
 
 $o-btns-bs-outline-override: () !default;
+$o-btns-bs-outline-override: map-merge((
+    "secondary": (
+        background: transparent,
+        border: $o-gray-300,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-300,
+        hover-color: $o-gray-800,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+), $o-btns-bs-outline-override);

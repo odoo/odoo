@@ -10,6 +10,7 @@ import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_s
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -30,17 +31,17 @@ export class ProductsWidget extends Component {
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
     }
-    get hasProducts() {
-        return Object.keys(this.pos.globalState.db.product_by_id).length > 0;
+    get posHasValidProduct() {
+        return this.pos.posHasValidProduct();
     }
     get selectedCategoryId() {
-        return this.pos.globalState.selectedCategoryId;
+        return this.pos.selectedCategoryId;
     }
     get searchWord() {
-        return this.pos.globalState.searchProductWord.trim();
+        return this.pos.searchProductWord.trim();
     }
     get productsToDisplay() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         let list = [];
         if (this.searchWord !== "") {
             list = db.search_product_in_category(this.selectedCategoryId, this.searchWord);
@@ -52,13 +53,13 @@ export class ProductsWidget extends Component {
         });
     }
     get subcategories() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         return db
             .get_category_childs_ids(this.selectedCategoryId)
             .map((id) => db.get_category_by_id(id));
     }
     get breadcrumbs() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         if (this.selectedCategoryId === db.root_category_id) {
             return [];
         }
@@ -68,25 +69,25 @@ export class ProductsWidget extends Component {
         ].map((id) => db.get_category_by_id(id));
     }
     get hasNoCategories() {
-        return this.pos.globalState.db.get_category_childs_ids(0).length === 0;
+        return this.pos.db.get_category_childs_ids(0).length === 0;
     }
     get shouldShowButton() {
         return this.productsToDisplay.length === 0 && this.searchWord;
     }
     switchCategory(categoryId) {
-        this.pos.globalState.setSelectedCategoryId(categoryId);
+        this.pos.setSelectedCategoryId(categoryId);
     }
     updateSearch(searchWord) {
-        this.pos.globalState.searchProductWord = searchWord;
+        this.pos.searchProductWord = searchWord;
     }
     clearSearch() {
-        this.pos.globalState.searchProductWord = "";
+        this.pos.searchProductWord = "";
     }
     updateProductList(event) {
         this.switchCategory(0);
     }
     async onPressEnterKey() {
-        const { searchProductWord } = this.pos.globalState;
+        const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
         }
@@ -117,7 +118,7 @@ export class ProductsWidget extends Component {
         }
     }
     async loadProductFromDB() {
-        const { searchProductWord } = this.pos.globalState;
+        const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
         }
@@ -144,7 +145,7 @@ export class ProductsWidget extends Component {
                 }
             );
             if (ProductIds.length) {
-                await this.pos.globalState._addProducts(ProductIds, false);
+                await this.pos._addProducts(ProductIds, false);
             }
             this.updateProductList();
             return ProductIds;
@@ -166,17 +167,42 @@ export class ProductsWidget extends Component {
         }
     }
     async loadDemoDataProducts() {
-        const { products, categories } = await this.orm.call(
+        const { models_data, successful } = await this.orm.call(
             "pos.session",
             "load_product_frontend",
-            [this.pos.globalState.pos_session.id]
+            [this.pos.pos_session.id]
         );
-        this.pos.globalState.db.add_categories(categories);
-        this.pos.globalState._loadProductProduct(products);
+        if (!successful) {
+            this.popup.add(ErrorPopup, {
+                title: this.env._t("Demo products are no longer available"),
+                body: this.env._t(
+                    "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
+                ),
+            });
+            // But the received models_data is still used to update the current session.
+        }
+        if (!models_data) {
+            this._showLoadDemoDataMissingDataError("models_data");
+            return;
+        }
+        for (const dataName of ["pos.category", "product.product"]) {
+            if (!models_data[dataName]) {
+                this._showLoadDemoDataMissingDataError(dataName);
+                return;
+            }
+        }
+        this.pos.updateModelsData(models_data);
+    }
+    _showLoadDemoDataMissingDataError(missingData) {
+        console.error(
+            "Missing '",
+            missingData,
+            "' in pos.session:load_product_frontend server answer."
+        );
     }
 
     createNewProducts() {
-        window.open("/web#action=point_of_sale.action_client_product_menu", "_blank");
+        window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
         this.state.showReloadMessage = true;
     }
 }

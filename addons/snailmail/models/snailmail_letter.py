@@ -60,7 +60,6 @@ class SnailmailLetter(models.Model):
              "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
     info_msg = fields.Char('Information')
-    display_name = fields.Char('Display Name', compute="_compute_display_name")
 
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
@@ -74,11 +73,11 @@ class SnailmailLetter(models.Model):
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
 
-    @api.depends('reference', 'partner_id')
+    @api.depends('attachment_id', 'partner_id')
     def _compute_display_name(self):
         for letter in self:
             if letter.attachment_id:
-                letter.display_name = "%s - %s" % (letter.attachment_id.name, letter.partner_id.name)
+                letter.display_name = f"{letter.attachment_id.name} - {letter.partner_id.name}"
             else:
                 letter.display_name = letter.partner_id.name
 
@@ -237,7 +236,7 @@ class SnailmailLetter(models.Model):
                 'letter_id': letter.id,
                 'res_model': letter.model,
                 'res_id': letter.res_id,
-                'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).name_get()[0][1],
+                'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).display_name,
                 'address': {
                     'name': recipient_name,
                     'street': letter.partner_id.street,
@@ -459,7 +458,7 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _append_cover_page(self, invoice_bin: bytes):
-        address_split = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().split('\n')
+        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
         address_split[0] = self.partner_id.name or self.partner_id.parent_id and self.partner_id.parent_id.name or address_split[0]
         address = '<br/>'.join(address_split)
         address_x = 118 * mm

@@ -130,7 +130,7 @@ class CrmTeam(models.Model):
 
     def _extra_sql_conditions(self):
         if self._in_sale_scope():
-            return "AND state in ('sale', 'done')"
+            return "AND state = 'sale'"
         return super()._extra_sql_conditions()
 
     def _graph_title_and_key(self):

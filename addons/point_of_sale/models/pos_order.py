@@ -129,6 +129,13 @@ class PosOrder(models.Model):
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['pos_session_id'] = self._get_valid_session(order).id
 
+        if order.get('partner_id'):
+            partner_id = self.env['res.partner'].browse(order['partner_id'])
+            if not partner_id.exists():
+                order.update({
+                    "partner_id": False,
+                    "to_invoice": False,
+                })
         pos_order = False
         if not existing_order:
             pos_order = self.create(self._order_fields(order))
@@ -197,8 +204,7 @@ class PosOrder(models.Model):
             order.add_payment(return_payment_vals)
 
     def _prepare_invoice_line(self, order_line):
-        display_name = order_line.product_id.get_product_multiline_description_sale()
-        name = order_line.product_id.default_code + " " + display_name if order_line.product_id.default_code else display_name
+        name = order_line.product_id.get_product_multiline_description_sale()
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
@@ -525,12 +531,28 @@ class PosOrder(models.Model):
                     account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
                 else:
                     account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                if rounding_line_difference:
-                    rounding_line.with_context(check_move_validity=False).write({
-                        'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                        'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                if rounding_line:
+                    if rounding_line_difference:
+                        rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).write({
+                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                            'account_id': account_id,
+                            'price_unit': rounding_applied,
+                        })
+
+                else:
+                    self.env['account.move.line'].with_context(skip_invoice_sync=True, check_move_validity=False).create({
+                        'balance': -rounding_applied,
+                        'quantity': 1.0,
+                        'partner_id': new_move.partner_id.id,
+                        'move_id': new_move.id,
+                        'currency_id': new_move.currency_id.id,
+                        'company_id': new_move.company_id.id,
+                        'company_currency_id': new_move.company_id.currency_id.id,
+                        'display_type': 'rounding',
+                        'sequence': 9999,
+                        'name': self.config_id.rounding_method.name,
                         'account_id': account_id,
-                        'price_unit': rounding_applied,
                     })
             else:
                 if rounding_line:
@@ -586,8 +608,13 @@ class PosOrder(models.Model):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
+        pos_refunded_invoice_ids = []
+        for orderline in self.lines:
+            if orderline.refunded_orderline_id and orderline.refunded_orderline_id.order_id.account_move:
+                pos_refunded_invoice_ids.append(orderline.refunded_orderline_id.order_id.account_move.id)
         vals = {
             'invoice_origin': self.name,
+            'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
@@ -812,7 +839,7 @@ class PosOrder(models.Model):
             new_move = order._create_invoice(move_vals)
 
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
-            new_move.sudo().with_company(order.company_id)._post()
+            new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
             moves += new_move
             payment_moves = order._apply_invoice_payments()
 
@@ -1365,6 +1392,11 @@ class PosOrderLine(models.Model):
                     del pl[2]['server_id']
         return super().write(values)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_order_state(self):
+        if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
+            raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
+
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):
         for line in self:
@@ -1425,6 +1457,7 @@ class PosOrderLine(models.Model):
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
             'full_product_name': orderline.full_product_name,
+            'refunded_orderline_id': orderline.refunded_orderline_id,
         }
 
     def export_for_ui(self):

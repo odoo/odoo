@@ -89,30 +89,13 @@ export class SettingsFormCompiler extends FormCompiler {
     compileSetting(el, params) {
         params.componentName =
             el.getAttribute("type") === "header" ? "SettingHeader" : "SearchableSetting";
-        params.labels = [];
         const res = super.compileSetting(el, params);
-        if (params.componentName === "SearchableSetting") {
-            res.setAttribute("labels", JSON.stringify(params.labels));
-        }
-        delete params.labels;
-        return res;
-    }
-
-    compileField(el, params) {
-        const res = super.compileField(el, params);
-        if (params.labels && el.hasAttribute("widget")) {
-            const label = params.getFieldExpr(el.getAttribute("name"), el.getAttribute("widget"));
-            if (label) {
-                params.labels.push(label);
-            }
-        }
         return res;
     }
 
     compileNode(node, params, evalInvisible) {
         if (isTextNode(node)) {
-            if (params.labels && node.textContent.trim()) {
-                params.labels.push(node.textContent.trim());
+            if (node.textContent.trim()) {
                 return createElement("HighlightText", {
                     originalText: toStringExpression(node.textContent),
                 });
@@ -121,18 +104,9 @@ export class SettingsFormCompiler extends FormCompiler {
         return super.compileNode(node, params, evalInvisible);
     }
 
-    createLabelFromField(fieldId, fieldName, fieldString, label, params) {
-        const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-        if (res.hasAttribute("string") && params.labels) {
-            params.labels.push(res.getAttribute("string"));
-        }
-        return res;
-    }
-
     compileButton(el, params) {
         const res = super.compileButton(el, params);
-        if (res.hasAttribute("string") && params.labels && res.children.length === 0) {
-            params.labels.push(res.getAttribute("string"));
+        if (res.hasAttribute("string") && res.children.length === 0) {
             const contentSlot = createElement("t");
             contentSlot.setAttribute("t-set-slot", "contents");
             const content = createElement("HighlightText", {

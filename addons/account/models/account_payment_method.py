@@ -119,10 +119,13 @@ class AccountPaymentMethodLine(models.Model):
     company_id = fields.Many2one(related='journal_id.company_id')
     available_payment_method_ids = fields.Many2many(related='journal_id.available_payment_method_ids')
 
-    def name_get(self):
-        if self.env.context.get('show_payment_journal_id'):
-            return [(method.id, "%s (%s)" % (method.name, method.journal_id.name)) for method in self]
-        return super().name_get()
+    @api.depends('journal_id')
+    @api.depends_context('show_payment_journal_id')
+    def _compute_display_name(self):
+        if not self.env.context.get('show_payment_journal_id'):
+            return super()._compute_display_name()
+        for method in self:
+            method.display_name = f"{method.name} ({method.journal_id.name})"
 
     @api.depends('payment_method_id.name')
     def _compute_name(self):

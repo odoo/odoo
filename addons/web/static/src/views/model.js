@@ -145,6 +145,9 @@ export function useModel(ModelClass, params, options = {}) {
             await options.onWillStart();
         }
         await load(component.props);
+        if (options.onWillStartAfterLoad) {
+            await options.onWillStartAfterLoad();
+        }
         started = true;
     });
     onWillUpdateProps((nextProps) => {

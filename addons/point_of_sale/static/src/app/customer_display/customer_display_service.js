@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import { batched, effect, Reactive } from "@point_of_sale/utils";
+import { batched } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
+import { Reactive, effect } from "@web/core/utils/reactive";
 
 export class LocalDisplay extends Reactive {
     status = "success";
@@ -10,8 +11,8 @@ export class LocalDisplay extends Reactive {
         super();
         this.setup(...arguments);
     }
-    setup(globalState) {
-        this.globalState = globalState;
+    setup(pos) {
+        this.pos = pos;
     }
     async connect() {
         if (this.popupWindow && !this.popupWindow.closed) {
@@ -58,7 +59,7 @@ export class LocalDisplay extends Reactive {
         // animations.
         const { body: displayBody, head: displayHead } = this.popupWindow.document;
         const container = document.createElement("div");
-        container.innerHTML = await this.globalState.customerDisplayHTML(closeUI);
+        container.innerHTML = await this.pos.customerDisplayHTML(closeUI);
 
         if (!container.innerHTML || container.innerHTML === "undefined") {
             displayBody.textContent = "";
@@ -94,13 +95,13 @@ export class RemoteDisplay extends Reactive {
         super();
         this.setup(...arguments);
     }
-    setup(globalState, { hardware_proxy }) {
+    setup(pos, { hardware_proxy }) {
         this.hardwareProxy = hardware_proxy;
-        this.globalState = globalState;
+        this.pos = pos;
         this.updateStatus();
     }
     async connect() {
-        const html = await this.globalState.customerDisplayHTML();
+        const html = await this.pos.customerDisplayHTML();
         try {
             const { status } = await this.hardwareProxy.message("take_control", { html });
             this.status = status === "success" ? "success" : "warning";
@@ -110,7 +111,7 @@ export class RemoteDisplay extends Reactive {
         }
     }
     async update({ closeUI = false } = {}) {
-        const html = await this.globalState.customerDisplayHTML(closeUI);
+        const html = await this.pos.customerDisplayHTML(closeUI);
         if (this.isUpdatingStatus && this.hardwareProxy.connectionInfo.status === "connected") {
             return this.hardwareProxy.message("customer_facing_display", { html });
         }
@@ -146,19 +147,19 @@ export const customerDisplayService = {
         return ["pos", ...RemoteDisplay.serviceDependencies];
     },
     start(env, deps) {
-        const { globalState } = deps.pos;
+        const pos = deps.pos;
 
         const {
             iface_customer_facing_display: enabled,
             iface_customer_facing_display_via_proxy: proxy,
-        } = globalState.config;
+        } = pos.config;
         if (!enabled) {
             return;
         }
 
         const display = proxy
-            ? new RemoteDisplay(globalState, pick(deps, ...RemoteDisplay.serviceDependencies))
-            : new LocalDisplay(globalState);
+            ? new RemoteDisplay(pos, pick(deps, ...RemoteDisplay.serviceDependencies))
+            : new LocalDisplay(pos);
         // Register an effect to update the display automatically when anything it renders changes
         effect(
             batched((display) => display.update()),

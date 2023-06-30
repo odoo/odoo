@@ -161,6 +161,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/xml/colorpicker.xml',
+            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -413,6 +414,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/fields/field_utils.js',
 
             ('include', 'web.frontend_legacy'),
+            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -445,6 +447,24 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_bootstrap_backend'),
+
+            'web/static/lib/bootstrap/js/dist/dom/data.js',
+            'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
+            'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
+            'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
+            'web/static/lib/bootstrap/js/dist/base-component.js',
+            'web/static/lib/bootstrap/js/dist/alert.js',
+            'web/static/lib/bootstrap/js/dist/button.js',
+            'web/static/lib/bootstrap/js/dist/carousel.js',
+            'web/static/lib/bootstrap/js/dist/collapse.js',
+            'web/static/lib/bootstrap/js/dist/dropdown.js',
+            'web/static/lib/bootstrap/js/dist/modal.js',
+            'web/static/lib/bootstrap/js/dist/offcanvas.js',
+            'web/static/lib/bootstrap/js/dist/tooltip.js',
+            'web/static/lib/bootstrap/js/dist/popover.js',
+            'web/static/lib/bootstrap/js/dist/scrollspy.js',
+            'web/static/lib/bootstrap/js/dist/tab.js',
+            'web/static/lib/bootstrap/js/dist/toast.js',
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',

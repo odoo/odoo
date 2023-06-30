@@ -20,15 +20,19 @@ import {
     onWillStart,
     onWillUpdateProps,
     useChildSubEnv,
+    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { RecipientList } from "./recipient_list";
 
 /**
  * @typedef {Object} Props
@@ -80,6 +84,7 @@ export class Chatter extends Component {
 
     setup() {
         this.action = useService("action");
+        this.attachmentBox = useRef("attachment-box");
         this.messaging = useMessaging();
         /** @type {import("@mail/activity/activity_service").ActivityService} */
         this.activityService = useState(useService("mail.activity"));
@@ -90,6 +95,7 @@ export class Chatter extends Component {
         this.rpc = useService("rpc");
         this.state = useState({
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
+            jumpThreadPresent: 0,
             showActivities: true,
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
@@ -98,8 +104,10 @@ export class Chatter extends Component {
         this.attachmentUploader = useAttachmentUploader(
             this.threadService.getThread(this.props.threadModel, this.props.threadId)
         );
-        this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
+        this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
+        this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
+        this.recipientsPopover = usePopover(RecipientList);
         useChildSubEnv({ inChatter: true });
         useDropzone(
             this.rootRef,
@@ -153,6 +161,14 @@ export class Chatter extends Component {
                 }
             }
         });
+        useEffect(
+            (opened) => {
+                if (opened) {
+                    this.attachmentBox.el.scrollIntoView({ block: "center" });
+                }
+            },
+            () => [this.state.isAttachmentBoxOpened]
+        );
     }
 
     /**
@@ -184,19 +200,23 @@ export class Chatter extends Component {
     /**
      * @returns {string}
      */
-    get toFollowersText() {
-        const threadName = this.state.thread.displayName || this.state.thread.name;
-        const toFollowersText = threadName
-            ? sprintf(
-                  _t(
-                      '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> <span class="fw-bold">"%(thread name)s"</span>.'
-                  ),
-                  { "thread name": escape(threadName) }
-              )
-            : _t(
-                  '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> this document.'
-              );
-        return markup(toFollowersText);
+    get toRecipientsText() {
+        const followers = this.state.thread.followers.slice(0, 5).map(({ partner }) => {
+            if (partner === this.store.self) {
+                return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
+            }
+            return `<span class="text-muted" title="${escape(partner.email)}">${escape(
+                partner.emailWithoutDomain
+            )}</span>`;
+        });
+        const formatter = new Intl.ListFormat(
+            this.store.env.services["user"].lang?.replace("_", "-"),
+            { type: "unit" }
+        );
+        if (this.state.thread.followers.length > 5) {
+            followers.push("…");
+        }
+        return markup(formatter.format(followers));
     }
 
     /**
@@ -260,11 +280,26 @@ export class Chatter extends Component {
         document.body.click(); // hack to close dropdown
     }
 
-    async onClickFollow() {
-        await this.orm.call(this.props.threadModel, "message_subscribe", [[this.props.threadId]], {
+    async _follow(threadModel, threadId) {
+        await this.orm.call(threadModel, "message_subscribe", [[threadId]], {
             partner_ids: [this.store.self.id],
         });
         this.onFollowerChanged();
+    }
+
+    async onClickFollow() {
+        if (this.props.threadId) {
+            this._follow(this.props.threadModel, this.props.threadId);
+        } else {
+            this.onNextUpdate = (nextProps) => {
+                if (nextProps.threadId) {
+                    this._follow(nextProps.threadModel, nextProps.threadId);
+                } else {
+                    return true;
+                }
+            };
+            await this.props.saveRecord?.();
+        }
     }
 
     /**
@@ -292,6 +327,7 @@ export class Chatter extends Component {
             this.reloadParentView();
         }
         this.toggleComposer();
+        this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
         this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
     }
@@ -380,7 +416,6 @@ export class Chatter extends Component {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
-        this.scrollPosition.ref.el.scrollTop = 0;
     }
 
     async onClickAttachFile(ev) {
@@ -391,5 +426,16 @@ export class Chatter extends Component {
         if (!saved) {
             return false;
         }
+    }
+
+    onScroll() {
+        this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
+    }
+
+    onClickRecipientList(ev) {
+        if (this.recipientsPopover.isOpen) {
+            return this.recipientsPopover.close();
+        }
+        this.recipientsPopover.open(ev.target, { thread: this.state.thread });
     }
 }

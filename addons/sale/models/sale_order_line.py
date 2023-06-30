@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round
+from odoo.tools import float_is_zero, float_compare, float_round, format_date
 
 
 class SaleOrderLine(models.Model):
@@ -263,6 +263,16 @@ class SaleOrderLine(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('order_partner_id', 'order_id', 'product_id')
+    def _compute_display_name(self):
+        name_per_id = self._additional_name_per_id()
+        for so_line in self.sudo():
+            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+            additional_name = name_per_id.get(so_line.id)
+            if additional_name:
+                name = f'{name} {additional_name}'
+            so_line.display_name = name
+
     @api.depends('product_id')
     def _compute_product_template_id(self):
         for line in self:
@@ -314,6 +324,15 @@ class SaleOrderLine(models.Model):
                     name = _("%(line_description)s (Draft)", line_description=name)
                 elif dp_state == 'cancel':
                     name = _("%(line_description)s (Canceled)", line_description=name)
+                else:
+                    invoice = line._get_invoice_lines().move_id
+                    if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
+                        name = _(
+                            "%(line_description)s (ref: %(reference)s on %(date)s)",
+                            line_description=name,
+                            reference=invoice.payment_reference,
+                            date=format_date(line.env, invoice.invoice_date),
+                        )
                 del context
             line.name = name
 
@@ -433,7 +452,7 @@ class SaleOrderLine(models.Model):
             else:
                 price = line.with_company(line.company_id)._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id,
+                    line.company_id or line.env.company,
                     line.order_id.currency_id,
                     line.order_id.date_order,
                     'sale',
@@ -496,6 +515,16 @@ class SaleOrderLine(models.Model):
         return self.product_id._get_product_price_context(
             self.product_no_variant_attribute_value_ids,
         )
+
+    def _get_pricelist_price_context(self):
+        """DO NOT USE in new code, this contextual logic should be dropped or heavily refactored soon"""
+        self.ensure_one()
+        return {
+            'pricelist': self.order_id.pricelist_id.id,
+            'uom': self.product_uom.id,
+            'quantity': self.product_uom_qty,
+            'date': self.order_id.date_order,
+        }
 
     def _get_pricelist_price_before_discount(self):
         """Compute the price used as base for the pricelist price computation.
@@ -745,7 +774,7 @@ class SaleOrderLine(models.Model):
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
         """
         for line in self:
-            if line.state in ['sale', 'done'] and not line.display_type:
+            if line.state == 'sale' and not line.display_type:
                 if line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
@@ -757,20 +786,19 @@ class SaleOrderLine(models.Model):
     def _compute_invoice_status(self):
         """
         Compute the invoice status of a SO line. Possible statuses:
-        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
+        - no: if the SO is not in status 'sale', we consider that there is nothing to
           invoice. This is also the default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_compute_qty_to_invoice()` for more information on how this quantity is calculated.
         - upselling: this is possible only for a product invoiced on ordered quantities for which
           we delivered more than expected. The could arise if, for example, a project took more
           time than expected but we decided not to invoice the extra cost to the client. This
-          occurs only in state 'sale', so that when a SO is set to done, the upselling opportunity
-          is removed from the list.
+          occurs only in state 'sale', the upselling opportunity is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            if line.state not in ('sale', 'done'):
+            if line.state != 'sale':
                 line.invoice_status = 'no'
             elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
                 line.invoice_status = 'invoiced'
@@ -816,7 +844,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             amount_to_invoice = 0.0
-            if line.state in ['sale', 'done']:
+            if line.state == 'sale':
                 # Note: do not use price_subtotal field as it returns zero when the ordered quantity is
                 # zero. It causes problem for expense line (e.i.: ordered qty = 0, deli qty = 4,
                 # price_unit = 20 ; subtotal is zero), but when you can invoice the line, you see an
@@ -869,7 +897,13 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
         for line in self:
-            if line.state in ['done', 'cancel'] or (line.state == 'sale' and (line.qty_invoiced > 0 or line.qty_delivered > 0)):
+            if line.state == 'cancel':
+                line.product_updatable = False
+            elif line.state == 'sale' and (
+                line.order_id.locked
+                or line.qty_invoiced > 0
+                or line.qty_delivered > 0
+            ):
                 line.product_updatable = False
             else:
                 line.product_updatable = True
@@ -878,7 +912,7 @@ class SaleOrderLine(models.Model):
     def _compute_product_uom_readonly(self):
         for line in self:
             # line.ids checks whether it's a new record not yet saved
-            line.product_uom_readonly = line.ids and line.state in ['sale', 'done', 'cancel']
+            line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
 
     #=== CONSTRAINT METHODS ===#
 
@@ -948,7 +982,7 @@ class SaleOrderLine(models.Model):
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
-        if 'done' in self.mapped('state') and any(f in values.keys() for f in protected_fields):
+        if any(self.order_id.mapped('locked')) and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
 
             if 'name' in protected_fields_modified and all(self.mapped('is_downpayment')):
@@ -1012,7 +1046,7 @@ class SaleOrderLine(models.Model):
         """
         return self.filtered(
             lambda line:
-                line.state in ('sale', 'done')
+                line.state == 'sale'
                 and (line.invoice_lines or not line.is_downpayment)
                 and not line.display_type
         )
@@ -1052,7 +1086,7 @@ class SaleOrderLine(models.Model):
 
     def _expected_date(self):
         self.ensure_one()
-        if self.state in ['sale', 'done'] and self.order_id.date_order:
+        if self.state == 'sale' and self.order_id.date_order:
             order_date = self.order_id.date_order
         else:
             order_date = fields.Datetime.now()
@@ -1132,17 +1166,6 @@ class SaleOrderLine(models.Model):
             for so_line in self
             if so_line.order_partner_id.ref or so_line.order_partner_id.name
         }
-
-    def name_get(self):
-        result = []
-        name_per_id = self._additional_name_per_id()
-        for so_line in self.sudo():
-            name = '%s - %s' % (so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
-            additional_name = name_per_id.get(so_line.id)
-            if additional_name:
-                name = '%s %s' % (name, additional_name)
-            result.append((so_line.id, name))
-        return result
 
     #=== HOOKS ===#
 

@@ -76,6 +76,10 @@ export class Thread {
      * @type {import("@mail/core/common/message_model").Message[]}
      */
     messages = [];
+    /** @type {string} */
+    modelName;
+    /** @type {string} */
+    module_icon;
     /**
      * Contains messages received from the bus that are not yet inserted in
      * `messages` list. This is a temporary storage to ensure nothing is lost
@@ -106,6 +110,7 @@ export class Thread {
     /** @type {ScrollPosition} */
     scrollPosition = new ScrollPosition();
     showOnlyVideo = false;
+    transientMessages = [];
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     /** @type {string} */
@@ -250,9 +255,7 @@ export class Thread {
     }
 
     get imgUrl() {
-        return (
-            this.newestNeedactionMessage?.module_icon ?? "/mail/static/src/img/smiley/avatar.jpg"
-        );
+        return this.module_icon ?? "/mail/static/src/img/smiley/avatar.jpg";
     }
 
     get allowDescription() {

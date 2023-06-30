@@ -57,7 +57,7 @@ class WebsiteSaleDigital(CustomerPortal):
             # Check if access can be granted through their purchases.
             res_model = attachment['res_model']
             res_id = attachment['res_id']
-            digital_purchases = request.env['account.move.line'].get_digital_purchases()
+            digital_purchases = request.env['account.move.line']._get_digital_purchases()
             if res_model == 'product.product':
                 purchased_product_ids = digital_purchases
             elif res_model == 'product.template':

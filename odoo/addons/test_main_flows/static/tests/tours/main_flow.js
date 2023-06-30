@@ -4,6 +4,7 @@ import {_t} from "web.core";
 import {Markup} from "web.utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import "web.legacy_tranlations_loaded";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
@@ -952,8 +953,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_br
 }, {
     mobile: false,
     edition: "enterprise",
-    trigger: "button[name='button_validate'].btn-primary",
-    extra_trigger: "button[name='button_validate'].btn-primary",
+    trigger: "button.btn-primary:contains('Validate')",
     content: _t("Reconcile the bank transaction"),
 },
 // exit reconciliation widget

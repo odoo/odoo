@@ -18,7 +18,7 @@
 }
 
 @include media-breakpoint-down(md) {
-    .o_we_shape {
+    .o_we_shape:not(.o_shape_show_mobile) {
         display: none;
     }
 }
@@ -58,7 +58,7 @@
 }
 
 .o_grid_item_image {
-    > img {
+    > img, > .media_iframe_video {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;

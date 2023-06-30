@@ -11,31 +11,32 @@
                 <field name="is_all_service" invisible="1"/>
                 <field name="recompute_delivery_price" invisible="1"/>
             </field>
-            <group name="note_group" position="before">
-                <div class="oe_right mb-2 ms-1">
-                    <button
-                        string="Add shipping"
-                        name="action_open_delivery_wizard"
-                        type="object"
-                        attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
-                    />
-                    <button
-                        string="Update shipping cost"
-                        name="action_open_delivery_wizard"
-                        context="{'carrier_recompute':True}"
-                        type="object"
-                        class="text-warning btn-secondary"
-                        attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
-                    />
-                    <button
-                        string="Update shipping cost"
-                        name="action_open_delivery_wizard"
-                        context="{'carrier_recompute':True}"
-                        type="object"
-                        attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
-                    />
-                </div>
-            </group>
+            <div name="so_button_below_order_lines" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <div name="so_button_below_order_lines" position="inside">
+                <button
+                    string="Add shipping"
+                    name="action_open_delivery_wizard"
+                    type="object"
+                    attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}"
+                />
+                <button
+                    string="Update shipping cost"
+                    name="action_open_delivery_wizard"
+                    context="{'carrier_recompute':True}"
+                    type="object"
+                    class="text-warning btn-secondary"
+                    attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}"
+                />
+                <button
+                    string="Update shipping cost"
+                    name="action_open_delivery_wizard"
+                    context="{'carrier_recompute':True}"
+                    type="object"
+                    attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}"
+                />
+            </div>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
                 <field name="recompute_delivery_price" invisible="1"/>
                 <field name="is_delivery" invisible="1"/>

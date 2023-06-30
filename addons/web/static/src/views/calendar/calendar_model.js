@@ -139,6 +139,10 @@ export class CalendarModel extends Model {
         return this.meta.quickCreateFormViewId;
     }
 
+    get defaultFilterLabel() {
+        return _t("Undefined");
+    }
+
     //--------------------------------------------------------------------------
 
     async createFilter(fieldName, filterValue) {
@@ -732,7 +736,7 @@ export class CalendarModel extends Model {
             type: "dynamic",
             recordId: null,
             value,
-            label: formatter(rawValue, { field }) || _t("Undefined"),
+            label: formatter(rawValue, { field }) || this.defaultFilterLabel,
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
             colorIndex,

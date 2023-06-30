@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import models, fields, _
+from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 
@@ -23,13 +23,14 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.has_timesheet = result.get(employee.id, False)
 
-    def name_get(self):
-        res = super().name_get()
+    @api.depends('company_id', 'user_id')
+    @api.depends_context('allowed_company_ids')
+    def _compute_display_name(self):
+        super()._compute_display_name()
         allowed_company_ids = self.env.context.get('allowed_company_ids', [])
         if len(allowed_company_ids) <= 1:
-            return res
+            return
 
-        name_mapping = dict(res)
         employees_count_per_user = {
             user.id: count
             for user, count in self.env['hr.employee'].sudo()._read_group(
@@ -40,8 +41,7 @@ class HrEmployee(models.Model):
         }
         for employee in self:
             if employees_count_per_user.get(employee.user_id.id, 0) > 1:
-                name_mapping[employee.id] = f'{name_mapping[employee.id]} - {employee.company_id.name}'
-        return list(name_mapping.items())
+                employee.display_name = f'{employee.display_name} - {employee.company_id.name}'
 
     def action_unlink_wizard(self):
         wizard = self.env['hr.employee.delete.wizard'].create({

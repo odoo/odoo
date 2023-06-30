@@ -11,8 +11,7 @@ class L10nItDdt(models.Model):
     name = fields.Char(string="Numero DDT", size=20, help="Transport document number", required=True)
     date = fields.Date(string="Data DDT", help="Transport document date", required=True)
 
-    def name_get(self):
-        res = []
+    @api.depends('date')
+    def _compute_display_name(self):
         for ddt in self:
-            res.append((ddt.id, ("%s (%s)") % (ddt.name, ddt.date)))
-        return res
+            ddt.display_name = f"{ddt.name} ({ddt.date})"

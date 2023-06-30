@@ -31,21 +31,22 @@ class HrAttendance(models.Model):
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
 
-    def name_get(self):
-        result = []
+    @api.depends('employee_id', 'check_in', 'check_out')
+    def _compute_display_name(self):
         for attendance in self:
             if not attendance.check_out:
-                result.append((attendance.id, _("%(empl_name)s from %(check_in)s") % {
-                    'empl_name': attendance.employee_id.name,
-                    'check_in': format_datetime(self.env, attendance.check_in, dt_format=False),
-                }))
+                attendance.display_name = _(
+                    "%s from %s",
+                    attendance.employee_id.name,
+                    format_datetime(self.env, attendance.check_in, dt_format=False)
+                )
             else:
-                result.append((attendance.id, _("%(empl_name)s from %(check_in)s to %(check_out)s") % {
-                    'empl_name': attendance.employee_id.name,
-                    'check_in': format_datetime(self.env, attendance.check_in, dt_format=False),
-                    'check_out': format_datetime(self.env, attendance.check_out, dt_format=False),
-                }))
-        return result
+                attendance.display_name = _(
+                    "%s from %s to %s",
+                    attendance.employee_id.name,
+                    format_datetime(self.env, attendance.check_in, dt_format=False),
+                    format_datetime(self.env, attendance.check_out, dt_format=False),
+                )
 
     def _get_employee_calendar(self):
         self.ensure_one()
@@ -54,7 +55,7 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         for attendance in self:
-            if attendance.check_out and attendance.check_in:
+            if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
                 resource = attendance.employee_id.resource_id
                 tz = timezone(calendar.tz)
@@ -146,6 +147,9 @@ class HrAttendance(models.Model):
                 attendances_emp[attendance.employee_id].add(check_out_day_start)
         return attendances_emp
 
+    def _get_overtime_leave_domain(self):
+        return []
+
     def _update_overtime(self, employee_attendance_dates=None):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
@@ -180,7 +184,9 @@ class HrAttendance(models.Model):
                 start, stop, emp.resource_id
             )[emp.resource_id.id]
             # Substract Global Leaves and Employee's Leaves
-            leave_intervals = calendar._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
+            leave_intervals = calendar._leave_intervals_batch(
+                start, stop, emp.resource_id, domain=self._get_overtime_leave_domain()
+            )
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
             # working_times = {date: [(start, stop)]}

@@ -88,7 +88,7 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");
-    await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-header");
+    await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-command[title='Open']");
     assert.verifySteps(["fetch_messages"]);
 });
 

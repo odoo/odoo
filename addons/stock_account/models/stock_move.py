@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_round, OrderedSet
+from odoo.tools import float_is_zero, float_round, float_compare, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -14,12 +14,11 @@ _logger = logging.getLogger(__name__)
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=False,
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=True,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
-    analytic_account_line_id = fields.Many2one(
-        'account.analytic.line', copy=False)
+    analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
 
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
@@ -31,7 +30,7 @@ class StockMove(models.Model):
         return action_data
 
     def _action_cancel(self):
-        self.analytic_account_line_id.unlink()
+        self.analytic_account_line_ids.unlink()
         return super()._action_cancel()
 
     def _should_force_price_unit(self):
@@ -407,7 +406,7 @@ class StockMove(models.Model):
 
     def _prepare_analytic_lines(self):
         self.ensure_one()
-        if not self._get_analytic_account():
+        if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
             return False
 
         if self.state in ['cancel', 'draft']:
@@ -429,24 +428,19 @@ class StockMove(models.Model):
         elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
             amount = sum(self.stock_valuation_layer_ids.mapped('value'))
             unit_amount = - sum(self.stock_valuation_layer_ids.mapped('quantity'))
-        if self.analytic_account_line_id:
-            self.analytic_account_line_id.unit_amount = unit_amount
-            self.analytic_account_line_id.amount = amount
-            return False
-        elif amount:
-            return self._generate_analytic_lines_data(
-                unit_amount, amount)
+
+        return self.env['account.analytic.account']._perform_analytic_distribution(
+            self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
 
     def _ignore_automatic_valuation(self):
         return False
 
-    def _generate_analytic_lines_data(self, unit_amount, amount):
+    def _prepare_analytic_line_values(self, account, amount, unit_amount):
         self.ensure_one()
-        account_id = self._get_analytic_account()
         return {
             'name': self.name,
             'amount': amount,
-            'account_id': account_id.id,
+            'account_id': account,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_id.uom_id.id,
@@ -532,18 +526,10 @@ class StockMove(models.Model):
         }
 
     def _account_analytic_entry_move(self):
-        analytic_lines_vals = []
-        moves_to_link = []
         for move in self:
             analytic_line_vals = move._prepare_analytic_lines()
-            if not analytic_line_vals:
-                continue
-            moves_to_link.append(move.id)
-            analytic_lines_vals.append(analytic_line_vals)
-        analytic_lines = self.env['account.analytic.line'].sudo().create(analytic_lines_vals)
-        for move_id, analytic_line in zip(moves_to_link, analytic_lines):
-            self.env['stock.move'].browse(
-                move_id).analytic_account_line_id = analytic_line
+            if analytic_line_vals:
+                move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
 
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
@@ -593,7 +579,7 @@ class StockMove(models.Model):
 
         return am_vals
 
-    def _get_analytic_account(self):
+    def _get_analytic_distribution(self):
         return False
 
     def _get_related_invoices(self):  # To be overridden in purchase and sale_stock

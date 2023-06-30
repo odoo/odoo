@@ -9,6 +9,8 @@ export class Composer {
         partnerIds: new Set(),
         threadIds: new Set(),
     };
+    /** @type {Set<number>} */
+    cannedResponseIds = new Set();
     /** @type {string} */
     textInputContent;
     /** @type {import("@mail/core/common/thread_model").Thread */

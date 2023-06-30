@@ -115,16 +115,15 @@ class AccountAnalyticAccount(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
 
-    def name_get(self):
-        res = []
+    @api.depends('code', 'partner_id')
+    def _compute_display_name(self):
         for analytic in self:
             name = analytic.name
             if analytic.code:
                 name = f'[{analytic.code}] {name}'
             if analytic.partner_id.commercial_partner_id.name:
                 name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
-            res.append((analytic.id, name))
-        return res
+            analytic.display_name = name
 
     def copy_data(self, default=None):
         default = dict(default or {})

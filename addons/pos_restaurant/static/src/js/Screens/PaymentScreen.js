@@ -9,7 +9,7 @@ patch(PaymentScreen.prototype, "pos_restaurant.PaymentScreen", {
     },
     get nextScreen() {
         const order = this.currentOrder;
-        if (!this.pos.globalState.config.set_tip_after_payment || order.is_tipped) {
+        if (!this.pos.config.set_tip_after_payment || order.is_tipped) {
             return this._super(...arguments);
         }
         // Take the first payment method as the main payment.

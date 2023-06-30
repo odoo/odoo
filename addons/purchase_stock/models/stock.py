@@ -75,8 +75,16 @@ class ReturnPicking(models.TransientModel):
 
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = super(ReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
-        vals['purchase_line_id'] = return_line.move_id.purchase_line_id.id
+        if self.location_id.usage == "supplier":
+            vals['purchase_line_id'], vals['partner_id'] = return_line.move_id._get_purchase_line_and_partner_from_chain()
         return vals
+
+    def _create_returns(self):
+        new_picking_id, picking_type_id = super()._create_returns()
+        picking = self.env['stock.picking'].browse(new_picking_id)
+        if len(picking.move_ids.partner_id) == 1:
+            picking.partner_id = picking.move_ids.partner_id
+        return new_picking_id, picking_type_id
 
 
 class Orderpoint(models.Model):

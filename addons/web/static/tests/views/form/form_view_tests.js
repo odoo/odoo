@@ -1777,6 +1777,8 @@ QUnit.module("Views", (hooks) => {
             const webClient = await createWebClient({ serverData });
 
             await doAction(webClient, 1);
+            await nextTick();
+            await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_main_navbar .o_menu_brand").textContent,
                 "App0"
@@ -3835,7 +3837,7 @@ QUnit.module("Views", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "name_get") {
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                     nameGetCount++;
                 }
             },
@@ -3866,8 +3868,8 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form><field name="trululu"/></form>',
             mockRPC(route, args) {
-                if (args.method === "name_get") {
-                    throw new Error("Should not call name_get");
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                    throw new Error("Should not call display_name read");
                 }
             },
         });
@@ -9026,7 +9028,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
     });
 
-    QUnit.test("ask to save new record before opening translate dialog", async function (assert) {
+    QUnit.test("save new record before opening translate dialog", async function (assert) {
         serverData.models.partner.fields.foo.translate = true;
 
         patchWithCleanup(localization, {
@@ -9067,14 +9069,6 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange"]);
         assert.containsOnce(target, ".o_form_editable");
         await click(target, ".o_field_translate.btn-link");
-        assert.containsOnce(target, ".modal");
-        assert.strictEqual(target.querySelector(".modal-title").textContent, "Warning");
-
-        await click(target.querySelectorAll(".modal-footer button")[1]); // cancel
-        assert.verifySteps([]);
-
-        await click(target, ".o_field_translate.btn-link");
-        await click(target.querySelectorAll(".modal-footer button")[0]); // save
         assert.verifySteps(["create", "read", "get_installed", "get_field_translations"]);
         assert.containsOnce(target, ".modal");
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");

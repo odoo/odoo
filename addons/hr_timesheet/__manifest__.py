@@ -39,7 +39,6 @@ up a management by affair.
         'views/hr_employee_views.xml',
         'data/hr_timesheet_data.xml',
         'views/project_task_sharing_views.xml',
-        'views/rating_rating_views.xml',
         'views/project_update_views.xml',
         'wizard/hr_employee_delete_wizard_views.xml',
         'views/hr_timesheet_menus.xml',

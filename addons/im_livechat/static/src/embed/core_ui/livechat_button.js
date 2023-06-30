@@ -14,8 +14,11 @@ export class LivechatButton extends Component {
 
     setup() {
         this.store = useStore();
+        /** @type {import('@mail/core/common/chat_window_service').ChatWindowService} */
         this.chatWindowService = useService("mail.chat_window");
+        /** @type {import('@im_livechat/embed/core/livechat_service').LivechatService} */
         this.livechatService = useState(useService("im_livechat.livechat"));
+        /** @type {import('@mail/core/common/thread_service').ThreadService} */
         this.threadService = useService("mail.thread");
         this.onClick = debounce(this.onClick.bind(this), 500, { leading: true });
     }

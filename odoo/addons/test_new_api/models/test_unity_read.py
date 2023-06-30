@@ -43,15 +43,14 @@ class Person(models.Model):
     lesson_ids = fields.Many2many('test_new_api.lesson', 'course_id')
     employer_id = fields.Many2one('test_new_api.employer')
 
-    def name_get(self):
+    def _compute_display_name(self):
         """
         use to check that a context has can still have an impact when reading the names of a many2one
         """
-        return [(record.id,
-                 ("particular " if 'particular' in self.env.context else "") +
-                 record.name +
-                 (" special" if 'special' in self.env.context else ""))
-                for record in self]
+        particular = "particular " if 'particular' in self.env.context else ""
+        special = " special" if 'special' in self.env.context else ""
+        for record in self:
+            record.display_name = f"{particular}{record.name}{special}"
 
 class Employer(models.Model):
     _name = 'test_new_api.employer'

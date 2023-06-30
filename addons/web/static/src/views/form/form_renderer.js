@@ -34,12 +34,7 @@ export class FormRenderer extends Component {
         const { arch, xmlDoc } = archInfo;
         const templates = { FormRenderer: xmlDoc };
         this.state = useState({}); // Used by Form Compiler
-        this.templates = useViewCompiler(
-            Compiler || FormCompiler,
-            arch,
-            templates,
-            this.compileParams
-        );
+        this.templates = useViewCompiler(Compiler || FormCompiler, arch, templates);
         useSubEnv({ model: record.model });
         useBounceButton(useRef("compiled_view_root"), (target) => {
             return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
@@ -87,10 +82,6 @@ export class FormRenderer extends Component {
 
     evalDomainFromRecord(record, expr) {
         return evalDomain(expr, record.evalContext);
-    }
-
-    get compileParams() {
-        return {};
     }
 }
 

@@ -10,6 +10,7 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { DatePickerPopup } from "@point_of_sale/app/utils/date_picker_popup/date_picker_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { PaymentScreenNumpad } from "@point_of_sale/app/screens/payment_screen/numpad/numpad";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
@@ -34,8 +35,8 @@ export class PaymentScreen extends Component {
         this.report = useService("report");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
-        this.payment_methods_from_config = this.pos.globalState.payment_methods.filter((method) =>
-            this.pos.globalState.config.payment_method_ids.includes(method.id)
+        this.payment_methods_from_config = this.pos.payment_methods.filter((method) =>
+            this.pos.config.payment_method_ids.includes(method.id)
         );
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
@@ -62,7 +63,7 @@ export class PaymentScreen extends Component {
         return config;
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get paymentLines() {
         return this.currentOrder.get_paymentlines();
@@ -70,19 +71,21 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.selected_paymentline;
     }
-    async selectPartner() {
+    async selectPartner(isEditMode = false, missingFields = []) {
         // IMPROVEMENT: This code snippet is repeated multiple times.
         // Maybe it's better to create a function for it.
         const currentPartner = this.currentOrder.get_partner();
+        const partnerScreenProps = { partner: currentPartner };
+        if (isEditMode && currentPartner) {
+            partnerScreenProps.editModeProps = true;
+            partnerScreenProps.missingFields = missingFields;
+        }
         const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
             "PartnerListScreen",
-            {
-                partner: currentPartner,
-            }
+            partnerScreenProps
         );
         if (confirmed) {
             this.currentOrder.set_partner(newPartner);
-            this.currentOrder.updatePricelist(newPartner);
         }
     }
     addNewPaymentLine(paymentMethod) {
@@ -158,8 +161,8 @@ export class PaymentScreen extends Component {
             title: tip ? this.env._t("Change Tip") : this.env._t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
-            nbrDecimal: this.pos.globalState.currency.decimal_places,
-            inputSuffix: this.pos.globalState.currency.symbol,
+            nbrDecimal: this.pos.currency.decimal_places,
+            inputSuffix: this.pos.currency.symbol,
         });
 
         if (confirmed) {
@@ -203,8 +206,8 @@ export class PaymentScreen extends Component {
     }
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
-        if (this.pos.globalState.config.cash_rounding) {
-            if (!this.pos.globalState.get_order().check_paymentlines_rounding()) {
+        if (this.pos.config.cash_rounding) {
+            if (!this.pos.get_order().check_paymentlines_rounding()) {
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Rounding error in payment lines"),
                     body: this.env._t(
@@ -225,7 +228,6 @@ export class PaymentScreen extends Component {
         }
     }
     async _finalizeValidation() {
-        const { globalState } = this.pos;
         if (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) {
             this.hardwareProxy.openCashbox();
         }
@@ -233,15 +235,20 @@ export class PaymentScreen extends Component {
         this.currentOrder.initialize_validation_date();
         this.currentOrder.finalized = true;
 
-        let syncOrderResult, hasError;
+        // 1. Save order to server.
+        const syncOrderResult = await this.pos.push_single_order(this.currentOrder);
+
+        if (syncOrderResult instanceof ConnectionLostError) {
+            this.pos.showScreen(this.nextScreen);
+            return;
+        } else if (!syncOrderResult) {
+            return;
+        }
 
         try {
-            // 1. Save order to server.
-            syncOrderResult = await globalState.push_single_order(this.currentOrder);
-
             // 2. Invoice.
             if (this.currentOrder.is_to_invoice()) {
-                if (syncOrderResult.length) {
+                if (syncOrderResult[0]?.account_move) {
                     await this.report.download("account.account_invoices", [
                         syncOrderResult[0].account_move,
                     ]);
@@ -253,60 +260,48 @@ export class PaymentScreen extends Component {
                     };
                 }
             }
-
-            // 3. Post process.
-            if (syncOrderResult.length && this.currentOrder.wait_for_push_order()) {
-                const postPushResult = await this._postPushOrderResolve(
-                    this.currentOrder,
-                    syncOrderResult.map((res) => res.id)
-                );
-                if (!postPushResult) {
-                    this.popup.add(ErrorPopup, {
-                        title: this.env._t("Error: no internet connection."),
-                        body: this.env._t(
-                            "Some, if not all, post-processing after syncing order failed."
-                        ),
-                    });
-                }
-            }
         } catch (error) {
-            if (error.code == 700 || error.code == 701) {
-                this.error = true;
-            }
-
-            if ("code" in error) {
-                // We started putting `code` in the rejected object for invoicing error.
-                // We can continue with that convention such that when the error has `code`,
-                // then it is an error when invoicing. Besides, _handlePushOrderError was
-                // introduce to handle invoicing error logic.
-                await this._handlePushOrderError(error);
+            if (error instanceof ConnectionLostError) {
+                Promise.reject(error);
+                return error;
             } else {
                 throw error;
             }
-        } finally {
-            // Always show the next screen regardless of error since pos has to
-            // continue working even offline.
-            this.pos.showScreen(this.nextScreen);
-            // Remove the order from the local storage so that when we refresh the page, the order
-            // won't be there
-            globalState.db.remove_unpaid_order(this.currentOrder);
+        }
 
-            // Ask the user to sync the remaining unsynced orders.
-            if (!hasError && syncOrderResult && globalState.db.get_orders().length) {
-                const { confirmed } = await this.popup.add(ConfirmPopup, {
-                    title: this.env._t("Remaining unsynced orders"),
+        // 3. Post process.
+        if (syncOrderResult.length && this.currentOrder.wait_for_push_order()) {
+            const postPushResult = await this._postPushOrderResolve(
+                this.currentOrder,
+                syncOrderResult.map((res) => res.id)
+            );
+            if (!postPushResult) {
+                this.popup.add(ErrorPopup, {
+                    title: this.env._t("Error: no internet connection."),
                     body: this.env._t(
-                        "There are unsynced orders. Do you want to sync these orders?"
+                        "Some, if not all, post-processing after syncing order failed."
                     ),
                 });
-                if (confirmed) {
-                    // NOTE: Not yet sure if this should be awaited or not.
-                    // If awaited, some operations like changing screen
-                    // might not work.
-                    globalState.push_orders();
-                }
             }
         }
+
+        // Remove the order from the local storage so that when we refresh the page, the order
+        // won't be there
+        this.pos.db.remove_unpaid_order(this.currentOrder);
+        // Ask the user to sync the remaining unsynced orders.
+        if (syncOrderResult && this.pos.db.get_orders().length) {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
+                title: this.env._t("Remaining unsynced orders"),
+                body: this.env._t("There are unsynced orders. Do you want to sync these orders?"),
+            });
+            if (confirmed) {
+                // NOTE: Not yet sure if this should be awaited or not.
+                // If awaited, some operations like changing screen
+                // might not work.
+                this.pos.push_orders();
+            }
+        }
+        this.pos.showScreen(this.nextScreen);
     }
     get nextScreen() {
         return !this.error ? "ReceiptScreen" : "ProductScreen";
@@ -410,7 +405,7 @@ export class PaymentScreen extends Component {
                     this.currentOrder.get_rounding_applied()
             ) > 0.00001
         ) {
-            if (!this.pos.globalState.payment_methods.some((pm) => pm.is_cash_count)) {
+            if (!this.pos.payment_methods.some((pm) => pm.is_cash_count)) {
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Cannot return change without a cash payment method"),
                     body: this.env._t(
@@ -474,7 +469,7 @@ export class PaymentScreen extends Component {
             line.can_be_reversed = payment_terminal.supports_reversals;
             // Automatically validate the order when after an electronic payment,
             // the current order is fully paid and due is zero.
-            const { config, currency } = this.pos.globalState;
+            const { config, currency } = this.pos;
             if (
                 this.currentOrder.is_paid() &&
                 floatIsZero(this.currentOrder.get_due(), currency.decimal_places) &&

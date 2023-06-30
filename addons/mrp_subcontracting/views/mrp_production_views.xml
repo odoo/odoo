@@ -12,6 +12,9 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="replace"/>
             <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+            <xpath expr="//button[@name='action_generate_bom']" position="replace"/>
+            <xpath expr="//field[@name='is_outdated_bom']" position="replace"/>
+            <xpath expr="//button[@name='action_update_bom']" position="replace"/>
             <xpath expr="//group[@name='group_extra_info']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -34,7 +37,7 @@
             <xpath expr="//field[@name='workorder_ids']" position="replace"/>
             <xpath expr="//button[@name='action_generate_serial']" position="attributes">
                 <attribute name="invisible">1</attribute>
-            </xpath> 
+            </xpath>
             <xpath expr="//field[@name='move_finished_ids']" position="replace"/>
             <xpath expr="//field[@name='move_raw_ids']" position="replace">
                 <field name="bom_product_ids" invisible="1"/>

@@ -696,14 +696,13 @@ class AccountJournal(models.Model):
                 'journal_id': self,
             }).id
 
-    def name_get(self):
-        res = []
+    @api.depends('currency_id')
+    def _compute_display_name(self):
         for journal in self:
             name = journal.name
             if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
-                name = "%s (%s)" % (name, journal.currency_id.name)
-            res += [(journal.id, name)]
-        return res
+                name = f"{name} ({journal.currency_id.name})"
+            journal.display_name = name
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

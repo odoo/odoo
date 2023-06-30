@@ -40,14 +40,14 @@
         <record id="preparation_printer" model="pos.printer">
             <field name="name">Preparation Printer</field>
             <field name="proxy_ip">localhost</field>
-            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
+            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]"/>
         </record>
 
         <!-- Resource: product.product -->
         <record id="stock.product_cable_management_box" model="product.product">
-          <field name="pos_categ_id" ref="point_of_sale.pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]"/>
         </record>
-        <record id="wall_shelf" model="product.product">
+         <record id="wall_shelf" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.98</field>
           <field name="name">Wall Shelf Unit</field>
@@ -56,11 +56,11 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100002000003</field>
-          <field name="taxes_id" eval='[(5,)]'/>
+          <field name="taxes_id" eval="[(5,)]"/>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
         </record>
         <record id="small_shelf" model="product.product">
@@ -70,12 +70,12 @@
           <field name="default_code">FURN_0008</field>
           <field name="type">product</field>
           <field name="weight">0.01</field>
-          <field name="taxes_id" eval='[(5,)]'/>
+          <field name="taxes_id" eval="[(5,)]"/>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
           <field name="to_weight">True</field>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/small_shelf.png"/>
         </record>
 
@@ -88,9 +88,9 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/letter_tray.png"/>
         </record>
         <record id="desk_organizer" model="product.product">
@@ -103,11 +103,11 @@
           <field name="type">product</field>
           <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
-          <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
+          <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
         </record>
 
         <function model="ir.model.data" name="_update_xmlids">
@@ -183,9 +183,9 @@
           <field name="barcode">2301000000006</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/magnetic_board.png"/>
         </record>
         <record id="monitor_stand" model="product.product">
@@ -197,9 +197,9 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/monitor_stand.png"/>
         </record>
         <record id="desk_pad" model="product.product">
@@ -211,9 +211,9 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_pad.png"/>
         </record>
 
@@ -225,8 +225,8 @@
           <field name="type">product</field>
           <field name="weight">0.01</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard.png"/>
         </record>
 
@@ -239,9 +239,9 @@
           <field name="weight">0.01</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/led_lamp.png"/>
         </record>
 
@@ -255,9 +255,9 @@
           <field name="to_weight">True</field>
           <field name="barcode">2100001000004</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/newspaper_stand.png"/>
         </record>
 
@@ -269,114 +269,114 @@
           <field name="default_code">CONS_0001</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_consumable"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-          <field name="uom_id" ref="uom.product_uom_unit" />
-          <field name="uom_po_id" ref="uom.product_uom_unit" />
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
         </record>
 
         <record id="product.product_product_1" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_2" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_delivery_01" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_chairs"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_chairs')])]"/>
         </record>
         <record id="product.product_delivery_02" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_order_01" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_3" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.product_product_4_product_template" model="product.template">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.product_product_5" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.product_product_6" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_7" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_8" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.product_product_9" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_10" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_11" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_chairs"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_chairs')])]"/>
         </record>
         <record id="product.product_product_11b" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_chairs"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_chairs')])]"/>
         </record>
         <record id="product.product_product_12" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_chairs"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_chairs')])]"/>
         </record>
         <record id="product.product_product_13" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.product_product_16" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_20" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_22" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_24" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_25" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.product_product_27" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.consu_delivery_03" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_desks"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
         </record>
         <record id="product.consu_delivery_02" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
         <record id="product.consu_delivery_01" model="product.product">
           <field name="available_in_pos" eval="True"/>
-          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
         </record>
 </odoo>

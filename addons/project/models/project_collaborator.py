@@ -16,9 +16,10 @@ class ProjectCollaborator(models.Model):
         ('unique_collaborator', 'UNIQUE(project_id, partner_id)', 'A collaborator cannot be selected more than once in the project sharing access. Please remove duplicate(s) and try again.'),
     ]
 
-    def name_get(self):
-        collaborator_search_read = self.search_read([('id', 'in', self.ids)], ['id', 'project_id', 'partner_id'])
-        return [(collaborator['id'], '%s - %s' % (collaborator['project_id'][1], collaborator['partner_id'][1])) for collaborator in collaborator_search_read]
+    @api.depends('project_id', 'partner_id')
+    def _compute_display_name(self):
+        for collaborator in self:
+            collaborator.display_name = f'{collaborator.project_id.display_name} - {collaborator.partner_id.display_name}'
 
     @api.model_create_multi
     def create(self, vals_list):

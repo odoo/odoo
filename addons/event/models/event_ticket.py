@@ -163,11 +163,12 @@ class EventTicket(models.Model):
             raise ValidationError(_('There are not enough seats available for:')
                                   + '\n%s\n' % '\n'.join(sold_out_tickets))
 
-    def name_get(self):
+    @api.depends('seats_max', 'seats_available')
+    @api.depends_context('name_with_seats_availability')
+    def _compute_display_name(self):
         """Adds ticket seats availability if requested by context."""
         if not self.env.context.get('name_with_seats_availability'):
-            return super().name_get()
-        res = []
+            return super()._compute_display_name()
         for ticket in self:
             if not ticket.seats_max:
                 name = ticket.name
@@ -179,8 +180,7 @@ class EventTicket(models.Model):
                     ticket_name=ticket.name,
                     count=formatLang(self.env, ticket.seats_available, digits=0),
                 )
-            res.append((ticket.id, name))
-        return res
+            ticket.display_name = name
 
     def _get_ticket_multiline_description(self):
         """ Compute a multiline description of this ticket. It is used when ticket

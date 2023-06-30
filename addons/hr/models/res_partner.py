@@ -13,17 +13,17 @@ class Partner(models.Model):
         help="Related employees based on their private address")
     employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_user")
 
-    def name_get(self):
+    def _compute_display_name(self):
         """ Override to allow an employee to see its private address in his profile.
             This avoids to relax access rules on `res.parter` and to add an `ir.rule`.
             (advantage in both security and performance).
             Use a try/except instead of systematically checking to minimize the impact on performance.
             """
         try:
-            return super(Partner, self).name_get()
+            super()._compute_display_name()
         except AccessError as e:
             if len(self) == 1 and self in self.env.user.employee_ids.mapped('address_home_id'):
-                return super(Partner, self.sudo()).name_get()
+                super(Partner, self.sudo())._compute_display_name()
             raise e
 
     def _compute_employees_count(self):

@@ -335,8 +335,7 @@ class WebsiteForum(WebsiteProfile):
             })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
-
-        if request.env.user.forum_waiting_posts_count:
+        if forum.has_pending_post:
             return request.redirect("/forum/%s/ask" % slug(forum))
 
         new_question = request.env['forum.post'].create({

@@ -527,6 +527,15 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
         self.assertEqual(len(invoice_attachments), 1)
 
+        # Only one PDF linked to the invoice.
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('name', '=', pdf_report.name),
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', False),
+        ])
+        self.assertFalse(invoice_attachments)
+
     def test_invoice_multi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
@@ -653,13 +662,20 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Send.
         wizard.action_send_and_print()
         message = self._get_mail_message(invoice)
-        self.assertRecordValues(message, [{
-            'attachment_ids': [
-                manual_attachment.id,
-                invoice.invoice_pdf_report_id.id,
-                extra_attachment2.id,
-            ],
-        }])
+        self.assertRecordValues(message.attachment_ids.sorted('name'), [
+            {
+                'name': invoice.invoice_pdf_report_id.name,
+                'datas': invoice.invoice_pdf_report_id.datas,
+            },
+            {
+                'name': extra_attachment2.name,
+                'datas': extra_attachment2.datas,
+            },
+            {
+                'name': manual_attachment.name,
+                'datas': manual_attachment.datas,
+            },
+        ])
 
         # Resend.
         wizard = self.create_send_and_print(invoice)
@@ -679,12 +695,31 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Send.
         wizard.action_send_and_print()
         message = self._get_mail_message(invoice)
-        self.assertRecordValues(message, [{
-            'attachment_ids': [
-                invoice.invoice_pdf_report_id.id,
-                extra_attachment2.id,
-            ],
-        }])
+        self.assertRecordValues(message.attachment_ids.sorted('name'), [
+            {
+                'name': invoice.invoice_pdf_report_id.name,
+                'datas': invoice.invoice_pdf_report_id.datas,
+            },
+            {
+                'name': extra_attachment2.name,
+                'datas': extra_attachment2.datas,
+            },
+        ])
+
+        # Manually remove the attachment and check the mail's attachments are not removed.
+        invoice_pdf_report_name = invoice.invoice_pdf_report_id.name
+        invoice_pdf_report_datas = invoice.invoice_pdf_report_id.datas
+        invoice.invoice_pdf_report_id.unlink()
+        self.assertRecordValues(message.attachment_ids.sorted('name'), [
+            {
+                'name': invoice_pdf_report_name,
+                'datas': invoice_pdf_report_datas,
+            },
+            {
+                'name': extra_attachment2.name,
+                'datas': extra_attachment2.datas,
+            },
+        ])
 
     def test_proforma_pdf(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

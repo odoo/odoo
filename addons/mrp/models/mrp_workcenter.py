@@ -327,16 +327,13 @@ class MrpWorkcenterProductivityLossType(models.Model):
     _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
-    @api.depends('loss_type')
-    def name_get(self):
+    def _compute_display_name(self):
         """ As 'category' field in form view is a Many2one, its value will be in
-        lower case. In order to display its value capitalized 'name_get' is
+        lower case. In order to display its value capitalized 'display_name' is
         overrided.
         """
-        result = []
         for rec in self:
-            result.append((rec.id, rec.loss_type.title()))
-        return result
+            rec.display_name = rec.loss_type.title()
 
     loss_type = fields.Selection([
             ('availability', 'Availability'),

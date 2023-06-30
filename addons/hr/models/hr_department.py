@@ -31,14 +31,17 @@ class Department(models.Model):
     master_department_id = fields.Many2one(
         'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
 
-    def name_get(self):
-        if not self.env.context.get('hierarchical_naming', True):
-            return [(record.id, record.name) for record in self]
-        return super(Department, self).name_get()
+    @api.depends_context('hierarchical_naming')
+    def _compute_display_name(self):
+        if self.env.context.get('hierarchical_naming', True):
+            return super()._compute_display_name()
+        for record in self:
+            record.display_name = record.name
 
     @api.model
     def name_create(self, name):
-        return self.create({'name': name}).name_get()[0]
+        record = self.create({'name': name})
+        return record.id, record.display_name
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):

@@ -175,6 +175,12 @@
                             <div id="sale_security_lead"/>
                             <div id="purchase_po_lead"/>
                         </block>
+                        <block title="Logistics" name="request_vendor_setting_container">
+                            <setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers"
+                            documentation="/applications/inventory_and_mrp/inventory/management/delivery/dropshipping.html">
+                                <field name="module_stock_dropshipping"/>
+                            </setting>
+                        </block>
                     </app>
                 </xpath>
             </field>

@@ -197,7 +197,7 @@
                 </t>
                 <t t-elif="line.discount !== 0">
                     <div class="pos-receipt-left-padding">
-                        <t t-if="pos.globalState.config.iface_tax_included === 'total'">
+                        <t t-if="pos.config.iface_tax_included === 'total'">
                             <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
                         </t>
                         <t t-else="">
@@ -211,7 +211,7 @@
                     </div>
                 </t>
                 <div class="pos-receipt-left-padding">
-                    <t t-esc="Math.round(line.quantity * Math.pow(10, pos.globalState.dp['Product Unit of Measure'])) / Math.pow(10, pos.globalState.dp['Product Unit of Measure'])"/>
+                    <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
                     <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                     x
                     <t t-esc="env.utils.formatCurrency(line.price_display_one)" />

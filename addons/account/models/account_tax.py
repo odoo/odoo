@@ -362,8 +362,9 @@ class AccountTax(models.Model):
             default['name'] = _("%s (Copy)") % self.name
         return super(AccountTax, self).copy(default=default)
 
-    def name_get(self):
-        name_list = []
+    @api.depends('type_tax_use', 'tax_scope')
+    @api.depends_context('append_type_to_tax_name')
+    def _compute_display_name(self):
         type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
         tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))
         for record in self:
@@ -372,8 +373,7 @@ class AccountTax(models.Model):
                 name += ' (%s)' % type_tax_use.get(record.type_tax_use)
             if record.tax_scope:
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
-            name_list += [(record.id, name)]
-        return name_list
+            record.display_name = name
 
     @api.onchange('amount')
     def onchange_amount(self):
@@ -1356,7 +1356,7 @@ class AccountTaxRepartitionLine(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
         help="Account on which to post the tax amount")
-    tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True)
+    tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')
     tax_id = fields.Many2one(comodel_name='account.tax', ondelete='cascade', check_company=True)
     company_id = fields.Many2one(string="Company", comodel_name='res.company', related="tax_id.company_id", store=True, help="The company this distribution line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1,

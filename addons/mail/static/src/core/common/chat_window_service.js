@@ -24,6 +24,19 @@ export class ChatWindowService {
         this.ui = services.ui;
     }
 
+    open(thread, replaceNewMessageChatWindow) {
+        const chatWindow = this.insert({
+            folded: false,
+            thread,
+            replaceNewMessageChatWindow,
+        });
+        chatWindow.autofocus++;
+        if (thread) {
+            thread.state = "open";
+        }
+        return chatWindow;
+    }
+
     openNewMessage() {
         if (this.store.chatWindows.some(({ thread }) => !thread)) {
             // New message chat window is already opened.
@@ -59,22 +72,6 @@ export class ChatWindowService {
             available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH)
         );
         return maxAmountWithoutHidden;
-    }
-
-    notifyState(chatWindow) {
-        if (this.ui.isSmall) {
-            return;
-        }
-        if (chatWindow.thread?.model === "discuss.channel") {
-            return this.orm.silent.call(
-                "discuss.channel",
-                "channel_fold",
-                [[chatWindow.thread.id]],
-                {
-                    state: chatWindow.thread.state,
-                }
-            );
-        }
     }
 
     /**
@@ -147,7 +144,7 @@ export class ChatWindowService {
         chatWindow.thread.state = "folded";
     }
 
-    async close(chatWindow, { escape = false } = {}) {
+    close(chatWindow, { escape = false } = {}) {
         if (this.maxVisible < this.store.chatWindows.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;

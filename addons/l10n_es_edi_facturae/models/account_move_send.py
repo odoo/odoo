@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 
 class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
@@ -29,9 +29,9 @@ class AccountMoveSend(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_linked_attachments(self, move):
+    def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
-        return super()._get_linked_attachments(move) + move.l10n_es_edi_facturae_xml_id
+        return super()._get_invoice_extra_attachments(move) + move.l10n_es_edi_facturae_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move):
         # EXTENDS 'account'
@@ -54,7 +54,7 @@ class AccountMoveSend(models.Model):
 
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
-        results = super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if self.l10n_es_edi_facturae_checkbox_xml and invoice._l10n_es_edi_facturae_get_default_enable():
             try:
@@ -66,7 +66,7 @@ class AccountMoveSend(models.Model):
                     str(error),
                 ))
 
-            results['l10n_es_edi_facturae_attachment_values'] = {
+            invoice_data['l10n_es_edi_facturae_attachment_values'] = {
                 'name': invoice._l10n_es_edi_facturae_get_filename(),
                 'raw': xml_content,
                 'mimetype': 'application/xml',
@@ -75,13 +75,11 @@ class AccountMoveSend(models.Model):
                 'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
             }
 
-        return results
-
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoice, invoice_data)
 
         attachment_vals = invoice_data.get('l10n_es_edi_facturae_attachment_values')
         if attachment_vals:
-            self.env['ir.attachment'].create(attachment_vals)
+            self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_vals)
             invoice.invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])

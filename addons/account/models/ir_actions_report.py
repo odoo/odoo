@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
-
+from zlib import error as zlib_error
 try:
     from PyPDF2.errors import PdfStreamError, PdfReadError
 except ImportError:
@@ -36,7 +36,7 @@ class IrActionsReport(models.Model):
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name, logo=True)
-                    except (ValueError, PdfStreamError, PdfReadError, TypeError):
+                    except (ValueError, PdfStreamError, PdfReadError, TypeError, zlib_error):
                         record._message_log(body=_(
                             "There was an error when trying to add the banner to the original PDF.\n"
                             "Please make sure the source file is valid."
@@ -49,8 +49,12 @@ class IrActionsReport(models.Model):
 
     def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         # Check for reports only available for invoices.
+        # + append context data with the display_name_in_footer parameter
         if self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
             invoices = self.env['account.move'].browse(res_ids)
+            if self.env['ir.config_parameter'].sudo().get_param('account.display_name_in_footer'):
+                data = data and dict(data) or {}
+                data.update({'display_name_in_footer': True})
             if any(x.move_type == 'entry' for x in invoices):
                 raise UserError(_("Only invoices could be printed."))
 

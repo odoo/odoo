@@ -83,7 +83,7 @@ class WebsiteSnippetFilter(models.Model):
         products = []
         sale_orders = self.env['sale.order'].sudo().search([
             ('website_id', '=', website.id),
-            ('state', 'in', ('sale', 'done')),
+            ('state', '=', 'sale'),
         ], limit=8, order='date_order DESC')
         if sale_orders:
             sold_products = [p.product_id.id for p in sale_orders.order_line]
@@ -121,7 +121,7 @@ class WebsiteSnippetFilter(models.Model):
             current_id = int(current_id)
             sale_orders = self.env['sale.order'].sudo().search([
                 ('website_id', '=', website.id),
-                ('state', 'in', ('sale', 'done')),
+                ('state', '=', 'sale'),
                 ('order_line.product_id.product_tmpl_id', '=', current_id),
             ], limit=8, order='date_order DESC')
             if sale_orders:
