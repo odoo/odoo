@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+import re
 from werkzeug.exceptions import NotFound
 
 from odoo import http, tools, _
@@ -174,7 +175,7 @@ class LivechatController(http.Controller):
             'reason': reason,
         }
         channel.message_post(
-            body=body,
+            body=Markup(re.sub(r'\r\n|\r|\n', '<br>', body)),
             message_type='notification',
             subtype_xmlid='mail.mt_comment'
         )
