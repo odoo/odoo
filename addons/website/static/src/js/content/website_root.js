@@ -24,6 +24,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
         'seo_object_request': '_onSeoObjectRequest',
         'will_remove_snippet': '_onWidgetsStopRequest',
+        'adjust_iframe': '_onAdjustIFrame',
     }),
 
     /**
@@ -187,13 +188,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         document.body.classList.add('o_fullscreen_transition');
         document.body.classList.toggle('o_fullscreen', this.isFullscreen);
         document.body.style.overflowX = 'hidden';
-        let resizing = true;
-        window.requestAnimationFrame(function resizeFunction() {
-            window.dispatchEvent(new Event('resize'));
-            if (resizing) {
-                window.requestAnimationFrame(resizeFunction);
-            }
-        });
+        this._onAdjustIFrame();
         let stopResizing;
         const onTransitionEnd = ev => {
             if (ev.target === document.body && ev.propertyName === 'padding-top') {
@@ -201,7 +196,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             }
         };
         stopResizing = () => {
-            resizing = false;
             document.body.style.overflowX = '';
             document.body.removeEventListener('transitionend', onTransitionEnd);
             document.body.classList.remove('o_fullscreen_transition');
@@ -222,6 +216,17 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         ev.data.options = _.clone(ev.data.options || {});
         ev.data.options.editableMode = ev.data.editableMode;
         this._super.apply(this, arguments);
+    },
+    /**
+     *
+     * @private
+     * @param {*} ev
+     */
+    _onAdjustIFrame: function(ev) {
+        const resizeFunction = () => {
+            window.dispatchEvent(new Event('resize'));
+        };
+        window.requestAnimationFrame(resizeFunction);
     },
     /**
      * @todo review

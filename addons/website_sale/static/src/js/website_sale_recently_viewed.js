@@ -107,7 +107,6 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
         if (productsTemp.length) {
             webProducts.push(productsTemp);
         }
-
         this.mobileCarousel = $(qweb.render('website_sale.productsRecentlyViewed', {
             uniqueId: this.uniqueId,
             productFrame: 1,
@@ -120,6 +119,7 @@ publicWidget.registry.productsRecentlyViewedSnippet = publicWidget.Widget.extend
         }));
         this._addCarousel();
         this.$el.toggleClass('d-none', !(products && products.length));
+        this.trigger_up('adjust_iframe');
     },
     /**
      * Add the right carousel depending on screen size.

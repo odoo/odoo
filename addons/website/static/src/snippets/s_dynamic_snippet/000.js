@@ -184,6 +184,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
             this.renderedContent = '';
         }
         this._renderContent();
+        this.trigger_up('adjust_iframe');
     },
     /**
      * @private
