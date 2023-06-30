@@ -3931,6 +3931,94 @@ options.registry.GalleryElement = options.Class.extend({
     },
 });
 
+options.registry.Button = options.Class.extend({
+    forceDuplicateButton: true,
+
+    /**
+     * @override
+     */
+    onBuilt(options) {
+        // Only if the button is built, not if a snippet containing that button
+        // is built (e.g. true if dropping a button from the snippet menu onto
+        // the page, false if dropping an "image-text" snippet).
+        if (options.isCurrent) {
+            this._adaptButtons();
+        }
+    },
+    /**
+     * @override
+     */
+    onClone(options) {
+        // Only if the button is cloned, not if a snippet containing that button
+        // is cloned.
+        if (options.isCurrent) {
+            this._adaptButtons();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Checks if there are buttons before or after the target element and
+     * applies appropriate styling.
+     *
+     * @private
+     */
+    _adaptButtons() {
+        const previousSiblingEl = this.$target[0].previousElementSibling;
+        const nextSiblingEl = this.$target[0].nextElementSibling;
+        let buttonNeighbor = false;
+        // When multiple buttons follow each other, they may break on 2 lines or
+        // more on mobile, so they need a margin-bottom. Also, if the button is
+        // dropped next to another button add a space between them.
+        if (previousSiblingEl?.matches(".btn")) {
+            previousSiblingEl.classList.add("mb-2");
+            buttonNeighbor = true;
+            this.$target[0].before(' ');
+        }
+        if (nextSiblingEl?.matches(".btn")) {
+            nextSiblingEl.classList.add("mb-2");
+            buttonNeighbor = true;
+            this.$target[0].after(' ');
+        }
+        if (buttonNeighbor) {
+            if (this.$target[0].matches(".s_custom_button")) {
+                this.$target[0].classList.remove(".s_custom_button");
+            } else {
+                // If the dropped button is not a custom button then we adjust
+                // its appearance to match its sibling.
+                [previousSiblingEl, nextSiblingEl].forEach((siblingEl) => {
+                    if (siblingEl?.classList?.contains("btn-secondary")) {
+                        this.$target[0].classList.remove("btn-primary");
+                        this.$target[0].classList.add("btn-secondary");
+                    }
+                    if (siblingEl?.classList?.contains("btn-sm")) {
+                        this.$target[0].classList.add("btn-sm");
+                    } else if (siblingEl?.classList?.contains("btn-lg")) {
+                        this.$target[0].classList.add("btn-lg");
+                    }
+                });
+            }
+            this.$target[0].classList.add("mb-2");
+        } else {
+            // To align with the editor's behavior, we need to enclose the
+            // button in a <p> tag if it's not dropped within a <p> tag. We only
+            // put the dropped button in a <p> if it's not next to another
+            // button, because some snippets have buttons that aren't inside a
+            // <p> (e.g. s_text_cover).
+            // TODO: this definitely needs to be fixed at web_editor level.
+            // Nothing should prevent adding buttons outside of a paragraph.
+            const btnContainerEl = this.$target[0].closest("p");
+            if (!btnContainerEl) {
+                const paragraphEl = document.createElement("p");
+                this.$target[0].parentNode.insertBefore(paragraphEl, this.$target[0]);
+                paragraphEl.appendChild(this.$target[0]);
+            }
+        }
+    },
+});
 
 export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,

@@ -120,7 +120,8 @@ var SnippetEditor = Widget.extend({
             }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
-            $customize.find('.oe_snippet_clone').addClass('d-none');
+            const cloneButtonEl = $customize[0].querySelector(".oe_snippet_clone");
+            cloneButtonEl.classList.toggle("d-none", !this.forceDuplicateButton);
         }
 
         if (!this.isTargetRemovable) {
@@ -196,10 +197,14 @@ var SnippetEditor = Widget.extend({
     /**
      * Notifies all the associated snippet options that the snippet has just
      * been dropped in the page.
+     *
+     * @param {HTMLElement} targetEl the snippet dropped in the page
      */
-    buildSnippet: async function () {
+    async buildSnippet(targetEl) {
         for (var i in this.styles) {
-            await this.styles[i].onBuilt();
+            await this.styles[i].onBuilt({
+                isCurrent: targetEl === this.$target[0],
+            });
         }
         await this.toggleTargetVisibility(true);
     },
@@ -338,6 +343,9 @@ var SnippetEditor = Widget.extend({
         }
         if (this.$target.is('#wrapwrap > main')) {
             return _t("Page Options");
+        }
+        if (this.$target[0].matches(".btn")) {
+            return _t("Button");
         }
         return _t("Block");
     },
@@ -774,6 +782,10 @@ var SnippetEditor = Widget.extend({
                 this.displayOverlayOptions = true;
             }
 
+            if (option.forceDuplicateButton) {
+                this.forceDuplicateButton = true;
+            }
+
             return option.appendTo(document.createDocumentFragment());
         });
 
@@ -1063,6 +1075,7 @@ var SnippetEditor = Widget.extend({
         }
 
         const openModalEl = this.$target[0].closest('.modal');
+        const toInsertInline = window.getComputedStyle(this.$target[0]).display.includes('inline');
 
         this.dropped = false;
         this._dropSiblings = {
@@ -1148,6 +1161,7 @@ var SnippetEditor = Widget.extend({
             $selectorSiblings: $selectorSiblings,
             $selectorChildren: $selectorChildren,
             canBeSanitizedUnless: canBeSanitizedUnless,
+            toInsertInline: toInsertInline,
             selectorGrids: selectorGrids,
         });
 
@@ -2217,7 +2231,7 @@ var SnippetsMenu = Widget.extend({
         // First call the onBuilt of all options of each item in the snippet
         // (and so build their editor instance first).
         await this._callForEachChildSnippet($target, function (editor, $snippet) {
-            return editor.buildSnippet();
+            return editor.buildSnippet($target[0]);
         });
         // The snippet is now fully built, notify the editor for changed
         // content.
@@ -2270,11 +2284,13 @@ var SnippetsMenu = Widget.extend({
      *        true: always allows,
      *        false: always forbid,
      *        string: specific type of forbidden sanitization
+     * @param {Boolean} [toInsertInline=false]
+     *        elements which are inline as the "s_badge" snippet for example
      * @param {Object} [selectorGrids = []]
      *        elements which are in grid mode and for which a grid dropzone
      *        needs to be inserted
      */
-    _activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, selectorGrids = []) {
+    _activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline, selectorGrids = []) {
         var self = this;
 
         // If a modal or a dropdown is open, the drop zones must be created
@@ -2290,20 +2306,27 @@ var SnippetsMenu = Widget.extend({
         }
 
         // Check if the drop zone should be horizontal or vertical
-        function setDropZoneDirection($elem, $parent, $sibling) {
-            var vertical = false;
-            var style = {};
+        function setDropZoneDirection($elem, $parent, toInsertInline, $sibling) {
+            let vertical = false;
+            let style = {};
             $sibling = $sibling || $elem;
-            var css = window.getComputedStyle($elem[0]);
-            var parentCss = window.getComputedStyle($parent[0]);
-            var float = css.float || css.cssFloat;
-            var display = parentCss.display;
-            var flex = parentCss.flexDirection;
-            if (float === 'left' || float === 'right' || (display === 'flex' && flex === 'row')) {
-                style['float'] = float;
-                if ($sibling.parent().width() !== $sibling.outerWidth(true)) {
+            const css = window.getComputedStyle($elem[0]);
+            const parentCss = window.getComputedStyle($parent[0]);
+            const float = css.float || css.cssFloat;
+            const display = parentCss.display;
+            const flex = parentCss.flexDirection;
+            if (toInsertInline || float === 'left' || float === 'right' || (display === 'flex' && flex === 'row')) {
+                if (!toInsertInline) {
+                    style['float'] = float;
+                }
+                if ((parseInt($sibling.parent().width()) !== parseInt($sibling.outerWidth(true)))) {
                     vertical = true;
                     style['height'] = Math.max($sibling.outerHeight(), 30) + 'px';
+                    if (toInsertInline) {
+                        style["display"] = "inline-block";
+                        style["verticalAlign"] = "middle";
+                        style["float"] = "none";
+                    }
                 }
             }
             return {
@@ -2337,7 +2360,7 @@ var SnippetsMenu = Widget.extend({
             }
             var data;
             if ($neighbor.length) {
-                data = setDropZoneDirection($neighbor, $neighbor.parent());
+                data = setDropZoneDirection($neighbor, $neighbor.parent(), toInsertInline);
             } else {
                 data = {
                     vertical: false,
@@ -2355,13 +2378,13 @@ var SnippetsMenu = Widget.extend({
 
                 if (!$zone.children().last().is('.oe_drop_zone')) {
                     data = testPreviousSibling($zone[0].lastChild, $zone)
-                        || setDropZoneDirection($zone, $zone, $children.last());
+                        || setDropZoneDirection($zone, $zone, toInsertInline, $children.last());
                     self._insertDropzone($('<we-hook/>').appendTo($zone), data.vertical, data.style, canBeSanitizedUnless);
                 }
 
                 if (!$zone.children().first().is('.oe_drop_clone')) {
                     data = testPreviousSibling($zone[0].firstChild, $zone)
-                        || setDropZoneDirection($zone, $zone, $children.first());
+                        || setDropZoneDirection($zone, $zone, toInsertInline, $children.first());
                     self._insertDropzone($('<we-hook/>').prependTo($zone), data.vertical, data.style, canBeSanitizedUnless);
                 }
             });
@@ -2381,7 +2404,7 @@ var SnippetsMenu = Widget.extend({
                     $zoneToCheck = $zoneToCheck.prev();
                 }
                 if (!$zoneToCheck.prev('.oe_drop_zone:visible, .oe_drop_clone').length) {
-                    data = setDropZoneDirection($zone, $zone.parent());
+                    data = setDropZoneDirection($zone, $zone.parent(), toInsertInline);
                     self._insertDropzone($('<we-hook/>').insertBefore($zone), data.vertical, data.style, canBeSanitizedUnless);
                 }
 
@@ -2390,7 +2413,7 @@ var SnippetsMenu = Widget.extend({
                     $zoneToCheck = $zoneToCheck.next();
                 }
                 if (!$zoneToCheck.next('.oe_drop_zone:visible, .oe_drop_clone').length) {
-                    data = setDropZoneDirection($zone, $zone.parent());
+                    data = setDropZoneDirection($zone, $zone.parent(), toInsertInline);
                     self._insertDropzone($('<we-hook/>').insertAfter($zone), data.vertical, data.style, canBeSanitizedUnless);
                 }
             });
@@ -3319,7 +3342,11 @@ var SnippetsMenu = Widget.extend({
 
                     const forbidSanitize = $snippet.data('oeForbidSanitize');
                     const canBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless);
+                    // Specific case for inline snippet (e.g. "s_badge")
+                    $baseBody[0].classList.remove("oe_snippet_body");
+                    const toInsertInline = window.getComputedStyle($baseBody[0]).display.includes('inline');
+                    $baseBody[0].classList.add("oe_snippet_body");
+                    self._activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline);
                     $dropZones = self.getEditableArea().find('.oe_drop_zone');
                     if (forbidSanitize === 'form') {
                         $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
@@ -3414,6 +3441,15 @@ var SnippetsMenu = Widget.extend({
 
                         var $target = $toInsert;
 
+                        if ($target[0].classList.contains("o_snippet_drop_in_only")) {
+                            // If it's a "drop in only" snippet, after dropping
+                            // it, we modify it so that it's no longer a
+                            // draggable snippet but rather simple HTML code, as
+                            // if the element had been created with the editor.
+                            $target[0].classList.remove("o_snippet_drop_in_only");
+                            delete $target[0].dataset.snippet;
+                            delete $target[0].dataset.name;
+                        }
 
                         self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
                         await self._scrollToSnippet($target, self.$scrollable);
@@ -3683,7 +3719,7 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onActivateInsertionZones: function (ev) {
-        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless, ev.data.selectorGrids);
+        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless, ev.data.toInsertInline, ev.data.selectorGrids);
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
