@@ -49,7 +49,7 @@ const tldWhitelist = [
 
 const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
 const httpRegex = `(?:https?:\\/\\/)`;
-const httpCapturedRegex= `(https?:\\/\\/)`;
+const httpCapturedRegex = `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi');
 export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
@@ -61,6 +61,7 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
 //------------------------------------------------------------------------------
 
 /**
+ * Returns the parent node and its index in the child node list
  * @param {Node} node
  * @returns {Array.<HTMLElement, number>}
  */
@@ -68,6 +69,8 @@ export function leftPos(node) {
     return [node.parentNode, childNodeIndex(node)];
 }
 /**
+ * Returns the parent node and the index of the node's next sibling
+ * in the child node list
  * @param {Node} node
  * @returns {Array.<HTMLElement, number>}
  */
@@ -75,6 +78,8 @@ export function rightPos(node) {
     return [node.parentNode, childNodeIndex(node) + 1];
 }
 /**
+ * Returns the parent node and its index in the child node list
+ * and that of its next sibling
  * @param {Node} node
  * @returns {Array.<HTMLElement, number, HTMLElement, number>}
  */
@@ -83,6 +88,7 @@ export function boundariesOut(node) {
     return [node.parentNode, index, node.parentNode, index + 1];
 }
 /**
+ * Returns the node with the initial index 0
  * @param {Node} node
  * @returns {Array.<Node, number>}
  */
@@ -90,6 +96,7 @@ export function startPos(node) {
     return [node, 0];
 }
 /**
+ * Returns the node with the last index in its child list
  * @param {Node} node
  * @returns {Array.<Node, number>}
  */
@@ -279,7 +286,7 @@ export function getFurthestUneditableParent(node, parentLimit) {
     return nonEditableElement;
 }
 /**
- * Returns the closest HTMLElement of the provided Node
+ * Returns the closest parent HTMLElement of the provided Node
  * if a 'selector' is provided, Returns the closest HTMLElement that match the selector
  *
  * @param {Node} node
@@ -545,7 +552,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
  *
  * @param {Element} element should have the focus or a child with the focus
  */
- export function ensureFocus(element) {
+export function ensureFocus(element) {
     const activeElement = element.ownerDocument.activeElement;
     if (activeElement !== element && (!element.contains(activeElement) || !activeElement.isContentEditable)) {
         element.focus();
@@ -557,7 +564,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
  * @param {Node} focusNode
  * @param {number} focusOffset
  * @param {boolean} [normalize=true]
- * @returns {?Array.<Node, number}
+ * @returns {?Array.<Node, number>}
  */
 export function setSelection(
     anchorNode,
@@ -944,7 +951,7 @@ const removeFormat = (node, formatSpec) => {
     }
 
     if (formatSpec.isTag && formatSpec.isTag(node)) {
-        const attributesNames = node.getAttributeNames().filter((name)=> {
+        const attributesNames = node.getAttributeNames().filter((name) => {
             return name !== 'data-oe-zws-empty-inline';
         });
         if (attributesNames.length) {
@@ -963,7 +970,7 @@ const removeFormat = (node, formatSpec) => {
     }
 }
 
-export const formatSelection = (editor, formatName, {applyStyle, formatProps} = {}) => {
+export const formatSelection = (editor, formatName, { applyStyle, formatProps } = {}) => {
     const selection = editor.document.getSelection();
     let direction
     let wasCollapsed;
@@ -1248,7 +1255,7 @@ export function isFontSize(node, props) {
  * @param {Element} editable
  * @returns {boolean}
  */
- export function isDirectionSwitched(node, editable) {
+export function isDirectionSwitched(node, editable) {
     const defaultDirection = editable.getAttribute('dir');
     return getComputedStyle(closestElement(node)).direction !== defaultDirection;
 }

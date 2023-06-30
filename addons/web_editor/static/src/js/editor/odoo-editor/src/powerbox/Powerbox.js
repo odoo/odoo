@@ -12,14 +12,24 @@ function cycle(num, max) {
 }
 
 /**
- * interface PowerboxCommand {
- *     category: string;
- *     name: string;
- *     priority: number;
- *     description: string;
- *     fontawesome: string; // a fontawesome class name
- *     callback: () => void; // to execute when the command is picked
- *     isDisabled?: () => boolean; // return true to disable the command
+ * @callback VoidFunction
+ * @returns {void}
+*/
+
+/**
+ * @callback BooleanFunction
+ * @returns {boolean}
+*/
+
+/**
+ * @typedef {Object} PowerboxCommand
+ *     @property {string} category
+ *     @property {string} name
+ *     @property {number} priority
+ *     @property {string} description
+ *     @property {string} fontawesome - a fontawesome class name
+ *     @property {VoidFunction} callback - to execute when the command is picked
+ *     @property {BooleanFunction | undefined} isDisabled - return true to disable the command
  * }
  */
 
@@ -87,14 +97,14 @@ export class Powerbox {
      * @param {PowerboxCommand[]} [commands=this.commands]
      * @param {Array<{name: string, priority: number}} [categories=this.categories]
      */
-    open(commands=this.commands, categories=this.categories) {
+    open(commands = this.commands, categories = this.categories) {
         commands = (commands || []).map(command => ({
             ...command,
             category: command.category || '',
             name: command.name || '',
             priority: command.priority || 0,
             description: command.description || '',
-            callback: command.callback || (() => {}),
+            callback: command.callback || (() => { }),
         }));
         categories = (categories || []).map(category => ({
             name: category.name || '',
@@ -202,10 +212,10 @@ export class Powerbox {
                     commandElWrapper.classList.add('active');
                 });
                 commandElWrapper.addEventListener('click', ev => {
-                        ev.preventDefault();
-                        ev.stopImmediatePropagation();
-                        this._pickCommand(command);
-                    }, true,
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    this._pickCommand(command);
+                }, true,
                 );
             }
         }
@@ -222,7 +232,7 @@ export class Powerbox {
      * @private
      * @param {PowerboxCommand} [command=this._context.selectedCommand]
      */
-    async _pickCommand(command=this._context.selectedCommand) {
+    async _pickCommand(command = this._context.selectedCommand) {
         if (command) {
             if (this.beforeCommand) {
                 await this.beforeCommand();
@@ -387,7 +397,7 @@ export class Powerbox {
             this._render(this._context.filteredCommands, this._context.categories);
             const activeCommand = this.el.querySelector('.oe-powerbox-commandWrapper.active');
             if (activeCommand) {
-                activeCommand.scrollIntoView({block: 'nearest', inline: 'nearest'});
+                activeCommand.scrollIntoView({ block: 'nearest', inline: 'nearest' });
             }
         }
     }

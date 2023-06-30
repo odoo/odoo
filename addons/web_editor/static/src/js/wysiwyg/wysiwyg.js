@@ -9,8 +9,8 @@ import { browser } from "@web/core/browser/browser";
 import Widget from "web.Widget";
 import Dialog from "web.Dialog";
 import customColors from "web_editor.custom_colors";
-import {ColorPaletteWidget} from "web_editor.ColorPalette";
-import {ColorpickerWidget} from "web.Colorpicker";
+import { ColorPaletteWidget } from "web_editor.ColorPalette";
+import { ColorpickerWidget } from "web.Colorpicker";
 import concurrency from "web.concurrency";
 import { device } from "web.config";
 import { localization } from "@web/core/l10n/localization";
@@ -77,13 +77,13 @@ const Wysiwyg = Widget.extend({
     defaultOptions: {
         lang: 'odoo',
         colors: customColors,
-        recordInfo: {context: {}},
+        recordInfo: { context: {} },
         document: document,
         allowCommandVideo: true,
         allowCommandImage: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
-        onHistoryResetFromSteps: () => {},
+        onHistoryResetFromSteps: () => { },
         autostart: true,
     },
     init: function (parent, options) {
@@ -110,7 +110,6 @@ const Wysiwyg = Widget.extend({
         this._joinPeerToPeer = this._joinPeerToPeer.bind(this);
     },
     /**
-     *
      * @override
      */
     start: async function () {
@@ -164,7 +163,7 @@ const Wysiwyg = Widget.extend({
                 route: '/web_editor/video_url/data',
                 params: { video_url: url },
             });
-            const [savedVideo] = VideoSelector.createElements([{src}]);
+            const [savedVideo] = VideoSelector.createElements([{ src }]);
             savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };
@@ -184,7 +183,7 @@ const Wysiwyg = Widget.extend({
             getContentEditableAreas: this.options.getContentEditableAreas,
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
-            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
+            defaultLinkAttributes: this.options.userGeneratedContent ? { rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
@@ -363,12 +362,12 @@ const Wysiwyg = Widget.extend({
             }
 
             if ($target.is(this.customizableLinksSelector)
-                    && $target.is('a')
-                    && $target[0].isContentEditable
-                    && !$target.attr('data-oe-model')
-                    && !$target.find('> [data-oe-model]').length
-                    && !$target[0].closest('.o_extra_menu_items')
-                    && $target[0].isContentEditable) {
+                && $target.is('a')
+                && $target[0].isContentEditable
+                && !$target.attr('data-oe-model')
+                && !$target.find('> [data-oe-model]').length
+                && !$target[0].closest('.o_extra_menu_items')
+                && $target[0].isContentEditable) {
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(ev.target.href, '_blank')
                 }
@@ -438,7 +437,7 @@ const Wysiwyg = Widget.extend({
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        const collaborationBusListener = ({ detail: notifications}) => {
+        const collaborationBusListener = ({ detail: notifications }) => {
             for (const { payload, type } of notifications) {
                 if (
                     type === 'editor_collaboration' &&
@@ -640,7 +639,7 @@ const Wysiwyg = Widget.extend({
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
             if (!ICE_SERVERS) {
-                ICE_SERVERS = await this._rpc({route: '/web_editor/get_ice_servers'});
+                ICE_SERVERS = await this._rpc({ route: '/web_editor/get_ice_servers' });
             }
             let iceServers = ICE_SERVERS;
             if (!iceServers.length) {
@@ -675,9 +674,9 @@ const Wysiwyg = Widget.extend({
                 const missingSteps = await this.ptp.requestClient(
                     step.clientId,
                     'get_missing_steps', {
-                        fromStepId: fromStepId,
-                        toStepId: step.id
-                    },
+                    fromStepId: fromStepId,
+                    toStepId: step.id
+                },
                     { transport: 'rtc' }
                 );
                 // If missing steps === -1, it means that either the
@@ -720,7 +719,7 @@ const Wysiwyg = Widget.extend({
         }
         // If peer to peer is initializing, wait for properly closing it.
         if (this._peerToPeerLoading) {
-            this._peerToPeerLoading.then(()=> {
+            this._peerToPeerLoading.then(() => {
                 this._collaborationStopBus();
                 this.ptp.closeAllConnections();
             });
@@ -880,7 +879,7 @@ const Wysiwyg = Widget.extend({
         } else {
             this.$editable.html(html);
         }
-        return Promise.resolve({isDirty: isDirty, html: html});
+        return Promise.resolve({ isDirty: isDirty, html: html });
     },
     /**
      * Reset the history.
@@ -953,7 +952,7 @@ const Wysiwyg = Widget.extend({
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            const { oeModel: resModel, oeId: resId } = editableEl.dataset;
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
                 const attachment = await this._rpc({
                     route: '/web_editor/attachment/add_data',
@@ -1155,7 +1154,7 @@ const Wysiwyg = Widget.extend({
                     this._observeOdooFieldChanges();
                 });
                 observer.observe(field, observerOptions);
-                this.odooFieldObservers.push({field: field, observer: observer});
+                this.odooFieldObservers.push({ field: field, observer: observer });
             });
         }
     },
@@ -1174,7 +1173,7 @@ const Wysiwyg = Widget.extend({
         const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
         // Link tool is different if the selection is an image or a text.
         if (targetEl.nodeType === Node.ELEMENT_NODE
-                && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
+            && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
             core.bus.trigger('activate_image_link_tool');
             return;
         }
@@ -1196,7 +1195,7 @@ const Wysiwyg = Widget.extend({
         }
         if (this.snippetsMenu && !options.forceDialog) {
             if (options.link && options.link.querySelector(mediaSelector) &&
-                    !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
+                !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
                 // If the link contains a media without text, the link is
                 // editable in the media options instead.
                 this.snippetsMenu._mutex.exec(() => {
@@ -1224,7 +1223,7 @@ const Wysiwyg = Widget.extend({
                         wysiwyg: this,
                         noFocusUrl: options.noFocusUrl,
                         forceNewWindow: this.options.linkForceNewWindow,
-                    }, this.odooEditor.editable, linkToolsData, $btn, link );
+                    }, this.odooEditor.editable, linkToolsData, $btn, link);
                 }
                 this.linkTools.noFocusUrl = options.noFocusUrl;
                 const _onClick = ev => {
@@ -1272,7 +1271,7 @@ const Wysiwyg = Widget.extend({
                     return;
                 }
                 const linkWidget = linkDialog.linkWidget;
-                getDeepRange(this.$editable[0], {range: data.range, select: true});
+                getDeepRange(this.$editable[0], { range: data.range, select: true });
                 if (this.options.userGeneratedContent) {
                     data.rel = 'ugc';
                 }
@@ -1371,11 +1370,11 @@ const Wysiwyg = Widget.extend({
             Component: FileViewer,
             props: {
                 files: [{
-                        isImage: true,
-                        isViewable: true,
-                        displayName: url,
-                        defaultSource: url,
-                        downloadUrl: url,
+                    isImage: true,
+                    isViewable: true,
+                    displayName: url,
+                    defaultSource: url,
+                    downloadUrl: url,
                 }],
                 startIndex: 0,
                 close: () => {
@@ -1516,7 +1515,7 @@ const Wysiwyg = Widget.extend({
      * @param {Object} [options]
      * @returns {widget}
      */
-    _createSnippetsMenuInstance: function (options={}) {
+    _createSnippetsMenuInstance: function (options = {}) {
         return new snippetsEditor.SnippetsMenu(this, Object.assign({
             wysiwyg: this,
             selectorEditableArea: '.o_editable',
@@ -1561,7 +1560,7 @@ const Wysiwyg = Widget.extend({
                 return;
             }
             this.showImageFullscreen(this.lastMediaClicked.src);
-    })
+        })
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
@@ -1626,7 +1625,7 @@ const Wysiwyg = Widget.extend({
                 $image.removeData('transfo-destroy');
                 return;
             }
-            $image.transfo({document: this.odooEditor.document});
+            $image.transfo({ document: this.odooEditor.document });
             const mouseup = () => {
                 $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
             };
@@ -1999,7 +1998,7 @@ const Wysiwyg = Widget.extend({
                 this.odooEditor.observerUnactive();
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
-                    $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                    $target.tooltip({ title: _t('Double-click to edit'), trigger: 'manual', container: 'body' }).tooltip('show');
                     this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
                 });
                 this.odooEditor.observerActive();
@@ -2071,7 +2070,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getEditorOptions: function (options) {
-        const finalOptions = {...this.defaultOptions, ...options};
+        const finalOptions = { ...this.defaultOptions, ...options };
         // autohideToolbar is true by default (false by default if navbar present).
         finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
             ? finalOptions.autohideToolbar
@@ -2249,7 +2248,7 @@ const Wysiwyg = Widget.extend({
                     description: _t('Add a link'),
                     fontawesome: 'fa-link',
                     callback: () => {
-                        this.toggleLinkTools({forceDialog: true});
+                        this.toggleLinkTools({ forceDialog: true });
                     },
                 },
                 {
@@ -2259,7 +2258,7 @@ const Wysiwyg = Widget.extend({
                     description: _t('Add a button'),
                     fontawesome: 'fa-link',
                     callback: () => {
-                        this.toggleLinkTools({forceDialog: true});
+                        this.toggleLinkTools({ forceDialog: true });
                         // Force the button style after the link modal is open.
                         setTimeout(() => {
                             $(".o_link_dialog .link-style[value=primary]").click();
@@ -2291,7 +2290,7 @@ const Wysiwyg = Widget.extend({
                 description: _t('Insert a video'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
-                    this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
+                    this.openMediaDialog({ noVideos: false, noImages: true, noIcons: true, noDocuments: true });
                 },
             });
         }
@@ -2301,7 +2300,7 @@ const Wysiwyg = Widget.extend({
         if (editorOptions.powerboxCommands) {
             commands.push(...editorOptions.powerboxCommands);
         }
-        return {commands, categories};
+        return { commands, categories };
     },
 
     /**
@@ -2365,7 +2364,7 @@ const Wysiwyg = Widget.extend({
             // Do not group elements which are parts of views, unless we are
             // in translate mode.
             if (!this.options.enableTranslation
-                    && (model === 'ir.ui.view' && field === 'arch')) {
+                && (model === 'ir.ui.view' && field === 'arch')) {
                 return uniqueId("view-part-to-save-");
             }
 
@@ -2386,24 +2385,24 @@ const Wysiwyg = Widget.extend({
             // TODO: Add a queue with concurrency limit in webclient
             return this.saving_mutex.exec(() => {
                 return this[saveElementFuncName]($els, context || this.options.context)
-                .then(function () {
-                    $els.removeClass('o_dirty');
-                }).guardedCatch(function (response) {
-                    // because ckeditor regenerates all the dom, we can't just
-                    // setup the popover here as everything will be destroyed by
-                    // the DOM regeneration. Add markings instead, and returns a
-                    // new rejection with all relevant info
-                    var id = uniqueId("carlos_danger_");
-                    $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                    $('.o_editable.' + id)
-                        .removeClass(id)
-                        .popover({
-                            trigger: 'hover',
-                            content: response.message.data.message || '',
-                            placement: 'auto',
-                        })
-                        .popover('show');
-                });
+                    .then(function () {
+                        $els.removeClass('o_dirty');
+                    }).guardedCatch(function (response) {
+                        // because ckeditor regenerates all the dom, we can't just
+                        // setup the popover here as everything will be destroyed by
+                        // the DOM regeneration. Add markings instead, and returns a
+                        // new rejection with all relevant info
+                        var id = uniqueId("carlos_danger_");
+                        $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
+                        $('.o_editable.' + id)
+                            .removeClass(id)
+                            .popover({
+                                trigger: 'hover',
+                                content: response.message.data.message || '',
+                                placement: 'auto',
+                            })
+                            .popover('show');
+                    });
             });
         });
         return Promise.all(proms).then(function () {
@@ -2420,7 +2419,7 @@ const Wysiwyg = Widget.extend({
                 selector: '[data-oe-readonly]',
                 container: 'body',
                 trigger: 'hover',
-                delay: {'show': 1000, 'hide': 100},
+                delay: { 'show': 1000, 'hide': 100 },
                 placement: 'bottom',
                 title: _t("Readonly field")
             })
@@ -2494,7 +2493,7 @@ const Wysiwyg = Widget.extend({
         } else {
             window.location.reload(true);
         }
-        return new Promise(function () {});
+        return new Promise(function () { });
     },
     _onAttachmentChange(attachment) {
         // todo: to remove when removing the legacy field_html
@@ -2589,7 +2588,7 @@ const Wysiwyg = Widget.extend({
                     $content: $dialogContent,
                     size: 'medium',
                 });
-                dialog.open({shouldFocusButtons:true});
+                dialog.open({ shouldFocusButtons: true });
 
                 await this.resetEditor(serverContent);
                 // We were in a peer to peer session before the conflict, join
@@ -2649,7 +2648,7 @@ const Wysiwyg = Widget.extend({
         if (options) {
             this.options = this._getEditorOptions(options);
         }
-        const {collaborationChannel} = this.options;
+        const { collaborationChannel } = this.options;
         this._stopPeerToPeer();
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
