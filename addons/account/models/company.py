@@ -498,7 +498,7 @@ class ResCompany(models.Model):
                 continue
 
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
-            # This is required in order to generate consistent hashs.
+            # This is required in order to generate consistent hashes.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
             all_moves = self.env['account.move'].sudo().search([
                 ('journal_id', '=', journal.id),
@@ -520,10 +520,10 @@ class ResCompany(models.Model):
                 previous_hash = ''
                 current_hash_version = 1
                 for move in moves:
-                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)
+                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move]
                     while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
                         current_hash_version += 1
-                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)
+                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move]
                     if move.inalterable_hash != computed_hash:
                         results.append({
                             'name': f"{journal.name} [{prefix}]",

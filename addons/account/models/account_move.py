@@ -2397,11 +2397,12 @@ class AccountMove(models.Model):
                 # Hash the move
                 if vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
-                    # TODOAL do BATCH to avoid 1 select
-                    for move in self.filtered(lambda m: m.restrict_mode_hash_table and not m.inalterable_hash).sorted(lambda m: (m.sequence_prefix, m.sequence_number)):
-                        res |= super(AccountMove, move).write({
-                            'inalterable_hash': move._hash_compute(),
-                        })
+                    moves_hashes = self\
+                        .filtered(lambda m: m.restrict_mode_hash_table and not m.inalterable_hash)\
+                        .sorted(lambda m: (m.sequence_prefix, m.sequence_number))\
+                        ._hash_compute()
+                    for move, inalterable_hash in moves_hashes.items():
+                        res |= super(AccountMove, move).write({'inalterable_hash': inalterable_hash})
 
             self._synchronize_business_models(set(vals.keys()))
 
@@ -2833,53 +2834,56 @@ class AccountMove(models.Model):
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
     def _hash_compute(self, previous_hash=None):
-        """ Returns the hash to write on journal entries when they get posted"""
-        self.ensure_one()
-        if not previous_hash:
-            previous_move = self.sudo().search([
-                ('journal_id', '=', self.journal_id.id),
-                ('state', '=', 'posted'),
-                ('sequence_prefix', '=', self.sequence_prefix),
-                ('sequence_number', '=', self.sequence_number - 1),
-                ('inalterable_hash', '!=', False),
-            ], limit=1)
-            previous_hash = previous_move.inalterable_hash if previous_move else ""
-
+        """:return: a dict in the form {move: hash}"""
         hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
-        if hash_version < 4:
-            def _getattrstring(obj, field_name):
-                field_value = obj[field_name]
-                if obj._fields[field_name].type == 'many2one':
-                    field_value = field_value.id
-                if obj._fields[field_name].type == 'monetary' and hash_version >= 3:
-                    return float_repr(field_value, obj.currency_id.decimal_places)
-                return str(field_value)
+        res = {}
+        for move in self:
+            if not previous_hash:
+                previous_move = move.sudo().search([
+                    ('journal_id', '=', move.journal_id.id),
+                    ('state', '=', 'posted'),
+                    ('sequence_prefix', '=', move.sequence_prefix),
+                    ('sequence_number', '=', move.sequence_number - 1),
+                    ('inalterable_hash', '!=', False),
+                ], limit=1)
+                previous_hash = previous_move.inalterable_hash if previous_move else ""
 
-            values = {}
-            for field in self._get_integrity_hash_fields():
-                values[field] = _getattrstring(self, field)
+            if hash_version < 4:
+                def _getattrstring(obj, field_name):
+                    field_value = obj[field_name]
+                    if obj._fields[field_name].type == 'many2one':
+                        field_value = field_value.id
+                    if obj._fields[field_name].type == 'monetary' and hash_version >= 3:
+                        return float_repr(field_value, obj.currency_id.decimal_places)
+                    return str(field_value)
 
-            for line in self.line_ids:
-                for field in line._get_integrity_hash_fields():
-                    k = 'line_%d_%s' % (line.id, field)
-                    values[k] = _getattrstring(line, field)
-        else:
-            values = {
-                'name': self.name,
-                'date': self.date.isoformat(),
-                'create_date': self.create_date.isoformat(timespec='seconds'),
-                'amount_total': float_repr(self.amount_total, self.currency_id.decimal_places),
-                'lines': [],
-            }
-            for line in self.line_ids:
-                values['lines'].append({
-                    'name': line.name,
-                    'debit': float_repr(line.debit, self.currency_id.decimal_places),
-                    'credit': float_repr(line.credit, self.currency_id.decimal_places),
-                })
-        current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
-        hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
-        return f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+                values = {}
+                for field in move._get_integrity_hash_fields():
+                    values[field] = _getattrstring(move, field)
+
+                for line in move.line_ids:
+                    for field in line._get_integrity_hash_fields():
+                        k = 'line_%d_%s' % (line.id, field)
+                        values[k] = _getattrstring(line, field)
+            else:
+                values = {
+                    'name': move.name,
+                    'date': move.date.isoformat(),
+                    'create_date': move.create_date.isoformat(timespec='seconds'),
+                    'amount_total': float_repr(move.amount_total, move.currency_id.decimal_places),
+                    'lines': [],
+                }
+                for line in move.line_ids:
+                    values['lines'].append({
+                        'name': line.name,
+                        'debit': float_repr(line.debit, move.currency_id.decimal_places),
+                        'credit': float_repr(line.credit, move.currency_id.decimal_places),
+                    })
+            current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
+            hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
+            res[move] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+            previous_hash = res[move]
+        return res
 
     # -------------------------------------------------------------------------
     # RECURRING ENTRIES
