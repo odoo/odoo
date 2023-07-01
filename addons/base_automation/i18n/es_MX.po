@@ -42,10 +42,10 @@ msgid ""
 "action cannot be run through the website."
 msgstr ""
 "Se puede ejecutar una acción de servidor de código desde el sitio web, "
-"usando un controlador dedicado. La dirección es "
-"<base>/website/action/<website_path>. Establezca este campo a verdadero para"
-" permitir a los usuarios ejecutar esta acción. Si se establece a falso, la "
-"acción no se podrá ejecutar a través del sitio web."
+"usando un controlador especializado. La dirección es "
+"<base>/website/action/<website_path>. Establezca este campo como \"true\" "
+"para permitir a los usuarios ejecutar esta acción. Si se establece como "
+"\"false\", no se podrá ejecutar la acción a través del sitio web."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -85,7 +85,7 @@ msgstr "Tipo de actividad de usuario"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
 msgid "Add Followers"
-msgstr "Añadir seguidores"
+msgstr "Agregar seguidores"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -124,7 +124,7 @@ msgstr "Disponible en el sitio web"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr "Norma de acción básica: revisar y ejecutar"
+msgstr "Regla de acción básica: revisar y ejecutar"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -167,8 +167,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Las acciones hijas de servidor que se ejecutarán. Tenga en cuenta que el "
-"último valor devuelto se usará como valor de retorno global."
+"Las acciones subordinadas del servidor que se ejecutarán. Tenga en cuenta "
+"que el último valor devuelto se usará como valor de retorno global."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
@@ -178,9 +178,9 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
-"Elija el método de envío por SMS:\n"
+"Seleccione el método de envío por SMS:\n"
 "SMS: SMS masivos\n"
-"Publicar como mensaje: documento de inicio de sesión\n"
+"Publicar como mensaje: registrar en documento\n"
 "Publicar como nota: SMS masivos con archivos"
 
 #. module: base_automation
@@ -220,7 +220,7 @@ msgid ""
 msgstr ""
 "Retraso después de fecha de activación.\n"
 "          Puede colocar un número negativo si necesita un retraso antes de la\n"
-"          fecha de activación, como enviar un recordatorio de 15 minutos antes de una reunión."
+"          fecha de activación, como enviar un recordatorio 15 minutos antes de una reunión."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -249,9 +249,9 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
-"Deshabilitar esta acción automatizada le permitirá continuar con su flujo de trabajo\n"
-"pero cualquier datos creados después de esto podrían estar dañados\n"
-"ya que está deshabilitando la personalización configurada en los\n"
+"Deshabilitar esta acción automatizada le permitirá continuar con su flujo de trabajo \n"
+"pero cualquiera de los datos creados después de esto podrían estar dañados \n"
+"ya que está deshabilitando la personalización configurada en los \n"
 "campos importantes o requeridos."
 
 #. module: base_automation
@@ -299,7 +299,7 @@ msgstr "ID externo"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr "Campos que desencadenan el OnChange."
+msgstr "Campos que desencadenan el \"onchange\"."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -336,7 +336,7 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Si está marcada esta casilla, la condición debe satisfacerse antes de "
+"Si está marcada esta casilla, se debe cumplir esta condición antes de "
 "ejecutar la regla de acción."
 
 #. module: base_automation
@@ -345,8 +345,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr ""
-"Si está presente, esta condición debe satisfacerse antes de la actualización"
-" del registro."
+"Si está marcada esta casilla, se debe cumplir esta condición antes de la "
+"actualización del registro."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
@@ -399,8 +399,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Modelo para la creación o actualización del registro. Establezca este campo "
-"sólo para especificar un modelo diferente al modelo base."
+"Modelo para la creación o actualización del registro. Configure este campo "
+"solo si desea especificar un modelo diferente al modelo base."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -466,7 +466,7 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"Proporciona el campo utilizado para vincular el registro recién creado en el"
+"Proporcione el campo utilizado para vincular el registro recién creado en el"
 " registro utilizado por la acción del servidor."
 
 #. module: base_automation
@@ -577,7 +577,7 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
 msgid "The full URL to access the server action through the website."
 msgstr ""
-"El URL completo para acceder a la acción de servidor a través del sitio web."
+"La URL completa para acceder a la acción de servidor a través del sitio web."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -611,7 +611,7 @@ msgstr ""
 "Tipo de acción del servidor. Estos son los valores disponibles:\n"
 "- 'Ejecutar código Python': un bloque de código Python que se ejecutará\n"
 "- 'Crear un registro nuevo': crear un registro nuevo con valores nuevos\n"
-"- 'Actualizar registro': Actualizar los valores de un registro\n"
+"- 'Actualizar registro': actualizar los valores de un registro\n"
 "- 'Ejecutar varias acciones': definir una acción que active muchas otras acciones\n"
 "- 'Enviar correo electrónico': publicar un mensaje, una nota o enviar un correo (Conversaciones)\n"
 "- 'Agregar seguidores': agregar seguidores a un registro (Conversaciones)\n"
@@ -632,9 +632,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Utiliza 'Usuario específico' para asignar siempre el mismo usuario en la "
-"siguiente actividad. Utiliza 'Usuario genérico en el registro' para "
-"especificar el nombre del campo del usuario para elegir en el registro."
+"Utilice \"Usuario específico\" para asignar siempre al mismo usuario en la "
+"siguiente actividad. Utilice \"Usuario genérico del registro\" para "
+"especificar el nombre del campo del usuario a elegir en el registro."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -651,8 +651,8 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "Utilice acciones automatizadas para activar acciones de forma automática para\n"
-"                  varias pantallas. Ejemplo: un cliente potencial creado por un usuario específico \n"
-"                  puede configurarse automáticamente a un equipo de ventas específico, o una\n"
+"                  varias pantallas. Ejemplo: un lead creado por un usuario específico \n"
+"                  puede configurarse de forma automática a un equipo de ventas específico, o una\n"
 "                  oportunidad que todavía tiene estado pendiente después de 14 días podría\n"
 "                  desencadenar un recordatorio automático por correo electrónico."
 
@@ -698,8 +698,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
-"Cuando trabaja con múltiples acciones, el orden de ejecución está basado en "
-"la secuencia. Un número menor tiene mayor prioridad."
+"Cuando se trabaja con múltiples acciones, el orden de ejecución se basa en "
+"la secuencia. Los números menores tienen mayor prioridad."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -707,7 +707,7 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Cuando se debe activar la condición.\n"
+"Cuándo se debe activar la condición.\n"
 "                Si se encuentra seleccionada, la revisará el programador. De lo contrario, se revisará en la creación y actualización."
 
 #. module: base_automation
@@ -722,9 +722,9 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-"Escribe el código Python que ejecutará la acción. Algunas variables están "
-"disponibles para su uso; hay ayuda disponible para la expresión de Python en"
-" la pestaña de ayuda."
+"Escriba el código Python que ejecutará la acción. Algunas variables están "
+"disponibles para su uso. Puede encontrar más información sobre la expresión "
+"de Python en la pestaña de ayuda."
 
 #. module: base_automation
 #. openerp-web
