@@ -91,7 +91,7 @@ msgstr "%i Arbeitsaufträge"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%s %s unbuilt in"
-msgstr ""
+msgstr "%s %s demontiert in"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1510,6 +1510,10 @@ msgid ""
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"Legt fest, ob Sie mehr oder weniger Komponenten als die in der Stückliste definierte Menge verbrauchen können:\n"
+"  * Erlaubt: erlaubt für alle Benutzer in der Fertigung.\n"
+"  * Erlaubt mit Warnung: erlaubt für alle Benutzer in der Fertigung mit Zusammenfassung der Verbrauchsdifferenzen beim Abschluss des Fertigungsauftrags.\n"
+"  * Blockiert: nur ein Manager kann einen Fertigungsauftrag schließen, wenn der Stücklistenverbrauch nicht eingehalten wird."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet_type
@@ -2836,7 +2840,7 @@ msgstr "Sonstiges"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production__mo_ids
 msgid "Mo"
-msgstr ""
+msgstr "Mo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_byproduct_ids
@@ -3085,6 +3089,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"Anzahl der Stücke (in Produkt-Maßeinheit), die an diesem Arbeitsplatz "
+"parallel (gleichzeitig) gefertigt werden können. Beispiel: Die Kapazität "
+"beträgt 5 und Sie müssen 10 Stück produzieren, dann wird die in der "
+"Stückliste angegebene Bearbeitungszeit mit zwei multipliziert. Beachten Sie "
+"jedoch, dass sowohl die Zeit vor als auch nach der Produktion nur einmal "
+"gezählt wird."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty

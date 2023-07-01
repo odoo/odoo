@@ -1169,7 +1169,7 @@ msgstr "認證成功"
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Certified"
-msgstr "具有證明的"
+msgstr ""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -4594,6 +4594,14 @@ msgid ""
 "You can only create certifications for surveys that have a scoring "
 "mechanism."
 msgstr "您只能為具有評分機制的調查建立證書。"
+
+#. module: survey
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

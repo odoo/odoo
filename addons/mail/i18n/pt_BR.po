@@ -5,9 +5,9 @@
 # Translators:
 # Martin Trigaux, 2021
 # Éder Brito <britoederr@gmail.com>, 2022
-# Layna Nascimento, 2023
 # Kevilyn Rosa, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,14 +35,14 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires \"%s\" access"
-msgstr ""
+msgstr "\"%s\" requer \"%s\" acesso"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr ""
+msgstr "\"%s\" requer acesso ao microfone"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -57,6 +57,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s não é reconhecido como um e-mail válido. Isso é necessário para "
+"criar um novo cliente."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -117,7 +119,7 @@ msgstr "%s e %s estão digitando..."
 #: code:addons/mail/static/src/models/message_reaction_group/message_reaction_group.js:0
 #, python-format
 msgid "%s and %s have reacted with %s"
-msgstr ""
+msgstr "%s e %s ter reagido com %s"
 
 #. module: mail
 #. openerp-web
@@ -151,7 +153,7 @@ msgstr "%s tem uma solicitação"
 #: code:addons/mail/static/src/models/message_reaction_group/message_reaction_group.js:0
 #, python-format
 msgid "%s has reacted with %s"
-msgstr ""
+msgstr "%s reagiu com %s"
 
 #. module: mail
 #. openerp-web
@@ -164,7 +166,7 @@ msgstr "%s está digitando..."
 #: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "%s started a live conference"
-msgstr ""
+msgstr "%s iniciou uma conferência ao vivo"
 
 #. module: mail
 #. openerp-web
@@ -228,7 +230,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: mail
 #. openerp-web
@@ -306,7 +308,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">joined the channel</div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\"> entrou no canal </div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -383,6 +385,11 @@ msgid ""
 "Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />\n"
 "Kind Regards,</p>"
 msgstr ""
+"<p>Caro remetente,<br /><br />\n"
+"%(alias_display_name)sA mensagem abaixo não pôde ser aceita pelo endereço.\n"
+"Somente %(contact_description)s estão autorizados a contatá-lo.<br /><br />\n"
+"Por favor, verifique se você está usando o endereço correto ou entre em contato conosco em %(default_email)s em vez de.<br /><br />\n"
+"Atenciosamente,</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -529,13 +536,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_partner_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
-msgstr ""
+msgstr "Um membro do canal deve ser um parceiro ou um convidado."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "A channel of type 'chat' cannot have more than two users."
-msgstr ""
+msgstr "Um canal do tipo 'chat' não pode ter mais de dois usuários."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -569,7 +576,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr ""
+msgstr "Uma configuração de volume deve ter um parceiro ou um convidado."
 
 #. module: mail
 #. openerp-web
@@ -1187,22 +1194,22 @@ msgstr "Avatar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: mail
 #. openerp-web
@@ -2718,7 +2725,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_option_list/rtc_option_list.xml:0
 #, python-format
 msgid "Exit full screen"
-msgstr ""
+msgstr "Sair da tela cheia"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -3596,7 +3603,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/channel_invitation_form/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to group chat"
-msgstr ""
+msgstr "Convidar para chat em grupo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -6505,7 +6512,7 @@ msgstr "Iniciar uma conversa"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Start a meeting"
-msgstr ""
+msgstr "Iniciar uma reunião"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -6905,7 +6912,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "O atalho que deve ser substituído nas mensagens de bate-papo"
+msgstr "O atalho que deve ser substituído nas mensagens de chat"
 
 #. module: mail
 #. openerp-web
@@ -7742,6 +7749,9 @@ msgid ""
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
 msgstr ""
+"Você está prestes a sair desta conversa em grupo e não terá mais acesso a "
+"ela, a menos que seja convidado novamente. Você tem certeza que quer "
+"continuar?"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7908,7 +7918,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a meeting!"
-msgstr ""
+msgstr "Você foi convidado para uma reunião!"
 
 #. module: mail
 #. openerp-web
@@ -8121,7 +8131,7 @@ msgstr "por exemplo, Discutir proposta"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
-msgstr ""
+msgstr "ex. Agendar uma reunião"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form

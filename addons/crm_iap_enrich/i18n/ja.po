@@ -6,6 +6,7 @@
 # Noma Yuki, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,25 +28,26 @@ msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
+"<span>Eメールアドレスに基づくデータが見つからないか、EメールアドレスがEメールプロバイダーのものです。クレジットは消費されませんでした。</span>"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 msgid ""
 "<span>Enrichment could not be done because the email address does not look "
 "valid.</span>"
-msgstr ""
+msgstr "<span>メールアドレスが有効でないため、情報付与を実行できませんでした。</span>"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
 msgid "Allow manual enrich"
-msgstr ""
+msgstr "マニュアル情報付与を許可する"
 
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr ""
+msgstr "CRM：リード情報付与（IAP）"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -66,12 +68,12 @@ msgstr "リードの会社データ情報を付与"
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich opportunity with company data"
-msgstr ""
+msgstr "会社データで案件に情報付与する"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr ""
+msgstr "情報付与されました"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
@@ -82,7 +84,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment (based on email address)"
-msgstr ""
+msgstr "リード情報付与（メールアドレスに基づく）"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
@@ -105,7 +107,7 @@ msgstr "リード / 案件"
 msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
-msgstr ""
+msgstr "Eメールに基づくリード情報付与のためのIAPサービスが、このリードに対して実行されたかどうか。"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit

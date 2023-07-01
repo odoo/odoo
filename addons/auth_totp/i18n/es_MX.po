@@ -31,13 +31,13 @@ msgstr "%(browser)s en %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "Asistente de la configuración de la autenticación de 2 pasos"
+msgstr "Asistente de la configuración de la autenticación de dos factores"
 
 #. module: auth_totp
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "2-Factor authentication is now enabled."
-msgstr "Ya se habilitó la autenticación de 2 pasos"
+msgstr "Ya se habilitó la autenticación de dos factores."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -47,7 +47,7 @@ msgid ""
 "muted\">Your account is protected!</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
-"muted\">¡Su cuenta está protegida!</span>"
+"muted\">Su cuenta está protegida</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -161,12 +161,12 @@ msgstr "Nombre del dispositivo"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr "Deshabilitar la A2P"
+msgstr "Deshabilitar la A2F"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "Deshabilitar la autenticación de 2 pasos"
+msgstr "Deshabilitar la autenticación de dos factores"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -183,7 +183,7 @@ msgstr "No volver a preguntar en este dispositivo"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr "Habilitar la A2P"
+msgstr "Habilitar la A2F"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -193,7 +193,7 @@ msgstr "Ingrese su código de 6 dígitos abajo"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
@@ -238,7 +238,7 @@ msgstr "Iniciar sesión"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Look for an \"Add an account\" button"
-msgstr "Buscar el botón \"agregar una cuenta\""
+msgstr "Busque el botón \"agregar una cuenta\""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -279,7 +279,7 @@ msgstr "Contraseña"
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr "El código de autenticación únicamente debe contener números"
+msgstr "El código de autenticación solo debe contener números"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -403,10 +403,10 @@ msgstr "Código de verificación"
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "La verificación falló, por favor revise el código de 6 dígitos"
+msgstr "La verificación falló, revise el código de 6 dígitos"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
-msgstr "e.g. 123456"
+msgstr "Por ejemplo, 123456"
