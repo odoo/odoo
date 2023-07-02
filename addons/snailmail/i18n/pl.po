@@ -17,6 +17,7 @@
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,21 +56,21 @@ msgstr "Adres"
 #: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending a letter with Snailmail."
-msgstr ""
+msgstr "Wystąpił błąd podczas wysyłania listu pocztą tradycyjną."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
-msgstr ""
+msgstr "Wystąpił błąd podczas wysyłania dokumentu pocztą.<br>Błąd: %s"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Wystąpił nieznany błąd. Prosimy o kontakt z pomocą techniczną."
 
 #. module: snailmail
 #. odoo-javascript
@@ -93,17 +94,17 @@ msgstr "Nazwa pliku załącznika"
 #: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "Oczekiwanie na wysyłkę"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Obie strony"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Obie strony"
 
 #. module: snailmail
 #. odoo-javascript
@@ -126,7 +127,7 @@ msgstr "Anuluj"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel Letter"
-msgstr ""
+msgstr "Anuluj list"
 
 #. module: snailmail
 #. odoo-javascript
@@ -134,7 +135,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Cancel letter"
-msgstr ""
+msgstr "Anuluj list"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -260,7 +261,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
 msgid "Failed letter"
-msgstr ""
+msgstr "Nieudany list"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
@@ -275,7 +276,7 @@ msgstr "Błąd formatu"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
 msgid "Format Error Sending a Snailmail Letter"
-msgstr ""
+msgstr "Błąd formatu wysyłania listu pocztą tradycyjną"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
@@ -299,7 +300,7 @@ msgstr "Informacja"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Nieprawidłowa nazwa odbiorcy."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -327,12 +328,12 @@ msgstr "Letter"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr ""
+msgstr "List wysłany pocztą tradycyjną"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Listy"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
@@ -375,7 +376,7 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Not enough credits for Snail Mail"
-msgstr ""
+msgstr "Za mało kredytów na pocztę tradycyjną"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -392,7 +393,7 @@ msgstr "Notyfikacje"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Jedno lub więcej wymaganych pól jest pustych."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -406,6 +407,9 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Nasz serwis nie może odczytać Twojego listu ze względu na jego format.<br/>\n"
+"Zmień format szablonu lub zaktualizuj ustawienia\n"
+"aby automatycznie dodawać pustą stronę tytułową do wszystkich listów."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -417,7 +421,7 @@ msgstr "Kontrahent"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Please use an A4 Paper format."
-msgstr ""
+msgstr "Prosimy o użycie formatu A4."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -434,7 +438,7 @@ msgstr "Drukuj w kolorze"
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "Re-send letter"
-msgstr ""
+msgstr "Ponowne wysłanie listu"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -444,7 +448,7 @@ msgstr "Adresat"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
 msgid "Related Record"
-msgstr ""
+msgstr "Powiązany rekord"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -474,7 +478,7 @@ msgstr "Wysłano przez"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Snail Mails are successfully sent"
-msgstr ""
+msgstr "Wiadomości poczty tradycyjnej zostały pomyślnie wysłane"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -485,67 +489,67 @@ msgstr "Snailmail"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
-msgstr ""
+msgstr "Błąd kredytu w poczcie tradycyjnej"
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/models/notification_group.js:0
 #, python-format
 msgid "Snailmail Failures"
-msgstr ""
+msgstr "Awarie poczty tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
-msgstr ""
+msgstr "Błąd formatu wiadomości poczty tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "List pocztowy"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr ""
+msgstr "Listy pocztą tradycyjną"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
-msgstr ""
+msgstr "Brak wymaganych pól w poczcie tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
-msgstr ""
+msgstr "Poczta tradycyjna Brak dostępnej ceny"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr ""
+msgstr "Wiadomość o statusie poczty tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
-msgstr ""
+msgstr "Błąd próby poczty tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
-msgstr ""
+msgstr "Nieznany błąd poczty tradycyjnej"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Błędna wiadomość pocztą tradycyjną"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Poczta tradycyjna: kolejka przetwarzania listów"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -591,7 +595,7 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr ""
+msgstr "Adres odbiorcy nie jest kompletny"
 
 #. module: snailmail
 #. odoo-python
@@ -601,13 +605,15 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Nie można wysłać załącznika listu. Sprawdź jego zawartość i skontaktuj się z"
+" pomocą techniczną, jeśli problem będzie się powtarzał."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Kraj partnera nie jest objęty usługą poczty tradycyjnej."
 
 #. module: snailmail
 #. odoo-javascript
@@ -617,6 +623,8 @@ msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
 msgstr ""
+"Kraj, do którego chcesz wysłać list, nie jest obsługiwany przez naszą "
+"usługę."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -624,6 +632,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
+"Adres klienta nie jest kompletny. Zaktualizuj adres tutaj i wyślij list "
+"ponownie."
 
 #. module: snailmail
 #. odoo-python
@@ -631,6 +641,7 @@ msgstr ""
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr ""
+"Dokument został poprawnie wysłany pocztą. <br>Identyfikator śledzenia to %s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -640,6 +651,8 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
+"List nie mógł zostać wysłany z powodu niewystarczających środków na koncie "
+"IAP."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -655,7 +668,7 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Update Config and Re-send"
-msgstr ""
+msgstr "Zaktualizuj konfigurację i wyślij ponownie"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -674,6 +687,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Po utworzeniu listu jego status to \"Oczekujący\".\n"
+"Jeśli list zostanie poprawnie wysłany, jego status zmieni się na \"Wysłany\",\n"
+"Jeśli nie, otrzyma stan \"Błąd\", a komunikat o błędzie zostanie wyświetlony w polu \"Komunikat o błędzie\"."
 
 #. module: snailmail
 #. odoo-python
@@ -683,6 +699,8 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Nie masz konta IAP zarejestrowanego dla tej usługi. <br>Przejdź do <a "
+"href=%s target=\"new\">iap.odoo.com</a>, aby odebrać darmowe kredyty."
 
 #. module: snailmail
 #. odoo-python
@@ -692,13 +710,15 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Nie masz wystarczającej ilości kredytów, aby wykonać tę operację, "
+"<br>przejdź do swojego <a href=%s target=\"new\">konta iap</a>."
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
-msgstr ""
+msgstr "Do wysłania listu potrzebne są kredyty na koncie IAP."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -716,11 +736,11 @@ msgstr "Kod pocztowy"
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "for further assistance."
-msgstr ""
+msgstr "w celu uzyskania dalszej pomocy."
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "support"
-msgstr ""
+msgstr "wsparcie"

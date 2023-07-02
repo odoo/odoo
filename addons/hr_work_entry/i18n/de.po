@@ -3,7 +3,6 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Caroline Renson <car@odoo.com>, 2023
 # Oliver Roch <oliver.roch@d9t.de>, 2023
 # Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
@@ -51,7 +50,7 @@ msgstr "Archiviert"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
 msgid "Attendance"
-msgstr "Arbeitstag"
+msgstr "Anwesenheit"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
@@ -91,7 +90,7 @@ msgstr "Konflikt"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Conflicting"
-msgstr "Kollidierende"
+msgstr "In Konflikt"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
@@ -103,14 +102,14 @@ msgstr "Konflikte"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -166,7 +165,7 @@ msgstr "Ende"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "Externer Code"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
@@ -181,7 +180,7 @@ msgstr "HR-Arbeitseintrag"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "HR-Arbeitspostentyp"
+msgstr "HR-Arbeitseintragsart"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
@@ -196,7 +195,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
 msgstr ""
-"Wenn das aktive Feld auf \"false\" gesetzt ist, können Sie die Art des "
+"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die Art des "
 "Arbeitseintrags ausblenden, ohne ihn zu entfernen."
 
 #. module: hr_work_entry
@@ -204,7 +203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
@@ -222,7 +221,7 @@ msgstr "Ich"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
-msgstr "Namen"
+msgstr "Name"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -242,7 +241,7 @@ msgstr "Lohnart"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Ressourcen Abwesenheitsdetail"
+msgstr "Abwesenheitsdetails der Ressource"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -252,19 +251,19 @@ msgstr "Arbeitseintrag suchen"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr "Arbeitseintragstyp suchen"
+msgstr "Arbeitseintragsart suchen"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 #, python-format
 msgid "Solve conflicts first"
-msgstr "Lösen Sie zuerst Konflikte"
+msgstr "Zuerst Konflikte lösen"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -279,7 +278,7 @@ msgstr "Startzeit sollte vor Endzeit liegen."
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "Staat"
+msgstr "Status"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
@@ -291,12 +290,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr "Urlaubsoptionen"
+msgstr "Abwesenheitsoptionen"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
-msgstr "An"
+msgstr "Bis"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -315,17 +314,17 @@ msgstr "Undefiniert"
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 #, python-format
 msgid "Undefined Type"
-msgstr "Nicht definierter Typ"
+msgstr "Undefinierter Typ"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "Verwenden Sie diesen Code, um Ihre Daten an Dritte zu exportieren"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
 msgid "Validated"
-msgstr "Genehmigt"
+msgstr "Validiert"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
@@ -359,7 +358,7 @@ msgstr "Arbeitseintrag"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry Name"
-msgstr "Name Arbeitseintrag"
+msgstr "Name des Arbeitseintrags"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -368,12 +367,12 @@ msgstr "Name Arbeitseintrag"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Work Entry Type"
-msgstr "Art Arbeitseintrag"
+msgstr "Arbeitseintragsart"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Work Entry Type Name"
-msgstr "Name des Arbeitseintragstyps"
+msgstr "Name der Arbeitseintragsart"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action

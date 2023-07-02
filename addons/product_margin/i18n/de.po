@@ -3,8 +3,8 @@
 # 	* product_margin
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,17 +53,17 @@ msgstr "Durchschnittspreis in Eingangsrechnungen "
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr "Durchschn. Kaufpreis pro Einheit"
+msgstr "Durchschn. Einzelpreis im Einkauf"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr "Durchschn. Verkauf Stückpreis"
+msgstr "Durchschn. Einzelpreis im Verkauf"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
-msgstr "Durchschnittspreis pro Einheit"
+msgstr "Durchschn. Einzelpreis"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -78,12 +78,12 @@ msgstr "Katalogpreis"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
@@ -114,12 +114,12 @@ msgstr "Erwarteter Verkauf"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr "Erwartete Einstandskosten im Verkauf"
+msgstr "Erwarteter Verkauf - Normalkosten"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr "Erwartete Überschüsse im Verkauf"
+msgstr "Erwarteter Verkauf - Umsatz"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin_rate
@@ -150,7 +150,7 @@ msgstr "Rechnungsstatus"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_date
@@ -180,7 +180,7 @@ msgstr "Normalkosten"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Normalkosten - Ist-Kosten"
+msgstr "Reguläre Kosten - Gesamtkosten"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -219,7 +219,7 @@ msgstr "Produktemargen"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -229,23 +229,23 @@ msgstr "Kategorien von Eigenschaften"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_gap
 msgid "Purchase Gap"
-msgstr "Einkaufslücke (Gap)"
+msgstr "Einkaufslücke"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Purchases"
-msgstr "Einkauf"
+msgstr "Einkäufe"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Sales"
-msgstr "Verkauf"
+msgstr "Verkäufe"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
-msgstr "Verkaufsgap"
+msgstr "Verkaufslücke"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -256,45 +256,42 @@ msgstr "Standardpreis"
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
-"Summe der Multiplikation von Standardpreis und Anzahl bei einer "
-"Lieferantenrechnung. "
+"Summe der Multiplikation von Standardpreis und Anzahl Lieferantenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
-"Betrag aus Multiplikation von Rechnungspreis mit Anzahl Kundenrechnungen"
+"Summe der Multiplikation von Rechnungspreis mit Anzahl Kundenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
-"Summe der Multiplikation von Angebotspreis und Anzahl bei einer "
-"Lieferantenrechnung"
+"Summe der Multiplikation von Rechnungspreis und Anzahl Lieferantenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
-msgstr ""
-"Betrag aus Multiplikation von Listenpreis mit der Anzahl Kundenrechnungen"
+msgstr "Summe der Multiplikation von Listenpreis und Anzahl Kundenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Summe Mengen in Ausgangsrechnungen"
+msgstr "Summe der Menge in Kundenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr "Summe der Menge in Lieferantenrechnung"
+msgstr "Summe der Menge in Lieferantenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "An"
+msgstr "Bis"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
@@ -306,7 +303,7 @@ msgstr "Gesamtkosten"
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
-msgstr "Gesamtsumme Margen"
+msgstr "Gesamtmarge"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate
@@ -316,7 +313,7 @@ msgstr "Gesamtmarge (%)"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "Summe Marge *100 / Gesamtgewinn"
+msgstr "Gesamtmarge * 100 / Umsatz"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__turnover
@@ -327,4 +324,4 @@ msgstr "Umsatz"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin
 msgid "Turnover - Standard price"
-msgstr "Umsatz - Einstandspreis"
+msgstr "Umsatz - Standardpreis"

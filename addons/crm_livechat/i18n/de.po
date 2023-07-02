@@ -3,17 +3,16 @@
 # 	* crm_livechat
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Friederike Fasterling-Nesselbosch, 2023
-# Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,20 +21,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_livechat
+#. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "%s's New Lead"
-msgstr "%ss neuer Lead"
+msgstr "Neuer Lead von %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr "Chatbot Skript"
+msgstr "Chatbot-Skript"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr "Chatbot Script Step"
+msgstr "Chatbot-Skript-Schritt"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
@@ -43,14 +43,16 @@ msgid "Create Lead"
 msgstr "Lead erstellen"
 
 #. module: crm_livechat
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/crm_livechat/models/mail_channel.py:0
 #: code:addons/crm_livechat/static/src/models/messaging_initializer.js:0
 #, python-format
 msgid "Create a new lead (/lead lead title)"
-msgstr "Einen neuen Lead erstellen"
+msgstr "Einen neuen Lead erstellen (/Lead Leadtitel)"
 
 #. module: crm_livechat
+#. odoo-python
 #: code:addons/crm_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Created a new lead: %s"
@@ -64,7 +66,7 @@ msgstr "Diskussionskanal"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr "Anzahl erstellter Leads"
+msgstr "Anzahl erzeugter Leads"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
@@ -80,12 +82,12 @@ msgstr ""
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
 msgid "Lead Generation Bot"
-msgstr "Lead Generation Bot"
+msgstr "Leadgenerierungsbot"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
 msgid "Leads"
-msgstr "Interessenten"
+msgstr "Leads"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -108,7 +110,7 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
-"Verwendet in Kombination mit Schritttyp 'create_lead', um erstellte "
+"Verwendet in Kombination mit Schritttyp „create_lead“, um erstellte "
 "Leads/Verkaufschancen dem bestimmten Team automatisch zuzuweisen"
 
 #. module: crm_livechat

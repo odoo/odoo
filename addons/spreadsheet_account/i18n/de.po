@@ -3,8 +3,9 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Friederike Fasterling-Nesselbosch, 2023
+# Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:15+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +36,8 @@ msgid ""
 "'%s' is not a valid period. Supported formats are \"21/12/2022\", "
 "\"Q1/2022\", \"12/2022\", and \"2022\"."
 msgstr ""
-"'%s' ist kein gültiger Zeitraum. Unterstützte Formate sind \"21/12/2022\", "
-"\"Q1/2022\", \"12/2022\", and \"2022\"."
+"„%s“ ist keine gültige Periode. Unterstützte Formate sind „21/12/2022“, "
+"„Q1/2022“, „12/2022“, und „2022“."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_account_account
@@ -83,7 +84,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/models/account.py:0
 #, python-format
 msgid "Journal items for account prefix %s"
-msgstr "Journalposten für Kontopräfix %s"
+msgstr "Buchungszeile für Kontopräfix %s"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -107,7 +108,7 @@ msgstr "Gibt die Kontonummern einer bestimmten Gruppe aus."
 msgid ""
 "Returns the ending date of the fiscal year encompassing the provided date."
 msgstr ""
-"Gibt das Enddatum des Steuerjahres zurück, das das angegebene Datum "
+"Gibt das Enddatum des Geschäftsjahres zurück, das das angegebene Datum "
 "einschließt."
 
 #. module: spreadsheet_account
@@ -117,8 +118,8 @@ msgstr ""
 msgid ""
 "Returns the starting date of the fiscal year encompassing the provided date."
 msgstr ""
-"Gibt das Anfangsdatum des Steuerjahres zurück, das das angegebene Datum "
-"umfasst."
+"Gibt das Anfangsdatum des Geschäftsjahres zurück, das das angegebene Datum "
+"einschließt."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -164,13 +165,15 @@ msgid ""
 "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
 "\"12/2022\", and \"2022\"."
 msgstr ""
+"Der Datumsbereich. Unterstützte Formate sind „21/12/2022“, „Q1/2022“, "
+"„12/2022“, und „2022“."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The prefix of the accounts."
-msgstr ""
+msgstr "Der Präfix der Konten."
 
 #. module: spreadsheet_account
 #. odoo-javascript

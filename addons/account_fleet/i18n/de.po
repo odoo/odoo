@@ -3,17 +3,17 @@
 # 	* account_fleet
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Friederike Fasterling-Nesselbosch, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "Kontobuchung"
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "Bills"
-msgstr "Rechnung"
+msgstr "Rechnungen"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
@@ -44,12 +44,12 @@ msgstr "Erstellungsdatum"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journalbuchung"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move_line
 msgid "Journal Item"
-msgstr "Journaleintrag"
+msgstr "Buchungszeile"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
@@ -57,6 +57,7 @@ msgid "Need Vehicle"
 msgstr "Fahrzeug benötigt"
 
 #. module: account_fleet
+#. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 #, python-format
 msgid "Service Vendor Bill: %s"

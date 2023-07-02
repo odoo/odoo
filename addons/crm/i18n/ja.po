@@ -10,6 +10,7 @@
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,14 +75,14 @@ msgstr "%(assigned)s のリードが %(team_name)s チームに割り当てら�
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr ""
+msgstr "%(attach_name)s （%(lead_name)sから）"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr ""
+msgstr "%(duplicates)s重複したリードがマージされました。"
 
 #. module: crm
 #. odoo-python
@@ -96,7 +97,7 @@ msgstr "%(members_assigned)s リードが %(member_count)s の販売担当者に
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "%s and %s"
-msgstr ""
+msgstr "%s と %s"
 
 #. module: crm
 #. odoo-python
@@ -126,7 +127,7 @@ msgstr "列間の<b>案件のドラッグ＆ドロップで</b>販売サイク�
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
-msgstr ""
+msgstr "<b>数文字入力して</b>会社を探す、または新しく作成する"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
@@ -262,6 +263,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>ルールに基づいて定期的にリードを割り当てる</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    全営業チームは、特に指定がない限りデフォルトで\n"
+"                                   この設定を使用します。\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -342,6 +348,76 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">リード/案件</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">プロダクトに興味がある</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            こんにちは<t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>様、<br><br>\n"
+"                            はじめまして、<t t-out=\"object.company_id.name or ''\">My Company(San Francisco)</t>へようこそ。\n"
+"                            お会いできて嬉しいです！お客様のオンボーディングが始まりました。<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>でご提供できるものをご覧頂けます。 私は<t t-out=\"object.user_id.name or ''\">Marc Demo</t>と申します。Odooを最大限に活用して頂けるようお手伝い致します。近々で、簡単なデモを行わせて頂くのはいかがでしょうか？<br>\n"
+"                            いつでもお気軽にご連絡下さい。<br><br>\n"
+"                            宜しくお願い致します。<br>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                                <br>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -502,7 +578,7 @@ msgstr "エイリアス名"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "エイリアスステータス"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
@@ -512,7 +588,7 @@ msgstr "エイリアスドメイン"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "最後に受信したメッセージで評価されたエイリアスステータス"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -555,6 +631,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"あなたは営業チームのメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。\n"
+"                                        CRMを使用するには、<a name=\"%d\" type=\"action\" tabindex=\"-1\">チームに参加</a>する必要があります。"
 
 #. module: crm
 #. odoo-python
@@ -564,6 +642,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"あなたは営業ではないチームのメンバーであるため、<b>デフォルトで初めのチーム</b>のパイプラインが表示されます。 "
+"CRMを使用するには、チームに参加する必要があります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -622,7 +702,7 @@ msgstr "割当ルール"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "チーム%(team)sのための割り当てドメインが誤ってフォーマットされています"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -766,7 +846,7 @@ msgstr " このボックスをオンにすると、着信リクエストを商�
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
-msgstr ""
+msgstr "このボックスにチェックを入れて、案件でプリセールスプロセスを管理します。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
@@ -792,7 +872,7 @@ msgstr "あなたのリード/案件カテゴリを分類し、分析。たと�
 msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
-msgstr ""
+msgstr "パイプラインに戻るにはパンくずリストをクリックしてください。Odooはナビゲートしたすべての変更を保存します。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -814,7 +894,7 @@ msgstr "閉めた/死んだリードはチャンスに変換できません。"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
 msgid "Closing Note"
-msgstr ""
+msgstr "終了ノート"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -872,7 +952,7 @@ msgstr "カスタムドメインを設定"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr ""
+msgstr "おめでとうございます、その大きな案件を獲得できますように！"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -902,7 +982,7 @@ msgstr "連絡先名"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Contact:"
-msgstr ""
+msgstr "連絡先："
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -931,12 +1011,12 @@ msgstr "変換オプション"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr ""
+msgstr "リードを案件に変換（一括）"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr ""
+msgstr "リードを案件に変換（一括ではない）"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1003,7 +1083,7 @@ msgstr "国"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "ウェブサイトトラフィックからリード/案件を作成"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1013,22 +1093,22 @@ msgstr "案件作成"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr ""
+msgstr "リードを作成"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr ""
+msgstr "失注理由を作成"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr ""
+msgstr "定期的計画を作成"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr ""
+msgstr "案件パイプラインからリード発掘リクエストを直接作成"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1043,7 +1123,7 @@ msgstr "新規に顧客を作成"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr ""
+msgstr "新規リードを作成"
 
 #. module: crm
 #. odoo-python
@@ -1107,12 +1187,12 @@ msgstr "作成日"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_opportunity_forecast
 msgid "Crm: Forecast"
-msgstr ""
+msgstr "Crm：予測"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr ""
+msgstr "Crm：自分のパイプライン"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_currency
@@ -1176,7 +1256,7 @@ msgstr "完了所要日数"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "期日：%s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
@@ -1201,14 +1281,14 @@ msgstr "説明"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr ""
+msgstr "Eメールが下記宛に送信されたのをご存じですか："
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
-msgstr ""
+msgstr "営業チームエイリアスに送信されたEメールがあなたのパイプラインに案件を作成したのをご存じですか？"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1217,6 +1297,7 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
+"会社名やVAT番号で検索すると、その会社の全データを即座に入力できることをご存知ですか？Odooはロゴ、住所、会社規模、会社情報、ソーシャルメディアアカウントなど、全てを自動入力します。"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1225,6 +1306,7 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
+"右上のマップアイコンを使って、案件リストをマップビューにできることをご存知ですか？Odooの多くの画面で、タスク、連絡先、配送注文などをマップに変換することができます。"
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1271,7 +1353,7 @@ msgstr "ドメイン"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
-msgstr ""
+msgstr "取引が成立したら、案件を<b>成約</b>にドラッグして下さい。おめでとうございます！"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1282,7 +1364,7 @@ msgstr "例. 月次"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
-msgstr ""
+msgstr "決算予定日を簡単に設定し、収益の流れを概観できます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1305,7 +1387,7 @@ msgstr "Eメールエイリアス"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "Eメールドメイン基準"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1320,7 +1402,7 @@ msgstr "メールCC"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr ""
+msgstr "メールCC："
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1340,7 +1422,7 @@ msgstr "全てのリードに自動的に情報付与"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "リードに自動的に情報付与"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
@@ -1385,7 +1467,7 @@ msgstr "見込完了"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Expected Closing:"
-msgstr ""
+msgstr "終了予定："
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
@@ -1438,12 +1520,12 @@ msgstr "フィールドラベル"
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
-msgstr ""
+msgstr "サニタイズされた電話番号を保存するためのフィールド。検索や比較のスピードアップに役立ちます。"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr ""
+msgstr "予測リードスコア計算に使用できるフィールド"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1478,12 +1560,13 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
+"営業チームにとって、リードの枯渇ほどつらいことはありません。幸い数回クリックするだけで、企業規模や業種など、貴社のニーズに特化したリードを生成することができます。この機能をお試しいただけるよう、200クレジットを無料でご提供しています。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr ""
+msgstr "強制割り当て"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -1494,14 +1577,14 @@ msgstr "フォーキャスト"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_pivot_forecast
 msgid "Forecast Analysis"
-msgstr ""
+msgstr "予測分析"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr ""
+msgstr " %(source_name)sから"
 
 #. module: crm
 #. odoo-python
@@ -1542,7 +1625,7 @@ msgstr "このステージへ案件を移行する必要条件をチームに伝
 #: code:addons/crm/models/crm_lead.py:0 code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
-msgstr ""
+msgstr "素晴らしい、初成約おめでとうございます！"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1606,7 +1689,7 @@ msgstr "例外活動を示すアイコン"
 msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
-msgstr ""
+msgstr "チェックした場合、すでに設定されていても、更新された案件に対して営業担当を強制的に更新します。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1625,7 +1708,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
-msgstr ""
+msgstr "設定されている場合、この営業チームは、この取引先に関連する営業および割り当てに使用されます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -1647,7 +1730,7 @@ msgstr "メールアドレスがブラックリストに含まれている場合
 msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
-msgstr ""
+msgstr "サニタイズされた電話番号がブラックリストに登録されている場合、その連絡先は、どのリストからも、一括送信のSMSを受信できなくなります。"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1659,7 +1742,7 @@ msgstr "インポートと同期"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "リードと案件のインポートテンプレート"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1684,6 +1767,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ブラックリストに登録された電話番号が携帯電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話番号フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1692,6 +1776,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1701,7 +1786,7 @@ msgstr "内部メモ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
-msgstr ""
+msgstr "各cron実行のインターバルタイプ（例：2日毎、2時間毎など"
 
 #. module: crm
 #. odoo-python
@@ -1710,7 +1795,7 @@ msgstr ""
 msgid ""
 "Invalid repeat frequency. Consider changing frequency type instead of using "
 "large numbers."
-msgstr ""
+msgstr "リピート回数が無効です。大きな数字を使用する代わりに、頻度タイプの変更を検討して下さい。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1720,7 +1805,7 @@ msgstr "フォロー中　"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
 msgid "Is Partner Visible"
-msgstr ""
+msgstr "取引先が表示されているか"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -1730,7 +1815,7 @@ msgstr "獲得ステージ"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
 msgid "Is automated probability?"
-msgstr ""
+msgstr "恐らく自動化されていますか？"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1740,7 +1825,7 @@ msgstr "職位"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr ""
+msgstr "職位："
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -1750,17 +1835,17 @@ msgstr "かんばん状態"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "Kpi Crm 作成済リード評価額"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "Kpi Crm 成約案件評価額"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr ""
+msgstr "Langアクティブカウント"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_id
@@ -1780,7 +1865,7 @@ msgstr "最後のアクション"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Action:"
-msgstr ""
+msgstr "最後のアクション："
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -1836,19 +1921,19 @@ msgstr "リード"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_enabled
 msgid "Lead Assign"
-msgstr ""
+msgstr "リード割り当て"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr ""
+msgstr "%(user_name)sによるリード割り当てリクエスト"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
 msgid "Lead Average Capacity"
-msgstr ""
+msgstr "リード平均許容量"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1868,32 +1953,32 @@ msgstr "リードマイニング"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr ""
+msgstr "リードプロパティ"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr ""
+msgstr "リード採点頻度"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr ""
+msgstr "リード採点頻度フィールド"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr ""
+msgstr "ストリング内リード採点頻度フィールド"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr ""
+msgstr "リード採点開始日"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr ""
+msgstr "ストリング内リード採点開始日"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1911,7 +1996,7 @@ msgstr "過去30日間にこのメンバーに割り当てられたリード"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr ""
+msgstr "リードまたは案件"
 
 #. module: crm
 #. odoo-python
@@ -1920,7 +2005,7 @@ msgstr ""
 msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
-msgstr ""
+msgstr "リード/案件自動割り当てを行えるのはマネージャーまたは管理者に限られています。"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1978,12 +2063,12 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr ""
+msgstr "割り当て済リード"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr ""
+msgstr "リード数"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
@@ -1994,12 +2079,12 @@ msgstr "リード生成"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
-msgstr ""
+msgstr "リードは案件作成の前の評価ステップです。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
 msgid "Leads or Opportunities"
-msgstr ""
+msgstr "リードまたは案件"
 
 #. module: crm
 #. odoo-python
@@ -2009,7 +2094,7 @@ msgstr ""
 msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
-msgstr ""
+msgstr "リードチームの割り当ては、%.2fではなく、最低でも0.2日間、最大でも30日間行う必要があります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2019,7 +2104,7 @@ msgstr "自分に割り当てられたリード"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are not assigned"
-msgstr ""
+msgstr "割り当てられていないリード"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2041,21 +2126,21 @@ msgstr "リードと案件"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr ""
+msgstr "リード/案件数"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr ""
+msgstr "<b>アクティビティを予定</b>しましょう。"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let’s have a look at an Opportunity."
-msgstr ""
+msgstr "案件を見てみましょう。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__exist
@@ -2068,7 +2153,7 @@ msgstr "既存の顧客にリンク"
 msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
-msgstr ""
+msgstr "リンクされた取引先（オプション）。通常、リードの変換時に作成されます。取引先は名前、TIN、Eメール、内部参照で見つけることができます。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2078,7 +2163,7 @@ msgstr "ロケールコード"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Looks like nothing is planned."
-msgstr ""
+msgstr "何も予定されていないようです。"
 
 #. module: crm
 #. odoo-javascript
@@ -2106,12 +2191,12 @@ msgstr "失注"
 #: code:addons/crm/wizard/crm_lead_lost.py:0
 #, python-format
 msgid "Lost Comment"
-msgstr ""
+msgstr "失注コメント"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
 msgid "Lost Count"
-msgstr ""
+msgstr "失注数"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -2127,7 +2212,7 @@ msgstr "失注理由"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Lost Reason:"
-msgstr ""
+msgstr "失注理由："
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
@@ -2157,6 +2242,7 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"手動割り当てでは、アクションボタンを使用してチームフォームビューから割り当てをトリガーすることができます。全チームの割り当てを繰り返し実行するcronを自動設定します。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2172,7 +2258,7 @@ msgstr "失注とマーク"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as won"
-msgstr ""
+msgstr "成約とする"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2220,7 +2306,7 @@ msgstr "打ち合わせ"
 msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
-msgstr ""
+msgstr "ユーザー %(user)s 用とチーム%(team)s用のメンバー割り当てドメインが誤ってフォーマットされています。"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2283,7 +2369,7 @@ msgstr "月次"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
-msgstr ""
+msgstr "チームに所属する全営業担当の月間リード平均キャパシティ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2327,7 +2413,7 @@ msgstr "新規"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr ""
+msgstr "新しいリード"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
@@ -2402,7 +2488,7 @@ msgstr "件名なし"
 msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
-msgstr ""
+msgstr "ドメインに一致する未割り当てのリードがないため、チームとその営業担当者に割り当てられたリード%(team_name)sがありません。"
 
 #. module: crm
 #. odoo-python
@@ -2411,7 +2497,7 @@ msgstr ""
 msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
-msgstr ""
+msgstr "キャパシティがないため%(team_name)sチームに割り当てられたリードがありません。営業担当者にキャパシティを追加して下さい。"
 
 #. module: crm
 #. odoo-python
@@ -2420,7 +2506,7 @@ msgstr ""
 msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
-msgstr ""
+msgstr "チームまたは営業担当者に割り当てられたリードがありません。未割り当てのリードと同様に、営業チームと営業担当者の設定を確認してください。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2441,7 +2527,7 @@ msgstr "まだデータはありません！"
 msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
-msgstr ""
+msgstr "営業担当者のドメインに一致する未割り当てのリードがないため、営業担当者に割り当てられたリードがありません。"
 
 #. module: crm
 #. odoo-python
@@ -2450,7 +2536,7 @@ msgstr ""
 msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
-msgstr ""
+msgstr "未割り当てのリードがそのドメインに一致しないため、%(team_name)sチームに割り当てられた新しいリードはありません。"
 
 #. module: crm
 #. odoo-python
@@ -2458,7 +2544,7 @@ msgstr ""
 #, python-format
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
-msgstr ""
+msgstr "チームのドメインに一致するリードがないため、チームに新たなリードは割り当てられません。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2468,7 +2554,7 @@ msgstr "次の活動が計画されていません"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "No opportunity to display!"
-msgstr ""
+msgstr "表示する案件はありません！"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2500,7 +2586,7 @@ msgstr "ノート:"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Now, <b>add your Opportunity</b> to your Pipeline."
-msgstr ""
+msgstr "今、パイプラインに <b>あなたの案件を追加</b>して下さい。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -2517,12 +2603,12 @@ msgstr "エラー数"
 msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
-msgstr ""
+msgstr "各cron実行間のインターバルタイプの数（例：2日ごと、4日ごとなど）"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr ""
+msgstr "先月割り当てられたリードと案件の数。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -2551,6 +2637,7 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"OdooのAIは履歴に基づいて各案件の成功率を予測します。成功率は常に手動で更新することができますが、Odooに任せれば、商談が営業サイクルの中で進む間にスコアが更新されます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2566,7 +2653,7 @@ msgstr "未完了案件"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr ""
+msgstr "案件失注の理由"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -2600,16 +2687,17 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"案件分析では、案件に瞬時にアクセスすることができ、案件毎の予想収益、計画コスト、期限切れ、対話回数などの情報を得ることができます。このレポートは主に営業マネージャーが営業パイプラインのチャネルの定期的なレビューを行うために使用します。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
 msgid "Opportunities Forecast"
-msgstr ""
+msgstr "案件予測"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
-msgstr ""
+msgstr "案件収益"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
@@ -2714,7 +2802,7 @@ msgstr "期日超過案件"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
 msgid "Overdue Opportunities Revenues"
-msgstr ""
+msgstr "期日超過案件収益"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2748,17 +2836,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr ""
+msgstr "取引先Eメールがアップデートします"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr ""
+msgstr "取引先電話番号がアップデート"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
 msgid "Partner is blacklisted"
-msgstr ""
+msgstr "取引先がブラックリストに登録されています"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -2769,7 +2857,7 @@ msgstr "電話"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "ブラックリストに登録された電話番号"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
@@ -2779,7 +2867,7 @@ msgstr "通話品質"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "電話/携帯電話"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2828,12 +2916,12 @@ msgstr "リストビューから複数の要素(リードまたは案件)を選�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr ""
+msgstr "Pls フィールド"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Pls 開始日"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -2851,27 +2939,27 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "重複の可能性のあるリード"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr ""
+msgstr "重複の可能性のあるリードの数"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "予測リード採点"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr ""
+msgstr "予測リード採点フィールドラベル"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr ""
+msgstr "予測リード採点：自動化された確度を再計算する"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2897,7 +2985,7 @@ msgstr "確度(%)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Probability:"
-msgstr ""
+msgstr "確度："
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lead_properties
@@ -2913,22 +3001,22 @@ msgstr "案件"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr ""
+msgstr "按分されたMRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "按分された定額収入"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "按分された収入"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr ""
+msgstr "按分された収入"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2967,7 +3055,7 @@ msgstr "定期的計画"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Recurring Revenue"
-msgstr ""
+msgstr "定期収入"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
@@ -2983,7 +3071,7 @@ msgstr "紹介者"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Referred By:"
-msgstr ""
+msgstr "紹介者"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
@@ -3002,7 +3090,7 @@ msgstr "繰返し周期"
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "Repeat frequency should be positive."
-msgstr ""
+msgstr "リピート頻度は正の値である必要があります。"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
@@ -3023,7 +3111,7 @@ msgstr "必要事項"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "再スケジュール"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -3121,12 +3209,12 @@ msgstr "販売担当者"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "サニタイズされた数"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
-msgstr ""
+msgstr "活動を予定して、やるべきことを全て把握する。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3161,12 +3249,12 @@ msgstr "シーケンス"
 msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
-msgstr ""
+msgstr "案件に定期プランを設定し、契約の更新期間<br>（例：毎月、毎年）を表示します。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr ""
+msgstr "案件パイプラインに新しいステージを追加"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -3199,12 +3287,12 @@ msgstr "リードのみ表示"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only leads"
-msgstr ""
+msgstr "リードのみを表示"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunities"
-msgstr ""
+msgstr "案件のみを表示"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3220,7 +3308,7 @@ msgstr "自動割当をスキップ"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Snooze 7d"
-msgstr ""
+msgstr "アラーム機能 7日"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__source_id
@@ -3279,7 +3367,7 @@ msgstr "ステージ変更"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Stage:"
-msgstr ""
+msgstr "ステージ："
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -3391,13 +3479,15 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
+"以下の連絡先は、このリードのフォロワーとして追加されました。\n"
+"　　　　　　　以下で、30日未満前に連絡しているためです："
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
-msgstr ""
+msgstr "このチャネルに関連付けられたEメールアドレス。新しいEメールを受信すると、チャネルに割り当てられた新しいリードが自動的に作成されます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -3425,7 +3515,7 @@ msgstr "リードから案件に変換される際に作成される取引先の
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
-msgstr ""
+msgstr "月の数は負にはできません。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
@@ -3457,20 +3547,20 @@ msgstr "成功率はステージに基づいて計算されますが、統計分
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "この分析では、月に何件のリードが作成されたかがわかります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr ""
+msgstr "このバーで予定されている活動に基づいて案件をフィルタリングすることができます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
-msgstr ""
+msgstr "これは、ルールに基づいて自動的にリードを営業担当者に割り当てるために使用することができます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3518,7 +3608,7 @@ msgstr "これはリンクのソースです。たとえば、検索エンジン
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgstr "この電話番号はSMSマーケティングのブラックリストに登録されています。ブラックリストを解除するにはクリックして下さい。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -3581,7 +3671,7 @@ msgstr "タイトル"
 msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
-msgstr ""
+msgstr "データ損失を防ぐため、リードと案件は%(max_length)sのグループでのみ統合できます。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3603,12 +3693,12 @@ msgstr "追跡"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "直近12カ月"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr ""
+msgstr "Eメールを送ってみる"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -3640,7 +3730,7 @@ msgstr "UTMキャンペーン"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr ""
+msgstr "UX：リード会社に限定、または会社がない場合は全て"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3682,19 +3772,19 @@ msgstr "確率を更新"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
 msgid "Update the probabilities"
-msgstr ""
+msgstr "確度を更新"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
 msgid "Use Leads"
-msgstr ""
+msgstr "リードを使用"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
-msgstr ""
+msgstr "案件が失注になった理由を報告するために失注理由を使用する（「競合他社に負けた」など）"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3727,7 +3817,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr ""
+msgstr "左上の<i>作成</i>ボタンを使用する、または以下にEメールを送る"
 
 #. module: crm
 #. odoo-python
@@ -3736,19 +3826,19 @@ msgstr ""
 msgid ""
 "Use the top left <i>Create</i> button, or send an email to %(email_link)s to"
 " test the email gateway."
-msgstr ""
+msgstr "左上の <i>作成</i>ボタンを使用する、またはEメールゲートウェイをテストするために%(email_link)sEメールを送ります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
-msgstr ""
+msgstr "左上の作成ボタンを使用する、またはEメールゲートウェイをテストするためにEメールを送ります。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid "Use this menu to have an overview of your Pipeline."
-msgstr ""
+msgstr "このメニューでパイプラインの概要を確認できます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__sequence
@@ -3763,7 +3853,7 @@ msgstr "ユーザ"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "ユーザーの会社"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__value
@@ -3808,7 +3898,7 @@ msgstr "サイト通信履歴"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website
 msgid "Website of the contact"
-msgstr ""
+msgstr "連絡先のウェブサイト"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3825,12 +3915,12 @@ msgstr "週"
 #. module: crm
 #: model:mail.template,name:crm.mail_template_demo_crm_lead
 msgid "Welcome Demo"
-msgstr ""
+msgstr "ウェルカムデモ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
-msgstr ""
+msgstr "何が問題だったのか？"
 
 #. module: crm
 #. odoo-python
@@ -3859,7 +3949,7 @@ msgstr "案件目標を達成"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "やりました！チームにとってこの7日間で一番の取引でした。"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -3878,7 +3968,7 @@ msgstr "はい"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "You can make your opportunity advance through your pipeline from here."
-msgstr ""
+msgstr "ここからパイプラインを通して案件を進めることができます。"
 
 #. module: crm
 #. odoo-python
@@ -3951,22 +4041,22 @@ msgstr "が次の日付で作成されたもの、"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "generate opportunities in your pipeline?<br>"
-msgstr ""
+msgstr "あなたのパイプラインで案件を作成しますか？<br>"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "to test the email gateway."
-msgstr ""
+msgstr "Eメールを送ります。"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr ""
+msgstr "このEメールアドレスは営業チームメンバーが設定することができます。"
 
 #. module: crm
 #. odoo-python

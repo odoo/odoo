@@ -6,6 +6,7 @@
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Kevilyn Rosa, 2023
 # Martin Trigaux, 2023
+# Diego Sayron, 2023
 # Layna Nascimento, 2023
 # 
 msgid ""
@@ -29,6 +30,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
+"                'Repair Order - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -51,13 +55,20 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'Under Repair' status is used when the repair is ongoing.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": Insufficient Quantity To Repair"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -82,6 +93,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
+"        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br>\n"
+"        </t>\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br><br>\n"
+"        Thank you,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -94,11 +124,13 @@ msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">Invoices</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Repairs</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -183,12 +215,12 @@ msgstr "Adicionar"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "Add internal notes."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "Add quotation notes."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -198,7 +230,7 @@ msgstr "Depois de ser Reparado"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "Allowed Picking Type"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -299,13 +331,13 @@ msgstr "Criar Fatura em Massa (reparo)"
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Create Repair"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "Create Repair Orders from Returns"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -386,7 +418,7 @@ msgstr "Nome exibido"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "Do you confirm you want to repair"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -408,6 +440,7 @@ msgstr "Provisório"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
+"Draft invoices for this order will be cancelled. Do you confirm the action?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -508,6 +541,7 @@ msgstr "Se marcado, algumas mensagens tem erro de entrega."
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"If ticked, you will be able to directly create repair orders from a return."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -697,7 +731,7 @@ msgstr "Nenhum produto definido em serviços."
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "Nenhuma ordem de reparo encontrada. Vamos criar uma!"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -711,6 +745,7 @@ msgstr "Normal"
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
 msgstr ""
+"Note that the warehouses of the return and repair locations don't match!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -735,7 +770,7 @@ msgstr "Número de mensagens com erro de entrega"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Number of repairs linked to this picking"
 
 #. module: repair
 #. odoo-python
@@ -902,12 +937,12 @@ msgstr "Reparo"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Repair Description"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
 msgid "Repair Fee"
-msgstr ""
+msgstr "Repair Fee"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
@@ -927,7 +962,7 @@ msgstr "Linha de Reparo (peças)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Repair Notes"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -964,7 +999,7 @@ msgstr "Ordens de Reparo"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "Repair Orders Tags"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -979,13 +1014,13 @@ msgstr "Ref. Reparo"
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "Repair Services"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "Repair Tags"
 
 #. module: repair
 #. odoo-python
@@ -1018,19 +1053,19 @@ msgstr "O reparo deve ser efetuado para ser finalizado."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Repair order count"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Repair orders of %s"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair: Quotation"
-msgstr ""
+msgstr "Repair: Quotation"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1074,12 +1109,12 @@ msgstr "Devolução"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Return Order from which the product to be repaired comes from."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Return Type Of"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1100,7 +1135,7 @@ msgstr "Pedido de Venda"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Sale Order from which the product to be repaired comes from."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1131,14 +1166,14 @@ msgstr "Enviar cotação"
 #. module: repair
 #: model:mail.template,description:repair.mail_template_repair_quotation
 msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
-msgstr ""
+msgstr "Sent manually when clicking on \"Send Quotation\" on a repair order"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "Serial number is required for operation lines with products: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1307,6 +1342,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"True if this repair is linked to a Return Order and the order is 'Done'. "
+"False otherwise."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1393,6 +1430,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"You can not delete a repair order once it has been confirmed. You must first"
+" cancel it."
 
 #. module: repair
 #. odoo-python
@@ -1402,6 +1441,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"You can not delete a repair order which is linked to an invoice which has "
+"been posted once."
 
 #. module: repair
 #. odoo-python
@@ -1415,14 +1456,14 @@ msgstr "Você não pode inserir quantidades negativas."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
-msgstr ""
+msgstr "You cannot cancel a completed repair order."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "You cannot delete a completed repair order."
 
 #. module: repair
 #. odoo-python
@@ -1442,3 +1483,4 @@ msgstr "do local"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
