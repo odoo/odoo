@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerCleanup } from "../../helpers/cleanup";
-import { defaultLocalization } from "../../helpers/mock_services";
+import { defaultLocalization, makeFakeDialogService } from "../../helpers/mock_services";
 import {
     click,
     editInput,
@@ -34,6 +34,7 @@ import {
     selectTimeRange,
     toggleFilter,
     toggleSectionFilter,
+    clickAllDaySlot,
 } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
 import { createWebClient, doAction } from "../../webclient/helpers";
@@ -4725,5 +4726,32 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".ui-datepicker-today");
         // test would fail here if we went to week mode
         assert.containsOnce(target, ".fc-dayGridMonth-view");
+    });
+
+    QUnit.test("calendar rendering with quick_create_form_view_id", async (assert) => {
+        serviceRegistry.add(
+            "dialog",
+            makeFakeDialogService((className, props) => {
+                assert.equal(props.viewId, 1);
+                return () => {};
+            }),
+            { force: true }
+        );
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" quick_create_form_view_id="1" quick_add="0">
+                    <field name="name"/>
+                </calendar>
+            `,
+        });
+        const date = target.querySelector(".fc-day-grid td");
+        await clickAllDaySlot(target, date.dataset.date);
+        const datepicker = document.querySelector("#ui-datepicker-div");
+        if (datepicker) {
+            datepicker.remove();
+        }
     });
 });
