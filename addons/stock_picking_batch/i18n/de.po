@@ -71,7 +71,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, der diese Zeilenanzahl überschreitet, wenn der Transfer zu ihnen hinzugefügt wird.\n"
+"Ein Transfer wird nicht automatisch zur Charge hinzugefügt, die diese Zeilenanzahl überschreitet, wenn der Transfer zu ihnen hinzugefügt wird.\n"
 "Belassen Sie diesen Wert bei „0“, wenn keine Zeilenbeschränkung besteht."
 
 #. module: stock_picking_batch
@@ -80,7 +80,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, der diese Anzahl Transfers überschreitet.\n"
+"Ein Transfer wird nicht automatisch zur Charge hinzugefügt, der diese Anzahl Transfers überschreitet.\n"
 "Belassen Sie diesen Wert bei „0“, wenn kein Transferlimit besteht."
 
 #. module: stock_picking_batch
@@ -134,17 +134,17 @@ msgstr "Hinzufügen zu"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Zuordnen zu Welle"
+msgstr "Zur Welle hinzufügen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr "Zum Stapel hinzufügen"
+msgstr "Zur Charge hinzufügen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr "Zu Wave hinzufügen"
+msgstr "Zur Welle hinzufügen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -176,34 +176,34 @@ msgstr "Automatisch bestätigen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr "Automatische Stapel"
+msgstr "Automatische Chargen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr "Stapel automatisch nach Kontakten gruppieren."
+msgstr "Charge automatisch nach Kontakten gruppieren."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr "Stapel automatisch nach Zielland gruppieren."
+msgstr "Charge automatisch nach Zielland gruppieren."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr "Stapel automatisch nach Zielstandort gruppieren."
+msgstr "Charge automatisch nach Zielstandort gruppieren."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr "Stapel automatisch nach Herkunftsstandort gruppieren."
+msgstr "Charge automatisch nach Quellstandort gruppieren."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Wenn möglich, werden die Kommissionierungen automatisch in Losen "
+"Wenn möglich, werden die Kommissionierungen automatisch in Chargen "
 "zusammengefasst, sobald sie bestätigt werden."
 
 #. module: stock_picking_batch
@@ -214,7 +214,7 @@ msgstr "Barcode"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
-msgstr "Stapel"
+msgstr "Charge"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -258,7 +258,7 @@ msgstr "Zu diesem Transfer gehörende Charge"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
-msgstr "Stapel"
+msgstr "Chargen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -277,7 +277,7 @@ msgstr "Abgebrochen"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "Wave Transfer kann nicht erstellt werden"
+msgstr "Wellen-Transfer kann nicht erstellt werden"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -289,14 +289,14 @@ msgstr "Verfügbarkeit prüfen"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr "Label Layout auswählen"
+msgstr "Etikettenlayout auswählen"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr "Wählen Sie den zu druckenden Etikettentyp"
+msgstr "Zu druckenden Etikettentyp auswählen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -324,7 +324,7 @@ msgstr "Kontakt"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Anzahl der Kommissionierungsstapel"
+msgstr "Anzahl Kommissionierungschargen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
@@ -339,7 +339,7 @@ msgstr "Einen neuen Stapeltransfer erstellen"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Einen neuen Wave Transfer erstellen"
+msgstr "Einen neuen Wellen-Transfer erstellen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -363,7 +363,7 @@ msgstr "Zielland"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Destination Location"
-msgstr "Lagerort (Ziel)"
+msgstr "Ziellagerort"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -457,13 +457,13 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"Wenn die Funktion für Automatische Stapel aktiviert ist, muss mindestens "
+"Wenn die Funktion für Automatische Chargen aktiviert ist, muss mindestens "
 "eine „Gruppieren nach“-Option ausgewählt werden."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "In Progress"
-msgstr "Laufend"
+msgstr "In Bearbeitung"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
@@ -502,7 +502,7 @@ msgstr "Zeile"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "Liste der mit diesem Stepel verbundenen Transfers"
+msgstr "Liste der mit dieser Charge verbundenen Transfers"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -512,12 +512,12 @@ msgstr "Hauptanhang"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr "Maximale Anzahl Zeilen pro Stapel"
+msgstr "Maximale Anzahl Zeilen pro Charge"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "Maximale Anzahl Transfers pro Stapel"
+msgstr "Maximale Anzahl Transfers pro Charge"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -617,7 +617,7 @@ msgstr "Kommissionierart"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Bitte fügen Sie der Stapelkommissionierung „Erledigte“ Mengen hinzu, um ein "
+"Bitte fügen Sie der Batch-Kommissionierung „Erledigte“ Mengen hinzu, um ein "
 "neues Paket zu erstellen."
 
 #. module: stock_picking_batch
@@ -700,7 +700,7 @@ msgstr "Menge bestimmen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
 msgid "Show Allocation Button"
-msgstr "„Zuweisung“-Schaltfläche anzeigen"
+msgstr "Zuteilungsschaltfläche anzeigen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -730,7 +730,7 @@ msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Source Location"
-msgstr "Lagerort (Quelle)"
+msgstr "Quelllagerort"
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -776,7 +776,7 @@ msgstr "Lagerbuchung"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Lagerpaket Zielort"
+msgstr "Bestand Paketziel"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
@@ -815,7 +815,7 @@ msgid ""
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
 "Ziel des Stapeltransfers ist es, Vorgänge zu gruppieren, die zusammen ausgeführt werden können (oder müssen), um ihre Effizienz zu erhöhen.\n"
-"Er kann auch nützlich sein, um Aufgaben zuzuweisen (eine Person = ein Stapel) oder\n"
+"Er kann auch nützlich sein, um Aufgaben zuzuweisen (eine Person = eine Charge) oder\n"
 "die zeitliche Steuerung von Vorgängen zu erleichtern (Aufgaben, die um 13 Uhr erledigt werden sollen)."
 
 #. module: stock_picking_batch
@@ -826,9 +826,9 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Ziel des Wave-Transfers ist es, Vorgänge aus verschiedenen Transfers zusammenzufassen,\n"
+"Ziel des Wellen-Transfers ist es, Vorgänge aus verschiedenen Transfers zusammenzufassen,\n"
 "                    um deren Effizienz zu steigern.\n"
-"                    Er kann auch dabei helfen, Aufträge zuzuweisen (eine Person = ein Stapel) oder\n"
+"                    Er kann auch dabei helfen, Aufträge zuzuweisen (eine Person = eine Charge) oder\n"
 "                    das Zeitmanagement von Vorgängen zu erleichtern (Aufgaben, die um 13 Uhr erledigt werden sollen)."
 
 #. module: stock_picking_batch
@@ -866,7 +866,7 @@ msgstr "Die ausgewählten Transfers sollten zur selben Vorgangsart gehören"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
 msgid "This batch is a wave"
-msgstr "Dieser Stapel ist eine Welle"
+msgstr "Diese Charge ist eine Welle"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -889,7 +889,7 @@ msgstr "Transfer"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
-msgstr "Umgelagert von"
+msgstr "Verschoben von"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
@@ -920,18 +920,18 @@ msgstr "Lager"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Wave Transfer"
+msgstr "Wellen-Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Wave Transfer-Zeilen"
+msgstr "Wellen-Transferszeilen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Wave Transfers"
+msgstr "Wellen-Transfers"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -951,7 +951,7 @@ msgstr "Website-Kommunikationshistorie"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr "Wenn angekreuzt, den Stapel im Entwurfsstatus erstellen"
+msgstr "Wenn angekreuzt, die Charge im Entwurfsstatus erstellen"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -965,7 +965,7 @@ msgstr "Sie können abgeschlossene Stapeltransfers nicht löschen."
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Sie müssen einige Kommissionierungen zu Stapeln zusammenfassen."
+msgstr "Sie müssen einige Kommissionierungen zu Chargen zusammenfassen."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
@@ -975,7 +975,7 @@ msgstr "ein neuer Stapeltransfer"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "ein neuer Wave Transfer"
+msgstr "ein neuer Wellen-Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
@@ -985,4 +985,4 @@ msgstr "ein bestehender Stapeltransfer"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "ein bestehender Wave Transfer"
+msgstr "ein bestehender Wellen-Transfer"

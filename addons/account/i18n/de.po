@@ -1091,7 +1091,7 @@ msgstr "<span>Dies ist eine Vorschau Ihrer AGBs.</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr "<span>Preis pro Einheit</span>"
+msgstr "<span>Einzelpreis</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1878,7 +1878,7 @@ msgstr "Buchhaltungsdokumente"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
 msgstr ""
-"Der Wirtschaftsprüfungsmodus verändert die Kodierung von "
+"Der Wirtschaftsprüfungsmodus verändert die Codierung von "
 "Ein-/Ausgangsrechnungen:"
 
 #. module: account
@@ -9157,7 +9157,7 @@ msgstr ""
 "Manuell: Bezahlen oder bezahlt werden mit einer beliebigen Methode außerhalb von Odoo.\n"
 "Zahlungsanbieter: Jeder Zahlungsanbieter hat seine eigene Zahlungsmethode. Beantragen Sie eine Transaktion mithilfe eines Zahlungstokens, das der Partner beim Online-Kauf oder -Abonnement gespeichert hat.\n"
 "Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie ihn aus Odoo aus.\n"
-"Sammeleinzahlung: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammeleinzahlung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
+"Sammelverarbeitung: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammelverarbeitung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
 "SEPA-Überweisung: Zahlen Sie im SEPA-Raum, indem Sie eine SEPA-Überweisungsdatei an Ihre Bank übermitteln. Das Modul account_sepa ist erforderlich.\n"
 "SEPA-Lastschrift: Bezahlen Sie in der SEPA-Zone dank eines Mandats, das Ihnen Ihr Partner erteilt hat. Das Modul account_sepa ist erforderlich.\n"
 "\n"
@@ -11464,13 +11464,13 @@ msgstr "Schellbearbeitungsmodus"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_encoding_vals
 msgid "Quick Encoding Vals"
-msgstr "Werte für Schnellerfassung"
+msgstr "Werte für Schnellkodierung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
-msgstr "Schnelle Kodierung"
+msgstr "Schnelle Codierung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -12342,7 +12342,7 @@ msgstr "Sicherung von %s - %s"
 #: model:ir.model.fields,field_description:account.field_account_move__access_token
 #: model:ir.model.fields,field_description:account.field_account_payment__access_token
 msgid "Security Token"
-msgstr "Security Token"
+msgstr "Security-Token"
 
 #. module: account
 #. odoo-javascript
@@ -12970,42 +12970,42 @@ msgstr "Status des Einführungspanels für Rechnungsstellung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
 msgid "State of the onboarding Taxes step"
-msgstr "Status des Einarbeitungsschritts für Steuern"
+msgstr "Status des Einführungsschritts für Steuern"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
 msgid "State of the onboarding bank data step"
-msgstr "Status des Einarbeitungsschritts für Bankdaten"
+msgstr "Status des Einführungsschritts für Bankdaten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
 msgid "State of the onboarding bill step"
-msgstr "Status des Einarbeitungsschritts für Eingangsrechnungen"
+msgstr "Status des Einführungsschritts für Eingangsrechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
 msgid "State of the onboarding charts of account step"
-msgstr "Status des Einarbeitungsschritts für Kontenpläne"
+msgstr "Status des Einführungsschritts für Kontenpläne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
 msgid "State of the onboarding create invoice step"
-msgstr "Status des Einarbeitungsschritts zur Erstellung von Rechnungen"
+msgstr "Status des Einführungsschritts zur Erstellung von Rechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
 msgid "State of the onboarding fiscal year step"
-msgstr "Status des Einarbeitungsschritts für das Geschäftsjahr"
+msgstr "Status des Einführungsschritts für das Geschäftsjahr"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr "Status des Einarbeitungsschritts für das Rechnungslayout"
+msgstr "Status des Einführungsschritts für das Rechnungslayout"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
 msgid "State of the onboarding sale tax step"
-msgstr "Status des Einarbeitungsschritts für Umsatzsteuern"
+msgstr "Status des Einführungsschritts für Umsatzsteuern"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -15669,12 +15669,12 @@ msgstr "Eindeutiger Bezeichner für diese Zeile."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
-msgstr "Stückpreis"
+msgstr "Einzelpreis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Unit Price:"
-msgstr "Stückpreis:"
+msgstr "Einzelpreis:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id

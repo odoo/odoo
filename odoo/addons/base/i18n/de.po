@@ -1180,12 +1180,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Kontenplanvorlage für litauische Buchhaltung.\n"
+"        Kontenplanvorlage für lettische Buchhaltung.\n"
 "        Dieses Modul enthält:\n"
 "        * Steuergruppen,\n"
-"        * Geläufigste litauische Steuern,\n"
+"        * Geläufigste lettische Steuern,\n"
 "        * Steuerpositionen,\n"
-"        * Liste litauischer Banken.\n"
+"        * Liste lettischer Banken.\n"
 "\n"
 "        Autor ist Allegro IT (für weitere Informationen: https://www.allegro.lv)\n"
 "        Co-Autor ist Chick.Farm (für weitere Informationen: https://www.myacc.cloud)\n"
@@ -1823,7 +1823,7 @@ msgstr ""
 "\n"
 "        Um für diese Zahlungsmethode in Frage zu kommen, muss der Kunde dem Unternehmen zuvor\n"
 "        ein Mandat erteilt haben, in dem er sein Einverständnis zur Nutzung des Lastschriftverfahrens erklärt.\n"
-"        Dieses Einverständnis muss in Odoo als „Kundenmandat“ kodiert worden sein.\n"
+"        Dieses Einverständnis muss in Odoo als „Kundenmandat“ codiert worden sein.\n"
 "\n"
 "        Außerdem müssen Sie die folgenden Voraussetzungen erfüllen, um\n"
 "        eine SDD-Datei ordnungsgemäß zu erstellen:\n"
@@ -2593,7 +2593,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Eine als Python-Code definierte Steuer besteht aus zwei Python-Code-Snippets, die in einer lokalen Umgebung ausgeführt werden und Daten wie den Stückpreis, das Produkt oder den Partner enthalten.\n"
+"Eine als Python-Code definierte Steuer besteht aus zwei Python-Code-Snippets, die in einer lokalen Umgebung ausgeführt werden und Daten wie den Einzelpreis, das Produkt oder den Partner enthalten.\n"
 "\n"
 "„Anwendbarer Code“ definiert, ob die Steuer angewendet werden soll.\n"
 "\n"
@@ -3325,7 +3325,7 @@ msgid ""
 msgstr ""
 "\n"
 "Fügen Sie Ihrem E-Commerce-Shop eine Auswahl an Versandmethoden hinzu.\n"
-"Konfigurieren Sie Ihre eigenen Methoden mit einem Preisraster oder integrieren Sie sie in Spediteure für einen vollautomatisierten Versandprozess."
+"Konfigurieren Sie Ihre eigenen Methoden mit einem Preisraster oder integrieren Sie sie mit Transportunternehmen für einen vollautomatisierten Versandprozess."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -3796,7 +3796,7 @@ msgstr ""
 "Ermöglicht Ihnen, Liefermethoden in Verkaufsaufträgen und Kommissionierung hinzuzufügen.\n"
 "==============================================================\n"
 "\n"
-"Sie können Ihre eigenen Frachtführer für Preise definieren. Beim Erstellen von\n"
+"Sie können Ihre eigenen Transportunternehmen für Preise definieren. Beim Erstellen von\n"
 "Rechnungen aus der Kommissionierung heraus ist das System in der Lage, die Versandzeile hinzuzufügen und zu berechnen.\n"
 
 #. module: base
@@ -4070,7 +4070,7 @@ msgstr ""
 "     Schritte zur Aktivierung des Kanals erläutert: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
 "\n"
 "  - Am Ende des Verfahrens sollten Sie eine „LASS-Expeditor-Nummer“ erhalten, Sie können\n"
-"    in den Gehaltsabrechnungseinstellungen mit der .pem-Datei und dem entsprechenden Passwort (falls vorhanden) kodieren.\n"
+"    in den Gehaltsabrechnungseinstellungen mit der .pem-Datei und dem entsprechenden Passwort (falls vorhanden) codieren.\n"
 "\n"
 "    "
 
@@ -4299,7 +4299,7 @@ msgstr ""
 "    * Mitarbeiterdetails\n"
 "    * Arbeitsverträge\n"
 "    * Passbasierter Vertrag\n"
-"    * Zuschläge/Abzüge\n"
+"    * Zuschüsse/Abzüge\n"
 "    * Konfiguration des Grund-/Brutto-/Nettogehalts\n"
 "    * Lohn-/Gehaltsabrechnung für Mitarbeiter\n"
 "    * Monatliche Gehaltsabrechnung\n"
@@ -4337,7 +4337,7 @@ msgstr ""
 "  - Konfiguration Ihres SFTP-Clients: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
 "\n"
 "  - Am Ende des Verfahrens sollten Sie eine „LASS-Expeditor-Nummer“ erhalten, Sie können\n"
-"    encode in den Gehaltsabrechnungseinstellungen mit der .pem-Datei und dem entsprechenden Passwort (falls vorhanden) kodieren.\n"
+"    in den Gehaltsabrechnungseinstellungen mit der .pem-Datei und dem entsprechenden Passwort (falls vorhanden) codieren.\n"
 "    "
 
 #. module: base
@@ -5116,7 +5116,7 @@ msgstr ""
 "\n"
 "Wenn Sie eine ausgehende Kommissionierung in einem italienischen Unternehmen drucken wollen, \n"
 "wird stattdessen ein DDT gedruckt. Er ist wie der Lieferschein, enthält aber auch den Wert des Produkts, \n"
-"den Transportgrund, den Spediteur ... Das macht ihn zu einem DDT.  \n"
+"den Transportgrund, das Transportunternehmen ... Das macht ihn zu einem DDT.  \n"
 "\n"
 "Für den DDT wird eine eine eigene Sequenz verwendet, denn die Nummer darf keine \n"
 "keine Lücken aufweisen und darf und sollte erst zum Zeitpunkt des Versands der Waren angebracht werden.\n"
@@ -6045,17 +6045,16 @@ msgid ""
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
 "\n"
-"Gamification Prozess\n"
+"Gamification-Prozess\n"
 "====================\n"
+"Das Gamification-Modul bietet Möglichkeiten, die Benutzer von Odoo zu bewerten und zu motivieren.\n"
 "\n"
-"Das Gamification (Spielifizierung) - Modul bietet Möglichkeiten, dass sich Mitarbeiter innerhalb Odoo selbst einschätzen und motivieren können.\n"
+"Die Benutzer können anhand von Zielen und numerischen Vorgaben bewertet werden.\n"
+"**Ziele** werden durch **Herausforderungen** zugewiesen, um die Mitglieder eines Teams zu bewerten und miteinander und mit der Zeit zu vergleichen.\n"
 "\n"
-"Die Benutzer können sich selbst Ziele und zahlenmäßige Vorgaben setzten um diese zu erreichen.\n"
-"Die selbst gesetzten **Ziele** werden dabei mit den Zielen der anderen Mitarbeitern verglichen, um einen Wettberwerb innerhalb von Teams oder der Firma zu erreichen.\n"
+"Für nicht-numerische Leistungen können **Abzeichen** an Benutzer vergeben werden. Von einem einfachen „Dankeschön“ bis hin zu einer außergewöhnlichen Leistung ist ein Abzeichen eine einfache Möglichkeit, sich bei einem Benutzer für seine gute Arbeit zu bedanken.\n"
 "\n"
-"Für besondere Leistungen die nicht in Zahlen ausgedrückt werden können, besteht die Möglichkeit **Auszeichnungen** zu vergeben. Egal ob es ein einfaches \"Danke\" ist, oder die Benennung einer aussergewöhnlichen Leistung.  Das Spilifizierungs-Modul ist eine einfach Möglichkeit um den Benutzern Dankbarkeit zu zeigen.\n"
-"\n"
-"Beide Varianten, Ziele und Auszeichnungen, sind flexibel einsetzbar und können für viele Module und Maßnahmen angepasst werden. Ist das Modul installiert, hilft es den Benutzern auf einfach Weise Ihr Benutzerprofil in OpenERP zu entdecken und zu konfigurieren.\n"
+"Sowohl Ziele als auch Abzeichen sind flexibel und können an eine große Anzahl von Modulen und Aktionen angepasst werden. Wenn dieses Modul installiert ist, erstellt es einfache Ziele, die neuen Benutzern helfen, Odoo zu entdecken und ihr Benutzerprofil zu konfigurieren.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -6815,7 +6814,7 @@ msgstr ""
 "* Verschiedene Phasen für Ihre Wartungsanfragen bestimmen\n"
 "* Wartungsanfragen planen (auch wiederkehrende präventive)\n"
 "* Geräte in Bezug auf Arbeitsplätze\n"
-"* MTBF, MTTR, …\n"
+"* MTBF, MTTR …\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter_wall
@@ -6834,8 +6833,8 @@ msgstr ""
 "Machen Sie alle zu einem Teil Ihrer Veranstaltung\n"
 "===================================\n"
 "\n"
-"Verwandeln Sie Ihre Veranstaltung in ein interaktives Erlebnis, indem Sie alle auf Ihrer Twitterwall posten lassen. Verbinden Sie sich mit der Menge und bauen Sie eine persönliche Beziehung zu den Teilnehmern auf.\n"
-"* Erstellen Sie Live-Twitterwall für die Veranstaltung\n"
+"Verwandeln Sie Ihre Veranstaltung in ein interaktives Erlebnis, indem Sie alle auf Ihrer Twitter-Wall posten lassen. Verbinden Sie sich mit der Menge und bauen Sie eine persönliche Beziehung zu den Teilnehmern auf.\n"
+"* Erstellen Sie Live-Twitter-Wall für die Veranstaltung\n"
 "  * Keine komplexe Moderation erforderlich.\n"
 "  * Passen Sie Ihre Live-Ansicht mithilfe verschiedener Optionen an.\n"
 "  * Auto-Storify-Ansicht nach Ende des Veranstaltung.\n"
@@ -7602,7 +7601,7 @@ msgstr ""
 "\n"
 "Neuimplementierung des Dateiimportsystems von Odoo: \n"
 "\n"
-"* Auf der Server-Seite zwingt das Vorgängersystem die meiste Logik in den Client, was den Aufwand (zwischen Clients) dupliziert, wodurch das Import-System viel schwieriger ohne Client (direktes RPC oder andere Formen der Automatisierung) zu verwenden ist und das Wissen über das Import-/Export-System viel schwerer zu erfassen ist, da es über mehr als 3 unterschiedliche Projekte verteilt ist.\n"
+"* Auf der Server-Seite zwingt das Vorgängersystem die meiste Logik in den Client, was den Aufwand (zwischen Clients) dupliziert, wodurch das Import-System viel schwieriger ohne Client (direktes RPC oder andere Formen der Automatisierung) zu verwenden ist und das Wissen über das Import-/Exportsystem viel schwieriger zu erfassen ist, da es über mehr als 3 unterschiedliche Projekte verteilt ist.\n"
 "\n"
 "* Auf erweiterbare Weise können Benutzer und Partner ihr eigenes Frontend zum Import von anderen Dateiformaten entwickeln (z. B. OpenDocument-Dateien), deren Handhabung im Arbeitsablauf einfacher sein kann, oder von ihren Datenproduktionsquellen.\n"
 "\n"
@@ -8158,9 +8157,9 @@ msgstr ""
 "===============\n"
 "* Definieren Sie Qualitätspunkte, die Qualitätsprüfungen für Kommissionierungen,\n"
 "  Fertigungs- oder Arbeitsaufträge (quality_mrp) generieren.\n"
-"* Qualitätswarnungen können unabhängig erstellt oder mit Qualitätsprüfungen verknüpft werden\n"
+"* Qualitätsalarme können unabhängig erstellt oder mit Qualitätsprüfungen verknüpft werden\n"
 "* Möglichkeit, die Qualitätsprüfung um ein Messung mit einer minimalen/maximalen Toleranz zu erweitern\n"
-"* Definieren Sie Ihre Phasen für die Qualitätswarnungen\n"
+"* Definieren Sie Ihre Phasen für die Qualitätsalarme\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control
@@ -8176,12 +8175,14 @@ msgid ""
 msgstr ""
 "\n"
 "Qualitätskontrolle\n"
-"===============\n"
-"* Definieren Sie Qualitätspunkte, die Qualitätsprüfungen für Kommissionierungen,\n"
-"  Fertigungs- oder Arbeitsaufträge (quality_mrp) generieren.\n"
-"* Qualitätswarnungen können unabhängig erstellt oder mit Qualitätsprüfungen verknüpft werden\n"
-"* Möglichkeit, die Qualitätsprüfung um ein Messung mit einer minimalen/maximalen Toleranz zu erweitern\n"
-"* Definieren Sie Ihre Phasen für die Qualitätswarnungen\n"
+"=================\n"
+"\n"
+"* Definieren Sie Qualitätspunkte, die Qualitätsprüfungen bei Pickaufträgen,\n"
+" Fertigungsaufträgen oder Arbeitsaufträgen (quality_mrp) generieren.\n"
+"* Qualitätsalarme können unabhängig oder in Verbindung mit Qualitätsprüfungen erstellt werden\n"
+"* Möglichkeit, eine Maßnahme zur Qualitätsprüfung und die minimale/maximale Toleranz hinzuzufügen\n"
+"* Festlegen Ihrer Etappen für Qualitätsalarme\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_expense
@@ -8595,7 +8596,7 @@ msgstr ""
 "\n"
 "Lokalisierung Schweiz\n"
 "==================\n"
-"Dieses Modul definiert einen Kontenplan für die Schweiz (Swiss PME/KMU 2015), Steuern und ermöglicht die Erstellung von ESR und QR-Rechnungen, wenn Sie eine Rechnung drucken oder per Post versenden.\n"
+"Dieses Modul definiert einen Kontenplan für die Schweiz (Swiss PME/KMU 2015), Steuern und ermöglicht die Erstellung von ESR- und QR-Rechnungen, wenn Sie eine Rechnung drucken oder per Post versenden.\n"
 "\n"
 "Ein ESR wird erstellt, wenn Sie die erforderlichen Informationen angeben:\n"
 "- Das Bankkonto, auf das die Zahlung erfolgen soll, muss eingerichtet sein und eine gültige Postreferenz haben.\n"
@@ -8605,7 +8606,7 @@ msgstr ""
 "- Ihre Rechnung muss in EUR oder CHF ausgestellt sein (da ESRs keine anderen Währungen akzeptieren)\n"
 "\n"
 "Eine QR-Rechnung wird erstellt, wenn:\n"
-"- der auf Ihrer Rechnung angegebene Partner eine vollständige Adresse (Strasse, Ort, Postleitzahl und Land) in der Schweiz hat\n"
+"- der auf Ihrer Rechnung angegebene Partner eine vollständige Adresse (Straße, Ort, Postleitzahl und Land) in der Schweiz hat\n"
 "- die Option zur Generierung des Schweizer QR-Codes auf der Rechnung ausgewählt ist (standardmässig)\n"
 "- die korrekte Kontonummer/QR-IBAN ist in Ihrem Bankjournal hinterlegt ist\n"
 "- (bei Verwendung einer QR-IBAN): die Zahlungsreferenz der Rechnung eine QR-Referenz ist\n"
@@ -8614,7 +8615,7 @@ msgstr ""
 "\n"
 "Das funktioniert folgendermaßen:\n"
 "- Wenn Sie die Rechnung drucken, werden drei Dateien heruntergeladen: die Rechnung, der ESR und die QR-Rechnung\n"
-"- Wenn Sie auf die Schaltfläche \"Per Post versenden\" klicken, werden diese drei Dateien an Ihren Mailentwurf angehängt\n"
+"- Wenn Sie auf die Schaltfläche „Per E-Mail versenden“ klicken, werden diese drei Dateien an Ihren Mailentwurf angehängt\n"
 "    "
 
 #. module: base
@@ -9010,25 +9011,25 @@ msgstr ""
 "* Wir haben die Kontenvorlagen, die hilfreich sein können, um Kontenpläne zu erstellen.\n"
 "* Auf diesem speziellen Assistenten werden Sie aufgefordert, den Namen des Unternehmen,\n"
 "die zu befolgende Kontenplanvorlage, die Anzahl der zu generierenden Stellen, den Code für Ihre\n"
-"Konto und Bankkonto, Währung zur Erstellung von Journalen.\n"
+"Konto und Bankkonto, Währung zur Erstellung von Journalen anzugeben.\n"
 "\n"
-"Damit wird die reine Kopie der Diagrammvorlage erzeugt.\n"
+"Damit wird die reine Kopie der Kontenplanvorlage erzeugt.\n"
 "\n"
 "Assistenten, die von diesem Modul zur Verfügung gestellt werden:\n"
 "--------------------------------\n"
-"* Partner Umsatzsteuer Intra: Die Partner mit der zugehörigen Mehrwertsteuer und den in Rechnung gestellten\n"
+"* Partner MwSt. Intra: Die Partner mit der zugehörigen Mehrwertsteuer und den in Rechnung gestellten\n"
 "Beträge. Bereitet ein XML-Dateiformat vor.\n"
 "\n"
-"**Pfad für den Zugriff :** Rechnung/Berichte/Rechtliche Berichte/Belgische Auszüge/Partner VAT Intra\n"
-"* Periodische Umsatzsteuererklärung: Bereitet eine XML-Datei für die MwSt-Erklärung von\n"
-"die Hauptgesellschaft des aktuell angemeldeten Benutzers.\n"
+"**Pfad für den Zugriff :** Rechnung/Berichte/Rechtliche Berichte/Belgische Auszüge/Partner MwSt. Intra\n"
+"* Periodische MwSt.-Erklärung: Bereitet eine XML-Datei für die MwSt-Erklärung\n"
+"des Hauptunternehmens des aktuell angemeldeten Benutzers vor.\n"
 "\n"
 "**Zugriffspfad :** Rechnung/Berichtswesen/Rechtliche Berichte/Belgische Auszüge/periodische MwSt.-Erklärung\n"
-"* Jährliche Auflistung der mehrwertsteuerpflichtigen Kunden: Bereitet eine XML-Datei für die Umsatzsteuer vor\n"
-"Erklärung der Hauptgesellschaft des aktuell angemeldeten Benutzers Basierend auf\n"
-"Geschäftsjahr.\n"
+"* Jährliche Auflistung der mehrwertsteuerpflichtigen Kunden: Bereitet eine XML-Datei für die MwSt.-Erklärung\n"
+"des Hauptunternehmens des aktuell angemeldeten Benutzers Basierend auf dem\n"
+"Geschäftsjahr vor.\n"
 "\n"
-"**Zugriffspfad :** Rechnung/Berichtswesen/Rechtliche Berichte/Belgische Auszüge/Jahresaufstellung der umsatzsteuerpflichtigen Kunden\n"
+"**Zugriffspfad :** Rechnung/Berichtswesen/Rechtliche Berichte/Belgische Auszüge/Jährliche Auflistung der mehrwertsteuerpflichtigen Kunden\n"
 "\n"
 "    "
 
@@ -9443,7 +9444,7 @@ msgstr ""
 "Unternehmen, die Dienstleistungen an DOM-ansässige Unternehmen verkaufen, sollten die\n"
 "Konfiguration ihrer Steuern und Steuerpositionen manuell aktualisieren.\n"
 "\n"
-"**Angesehen:** Sistheo, Zeekom, CrysaLEAD, Akretion und Camptocamp.\n"
+"**Vorteile:** Sistheo, Zeekom, CrysaLEAD, Akretion und Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -10336,9 +10337,9 @@ msgid ""
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
 "\n"
-"Dieses Modul stellt die Verbindung zwischen der Chargenkommissionierung und den Trägeranwendungen her.\n"
+"Dieses Modul stellt die Verbindung zwischen den Apps der Batch-Kommissionierung und den Transportunternehmen her.\n"
 "\n"
-"Ermöglicht die Vorbereitung von Chargen in Abhängigkeit von ihrem Träger\n"
+"Ermöglicht die Vorbereitung von Chargen in Abhängigkeit von ihrem Transportunternehmen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -10811,29 +10812,29 @@ msgstr ""
 "Umsatzsteuervalidierung für die Umsatzsteuer-Identifikationsnummern der Partner\n"
 "===================================================================\n"
 "\n"
-"Nach der Installation dieses Moduls werden die eingegebenen Mehrwertsteuer der Partner für alle unterstützten Ländern validiert. Das Land\n"
-"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der der Mehrwertsteuer-Nummer\n"
+"Nach der Installation dieses Moduls werden die eingegebenen Umsatzsteuern der Partner für alle unterstützten Ländern validiert. Das Land\n"
+"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der der USt-IdNr.\n"
 "vorangestellt ist, z. B. wird BE0477472701 nach dem belgischen Format validiert.\n"
 "\n"
 "Es gibt zwei verschiedene Ebenen der Validierung der Umsatzsteuer-Identifikationsnummer:\n"
 "--------------------------------------------------------------------------------------------------------------------------\n"
-"  * Standardmäßig wird eine einfache offline Prüfung durchgeführt, unter Verwendung der\n"
+"  * Standardmäßig wird eine einfache Offline-Prüfung durchgeführt, unter Verwendung der\n"
 "      bekannten Validierungsregeln für das Land, in der Regel eine einfache Prüfziffer. Das geht schnell\n"
-"      und ist jederzeit möglich, aber ermöglicht auch Mehrwertsteuer-IDs, die vielleicht nicht vergeben\n"
-"      oder nicht mehr gültig sind.\n"
+"      und ist jederzeit möglich, aber erlaubt auch Nummern, die vielleicht nicht vergeben\n"
+"      oder nicht mehr gültig sind.\n"
 "      \n"
-"       * Wenn die \"VAT MIAS Check\" Option aktiviert ist (in der Konfiguration des Unternehmens des\n"
-"       Benutzers) wird die Mehrwertsteuer-ID an die Online EU VIES Datenbank\n"
+"       * Wenn die „MwSt.-MIAS-Prüfung“-Option aktiviert ist (in der Konfiguration des Unternehmens des\n"
+"      Benutzers) wird die USt-IdNr. an die Online-EU-MIAS-Datenbank\n"
 "       übermittelt werden, die sicherstellt, dass die Zahl gültig und aktuell\n"
 "       einem EU-Unternehmen zugeordnet ist. Das ist ein wenig langsamer als die einfache\n"
-"       offline Prüfung, erfordert eine Internet-Verbindung und steht möglicherweise nicht jederzeit zur   \n"
+"       Offline-Prüfung, erfordert eine Internet-Verbindung und steht möglicherweise nicht jederzeit zur   \n"
 "       Verfügung. Wenn der Dienst nicht verfügbar ist oder das gewünschte Land nicht unterstützt wird\n"
 "       (z. B. für Nicht-EU-Ländern), wird stattdessen eine einfache Prüfung \n"
 "       durchgeführt.\n"
 "\n"
 "Zu den unterstützten Länder gehören derzeit die EU-Länder und ein paar Nicht-EU-Länder,\n"
 "wie Chile, Kolumbien, Mexiko, Norwegen oder Russland. Für nicht unterstützte Länder, wird\n"
-"nur der Land Code validiert.\n"
+"nur der Ländercode validiert.\n"
 "    "
 
 #. module: base
@@ -11492,7 +11493,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
 msgid "# Record Rules"
-msgstr "# Rechte für Daten"
+msgstr "# Datensatzregeln"
 
 #. module: base
 #. odoo-python
@@ -14610,7 +14611,7 @@ msgstr "Aktiva"
 #: model_terms:ir.ui.view,arch_db:base.asset_view_search
 #: model_terms:ir.ui.view,arch_db:base.asset_view_tree
 msgid "Assets"
-msgstr "Vermögenswerte"
+msgstr "Assets"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -14832,7 +14833,7 @@ msgstr "Assistent für automatisches Zusammenführen"
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr "Automatisch aufräumen"
+msgstr "Auto-Vacuum"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_holidays
@@ -15263,7 +15264,7 @@ msgstr "Sammelzahlung"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "Stapeltransfer, Frachtführer"
+msgstr "Stapeltransfer, Transportunternehmen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -15506,7 +15507,7 @@ msgstr "Boolesch"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale_exhibitor
 msgid "Booths Sale/Exhibitors Bridge"
-msgstr "Brücken zwischen Standverkauf/Aussteller"
+msgstr "Brücke zwischen Standverkauf/Aussteller"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_exhibitor
@@ -15728,7 +15729,7 @@ msgstr "Brückenmodul für project_enterprise und hr_contract"
 #: model:ir.module.module,summary:base.module_website_event_twitter_wall
 msgid "Bridge module to configure a twitter wall on your event"
 msgstr ""
-"Brückenmodul zur Konfiguration einer Twitterwall für Ihre Veranstaltung"
+"Brückenmodul zur Konfiguration einer Twitter-Wall für Ihre Veranstaltung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_social
@@ -16855,7 +16856,7 @@ msgstr "Installationsassistenten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
 msgid "Configure a Twitter Wall on your Event"
-msgstr "Konfigurieren Sie eine Twitterwall für Ihre Veranstaltung"
+msgstr "Konfigurieren Sie eine Twitter-Wall für Ihre Veranstaltung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -18173,7 +18174,7 @@ msgstr "Standardlimit für Listenansicht"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__default
 msgid "Default paper format ?"
-msgstr "Standard Papierformat?"
+msgstr "Standard-Papierformat?"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
@@ -18243,7 +18244,7 @@ msgstr "Lieferkosten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
-msgstr "Lieferung Kommissionierung Stapel"
+msgstr "Lieferung Batch-Kommissionierung"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -19150,18 +19151,18 @@ msgstr ""
 "Notizen:\n"
 "------\n"
 "\n"
-"- In den Steuern könnte das Konto `Base Tax Received Account` eingestellt werden, das ist das\n"
-"Konto, das auf Zeilen gesetzt wird, die in der Journalbuchung nach vereinnahmten Entgelten angelegt werden, und\n"
-"die zur Verfolgung des Steuerbasisbetrags verwendet wird, wird dieses Konto in den mexikanischen Berichten nicht berücksichtigt.\n"
+"- In den Steuern könnte das Konto `Basiskonto für erhaltene Steuer` eingestellt werden, das ist das\n"
+"Konto, das auf Zeilen gesetzt wird, die in der Journalbuchung mit Ist-Versteuerung angelegt werden, und\n"
+"die zur Verfolgung des Steuerbasisbetrags verwendet wird. Dieses Konto wird in den mexikanischen Berichten nicht berücksichtigt.\n"
 "\n"
 "\n"
 "Konfiguration\n"
 "=============\n"
 "\n"
-"Um dieses Modul zu konfigurieren, wird dringend empfohlen, dass Ihr Kontenplan von den l10n_mx Daten und der Struktur abhängt,\n"
+"Um dieses Modul zu konfigurieren, wird dringend empfohlen, dass Ihr Kontenplan von den l10n_mx Daten und der Struktur abhängt.\n"
 "Sie können dies nachträglich einstellen, wenn Ihr Kontenplan nicht davon abhängig sind, was l10n_mx tut, aber Sie werden zusätzliche manuelle Arbeit benötigen.\n"
 "\n"
-"Credits\n"
+"Vorteile\n"
 "=======\n"
 "\n"
 "**Mitwirkende**\n"
@@ -19621,7 +19622,7 @@ msgstr "Aussteller"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr "Veranstaltung Meeting/Räume"
+msgstr "Veranstaltungsmeeting/-räume"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
@@ -20570,7 +20571,7 @@ msgstr "Fuhrpark aus Dokumente"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
-msgstr "Textumlauf"
+msgstr "Gleitkommazahlen"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -20894,7 +20895,7 @@ msgstr "GPL-3 oder höher"
 #. module: base
 #: model:res.country,vat_label:base.sg
 msgid "GST No."
-msgstr "GST No."
+msgstr "GST-Nr."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos
@@ -21206,7 +21207,7 @@ msgstr "Google-Benutzer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
 msgid "Google places autocompletion"
-msgstr "Google Places Autovervollständigung"
+msgstr "Autovervollständigung für Google Places"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
@@ -22039,7 +22040,7 @@ msgstr "IR-Profil"
 #. module: base
 #: model:res.country,vat_label:base.nz
 msgid "IRD/GST"
-msgstr "IRD/MwSt."
+msgstr "IRD/GST"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
@@ -22330,7 +22331,7 @@ msgstr "Bild-Mixin"
 #: code:addons/fields.py:0
 #, python-format
 msgid "Image is not encoded in base64."
-msgstr "Das Bild ist nicht in base64 kodiert."
+msgstr "Das Bild ist nicht in base64 codiert."
 
 #. module: base
 #. odoo-python
@@ -22938,7 +22939,7 @@ msgstr "Intrastat-Berichte"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "Introspection report on objects"
-msgstr "Eigene Projektrevision"
+msgstr "Introspektionsbericht über die Objekte"
 
 #. module: base
 #. odoo-python
@@ -23028,8 +23029,8 @@ msgid ""
 "Invalid inheritance mode: if the mode is 'extension', the view must extend "
 "an other view"
 msgstr ""
-"Ungültiger Vererbungsmodus: Wenn der Modus 'extension' ist, muss die Ansicht"
-" eine andere Ansicht erweitern."
+"Ungültiger Vererbungsmodus: Wenn der Modus „Erweiterung“ ist, muss die "
+"Ansicht eine andere Ansicht erweitern."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_qweb_required_key
@@ -23466,7 +23467,7 @@ msgstr "Schlüssel muss eindeutig sein!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_keypay
 msgid "Keypay Australian Payroll"
-msgstr "Australische Keypay-Lohnbuchhaltung"
+msgstr "Australische Keypay-Personalabrechnung"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -23537,9 +23538,9 @@ msgid ""
 "Label tag must contain a \"for\". To match label style without corresponding"
 " field or button, use 'class=\"o_form_label\"'."
 msgstr ""
-"Der Label-Tag muss ein \"for\" enthalten. Um ein Etikett ohne entsprechendes"
-" Feld oder eine Schaltfläche anzupassen, verwenden Sie "
-"'class=\"o_form_label\"'."
+"Das Bezeichnungsstichwort muss ein „für“ enthalten. Um eine Bezeichnung ohne"
+" entsprechendes Feld oder eine Schaltfläche anzupassen, verwenden Sie "
+"„class=\"o_form_label\"“."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -23816,7 +23817,7 @@ msgstr "Lettland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr "Litauen - Buchhaltung"
+msgstr "Lettland - Buchhaltung"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -23937,7 +23938,7 @@ msgstr "Brief 2 8,5 x 11 Zoll, 215,9 x 279,4 mm"
 #: model:ir.model.fields,field_description:base.field_ir_logging__level
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Level"
-msgstr "Ebene"
+msgstr "Level"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -26034,7 +26035,7 @@ msgstr "Nicht-relationales Feld %r in Abhängigkeit %r"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
-msgstr "Nichtrelationaler Feldname „%s“ im zugehörigen Feld „%s“"
+msgstr "Nichtrelationaler Feldname „%s“ im Bezugsfeld „%s“"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_testing_utilities
@@ -28376,8 +28377,8 @@ msgid ""
 msgstr ""
 "Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Null/Leer).\n"
 "\n"
-"* Bei extension (Vorgabe), wenn diese Sicht angefordert wird, wird die naheliegendste Hauptsicht (über inherit_id) gesucht und dieses Modell auf alle mit diesem Modell aus der Hauptsicht ableitenden Sichten angewendet.\n"
-"* Bei primary, wird die naheliegendste Hauptsicht vollständig aufgelöst (selbst wenn diese ein von diesem abweichendes Modell verwendet), dann werden die Vererbungselemente (<xpath/>) aufgerufen und das Ergebnis wird verwendet, als wäre es der tatsächliche Inhalt dieser Sicht.\n"
+"* Bei Erweiterung (Standard), wenn diese Sicht angefordert wird, wird die naheliegendste Hauptsicht (über inherit_id) gesucht und dieses Modell auf alle mit diesem Modell aus der Hauptsicht ableitenden Sichten angewendet.\n"
+"* Bei primär, wird die naheliegendste Hauptsicht vollständig aufgelöst (selbst wenn diese ein von diesem abweichendes Modell verwendet), dann werden die Vererbungselemente (<xpath/>) aufgerufen und das Ergebnis wird verwendet, als wäre es der tatsächliche Inhalt dieser Sicht.\n"
 
 #. module: base
 #. odoo-python
@@ -29836,7 +29837,7 @@ msgstr "PostgreSQL-Tabellenname implementiert eine many2many-Beziehung."
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Precision Digits"
-msgstr "Genauigkeitsziffern"
+msgstr "Nachkommastellen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -29893,7 +29894,7 @@ msgid ""
 "context on the `lastcall` key"
 msgstr ""
 "Zuvor lief der Cron erfolgreich, bereitgestellt für den Job durch den "
-"Kontext auf der `lastcall` Taste"
+"Kontext auf der `lastcall`-Taste"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -30009,7 +30010,7 @@ msgstr "Produkte & Preislisten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr "Produkt-Ablaufdatum"
+msgstr "Ablaufdatum von Produkten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project_sale
@@ -31031,7 +31032,7 @@ msgstr "Zugehöriges Unternehmen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related
 msgid "Related Field"
-msgstr "Zugehöriges Feld"
+msgstr "Bezugsfeld"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
@@ -31051,21 +31052,21 @@ msgstr "Verknüpfte Serveraktion"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr "Zugehöriges Feld"
+msgstr "Bezugsfeld"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr "Zugehöriges Feld „%s“ enthält nicht das Gegenmodell „%s“"
+msgstr "Bezugsfeld „%s“ enthält nicht das Gegenmodell „%s“"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
-msgstr "Zugehöriges Feld „%s“ ist nicht vom Typ „%s“"
+msgstr "Bezugsfeld „%s“ ist nicht vom Typ „%s“"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field
@@ -33229,7 +33230,7 @@ msgstr "Staat Palästina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr "Status des Einarbeitungsschritts für Unternehmen"
+msgstr "Status des Einführungsschritts für Unternehmen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -33249,7 +33250,7 @@ msgstr "Status"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
 msgid "Step"
-msgstr "Schrittweise Erhöhung"
+msgstr "Schritt"
 
 #. module: base
 #. odoo-python
@@ -33257,7 +33258,7 @@ msgstr "Schrittweise Erhöhung"
 #: code:addons/base/models/ir_sequence.py:0
 #, python-format
 msgid "Step must not be zero."
-msgstr "Inkrementierung muss größer Null sein"
+msgstr "Schritt muss größer Null sein"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_iot
@@ -34305,7 +34306,7 @@ msgid ""
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
 "Das m2o-Feld %s ist obligatorisch, aber seine ondelete-Richtlinie ist als "
-"„Null eingestellt“ angegeben. Nur „beschränken“ und „Absturz“ sind sinnvoll."
+"„Null eingestellt“ angegeben. Nur „beschränken“ und „Kaskade“ sind sinnvoll."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -34485,9 +34486,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
-"Die optionale Domäne schränkt durch die Eingabe einer Tripleliste die "
-"anzuzeigenden Werte für eine Feldverknüpfung ein. Ein Beispiel wäre: "
-"[('color','=','red')]"
+"Der optionale Bereich zur Einschränkung möglicher Werte für "
+"Beziehungsfelder, angegeben als Python-Ausdruck, der eine Liste von Triplets"
+" definiert. Zum Beispiel: [('color','=','red')]"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__report_file
@@ -34893,7 +34894,7 @@ msgid ""
 "                           using the same encoding."
 msgstr ""
 "Diese Datei wurde angelegt unter Verwendung der allgemeinen <strong>Unicode/UTF-8</strong>-Dateikodierung, stellen\n"
-"                           Sie bitte sicher, diese mit gleicher Kodierung anzusehen oder zu bearbeiten."
+"                           Sie bitte sicher, diese mit gleicher Codierung anzusehen oder zu bearbeiten."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__views
@@ -35674,7 +35675,7 @@ msgstr "Twitter-Snippet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
 msgid "Twitter Wall"
-msgstr "Twitterwall"
+msgstr "Twitter-Wall"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
@@ -36066,7 +36067,7 @@ msgstr "Unbekanntes Feld %r in Abhängigkeit %r"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr "Unbekannter Feldname „%s“ in Beziehungsfeld „%s“"
+msgstr "Unbekannter Feldname „%s“ in Bezugsfeld „%s“"
 
 #. module: base
 #. odoo-python
@@ -36316,7 +36317,7 @@ msgid ""
 "modify the input form for addresses."
 msgstr ""
 "Verwenden Sie dieses Feld, wenn Sie die übliche Weise ersetzen wollen, wie "
-"Sie eine vollständige Adresse kodieren. Beachten Sie, dass das Feld "
+"Sie eine vollständige Adresse codieren. Beachten Sie, dass das Feld "
 "„address_format“ verwendet wird, um die Art zu ändern, wie Adressen "
 "angezeigt werden (beispielsweise in Berichten), während dieses Feld "
 "verwendet wird, um das Eingabeformular für Adressen zu ändern."
@@ -37859,7 +37860,7 @@ msgstr "und"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
-msgstr "assets"
+msgstr "Assets"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view

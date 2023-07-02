@@ -1804,6 +1804,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"    ロック日を不可逆にします：\n"
+"\n"
+"    * アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日は請求書ロック日よりも前（または同じ）でなければなりません。\n"
+"    * まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
+"    * 新しい全てのユーザーのロック日は、前の日付より後（または同じ）である必要があります。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud
@@ -4349,6 +4356,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"EDIエクアドル語ローカライズ\n"
+"===========================\n"
+"電子署名と税務当局SRIへの直接接続と、そのXML、RIDEで電子ドキュメントを追加、\n"
+"\n"
+"サポートされているドキュメントは、請求書、クレジットノート、デビットノート、購入清算と源泉徴収です。\n"
+"\n"
+"各購入請求書に適用される源泉徴収税を簡単に予測するための自動化が含まれています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -9515,6 +9530,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Implementation details\n"
+"\n"
+"### Supported features\n"
+"\n"
+"- リダイレクトフローによる支払\n"
+"- クレジットカード、デビットカード、クレジットカード、その他 [others]など、さまざまな支払い方法があります。\n"
+" (https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- [Webhook](https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  通知\n"
+"\n"
+"### Not implemented features\n"
+"\n"
+"- [Manual capture](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Partial refunds](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API and gateway\n"
+"\n"
+"当社は以下の組み合わせで統合することを選択しました\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) と\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing) 解決方法：\n"
+"リダイレクトを含む支払フローは顧客にCheckout ProのJavaScript SDKが内部で行うようにフォームがエンコードされたペイロードと\n"
+" HTTPリクエストを送付することで開始されます。残存しているAPIコールは\n"
+"Checkout APIのドキュメント化に応じて実施されます。 Checkout Proとの統合が不可能だったのは、Checkout APIのみでも\n"
+"顧客を決済ページにリダイレクトすることのみ許可しているからで、\n"
+"加盟店のウェブサイトから直接支払いを受け付けるには、カスタム支払いフォームを作成する必要があるためです。\n"
+"\n"
+"他のゲートウェイは除外されています。他のゲートウェイについての詳細はタスクの開発者メモを参照して下さい。\n"
+"\n"
+"このモジュールが実装するAPIはバージョン管理されていません。\n"
+"\n"
+"## Merge details\n"
+"\n"
+"モジュールの最初のバージョンは、以下のタスクに規定されています：\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) また以下と統合されています：PR\n"
+"odoo/odoo#83957 in `saas-15.5`.\n"
+"\n"
+"## Testing instructions\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -12304,7 +12360,7 @@ msgstr "連絡先の自動マージのリストを実行してもよろしいで
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Are you sure you want to hide these onboarding tips?"
-msgstr ""
+msgstr "このオンボーディングのヒントを非表示にしても大丈夫ですか？"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -24575,7 +24631,7 @@ msgstr "店頭で決済・ピッキング"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Onboarding Tips"
-msgstr ""
+msgstr "オンボーディングのヒント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding

@@ -52,7 +52,7 @@ msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
-msgstr "<strong/>"
+msgstr "<strong> Bis:</strong>"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
@@ -61,13 +61,13 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Mitglied, dem Sie eine Mitgliedschaft zuordnen wollen. Dies wird im "
-"Mitgliedsstatus berücksichtigt."
+"Ein Mitglied, mit dem Sie Ihre Mitgliedschaft verknüpfen möchten, wobei der "
+"Mitgliedsstatus des verknüpften Mitglieds berücksichtigt wird."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr "Buchung Rechnungsposition"
+msgstr "Konto Rechnungszeile"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -90,12 +90,12 @@ msgstr "Mitgliedsbeitrag"
 #: model:ir.model.fields,field_description:membership.field_res_users__associate_member
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr "Verbundenes Mitglied"
+msgstr "Verknüpftes Mitglied"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "Zugehöriger Partner"
+msgstr "Verknüpfter Partner"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -111,12 +111,12 @@ msgstr "Abbrechen"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Ende Mitgliedschaft"
+msgstr "Mitgliedschaftsdatum stornieren"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr "Enddatum"
+msgstr "Datum stornieren"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
@@ -200,7 +200,7 @@ msgstr "Eintrittsdatum des Mitglied"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,help:membership.field_res_users__membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr "Datum, an dem die Mitgliedschaft gekündigt wurde"
+msgstr "Datum, an dem die Mitgliedschaft beendet wurde"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership_date_to
@@ -220,7 +220,7 @@ msgstr "Anzeigename"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_earned
 msgid "Earned Amount"
-msgstr "Bisherige Beiträge"
+msgstr "Verdienter Betrag"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
@@ -231,7 +231,7 @@ msgstr "Enddatum"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr "Ende Mitgliedschaft am"
+msgstr "Endedatum der Mitgliedschaft"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -300,12 +300,12 @@ msgstr "Mitgliedsbeitragsrechung"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__invoiced
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__invoiced
 msgid "Invoiced Member"
-msgstr "Abrechnung Mitglieder"
+msgstr "Abgerechnetes Mitglied"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "Fakturiert/Bezahlt/Frei"
+msgstr "Abgerechnet/Bezahlt/Kostenlos"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -386,7 +386,7 @@ msgstr "Mitglied"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr "Preis der Mitgliedschaft (Beitrag)"
+msgstr "Mitgliedschaftsbeitrag"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -452,7 +452,7 @@ msgstr "Mitgliedsbetrag"
 #: model:ir.model,name:membership.model_membership_invoice
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr "Mitgliedsbeitrag Rechnung"
+msgstr "Mitgliedsbeitragsrechnung"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -599,7 +599,7 @@ msgstr "Berichtswesen"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr "Generierter Umsatz"
+msgstr "Umsatz Erledigt"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__user_id
@@ -612,7 +612,7 @@ msgstr "Vertriebsmitarbeiter"
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
 #: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr "Zur Vergabe freier Mitgliedschaft aktivieren"
+msgstr "Zur Vergabe kostenkoser Mitgliedschaft aktivieren"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
@@ -660,17 +660,18 @@ msgstr "Der vom Partner verhandelte Preis."
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr "Dieser Hinweis erscheint auf den Angeboten ..."
+msgstr "Dieser Hinweis erscheint auf Angeboten ..."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "Es werden die Spalten bezahlt, alt, gesamt angezeigt"
+msgstr "Die Spalten zahlend, ehemalig und insgesamt verdient werden angezeigt"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Die Spalten wartend, fakturiert und gesamt wartend werden angezeigt"
+msgstr ""
+"Die Spalten wartend, abgerechnet und insgesamt wartend werden angezeigt"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
@@ -694,4 +695,4 @@ msgstr "Wartendes Mitglied"
 #: code:addons/membership/models/partner.py:0
 #, python-format
 msgid "You cannot create recursive associated members."
-msgstr "Sie können keine rekursiven assoziierten Mitglieder erstellen."
+msgstr "Sie können keine rekursiven verknüpften Mitglieder erstellen."

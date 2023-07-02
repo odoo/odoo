@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wolfgang Taferner, 2023
-# Ermin Trevisan <trevi@twanda.com>, 2023
 # Felix Schubert <felix.schubert@go-erp.com>, 2023
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Niyas Raphy, 2023
@@ -223,7 +222,7 @@ msgstr "<span class=\"o_stat_text\">Auslastung</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Lost</span>"
-msgstr "<span class=\"o_stat_text\">Verpasst</span>"
+msgstr "<span class=\"o_stat_text\">Verloren</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -255,7 +254,7 @@ msgstr "<span class=\"o_stat_text\">Ausschuss</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr " <span class=\"o_stat_text\">FA-Quelle</span> "
+msgstr " <span class=\"o_stat_text\">Quelle FA</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -442,7 +441,8 @@ msgstr "<strong>Arbeitsplatz: </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? Dies kann zu Inkonsistenzen in Ihrem Bestand führen."
+msgstr ""
+"demontieren möchten? Dies kann zu Inkonsistenzen in Ihrem Bestand führen."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -632,7 +632,7 @@ msgstr "Reservierung der Produktion erlaubt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr "Freigabe der Produktion"
+msgstr "Aufgebung der Reservierung der Produktion erlaubt"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
@@ -978,7 +978,7 @@ msgstr "Blockierungsgrund"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "Bausteine"
+msgstr "Blöcke"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1720,7 +1720,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
 msgid "Delay Alert Date"
-msgstr "Warnzeitpunkt verzögern"
+msgstr "Warndatum bei Verzögerung"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -1819,7 +1819,7 @@ msgstr "Zeigt die verbrauchten Los-/Seriennummern an."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr "Bestätigen Sie, dass Sie demontieren möchten"
+msgstr "Bestätigen Sie, dass Sie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2181,7 +2181,9 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "Bestimmt die Reihenfolge der angezeigten Arbeitsplätze"
+msgstr ""
+"Gibt die Reihenfolge an, in der eine Liste von Arbeitsplänen für "
+"Arbeitsplätze angezeigt wird."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__sequence
@@ -2193,7 +2195,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
-msgstr "Zeigt die Reihenfolge an."
+msgstr "Gibt bei der Anzeige die Reihenfolge an."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -2417,7 +2419,7 @@ msgstr "In Bearbeitung"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
-msgstr "Inhaltsindizierung"
+msgstr "Indizierter Inhalt"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -2833,7 +2835,7 @@ msgstr "Fertigen (1 Schritt)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "Fertigung MTO-Regel"
+msgstr "Einzelfertigungsregel"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -3317,7 +3319,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr "Nummer der Auftragsquelle Fertigungsauftrag"
+msgstr "Anzahl Quellen FA"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3380,7 +3382,7 @@ msgstr "Vorgangsabhängigkeiten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
 msgid "Operation To Consume"
-msgstr "Vorgang – benötigte Produkte"
+msgstr "Für Vorgang benötigte Produkte"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
@@ -3433,7 +3435,7 @@ msgstr "Vorgänge erledigt"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Operations Planned"
-msgstr "Geplante Vorgänge"
+msgstr "Vorgänge geplant"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
@@ -3455,7 +3457,7 @@ msgstr "Vorgänge, die beendet sein müssen, bevor dieser Vorgang starten kann."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
-msgstr "Beschaffungsregel"
+msgstr "Beschaffungspunkt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
@@ -3622,7 +3624,7 @@ msgstr "Kommissionierung vor Fertigungsstandort"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Plan"
-msgstr "Planung"
+msgstr "Plan"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3676,7 +3678,7 @@ msgstr "Falzschicht"
 #. module: mrp
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
 msgid "Ply Veneer"
-msgstr "Ply Veneer"
+msgstr "Furnierschicht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
@@ -4430,7 +4432,7 @@ msgstr "Sequenzkommissionierung vor der Fertigung"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
-msgstr "Fertigungsablauf"
+msgstr "Sequenzproduktion"
 
 #. module: mrp
 #. odoo-python
@@ -4626,12 +4628,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Quelle"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
 msgid "Source Location"
-msgstr "Lagerort (Quelle)"
+msgstr "Quelllagerort"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -4702,7 +4704,7 @@ msgstr "Edelstahlschraube vollständig (Durchm. 5 mm, Länge 10 mm)"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Starred"
-msgstr "Markiert"
+msgstr "Mit Sternchen versehen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5568,7 +5570,7 @@ msgstr "Planung aufheben"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #, python-format
 msgid "Unreserve"
-msgstr "Reservierung abbrechen"
+msgstr "Reservierung aufheben"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -6429,7 +6431,7 @@ msgstr "erwartete Dauer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "from location"
-msgstr "vom Ort"
+msgstr "aus Lagerort"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -6457,7 +6459,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
-msgstr "letzter"
+msgstr "letztes"
 
 #. module: mrp
 #. odoo-python
@@ -6518,7 +6520,7 @@ msgstr "tatsächliche Dauer"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"
-msgstr "trennen"
+msgstr "aufteilen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

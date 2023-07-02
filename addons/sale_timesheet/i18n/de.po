@@ -151,7 +151,7 @@ msgstr ""
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr "Kundendienstleistungen"
+msgstr "After-Sales-Services"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -459,7 +459,7 @@ msgstr "Mitarbeiter"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr "Stundensatz Mitarbeiter"
+msgstr "Mitarbeiterstundensatz"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -576,9 +576,9 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
 msgstr ""
-"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungfen (gelieferte "
+"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungen (gelieferte "
 "Menge) aus, und erstellen Sie ein Projekt für den Auftrag mit einer Aufgabe "
-"für jede Auftragsposition, um den Zeitaufwand zu verfolgen."
+"für jede Auftragszeile, um den Zeitaufwand zu verfolgen."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -588,7 +588,7 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create a task in an "
 "existing project to track the time spent."
 msgstr ""
-"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungfen (gelieferte "
+"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungen (gelieferte "
 "Menge) aus und erstellen Sie eine Aufgabe in einem bestehenden Projekt, um "
 "den Zeitaufwand zu verfolgen."
 
@@ -600,7 +600,7 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
-"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungfen (gelieferte "
+"Stellen Sie Rechnungen auf der Grundlage von Zeiterfassungen (gelieferte "
 "Menge) aus und erstellen Sie ein leeres Projekt für den Auftrag, um den "
 "Zeitaufwand zu verfolgen."
 
@@ -783,7 +783,7 @@ msgstr "Nichtabrechenbare Stunden"
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
 msgstr ""
-"Anzahl der aufgewendeten Stunden multipliziert mit dem Einheitspreis pro "
+"Anzahl der aufgewendeten Stunden multipliziert mit dem Einzelpreis pro "
 "Stunde/Tag."
 
 #. module: sale_timesheet
@@ -940,7 +940,7 @@ msgstr "Projektvorlage"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr "Projekt-Update"
+msgstr "Projektaktualisierung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -1066,7 +1066,7 @@ msgstr "Verkaufsauftragspositionen"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Verkaufsauftragsposition"
+msgstr "Verkaufsauftragszeile"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
@@ -1081,7 +1081,7 @@ msgid ""
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
 "Verkaufsauftragsposition, die standardmäßig auf den Zeiterfassungsbögen des entsprechenden Mitarbeiters ausgewählt wird. Sie umgeht die für das Projekt und die Aufgabe definierte Verkaufsauftragsposition und kann bei jedem Zeiterfassungsbogen geändert werden, falls erforderlich. Mit anderen Worten: Sie definiert den Satz, zu dem die Zeit eines Mitarbeiters in Rechnung gestellt wird, zum Beispiel auf der Grundlage seiner Kenntnisse, Fähigkeiten oder Erfahrung.\n"
-"Wenn Sie dieselbe Dienstleistung zu einem anderen Satz in Rechnung stellen möchten, müssen Sie zwei separate Verkaufsauftragspositionen anlegen, da jede Verkaufsauftragsposition jeweils nur einen einzigen Stückpreis haben kann.\n"
+"Wenn Sie dieselbe Dienstleistung zu einem anderen Satz in Rechnung stellen möchten, müssen Sie zwei separate Verkaufsauftragspositionen anlegen, da jede Verkaufsauftragsposition jeweils nur einen einzigen Einzelpreis haben kann.\n"
 "Sie können auch die stündlichen Unternehmenskosten Ihrer Mitarbeiter für deren Zeiterfassungen speziell für dieses Projekt festlegen. Dadurch werden die für den Mitarbeiter festgelegten Zeiterfassungskosten umgangen."
 
 #. module: sale_timesheet
@@ -1148,7 +1148,7 @@ msgstr "Dienstleistung"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
 msgid "Service Revenues"
-msgstr "Dienstleistungsvergütungen"
+msgstr "Umsätze aus Dienstleistungen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
@@ -1293,10 +1293,10 @@ msgstr ""
 "Leistungen zu unterschiedlichen Sätzen in Rechnung stellen möchten. Der "
 "feste Satz ist ideal, wenn Sie eine Leistung zu einem festen Satz pro Stunde"
 " oder Tag abrechnen möchten, unabhängig davon, welcher Mitarbeiter sie "
-"erbracht hat. Der Mitarbeitersatz ist vorzuziehen, wenn Ihre Mitarbeiter "
-"dieselbe Leistung zu einem unterschiedlichen Satz erbringen. So würden z. B."
-" Junior- und Senior-Berater die gleiche Leistung (=Beratung) erbringen, aber"
-" aufgrund ihres Dienstalters zu einem unterschiedlichen Satz."
+"erbracht hat. Der Mitarbeiterstundensatz ist vorzuziehen, wenn Ihre "
+"Mitarbeiter dieselbe Leistung zu einem unterschiedlichen Satz erbringen. So "
+"würden z. B. Junior- und Senior-Berater die gleiche Leistung (=Beratung) "
+"erbringen, aber aufgrund ihres Dienstalters zu einem unterschiedlichen Satz."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1326,7 +1326,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold
 msgid "Threshold"
-msgstr "Schwelle"
+msgstr "Grenzwert"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1359,7 +1359,7 @@ msgstr "Kosten aus erf. Zeiten"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Einheit erf. Zeiten"
+msgstr "Codierungseinheit für Zeiterfassung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
@@ -1555,12 +1555,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
-msgstr "Stückpreis"
+msgstr "Einzelpreis"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr "Stückpreis der Verkaufsauftragsposition."
+msgstr "Einzelpreis der Verkaufsauftragsposition."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1585,7 +1585,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
 msgid "Warning Employee Rate"
-msgstr "Warnung Mitarbeiterquote"
+msgstr "Warnung Mitarbeitersatz"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1

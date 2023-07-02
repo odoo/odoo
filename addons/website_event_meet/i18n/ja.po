@@ -8,14 +8,15 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Martin Trigaux, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-25 11:25+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr ""
 msgid ""
 "<span>Oops! This room is full !</span><br/>Come back later to have a chat "
 "with us!"
-msgstr ""
+msgstr "<span>！！この部屋は満室です！</span><br/>後ほど戻ってきてチャットしましょう！"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -122,6 +123,11 @@ msgstr "聴衆"
 msgid ""
 "Be sure you are ready to spend at least 10 minutes in the room if you want "
 "to initiate a new topic."
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,name:website_event_meet.event_meeting_room_0
+msgid "Best wood for furniture"
 msgstr ""
 
 #. module: website_event_meet
@@ -315,6 +321,11 @@ msgid "Let Visitors Create Rooms"
 msgstr "訪問者にルーム作成を許可"
 
 #. module: website_event_meet
+#: model:event.meeting.room,summary:website_event_meet.event_meeting_room_0
+msgid "Let's talk about wood types for furniture"
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_max_capacity
 msgid "Max capacity"
 msgstr "最大数"
@@ -354,6 +365,11 @@ msgstr "参加者数"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_max_participant_reached
 msgid "Peak participants"
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,name:website_event_meet.event_meeting_room_1
+msgid "Reducing the ecological footprint with wood ?"
 msgstr ""
 
 #. module: website_event_meet
@@ -403,6 +419,11 @@ msgstr "ルーム"
 #: model_terms:ir.actions.act_window,help:website_event_meet.event_meeting_room_action
 msgid ""
 "Rooms allow your event attendees to meet up and chat on different topics."
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,summary:website_event_meet.event_meeting_room_1
+msgid "Share your tips to reduce your ecological footprint using wood."
 msgstr ""
 
 #. module: website_event_meet
@@ -466,9 +487,20 @@ msgid "Unpublished"
 msgstr "未公開"
 
 #. module: website_event_meet
+#: model:event.meeting.room,summary:website_event_meet.event_meeting_room_2
+msgid ""
+"Venez partager vos meubles préférés et l'utilisation que vous en faites."
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_published
 msgid "Visible on current website"
 msgstr "現在のウェブサイトで見える状態"
+
+#. module: website_event_meet
+#: model:event.meeting.room,name:website_event_meet.event_meeting_room_2
+msgid "Vos meubles préférés ?"
+msgstr ""
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
@@ -488,6 +520,11 @@ msgstr "ウェブサイトURL"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "a few seconds"
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_2
+msgid "client(s)"
 msgstr ""
 
 #. module: website_event_meet
@@ -512,6 +549,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #, python-format
 msgid "e.g. Let's talk about Corporate Finance"
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_1
+msgid "ecologist(s)"
 msgstr ""
 
 #. module: website_event_meet
@@ -546,4 +588,9 @@ msgstr "に始まります"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "to have a chat with us!"
+msgstr ""
+
+#. module: website_event_meet
+#: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_0
+msgid "wood expert(s)"
 msgstr ""

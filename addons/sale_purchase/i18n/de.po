@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
 "                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Es gibt aktive Kaufaufträge im Zusammenhang mit diesem Verkaufsauftrag, die nicht automatisch storniert werden! <br/>\n"
+"                    Es gibt aktive Einkaufsaufträge im Zusammenhang mit diesem Verkaufsauftrag, die nicht automatisch storniert werden! <br/>\n"
 "                </span>\n"
 "            </span>"
 
@@ -125,7 +125,7 @@ msgstr "Bestellte Menge verringert!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr "Herstellungsverlauf Gegenstand"
+msgstr "Ursprung Verkaufsgegenstand"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/product_template.py:0
@@ -162,7 +162,7 @@ msgstr "Einkaufsauftragsalarm"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Einkaufsauftragsposition"
+msgstr "Einkaufsauftragszeile"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -197,12 +197,12 @@ msgstr "Verkaufsauftrag"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Verkaufsauftrag stornieren"
+msgstr "Verkaufsauftragsstornierung"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Verkaufsauftragsposition"
+msgstr "Verkaufsauftragszeile"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/purchase_order.py:0
@@ -214,7 +214,7 @@ msgstr "Quellen der Verkaufsaufträge %s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
-msgstr "Dienstleistung Subunternehmer"
+msgstr "Subunternehmer-Service"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order_line.py:0
@@ -240,7 +240,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr "abgebrochen"
+msgstr "storniert"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

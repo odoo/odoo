@@ -265,7 +265,7 @@ msgstr "Fecha de inicio"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr "La hora de inicio debe ser antes de la hora límite."
+msgstr "La hora de inicio debe ser antes de la hora de finalización."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -315,7 +315,7 @@ msgstr "Validado"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr "Las entradas de trabajo validadas no se pueden traslapar"
+msgstr "Las entradas de trabajo validadas no se pueden sobreponer"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -369,8 +369,8 @@ msgstr "Tipo de entradas de trabajo"
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr ""
-"La entrada de trabajo debe tener un fin. Defina una fecha de límite o una "
-"duración."
+"La entrada de trabajo debe tener un fin. Defina una fecha de finalización o "
+"una duración."
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

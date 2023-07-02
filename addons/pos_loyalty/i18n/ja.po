@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Noma Yuki, 2023
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -39,6 +39,16 @@ msgid "%s Points"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "次回注文時に15%割引"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
@@ -46,31 +56,17 @@ msgid "A better global discount is already applied."
 msgstr ""
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
 msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
 msgstr ""
 
 #. module: pos_loyalty
@@ -129,6 +125,11 @@ msgstr "クーポン"
 #, python-format
 msgid "Coupon Codes"
 msgstr "クーポンコード"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "クーポンポイント"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -190,6 +191,11 @@ msgstr "エラー"
 #: code:addons/pos_loyalty/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Error validating rewards"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
 msgstr ""
 
 #. module: pos_loyalty
@@ -272,7 +278,13 @@ msgid "Loyalty Coupon"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "ロイヤリティポイント"
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "ロイヤリティプログラム"
 
@@ -376,7 +388,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "Print Report"
-msgstr ""
+msgstr "レポート印刷"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -446,6 +458,11 @@ msgid "Select program"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
@@ -499,6 +516,15 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
 msgstr ""
 
 #. module: pos_loyalty
@@ -590,7 +616,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "This is used to print the generated gift cards from PoS."
-msgstr ""
+msgstr "これは、POSから生成されたギフトカードを印刷するために使用されます。"
 
 #. module: pos_loyalty
 #. odoo-python
