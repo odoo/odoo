@@ -4726,4 +4726,18 @@ QUnit.module("Views", ({ beforeEach }) => {
         // test would fail here if we went to week mode
         assert.containsOnce(target, ".fc-dayGridMonth-view");
     });
+
+    QUnit.test(`calendar view accepts quick_create_form_view_id`, async (assert) => {
+        const calendarComponent = await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" scales="month" quick_create_form_view_id="1">
+                    <field name="name" readonly="1"/>
+                </calendar>
+            `,
+        });
+        assert.equal(calendarComponent.model.quickCreateFormViewId, 1);
+    });
 });
