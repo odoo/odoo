@@ -15,6 +15,7 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Po potwierdzeniu zamówienia sprzedaży produkt ten może wygenerować projekt i/lub zadanie. Na ich podstawie można śledzić sprzedawaną usługę.\n"
+"\"W projekcie zamówienia sprzedaży\": Użyje skonfigurowanego projektu zamówienia sprzedaży, jeśli został zdefiniowany, lub utworzy nowy projekt na podstawie wybranego szablonu."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -300,6 +303,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Produkt %s nie powinien mieć projektu globalnego, ponieważ wygeneruje on "
+"projekt."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -308,6 +313,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Produkt %s nie powinien mieć projektu ani szablonu projektu, ponieważ nie "
+"będzie generował projektu."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -316,6 +323,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Produkt %s nie powinien mieć szablonu projektu, ponieważ wygeneruje zadanie "
+"w projekcie globalnym."
 
 #. module: sale_project
 #: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
@@ -345,6 +354,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Nie można powiązać pozycji zamówienia %(order_id)s - %(product_id)s z tym "
+"zadaniem, ponieważ jest to refakturowany wydatek."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

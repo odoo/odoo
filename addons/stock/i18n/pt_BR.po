@@ -39,8 +39,8 @@
 # Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
-# Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# Kevilyn Rosa, 2023
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Kevilyn Rosa, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3200,6 +3200,8 @@ msgstr "Operando de direito de domínio inválido%s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Configuração de regra inválida, a regra seguinte provoca um ciclo "
+"interminável: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -5235,6 +5237,9 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"As cotações são excluídas automaticamente quando apropriado. Se você "
+"precisar excluí-los manualmente, peça a um gerente de estoque para fazer "
+"isso."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6838,6 +6843,9 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"A quantidade feita para o produto \"%s\" não respeita a precisão de "
+"arredondamento definida na unidade de medida \"%s\". Altere a quantidade "
+"feita ou a precisão de arredondamento de sua unidade de medida."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7079,6 +7087,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"A empresa desse produto não pode ser alterada enquanto houver quantidades "
+"dele pertencentes a outra empresa."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7087,6 +7097,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"A empresa desse produto não pode ser alterada enquanto houver movimentações "
+"de estoque dele pertencente a outra empresa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7463,7 +7475,7 @@ msgstr "Unidades de Medida"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Unidade de medida"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8038,7 +8050,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
-msgstr ""
+msgstr "Não é possível alterar o tipo de um produto que já foi usado."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8242,6 +8254,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Não é possível alterar uma movimentação de estoque cancelada, em vez disso, "
+"crie uma nova linha."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

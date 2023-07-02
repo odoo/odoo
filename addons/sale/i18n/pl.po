@@ -37,6 +37,7 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Tymoteusz Motylewski, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-09 15:44+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2846,7 +2847,7 @@ msgstr "Stan zamówienia"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Dosprzedaż zamówień"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3892,17 +3893,17 @@ msgstr "Zacznij weryfikując dane Twojej firmy"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Stan kroku zamówienia potwierdzenia wdrożenia"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Stan przykładowego kroku notowania onboardingu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Panel onboardingowy dotyczący stanu sprzedaży"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4038,6 +4039,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Zamówienie sprzedaży %s powiązane z kontem analitycznym %s musi zostać "
+"zatwierdzone przed zarejestrowaniem wydatków."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -4113,7 +4116,7 @@ msgstr "Komunikacja w sprawie płatności tego zamówienia sprzedaży."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Procent kwoty do zafakturowania z góry, z wyłączeniem podatków."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4197,6 +4200,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Jest to data dostawy obiecana klientowi. Jeśli zostanie ustawiona, "
+"zamówienie dostawy zostanie zaplanowane na podstawie tej daty, a nie czasu "
+"realizacji sygnału produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
@@ -4259,6 +4265,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
+"Spowoduje to aktualizację wszystkich cen jednostkowych w oparciu o aktualnie"
+" ustawiony cennik."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4277,7 +4285,7 @@ msgstr "Ilość do faktury"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Do dosprzedaży"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4298,6 +4306,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Aby przyspieszyć potwierdzenie zamówienia, możemy aktywować podpisy "
+"elektroniczne lub płatności."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4566,6 +4576,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Nie można usunąć linii zamówienia po potwierdzeniu zamówienia sprzedaży.\n"
+"Należy raczej ustawić ilość na 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4583,6 +4595,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"W tym miejscu można ustawić typ komunikacji, który będzie wyświetlany na "
+"zamówieniach sprzedaży. Komunikacja ta będzie przekazywana klientowi po "
+"wybraniu przez niego metody płatności."
 
 #. module: sale
 #: code:addons/sale/models/product_product.py:0
