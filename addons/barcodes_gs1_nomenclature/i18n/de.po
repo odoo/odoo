@@ -31,8 +31,8 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
-"Alternatives Regex-Trennzeichen für den FNC1. Das Trennzeichen darf nicht "
-"mit dem Anfang/Ende eines verwandten Regelmusters übereinstimmen."
+"Alternatives Regex-Trennzeichen für FNC1. Das Trennzeichen darf nicht mit "
+"dem Anfang/Ende eines verwandten Regelmusters übereinstimmen."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -42,7 +42,7 @@ msgstr "Zugehörige Maßeinheit"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
 msgid "Barcode Nomenclature"
-msgstr "Barcode Nomenklatur"
+msgstr "Barcode-Nomenklatur"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
@@ -67,7 +67,7 @@ msgstr "Dezimal"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
 msgid "Destination location"
-msgstr "Ziel Lagerort"
+msgstr "Ziellagerort"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -82,12 +82,12 @@ msgstr "Ablaufdatum"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr "FNC1 Separator"
+msgstr "FNC1-Trennzeichen"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr "GS1 Inhaltstyp"
+msgstr "GS1-Inhaltstyp"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
@@ -97,15 +97,15 @@ msgstr "GS1-128"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
-"Wenn True, wird die letzte Ziffer von KI verwendet, um zu bestimmen, wo die "
-"erste Dezimalstelle ist."
+"Wenn Wahr, wird die letzte Ziffer von KI verwendet, um zu bestimmen, wo die "
+"erste Dezimalstelle ist"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -125,12 +125,12 @@ msgstr "Ungültiger Barcode: die Prüfziffer ist falsch"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr "Ist die GS1 Nomenklatur"
+msgstr "Ist GS1-Nomenklatur"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
 msgid "Location"
-msgstr "Standort"
+msgstr "Lagerort"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
@@ -140,12 +140,12 @@ msgstr "Los"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
 msgid "Measure"
-msgstr "Werte"
+msgstr "Kennzahl"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr "Numerischer Identifikation"
+msgstr "Numerischer Kennung"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
@@ -160,7 +160,7 @@ msgstr "Paketreferenz"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
 msgid "Package Type"
-msgstr "Typ der Verpackung"
+msgstr "Pakettyp"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
@@ -185,7 +185,7 @@ msgid ""
 msgstr ""
 "Der GS1-Inhaltstyp legt fest, als welche Art von Daten die Regel den Barcode"
 " verarbeiten wird: * Datum: der Barcode wird in eine Odoo-Datumszeit "
-"umgewandelt; * Maßeinheit: der Wert des Barcodes bezieht sich auf eine "
+"umgewandelt; * Kennzahl: der Wert des Barcodes bezieht sich auf eine "
 "bestimmte Maßeinheit; * Numerische Kennung: Barcode mit fester Länge, der "
 "einer bestimmten Codierung folgt; * Alphanumerischer Name: Barcode mit "
 "variabler Länge."
@@ -195,7 +195,7 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr "Das Regelmuster \"%s\" ist keine gültige Regex:"
+msgstr "Das Regelmuster „%s“ ist kein gültiger Regex:"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -206,7 +206,7 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
-"Das Regelmuster \"%s\" ist nicht gültig, es braucht zwei Gruppen:\n"
+"Das Regelmuster „%s“ ist nicht gültig, es braucht zwei Gruppen:\n"
 "\t- Eine erste für die Anwendungskennung (in der Regel 2- bis 4-stellig);\n"
 "\t- Eine zweite, um den Wert zu erfassen."
 
@@ -219,7 +219,7 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
-"Mit der Barcode-Regel \"%s\" ist etwas nicht in Ordnung.\n"
+"Mit der Barcode-Regel „%s“ ist etwas nicht in Ordnung.\n"
 "Wenn diese Regel Dezimalzahlen verwendet, stellen Sie sicher, dass nur Ziffern für den Application Identifier enthalten sind.\n"
 "Stellen Sie sicher, dass mögliche übereinstimmende Werte nur Ziffern enthalten, da der Wert sonst nicht als Kennzahl zugeordnet werden kann."
 

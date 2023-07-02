@@ -3,10 +3,10 @@
 # 	* account_peppol
 # 
 # Translators:
-# Junko Augias, 2023
 # Andy Yiu, 2023
 # Noma Yuki, 2023
 # Martin Trigaux, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,10 @@ msgid ""
 "                                             before confirming the registration!\n"
 "                                        </b>"
 msgstr ""
+"<b>\n"
+"                                            下記のEASコードとエンドポイント（参加者ID）を登録を確定する前に\n"
+"                                             ご確認下さい！\n"
+"                                        </b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -45,6 +49,9 @@ msgid ""
 "                        The invoice will be sent automatically to PEPPOL\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted mx-3\" attrs=\"{'invisible': [('peppol_move_state', '!=', 'to_send')]}\">\n"
+"                        請求書は自動的にPEPPOL宛に送られます\n"
+"                    </span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -53,11 +60,14 @@ msgid ""
 "                                        Upload a document to verify Company information.\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        会社情報を確認するためのドキュメントをアップロードする。\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "Account EDIプロキシユーザー"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
@@ -72,7 +82,7 @@ msgstr "有効化"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Application status:"
-msgstr ""
+msgstr "アプリケーションステータス："
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__manually_approved
@@ -84,12 +94,12 @@ msgstr "承認済"
 msgid ""
 "By clicking the \"Confirm\" button, I accept that Odoo may process my "
 "e-invoices."
-msgstr ""
+msgstr "「確定」ボタンを押すことで、私はOdooが電子請求書を処理することに同意します。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel PEPPOL"
-msgstr ""
+msgstr "PEPPOLをキャンセル"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__canceled
@@ -101,20 +111,20 @@ msgstr "取消済"
 #: code:addons/account_peppol/models/account_move.py:0
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr ""
+msgstr "PEPPOLに送信済みのエントリをキャンセルすることはできません。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr " %s アプリケーションのユーザーを登録できません"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Checked on"
-msgstr ""
+msgstr "以下でチェックされた："
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
@@ -123,6 +133,8 @@ msgid ""
 "Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
+"Peppol BIS Billing 3.0 およびその派生版のエンドポイントを識別するために使用されるコード。\n"
+"リストは下記を参照：https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -159,26 +171,26 @@ msgstr "エラー"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Error when receiving via Peppol: %s"
-msgstr ""
+msgstr "Peppol経由で受け取る際のエラー：%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document."
-msgstr ""
+msgstr "Peppolドキュメントのインポートに失敗しました"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document. Sender endpoint: %s"
-msgstr ""
+msgstr "Peppolドキュメントのインポートに失敗しました。送り主のエンドポイント：%s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "受入請求仕訳帳"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
@@ -189,22 +201,22 @@ msgstr "仕訳"
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr ""
+msgstr "最終Peppolエンドポイント検証"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
-msgstr ""
+msgstr "登録されていません"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Not valid"
-msgstr ""
+msgstr "無効です"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
-msgstr ""
+msgstr "まだ検証されていません"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -213,50 +225,53 @@ msgid ""
 "                                        You will be able to start sending and receiving documents via PEPPOL once your participation is approved.\n"
 "                                        We will notify you once we have reviewed your application."
 msgstr ""
+"お客様がこのオプションを選択し確認された後、当社で審査を行います。\n"
+"　　　　　　　　　　参加承認後、PEPPOL経由でのドキュメント送受信を開始することができます。\n"
+"　　　　　　　　　　審査完了後、ご連絡いたします。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
-msgstr ""
+msgstr "PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "PEPPOL Electronic Document Invoicing"
-msgstr ""
+msgstr "PEPPOL電子ドキュメント請求"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__is_account_peppol_participant
 msgid "PEPPOL Participant"
-msgstr ""
+msgstr "PEPPOL参加者"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "PEPPOL Purchase Journal"
-msgstr ""
+msgstr "PEPPOL購入仕訳"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr ""
+msgstr "PEPPOL対象"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr ""
+msgstr "PEPPOLエンドポイント有効性"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_message_uuid
 msgid "PEPPOL message ID"
-msgstr ""
+msgstr "PEPPOLメッセージID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "PEPPOL state"
-msgstr ""
+msgstr "PEPPOLステート"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -266,22 +281,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
-msgstr ""
+msgstr "PEPPOLステータス"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "PEPPOL: retrieve new documents"
-msgstr ""
+msgstr "PEPPOL：新しいドキュメントを取得"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "PEPPOL: update message status"
-msgstr ""
+msgstr "PEPPOL：メッセージステータスをアップデート"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
+msgstr "PEPPOL：参加者ステータスをアップデート"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -291,60 +306,60 @@ msgstr "保留"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol EAS"
-msgstr ""
+msgstr "Peppol EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Endpoint"
-msgstr ""
+msgstr "Peppolエンドポイント"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_attachment_ids
 msgid "Peppol Identification Documents"
-msgstr ""
+msgstr "Peppol身元確認書類"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully"
-msgstr ""
+msgstr "Peppoドキュメントが受理されました"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr ""
+msgstr "Peppoドキュメントが受理されました。送信元エンドポイント：%s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr ""
+msgstr "Peppol e-address (EAS)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 msgid "Peppol endpoint validity"
-msgstr ""
+msgstr "Peppolエンドポイント有効性"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
-msgstr ""
+msgstr "Peppolエラー：%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol update: %s"
-msgstr ""
+msgstr "Peppolアップデート：%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -353,28 +368,28 @@ msgstr ""
 msgid ""
 "Please fill in the EAS code and the Participant ID code in the company's "
 "partner form."
-msgstr ""
+msgstr "EASコードと参加者IDコードを企業取引先フォームに記入してください。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please select the UBL format"
-msgstr ""
+msgstr "UBLフォーマットを選択して下さい"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please upload a document that would help verifying your application"
-msgstr ""
+msgstr "申請の確認に役立つドキュメントをアップロードして下さい。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
-msgstr ""
+msgstr "取引先設定で取引先の設定を確認して下さい。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -384,12 +399,12 @@ msgstr "処理中"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy type"
-msgstr ""
+msgstr "プロキシタイプ"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Register as a PEPPOL user"
-msgstr ""
+msgstr "PEPPOLユーザー登録"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
@@ -399,26 +414,26 @@ msgstr "拒否済"
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
-msgstr ""
+msgstr "PEPPOL経由で請求書を送付"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send via PEPPOL"
-msgstr ""
+msgstr "PEPPOL経由で送付"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr ""
+msgstr "このドキュメントは処理のためPeppolアクセスポイントに送信されました。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The following invoice does not have an XML attachment: %s"
-msgstr ""
+msgstr "以下の請求書にはXML添付がありません：%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -429,19 +444,20 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
+"以下の取引先のPeppolドキュメントの受信が正しく設定されていません。Peppolエンドポイントと電子請求書フォーマットをご確認下さい：%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
+msgstr "取引先にPeppol EAS および/またはエンドポイント識別子がありません。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "The partner's EAS code and PEPPOL endpoint are valid"
-msgstr ""
+msgstr "取引先のEASコードとPEPPOLエンドポイントは有効です"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -454,22 +470,22 @@ msgstr "未送信"
 msgid ""
 "Unique identifier used by the Peppol BIS Billing 3.0 and its derivatives, "
 "also known as 'Endpoint ID'."
-msgstr ""
+msgstr "Peppol BIS Billing 3.0およびその派生版で使用される一意の識別子で、「エンドポイントID」とも呼ばれます。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Upload documents"
-msgstr ""
+msgstr "ドキュメントをアップロード"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Use PEPPOL"
-msgstr ""
+msgstr "PEPPOLを使用する"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Use PEPPOL Invoicing"
-msgstr ""
+msgstr "PEPPOL請求を使用する"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
@@ -484,7 +500,7 @@ msgstr "確認"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "取引先のPEPPOLエンドポイントを検証する"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning

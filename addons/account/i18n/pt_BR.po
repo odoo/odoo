@@ -18,8 +18,8 @@
 # ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
 # Martin Trigaux, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
-# Kevilyn Rosa, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
+# Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
 # 
 msgid ""
@@ -105,7 +105,7 @@ msgstr "# Faturas Reconciliadas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr ""
+msgstr "# Linhas de extrato reconciliadas"
 
 #. module: account
 #. odoo-python
@@ -262,6 +262,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
 msgstr ""
+"- Uma data padrão da fatura do cliente / fatura do fornecedor será sugerida."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -269,6 +270,8 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
+"- Um novo campo «Total (tax inc.)» para acelerar e controlar a codificação "
+"automatizando a criação de linha com a conta e impostos corretos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -278,7 +281,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr ""
+msgstr "- A sequência do documento torna-se editável em todos os documentos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -452,6 +455,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Caro\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aqui está o sua\n"
+"        <t t-if=\"object.name\">\n"
+"            Fatura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Fatura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (com referencia: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        no valor de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        da <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Esta fatura já está paga.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Por favor, envie o pagamento o mais cedo possível.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Por favor, use a seguinte comunicação para o seu pagamento: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Não hesite em contactar-nos se tiver alguma dúvida.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1184,6 +1228,8 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"Uma tolerância de pagamento definida como uma porcentagem deve estar sempre "
+"entre 0 e 100"
 
 #. module: account
 #. odoo-python
@@ -1192,6 +1238,8 @@ msgstr ""
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
+"Uma tolerância de pagamento definida como um valor deve ser sempre maior que"
+" 0"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1654,7 +1702,7 @@ msgstr "Lançamentos Contábeis"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr ""
+msgstr "Modo Empresas de Contabilidade"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1703,6 +1751,7 @@ msgstr "Documentos financeiros"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
 msgstr ""
+"O modo de firma de contabilidade mudará a codificação da fatura/conta:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1723,7 +1772,7 @@ msgstr "Mapeamento de contas da posição fiscal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr ""
+msgstr "Prefixo de Contas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -1802,7 +1851,7 @@ msgstr "Ative para criar recibo de compra"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create sale receipt"
-msgstr ""
+msgstr "Ative para criar recibo de venda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -2144,14 +2193,14 @@ msgstr "Sempre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__mixed
 msgid "Always (upon invoice)"
-msgstr ""
+msgstr "Sempre (mediante fatura)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__always_tax_exigible
 #: model:ir.model.fields,field_description:account.field_account_move__always_tax_exigible
 #: model:ir.model.fields,field_description:account.field_account_payment__always_tax_exigible
 msgid "Always Tax Exigible"
-msgstr ""
+msgstr "Sempre Imposto Exigível"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -2354,12 +2403,12 @@ msgstr "Distribuição Analítica"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Modelo de Distribuição Analítica"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "Modelos de Distribuição Analítica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
@@ -2395,7 +2444,7 @@ msgstr "Aplicações do plano analítico"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Planos Analítico"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -3098,6 +3147,9 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
+"Por padrão, sempre desdobramos as linhas possíveis. Se esta opção estiver "
+"marcada, a linha não será desdobrada por padrão e um botão de dobra será "
+"exibido."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -3367,7 +3419,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr ""
+msgstr "Redução de imposto com Desconto em Dinheiro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
@@ -3779,7 +3831,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr ""
+msgstr "Estorno Contabilidade da Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4599,7 +4651,7 @@ msgstr "Pagamentos de Cliente"
 #: model:ir.model.fields,help:account.field_account_move__access_url
 #: model:ir.model.fields,help:account.field_account_payment__access_url
 msgid "Customer Portal URL"
-msgstr "Endereço do Portal do Consumidor"
+msgstr "URL do portal do cliente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_customer_rank
@@ -4868,7 +4920,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr ""
+msgstr "Limite de Crédito Padrão"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5183,7 +5235,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_days
 msgid "Discount Days"
-msgstr ""
+msgstr "Dias de Desconto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_amount_currency
@@ -5362,7 +5414,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
-msgstr ""
+msgstr "País Local da sua Contabilidade"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_send__mode__done
@@ -6001,7 +6053,7 @@ msgstr "Conta Financeira"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefix"
-msgstr ""
+msgstr "Prefixo de Contas Financeiras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -9275,7 +9327,7 @@ msgstr "Mais antigo primeiro"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr ""
+msgstr "No pagamento antecipado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -10370,6 +10422,8 @@ msgid ""
 "Prefix that defines which accounts from the financial accounting this "
 "applicability should apply on."
 msgstr ""
+"Prefixo que define em quais contas da contabilidade financeira essa "
+"aplicabilidade deve ser aplicada."
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -10485,7 +10539,7 @@ msgstr "Unidade de Medida do Produto"
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "Variação do Produto"
+msgstr "Variante do produto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -10601,13 +10655,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_encoding_vals
 msgid "Quick Encoding Vals"
-msgstr ""
+msgstr "Valor de codificação rápida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
-msgstr ""
+msgstr "Codificação Rápida"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -11227,7 +11281,7 @@ msgstr "Vendas"
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_use_credit_limit
 msgid "Sales Credit Limit"
-msgstr ""
+msgstr "Limite de Crédito de Vendas"
 
 #. module: account
 #: model:account.account,name:account.1_expense_sales
@@ -11497,9 +11551,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Selecionando a opção de \"Aviso\" irá notificar o usuário com a mensagem, "
-"marcar \"Mensagem de Bloqueio\" irá lançar uma exceção com a mensagem e "
-"bloquear o fluxo. A mensagem tem de ser escrita no campo a seguir."
+"Selecionar a opção de “Aviso” notificará o usuário com a mensagem. Se "
+"selecionar “Mensagem de bloqueio”, isso lançará uma exceção com a mensagem e"
+" bloqueará o fluxo. A mensagem tem de ser escrita no campo seguinte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__selection
@@ -12145,13 +12199,13 @@ msgstr "Valoração de Estoque"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Estorno Contabilidade"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Estorno Contabilidade"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
@@ -12901,6 +12955,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"O cliente renuncia explicitamente a seus próprios termos e condições padrão,"
+" mesmo que tenham sido elaborados após estes termos e condições padrão de "
+"venda. Para que seja válida, qualquer derrogação deve ser expressamente "
+"acordada por escrito e com antecedência."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
@@ -13911,6 +13969,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Este é o limite de crédito padrão que será usado em parceiros que não "
+"possuem um limite específico para eles."
 
 #. module: account
 #. odoo-python
@@ -14319,6 +14379,8 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Acione alertas ao criar Faturas e Pedidos de Venda para Parceiros com Valor "
+"Total a Receber superior a um limite."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -14606,7 +14668,7 @@ msgstr "Utilizar Débito Direto SEPA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Usar Estorno Contabilidade"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
@@ -14724,6 +14786,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
+"Campo utilitário para expressar se o item do diário está sujeito à estorno "
+"contabilidade"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required

@@ -3,9 +3,9 @@
 # 	* stock_account
 # 
 # Translators:
+# Cécile Collart <cco@odoo.com>, 2023
 # Nicolas Seinlet <nicolas@seinlet.com>, 2023
 # Marie Willemyns <mwi@odoo.com>, 2023
-# Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
@@ -414,7 +414,7 @@ msgstr "Emplacements de l'inventaire"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
-msgstr "Valorisation du stock"
+msgstr "Valorisation des stocks"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
@@ -904,12 +904,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Utilisé pour la valorisation de l'inventaire en temps réel. Quand il est "
-"défini sur un emplacement virtuel (type autre que \"Interne\"), ce compte "
-"sera utilisé pour enregistrer la valeur des produits qui ont été déplacés "
-"depuis un emplacement interne vers cet emplacement, à la place du compte "
-"générique de stock de sortie décrit dans le produit. Ceci n'a pas d'effet "
-"pour les emplacements internes."
+"Utilisé pour la valorisation des stocks en temps réel. Quand il est défini "
+"sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera "
+"utilisé pour enregistrer la valeur des produits qui ont été déplacés depuis "
+"un emplacement interne vers cet emplacement, à la place du compte générique "
+"de stock de sortie décrit dans le produit. Ceci n'a pas d'effet pour les "
+"emplacements internes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -920,7 +920,7 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Utilisé pour la valorisation du stock en temps réel. Lorsqu'il est défini "
+"Utilisé pour la valorisation des stocks en temps réel. Lorsqu'il est défini "
 "sur un emplacement virtuel, ce compte est utilisé pour valoriser les "
 "produits qui sont déplacés de cet emplacement à un emplacement interne, à la"
 " place du compte de sortie de stock générique défini sur le produit. Ceci "
@@ -969,7 +969,7 @@ msgstr "Valeur"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr "Valeur disponible :"
+msgstr "Valeur en stock :"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -989,8 +989,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Quand la valorisation d'inventaire automatisée est activée sur un article, "
-"ce compte contient la valeur actuelle des articles."
+"Quand la valorisation des stocks automatisée est activée sur un article, ce "
+"compte contient la valeur actuelle des articles."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -999,7 +999,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Quand la valorisation d'inventaire est automatisée, les entrées comptables de contre-partie pour les sorties de stock seront postées dans ce compte,\n"
+"Quand la valorisation des stocks est automatisée, les entrées comptables de contre-partie pour les sorties de stock seront postées dans ce compte,\n"
 "                à moins qu'un compte de valorisation spécifique ne soit indiqué sur l'emplacement de destination. C'est la valeur par défaut pour tous les articles de cette catégorie.\n"
 "                Elle peut aussi être spécifiée directement sur chaque article."
 
@@ -1009,9 +1009,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Quand la valorisation d'inventaire est automatisée, c'est le journal "
-"comptable dans lequel les entrées seront automatiquement postées lorsque les"
-" mouvements de stock seront réalisés."
+"Quand la valorisation des stocks est automatisée, c'est le journal comptable"
+" dans lequel les entrées seront automatiquement postées lorsque les "
+"mouvements de stock seront réalisés."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation

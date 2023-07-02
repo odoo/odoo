@@ -37,6 +37,7 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -944,6 +945,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Zamówienie ma na celu dosprzedaż, gdy dostarczone ilości są wyższe niż początkowo\n"
+"zamówione ilości, a polityka fakturowania opiera się na zamówionych ilościach."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -1885,7 +1888,7 @@ msgstr "Wygaśnięcie"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "Wygasa w dniu %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2873,7 +2876,7 @@ msgstr "Stan zamówienia"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Dosprzedaż zamówień"
 
 #. module: sale
 #. odoo-python
@@ -3037,7 +3040,7 @@ msgstr "Price Reduce Tax excl"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Obniżka ceny wraz z podatkiem"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -4035,17 +4038,17 @@ msgstr "Zacznij weryfikując dane Twojej firmy"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Stan kroku zamówienia potwierdzenia wdrożenia"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Stan przykładowego kroku notowania onboardingu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Panel onboardingowy dotyczący stanu sprzedaży"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4154,6 +4157,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"Zespół %(team_name)s ma %(sale_order_count)s aktywne zamówienia sprzedaży. "
+"Rozważ ich anulowanie lub zarchiwizowanie zespołu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4237,6 +4242,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Zamówienie sprzedaży %s powiązane z kontem analitycznym %s musi zostać "
+"zatwierdzone przed zarejestrowaniem wydatków."
 
 #. module: sale
 #. odoo-python
@@ -4258,6 +4265,8 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Data dostawy jest wcześniejsza niż oczekiwana. Termin dostawy może nie "
+"zostać dotrzymany."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4283,6 +4292,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Faktura jest generowana automatycznie i dostępna w portalu klienta po potwierdzeniu transakcji przez dostawcę płatności.\n"
+"Faktura jest oznaczana jako zapłacona, a płatność jest rejestrowana w dzienniku płatności zdefiniowanym w konfiguracji dostawcy płatności.\n"
+"Ten tryb jest zalecany w przypadku wystawiania faktury końcowej przy zamówieniu, a nie po dostawie."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4393,6 +4405,11 @@ msgid ""
 "- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"Nie ma nic do zafakturowania!\n"
+"\n"
+"Przyczyną takiego zachowania może być:\n"
+"- Powinieneś dostarczyć swoje produkty przed ich zafakturowaniem.\n"
+"- Powinieneś zmodyfikować politykę fakturowania swojego produktu: Otwórz produkt, przejdź do zakładki \"Sprzedaż\" i zmień politykę fakturowania z \"dostarczonych ilości\" na \"zamówione ilości\". W przypadku usług należy zmodyfikować politykę fakturowania usług na \"Przedpłata\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4421,6 +4438,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Jest to data dostawy obiecana klientowi. Jeśli zostanie ustawiona, "
+"zamówienie dostawy zostanie zaplanowane na podstawie tej daty, a nie czasu "
+"realizacji sygnału produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4448,6 +4468,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Ten produkt jest pakowany przez %(pack_size).2f %(pack_name)s. Powinieneś "
+"sprzedawać %(quantity).2f %(unit)s"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4497,11 +4519,15 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Spowoduje to aktualizację wszystkich podatków w oparciu o aktualnie wybraną "
+"pozycję podatkową."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
+"Spowoduje to aktualizację wszystkich cen jednostkowych w oparciu o aktualnie"
+" ustawiony cennik."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4517,7 +4543,7 @@ msgstr "Do zafakturowania"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Do dosprzedaży"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4538,6 +4564,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Aby przyspieszyć potwierdzenie zamówienia, możemy aktywować podpisy "
+"elektroniczne lub płatności."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4716,7 +4744,7 @@ msgstr "Aktualizuj podatki"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Doprzedaż %(order)s dla klienta %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4729,6 +4757,8 @@ msgstr "Szansa sprzedaży"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Używany przez sprzedawców podczas wysyłania ofert lub proform do "
+"potencjalnych klientów."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4851,6 +4881,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Nie można usunąć linii zamówienia po potwierdzeniu zamówienia sprzedaży.\n"
+"Należy raczej ustawić ilość na 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4858,6 +4890,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Możesz wybrać wszystkie zamówienia i wystawić faktury zbiorczo, <br>\n"
+"lub zaznaczyć każde zamówienie i fakturować je pojedynczo."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -4866,6 +4900,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"W tym miejscu można ustawić typ komunikacji, który będzie wyświetlany na "
+"zamówieniach sprzedaży. Komunikacja ta będzie przekazywana klientowi po "
+"wybraniu przez niego metody płatności."
 
 #. module: sale
 #. odoo-javascript

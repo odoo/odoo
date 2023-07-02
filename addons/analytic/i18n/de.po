@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "Betrag"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Analytic"
-msgstr "Kostenstelle"
+msgstr "Kostenrechnung"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -109,7 +109,7 @@ msgstr "Kostenrechnung"
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr "Kostenstellenkonten"
+msgstr "Kostenstellen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
@@ -120,7 +120,7 @@ msgstr "Anzahl Kostenstellen"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Verteilung der Kostenstellen"
+msgstr "Kostenverteilung"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
@@ -138,7 +138,7 @@ msgstr "Verteilungsschlüssel für Kostenstellen"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Suche nach Kostenstellenverteilung"
+msgstr "Suche nach Kostenverteilung"
 
 #. module: analytic
 #. odoo-javascript
@@ -150,7 +150,7 @@ msgstr "Vorlage für Kostenverteilung"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr "Kostenpunkt"
+msgstr "Kostenstellenbuchung"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -158,22 +158,22 @@ msgstr "Kostenpunkt"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Items"
-msgstr "Kostenstellen Buchungen"
+msgstr "Kostenstellenbuchungen"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenstellenzeile"
+msgstr "Kostenstellenbuchungen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "Kostenstellen Buchungen"
+msgstr "Kostenstellenbuchungen"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr "Analytisches Mixin"
+msgstr "Kostenrechnung Mixin"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
@@ -205,7 +205,7 @@ msgstr "Kostengenauigkeit"
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Accounts"
-msgstr "Kostenstellenkonten"
+msgstr "Kostenstellen"
 
 #. module: analytic
 #. odoo-python
@@ -271,7 +271,7 @@ msgstr "Kategorie"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Kostenstellen"
+msgstr "Kostenstellenplan"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
@@ -281,7 +281,7 @@ msgstr "Anzahl Unterpläne"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
 msgid "Childrens"
-msgstr "Kinder"
+msgstr "Untergeordnete"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
@@ -342,8 +342,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, "
-"Auslagen oder Stundenzettel erfassen."
+"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Spesen"
+" oder Zeiterfassungen registrieren."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -352,7 +352,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
@@ -361,7 +361,7 @@ msgstr "Angelegt von"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -471,7 +471,7 @@ msgstr "Gruppieren nach ..."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
 msgid "Has Message"
-msgstr "Hat Nachricht"
+msgstr "Hat eine Nachricht"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -519,7 +519,7 @@ msgstr "Ungültig"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Follower"
+msgstr "Ist Follower"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -573,7 +573,7 @@ msgstr "Nachricht mit Zustellungsfehler"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
 msgid "Messages"
-msgstr "Mitteilungen"
+msgstr "Nachrichten"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_millennium_industries
@@ -589,7 +589,7 @@ msgstr "Sonstiges"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
-msgstr "Namen"
+msgstr "Name"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_nebula
@@ -711,7 +711,7 @@ msgstr "Partnerkategorie"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__plan_id
 msgid "Plan"
-msgstr "Planung"
+msgstr "Plan"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
@@ -734,7 +734,7 @@ msgstr "Schnellsuche: %s"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr "Verweis"
+msgstr "Referenz"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_department
@@ -768,14 +768,14 @@ msgstr "Seagate P2"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Suche Kostenstellen Buchungen"
+msgstr "Kostenstellenbuchungen suchen"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Search More..."
-msgstr "Weitere suchen ..."
+msgstr "Mehr suchen ..."
 
 #. module: analytic
 #. odoo-javascript
@@ -839,7 +839,7 @@ msgid ""
 "to create an analytic item for"
 msgstr ""
 "Das ausgewählte Konto gehört zu einem anderen Unternehmen als dem, für das "
-"Sie ein Analyseelement erstellen möchten"
+"Sie eine Kostenstellenbuchung erstellen möchten"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -865,7 +865,7 @@ msgstr "Maßeinheit"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr "Maßeinheit Kategorie"
+msgstr "Maßeinheitskategorie"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

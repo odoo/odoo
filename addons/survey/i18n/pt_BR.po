@@ -8,8 +8,8 @@
 # Kevilyn Rosa, 2023
 # Martin Trigaux, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
-# Layna Nascimento, 2023
 # Diego Sayron, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Diego Sayron, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "Perguntas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__random_questions_count
 msgid "# Questions Randomly Picked"
-msgstr ""
+msgstr "# Questions Randomly Picked"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
@@ -177,6 +177,8 @@ msgid ""
 "<b>Certificate</b>\n"
 "                            <br/>"
 msgstr ""
+"<b>Certificate</b>\n"
+"                            <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -184,6 +186,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Completed</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Completed</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -191,6 +195,8 @@ msgid ""
 "<br/>\n"
 "                                    <span class=\"text-muted\">Registered</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">Registered</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -198,11 +204,13 @@ msgid ""
 "<br/>\n"
 "                                <span class=\"text-muted\">Average Duration</span>"
 msgstr ""
+"<br/>\n"
+"                                <span class=\"text-muted\">Average Duration</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "<br/> <span>by</span>"
-msgstr ""
+msgstr "<br/> <span>by</span>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -234,6 +242,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Dear <span t-out=\"object.partner_id.name or 'participant'\">participant</span></p>\n"
+"                <p>\n"
+"                    Please find attached your\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
+"                    certification\n"
+"                </p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -270,11 +304,42 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            You have been invited to take a new certification.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            We are conducting a survey and your response would be appreciated.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    Start Certification\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Start Survey\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            We wish you good luck!\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Thank you in advance for your participation.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "<i class=\"fa fa-bar-chart me-1\"/>Graph"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart me-1\"/>Graph"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -284,12 +349,12 @@ msgstr "<i class=\"fa fa-bar-chart\"/> Resultados"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg me-2\"/>answer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o  fa-lg me-2\"/>answer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -308,7 +373,7 @@ msgstr "<i class=\"fa fa-close\"/> Encerrar"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>answer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -331,18 +396,18 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "<i class=\"fa fa-list-alt me-1\"/>All Data"
-msgstr ""
+msgstr "<i class=\"fa fa-list-alt me-1\"/>All Data"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "<i class=\"fa fa-list-alt me-1\"/>Data"
-msgstr ""
+msgstr "<i class=\"fa fa-list-alt me-1\"/>Data"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "<i class=\"fa fa-list-ol me-1\"/>Most Common"
-msgstr ""
+msgstr "<i class=\"fa fa-list-ol me-1\"/>Most Common"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -356,17 +421,17 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<i class=\"fa fa-trash me-1\"/>Remove all filters"
-msgstr ""
+msgstr "<i class=\"fa fa-trash me-1\"/>Remove all filters"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -374,6 +439,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Points</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_scored_question', '!=', "
+"True)]}\">Points</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -390,6 +457,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Average "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Average "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -397,6 +466,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -404,11 +475,13 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
 "</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span class=\"fa fa-filter me-1\"/>Filters"
-msgstr ""
+msgstr "<span class=\"fa fa-filter me-1\"/>Filters"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -416,6 +489,8 @@ msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
 "tooltip\"> or press Enter</span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
+"tooltip\"> or press Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -424,6 +499,9 @@ msgid ""
 "                            <span id=\"enter-tooltip\">or press Enter</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
+"                            <span id=\"enter-tooltip\">or press Enter</span>\n"
+"                        </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -432,11 +510,14 @@ msgid ""
 "                        <span id=\"enter-tooltip\">or press Enter</span>\n"
 "                    </span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
+"                        <span id=\"enter-tooltip\">or press Enter</span>\n"
+"                    </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"mx-1\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\">-</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -462,6 +543,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
 " press Enter</span>"
 msgstr ""
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
+" press Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -470,6 +553,9 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">Key</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -477,6 +563,8 @@ msgid ""
 "<span class=\"o_survey_session_answer_count\">0</span>\n"
 "                                     /"
 msgstr ""
+"<span class=\"o_survey_session_answer_count\">0</span>\n"
+"                                     /"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
@@ -484,21 +572,23 @@ msgid ""
 "<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Start</span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 msgstr ""
+"<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Start</span>\n"
+"                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Completed</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Completed</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Questions</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Questions</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Registered</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Registered</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -521,7 +611,7 @@ msgstr "<span>%</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
-msgstr ""
+msgstr "<span>All surveys</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
@@ -535,11 +625,13 @@ msgid ""
 "<span>Click on the filter icon (<span class=\"fa fa-filter text-primary\"/>)\n"
 "                                    next to an answer to filter surveys on similar answers only.</span>"
 msgstr ""
+"<span>Click on the filter icon (<span class=\"fa fa-filter text-primary\"/>)\n"
+"                                    next to an answer to filter surveys on similar answers only.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Completed surveys</span>"
-msgstr ""
+msgstr "<span>Completed surveys</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -549,7 +641,7 @@ msgstr "<span>Data</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Failed only</span>"
-msgstr ""
+msgstr "<span>Failed only</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -558,6 +650,9 @@ msgid ""
 "                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123 </i>\n"
 "                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
 msgstr ""
+"<span>How many ...?</span><br/>\n"
+"                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123 </i>\n"
+"                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
@@ -573,6 +668,8 @@ msgid ""
 "<span>Name all the animals</span><br/>\n"
 "                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
 msgstr ""
+"<span>Name all the animals</span><br/>\n"
+"                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -580,31 +677,33 @@ msgid ""
 "<span>Name one animal</span><br/>\n"
 "                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 msgstr ""
+"<span>Name one animal</span><br/>\n"
+"                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "<span>Number of attempts left</span>:"
-msgstr ""
+msgstr "<span>Number of attempts left</span>:"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader!</span>"
-msgstr ""
+msgstr "<span>Our famous Leader!</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
-msgstr ""
+msgstr "<span>Our sales people have an advantage, but you can do it!</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed and Failed</span>"
-msgstr ""
+msgstr "<span>Passed and Failed</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
-msgstr ""
+msgstr "<span>Passed only</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -612,11 +711,13 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>This certificate is presented to</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "<span>Try It</span>"
-msgstr ""
+msgstr "<span>Try It</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -627,22 +728,22 @@ msgstr "<span>Aguardando os participantes...</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>When does ... start?</span><br/>"
-msgstr ""
+msgstr "<span>When does ... start?</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>When is Christmas?</span><br/>"
-msgstr ""
+msgstr "<span>When is Christmas?</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>Which are yellow?</span><br/>"
-msgstr ""
+msgstr "<span>Which are yellow?</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span>Which is yellow?</span><br/>"
-msgstr ""
+msgstr "<span>Which is yellow?</span><br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -650,6 +751,8 @@ msgid ""
 "<span>for successfully completing</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>for successfully completing</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q4
@@ -691,7 +794,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 msgid "A problem has occurred"
-msgstr ""
+msgstr "A problem has occurred"
 
 #. module: survey
 #. odoo-python
@@ -779,7 +882,7 @@ msgstr "Adicionar contatos existentes..."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add some fun to your presentations by sharing questions live"
-msgstr ""
+msgstr "Add some fun to your presentations by sharing questions live"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
@@ -802,6 +905,8 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
+"After watching this video, will you swear that you are not going to "
+"procrastinate to trim your hedge this year?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -832,6 +937,8 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"All conditional display questions need a triggering question.\n"
+"Please disable \"Conditional Display\" or specify a triggering question."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -844,6 +951,8 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"All questions triggered by another need a triggering answer.\n"
+"Please disable \"Conditional Display\" or specify a triggering answer."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -853,7 +962,7 @@ msgstr "Todas as pesquisas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Allowed Triggering Questions"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -875,7 +984,7 @@ msgstr ""
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
 msgid "An apple a day keeps the doctor away."
-msgstr ""
+msgstr "An apple a day keeps the doctor away."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -963,7 +1072,7 @@ msgstr "Ásia"
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__assessment
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Assessment"
-msgstr ""
+msgstr "Assessment"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
@@ -999,6 +1108,8 @@ msgid ""
 "Attendee nickname, mainly used to identify them in the survey session "
 "leaderboard."
 msgstr ""
+"Attendee nickname, mainly used to identify them in the survey session "
+"leaderboard."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1021,6 +1132,8 @@ msgid ""
 "Automated email sent to the user when they succeed the certification, "
 "containing their certification document."
 msgstr ""
+"Automated email sent to the user when they succeed the certification, "
+"containing their certification document."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug3
@@ -1035,17 +1148,17 @@ msgstr "Média"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
 msgid "Average Duration"
-msgstr ""
+msgstr "Average Duration"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
 msgid "Average duration of the survey (in hours)"
-msgstr ""
+msgstr "Average duration of the survey (in hours)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_score_avg
 msgid "Avg Score (%)"
-msgstr ""
+msgstr "Avg Score (%)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug3
@@ -1067,7 +1180,7 @@ msgstr "Imagem De Fundo"
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image_url
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_url
 msgid "Background Url"
-msgstr ""
+msgstr "Background Url"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -1087,14 +1200,14 @@ msgstr "Abelhas"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_3_question_3
 msgid "Beware of leap years!"
-msgstr ""
+msgstr "Beware of leap years!"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Blue Pen"
-msgstr ""
+msgstr "Blue Pen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body_has_template_value
@@ -1109,12 +1222,12 @@ msgstr "Tijolos"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_feedback_p1_q1
 msgid "Brussels"
-msgstr ""
+msgstr "Brussels"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q3
 msgid "Brussels, Belgium"
-msgstr ""
+msgstr "Brussels, Belgium"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_burger_quiz
@@ -1126,7 +1239,7 @@ msgstr "Questionário sobre Hamburguer"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "But first, keep listening to the host."
-msgstr ""
+msgstr "But first, keep listening to the host."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_3
@@ -1146,7 +1259,7 @@ msgstr "Corpo de texto pode ser editado"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
 msgid "Can Humans ever directly see a photon?"
-msgstr ""
+msgstr "Can Humans ever directly see a photon?"
 
 #. module: survey
 #. odoo-python
@@ -1171,7 +1284,7 @@ msgstr "Distintivo de Certificação"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
-msgstr ""
+msgstr "Certification Badge is not configured for the survey %(survey_name)s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -1181,7 +1294,7 @@ msgstr "Falha na Certificação"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification n°"
-msgstr ""
+msgstr "Certification n°"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
@@ -1191,7 +1304,7 @@ msgstr "Modelo de certificação"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "Certification: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1219,7 +1332,7 @@ msgstr "Certificado"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
 msgid "Certified Email Template"
-msgstr ""
+msgstr "Certified Email Template"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1236,7 +1349,7 @@ msgstr "Gráfico"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Cheating on your neighbors will not help!"
-msgstr ""
+msgstr "Cheating on your neighbors will not help!"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
@@ -1258,7 +1371,7 @@ msgstr "Escolhas"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
-msgstr ""
+msgstr "Choose your favourite subject and show how good you are. Ready?"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1312,7 +1425,7 @@ msgstr "Índice de Cores"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "Come back once you have added questions to your Surveys."
-msgstr ""
+msgstr "Come back once you have added questions to your Surveys."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_comments
@@ -1327,7 +1440,7 @@ msgstr "Comentar Mensagem"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
 msgid "Comment is an answer"
-msgstr ""
+msgstr "Comment is an answer"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_company_count
@@ -1344,7 +1457,7 @@ msgstr "Concluído"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Completed surveys"
-msgstr ""
+msgstr "Completed surveys"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1371,6 +1484,7 @@ msgstr "Exibição Condicional"
 msgid ""
 "Conditional display is not available when questions are randomly picked."
 msgstr ""
+"Conditional display is not available when questions are randomly picked."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1382,7 +1496,7 @@ msgstr "Cadeira de Reuniões"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
-msgstr ""
+msgstr "Congratulations! You are now ready to collect feedback like a pro :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1435,7 +1549,7 @@ msgstr "Cookies"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Copied!"
-msgstr ""
+msgstr "Copied!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
@@ -1512,7 +1626,7 @@ msgstr "Criar Sessão ao Vivo"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Create a custom survey from scratch"
-msgstr ""
+msgstr "Create a custom survey from scratch"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1557,7 +1671,7 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Creating token for closed/archived surveys is not allowed."
-msgstr ""
+msgstr "Creating token for closed/archived surveys is not allowed."
 
 #. module: survey
 #. odoo-python
@@ -1696,19 +1810,19 @@ msgstr "Nome exibido"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Display Progress as"
-msgstr ""
+msgstr "Display Progress as"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s: %s\""
-msgstr ""
+msgstr "Displayed if \"%s: %s\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "Displayed when the answer entered is not valid."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1718,7 +1832,7 @@ msgstr "Vendemos Painéis de Isolamento Sonoro?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns?"
-msgstr ""
+msgstr "Do you have any other comments, questions, or concerns?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1733,12 +1847,12 @@ msgstr "Cães"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees?"
-msgstr ""
+msgstr "Dogwood is from which family of trees?"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
 msgid "Don't be shy, be wild!"
-msgstr ""
+msgstr "Don't be shy, be wild!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug1
@@ -1753,7 +1867,7 @@ msgstr "Gaveta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "Duplicate Question"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -1774,7 +1888,7 @@ msgstr "E-mail"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "End Live Session"
-msgstr ""
+msgstr "End Live Session"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description_done
@@ -1785,19 +1899,19 @@ msgstr "Mensagem Final"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
 msgid "End date and time"
-msgstr ""
+msgstr "End date and time"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "End of Survey"
-msgstr ""
+msgstr "End of Survey"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Enter Session Code"
-msgstr ""
+msgstr "Enter Session Code"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -1817,7 +1931,7 @@ msgstr "Teixo Europeu"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Exclude Tests"
-msgstr ""
+msgstr "Exclude Tests"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_partner_ids
@@ -1845,7 +1959,7 @@ msgstr "Falhou"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Failed only"
-msgstr ""
+msgstr "Failed only"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_2
@@ -1871,7 +1985,7 @@ msgstr "Ficus"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 #: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "Filter surveys"
-msgstr ""
+msgstr "Filter surveys"
 
 #. module: survey
 #. odoo-javascript
@@ -1912,7 +2026,7 @@ msgstr "Resposta do Texto Livre"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
 msgid "From which continent is native the Scots pine (pinus sylvestris)?"
-msgstr ""
+msgstr "From which continent is native the Scots pine (pinus sylvestris)?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug1
@@ -1937,7 +2051,7 @@ msgstr "Desafio de Gamificação"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Gather feedbacks from your employees and customers"
-msgstr ""
+msgstr "Gather feedbacks from your employees and customers"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2
@@ -2000,7 +2114,7 @@ msgstr "Lidar com o existente"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Handle quiz &amp; certifications"
-msgstr ""
+msgstr "Handle quiz &amp; certifications"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q3_sug1
@@ -2021,7 +2135,7 @@ msgstr "Altura"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Help Participants know what to write"
-msgstr ""
+msgstr "Help Participants know what to write"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug3
@@ -2033,7 +2147,7 @@ msgstr "Hemiunu"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Here, you can overview all the participations."
-msgstr ""
+msgstr "Here, you can overview all the participations."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -2049,28 +2163,28 @@ msgstr "Histórico"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q3
 msgid "How frequently do you buy products online?"
-msgstr ""
+msgstr "How frequently do you buy products online?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How frequently do you use our products?"
-msgstr ""
+msgstr "How frequently do you use our products?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How good of a presenter are you? Let's find out!"
-msgstr ""
+msgstr "How good of a presenter are you? Let's find out!"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How likely are you to recommend the following products to a friend?"
-msgstr ""
+msgstr "How likely are you to recommend the following products to a friend?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q1
@@ -2094,12 +2208,12 @@ msgstr "Quantos dias tem a nossa garantia de devolução de dinheiro?"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How many orders did you pass during the last 6 months?"
-msgstr ""
+msgstr "How many orders did you pass during the last 6 months?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
 msgid "How many times did you order products on our website?"
-msgstr ""
+msgstr "How many times did you order products on our website?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_4
@@ -2109,7 +2223,7 @@ msgstr "Quantas versões da Secretária de Canto temos?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q3
 msgid "How many years did the 100 years war last?"
-msgstr ""
+msgstr "How many years did the 100 years war last?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
@@ -2124,7 +2238,7 @@ msgstr "Com que frequência deve regar essas plantas"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q4
 msgid "How old are you?"
-msgstr ""
+msgstr "How old are you?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug4
@@ -2157,7 +2271,7 @@ msgstr "Não tenho nem ideia, eu sou um cão!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug3
 msgid "I've been noticing gravity since I was very young!"
-msgstr ""
+msgstr "I've been noticing gravity since I was very young!"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
@@ -2247,6 +2361,8 @@ msgid ""
 "If checked, this question will be displayed only\n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
+"If checked, this question will be displayed only\n"
+"        if the specified conditional answer have been selected in a previous question"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -2289,7 +2405,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
 msgid "If yes, explain what you think is missing, give examples."
-msgstr ""
+msgstr "If yes, explain what you think is missing, give examples."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -2305,14 +2421,14 @@ msgstr "Imagem"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_image_filename
 msgid "Image Filename"
-msgstr ""
+msgstr "Image Filename"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Image Zoom Dialog"
-msgstr ""
+msgstr "Image Zoom Dialog"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug1
@@ -2339,7 +2455,7 @@ msgstr "Na lista abaixo, selecione todas as coníferas."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q2
 msgid "In which country did the bonsai technique develop?"
-msgstr ""
+msgstr "In which country did the bonsai technique develop?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_scored_question
@@ -2409,12 +2525,12 @@ msgstr "Está em uma Sessão"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_placed_before_trigger
 msgid "Is misplaced?"
-msgstr ""
+msgstr "Is misplaced?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Is not a Certification"
-msgstr ""
+msgstr "Is not a Certification"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
@@ -2424,12 +2540,12 @@ msgstr "Essa entrada de usuário faz parte de uma sessão de pesquisa ou não."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q3
 msgid "Is the wood of a coniferous hard or soft?"
-msgstr ""
+msgstr "Is the wood of a coniferous hard or soft?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before its trigger question?"
-msgstr ""
+msgstr "Is this question placed before its trigger question?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2441,35 +2557,35 @@ msgstr "Istambul"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It does not mean anything specific"
-msgstr ""
+msgstr "It does not mean anything specific"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It helps attendees focus on what you are saying"
-msgstr ""
+msgstr "It helps attendees focus on what you are saying"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It helps attendees remember the content of your presentation"
-msgstr ""
+msgstr "It helps attendees remember the content of your presentation"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is a small bit of text, displayed to help participants answer"
-msgstr ""
+msgstr "It is a small bit of text, displayed to help participants answer"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is an option that can be different for each Survey"
-msgstr ""
+msgstr "It is an option that can be different for each Survey"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row2
@@ -2481,14 +2597,14 @@ msgstr "É fácil encontrar o produto que você deseja"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It is more engaging for your audience"
-msgstr ""
+msgstr "It is more engaging for your audience"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It's a Belgian word for \"Management\""
-msgstr ""
+msgstr "It's a Belgian word for \"Management\""
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug3
@@ -2512,12 +2628,12 @@ msgstr "Japão"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Join Session"
-msgstr ""
+msgstr "Join Session"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
 msgid "Just to categorize your answers, don't worry."
-msgstr ""
+msgstr "Just to categorize your answers, don't worry."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -2591,7 +2707,7 @@ msgstr "Últimas Atividades"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Launch Session"
-msgstr ""
+msgstr "Launch Session"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2619,40 +2735,40 @@ msgstr "Limoeiros"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's get started!"
-msgstr ""
+msgstr "Let's get started!"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's give it a spin!"
-msgstr ""
+msgstr "Let's give it a spin!"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's have a look at your answers!"
-msgstr ""
+msgstr "Let's have a look at your answers!"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Let's open the survey you just submitted."
-msgstr ""
+msgstr "Let's open the survey you just submitted."
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Likely"
-msgstr ""
+msgstr "Likely"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Limit Attempts"
-msgstr ""
+msgstr "Limit Attempts"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_attempts_limited
@@ -2677,14 +2793,14 @@ msgstr "Sessões ao Vivo"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__live_session
 msgid "Live session"
-msgstr ""
+msgstr "Live session"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Load a <b>sample Survey</b> to get started quickly."
-msgstr ""
+msgstr "Load a <b>sample Survey</b> to get started quickly."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -2783,7 +2899,7 @@ msgstr "Mensagens"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Min/Max Limits"
-msgstr ""
+msgstr "Min/Max Limits"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -2909,7 +3025,7 @@ msgstr "Neutro"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Never (less than once a month)"
-msgstr ""
+msgstr "Never (less than once a month)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -2971,18 +3087,18 @@ msgstr "Não"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "No Questions yet!"
-msgstr ""
+msgstr "No Questions yet!"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "No Survey Found"
-msgstr ""
+msgstr "No Survey Found"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "No answers yet!"
-msgstr ""
+msgstr "No answers yet!"
 
 #. module: survey
 #. odoo-python
@@ -2994,7 +3110,7 @@ msgstr "Não há mais tentativas."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "No question yet, come back later."
-msgstr ""
+msgstr "No question yet, come back later."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__no_scoring
@@ -3036,14 +3152,14 @@ msgstr "Não começou ainda"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Now that you are done, submit your form."
-msgstr ""
+msgstr "Now that you are done, submit your form."
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Now, use this shortcut to go back to the survey."
-msgstr ""
+msgstr "Now, use this shortcut to go back to the survey."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__number
@@ -3101,7 +3217,7 @@ msgstr "Resposta numérica"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Object-Directed Open Organization"
-msgstr ""
+msgstr "Object-Directed Open Organization"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3113,7 +3229,7 @@ msgstr "Ocorrência"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Odoo Certification"
-msgstr ""
+msgstr "Odoo Certification"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_5
@@ -3125,7 +3241,7 @@ msgstr "Cadeira de Escritório Preta"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Often (1-3 times per week)"
-msgstr ""
+msgstr "Often (1-3 times per week)"
 
 #. module: survey
 #. odoo-python
@@ -3134,6 +3250,7 @@ msgstr ""
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
 msgstr ""
+"On Survey questions, one can define \"placeholders\". But what are they for?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3167,14 +3284,14 @@ msgstr "Uma opção por linha"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to answer at least half the questions correctly"
-msgstr ""
+msgstr "One needs to answer at least half the questions correctly"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "One needs to get 50% of the total score"
-msgstr ""
+msgstr "One needs to get 50% of the total score"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
@@ -3196,7 +3313,7 @@ msgstr "Uma página com todas as perguntas"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Only a single question left!"
-msgstr ""
+msgstr "Only a single question left!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -3204,7 +3321,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 #: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "Only show survey results having selected this answer"
-msgstr ""
+msgstr "Only show survey results having selected this answer"
 
 #. module: survey
 #. odoo-python
@@ -3217,7 +3334,7 @@ msgstr "Somente os usuários da pesquisa podem gerenciar sessões."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Oops! No survey matches this code."
-msgstr ""
+msgstr "Oops! No survey matches this code."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3229,7 +3346,7 @@ msgstr "Abrir Gerenciador de Sessões"
 #: code:addons/survey/static/src/question_page/description_page_field.xml:0
 #, python-format
 msgid "Open section"
-msgstr ""
+msgstr "Open section"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3255,7 +3372,7 @@ msgstr "Opções"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Organizational Development for Operation Officers"
-msgstr ""
+msgstr "Organizational Development for Operation Officers"
 
 #. module: survey
 #. odoo-python
@@ -3280,7 +3397,7 @@ msgstr "Servidor de envio"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance"
-msgstr ""
+msgstr "Overall Performance"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug5
@@ -3336,12 +3453,12 @@ msgstr "Participantes"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Participate to %(survey_name)s"
-msgstr ""
+msgstr "Participate to %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr ""
+msgstr "Participate to {{ object.survey_id.display_name }} survey"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3367,12 +3484,12 @@ msgstr "Aprovado"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed and Failed"
-msgstr ""
+msgstr "Passed and Failed"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed only"
-msgstr ""
+msgstr "Passed only"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -3382,14 +3499,14 @@ msgstr "Preste atenção ao ecrã do anfitrião até a próxima pergunta."
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
 msgid "Percentage left"
-msgstr ""
+msgstr "Percentage left"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Performance by Section"
-msgstr ""
+msgstr "Performance by Section"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug3
@@ -3404,22 +3521,22 @@ msgstr "Peter W. Higgs"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Badge..."
-msgstr ""
+msgstr "Pick a Badge..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Style..."
-msgstr ""
+msgstr "Pick a Style..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Template..."
-msgstr ""
+msgstr "Pick a Template..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Pick a previous multiple-choice question"
-msgstr ""
+msgstr "Pick a previous multiple-choice question"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -3449,6 +3566,8 @@ msgid ""
 "Please complete this very short survey to let us know how satisfied your are"
 " with our products."
 msgstr ""
+"Please complete this very short survey to let us know how satisfied your are"
+" with our products."
 
 #. module: survey
 #. odoo-python
@@ -3487,7 +3606,7 @@ msgstr "Baixa qualidade"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Practice in front of a mirror"
-msgstr ""
+msgstr "Practice in front of a mirror"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__predefined_question_ids
@@ -3526,7 +3645,7 @@ msgstr "Pergunta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Question & Pages"
-msgstr ""
+msgstr "Question & Pages"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__matrix_question_id
@@ -3536,7 +3655,7 @@ msgstr "Pergunta (como linha da matriz)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_form
 msgid "Question Answer Form"
-msgstr ""
+msgstr "Question Answer Form"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_answer_count
@@ -3547,7 +3666,7 @@ msgstr "Perguntas Respostas Contagem"
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
 msgid "Question Selection"
-msgstr ""
+msgstr "Question Selection"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3577,7 +3696,7 @@ msgstr ""
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "Question type should be empty for these pages: %s"
-msgstr ""
+msgstr "Question type should be empty for these pages: %s"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -3591,7 +3710,7 @@ msgstr "Perguntas"
 #. module: survey
 #: model:ir.ui.menu,name:survey.survey_menu_questions
 msgid "Questions & Answers"
-msgstr ""
+msgstr "Questions & Answers"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -3611,14 +3730,14 @@ msgstr "Questionário aprovado"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
 msgid "Randomized per Section"
-msgstr ""
+msgstr "Randomized per Section"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Rarely (1-3 times per month)"
-msgstr ""
+msgstr "Rarely (1-3 times per month)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__rating_ids
@@ -3636,12 +3755,12 @@ msgstr "Pronto"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Ready to change the way you <b>gather data</b>?"
-msgstr ""
+msgstr "Ready to change the way you <b>gather data</b>?"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample or create one from scratch..."
-msgstr ""
+msgstr "Ready to test? Pick a sample or create one from scratch..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -3653,7 +3772,7 @@ msgstr "Destinatários"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Red Pen"
-msgstr ""
+msgstr "Red Pen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
@@ -3675,12 +3794,12 @@ msgstr "Reabrir"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Require Login"
-msgstr ""
+msgstr "Require Login"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_success_min
 msgid "Required Score (%)"
-msgstr ""
+msgstr "Required Score (%)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_text
@@ -3700,7 +3819,7 @@ msgstr "Reenviar convite"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Responded"
-msgstr ""
+msgstr "Responded"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_id
@@ -3846,7 +3965,7 @@ msgstr "Pesquisar Pergunta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey User Inputs"
-msgstr ""
+msgstr "Search Survey User Inputs"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
@@ -3910,12 +4029,12 @@ msgstr "Enviar por e-mail"
 #. module: survey
 #: model:mail.template,description:survey.mail_template_certification
 msgid "Sent to participant if they succeeded the certification"
-msgstr ""
+msgstr "Sent to participant if they succeeded the certification"
 
 #. module: survey
 #: model:mail.template,description:survey.mail_template_user_input_invite
 msgid "Sent to participant when you share a survey"
-msgstr ""
+msgstr "Sent to participant when you share a survey"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
@@ -3959,7 +4078,7 @@ msgstr "Compartilhar"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Share a Survey"
-msgstr ""
+msgstr "Share a Survey"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_allowed
@@ -3971,28 +4090,28 @@ msgstr "Mostrar Campo de Comentários"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Correct Answer(s)"
-msgstr ""
+msgstr "Show Correct Answer(s)"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Final Leaderboard"
-msgstr ""
+msgstr "Show Final Leaderboard"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Leaderboard"
-msgstr ""
+msgstr "Show Leaderboard"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Show Results"
-msgstr ""
+msgstr "Show Results"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -4010,7 +4129,7 @@ msgstr ""
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Show them slides with a ton of text they need to read fast"
-msgstr ""
+msgstr "Show them slides with a ton of text they need to read fast"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
@@ -4045,6 +4164,8 @@ msgid ""
 "Some general information about you. It will be used internally for "
 "statistics only."
 msgstr ""
+"Some general information about you. It will be used internally for "
+"statistics only."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2
@@ -4081,14 +4202,14 @@ msgstr "Estações espaciais"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Speak softly so that they need to focus to hear you"
-msgstr ""
+msgstr "Speak softly so that they need to focus to hear you"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Speak too fast"
-msgstr ""
+msgstr "Speak too fast"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug1
@@ -4111,7 +4232,7 @@ msgstr "Iniciar a Certificação"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Start Live Session"
-msgstr ""
+msgstr "Start Live Session"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -4170,7 +4291,7 @@ msgstr "Sucesso"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_ratio
 msgid "Success Ratio (%)"
-msgstr ""
+msgstr "Success Ratio (%)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -4245,14 +4366,14 @@ msgstr "Rótulo da Pesquisa"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "Survey Link"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Survey Participant"
-msgstr ""
+msgstr "Survey Participant"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -4279,7 +4400,7 @@ msgstr "Título da Pesquisa"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__survey_type
 msgid "Survey Type"
-msgstr ""
+msgstr "Survey Type"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_start_url
@@ -4305,12 +4426,12 @@ msgstr "Entradas de Usuário da Pesquisa"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_certification
 msgid "Survey: Certification Success"
-msgstr ""
+msgstr "Survey: Certification Success"
 
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
 msgid "Survey: Invite"
-msgstr ""
+msgstr "Survey: Invite"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -4327,7 +4448,7 @@ msgstr "Takaaki Kajita"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Take Again"
-msgstr ""
+msgstr "Take Again"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -4344,27 +4465,27 @@ msgstr "Entrada de teste"
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_3
 msgid "Test your knowledge of our policies."
-msgstr ""
+msgstr "Test your knowledge of our policies."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_2
 msgid "Test your knowledge of our prices."
-msgstr ""
+msgstr "Test your knowledge of our prices."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.vendor_certification_page_1
 msgid "Test your knowledge of your products!"
-msgstr ""
+msgstr "Test your knowledge of your products!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.vendor_certification
 msgid "Test your vendor skills!"
-msgstr ""
+msgstr "Test your vendor skills!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Tests Only"
-msgstr ""
+msgstr "Tests Only"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__char_box
@@ -4381,14 +4502,14 @@ msgstr "Texto resposta"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you for your participation, hope you had a blast!"
-msgstr ""
+msgstr "Thank you for your participation, hope you had a blast!"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
+msgstr "Thank you very much for your feedback. We highly value your opinion!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4401,7 +4522,7 @@ msgstr "Obrigado!"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you. We will contact you soon."
-msgstr ""
+msgstr "Thank you. We will contact you soon."
 
 #. module: survey
 #. odoo-python
@@ -4522,7 +4643,7 @@ msgstr "A pergunta é limitada no tempo"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "The session did not start yet."
-msgstr ""
+msgstr "The session did not start yet."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -4581,7 +4702,7 @@ msgstr "Houve um erro durante a validação da pesquisa."
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "They are a default answer, used if the participant skips the question"
-msgstr ""
+msgstr "They are a default answer, used if the participant skips the question"
 
 #. module: survey
 #. odoo-python
@@ -4590,6 +4711,7 @@ msgstr ""
 msgid ""
 "They are technical parameters that guarantees the responsiveness of the page"
 msgstr ""
+"They are technical parameters that guarantees the responsiveness of the page"
 
 #. module: survey
 #. odoo-python
@@ -4618,7 +4740,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "This is a Test Survey."
-msgstr ""
+msgstr "This is a Test Survey."
 
 #. module: survey
 #. odoo-javascript
@@ -4650,6 +4772,7 @@ msgstr "Esta mensagem será exibida quando a pesquisa estiver concluída"
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
 msgstr ""
+"This question is positioned before its trigger (\"%s\") and will be skipped."
 
 #. module: survey
 #. odoo-python
@@ -4665,7 +4788,7 @@ msgstr "Esta pergunta requer uma resposta."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
 msgid "This question was skipped"
-msgstr ""
+msgstr "This question was skipped"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p1
@@ -4673,17 +4796,20 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
+"This section is about general information about you. Answering them helps "
+"qualifying your answers."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
 msgid "This section is about our eCommerce experience itself."
-msgstr ""
+msgstr "This section is about our eCommerce experience itself."
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
+"This small quiz will test your knowledge about our Company. Be prepared!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -4691,6 +4817,8 @@ msgid ""
 "This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
+"This survey allows you to give a feedback about your experience with our products.\n"
+"    Filling it helps us improving your experience."
 
 #. module: survey
 #. odoo-python
@@ -4707,7 +4835,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
+msgstr "This survey is now closed. Thank you for your interest!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -4717,7 +4845,7 @@ msgstr "Esta pesquisa está aberto apenas para pessoas registradas. Por Favor"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Time & Scoring"
-msgstr ""
+msgstr "Time & Scoring"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__time_limit
@@ -4732,12 +4860,12 @@ msgstr "Limite de tempo (segundos)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Time limit for this certification:"
-msgstr ""
+msgstr "Time limit for this certification:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Time limit for this survey:"
-msgstr ""
+msgstr "Time limit for this survey:"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__title
@@ -4748,7 +4876,7 @@ msgstr "Título"
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "To join:"
-msgstr ""
+msgstr "To join:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
@@ -4856,7 +4984,7 @@ msgstr "Único"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Unlikely"
-msgstr ""
+msgstr "Unlikely"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4868,21 +4996,21 @@ msgstr "Próximas Atividades"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use a fun visual support, like a live presentation"
-msgstr ""
+msgstr "Use a fun visual support, like a live presentation"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Use humor and make jokes"
-msgstr ""
+msgstr "Use humor and make jokes"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr ""
+msgstr "Use the breadcrumbs to quickly go back to the dashboard."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
@@ -4993,11 +5121,13 @@ msgid ""
 "We like to say that the apple doesn't fall far from the tree, so here are "
 "trees."
 msgstr ""
+"We like to say that the apple doesn't fall far from the tree, so here are "
+"trees."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5
 msgid "We may be interested by your input."
-msgstr ""
+msgstr "We may be interested by your input."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -5019,6 +5149,8 @@ msgid ""
 "Welcome to this Odoo certification. You will receive 2 random questions out "
 "of a pool of 3."
 msgstr ""
+"Welcome to this Odoo certification. You will receive 2 random questions out "
+"of a pool of 3."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_5
@@ -5041,7 +5173,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q2
 msgid "What do you think about our new eCommerce?"
-msgstr ""
+msgstr "What do you think about our new eCommerce?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_3
@@ -5051,65 +5183,65 @@ msgstr "O que pensa dos nossos preços (não classificado)?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p5_q1
 msgid "What do you think about this survey?"
-msgstr ""
+msgstr "What do you think about this survey?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does \"ODOO\" stand for?"
-msgstr ""
+msgstr "What does \"ODOO\" stand for?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What does one need to get to pass an Odoo Survey?"
-msgstr ""
+msgstr "What does one need to get to pass an Odoo Survey?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is a frequent mistake public speakers do?"
-msgstr ""
+msgstr "What is a frequent mistake public speakers do?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "What is the best way to catch the attention of an audience?"
-msgstr ""
+msgstr "What is the best way to catch the attention of an audience?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q2
 msgid "What is the biggest city in the world?"
-msgstr ""
+msgstr "What is the biggest city in the world?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email?"
-msgstr ""
+msgstr "What is your email?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q2
 msgid "What is your nickname?"
-msgstr ""
+msgstr "What is your nickname?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q2
 msgid "What is, approximately, the critical mass of plutonium-239?"
-msgstr ""
+msgstr "What is, approximately, the critical mass of plutonium-239?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q1
 msgid "When did Genghis Khan die?"
-msgstr ""
+msgstr "When did Genghis Khan die?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q2
 msgid "When did precisely Marc Demo crop its first apple tree?"
-msgstr ""
+msgstr "When did precisely Marc Demo crop its first apple tree?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q6
@@ -5119,29 +5251,29 @@ msgstr "Quando é que colhe esses frutos"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q1
 msgid "When is Mitchell Admin born?"
-msgstr ""
+msgstr "When is Mitchell Admin born?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
 msgid "When is your date of birth?"
-msgstr ""
+msgstr "When is your date of birth?"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Whenever you pick an answer, Odoo saves it for you."
-msgstr ""
+msgstr "Whenever you pick an answer, Odoo saves it for you."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q3
 msgid "Where are you from?"
-msgstr ""
+msgstr "Where are you from?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q1
 msgid "Where do you live?"
-msgstr ""
+msgstr "Where do you live?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
@@ -5154,7 +5286,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q1
 msgid "Which Musician is not in the 27th Club?"
-msgstr ""
+msgstr "Which Musician is not in the 27th Club?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
@@ -5164,12 +5296,12 @@ msgstr "A que categoria pertence o tomate"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
 msgid "Which is the highest volcano in Europe?"
-msgstr ""
+msgstr "Which is the highest volcano in Europe?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q1
 msgid "Which of the following words would you use to describe our products?"
-msgstr ""
+msgstr "Which of the following words would you use to describe our products?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q2
@@ -5179,7 +5311,7 @@ msgstr "Qual das seguintes opções usaria para polinizar"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q2
 msgid "Which painting/drawing was not made by Pablo Picasso?"
-msgstr ""
+msgstr "Which painting/drawing was not made by Pablo Picasso?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q3
@@ -5189,12 +5321,12 @@ msgstr "Qual citação é de Jean-Claude Van Damme"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1
 msgid "Who are you?"
-msgstr ""
+msgstr "Who are you?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q2
 msgid "Who is the architect of the Great Pyramid of Giza?"
-msgstr ""
+msgstr "Who is the architect of the Great Pyramid of Giza?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q1
@@ -5202,6 +5334,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
+"Who received a Nobel prize in Physics for the discovery of neutrino "
+"oscillations, which shows that neutrinos have mass?"
 
 #. module: survey
 #. odoo-python
@@ -5210,6 +5344,7 @@ msgstr ""
 msgid ""
 "Why should you consider making your presentation more fun with a small quiz?"
 msgstr ""
+"Why should you consider making your presentation more fun with a small quiz?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_3
@@ -5232,6 +5367,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5239,13 +5376,15 @@ msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD hh:mm:ss\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Yellow Pen"
-msgstr ""
+msgstr "Yellow Pen"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug1
@@ -5273,6 +5412,8 @@ msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
 msgstr ""
+"You can share your links through different means: email, invite shortcut, "
+"live presentation, ..."
 
 #. module: survey
 #. odoo-python
@@ -5334,27 +5475,29 @@ msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
 msgstr ""
+"Your responses will help us improve our product range to serve you even "
+"better."
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom in"
-msgstr ""
+msgstr "Zoom in"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoom out"
-msgstr ""
+msgstr "Zoom out"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "Zoomed Image"
-msgstr ""
+msgstr "Zoomed Image"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5369,7 +5512,7 @@ msgstr "respondeu"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "attempts"
-msgstr ""
+msgstr "attempts"
 
 #. module: survey
 #. odoo-javascript
@@ -5381,48 +5524,49 @@ msgstr "fechar"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
+msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "e.g. \"Thank you very much for your feedback!\""
-msgstr ""
+msgstr "e.g. \"Thank you very much for your feedback!\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "e.g. \"The following Survey will help us...\""
-msgstr ""
+msgstr "e.g. \"The following Survey will help us...\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. \"What is the...\""
-msgstr ""
+msgstr "e.g. \"What is the...\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "e.g. 4812"
-msgstr ""
+msgstr "e.g. 4812"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. Guidelines, instructions, picture, ... to help attendees answer"
-msgstr ""
+msgstr "e.g. Guidelines, instructions, picture, ... to help attendees answer"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. No one can solve challenges like you do"
-msgstr ""
+msgstr "e.g. No one can solve challenges like you do"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. Problem Solver"
-msgstr ""
+msgstr "e.g. Problem Solver"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5432,7 +5576,7 @@ msgstr "por exemplo, Pesquisa de Satisfação"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q1
 msgid "ex@mple.com"
-msgstr ""
+msgstr "ex@mple.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -5452,28 +5596,28 @@ msgstr "de"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "of achievement"
-msgstr ""
+msgstr "of achievement"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press CTRL+Enter"
-msgstr ""
+msgstr "or press CTRL+Enter"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press Enter"
-msgstr ""
+msgstr "or press Enter"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press ⌘+Enter"
-msgstr ""
+msgstr "or press ⌘+Enter"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -5493,7 +5637,7 @@ msgstr "pesquisa expirou"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "survey is empty"
-msgstr ""
+msgstr "survey is empty"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
@@ -5509,3 +5653,4 @@ msgstr "até"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
 msgstr ""
+"⚠️ This question is positioned before its trigger and will be skipped."

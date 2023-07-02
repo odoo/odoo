@@ -29,12 +29,12 @@ msgstr "Bewerber"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
@@ -54,7 +54,7 @@ msgstr "Ist Interviewer"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_date
@@ -77,17 +77,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_id
 msgid "Skill"
-msgstr "Qualifikation"
+msgstr "Kompetenz"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_level_id
 msgid "Skill Level"
-msgstr "Qualifikationsniveau"
+msgstr "Kompetenzlevel"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_type_id
 msgid "Skill Type"
-msgstr "Qualifikationstyp"
+msgstr "Kompetenzart"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant_skill
@@ -101,7 +101,7 @@ msgstr "Kompetenzlevel für einen Bewerber"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search_bis
 msgid "Skills"
-msgstr "Fähigkeiten"
+msgstr "Kompetenzen"
 
 #. module: hr_recruitment_skills
 #. odoo-python
@@ -109,7 +109,7 @@ msgstr "Fähigkeiten"
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr ""
-"Die Fähigkeit%(name)s und die Kategorie %(type)s passen nicht zusammen"
+"Die Kompetenz %(name)s und die Kategorie %(type)s passen nicht zusammen"
 
 #. module: hr_recruitment_skills
 #. odoo-python
@@ -117,10 +117,9 @@ msgstr ""
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
-"Die Fähigkeitsstufe %(level)s ist für den Fähigkeitstyp %(type)s nicht "
-"gültig: "
+"Das Kompetenzlevel %(level)s ist für die Kompetenzart %(type)s nicht gültig"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
-msgstr "Zwei Stufen für dieselbe Kompetenz sind nicht erlaubt."
+msgstr "Zwei Level für dieselbe Kompetenz sind nicht erlaubt."

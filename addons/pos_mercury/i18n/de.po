@@ -34,10 +34,10 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "<i>Vantiv-Konfigurationen</i> Konfigurationen legen fest, welches Vantiv-Konto bei der Verarbeitung\n"
-"von Kreditkartentransaktionen am Point of Sale verwendet wird. Wenn Sie eine Vantiv-Konfiguration einrichten, \n"
-"können Sie Zahlungen mit verschiedenen Kreditkarten zulassen (z.B. Visa, MasterCard, Discovery, American Express, ...). \n"
+"von Kreditkartentransaktionen im Kassensystem verwendet wird. Wenn Sie eine Vantiv-Konfiguration einrichten, \n"
+"können Sie Zahlungen mit verschiedenen Kreditkarten zulassen (z. B. Visa, MasterCard, Discovery, American Express ...). \n"
 "Nachdem Sie diese Konfiguration eingerichtet haben, \n"
-"sollten Sie sie mit einer Point-of-Sale-Zahlungsmethode verknüpfen."
+"sollten Sie sie mit einer Zahlungsmethode des Kassensystems verknüpfen."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -51,7 +51,7 @@ msgstr "ÜBER BETRAG GEMÄẞ"
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr "BESTÄTIGUNGSCODE:"
+msgstr "GENEHMIGUNGSCODE:"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -79,12 +79,12 @@ msgstr "Kartennummer"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr "Kartennummer Präfix"
+msgstr "Präfix der Kartennummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr "Name des Kartenbesitzers"
+msgstr "Name des Karteninhabers"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -108,13 +108,13 @@ msgstr "Karte konnte nicht gelesen werden"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__create_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: pos_mercury
 #: model:ir.model.fields.selection,name:pos_mercury.selection__barcode_rule__type__credit
@@ -131,7 +131,7 @@ msgid ""
 "through the Vantiv backend."
 msgstr ""
 "Kreditkartenerstattungen werden nicht unterstützt. Wählen Sie stattdessen "
-"Ihre Kreditkartenzahlungsmethode aus, klicken Sie auf \"Bestätigen\" und "
+"Ihre Kreditkartenzahlungsmethode aus, klicken Sie auf „Validieren“ und "
 "erstatten Sie die ursprüngliche Gebühr manuell über das Vantiv-Backend."
 
 #. module: pos_mercury
@@ -147,8 +147,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Für die schnelle Bearbeitung von Aufträgen: einfach eine Kreditkarte über den Zahlungsbildschirm\n"
-" ziehen (ohne etwas anderes gedrückt zu haben)"
+"Für die schnelle Abwicklung von Aufträgen: Durch einfaches Durchziehen einer Kreditkarte auf dem Zahlungsbildschirm\n"
+"                                (ohne etwas anderes gedrückt zu haben) wird die Karte mit dem vollen Betrag des Auftrags\n"
+"                                belastet."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -174,7 +175,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Händler-ID, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
+"Händler-ID, um ihn auf dem Server des Zahlungsanbieters zu authentifizieren"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -182,7 +183,7 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
-"Wenn Sie noch kein Vantiv-Konto haben, kontaktieren Sie Vantiv unter +1 (800) 846-4472\n"
+"Wenn Sie noch kein Vantiv-Konto haben, kontaktieren Sie Vantiv unter +1 (800) 846-4472,\n"
 "                                um eines zu erstellen."
 
 #. module: pos_mercury
@@ -194,7 +195,7 @@ msgstr "Rechnungsnummer von Vantiv Pay"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_date
@@ -215,7 +216,7 @@ msgstr "Händlerpasswort"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name"
-msgstr "Namen"
+msgstr "Name"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
@@ -234,8 +235,7 @@ msgstr "Keine Vantiv-Konfiguration mit der Zahlungsmethode verbunden."
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr ""
-"Es wurde keine offenen Kassensystem-Sitzungen für den Benutzer%s gefunden."
+msgstr "Es wurde keine offene Kassensitzung für den Benutzer%s gefunden."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -285,7 +285,8 @@ msgstr "Teilweise genehmigt"
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Händlerpasswort, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
+"Händlerpasswort, um ihn auf dem Server des Zahlungsanbieters zu "
+"authentifizieren"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -314,22 +315,22 @@ msgstr "Bitte richten Sie Ihr Vantiv-Händlerkonto ein."
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Point Of Sale Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Point of Sale Zahlungsmethoden"
+msgstr "Zahlungsmethoden des Kassensystems"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Point of Sale-Zahlungen"
+msgstr "Kassenzahlungen"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Point of Sale Sitzung"
+msgstr "Kassensitzung"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
@@ -339,52 +340,52 @@ msgstr "Kassensystem Vantiv-Konfiguration"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr "Point of Sale Vantiv-Transaktion"
+msgstr "Kassensystem Vantiv-Transaktion"
 
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Refunds not supported"
-msgstr "Rückerstattungen werden nicht unterstützt"
+msgstr "Rückerstattungen nicht unterstützt"
 
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr "Storno fehlgeschlagen, VoidSale wird gesendet …"
+msgstr "Stornierung fehlgeschlagen, VoidSale wird gesendet …"
 
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal succeeded"
-msgstr "Storno erfolgreich"
+msgstr "Stornierung erfolgreich"
 
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Sending reversal..."
-msgstr "Storno wird gesendet …"
+msgstr "Stornierung wird gesendet …"
 
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
-msgstr "FÜR KREDITKARTENVERTRAG"
+msgstr "KREDITKARTENVERTRAG"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr "Die Marke der Zahlungskarte (z.B. Visa, AMEX …)"
+msgstr "Die Marke der Zahlungskarte (z. B. Visa, AMEX …)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr "Die für die Zahlung verwendete Kartennummer"
+msgstr "Die für die Zahlung verwendete Kartennummer."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
@@ -405,7 +406,7 @@ msgid ""
 "layout set to US QWERTY (not US International)."
 msgstr ""
 "Dies kann durch schlecht ausgeführtes Einlesen oder dadurch verursacht "
-"werden, dass Sie Ihr Tastatur-Layout nicht auf US QWERTY eingestellt haben "
+"werden, dass Sie Ihr Tastaturlayout nicht auf US QWERTY eingestellt haben "
 "(nicht US-international)."
 
 #. module: pos_mercury
@@ -413,7 +414,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Transaction approved"
-msgstr "Transaktion freigegeben"
+msgstr "Transaktion genehmigt"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
@@ -428,7 +429,7 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"Die Verwendung der Vantiv-Integration am Point of Sale ist einfach: Drücken Sie einfach auf die\n"
+"Die Verwendung der Vantiv-Integration im Kassensystem ist einfach: Drücken Sie einfach auf die\n"
 "zugehörige Zahlungsmethode. Danach kann der Betrag angepasst werden (z.B. für Cashback)\n"
 "wie bei jeder anderen Zahlungsart. Wann immer die Zahlungsart eingerichtet ist, kann eine Karte\n"
 "durch das Kartenlesegerät gezogen werden."
@@ -457,12 +458,12 @@ msgstr "Vantiv-Rechnungsnummer"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr "Vantiv-Datensatznummer "
+msgstr "Vantiv-Belegnummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr "Vantiv-Referenz"
+msgstr "Vantiv-Referenznummer"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -484,8 +485,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"Wir unterstützen derzeit das Kartenlesegerät MagTek Dynamag. Es kann angeschlossen werden\n"
-"                                direkt an das Kassensystem-Gerät oder es kann an die IoTBox angeschlossen werden."
+"Wir unterstützen derzeit das Kartenlesegerät MagTek Dynamag. Es kann angeschlossen\n"
+"                                direkt an das Kassensystem-Gerät oder an die IoT-Box angeschlossen werden."
 
 #. module: pos_mercury
 #. odoo-javascript

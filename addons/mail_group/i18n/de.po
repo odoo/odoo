@@ -3,10 +3,10 @@
 # 	* mail_group
 # 
 # Translators:
-# Felix Schubert <felix.schubert@go-erp.com>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,7 +178,7 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
-"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Auf der Whitelist</span>\n"
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Auf der weißen Liste</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Gesperrt</span>"
 
 #. module: mail_group
@@ -333,7 +333,7 @@ msgstr "Autor"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
 msgid "Author Moderation Status"
-msgstr "Autor Moderationsstatus"
+msgstr "Autor-Moderationsstatus"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
@@ -405,7 +405,7 @@ msgstr "Kann Mitglieder verwalten"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Children"
-msgstr "Kinder"
+msgstr "Untergeordnet"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -431,7 +431,7 @@ msgstr "Inhalte"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr "Legen Sie eine Mailing-Gruppe an"
+msgstr "Eine Mailinggruppe erstellen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -445,7 +445,7 @@ msgstr "Eine neue Gruppe erstellen"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
@@ -453,7 +453,7 @@ msgstr "Angelegt von"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
@@ -529,7 +529,7 @@ msgstr "E-Mails"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails waiting an action for this group"
-msgstr "Emails, die auf eine Aktion für diese Gruppe warten"
+msgstr "E-Mails, die auf eine Aktion für diese Gruppe warten"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
@@ -716,7 +716,7 @@ msgstr "Mailing-Gruppe"
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr "Mail-Gruppen-Administrator"
+msgstr "Mailinggruppen-Administrator"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
@@ -753,17 +753,17 @@ msgstr "Mail-Nachricht"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr "Mitglied Mailingliste"
+msgstr "Mitglied der Mailingliste"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr "Mailingliste Nachricht"
+msgstr "Nachricht an Mailingliste"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr "Mailingliste Schwarze/Weiße Liste"
+msgstr "Schwarze/Weiße Liste der Mailingliste"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
@@ -826,7 +826,7 @@ msgstr "Erklärung für Ablehnung der Nachricht"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
 msgid "Messages"
-msgstr "Mitteilungen"
+msgstr "Nachrichten"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
@@ -853,12 +853,12 @@ msgstr "Nachrichten, die eine Aktion erfordern"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Moderate Messages"
-msgstr "Moderiere Nachrichten"
+msgstr "Nachrichten moderieren"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate this group"
-msgstr "Moderieren Sie diese Gruppe"
+msgstr "Diese Gruppe moderieren"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -935,12 +935,12 @@ msgstr "Moderatoren müssen eine E-Mail-Adresse haben."
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
 msgid "My Company News"
-msgstr "Neuigkeiten meine Firma"
+msgstr "News zu meinem Unternehmen"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
 msgid "Name"
-msgstr "Namen"
+msgstr "Name"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -984,7 +984,7 @@ msgstr "Benachrichtigungsnachricht"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Notify Members"
-msgstr "Mitglieder informieren"
+msgstr "Mitglieder benachrichtigen"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
@@ -1022,7 +1022,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_user_id
 msgid "Owner"
-msgstr "Eigentümer"
+msgstr "Besitzer"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1058,7 +1058,7 @@ msgstr "Partner"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr "Partner Mitglied"
+msgstr "Partnermitglied"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
@@ -1087,7 +1087,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
-msgstr "Dauerhaftes Verbot"
+msgstr "Dauerhaft gesperrt"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
@@ -1098,7 +1098,7 @@ msgid ""
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
-"- Jeder: jeder kann posten\n"
+"- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
 "- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
 
@@ -1138,7 +1138,7 @@ msgstr "Thread-ID des Datensatzes"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Reference"
-msgstr "Verweis"
+msgstr "Referenz"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
@@ -1188,7 +1188,7 @@ msgstr "Gruppennachricht suchen"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr "Suche nach Mailgruppenmitglied"
+msgstr "Mailgruppenmitglied suchen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -1198,12 +1198,12 @@ msgstr "Mailinggruppe suchen"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr "Moderationsliste durchsuchen"
+msgstr "Moderationsliste suchen"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr "Ausgewählte Gruppe von Nutzern"
+msgstr "Ausgewählte Gruppe von Benutzern"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1280,7 +1280,7 @@ msgstr "Betreff"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Subscribe"
-msgstr "Abonnieren"
+msgstr "Anmelden"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
@@ -1370,7 +1370,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The notification message is missing."
-msgstr "Die Nachricht der Benachrichtigung fehlt."
+msgstr "Der Benachrichtigungstext fehlt."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
@@ -1405,14 +1405,14 @@ msgstr "Der Datensatz der Nachricht sollte die Gruppe sein."
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is already subscribed."
-msgstr "Diese E-Mail ist bereits registriert."
+msgstr "Diese E-Mail ist bereits angemeldet."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is not subscribed."
-msgstr "Diese E-Mail ist nicht abonniert."
+msgstr "Diese E-Mail ist nicht angemeldet."
 
 #. module: mail_group
 #. odoo-python
@@ -1469,7 +1469,7 @@ msgstr "Weiße Liste"
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr "Auf der Weiße Liste"
+msgstr "Auf der weißen Liste"
 
 #. module: mail_group
 #. odoo-python
@@ -1537,7 +1537,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
-msgstr "Mitteilungen / Monat"
+msgstr "Nachrichten / Monat"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -1552,17 +1552,17 @@ msgstr "Antworten"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr "angemeldet bei"
+msgstr "angemeldet zur"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr "die Liste"
+msgstr "Liste"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr "abgemeldet von"
+msgstr "abgemeldet von der"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

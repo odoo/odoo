@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "EDIアカウントプロキシユーザー"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr ""
+msgstr "Ediアカウントプロキシ顧客"
 
 #. module: account_edi_proxy_client
 #: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
@@ -63,7 +64,7 @@ msgstr "作成日"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr ""
+msgstr "デモモード"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -73,22 +74,22 @@ msgstr "表示名"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr ""
+msgstr "EDIプロキシユーザー"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr ""
+msgstr "EDIプロキシユーザー"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
 msgid "EDI operating mode"
-msgstr ""
+msgstr "EDI操作モード"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr ""
+msgstr "Edi識別確認"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -98,7 +99,7 @@ msgstr "ID"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
-msgstr ""
+msgstr "Idクライアント"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -113,22 +114,22 @@ msgstr "最終更新日"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
 msgid "Private Key"
-msgstr ""
+msgstr "プライベートキー"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_filename
 msgid "Private Key Filename"
-msgstr ""
+msgstr "プライベートキーファイル名"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__prod
 msgid "Production mode"
-msgstr ""
+msgstr "本番モード"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy type"
-msgstr ""
+msgstr "プロキシタイプ"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -138,17 +139,17 @@ msgstr "リフレッシュトークン"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__test
 msgid "Test mode"
-msgstr ""
+msgstr "テストモード"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
 msgid "The key to encrypt all the user's data"
-msgstr ""
+msgstr "全ユーザーのデータを暗号化するキー"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "The unique id that identifies this user, typically the vat"
-msgstr ""
+msgstr "このユーザーを識別する一意のID、通常vat"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -157,7 +158,7 @@ msgstr ""
 msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
-msgstr ""
+msgstr "このサービスが要求したURLからエラーが返されました。このサービスがコンタクトしようとしたURLは%s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -166,7 +167,7 @@ msgstr ""
 msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s. %s"
-msgstr ""
+msgstr "このサービスが要求したURLからエラーを返されました。このサービスがコンタクトしようとしたURLは%s.%s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -174,19 +175,19 @@ msgstr ""
 #, python-format
 msgid ""
 "The url that this service tried to contact does not exist. The url was %r"
-msgstr ""
+msgstr "このサービスがコンタクトを試みたURL は存在しません。URL は %r"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_company_proxy
 msgid "This company has a user already created for this EDI type"
-msgstr ""
+msgstr "この会社には、このEDIタイプ用に作成済みのユーザーがいます。"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_edi_identification
 msgid "This edi identification is already assigned to a user"
-msgstr ""
+msgstr "この edi IDは、すでにユーザーに割り当てられています。"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr ""
+msgstr "このid_clientはすでに別のユーザで使用されています"

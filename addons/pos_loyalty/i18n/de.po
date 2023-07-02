@@ -29,7 +29,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Technisches Feld, das verwendet wird, um mehrere Belohnungszeilen derselben Belohnung miteinander zu verbinden."
+"Technisches Feld, das verwendet wird, um mehrere Prämienzeilen derselben Prämien miteinander zu verbinden."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -41,12 +41,12 @@ msgstr "%s Punkte"
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
 msgid "15% on next order"
-msgstr "15% auf die nächste Bestellung"
+msgstr "15 % auf den nächsten Einkauf"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
 msgid "15% on your order"
-msgstr "15% auf Ihre Bestellung"
+msgstr "15 % auf Ihren Einkauf"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -68,13 +68,13 @@ msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
 msgstr ""
-"Ein technisches Feld, das als Alternative zum Promo-Code verwendet wird. Es "
-"wird automatisch generiert, wenn der Promo-Code geändert wird."
+"Ein technisches Feld, das als Alternative zum Aktionscode verwendet wird. Es"
+" wird automatisch generiert, wenn der Aktionscode geändert wird."
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
-msgstr "Alle Verkaufsstellen"
+msgstr "Alle Kassensysteme"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
@@ -89,8 +89,8 @@ msgid ""
 "Are you sure you want to remove %s from this order?\n"
 " You will still be able to claim it through the reward button."
 msgstr ""
-"Sind Sicher, dass Sie %s aus der Bestellung entfernen möchten?  Sie können "
-"sie immer noch über die Schaltfläche Belohnung einfordern."
+"Sind Sicher, dass Sie %s entfernen möchten? Sie können sie immer noch über "
+"die Prämienschaltfläche einfordern."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -115,7 +115,7 @@ msgstr "Barcoderegel"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguration"
+msgstr "Konfigurationseinstellungen"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__coupon_id
@@ -133,21 +133,21 @@ msgstr "Gutscheincodes"
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
 msgid "Coupon point(s)"
-msgstr "Coupon-Punkt(e)"
+msgstr "Gutscheinpunkt(e)"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
 #, python-format
 msgid "Current Balance:"
-msgstr "Aktuelle Bilanz:"
+msgstr "Aktuelles Saldo:"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "Customer needed"
-msgstr "Kunde benötigt"
+msgstr "Kunde erforderlich"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -160,7 +160,7 @@ msgstr "Belohnung deaktivieren"
 #: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Defines the way you want to set your gift cards."
-msgstr "Definiert wie Sie Ihre Geschenkkarten einstellen möchten."
+msgstr "Definiert, wie Sie Ihre Geschenkkarten einstellen möchten."
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
@@ -227,7 +227,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Gift Cards settings"
-msgstr "Geschenkkarten Einstellungen"
+msgstr "Geschenkkarten-Einstellungen"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -240,12 +240,12 @@ msgstr "Geschenkkarte oder Gutscheincode"
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Gift cards & eWallet"
-msgstr "Geschenkkarten & elektronische Geldbeutel"
+msgstr "Geschenkkarten & E-Geldbörse"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many point this reward cost on the coupon."
-msgstr "Wie viele Punkte vom Gutschein für diese Prämie benötigt werden."
+msgstr "Wie viele Punkte vom Gutschein für diese Belohnung benötigt werden."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -253,7 +253,7 @@ msgstr "Wie viele Punkte vom Gutschein für diese Prämie benötigt werden."
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
 msgstr ""
-"Ungültige Prämie für Geschenkkartenprogramm. 1 Währung pro Rabattpunkt "
+"Ungültige Belohnung für Geschenkkartenprogramm. 1 Währung pro Rabattpunkt "
 "verwenden."
 
 #. module: pos_loyalty
@@ -262,15 +262,15 @@ msgstr ""
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
 msgstr ""
-"Ungültige Regel für Geschenkkartenprogramm. 1 Währung pro ausgegebner "
-"Währung verwenden."
+"Ungültige Regel für Geschenkkartenprogramm. 1 Punkt pro ausgegebener Währung"
+" verwenden."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one reward."
-msgstr "Ungültiges Geschenkkartenprogramm. Mehr als eine Prämie."
+msgstr "Ungültiges Geschenkkartenprogramm. Mehr als eine Belohnung."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -282,7 +282,7 @@ msgstr "Ungültiges Geschenkkartenprogramm. Mehr als eine Regel."
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
-msgstr "Ist Prämienzeile"
+msgstr "Ist Belohnungszeile"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -292,7 +292,7 @@ msgstr "Treuekommunikation"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Treue-Coupon"
+msgstr "Treuegutschein"
 
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
@@ -327,7 +327,8 @@ msgstr "Nein"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "No reward can be claimed with this coupon."
-msgstr "Mit diesem Gutschein kann keine Prämie in Anspruch genommen werden."
+msgstr ""
+"Mit diesem Gutschein kann keine Belohnung in Anspruch genommen werden."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -341,17 +342,17 @@ msgstr "Bitte wählen Sie ein Produkt für diese Belohnung aus"
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "Please select a reward"
-msgstr "Bitte wählen Sie eine Prämie"
+msgstr "Bitte wählen Sie eine Belohnung"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
 msgid "PoS Order Count"
-msgstr "PoS-Bestellungen Anzahl"
+msgstr "Anzahl Kassensystemaufträge"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr "PoS Auftragsreferenz"
+msgstr "Kassensystem-Auftragsreferenz"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
@@ -367,27 +368,27 @@ msgstr "Kassensystem"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Point Of Sale Konfiguration"
+msgstr "Kassensystem-Konfiguration"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Auftragszeilen am Point of Sale"
+msgstr "Auftragspositionen des Kassensystems"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Point Of Sale Verkäufe"
+msgstr "Kassenverkäufe"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Point of Sale Sitzung"
+msgstr "Kassensitzung"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid "Point of Sales"
-msgstr "Kassenplätze"
+msgstr "Kassensystem"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -412,7 +413,7 @@ msgstr "Bericht drucken"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
-msgstr "Programm: %(name)s, Prämienprodukt: `%(reward_product)s`"
+msgstr "Programm: %(name)s, Belohnungsprodukt: `%(reward_product)s`"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -462,7 +463,7 @@ msgstr "Belohnung"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr "Prämie Kenncode"
+msgstr "Kenncode der Prämie"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
@@ -497,7 +498,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Spent:"
-msgstr "Ausgegeben"
+msgstr "Ausgegeben:"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
@@ -551,13 +552,13 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
-"Die Belohnung „%s“ enthält einen Fehler in der Domain, Ihre Domain muss mit "
-"dem PoS-Client kompatibel sein"
+"Die Prämie „%s“ enthält einen Fehler in der Domain, Ihre Domain muss mit dem"
+" Kassensystem-Client kompatibel sein"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
-msgstr "Die mit dieser Zeile verbundene Belohnung."
+msgstr "Die mit dieser Position verbundene Belohnung."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -623,21 +624,21 @@ msgstr "Dies sind die Produkte, die für diese Regel gültig sind."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr "Dieser Kupon ist abgelaufen (%s)."
+msgstr "Dieser Gutschein ist abgelaufen (%s)."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr "Dieser Kupon ist ungültig (%s)."
+msgstr "Dieser Gutschein ist ungültig (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/pos_store.js:0
 #, python-format
 msgid "This gift card has already been sold"
-msgstr "Dieser Geschenkgutschein wurde bereits verkauft"
+msgstr "Diese Geschenkkarte wurde bereits verkauft"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -648,7 +649,7 @@ msgid ""
 "reward?"
 msgstr ""
 "Diese Geschenkkarte ist nicht an einen Auftrag gebunden. Möchten Sie die "
-"Prämie wirklich anwenden?"
+"Belohnung wirklich anwenden?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -759,7 +760,7 @@ msgstr "Sie müssen „%s“ einstellen, bevor Sie „%s“ einstellen."
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
 #, python-format
 msgid "eWallet"
-msgstr "eWallet"
+msgstr "E-Geldbörse"
 
 #. module: pos_loyalty
 #. odoo-javascript

@@ -39,12 +39,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #, python-format
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Kostenstelle"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytischer Buchungssatz"
+msgstr "Kostenstellenbuchung"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
@@ -52,8 +52,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take        place "
 "for financial management of the manufacturing order."
 msgstr ""
-"Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das "
-"Finanzmanagement des Produktionsauftrags erfolgen."
+"Kostenstelle, auf die die Kosten- und Erlösbuchungen für das "
+"Finanzmanagement des Fertigungsauftrags erfolgen."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
@@ -61,8 +61,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take place for "
 "financial management of the manufacturing order."
 msgstr ""
-"Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das "
-"Finanzmanagement des Produktionsauftrags erfolgen."
+"Kostenstelle, auf die die Kosten- und Erlösbuchungen für das "
+"Finanzmanagement des Fertigungsauftrags erfolgen."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -95,7 +95,7 @@ msgstr "Kategorie"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Berechnung des Preises aus Stückliste"
+msgstr "Preis anhand der Stückliste berechnen"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -111,12 +111,12 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr "Zusätzliche Stückkosten"
+msgstr "Zusätzliche Einzelkosten"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Journaleintrag"
+msgstr "Buchungszeile"
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
@@ -148,13 +148,13 @@ msgid ""
 "Posts analytical accounting entries in real time for both component and "
 "operational costs."
 msgstr ""
-"Tätigt Buchungen in Analysekonten in Echtzeit für Komponenten und "
-"Arbeitskosten,"
+"Bucht Posten in Kostenstellenrechnung in Echtzeit für Komponenten und "
+"Arbeitskosten."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product"
-msgstr "Produkte"
+msgstr "Produkt"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_category
@@ -164,7 +164,7 @@ msgstr "Produktkategorie"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -184,12 +184,12 @@ msgstr "Bewertung anzeigen"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerbewegung"
+msgstr "Lagerbuchung"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_rule
 msgid "Stock Rule"
-msgstr "Lagerregel"
+msgstr "Bestandsregel"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -211,7 +211,7 @@ msgstr "Arbeitsplatz"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Arbeitsplatz Auslastung"
+msgstr "Arbeitsplatznutzung"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
@@ -233,7 +233,7 @@ msgstr "Arbeitsaufträge"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenters"
-msgstr "Work-Center"
+msgstr "Arbeitsplätze"
 
 #. module: mrp_account
 #. odoo-python

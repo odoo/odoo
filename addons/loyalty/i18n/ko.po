@@ -6,8 +6,8 @@
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Linkup <link-up@naver.com>, 2023
 # Martin Trigaux, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,10 @@ msgid ""
 "        Use a code: Customers will be eligible for a reward if they enter a code.\n"
 "        "
 msgstr ""
+"\n"
+"        자동: 고객이 장바구니에서 자동으로 리워드를 받을 수 있습니다.\n"
+"        코드 사용: 고객이 코드를 입력하면 리워드를 받을 수 있습니다.\n"
+"        "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
@@ -39,6 +43,9 @@ msgid ""
 "        Manage where your program should be available for use.\n"
 "        "
 msgstr ""
+"\n"
+"        프로그램을 사용해야 할 장소를 관리하십시오.\n"
+"        "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__portal_visible
@@ -47,6 +54,9 @@ msgid ""
 "        Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        웹 포탈에서나 POS 고객 항목 및 이커머스 결제 시에 사용 가능한 포인트 및 리워드에 사용된 포인트를 표시합니다. .\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -60,55 +70,55 @@ msgstr " (최대 %s)"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%g%% on "
-msgstr ""
+msgstr "다음에서%g%% "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order"
-msgstr ""
+msgstr "주문당 %s"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per order on "
-msgstr ""
+msgstr "다음에서 주문당 %s"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point"
-msgstr ""
+msgstr "포인트당 %s"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%s per point on "
-msgstr ""
+msgstr "다음에서 포인트당 %s"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "( Max"
-msgstr ""
+msgstr "(최대"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "(if at least"
-msgstr ""
+msgstr "(최소"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
-msgstr ""
+msgstr "(세금 제외)"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
-msgstr ""
+msgstr "10% 할인 쿠폰"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
@@ -132,6 +142,10 @@ msgid ""
 "\n"
 "                                        <span class=\"fw-bold text-decoration-underline\">Applied to:</span>"
 msgstr ""
+"<br/>\n"
+"                                        <br/>\n"
+"\n"
+"                                        <span class=\"fw-bold text-decoration-underline\">적용 대상:</span>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -164,6 +178,33 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                    기프트 카드를 확인하세요!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\">\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>기프트 카드</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">카드 유효 기간 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">지금 바로 사용해보세요!</a>\n"
+"                    </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -179,7 +220,7 @@ msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>All Products</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>전체 품목</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -205,6 +246,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('clear_wallet', '!=', True)]}\"> (or "
 "more)</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('clear_wallet', '!=', True)]}\"> (또는 "
+"이상)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -216,6 +259,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('will_send_mail', '=', False)]}\">\n"
+"                            생성 후 전송 \n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('will_send_mail', '=', True)]}\">\n"
+"                            생성 \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -223,6 +272,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Among:</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">다음 중에서 확인:</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -230,6 +281,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">부여됩니다</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -238,6 +291,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    the value of the coupon"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">다음과 같이 부여됩니다:</span>\n"
+"                                    <br/>\n"
+"                                    쿠폰 해당 가격"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -245,6 +301,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">In exchange of</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">교환 대상</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -279,6 +337,8 @@ msgid ""
 "'coupons')]}\">Grant the amount of coupon points defined as the coupon "
 "value</span>"
 msgstr ""
+"<span colspan=\"2\" attrs=\"{'invisible': [('program_type', '!=', "
+"'coupons')]}\">쿠폰 값으로 설정되어 있는 쿠폰 포인트 금액이 부여됩니다</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -293,12 +353,12 @@ msgstr "<span>최소구매수량</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>위와 같이 구매 시 사용 가능</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span>on</span>"
-msgstr ""
+msgstr " "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -367,6 +427,54 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._get_mail_partner().name\">\n"
+"            축하합니다 <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>님,<br>\n"
+"        </t>\n"
+"\n"
+"        고객님께 <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>에서 리워드를 드립니다.<br>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">리워드 세부 내용</span>\n"
+"                <br>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        다음의 프로모션 코드를 사용하세요.\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            만료일 <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    최소 구매 수량 <t t-out=\"rule.minimum_qty or ''\">10</t> 품목\n"
+"                </span><br>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    다음 금액 이상 구매하실 경우 사용이 가능합니다. <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                </span><br>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br>\n"
+"        감사합니다.\n"
+"        <t t-if=\"object._get_signature()\">\n"
+"            <br>\n"
+"            <t t-out=\"object._get_signature() or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -392,7 +500,7 @@ msgstr "프로그램에는 한 가지 이상의 혜택이 포함되어야 합니
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr ""
+msgstr "쿠폰 중에서 같은 코드로 동작되는 내용이 이미 존재합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -412,7 +520,7 @@ msgstr "활성화"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "사용 중인 적립 카드"
 
 #. module: loyalty
 #. odoo-javascript
@@ -424,28 +532,28 @@ msgstr "추가"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr ""
+msgstr "리워드 추가"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a rule"
-msgstr ""
+msgstr "규칙 추가"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
 msgid "All Discount Product"
-msgstr ""
+msgstr "전체 할인 품목"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "다음 중에서 "
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
 msgid "Anonymous Customers"
-msgstr ""
+msgstr "익명 고객"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__mode
@@ -455,7 +563,7 @@ msgstr "응용 프로그램"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
 msgid "Applies On"
-msgstr ""
+msgstr "적용 대상"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -466,7 +574,7 @@ msgstr "보관됨"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__create
 msgid "At Creation"
-msgstr ""
+msgstr "다음을 생성할 때"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
@@ -484,13 +592,13 @@ msgstr "자동"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr ""
+msgstr "프로모션 자동 적용: $50 이상 주문 시 10% 할인"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
-msgstr ""
+msgstr "다음에 사용 가능"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
@@ -508,7 +616,7 @@ msgstr "바코드"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "10개 상품 구매 시 11번째 상품에는 $10 할인 혜택을 적용합니다"
 
 #. module: loyalty
 #. odoo-python
@@ -532,7 +640,7 @@ msgstr "X개 구매 시 Y개 무료 증정"
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Can not generate coupon, no program is set."
-msgstr ""
+msgstr "쿠폰을 생성할 수 없습니다. 설정한 프로그램이 없습니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -557,12 +665,12 @@ msgstr "최저가 상품"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
 msgid "Clear Wallet"
-msgstr ""
+msgstr "지갑 초기화"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Clear all promo point(s)"
-msgstr ""
+msgstr "전체 프로모션 포인트 초기화"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
@@ -577,7 +685,7 @@ msgstr "주문시 10% 코드"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
 msgid "Communication Plan"
-msgstr ""
+msgstr "커뮤니케이션 계획"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -602,7 +710,7 @@ msgstr "이메일 작성"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
 msgid "Conditional rules"
-msgstr ""
+msgstr "조건부 규칙"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -652,17 +760,17 @@ msgstr "쿠폰 포인트"
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
 msgid "Coupon points"
-msgstr ""
+msgstr "쿠폰 포인트"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
-msgstr ""
+msgstr "쿠폰 값"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "Coupon: Coupon Information"
-msgstr ""
+msgstr "쿠폰: 쿠폰 정보"
 
 #. module: loyalty
 #. odoo-python
@@ -680,19 +788,19 @@ msgstr "쿠폰"
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "Create a new one from scratch, or use one of the templates below."
-msgstr ""
+msgstr "처음부터 새로 생성하시거나 아래의 서식 중에서 선택하십시오."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
+msgstr "처음부터 새로 생성하거나 아래의 서식을 사용하십시오:"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Create record"
-msgstr ""
+msgstr "레코드 생성"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_uid
@@ -738,17 +846,17 @@ msgstr "통화 기호입니다. 금액을 인쇄할 때 사용됩니다."
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
 msgid "Current & Future orders"
-msgstr ""
+msgstr "현재 및 다음 주문"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__current
 msgid "Current order"
-msgstr ""
+msgstr "현재 주문"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_tag_ids
 msgid "Customer Tags"
-msgstr ""
+msgstr "고객 태그"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_ids
@@ -760,7 +868,7 @@ msgstr "고객"
 msgid ""
 "Define Discount codes on conditional rules then share it with your customers"
 " for rewards."
-msgstr ""
+msgstr "조건부 규칙에 할인 코드를 설정한 후 고객에게 리워드 지급 시 공유해주십시오."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
@@ -770,7 +878,7 @@ msgstr "설명"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr ""
+msgstr "주문에 대한 설명"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -788,27 +896,27 @@ msgstr "할인 및 적립"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
 msgid "Discount Applicability"
-msgstr ""
+msgstr "할인 적용"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
 msgid "Discount Code"
-msgstr ""
+msgstr "할인 코드"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
 msgid "Discount Line Product"
-msgstr ""
+msgstr "할인 적용 상품"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
 msgid "Discount Mode"
-msgstr ""
+msgstr "할인 모드"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "할인 품목 범위"
 
 #. module: loyalty
 #. odoo-python
@@ -830,17 +938,17 @@ msgstr "할인 포인트"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
 msgid "Discounted Prod. Categories"
-msgstr ""
+msgstr "할인 품목 카테고리"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_tag_id
 msgid "Discounted Prod. Tag"
-msgstr ""
+msgstr "할인 품목 태그"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_ids
 msgid "Discounted Products"
-msgstr ""
+msgstr "할인 품목"
 
 #. module: loyalty
 #. odoo-python
@@ -870,13 +978,14 @@ msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
 msgstr ""
+"고객이 매장에서 물품을 구매할 때, 다음 구매 시 사용할 수 있는 고유한 일회성 쿠폰 코드를 지급함으로써 반복하여 구매하도록 합니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
-msgstr ""
+msgstr "각 규칙에서 고객에게 포인트를 부여하여 리워드로 교환할 수 있도록 합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -886,7 +995,7 @@ msgstr "이메일 서식"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__mail_template_id
 msgid "Email template"
-msgstr ""
+msgstr "이메일 서식"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
@@ -911,7 +1020,7 @@ msgstr "스탬프 카드"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr ""
+msgstr "나중에 주문할 때 사용하시도록 전자 지갑을 충전해두세요"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -926,7 +1035,7 @@ msgstr "팔로워 (협력사)"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__mode
 msgid "For"
-msgstr ""
+msgstr "다음"
 
 #. module: loyalty
 #. odoo-python
@@ -953,17 +1062,17 @@ msgstr "무료 상품 - 대형 캐비넷"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "Free Product - [%s]"
-msgstr ""
+msgstr "무료 상품 - [%s]"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Free product"
-msgstr ""
+msgstr "무료 상품"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__future
 msgid "Future orders"
-msgstr ""
+msgstr "다음 주문"
 
 #. module: loyalty
 #. odoo-javascript
@@ -981,6 +1090,8 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
+"수기로 쿠폰 코드를 생성하여 공유해보세요. 온라인 몰이나 POS 또는 일반 주문에서도 리워드 요청에 사용할 수 있습니다. 조건부 규칙으로"
+" 사용에 대한 제한 설정을 할 수 있습니다."
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -996,19 +1107,19 @@ msgstr "기프트 카드 생성"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr ""
+msgstr "전자 지갑 생성"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get 10% of on some products, with a code"
-msgstr ""
+msgstr "코드를 사용하시면 일부 품목에 10% 할인이 적용됩니다"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
-msgstr ""
+msgstr "사은품 및 전자 지갑"
 
 #. module: loyalty
 #. odoo-python
@@ -1032,7 +1143,7 @@ msgstr "기프트 카드 상품"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Gift Card value"
-msgstr ""
+msgstr "기프트 카드 값"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
@@ -1054,6 +1165,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
+"기프트 카드를 수기로 생성하거나 고객이 기프트 카드 품목을 주문하면 이메일로 자동 발송합니다.\n"
+"                                    <br/>\n"
+"                                    그러면 기프트 카드를 사용하여 주문 결제를 할 수 있습니다."
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
@@ -1071,7 +1185,7 @@ msgstr "수여"
 msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in"
 " exchange of X credits."
-msgstr ""
+msgstr "구매 항목마다 1 크레딧을 부여한 후 고객에게 X 크레딧을 Y 항목으로 교환하여 리워드를 받을 수 있도록 합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1081,12 +1195,12 @@ msgstr "메시지가 있습니다"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Here is your gift card!"
-msgstr ""
+msgstr "고객님의 기프트 카드를 확인하세요!"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Here is your reward from"
-msgstr ""
+msgstr "다음에 대한 리워드를 확인해보세요."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__id
@@ -1111,12 +1225,12 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr ""
+msgstr "최소"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "In exchange of"
-msgstr ""
+msgstr "교환 대상"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
@@ -1126,14 +1240,14 @@ msgstr "비활성"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "Included"
-msgstr ""
+msgstr "포함 사항"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Invalid quantity."
-msgstr ""
+msgstr "잘못된 수량입니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_is_follower
@@ -1143,17 +1257,17 @@ msgstr "팔로워임"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
 msgid "Is Global Discount"
-msgstr ""
+msgstr "전체 할인입니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_nominative
 msgid "Is Nominative"
-msgstr ""
+msgstr "이름 형식입니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_payment_program
 msgid "Is Payment Program"
-msgstr ""
+msgstr "결제 프로그램입니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
@@ -1189,7 +1303,7 @@ msgstr "한도"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr ""
+msgstr "사용 제한"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1242,17 +1356,17 @@ msgstr "적립 포인트"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
 msgid "Max Discount"
-msgstr ""
+msgstr "최대 할인"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
 msgid "Max Usage"
-msgstr ""
+msgstr "최대 사용"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_program_check_max_usage
 msgid "Max usage must be strictly positive if a limit is used."
-msgstr ""
+msgstr "제한을 적용하는 경우, 최대 사용 항목은 반드시 양수여야 합니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error
@@ -1267,12 +1381,12 @@ msgstr "메시지"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr ""
+msgstr "최소 금액 세금 모드"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr ""
+msgstr "최소 구매"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
@@ -1296,17 +1410,17 @@ msgstr "다음 방문시 사용 가능한 쿠폰"
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "No Coupons Found."
-msgstr ""
+msgstr "쿠폰을 찾을 수 없습니다."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr ""
+msgstr "적립 제도를 찾을 수 없습니다."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "No program found."
-msgstr ""
+msgstr "프로그램을 찾을 수 없습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction_counter
@@ -1341,7 +1455,7 @@ msgstr "협력사"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr ""
+msgstr "포인트"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
@@ -1353,17 +1467,17 @@ msgstr "포인트"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
 msgid "Points Display"
-msgstr ""
+msgstr "포인트 표시"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Points Unit"
-msgstr ""
+msgstr "포인트 단위"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__required_points
 msgid "Points needed"
-msgstr ""
+msgstr "필요한 포인트"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__point_name
@@ -1377,7 +1491,7 @@ msgstr "포털 포인트 이름"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__portal_visible
 msgid "Portal Visible"
-msgstr ""
+msgstr "포털 표시"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_template
@@ -1388,7 +1502,7 @@ msgstr "품목"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_domain
 msgid "Product Domain"
-msgstr "상품 도메인"
+msgstr "상품 범위"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
@@ -1406,7 +1520,7 @@ msgstr "품목 세부선택"
 msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
-msgstr ""
+msgstr "할인을 적용하기 위해서 판매 주문 시에 사용된 제품입니다. 리워드마다 목적으로 자체 상품이 있습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1441,7 +1555,7 @@ msgstr "프로그램 유형"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program trigger"
-msgstr ""
+msgstr "프로그램 작동"
 
 #. module: loyalty
 #. odoo-python
@@ -1486,12 +1600,12 @@ msgstr "수량"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Quantity rewarded"
-msgstr ""
+msgstr "리워드 수량"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
-msgstr ""
+msgstr "생성할 수량"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
@@ -1507,22 +1621,22 @@ msgstr "보상"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
 msgid "Reward Point Mode"
-msgstr ""
+msgstr "리워드 포인트 모드"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr ""
+msgstr "리워드 품목 범위"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr ""
+msgstr "리워드 품목 수량"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr ""
+msgstr "리워드 품목 측정 단위"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
@@ -1542,24 +1656,24 @@ msgstr "보상"
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
 msgid "Rule points reward must be strictly positive."
-msgstr ""
+msgstr "포인트 보상 규칙은 반드시 양수여야 합니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr ""
+msgstr "규칙 및 리워드"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
 msgid "Selected Customers"
-msgstr ""
+msgstr "선택한 고객"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "품목을 구매할 수 있도록 기프트 카드 판매"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1571,7 +1685,7 @@ msgstr "보내기"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr ""
+msgstr "주문 후 다음 구매 시 사용할 수 있는 쿠폰 발송"
 
 #. module: loyalty
 #. odoo-python
@@ -1583,12 +1697,12 @@ msgstr "다양한 혜택을 담은 쿠폰을 발행합니다"
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
 msgid "Sent to customer who purchased a gift card"
-msgstr ""
+msgstr "기프트 카드를 구매한 고객에게 발송"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_loyalty_card
 msgid "Sent to customer with coupon information"
-msgstr ""
+msgstr "쿠폰 정보를 고객에게 발송"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
@@ -1600,12 +1714,12 @@ msgstr "순서"
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
-msgstr ""
+msgstr "고객이 리워드를 받을 수 있는 주문에 대해 조건부 규칙을 설정합니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points Unit"
-msgstr ""
+msgstr "포인트 단위 표시"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
@@ -1615,14 +1729,14 @@ msgstr "특정 제품"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
 msgid "Split per unit"
-msgstr ""
+msgstr "단위 당 분할"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
-msgstr ""
+msgstr "적립 및 전자 지갑 프로그램에서는 단위 당 분할이 허용되지 않습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
@@ -1637,7 +1751,7 @@ msgstr "감사합니다,"
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_discount_positive
 msgid "The discount must be strictly positive."
-msgstr ""
+msgstr "할인은 반드시 양수이어야 합니다."
 
 #. module: loyalty
 #. odoo-python
@@ -1649,17 +1763,17 @@ msgstr "프로모션 코드는 고유해야 합니다."
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
-msgstr ""
+msgstr "리워드에 필요한 포인트는 반드시 양수이어야 합니다."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
-msgstr ""
+msgstr "리워드 품목 수량은 반드시 양수이어야 합니다."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "There haven't been any coupons generated yet."
-msgstr ""
+msgstr "아직 생성된 쿠폰이 없습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__reward_product_ids
@@ -1670,7 +1784,7 @@ msgstr "이 규칙에서 신청할 수 있는 상품입니다."
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr ""
+msgstr "이 리워드 항목에서 할인받을 수 있는 최대 금액이며 제한하지 않으려면 0으로 두십시오."
 
 #. module: loyalty
 #. odoo-python
@@ -1679,17 +1793,17 @@ msgstr ""
 msgid ""
 "This product may not be archived. It is being used for an active promotion "
 "program."
-msgstr ""
+msgstr "이 품목은 보관 처리 할 수 없습니다. 활성화되어 있는 프로모션 프로그램에 사용 중입니다."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr ""
+msgstr "전자 지갑 충전"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "총 주문 수"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1699,7 +1813,7 @@ msgstr "트리거"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
 msgid "Use Count"
-msgstr ""
+msgstr "사용 횟수"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__with_code
@@ -1709,7 +1823,7 @@ msgstr "코드 사용하기"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Use points on"
-msgstr ""
+msgstr "다음에 포인트 사용"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1720,7 +1834,7 @@ msgstr "먼저 이 프로모션 코드 사용하기"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
-msgstr ""
+msgstr "사용자 디버그"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
@@ -1740,21 +1854,21 @@ msgstr "기간"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "연락 시"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
-msgstr ""
+msgstr "고객이 주문할 때 현재 주문이나 다음 주문에 대한 리워드로 교환할 수 있는 포인트가 적립됩니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
-msgstr ""
+msgstr "쿠폰을 생성할 때 리워드로 교환할 수 있는 특정 포인트 값을 설정할 수 있습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1762,23 +1876,25 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
+"일치하는 단위 별로 리워드 쿠폰을 분리할지 여부는 '다음' 프로그램에만 적용할 수 있으며 지출 또는 지불 단위 당으로 모드를 작동 시킬 "
+"수 있습니다."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
 msgid "Will Send Mail"
-msgstr ""
+msgstr "메일을 전송해드리겠습니다."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchases, and claim gifts"
-msgstr ""
+msgstr "구매할 때마다 포인트를 적립하여 사은품을 받으세요"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
 msgid "With a promotion code"
-msgstr ""
+msgstr "프로모션 코드 포함"
 
 #. module: loyalty
 #. odoo-python
@@ -1795,7 +1911,7 @@ msgstr "활성화 상태의 프로그램은 삭제할 수 없습니다"
 msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
-msgstr ""
+msgstr "'쿠폰 및 적립'에서 사용 중이므로 %(name)s 항목을 삭제할 수 없습니다. 대신 보관 처리하십시오."
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
@@ -1805,7 +1921,7 @@ msgstr "고객님의 기프트 카드는 다음에 해당됩니다 {{ object.com
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "{{ object.program_id.company_id.name }} 의 리워드 쿠폰"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -1820,7 +1936,7 @@ msgstr "할인"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "e.g. 10% discount on laptops"
-msgstr ""
+msgstr "예: 노트북 10% 할인"
 
 #. module: loyalty
 #. odoo-python
@@ -1836,12 +1952,12 @@ msgstr "e월렛"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr ""
+msgstr "전자 지갑 품목"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr ""
+msgstr "전자 지갑 금액"
 
 #. module: loyalty
 #. odoo-python
@@ -1857,11 +1973,14 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
+"고객이 전자 지급 품목을 주문할 경우 수동이나 자동으로 전자 지갑이 생성됩니다.\n"
+"                                     <br/>\n"
+"                                     그 후 결제 단계에서 주문 결제용으로 전자 지갑 사용이 제안됩니다."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr ""
+msgstr "구매한 항목"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -1869,6 +1988,8 @@ msgid ""
 "on the cheapest product\n"
 "                                        <br/>"
 msgstr ""
+"최저가 품목\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1881,46 +2002,48 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
+"주문 시\n"
+"                                        <br/>"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per %s spent"
-msgstr ""
+msgstr "지출한 %s별"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per order"
-msgstr ""
+msgstr "주문별"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per unit paid"
-msgstr ""
+msgstr "지불 단위별"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "specific products"
-msgstr ""
+msgstr "특정 품목"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr ""
+msgstr "발송"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "the cheapest product"
-msgstr ""
+msgstr "최저가 품목"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1930,11 +2053,11 @@ msgstr "종료"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "usages"
-msgstr ""
+msgstr "사용"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
-msgstr ""
+msgstr "주문"

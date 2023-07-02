@@ -1122,7 +1122,7 @@ msgstr "<strong>支払期限:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr "<strong>期末残高</strong>"
+msgstr "<strong>終了残高</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1226,7 +1226,7 @@ msgstr "銀行取引明細書は、一定期間内の全ての銀行取引をま
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "外国VATが含まれる財政状態は、すでにこの地区に存在しました。"
+msgstr "外国VATが含まれる会計ポジションは、すでにこの地区に存在しました。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1325,7 +1325,7 @@ msgstr "明細書には同一の仕訳帳からの項目のみ記載して下さ
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "税財政状態は、同じ税に対して一回だけ定義できます。"
+msgstr "税会計ポジションは、同じ税に対して一回だけ定義できます。"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1618,7 +1618,7 @@ msgstr "口座保持者と異なる場合の口座名義"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
 msgid "Account on Product"
-msgstr "製品の勘定科目"
+msgstr "プロダクトの勘定科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
@@ -1795,7 +1795,7 @@ msgstr "アカウント"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "財政状態の勘定科目マッピング"
+msgstr "会計ポジションの勘定科目マッピング"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2169,7 +2169,7 @@ msgstr "全ての契約関係は、以下によってのみ管理されます：
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
-msgstr "製品マージンを許可する"
+msgstr "プロダクトマージンを許可する"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
@@ -2358,7 +2358,7 @@ msgstr "貸借対照表に計上されていない口座には税金がかかり
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr "勘定科目財政状態は、同じ勘定科目に対して一回だけ定義できます。"
+msgstr "勘定科目会計ポジションは、同じ勘定科目に対して一回だけ定義できます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2516,7 +2516,7 @@ msgstr "適用"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
-msgstr "製品及びサービスの配送先であるEU加盟国のVATを適用します。"
+msgstr "プロダクト及びサービスの配送先であるEU加盟国のVATを適用します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -2923,7 +2923,7 @@ msgstr "銀行取引"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Bank Transactions Conditions"
-msgstr "銀行トランザクション条件"
+msgstr "銀行取引条件"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
@@ -3167,7 +3167,7 @@ msgstr "折り畳まれる全ての明細はデフォルトで折り畳みます
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "有効化フィールドを解除することで、それを消すことなく財政状況に非表示することができます。"
+msgstr "有効化フィールドを解除することで、それを消すことなく会計ポジションを非表示にすることができます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -3612,7 +3612,7 @@ msgstr "税レポートの計算でこのタグに関連付けられている行
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "製品や請求書に表示する価格に税金が含まれている場合は、これをチェックして下さい。"
+msgstr "プロダクトや請求書に表示する価格に税金が含まれている場合は、これをチェックして下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -3644,7 +3644,7 @@ msgstr "子供税"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "製品にデフォルト売上税を選択してください。"
+msgstr "プロダクト用にデフォルト販売税を選択して下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -3677,17 +3677,17 @@ msgstr "コード"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "Code Prefix"
-msgstr "コード接頭辞"
+msgstr "コードプレフィックス"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_end
 msgid "Code Prefix End"
-msgstr "コード接頭辞の終了文"
+msgstr "コードプレフィックスの終り"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_start
 msgid "Code Prefix Start"
-msgstr "コード接頭辞の開始文"
+msgstr "コードプレフィックスの始め"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4150,7 +4150,7 @@ msgstr "自分のアドレス帳に連絡先を新規作成する"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "新規財政状態を作成"
+msgstr "新規会計ポジションを作成"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -4160,7 +4160,7 @@ msgstr "新しい貿易条件を作成します。"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
 msgid "Create a new purchasable product"
-msgstr "新製品購入を作成します。"
+msgstr "新規の購買可能なプロダクトを作成します。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -4175,7 +4175,7 @@ msgstr "新規販売領収書を作成"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr "新販売可能な製品を作成します。"
+msgstr "新規の販売可能なプロダクトを作成します。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
@@ -4984,13 +4984,13 @@ msgstr "ローカル取引に適用されるデフォルト税"
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr "製品を購入時に適用されるデフォルト税。"
+msgstr "プロダクト購買時に適用されるデフォルト税。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr "製品を販売時に適用されるデフォルト税。"
+msgstr "プロダクト販売時に適用されるデフォルト税。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -6124,13 +6124,13 @@ msgstr "会計期間"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "財政状態"
+msgstr "会計ポジション"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "財政状態"
+msgstr "会計ポジション"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -6145,7 +6145,7 @@ msgstr "会計年度"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "財政状態"
+msgstr "会計ポジション"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -6155,7 +6155,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "財政状態は、特定の顧客、または特定の受注・請求書に、税金と勘定を調整するために使用されます。デフォルト値は顧客から取得されます。"
+msgstr "会計ポジションは、特定の顧客、または特定の販売オーダ/請求書で税金と勘定を調整するために使用されます。デフォルト値は顧客から取得されます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6468,7 +6468,7 @@ msgstr "良い"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__consu
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
-msgstr "製品"
+msgstr "商品"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__group_id
@@ -6857,7 +6857,7 @@ msgid ""
 "must charge VAT based on the delivery address. This rule applies regardless "
 "of where you are located."
 msgstr ""
-"EU加盟国のお客様に製品及びサービスを販売するため、配送住所によってVATが課税されます。あなたの所在国にかかわらず、ルールが適用されます。"
+"EU加盟国のお客様に商品及びサービスを販売するため、配送住所によってVATが課税されます。あなたの所在国にかかわらず、ルールが適用されます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -7906,7 +7906,7 @@ msgstr "許可仕訳帳"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "仕訳入力締切日"
+msgstr "仕訳入力ロック日"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -7967,7 +7967,7 @@ msgstr "オープンのまま残す"
 #: model:ir.model.fields,help:account.field_product_template__property_account_income_id
 msgid ""
 "Keep this field empty to use the default value from the product category."
-msgstr "製品カテゴリのデフォルト値を使用するには、このフィールドを空のままにします。"
+msgstr "プロダクトカテゴリのデフォルト値を使用するには、このフィールドを空のままにします。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
@@ -7977,7 +7977,7 @@ msgid ""
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"製品カテゴリのデフォルト値を使用するには、このフィールドを空のままにします。自動評価方式のアングロサクソン会計が設定されている場合は、製品カテゴリの費用勘定が使用されます。"
+"プロダクトカテゴリのデフォルト値を使用するには、このフィールドを空のままにします。自動評価方式のアングロサクソン会計が設定されている場合は、プロダクトカテゴリの費用勘定が使用されます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -8674,7 +8674,7 @@ msgstr "送金サービス"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "請求書から製品のマージンをモニター"
+msgstr "請求書でプロダクトのマージンを捕捉"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
@@ -8818,7 +8818,7 @@ msgstr "新しい移動"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transaction"
-msgstr "新しいトランザクション"
+msgstr "新規取引"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -10387,12 +10387,12 @@ msgstr "問題の説明"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
 msgid "Product Categories"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -10401,12 +10401,12 @@ msgstr "製品カテゴリ"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
 msgid "Product Quantity"
-msgstr "製品数量"
+msgstr "プロダクト数量"
 
 #. module: account
 #: model:account.account,name:account.1_income
@@ -10416,12 +10416,12 @@ msgstr "プロダクト売上"
 #. module: account
 #: model:ir.model,name:account.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "製品単位"
+msgstr "プロダクト単位"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -10431,7 +10431,7 @@ msgstr "製品バリアント"
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 #: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
 msgid "Products"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: account
 #: model:account.account,name:account.1_to_receive_rec
@@ -10910,7 +10910,7 @@ msgstr "担当ユーザ"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
 msgid "Restrict the use of taxes to a type of product."
-msgstr "指定された製品種類に税の使用を制限します。"
+msgstr "指定されたプロダクトタイプへの税の使用を制限します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -11179,12 +11179,12 @@ msgstr "販売領収書が作成されました"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr "売上税"
+msgstr "販売税"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
 msgid "Sales tax"
-msgstr "売上税"
+msgstr "販売税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_user_id
@@ -11260,7 +11260,7 @@ msgstr "検索バー"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "財政状態を検索"
+msgstr "会計ポジションを検索"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -12159,7 +12159,7 @@ msgstr "この行を作成する税金によってこの行に割り当てられ
 #: model:ir.model.fields,help:account.field_product_template__account_tag_ids
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
-msgstr "この製品に作成した、一般及び税仕訳にセットするタグ。"
+msgstr "このプロダクト用に作成した、一般及び税仕訳にセットするタグ。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -12305,7 +12305,7 @@ msgstr "税マッピング"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "財政状態の税マッピング"
+msgstr "会計ポジションの税マッピング"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -12434,7 +12434,7 @@ msgstr "税名は一意である必要があります！"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "製品の税"
+msgstr "プロダクトの税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -12488,7 +12488,7 @@ msgstr "税設定済"
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr "所在国の税、財政状態、勘定科目一覧表及び法務書類"
+msgstr "所在国の税、会計ポジション、勘定科目一覧表及び法務書類"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -12831,7 +12831,7 @@ msgstr "税金グループが適用される国。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr "この税金が適用される国"
+msgstr "この税金が適用される国。"
 
 #. module: account
 #. odoo-python
@@ -12840,14 +12840,14 @@ msgstr "この税金が適用される国"
 msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
-msgstr "国外財政状態に設定した国は、レポート上の国と一致する必要があります。"
+msgstr "国外VAT会計ポジションに設定した国は、レポート上の国と一致する必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr "この会社の確定申告の課税国"
+msgstr "この会社の税務申告の課税国"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -12884,14 +12884,14 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date of some related entries is protected by a lock date"
-msgstr "一部の関連仕訳の日付は、ロック日付で保護されています"
+msgstr "一部の関連仕訳の日付は、ロック日で保護されています"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr "選択した日付は、ロック日付で保護されています"
+msgstr "選択した日付は、ロック日で保護されています"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -12899,7 +12899,7 @@ msgstr "選択した日付は、ロック日付で保護されています"
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
-msgstr "配送住所は財政状態の計算に使われます。"
+msgstr "配送住所は会計ポジションの計算に使われます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -12961,7 +12961,7 @@ msgstr "「仕入先」フィールは必須項目です。仕入先請求書を
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "財政状態は、この連絡先に使用される税及び勘定科目を決定します。"
+msgstr "会計ポジションは、この連絡先に使用される税及び勘定科目を決定します。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13013,7 +13013,7 @@ msgstr "仕訳'%(journal)s' と勘定 '%(account)s' に設定されている外�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr "この外部値が作成された国外財政状態。"
+msgstr "この外部値が作成された国外会計ポジション。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13149,7 +13149,7 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"オプションの数量はこの行で、例えば、販売された製品の数を表します。数量は法的には要求されませんが、幾つかのレポートのためにはとても役立ちます。"
+"オプションの数量はこの行で、例えば、販売されたプロダクトの数を表します。数量は法的には要求されませんが、幾つかのレポートのためにはとても役立ちます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -13350,7 +13350,7 @@ msgstr "会社通貨で表示される仕訳項目の残額。"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "残高（%s）が、指定された期末残高と一致しない。"
+msgstr "残高（%s）が、指定された終了残高と一致しない。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13452,7 +13452,7 @@ msgstr "この仕訳は支払と非支払で配列が異なりますが、両方
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr "未消込金残高が以前の明細書の期末残高と一致しない、または以前の明細書が見当たりません。"
+msgstr "未消込金残高が以前の明細書の終了残高と一致しない、または以前の明細書が見当たりません。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -13478,7 +13478,7 @@ msgstr "余剰金合計の提案がこの金額・割合の下で計算書の明
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "この財政状況にマップされた地区での会社の納税者番号。"
+msgstr "この会計ポジションにマップされた地区での会社の納税者番号。"
 
 #. module: account
 #. odoo-python
@@ -13584,7 +13584,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr "これらの税金は、作成されたすべての新製品に設定されます。"
+msgstr "これらの税金は、作成されたすべての新規プロダクトに設定されます。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -13714,7 +13714,7 @@ msgstr "この仕訳には、設定された税法上の居住地国と合わな
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr "この仕訳には、お使いの財政状態と合わない税が含まれています。財政状態及び税務設定に設定された国をご確認ください。"
+msgstr "この仕訳には、会計ポジションと合わない税が含まれています。会計ポジションおよび税務設定に設定された国をご確認ください。"
 
 #. module: account
 #. odoo-python
@@ -14501,14 +14501,14 @@ msgstr "ダッシュボードビューで注文ジャーナルに使用"
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr "レジの期末残高がシステムの計算値と異なる場合に損失を登録するために使用されます"
+msgstr "レジの終了残高がシステムの計算値と異なる場合に損失を登録するために使用されます"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr "レジの期末残高がシステムの計算と異なる場合に利益を登録するために使用されます"
+msgstr "レジの終了残高がシステムの計算と異なる場合に利益を登録するために使用されます"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__user_id
@@ -15124,7 +15124,7 @@ msgstr "すべてがインバウンド又はすべてがアウトバウンドの
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
-msgstr "/追加する前に、ロック日付%sを含めてエントリを変更することはできません。"
+msgstr "ロック日%s以前にエントリを追加/変更することはできません。"
 
 #. module: account
 #. odoo-python
@@ -15133,8 +15133,7 @@ msgstr "/追加する前に、ロック日付%sを含めてエントリを変更
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
-msgstr ""
-"入力禁止日%s 以前の日付で仕訳を作成・修正することはできません。会社設定を確認するか、「請求マネジャー」権限を持つユーザにご相談ください。"
+msgstr "ロック日%s 以前の日付で仕訳を作成・修正することはできません。会社設定を確認するか、アドバイザ権限を持つユーザにご相談ください。"
 
 #. module: account
 #. odoo-python
@@ -15170,7 +15169,7 @@ msgstr "仕訳で銀行勘定として設定されている勘定の種類を受
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr "税法上の居住地国には、状態を割り当ててないまま、外国納税者番号を使用する財政状態を作成することはできません。"
+msgstr "国外VATを持つ会計ポジションは、そのVATにステータスを割り当てなければ、税法上の所在国で作成することはできません。"
 
 #. module: account
 #. odoo-python
@@ -15179,7 +15178,7 @@ msgstr "税法上の居住地国には、状態を割り当ててないまま、
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
-msgstr "税法上の居住地国には、外国納税者番号を使用する財政状態を作成することはできません。"
+msgstr "税法上の所在国内で、外国納税者番号を使用する会計ポジションを作成することはできません。"
 
 #. module: account
 #. odoo-python
@@ -15188,7 +15187,7 @@ msgstr "税法上の居住地国には、外国納税者番号を使用する財
 msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
-msgstr "税法上の居住地国に、会社の主要セットと同じ納税者番号を持つ財政状態を作成できません。"
+msgstr "税法上の所在国に、会社の単一の主要設定と同じ納税者番号を持つ会計ポジションを作成できません。"
 
 #. module: account
 #. odoo-python
@@ -15404,7 +15403,7 @@ msgstr "税金の仕切り直しに設定されている行 \"%s\"を削除・�
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
-msgstr "財政状態の勘定科目マッピングに設定された勘定科目「%s」は削除・無効化することはできません。"
+msgstr "会計ポジションの勘定科目マッピングに設定された勘定科目「%s」は削除・無効化することはできません。"
 
 #. module: account
 #. odoo-python

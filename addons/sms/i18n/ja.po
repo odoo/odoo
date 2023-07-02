@@ -360,7 +360,7 @@ msgstr "故障タイプ"
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
-msgstr ""
+msgstr "サニタイズされた電話番号を保存するためのフィールド。検索や比較のスピードアップに役立ちます。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
@@ -466,7 +466,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
-msgstr ""
+msgstr "サニタイズされた電話番号がブラックリストに登録されている場合、その連絡先は、どのリストからも、一括送信のSMSを受信できなくなります。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -485,6 +485,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ブラックリストに登録された電話番号が携帯電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話番号フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -493,6 +494,7 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -693,12 +695,12 @@ msgstr "取引先"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "電話ブラックリストMixin"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "ブラックリストに登録された電話番号"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -715,7 +717,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "電話/携帯電話"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
@@ -982,7 +984,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "サニタイズされた数"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1190,7 +1192,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgstr "この電話番号はSMSマーケティングのブラックリストに登録されています。ブラックリストを解除するにはクリックして下さい。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
