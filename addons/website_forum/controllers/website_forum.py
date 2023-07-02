@@ -675,7 +675,7 @@ class WebsiteForum(WebsiteProfile):
                 down_votes = count
 
         # Votes which given by users on others questions and answers.
-        vote_ids = Vote.search([('user_id', '=', user.id)])
+        vote_ids = Vote.search([('user_id', '=', user.id), ('forum_id', 'in', forums.ids)])
 
         # activity by user.
         comment = Data._xmlid_lookup('mail.mt_comment')[1]
