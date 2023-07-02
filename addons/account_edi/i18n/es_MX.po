@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr "Error(es) de la facturación electrónica"
+msgstr "Errores en la facturación electrónica"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -36,7 +36,7 @@ msgstr "Información de la facturación electrónica"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr "Advertencia(s) de la facturación electrónica"
+msgstr "Advertencias en la facturación electrónica"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -69,8 +69,8 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
-"Bloquea la operación actual del documento dependiendo de la severidad del error:\n"
-"* Info: el documento no está bloqueado y todo trabaja como debería-\n"
+"Bloquea la operación actual del documento dependiendo de la gravedad del error:\n"
+"* Información: el documento no está bloqueado y todo funciona como debería.\n"
 "* Advertencia: hay un error que no impide el funcionamiento de la operación actual de facturación electrónica.\n"
 "* Error: hay un error que bloquea la operación actual de facturación electrónica."
 
@@ -121,7 +121,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -150,7 +150,7 @@ msgstr "Formato EDI"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "Formato EDI que soporta los movimientos en este diario"
+msgstr "Formato EDI compatible con los movimientos en este diario"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -214,7 +214,7 @@ msgstr "Servicios de web EDI para procesar"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
 msgid "Electronic Data Interchange"
-msgstr "Intercambio de Datos Electrónico (EDI, por su sigla en inglés)"
+msgstr "Intercambio electrónico de datos"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -408,8 +408,8 @@ msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
-"Este servicio de facturación electrónica procesará la factura "
-"asincrónicamente:"
+"Este servicio de facturación electrónica procesará la factura de forma "
+"asíncrona:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
@@ -417,7 +417,8 @@ msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
-"Este sistema de facturación electrónica procesará el pago asincrónicamente:"
+"Este sistema de facturación electrónica procesará el pago de forma "
+"asíncrona:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error

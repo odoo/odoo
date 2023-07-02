@@ -3,7 +3,6 @@
 # 	* event_booth_sale
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Fernanda Alvarez, 2023
 # 
@@ -37,7 +36,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__event_booth_id
 msgid "Booth"
-msgstr "Cabina"
+msgstr "Estand"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_id
@@ -106,7 +105,7 @@ msgstr "Correo electrónico de contacto"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_mobile
 msgid "Contact Mobile"
-msgstr "Contacto de celular"
+msgstr "Celular del contacto"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
@@ -333,7 +332,7 @@ msgstr "Línea de orden de venta"
 #. module: event_booth_sale
 #: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
 msgid "Select an event booth"
-msgstr "Seleccionar una cabina de evento"
+msgstr "Seleccione un estand de evento"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
@@ -342,7 +341,7 @@ msgid ""
 "The following booths are unavailable, please remove them to continue : "
 "%(booth_names)s"
 msgstr ""
-"Las siguientes cabinas no están disponibles, quítelas para continuar: "
+"Los siguientes estands no están disponibles, quítelos para continuar: "
 "%(booth_names)s"
 
 #. module: event_booth_sale
@@ -359,7 +358,9 @@ msgstr "Unidades"
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
-msgstr "Usada para crear un registro al probar la cabina de evento deseada."
+msgstr ""
+"Se usa para crear un registro al proporcionar el estand deseado para el "
+"evento."
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth.py:0
@@ -368,14 +369,14 @@ msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
 msgstr ""
-"No puede borrar las siguientes cabinas ya que están vinculadas a órdenes de "
-"venta: %(booths)s"
+"No puede eliminar los siguientes estands ya que están vinculados a órdenes "
+"de venta: %(booths)s"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
 #, python-format
 msgid "You have to select at least one booth."
-msgstr "Debe seleccionar al menos una cabina."
+msgstr "Debe seleccionar al menos un estand."
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
@@ -383,4 +384,4 @@ msgstr "Debe seleccionar al menos una cabina."
 msgid ""
 "Your order has been cancelled because the following booths have been "
 "reserved"
-msgstr "Su orden se canceló porque las siguientes cabinas se reservaron"
+msgstr "Se canceló su orden porque se reservaron los siguientes estands."
