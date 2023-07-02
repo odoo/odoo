@@ -250,8 +250,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
-"<br/>Nadie ha conseguido alcanzar todas las metas, por lo que no se otorgará"
-" la insignia como recompensa de este desafío."
+"<br/>Nadie logró alcanzar todas las metas, así que no se otorgará la "
+"insignia de este desafío."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -1008,10 +1008,10 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"Las insignias se conceden cuando se finaliza un desafío. Esto puede ser al "
-"final del periodo (por ejemplo: final de mes para un desafío mensual), al "
-"final del desafío (si no se establece ninguna periodicidad) o cuando el "
-"desafío se cierra manualmente."
+"Las insignias se otorgan cuando concluye un desafío. Esto puede ser al final"
+" del periodo (por ejemplo: final de mes para un desafío mensual), al final "
+"del desafío (si no se establece ninguna periodicidad) o cuando el desafío se"
+" cierra de manera manual."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -1286,8 +1286,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr ""
-"Describa el desafío: qué hace, a quién va dirigido, porqué es importante..."
+msgstr "Describa el desafío: qué hace, a quién va dirigido, su importancia..."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -1428,7 +1427,7 @@ msgstr "Seguidores (Canales)"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
@@ -1669,7 +1668,7 @@ msgstr "¿Cómo se calcula la meta?"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr "Recursos humanos / Compromiso"
+msgstr "Recursos humanos/participación"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1757,9 +1756,9 @@ msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr ""
-"En el modo de proceso por lotes, el dominio se evalúa globalmente. Si está "
-"habilitado, no utilice la palabra clave 'usuario' en el filtro de dominio "
-"que está a continuación."
+"En el modo de lotes, el dominio se evalúa globalmente. Si se habilita, no "
+"utilice la palabra clave \"usuario\" en el filtro de dominio que está a "
+"continuación."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
@@ -2199,8 +2198,8 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
-"El código Python a ejecutar para cada usuario. 'result' debe contener el "
-"nuevo valor actual. El registro del usuario evaluado puede ser accedido "
+"El código Python a ejecutar para cada usuario. \"result\" debe contener el "
+"nuevo valor actual. Se puede acceder al registro del usuario evaluado "
 "mediante object_user_id."
 
 #. module: gamification
@@ -2217,7 +2216,7 @@ msgstr "Nombre de rango"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
 msgid "Rank based on karma"
-msgstr "Rango basado en karma"
+msgstr "Rango según las recompensas"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
@@ -2263,7 +2262,7 @@ msgstr "Alcanzado cuando el valor actual es"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
-msgstr "Registrado manualmente"
+msgstr "Registrado de forma manual"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2586,8 +2585,8 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
-"El día en el que el nuevo desafío se cerrará automáticamente. Si no se "
-"establece periodicidad, se usará esta fecha como fecha de finalización."
+"El día en el que se cerrará de forma automática el nuevo desafío. Si no "
+"establece la periodicidad, se usará esta fecha como fecha de finalización."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -2595,8 +2594,8 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"El día en el que el nuevo desafío empezará automáticamente. Si no se "
-"establece periodicidad, se usará esta fecha como fecha de inicio."
+"El día en el que el nuevo desafío empezará de forma automática. Si no "
+"establece la periodicidad, se usará esta fecha como fecha de inicio."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2820,7 +2819,7 @@ msgstr "Total"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Seguimiento de cambios de karma"
+msgstr "Seguimiento de cambios de recompensas"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
