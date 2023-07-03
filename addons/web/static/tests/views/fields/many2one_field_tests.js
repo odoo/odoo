@@ -2396,7 +2396,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(3);
 
         serverData.models.partner.fields.timmy.default = [
-            [0, 0, { display_name: "brandon is the new timmy", name: "brandon" }],
+            [0, 0, { display_name: "brandon is the new timmy" }],
         ];
         serverData.models.partner.onchanges.timmy = (obj) => {
             obj.int_field = obj.timmy.length;
