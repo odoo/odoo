@@ -70,6 +70,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      * @override
      */
     start: async function () {
+        // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
+        this.$editable[0].addEventListener("click", this._onPageClick.bind(this), { capture: true });
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
@@ -214,6 +216,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         socialMediaOptions.clearDbSocialValuesCache();
 
         this._restoreMegaMenus();
+        this.$editable[0].removeEventListener("click", this._onPageClick.bind(this), { capture: true });
         this._super.apply(this, arguments);
     },
 
@@ -396,6 +399,36 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         megaMenuEl.classList.add('o_no_parent_editor');
         this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
+    },
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.$editable[0].querySelectorAll(
+            ".o_mega_menu_toggle, #top_menu_container .dropdown-toggle.show"
+        )) {
+            Dropdown.getOrCreateInstance(toggleEl).hide();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest(".dropdown-menu.show, .dropdown-toggle.show")) {
+            return;
+        }
+        this._hideDropdowns();
     },
 });
 
