@@ -24,17 +24,17 @@
                     <th class="o_wforum_table_posters"></th>
                     <th class="o_wforum_table_replies small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='child_count asc' if sorting == 'child_count desc' else 'child_count desc') }">
-                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ not sorting.startswith('child_count') and 'd-none ' }"></i>
+                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ 'd-none ' if not sorting.startswith('child_count') else '' }"></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_views small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='views asc' if sorting == 'views desc' else 'views desc') }">
-                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ not sorting.startswith('views') and 'd-none ' }"></i>
+                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('views') else '' }"></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_activity small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='last_activity_date asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
-                            Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ not sorting.startswith('last_activity') and 'd-none ' }"></i>
+                            Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('last_activity') else '' }"></i>
                         </a>
                     </th>
                 </tr>
@@ -53,6 +53,8 @@
 
 <!-- Edition: ask your question -->
 <template id="new_question" name="New Post">
+    <t t-set="_page_name" t-value="'new_question'"/>
+    <t t-set="_page_name_label">Ask your question</t>
     <t t-call="website_forum.header">
         <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
@@ -103,7 +105,7 @@
             </div>
             <div class="row mb-5">
                 <div class="col offset-lg-2">
-                    <button type="submit" t-attf-class="o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call'} btn btn-primary #{user.karma &lt; forum.karma_ask and 'karma_required'}"
+                    <button type="submit" t-attf-class="o_wforum_submit_post #{ 'oe_social_share_call' if forum.allow_share else '' } btn btn-primary #{ 'karma_required' if user.karma &lt; forum.karma_ask else ''}"
                     t-att-data-karma="forum.karma_ask"
                     data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
                     <a class="btn btn-link" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }">Discard</a>
@@ -115,6 +117,14 @@
 
 <!-- Edition: edit a post -->
 <template id="edit_post" name="Edit Post">
+    <t t-if="is_answer">
+        <t t-set="_page_name" t-value="'edit_answer'"/>
+        <t t-set="_page_name_label">Edit your answer</t>
+    </t>
+    <t t-else="">
+        <t t-set="_page_name" t-value="'edit_question'"/>
+        <t t-set="_page_name_label">Edit your question</t>
+    </t>
     <t t-call="website_forum.header">
         <div t-if="is_answer" class="row g-0">
             <div class="col-lg-2 pt-3">
@@ -192,7 +202,7 @@
             <t t-if="len(pager_tag_chars) &lt; 11">
                 <ul class="pagination overflow-auto mt0 mb0">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                        <li t-if="tuple_char_index &lt; 11" t-attf-class="page-item #{ active_char_tag == tuple_char[1] and 'active' }">
+                        <li t-if="tuple_char_index &lt; 11" t-attf-class="page-item #{ 'active' if active_char_tag == tuple_char[1] else '' }">
                             <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search') }"
                                class="page-link">
                                 <t t-out="tuple_char[0]"/>
@@ -215,20 +225,21 @@
         </t>
 
         <div class="row g-0 mt-3 mb-5" t-if="tags">
-            <div class="col-md-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <div t-attf-class="#{ 'd-block' if request.env.user._is_public() else 'd-flex'}">
-                    <a t-attf-class="#{len(tag.post_ids) == 0 and 'disabled'} btn btn-link pe-0 text-decoration-none text-nowrap #{tag.message_is_follower and 'text-dark fw-bold'}"
-                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }}">
-                        <t t-out="tag.name"/>
-                        <span class="small">(<t t-out="tag.posts_count"/>)</span>
-                    </a>
+            <div class="col-3 pe-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
+                <span t-attf-class="#{ 'd-block' if request.env.user._is_public() else 'd-flex align-items-baseline'}">
                     <t t-call="website_forum.follow">
                         <t t-set="email" t-value="user_id.email"/>
                         <t t-set="object" t-value="tag"/>
                         <t t-set="icons_design" t-value="True"/>
                         <t t-set="div_class" t-value="'d-inline'"/>
+                        <t t-set="btn_classes" t-value="'px-2'"/>
                     </t>
-                </div>
+                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } btn-link #{ 'text-dark fw-bold' if tag.message_is_follower else '' }"
+                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }}">
+                        <t t-out="tag.name"/>&amp;nbsp;
+                        <span class="small">(<t t-out="tag.posts_count"/>)</span>
+                    </a>
+                </span>
             </div>
         </div>
         <t t-else="">
