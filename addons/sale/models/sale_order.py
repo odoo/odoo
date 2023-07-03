@@ -792,6 +792,16 @@ class SaleOrder(models.Model):
 
     #=== ACTION METHODS ===#
 
+    def action_open_discount_wizard(self):
+        self.ensure_one()
+        return {
+            'name': _("Discount"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order.discount',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
         return orders.write({

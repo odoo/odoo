@@ -27,6 +27,16 @@ class ResCompany(models.Model):
         help="Days between quotation proposal and expiration."
             " 0 days means automatic expiration is disabled",
     )
+    sale_discount_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string="Discount Product",
+        domain=[
+            ('type', '=', 'service'),
+            ('invoice_policy', '=', 'order'),
+        ],
+        help="Default product used for discounts",
+        check_company=True,
+    )
     sale_down_payment_product_id = fields.Many2one(
         comodel_name='product.product',
         string="Deposit Product",
