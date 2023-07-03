@@ -11,7 +11,7 @@ class SomeObj(models.Model):
     categ_id = fields.Many2one('test_access_right.obj_categ')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
-        groups='test_access_rights.test_group,!base.group_no_one,base.group_user,!base.group_public',
+        groups='test_access_rights.test_group,!base.group_no_one,!base.group_public',
         default=5
     )
     forbidden2 = fields.Integer(groups='test_access_rights.test_group')
