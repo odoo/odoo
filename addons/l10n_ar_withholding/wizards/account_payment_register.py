@@ -9,7 +9,7 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
 
     payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade',)
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
-    name = fields.Char(required=True)
+    name = fields.Char(string='Number', required=True)
     tax_id = fields.Many2one('account.tax', required=True,)
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
