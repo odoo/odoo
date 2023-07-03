@@ -1,345 +1,374 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="tax_report" model="account.tax.report">
         <field name="name">Tax Report</field>
         <field name="country_id" ref="base.ch"/>
     </record>
 
     <record id="account_tax_report_line_chiffre_af" model="account.tax.report.line">
-        <field name="name">I - CHIFFRE D'AFFAIRES</field>
+        <field name="name">I. CHIFFRE D'AFFAIRES</field>
         <field name="report_id" ref="tax_report"/>
         <field name="formula">None</field>
         <field name="sequence" eval="1"/>
     </record>
 
     <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
-        <field name="name">200 Chiffre d'affaires</field>
-        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_289</field>
+        <field name="name">200 - Total des contre-prestations convenues ou reçues, y c. de prestations imposées par option, de transferts par procédure de déclaration, de prestations à l’étranger</field>
+        <field name="code">tax_ch_200</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_382a + tax_ch_383a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
-    <record id="account_tax_report_line_chtax_289" model="account.tax.report.line">
-        <field name="name">289 Déductions (ch.220 à ch.280)</field>
+    <record id="account_tax_report_line_chtax_205" model="account.tax.report.line">
+        <field name="name">205 - Contre-prestations déclarées sous ch. 200 qui proviennent de prestations exclues du champ de l’impôt (art. 21) pour lesquelles il a été opté en vertu de l’art. 22</field>
+        <field name="tag_name">205</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="code">tax_ch_289</field>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_220_289" model="account.tax.report.line">
-        <field name="name">220 Chiffre d'affaires imposable a 0% (export)</field>
+        <field name="name">220 - Prestations exonérées (p. ex. exportations, art. 23), prestations exonérées fournies à des institutions et à des personnes bénéficiaires (art. 107, al. 1, let. a)</field>
+        <field name="code">tax_ch_220</field>
         <field name="tag_name">220</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="0"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_221" model="account.tax.report.line">
-        <field name="name">221 Prestations fournies à l'étranger</field>
+        <field name="name">221 - Prestations fournies à l’étranger</field>
+        <field name="code">tax_ch_221</field>
         <field name="tag_name">221</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_225" model="account.tax.report.line">
-        <field name="name">225 Transfer avec la procédure de déclaration</field>
+        <field name="name">225 - Transferts avec la procédure de déclaration (art. 38)</field>
+        <field name="code">tax_ch_225</field>
         <field name="tag_name">225</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_230" model="account.tax.report.line">
-        <field name="name">230 Chiffre d'affaires non-imposable a 0% (exclu)</field>
+        <field name="name">230 - Prestations exclues du champ de l’impôt (art. 21) fournies sur le territoire suisse pour lesquelles il n’a pas été opté selon l’art. 22</field>
+        <field name="code">tax_ch_230</field>
         <field name="tag_name">230</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_235" model="account.tax.report.line">
-        <field name="name">235 Diminution de la contre-prestation</field>
+        <field name="name">235 - Diminutions de la contre-prestation telles que rabais, escomptes, etc.</field>
+        <field name="code">tax_ch_235</field>
         <field name="tag_name">235</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_280" model="account.tax.report.line">
-        <field name="name">280 Divers (p.ex valeur du terrain)</field>
+        <field name="name">280 - Divers (p.ex. valeur du terrain)</field>
+        <field name="code">tax_ch_280</field>
         <field name="tag_name">280</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_289"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_289" model="account.tax.report.line">
+        <field name="name">289 - Déductions (Total ch. 220 à 280)</field>
+        <field name="code">tax_ch_289</field>
+        <field name="formula">tax_ch_220 + tax_ch_221 + tax_ch_225 + tax_ch_230 + tax_ch_235 + tax_ch_280</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_chtax_299" model="account.tax.report.line">
-        <field name="name">299 Chiffre d'affaires imposable (ch.200 moins ch.289)</field>
+        <field name="name">299 - Total du chiffre d’affaires imposable (ch. 200 moins ch. 289)</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a</field>
+        <field name="sequence" eval="10"/>
+        <field name="formula">tax_ch_200 - tax_ch_289</field>
+        <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
     </record>
 
     <record id="account_tax_report_line_calc_impot" model="account.tax.report.line">
-        <field name="name">II - CALCUL DE L'IMPOT</field>
+        <field name="name">II. CALCUL DE L'IMPÔT</field>
         <field name="report_id" ref="tax_report"/>
         <field name="formula">None</field>
-        <field name="sequence" eval="3"/>
+        <field name="sequence" eval="2"/>
     </record>
 
-    <record id="account_tax_report_line_calc_impot_chiffre" model="account.tax.report.line">
-        <field name="name">Chiffre d'affaires imposable</field>
+    <record id="account_tax_report_line_supplies_1" model="account.tax.report.line">
+        <field name="name">Prestations CHF dès le 01.01.2024</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_303a" model="account.tax.report.line">
+        <field name="name">303a - Taux normal (8,1%): Prestations CHF dès le 01.01.2024</field>
+        <field name="code">tax_ch_303a</field>
+        <field name="tag_name">303a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_1"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_313a" model="account.tax.report.line">
+        <field name="name">313a - Taux réduit (2,6%): Prestations CHF dès le 01.01.2024</field>
+        <field name="code">tax_ch_313a</field>
+        <field name="tag_name">313a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_1"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_343a" model="account.tax.report.line">
+        <field name="name">343a - Taux spécial pour l'hébergement (3,8%): Prestations CHF dès le 01.01.2024</field>
+        <field name="code">tax_ch_343a</field>
+        <field name="tag_name">343a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_1"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_383a" model="account.tax.report.line">
+        <field name="name">383a - Impôt sur les acquisitions: Prestations CHF dès le 01.01.2024</field>
+        <field name="code">tax_ch_383a</field>
+        <field name="tag_name">383a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_1"/>
+    </record>
+
+    <record id="account_tax_report_line_supplies_2" model="account.tax.report.line">
+        <field name="name">Prestations CHF jusqu'au 31.12.2023</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+        <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_302a" model="account.tax.report.line">
-        <field name="name">302a Chiffre d'affaires imposable a 7.7% (TS) jusqu'au 31.12.2023</field>
-        <field name="tag_name">302a</field>
+        <field name="name">302a - Taux normal (7,7%): Prestations CHF jusqu'au 31.12.2023</field>
         <field name="code">tax_ch_302a</field>
+        <field name="tag_name">302a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_303a" model="account.tax.report.line">
-        <field name="name">303a Chiffre d'affaires imposable a 8.1% (TS) dès le 01.01.2024</field>
-        <field name="tag_name">303a</field>
-        <field name="code">tax_ch_303a</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_312a" model="account.tax.report.line">
-        <field name="name">312a Chiffre d'affaires imposable a 2.5% (TR) jusqu'au 31.12.2023</field>
-        <field name="tag_name">312a</field>
+        <field name="name">312a - Taux réduit (2,5%): Prestations CHF jusqu'au 31.12.2023</field>
         <field name="code">tax_ch_312a</field>
+        <field name="tag_name">312a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_313a" model="account.tax.report.line">
-        <field name="name">313a Chiffre d'affaires imposable a 2.6% (TR) dès le 01.01.2024</field>
-        <field name="tag_name">313a</field>
-        <field name="code">tax_ch_313a</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_342a" model="account.tax.report.line">
-        <field name="name">342a Chiffre d'affaires imposable a 3.7% (TS) jusqu'au 31.12.2023</field>
-        <field name="tag_name">342a</field>
+        <field name="name">342a - Taux spécial pour l'hébergement (3,7%): Prestations CHF jusqu'au 31.12.2023</field>
         <field name="code">tax_ch_342a</field>
+        <field name="tag_name">342a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_343a" model="account.tax.report.line">
-        <field name="name">343a Chiffre d'affaires imposable a 3.8% (TS) dès le 01.01.2024</field>
-        <field name="tag_name">343a</field>
-        <field name="code">tax_ch_343a</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
-    </record>
-
-    <record id="account_tax_report_line_calc_impot_base" model="account.tax.report.line">
-        <field name="name">Base Impôt sur acquisitions de services</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_381a" model="account.tax.report.line">
-        <field name="name">381a Impots sur les acquisitions</field>
-        <field name="tag_name">381a</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_382a" model="account.tax.report.line">
-        <field name="name">382a Impots sur les acquisitions jusqu'au 31.12.2023</field>
+        <field name="name">382a - Impôt sur les acquisitions: Prestations CHF jusqu'au 31.12.2023</field>
+        <field name="code">tax_ch_382a</field>
         <field name="tag_name">382a</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_supplies_2"/>
     </record>
 
-    <record id="account_tax_report_line_chtax_383a" model="account.tax.report.line">
-        <field name="name">383a Impots sur les acquisitions dès le 01.01.2024</field>
-        <field name="tag_name">383a</field>
+    <record id="account_tax_report_line_tax_amount_1" model="account.tax.report.line">
+        <field name="name">Impôt CHF / ct. dès le 01.01.2024</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_303b" model="account.tax.report.line">
+        <field name="name">303b - Taux normal (8,1%): Impôt CHF / ct. dès le 01.01.2024</field>
+        <field name="code">tax_ch_303b</field>
+        <field name="tag_name">303b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_1"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_313b" model="account.tax.report.line">
+        <field name="name">313b - Taux réduit (2,6%): Impôt CHF / ct. dès le 01.01.2024</field>
+        <field name="code">tax_ch_313b</field>
+        <field name="tag_name">313b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_1"/>
     </record>
 
-    <record id="account_tax_report_line_chtax_399" model="account.tax.report.line">
-        <field name="name">399 TVA Due </field>
-        <field name="code">tax_ch_399</field>
+    <record id="account_tax_report_line_chtax_343b" model="account.tax.report.line">
+        <field name="name">343b - Taux spécial pour l'hébergement (3,8%): Impôt CHF / ct. dès le 01.01.2024</field>
+        <field name="code">tax_ch_343b</field>
+        <field name="tag_name">343b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_1"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_383b" model="account.tax.report.line">
+        <field name="name">383b - Impôt sur les acquisitions: Impôt CHF / ct. dès le 01.01.2024</field>
+        <field name="code">tax_ch_383b</field>
+        <field name="tag_name">383b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_1"/>
+    </record>
+
+    <record id="account_tax_report_line_tax_amount_2" model="account.tax.report.line">
+        <field name="name">Impôt CHF / ct. jusqu'au 31.12.2023</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_302b" model="account.tax.report.line">
-        <field name="name">302b TVA due a 7.7% (TS) jusqu'au 31.12.2023</field>
+        <field name="name">302b - Taux normal (7,7%): Impôt CHF / ct. jusqu'au 31.12.2023</field>
+        <field name="code">tax_ch_302b</field>
         <field name="tag_name">302b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_303b" model="account.tax.report.line">
-        <field name="name">303b TVA due a 8.1% (TS) dès le 01.01.2024</field>
-        <field name="tag_name">303b</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_312b" model="account.tax.report.line">
-        <field name="name">312b TVA due a 2.5% (TR) jusqu'au 31.12.2023</field>
+        <field name="name">312b - Taux réduit (2,5%): Impôt CHF / ct. jusqu'au 31.12.2023</field>
+        <field name="code">tax_ch_312b</field>
         <field name="tag_name">312b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_313b" model="account.tax.report.line">
-        <field name="name">313b TVA due a 2.6% (TR) dès le 01.01.2024</field>
-        <field name="tag_name">313b</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_342b" model="account.tax.report.line">
-        <field name="name">342b TVA due a 3.7% (TS) jusqu'au 31.12.2023</field>
+        <field name="name">342b - Taux spécial pour l'hébergement (3,7%): Impôt CHF / ct. jusqu'au 31.12.2023</field>
+        <field name="code">tax_ch_342b</field>
         <field name="tag_name">342b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_343b" model="account.tax.report.line">
-        <field name="name">343b TVA due a 3.8% (TS) dès le 01.01.2024</field>
-        <field name="tag_name">343b</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_381b" model="account.tax.report.line">
-        <field name="name">381b Impots sur les acquisitions </field>
-        <field name="tag_name">381b</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_2"/>
     </record>
 
     <record id="account_tax_report_line_chtax_382b" model="account.tax.report.line">
-        <field name="name">382b Impots sur les acquisitions jusqu'au 31.12.2023</field>
+        <field name="name">382b - Impôt sur les acquisitions: Impôt CHF / ct. jusqu'au 31.12.2023</field>
+        <field name="code">tax_ch_382b</field>
         <field name="tag_name">382b</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_383b" model="account.tax.report.line">
-        <field name="name">383b Impots sur les acquisitions dès le 01.01.2024</field>
-        <field name="tag_name">383b</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
-    </record>
-
-    <record id="account_tax_report_line_chtax_479" model="account.tax.report.line">
-        <field name="name">479 TVA préalable</field>
-        <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="4"/>
-        <field name="code">tax_ch_479</field>
+        <field name="parent_id" ref="account_tax_report_line_tax_amount_2"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_399" model="account.tax.report.line">
+        <field name="name">399 - Total de l’impôt dû</field>
+        <field name="code">tax_ch_399</field>
+        <field name="formula">tax_ch_302b + tax_ch_303b + tax_ch_312b + tax_ch_313b + tax_ch_342b + tax_ch_343b + tax_ch_382b + tax_ch_383b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_400" model="account.tax.report.line">
-        <field name="name">400 TVA préalable sur biens et services</field>
+        <field name="name">400 - Impôt préalable grevant les coûts en matériel et en prestations de services</field>
         <field name="tag_name">400</field>
+        <field name="code">tax_ch_400</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_405" model="account.tax.report.line">
-        <field name="name">405 TVA préalable sur invest. et autres ch.</field>
+        <field name="name">405 - Impôt préalable grevant les investissements et autres charges d’exploitation</field>
+        <field name="code">tax_ch_405</field>
         <field name="tag_name">405</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_410" model="account.tax.report.line">
-        <field name="name">410 Dégrèvement ultérieur de l'impot préalable</field>
+        <field name="name">410 - Dégrèvement ultérieur de l’impôt préalable (art. 32)</field>
+        <field name="code">tax_ch_410</field>
         <field name="tag_name">410</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_415" model="account.tax.report.line">
-        <field name="name">415 Correction de l'impot préalable</field>
+        <field name="name">415 - Corrections de l’impôt préalable: double affectation (art. 30), prestations à soi-même (art. 31)</field>
+        <field name="code">tax_ch_415</field>
         <field name="tag_name">415</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_420" model="account.tax.report.line">
-        <field name="name">420 Réduction de la déduction de l'impot préalable</field>
+        <field name="name">420 - Réductions de la déduction de l’impôt préalable: prestations n’étant pas considérées comme des contre-prestations, telles subventions, taxes touristiques (art. 33, al. 2)</field>
+        <field name="code">tax_ch_420</field>
         <field name="tag_name">420</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="account_tax_report_line_chtax_479"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
-    <record id="account_tax_report_line_chtax_solde" model="account.tax.report.line">
-        <field name="name">SOLDE</field>
+    <record id="account_tax_report_line_chtax_479" model="account.tax.report.line">
+        <field name="name">479 - Total ch. 400 à 420</field>
+        <field name="code">tax_ch_479</field>
+        <field name="formula">tax_ch_400 + tax_ch_405 + tax_ch_410 - tax_ch_415 - tax_ch_420</field>
         <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="5"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_500" model="account.tax.report.line">
-        <field name="name">500 Solde de TVA a payer a l'AFC</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
+        <field name="name">500 - Montant à payer</field>
         <field name="formula">tax_ch_399 - tax_ch_479 &gt; 0 and tax_ch_399 - tax_ch_479 or 0.0</field>
-        <field name="parent_id" ref="account_tax_report_line_chtax_solde"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_510" model="account.tax.report.line">
-        <field name="name">510 Solde de TVA a recevoir de l'AFC</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
+        <field name="name">510 - Solde en faveur de l’assujetti</field>
         <field name="formula">tax_ch_479 - tax_ch_399 &gt; 0 and tax_ch_479 - tax_ch_399 or 0.0</field>
-        <field name="parent_id" ref="account_tax_report_line_chtax_solde"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot"/>
     </record>
 
     <record id="account_tax_report_line_chtax_autres_mouv" model="account.tax.report.line">
-        <field name="name">AUTRES MOUVEMENTS DE FONDS</field>
-        <field name="sequence" eval="6"/>
+        <field name="name">III. AUTRES MOUVEMENTS DE FONDS</field>
+        <field name="sequence" eval="3"/>
         <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_chtax_900" model="account.tax.report.line">
-        <field name="name">900 Subventions, taxes touristiques</field>
+        <field name="name">900 - Subventions, taxes touristiques perçues par les offices du tourisme, contributions aux établissements d'élimination des déchets et d'approvisionnement en eau</field>
         <field name="tag_name">900</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_autres_mouv"/>
@@ -347,7 +376,7 @@
     </record>
 
     <record id="account_tax_report_line_chtax_910" model="account.tax.report.line">
-        <field name="name">910 Les dons, les dividendes, les dédommagements, ...</field>
+        <field name="name">910 - Les dons, les dividendes, les dédommagements, etc.</field>
         <field name="tag_name">910</field>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_autres_mouv"/>
