@@ -43,6 +43,7 @@
         }"/>
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get(),
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
         })"/>
