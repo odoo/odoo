@@ -14,7 +14,7 @@ class Feedback(TransactionCase):
         self.user = self.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [Command.set(self.group2.ids)],
+            'groups_id': [Command.set([self.group2.id, self.env.ref('base.group_user').id])],
         })
 
 
@@ -179,6 +179,7 @@ class TestIRRuleFeedback(Feedback):
 
     def test_local(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
+        self.env.ref('base.group_no_one').write({'users': [Command.unlink(self.user.id)]})
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -421,7 +422,7 @@ Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
 User: %s
 Fields:
-- forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+- forbidden (allowed for groups 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
     % self.user.id
         )
 
@@ -454,7 +455,7 @@ Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: write
 User: %s
 Fields:
-- forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
+- forbidden (allowed for groups 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
 - forbidden2 (allowed for groups 'Test Group')"""
     % self.user.id
         )
