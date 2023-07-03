@@ -215,7 +215,7 @@ class AutomaticEntryWizard(models.TransientModel):
         }]
 
     def _get_move_dict_vals_change_period(self):
-        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id})
+        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id, 'move_type': 'entry'})
 
         def get_lock_safe_date(aml):
             # Use a reference move in the correct journal because _get_accounting_date depends on the journal sequence.
