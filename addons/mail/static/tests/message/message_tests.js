@@ -1291,10 +1291,13 @@ QUnit.test("Channel should be opened after clicking on its mention", async (asse
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "my-channel" });
-    const { openFormView } = await start();
+    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(my-channel)");
     await click(".o-mail-Composer-send");
     await click(".o_channel_redirect");

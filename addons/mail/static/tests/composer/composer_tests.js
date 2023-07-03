@@ -384,7 +384,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
@@ -395,6 +395,9 @@ QUnit.test("mention a channel after some text", async (assert) => {
         "text content of composer should have content"
     );
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -410,11 +413,14 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
         name: "General",
         channel_type: "channel",
     });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
