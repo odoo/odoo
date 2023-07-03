@@ -7661,6 +7661,50 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
+    QUnit.test("nested x2manys with context referencing parent record", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.partner.records[0].p = [2];
+
+        let onchangeNb = 0;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="p" context="{'parent_foo': parent.foo}">
+                                <tree>
+                                    <field name="display_name"/>
+                                </tree>
+                            </field>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange2") {
+                    onchangeNb++;
+                    if (onchangeNb === 1) {
+                        assert.deepEqual(args.args[3].p.context, { parent_foo: "yop" });
+                    } else {
+                        assert.strictEqual(args.kwargs.context.parent_foo, "yop");
+                    }
+                }
+            },
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.containsOnce(target, ".o_dialog");
+        await click(target.querySelector(".o_dialog .o_field_x2many_list_row_add a"));
+    });
+
     QUnit.test("resetting invisible one2manys", async function (assert) {
         serverData.models.partner.records[0].turtles = [];
         serverData.models.partner.onchanges.foo = function (obj) {
