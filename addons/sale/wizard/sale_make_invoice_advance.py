@@ -194,12 +194,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
             self.sale_order_ids.ensure_one()
             self = self.with_company(self.company_id)
             order = self.sale_order_ids
-
             # Create deposit product if necessary
             if not self.product_id:
                 self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
+                self.company_id.sale_down_payment_product_id.product_tmpl_id.active = False  # hide down payment product from user
                 self._compute_product_id()
 
             # Create down payment section if necessary
@@ -250,7 +250,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'invoice_policy': 'order',
             'company_id': self.company_id.id,
             'property_account_income_id': self.deposit_account_id.id,
-            'taxes_id': [Command.set(self.deposit_taxes_id.ids)],
+            'active': False,  # hide down payment product from user
         }
 
     def _prepare_down_payment_section_values(self, order):
