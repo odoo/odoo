@@ -53,6 +53,14 @@
                     <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree" position="inside">
+                <field name="is_downpayment" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="context">{'is_downpayment': is_downpayment}</attribute>
+                <attribute name="widget">many2one_barcode_sale_product</attribute>
+                <attribute name="attrs">{'readonly': [('is_downpayment', '=', True)]}</attribute>
+            </xpath>
         </field>
     </record>
 

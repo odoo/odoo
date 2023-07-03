@@ -897,7 +897,9 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
         for line in self:
-            if line.state == 'cancel':
+            if line.is_downpayment:
+                line.product_updatable = False
+            elif line.state == 'cancel':
                 line.product_updatable = False
             elif line.state == 'sale' and (
                 line.order_id.locked

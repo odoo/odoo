@@ -39,9 +39,10 @@ export class SaleOrderLineProductField extends Many2OneField {
         // product form should be accessible if the widget field is readonly
         // or if the line cannot be edited (e.g. locked SO)
         return (
-            this.props.readonlyField ||
-            (this.props.record.model.root.activeFields.order_line &&
-                this.props.record.model.root._isReadonly("order_line"))
+                ! this.props.record.data.is_downpayment && ( this.props.readonlyField || (
+                this.props.record.model.root.activeFields.order_line &&
+                this.props.record.model.root._isReadonly("order_line")
+            ))
         );
     }
     get hasExternalButton() {
