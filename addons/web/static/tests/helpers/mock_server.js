@@ -898,7 +898,6 @@ export class MockServer {
         return [id, name];
     }
 
-
     /**
      * Simulate a 'name_search' operation.
      *
@@ -949,6 +948,17 @@ export class MockServer {
                     onchangeValues[fName] = false;
                 });
             const defaultValues = this.mockDefaultGet(modelName, [fieldsFromView], kwargs);
+            for (const fieldName in defaultValues) {
+                const fieldType = this.models[modelName].fields[fieldName].type;
+                if (["one2many", "many2many"].includes(fieldType)) {
+                    const subSpec = specification[fieldName];
+                    for (const command of defaultValues[fieldName]) {
+                        if (command[0] === 0 || command[0] === 1) {
+                            command[2] = pick(command[2], ...Object.keys(subSpec.fields));
+                        }
+                    }
+                }
+            }
             Object.assign(onchangeValues, defaultValues);
         }
         fields.forEach((field) => {
@@ -1033,7 +1043,7 @@ export class MockServer {
                 } else if (field.type === "one2many" || field.type === "many2many") {
                     result[fieldName] = record[fieldName] || [];
                 } else {
-                    result[fieldName] = record[fieldName] || false;
+                    result[fieldName] = record[fieldName] !== undefined ? record[fieldName] : false;
                 }
             }
             records.push(result);

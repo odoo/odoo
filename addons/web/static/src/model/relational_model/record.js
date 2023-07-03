@@ -38,10 +38,8 @@ export class Record extends DataPoint {
         this._closeInvalidFieldsNotification = () => {};
 
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
-        const vals = this._parseServerValues({
-            ...this._getDefaultValues(missingFields),
-            ...data,
-        });
+        data = { ...this._getDefaultValues(missingFields), ...data };
+        const vals = this._parseServerValues(data);
         if (this.resId) {
             this._values = markRaw(vals);
             this._changes = markRaw({});
@@ -49,11 +47,19 @@ export class Record extends DataPoint {
             this._values = markRaw({});
             this._changes = markRaw(vals);
         }
+        this.data = { ...this._values, ...this._changes };
+        // In db, char, text and html fields can be not set (NULL) and set to the empty string. In
+        // the UI, there's no difference, but in the eval context, it's not the same. The next
+        // structure keeps track of the server values we received for those fields (which can thus
+        // be false or a string). This allows us to properly build the eval context, and to always
+        // expose string values (false fallbacks on the empty string) in this.data.
+        this._textValues = markRaw({});
+        this._setTextValues(data);
         this._savePoint = markRaw({
             dirty: false,
             changes: { ...this._changes },
+            textValues: { ...this._textValues },
         });
-        this.data = { ...this._values, ...this._changes };
 
         const parentRecord = this._parentRecord;
         if (parentRecord) {
@@ -146,7 +152,8 @@ export class Record extends DataPoint {
                 this.model._updateConfig(this.config, { resId: false }, { noReload: true });
                 this.dirty = false;
                 this._changes = this._parseServerValues(this._getDefaultValues());
-                this._values = {};
+                this._values = markRaw({});
+                this._textValues = markRaw({});
                 this.data = { ...this._changes };
                 this._setEvalContext();
             }
@@ -259,6 +266,7 @@ export class Record extends DataPoint {
 
     _addSavePoint() {
         this._savePoint.dirty = this.dirty;
+        Object.assign(this._savePoint.textValues, this._textValues);
         Object.assign(this._savePoint.changes, this._changes);
         for (const fieldName in this._changes) {
             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
@@ -272,6 +280,7 @@ export class Record extends DataPoint {
             this._changes[fieldName] = changes[fieldName];
             this.data[fieldName] = changes[fieldName];
         }
+        this._setTextValues(changes);
         this._setEvalContext();
         this._removeInvalidFields(Object.keys(changes));
     }
@@ -291,6 +300,7 @@ export class Record extends DataPoint {
     _applyValues(values) {
         Object.assign(this._values, this._parseServerValues(values));
         Object.assign(this.data, this._values, this._changes);
+        this._setTextValues(Object.assign({}, values, this._changes));
         this._setEvalContext();
     }
 
@@ -353,8 +363,8 @@ export class Record extends DataPoint {
         for (const fieldName in data) {
             const value = data[fieldName];
             const field = this.fields[fieldName];
-            if (["char", "text"].includes(field.type)) {
-                dataContext[fieldName] = value !== "" ? value : false;
+            if (["char", "text", "html"].includes(field.type)) {
+                dataContext[fieldName] = this._textValues[fieldName];
             } else if (["one2many", "many2many"].includes(field.type)) {
                 dataContext[fieldName] = value.resIds;
             } else if (value && field.type === "date") {
@@ -407,8 +417,9 @@ export class Record extends DataPoint {
             }
         }
         this.dirty = this._savePoint.dirty;
-        this._changes = { ...this._savePoint.changes };
+        this._changes = markRaw({ ...this._savePoint.changes });
         this.data = { ...this._values, ...this._changes };
+        this._textValues = markRaw({ ...this._savePoint.textValues });
         this._setEvalContext();
         this._invalidFields.clear();
         this._closeInvalidFieldsNotification();
@@ -523,14 +534,22 @@ export class Record extends DataPoint {
         if (this.resId) {
             this.model._updateSimilarRecords(this, values);
             this._values = this._parseServerValues(values);
-            this._changes = {};
+            this._changes = markRaw({});
+            this._setTextValues(values);
         } else {
-            this._values = {};
-            this._changes = this._parseServerValues({ ...this._getDefaultValues(), ...values });
+            this._values = markRaw({});
+            const allVals = { ...this._getDefaultValues(), ...values };
+            this._changes = this._parseServerValues(allVals);
+            this._setTextValues(allVals);
         }
         this.dirty = false;
         this.data = { ...this._values, ...this._changes };
         this._setEvalContext();
+        this._savePoint = markRaw({
+            dirty: false,
+            changes: { ...this._changes },
+            textValues: { ...this._textValues },
+        });
         this._invalidFields.clear();
     }
 
@@ -814,6 +833,17 @@ export class Record extends DataPoint {
             });
         }
         this._invalidFields.add(fieldName);
+    }
+
+    _setTextValues(values) {
+        for (const fieldName in values) {
+            if (!this.activeFields[fieldName]) {
+                continue;
+            }
+            if (["char", "text", "html"].includes(this.fields[fieldName].type)) {
+                this._textValues[fieldName] = values[fieldName];
+            }
+        }
     }
 
     _switchMode(mode) {

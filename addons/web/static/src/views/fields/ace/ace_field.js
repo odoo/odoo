@@ -4,7 +4,6 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
-import { formatText } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
@@ -36,7 +35,7 @@ export class AceField extends Component {
         effect(
             async ({ record, mode, name, readonly }) => {
                 if (this.lastSetValue !== record.data[name]) {
-                    this.state.value = formatText(record.data[name]);
+                    this.state.value = record.data[name];
                 }
                 this.state.mode = mode === "xml" ? "qweb" : mode;
                 this.state.readonly = readonly;

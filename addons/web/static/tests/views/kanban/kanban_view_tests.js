@@ -5282,18 +5282,18 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("Ensuring each progress bar has some space", async (assert) => {
         serverData.models.partner.records = [
-            ({
+            {
                 id: 1,
                 foo: "blip",
                 state: "def",
-            }),
-            ({
+            },
+            {
                 id: 2,
                 foo: "blip",
                 state: "abc",
-            }),
+            },
         ];
-        
+
         for (let i = 0; i < 20; i++) {
             serverData.models.partner.records.push({
                 id: 3 + i,
@@ -5301,7 +5301,7 @@ QUnit.module("Views", (hooks) => {
                 state: "ghi",
             });
         }
-        
+
         await makeView({
             type: "kanban",
             resModel: "partner",
