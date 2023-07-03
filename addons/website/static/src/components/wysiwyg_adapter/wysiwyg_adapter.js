@@ -185,6 +185,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     async startEdition() {
         this.props.removeWelcomeMessage();
 
+        // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
+        this.__onPageClick = this._onPageClick.bind(this);
+        this.$editable[0].addEventListener("click", this.__onPageClick, { capture: true });
+
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
@@ -430,6 +434,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options')[Symbol.for('default')];
         formOptionsMod.clearAllFormsInfo();
 
+        this.$editable[0].removeEventListener("click", this.__onPageClick, { capture: true });
         return super.destroy(...arguments);
     }
 
@@ -1094,6 +1099,16 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             type: $editable.data('oe-type'),
         };
     }
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.$editable[0].querySelectorAll(".dropdown-toggle.show")) {
+            Dropdown.getOrCreateInstance(toggleEl).hide();
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1294,5 +1309,18 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _widgetsStopRequest() {
         this._websiteRootEvent('widgets_stop_request');
+    }
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest(".dropdown-menu.show, .dropdown-toggle.show")) {
+            return;
+        }
+        this._hideDropdowns();
     }
 }
