@@ -180,105 +180,107 @@
                                 </t>
                             </tbody>
                         </table>
-                    </div>
-                    <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
-                        <div id="total" class="clearfix row mb-2">
-                            <div class="ms-auto">
-                                <table class="table table-sm table-borderless avoid-page-break-inside">
+                        <div>
+                            <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
+                                <div id="total" class="clearfix row mb-2">
+                                    <div class="ms-auto">
+                                        <table class="table table-sm table-borderless avoid-page-break-inside">
 
-                                    <!--Tax totals-->
-                                    <t t-set="tax_totals" t-value="o.tax_totals"/>
-                                    <t t-call="account.document_tax_totals"/>
+                                            <!--Tax totals-->
+                                            <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                            <t t-call="account.document_tax_totals"/>
 
-                                    <!--Payments-->
-                                    <t t-if="print_with_payments">
-                                        <t t-if="o.payment_state != 'invoicing_legacy'">
-                                            <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
-                                            <t t-foreach="payments_vals" t-as="payment_vals">
-                                                <tr t-if="payment_vals['is_exchange'] == 0">
-                                                    <td>
-                                                        <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <span t-out="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                    </td>
-                                                </tr>
+                                            <!--Payments-->
+                                            <t t-if="print_with_payments">
+                                                <t t-if="o.payment_state != 'invoicing_legacy'">
+                                                    <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
+                                                    <t t-foreach="payments_vals" t-as="payment_vals">
+                                                        <tr t-if="payment_vals['is_exchange'] == 0">
+                                                            <td>
+                                                                <i class="oe_form_field text-end oe_payment_label">Paid on <t t-out="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                                                            </td>
+                                                            <td class="text-end">
+                                                                <span t-out="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-if="len(payments_vals) > 0">
+                                                        <tr class="border-black">
+                                                            <td><strong>Amount Due</strong></td>
+                                                            <td class="text-end">
+                                                                <span t-field="o.amount_residual"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
                                             </t>
-                                            <t t-if="len(payments_vals) > 0">
-                                                <tr class="border-black">
-                                                    <td><strong>Amount Due</strong></td>
-                                                    <td class="text-end">
-                                                        <span t-field="o.amount_residual"/>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
-                                Total amount in words: <br/>
-                                <small class="text-muted lh-sm"><span t-field="o.amount_total_words"/></small>
-                            </p>
-                        </div>
-                        <t t-call="account.document_tax_totals_company_currency_template"/>
-                    </div>
-                    <div id="payment_term">
-                        <div class="justify-text">
-                            <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
-                                <span t-field="o.fiscal_position_id.note"/>
-                            </p>
-                        </div>
-                        <t t-set="payment_term_details" t-value="o.payment_term_details"/>
-                        <div class="mb-3">
-                            <div id="payment_terms_note_id" t-field="o.invoice_payment_term_id.note" name="payment_term"/>
-                            <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
-                                <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
-                                    <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
-                                        <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
-                                            <td>
-                                                <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                                      t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)"/> due if paid before
-                                                <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)"/>
-                                            </td>
-                                        </t>
-                                        <t t-elif="len(payment_term_details) > 1" t-foreach="payment_term_details" t-as="term">
-                                            <div>
-                                                <span t-out="term_index + 1"/> - Installment of
-                                                <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end"/>
-                                                <span> due on </span>
-                                                <t t-out="term.get('date')" class="text-start"/>
-                                            </div>
-                                        </t>
+                                        </table>
                                     </div>
                                 </div>
-                            </t>
-                        </div>
-                        <div class="mb-3" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
-                            <p name="payment_communication">
-                                Payment Communication: <span class="fw-bold" t-field="o.payment_reference"/>
-                            </p>
-                        </div>
-                        <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="o.display_qr_code and o.amount_residual > 0">
-                            <div class="qrcode me-3" id="qrcode_image">
-                                <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
-                                <p t-if="qr_code_url" class="position-relative mb-0">
-                                    <img t-att-src="qr_code_url"/>
-                                    <img src="/account/static/src/img/Odoo_logo_O.svg"
-                                         id="qrcode_odoo_logo"
-                                         class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
-                                    />
-                                </p>
+                                <div class="mb-2">
+                                    <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
+                                        Total amount in words: <br/>
+                                        <small class="text-muted lh-sm"><span t-field="o.amount_total_words"/></small>
+                                    </p>
+                                </div>
+                                <t t-call="account.document_tax_totals_company_currency_template"/>
                             </div>
-                            <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
-                                <p>Scan this QR Code to<br/>pay with your mobile</p>
+                            <div id="payment_term" class="clearfix">
+                                <div class="justify-text">
+                                    <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
+                                        <span t-field="o.fiscal_position_id.note"/>
+                                    </p>
+                                </div>
+                                <t t-set="payment_term_details" t-value="o.payment_term_details"/>
+                                <div class="mb-3">
+                                    <div id="payment_terms_note_id" t-field="o.invoice_payment_term_id.note" name="payment_term"/>
+                                    <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
+                                        <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
+                                            <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
+                                                <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
+                                                    <td>
+                                                        <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                              t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)"/> due if paid before
+                                                        <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)"/>
+                                                    </td>
+                                                </t>
+                                                <t t-elif="len(payment_term_details) > 1" t-foreach="payment_term_details" t-as="term">
+                                                    <div>
+                                                        <span t-out="term_index + 1"/> - Installment of
+                                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end"/>
+                                                        <span> due on </span>
+                                                        <t t-out="term.get('date')" class="text-start"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="mb-3" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
+                                    <p name="payment_communication">
+                                        Payment Communication: <span class="fw-bold" t-field="o.payment_reference"/>
+                                    </p>
+                                </div>
+                                <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="o.display_qr_code and o.amount_residual > 0">
+                                    <div class="qrcode me-3" id="qrcode_image">
+                                        <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
+                                        <p t-if="qr_code_url" class="position-relative mb-0">
+                                            <img t-att-src="qr_code_url"/>
+                                            <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                 id="qrcode_odoo_logo"
+                                                 class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                            />
+                                        </p>
+                                    </div>
+                                    <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
+                                        <p>Scan this QR Code to<br/>pay with your mobile</p>
+                                    </div>
+                                </div>
+                                <!--terms and conditions-->
+                                <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
+                                    <span t-field="o.narration"/>
+                                </div>
                             </div>
-                        </div>
-                        <!--terms and conditions-->
-                        <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
-                            <span t-field="o.narration"/>
                         </div>
                     </div>
                 </div>
