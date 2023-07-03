@@ -63,7 +63,6 @@ let PaymentPaytm = PaymentInterface.extend({
         return true;
     },
 
-
     pollPayment: async function (transaction, timestamp) {
         const fetchPaymentStatus = async (resolve, reject) => {
             const line = this.pos.get_order().selected_paymentline;
@@ -98,7 +97,6 @@ let PaymentPaytm = PaymentInterface.extend({
                 line.set_payment_status('force_done');
                 this._showError('Unable to establish connection with PayTM API');
                 throw false;
-                
             };
         };
         return new Promise(fetchPaymentStatus);
@@ -119,7 +117,7 @@ let PaymentPaytm = PaymentInterface.extend({
             return data;
         } catch {
             this._showError('Unable to establish connection with PayTM API');
-            return false;
+            throw false;
         };
     },
 

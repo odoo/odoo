@@ -6,13 +6,13 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='use_payment_terminal']" position="after">
-                <field name="paytm_mid" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
                 <field name="paytm_tid" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
-                <field name="merchant_key" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
                 <field name="channel_id" groups="base.group_no_one" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
                 <field name="accept_payment" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
                 <field name="allowed_payment_modes" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
-                <field name="paytm_test_mode" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}"/>
+                <div colspan="2" class="mt16" attrs="{'invisible': [('use_payment_terminal', '!=', 'paytm')], 'required': [('use_payment_terminal', '=', 'paytm')]}">
+                    <button name="action_paytm_key" type="object" icon="fa-arrow-right" string="Don't forget to setup PayTM merchant credentials before using this payment method." class="btn-link"/>
+                </div>
             </xpath>
         </field>
     </record>

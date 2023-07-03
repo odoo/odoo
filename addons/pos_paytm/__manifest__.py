@@ -10,7 +10,7 @@
     'data': [
         'views/pos_payment_method_views.xml',
     ],
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'payment_paytm'],
     'installable': True,
     'assets': {
         'point_of_sale.assets': [

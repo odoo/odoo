@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+	<record id="payment_provider_paytm" model="payment.provider">
+        <field name="name">PayTM</field>
+        <field name="module_id" ref="base.module_payment_paytm"/>
+        <field name="payment_icon_ids" eval="[(6, 0, [ref('payment.payment_icon_cc_rupay')])]"/>
+        <field name="code">paytm</field>
+        <field name="available_country_ids" eval="[(4,(ref('base.in')))]"/>
+    </record>
+</odoo>

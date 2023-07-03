@@ -5,21 +5,23 @@ import string
 import base64
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-def generateSignature(params, key):
-    params_string = []
-    for k in sorted(params.keys()):
-        value = params[k] if params[k] is not None and params[k].lower() != "null" else ""
-        params_string.append(str(value))
-    params = '|'.join(params_string)
+def generate_signature(params_dict, key):
+    params_list = []
+    for k in sorted(params_dict.keys()):
+        value = params_dict[k]
+        if value is None or params_dict[k].lower() == "null":
+            value = ""
+        params_list.append(str(value))
     salt = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(4))
-    finalString = '%s|%s' % (params, salt)
-    hasher = hashlib.sha256(finalString.encode())
-    hashString = hasher.hexdigest() + salt
-    hashString = bytes(hashString + (16 - len(hashString) % 16) * chr(16 - len(hashString) % 16), 'utf-8')
+    params_list.append(salt)
+    params_with_salt = '|'.join(params_list)
+    hashed_params = hashlib.sha256(params_with_salt.encode())
+    hashed_params_with_salt = hashed_params.hexdigest() + salt
+    padding = 16 - len(hashed_params_with_salt) % 16
+    padded_hashed_params_with_salt = bytes(hashed_params_with_salt + padding * chr(padding), 'utf-8')
     key = key.encode("utf8")
     iv = '@@@@&&&&####$$$$'.encode("utf8")
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     encryptor = cipher.encryptor()
-    hashString = encryptor.update(hashString) + encryptor.finalize()
-    hashString = base64.b64encode(hashString)
-    return hashString.decode("UTF-8")
+    encrypted_hashed_params = encryptor.update(padded_hashed_params_with_salt) + encryptor.finalize()
+    return base64.b64encode(encrypted_hashed_params).decode("UTF-8")
