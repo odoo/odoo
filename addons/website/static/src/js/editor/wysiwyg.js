@@ -69,6 +69,8 @@ Wysiwyg.include({
      * @override
      */
     start: async function () {
+        // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
+        this.el.addEventListener("click", this._onPageClick.bind(this), { capture: true });
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
         // Dropdown menu initialization: handle dropdown openings by hand
@@ -195,6 +197,7 @@ Wysiwyg.include({
      */
     destroy: function () {
         this._restoreMegaMenus();
+        this.el.removeEventListener("click", this._onPageClick.bind(this), { capture: true });
         this._super.apply(this, arguments);
     },
 
@@ -334,6 +337,36 @@ Wysiwyg.include({
         megaMenuEl.classList.add('o_no_parent_editor');
         this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
+    },
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll(
+            ".o_mega_menu_toggle, #top_menu_container .dropdown-toggle"
+        )) {
+            $(toggleEl).dropdown("hide");
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest(".dropdown.show")) {
+            return;
+        }
+        this._hideDropdowns();
     },
 });
 
