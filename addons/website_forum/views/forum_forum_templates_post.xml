@@ -16,7 +16,7 @@
                 aria-label="You're following this post"
                 data-bs-toggle="tooltip"
                 class="fa fa-bell"/>
-            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
+            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
                 t-attf-title="Read: #{question.name}"
                 t-attf-class="stretched-link text-body #{_link_classes}">
                 <span t-out="question.name"/>
@@ -40,7 +40,7 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge position-relative z-index-1 #{tag and tag.name == question_tag.name and 'text-bg-secondary' or 'text-bg-light'} fw-normal"
+                t-attf-class="badge position-relative z-index-1 #{ 'text-bg-secondary' if tag and tag.name == question_tag.name else 'text-bg-light' } fw-normal"
                 t-field="question_tag.name"/>
         </t>
     </div>
@@ -109,10 +109,10 @@
             <div t-field="question.write_date" t-options='{"format": "MMM yy "}' class="d-lg-none small text-muted text-nowrap"/>
         </td>
         <td class="o_wforum_view_count d-none d-lg-table-cell text-center">
-            <span t-out="question.views" t-attf-class="#{question.views == 0 and 'opacity-50'}" />
+            <span t-out="question.views" t-attf-class="#{ 'opacity-50' if question.views == 0 else '' }" />
         </td>
         <td class="o_wforum_last_activity d-none d-lg-table-cell order-4 text-center" t-att-data-last-activity="question.last_activity_date">
-            <span class="o_wforum_relative_datetime"/>
+            <span class="o_wforum_relative_datetime position-relative z-index-1" t-att-title="question.last_activity_date"/>
         </td>
     </tr>
 </template>
@@ -146,7 +146,7 @@
             - it really helps to select the best questions and answers!
         </p>
         <div>
-            <button type="submit" t-attf-class="o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call '}btn btn-primary my-3 #{not question.can_answer and 'karma_required'}"
+            <button type="submit" t-attf-class="o_wforum_submit_post #{ 'oe_social_share_call ' if forum.allow_share else '' }btn btn-primary my-3 #{ 'karma_required' if not question.can_answer else ''}"
                     t-att-data-karma="question.forum_id.karma_answer"
                     data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
             <a href="#"
@@ -173,8 +173,8 @@
             <span t-if="question.views" class="small">
                 <t t-out="question.views or 0"/>
                 <span class="text-muted">
-                    <t t-if="question.views == 1">Views</t>
-                    <t t-else="">View</t>
+                    <t t-if="question.views == 1">View</t>
+                    <t t-else="">Views</t>
                 </span>
             </span>
         </div>
@@ -182,7 +182,7 @@
     <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-3">
         <a t-foreach="question.tag_ids" t-as="question_tag"
             t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-            t-attf-class="badge text-bg-light #{not question_tag_first and 'ms-1'} fw-normal"
+            t-attf-class="badge text-bg-light #{'ms-1' if not question_tag_first else ''} fw-normal"
             t-field="question_tag.name"/>
     </div>
 </template>
@@ -212,13 +212,13 @@
                 <h5 >You have a pending post</h5>
                 <span>Please wait for a moderator to validate your previous post to be allowed to reply to questions.</span>
             </div>
-            <div t-attf-class="alert alert-danger #{question.state != 'flagged' and 'd-none '}text-center" >
+            <div t-attf-class="alert alert-danger #{'d-none ' if question.state != 'flagged' else ''}text-center" >
                 <h5>This question has been flagged</h5>
                 <span t-if="question.can_moderate">As a moderator, you can either validate or reject this answer.</span>
                 <t t-call="website_forum.link_button">
                     <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(question) + '/flag'"/>
                     <t t-set="form_method" t-value="'GET'"/>
-                    <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
+                    <t t-set="karma" t-value="question.forum_id.karma_flag if not question.can_flag else 0"/>
                     <t t-set="classes" t-valuef="o_wforum_flag"/>
                     <t t-set="flag_validator" t-value="question.can_moderate"/>
                     <t t-set="object" t-value="question"/>
@@ -237,12 +237,12 @@
                         <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
                         <t t-set="label">Reopen</t>
                         <t t-set="icon" t-value="'fa-folder-open'"/>
-                        <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                        <t t-set="karma" t-value="question.karma_close if not question.can_close else 0"/>
                         <t t-set="classes" t-value="'btn-info'"/>
                     </t>
                 </div>
             </div>
-            <div t-attf-class="d-flex align-items-center #{not is_profile and 'mb-3'}" t-call="website_forum.post_stats"/>
+            <div t-attf-class="d-flex align-items-center #{'mb-3' if not is_profile else ''}" t-call="website_forum.post_stats"/>
             <div class="d-grid">
                 <!-- Question Post -->
                 <t t-call="website_forum.post_display">
@@ -262,7 +262,7 @@
                 </section>
                 <!-- Write Answer -->
                 <div t-if="uid and not question.uid_has_answered and question.can_answer and question.state == 'active' and question.active != False" class="d-flex mt-3">
-                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{forum.has_pending_post and ' disabled'} text-decoration-none"
+                    <a t-attf-class="btn btn-link collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ ' disabled' if forum.has_pending_post else ''} text-decoration-none"
                         t-att-data-karma="question.forum_id.karma_answer"
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
@@ -309,7 +309,7 @@
                     <t t-set="object" t-value="post_id"/>
                     <t t-set="show_image" t-value="True"/>
                 </t>
-                <div t-attf-class="align-self-center flex-grow-1 mt-2 border-start opacity-50 #{post_id.is_correct and 'border-success'}"/>
+                <div t-attf-class="align-self-center flex-grow-1 mt-2 border-start opacity-50 #{ 'border-success' if post_id.is_correct else '' }"/>
             </div>
             <div class="post_content_wrapper col">
                 <header class="o_wforum_post_header d-flex align-items-center mb-1">
@@ -324,7 +324,7 @@
                         <span t-if="_question_creator == _answer_creator" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
                             Author
                         </span>
-                        <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{answer.is_correct and 'd-inline' or 'd-none'} ms-auto border border-success rounded-pill px-2 py-1 text-success">
+                        <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{ 'd-inline' if answer.is_correct else 'd-none' } ms-auto border border-success rounded-pill px-2 py-1 text-success">
                             Best Answer
                         </span>
                     </t>
@@ -336,7 +336,7 @@
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(post_id) }/flag"/>
                             <t t-set="form_method" t-value="'GET'"/>
-                            <t t-set="karma" t-value="not post_id.can_flag and post_id.forum_id.karma_flag or 0"/>
+                            <t t-set="karma" t-value="post_id.forum_id.karma_flag if not post_id.can_flag else 0"/>
                             <t t-set="classes" t-valuef="o_wforum_flag"/>
                             <t t-set="flag_validator" t-value="post_id.can_moderate"/>
                             <t t-set="object" t-value="post_id"/>
@@ -364,18 +364,18 @@
                             <t t-set="helper_no_karma">You don't have enough karma</t>
                             <t t-set="helper_decline">Unmark as Best Answer</t>
                             <a t-if="question.can_answer and question.forum_id.mode == 'questions'"
-                                t-attf-class="o_wforum_validate_toggler btn #{not answer.is_correct and answer.create_uid.id != uid and post_id.can_accept and 'opacity-50 opacity-100-hover'} #{not post_id.can_accept and 'karma_required opacity-25 '}#{answer.create_uid.id == uid and 'opacity-25'}"
+                                t-attf-class="o_wforum_validate_toggler btn #{ 'opacity-50 opacity-100-hover' if not answer.is_correct and answer.create_uid.id != uid and post_id.can_accept else ''} #{ 'karma_required opacity-25 ' if not post_id.can_accept else ''}#{ 'opacity-25' if answer.create_uid.id == uid else ''}"
                                 href="#"
                                 t-attf-data-karma="#{post_id.karma_accept}"
                                 t-att-data-helper-accept="helper_accept"
                                 t-att-data-helper-own-post="helper_own_post"
                                 t-att-data-helper-no-karma="helper_no_karma"
                                 t-att-data-helper-decline="helper_decline"
-                                t-att-title="not post_id.can_accept and helper_no_karma or answer.is_correct and helper_decline or not answer.is_correct and helper_accept or answer.is_correct and answer.create_uid.id == uid and helper_own_post"
+                                t-att-title="helper_no_karma if not post_id.can_accept else (helper_decline if answer.is_correct else (helper_accept if not answer.is_correct else (helper_own_post if answer.is_correct and answer.create_uid.id == uid else '')))"
                                 data-bs-toggle="tooltip"
                                 t-attf-data-target="#answer-#{post_id.id}"
                                 t-attf-data-href="/forum/#{ slug(question.forum_id) }/post/#{ slug(answer) }/toggle_correct">
-                                <i t-attf-class="fa #{answer.is_correct and 'fa-check-circle text-success' or 'fa-check-circle-o'} fs-5"/>
+                                <i t-attf-class="fa #{ 'fa-check-circle text-success' if answer.is_correct else 'fa-check-circle-o' } fs-5"/>
                             </a>
                         </t>
                     </t>
@@ -383,7 +383,7 @@
                         <t t-if="post_id == question">
                             <t t-set="user_answer" t-value="uid and post_id.child_ids.filtered(lambda a: a.create_uid.id == uid)"/>
                             <div t-if="not user_answer and uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto me-2">
-                                <a t-attf-class="btn btn-link collapsed #{ not question.can_answer and 'karma_required text-muted' }#{ forum.has_pending_post and 'disabled' } text-decoration-none"
+                                <a t-attf-class="btn btn-link collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
                                     t-att-data-karma="question.forum_id.karma_answer"
                                     data-bs-toggle="collapse" data-bs-target=".answer_collapse"
                                     href="#"
@@ -411,15 +411,15 @@
                             </a>
                         </div>
                         <t t-if="post_id.state == 'active' and post_id.active != False">
-                            <a t-attf-class="btn #{not uid and 'd-none '}#{not post_id.can_comment and 'karma_required opacity-25' or 'opacity-50 opacity-100-hover'}"
-                               t-att-data-karma="{not post_id.can_comment and post_id.karma_comment or 0}"
-                               t-att-data-bs-toggle="post_id.can_comment and 'collapse' or None"
-                               t-attf-href="##{post_id == answer and _answer_comment_collapse_uid or _question_comment_collapse_uid}"
+                            <a t-attf-class="btn #{ 'd-none ' if not uid else '' }#{'karma_required opacity-25' if not post_id.can_comment else 'opacity-50 opacity-100-hover'}"
+                               t-att-data-karma="{post_id.karma_comment if not post_id.can_comment else 0}"
+                               t-att-data-bs-toggle="'collapse' if post_id.can_comment else None"
+                               t-attf-href="##{ _answer_comment_collapse_uid if post_id == answer else _question_comment_collapse_uid}"
                             >
-                                <i t-attf-class="fa fa-comment #{not post_id.can_comment and 'karma_required'}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
+                                <i t-attf-class="fa fa-comment #{ 'karma_required' if not post_id.can_comment else ''}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
                             <a href="javascript:void(0)" class="oe_social_share btn opacity-50 opacity-100-hover"
-                               t-attf-data-urlshare="#{request.httprequest.url}#{post_id == answer and '#' + ''}"
+                               t-attf-data-urlshare="#{request.httprequest.url}#{'#' + '' if post_id == answer else ''}"
                                t-attf-data-hashtags="##{post_type}"
                             >
                                 <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
@@ -452,7 +452,7 @@
                 <t t-set="label">Reopen</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-undo fa-fw'"/>
-                <t t-set="karma" t-value="not post_id.can_close and post_id.karma_close or 0"/>
+                <t t-set="karma" t-value="post_id.karma_close if not post_id.can_close else 0"/>
             </t>
         </t>
         <t t-call="website_forum.link_button">
@@ -460,7 +460,7 @@
             <t t-set="label">Edit</t>
             <t t-set="inDropdown" t-value="True"/>
             <t t-set="icon" t-value="'fa-pencil fa-fw'"/>
-            <t t-set="karma" t-value="not post_id.can_edit and post_id.karma_edit or 0"/>
+            <t t-set="karma" t-value="post_id.karma_edit if not post_id.can_edit else 0"/>
         </t>
         <t t-if="post_id == question">
             <t t-if="post_id.state != 'close'" t-call="website_forum.link_button">
@@ -468,21 +468,21 @@
                 <t t-set="label">Close</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-times fa-fw'"/>
-                <t t-set="karma" t-value="not post_id.can_close and post_id.karma_close or 0"/>
+                <t t-set="karma" t-value="post_id.karma_close if not post_id.can_close else 0"/>
             </t>
             <t t-if="not post_id.active and post_id.state != 'offensive'" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/undelete'"/>
                 <t t-set="label">Undelete</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-upload fa-fw'"/>
-                <t t-set="karma" t-value="not post_id.can_unlink and post_id.karma_unlink or 0"/>
+                <t t-set="karma" t-value="post_id.karma_unlink if not post_id.can_unlink else 0"/>
             </t>
             <t t-if="not post_id.active and post_id.state == 'offensive'" t-call="website_forum.link_button">
                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/validate'"/>
                 <t t-set="label">Validate</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-check fa-fw'"/>
-                <t t-set="karma" t-value="not post_id.can_moderate and post_id.forum_id.karma_moderate or 0"/>
+                <t t-set="karma" t-value="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
             </t>
         </t>
         <t t-if="post_id.active" t-call="website_forum.link_button">
@@ -490,14 +490,14 @@
             <t t-set="label">Delete</t>
             <t t-set="inDropdown" t-value="True"/>
             <t t-set="icon" t-value="'fa-trash-o fa-fw'"/>
-            <t t-set="karma" t-value="not post_id.can_unlink and post_id.karma_unlink or 0"/>
+            <t t-set="karma" t-value="post_id.karma_unlink if not post_id.can_unlink else 0"/>
         </t>
         <t t-if="post_id.active and post_id.state != 'flagged'" t-call="website_forum.link_button">
             <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/flag'"/>
             <t t-set="label">Flag</t>
             <t t-set="inDropdown" t-value="True"/>
-            <t t-set="icon" t-value="not post_id.can_flag and 'fa-flag-o' or 'fa-flag'"/>
-            <t t-set="karma" t-value="not post_id.can_flag and post_id.forum_id.karma_flag or 0"/>
+            <t t-set="icon" t-value="'fa-flag-o' if not post_id.can_flag else 'fa-flag'"/>
+            <t t-set="karma" t-value="post_id.forum_id.karma_flag if not post_id.can_flag else 0"/>
             <t t-set="classes" t-valuef="o_wforum_flag "/>
             <t t-set="object" t-value="post_id"/>
         </t>
@@ -557,7 +557,7 @@
                             <t t-set="inDropdown" t-value="True"/>
                             <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
                             <t t-set="classes" t-value="'comment_delete'"/>
-                            <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
+                            <t t-set="karma" t-value="object.karma_unlink if not object.can_unlink else 0"/>
                         </t>
                         <t t-if="message.create_uid.id not in question.child_ids.create_uid.ids">
                             <t t-call="website_forum.link_button">
@@ -565,7 +565,7 @@
                                 <t t-set="label">Convert to answer</t>
                                 <t t-set="inDropdown" t-value="True"/>
                                 <t t-set="icon" t-value="'fa-magic text-muted'"/>
-                                <t t-set="karma" t-value="not object.can_comment_convert and object.karma_comment_convert or 0"/>
+                                <t t-set="karma" t-value="object.karma_comment_convert if not object.can_comment_convert else 0"/>
                             </t>
                         </t>
                     </div>
