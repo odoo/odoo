@@ -14,32 +14,25 @@
     // Day
 
     .o_date_item_cell {
-        --DateTimePicker__Cell-border-radius-start: 0;
-        --DateTimePicker__Cell-border-radius-end: 0;
         position: relative;
-        border-radius: var(--DateTimePicker__Cell-border-radius-start)
-            var(--DateTimePicker__Cell-border-radius-end)
-            var(--DateTimePicker__Cell-border-radius-end)
-            var(--DateTimePicker__Cell-border-radius-start);
+        border-radius: 0;
     }
 
+    .o_current,
     .o_selected {
-        &,.o_current {
-            color: $o-component-active-color;
-        }
-        
-        &:not(.o_select_start, .o_select_end) {
-            background: $o-component-active-bg;
-        }
+        color: $o-component-active-color;
     }
 
-    .o_current:not(.o_select_start,.o_select_end),
+    .o_selected:not(.o_select_start):not(.o_select_end) {
+        background: $o-component-active-bg;
+    }
+
+    .o_current,
     .o_highlight_start:not(.o_selected),
     .o_highlight_end:not(.o_selected),
     .o_select_start,
     .o_select_end {
-
-        &::before {
+        &:before {
             content: "";
             position: absolute;
             box-shadow: inset 0 0 0 1px $o-component-active-border;
@@ -49,7 +42,6 @@
             z-index: 1;
         }
     }
-
 
     .o_select_start,
     .o_select_end {
@@ -83,7 +75,7 @@
             content: "";
             position: absolute;
             left: 50%;
-            bottom: $spacer * -.25;
+            bottom: $spacer * -0.25;
             transform: translateX(-50%);
             width: 0.95em;
             height: 0.2em;
@@ -97,7 +89,7 @@
     }
 
     .o_time_picker_select {
-        background-image: none;
+        background: none;
 
         &:focus,
         &:hover {
@@ -119,14 +111,14 @@
 
     // Utilities
 
-    .o_date_item_picker {
-        .o_datetime_button {
-            &.o_selected, &:hover, &.o_today:not(.o_selected):hover {
-                &:not(.o_select_start, .o_select_end) {
-                    background-color: $o-component-active-bg;
-                    color: $o-component-active-color;
-                }
-            }  
+    .o_date_item_picker .o_datetime_button {
+        &.o_selected,
+        &:hover,
+        &.o_today:not(.o_selected):hover {
+            &:not(.o_select_start):not(.o_select_end) {
+                background: $o-component-active-bg;
+                color: $o-component-active-color;
+            }
         }
     }
 
@@ -136,9 +128,10 @@
     }
 
     // Compute  spacing  between the two month by compensating buttons size and tables gap
-    
+
     .o_zoom_out {
-        gap: o-to-rem($btn-border-width) * 4 + o-to-rem($o-font-size-base) * 2 + o-to-rem($btn-padding-x * 4);
+        gap: o-to-rem($btn-border-width) * 4 + o-to-rem($o-font-size-base) * 2 +
+            o-to-rem($btn-padding-x * 4);
     }
 
     .o_cell_md {
