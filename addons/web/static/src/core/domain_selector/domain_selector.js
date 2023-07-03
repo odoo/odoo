@@ -11,7 +11,7 @@ import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
+import { getOperatorInfo, toOperator } from "@web/core/domain_selector/domain_selector_operators";
 import {
     Editor,
     PathEditor,
@@ -207,8 +207,10 @@ export class DomainSelector extends Component {
         this.notifyChanges();
     }
 
-    updateLeafOperator(node, operator) {
+    updateLeafOperator(node, operatorKey) {
+        const [operator, negate] = toOperator(operatorKey);
         const previousOperatorInfo = getOperatorInfo(node.operator);
+        node.negate = negate;
         node.operator = operator;
         const operatorInfo = getOperatorInfo(operator);
         if (previousOperatorInfo.valueCount !== operatorInfo.valueCount) {
