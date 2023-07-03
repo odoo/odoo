@@ -776,7 +776,7 @@ class MrpProduction(models.Model):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
                 raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(order.move_byproduct_ids.mapped('cost_share')) > 100:
+            if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
     def write(self, vals):
