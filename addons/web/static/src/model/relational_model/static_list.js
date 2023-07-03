@@ -168,9 +168,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async delete(record) {
-        await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
-        this._onUpdate();
+    delete(record) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            await this._onUpdate();
+        });
     }
 
     async enterEditMode(record) {
@@ -279,9 +281,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async forget(record) {
-        await this._applyCommands([[x2ManyCommands.FORGET, record.resId]]);
-        this._onUpdate();
+    forget(record) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.FORGET, record.resId]]);
+            await this._onUpdate();
+        });
     }
 
     leaveEditMode({ discard, canAbandon, validate } = {}) {
@@ -312,9 +316,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async linkTo(resId, serverData) {
-        await this._applyCommands([[x2ManyCommands.LINK_TO, resId, serverData]]);
-        this._onUpdate();
+    linkTo(resId, serverData) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.LINK_TO, resId, serverData]]);
+            await this._onUpdate();
+        });
     }
 
     load({ limit, offset, orderBy } = {}) {
@@ -338,27 +344,29 @@ export class StaticList extends DataPoint {
     }
 
     async replaceWith(ids, { reload = false, silent = false } = {}) {
-        const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
-        if (resIds.length) {
-            const records = await this.model._loadRecords({
-                ...this.config,
-                resIds,
-                context: this.context,
-            });
-            for (const record of records) {
-                this._createRecordDatapoint(record);
+        return this.model.mutex.exec(async () => {
+            const resIds = reload ? ids : ids.filter((id) => !this._cache[id]);
+            if (resIds.length) {
+                const records = await this.model._loadRecords({
+                    ...this.config,
+                    resIds,
+                    context: this.context,
+                });
+                for (const record of records) {
+                    this._createRecordDatapoint(record);
+                }
             }
-        }
-        this.records = ids.map((id) => this._cache[id]);
-        const updateCommandsToKeep = this._commands.filter(
-            (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
-        );
-        this._commands = [x2ManyCommands.replaceWith(ids)].concat(updateCommandsToKeep);
-        this._currentIds = [...ids];
-        this.count = this._currentIds.length;
-        if (!silent) {
-            this._onUpdate();
-        }
+            this.records = ids.map((id) => this._cache[id]);
+            const updateCommandsToKeep = this._commands.filter(
+                (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
+            );
+            this._commands = [x2ManyCommands.replaceWith(ids)].concat(updateCommandsToKeep);
+            this._currentIds = [...ids];
+            this.count = this._currentIds.length;
+            if (!silent) {
+                await this._onUpdate();
+            }
+        });
     }
 
     async resequence(movedId, targetId) {

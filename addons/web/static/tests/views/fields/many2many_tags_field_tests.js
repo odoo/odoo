@@ -1758,6 +1758,55 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, "[name='timmy'].o_field_invalid");
     });
 
+    QUnit.test("set a required many2many_tags and save directly", async function (assert) {
+        let def;
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags" required="1"/></form>',
+            async mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_read") {
+                    await def;
+                }
+            }
+        });
+        patchWithCleanup(form.env.services.notification, {
+            add: () => assert.step("notification"),
+        });
+
+        assert.verifySteps([
+            "get_views",
+            "onchange2",
+        ]);
+
+        assert.containsNone(target, ".o_tag");
+
+        def = makeDeferred();
+        await clickDropdown(target, "timmy");
+        await clickOpenedDropdownItem(target, "timmy", "gold");
+        assert.containsNone(target, ".o_tag");
+
+        assert.verifySteps([
+            "name_search",
+            "web_read",
+        ]);
+
+        await clickSave(target);
+        assert.doesNotHaveClass(target, "[name='timmy']", "o_field_invalid");
+
+        assert.verifySteps([]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.verifySteps([
+            "create",
+            "web_read",
+        ]);
+    });
+
     QUnit.test("Many2ManyTagsField with option 'no_quick_create' set to true", async (assert) => {
         serverData.views = {
             "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
