@@ -729,7 +729,7 @@ class ProjectTask(models.Model):
         if not self.display_sale_order_button:
             return {}
         return {
-            "name": "Portal Sale Order",
+            "name": _("Portal Sale Order"),
             "type": "ir.actions.act_url",
             "url": self.sale_order_id.access_url,
         }

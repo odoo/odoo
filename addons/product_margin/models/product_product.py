@@ -3,7 +3,7 @@
 
 import time
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ProductProduct(models.Model):
@@ -60,7 +60,7 @@ class ProductProduct(models.Model):
             field_no_aggr, _sep, agg = field.partition(':')
             if field_no_aggr in fields_list:
                 if agg and agg != 'sum':
-                    raise NotImplementedError('Aggregate functions other than \':sum\' are not allowed.')
+                    raise NotImplementedError(_('Aggregate functions other than \':sum\' are not allowed.'))
                 return field_no_aggr
             return field
         fields = {truncate_aggr(field) for field in fields}
