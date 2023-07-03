@@ -340,6 +340,8 @@ class TestActivityMixin(TestActivityCommon):
                 user_id=self.user_admin.id,
                 feedback='Test feedback',)
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
+            self.assertFalse(act1.exists())
+            self.assertTrue(act2.exists() and act3.exists())
 
             # Reschedule all activities, should update the record state
             self.assertEqual(self.test_record.activity_state, 'overdue')
@@ -353,6 +355,8 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
+            self.assertFalse(act1.exists() or act3.exists())
+            self.assertTrue(act2.exists())
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
@@ -365,6 +369,8 @@ class TestActivityMixin(TestActivityCommon):
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
+            self.assertFalse(self.test_record.activity_state)
+            self.assertFalse(act1.exists() or act2.exists() or act3.exists())
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):

@@ -51,6 +51,13 @@ class MailActivityMixin(models.AbstractModel):
         'mail.activity', 'res_id', 'Activities',
         auto_join=True,
         groups="base.group_user",)
+    # Technical field used to filter record that have visible activities
+    has_visible_activities = fields.Boolean('Has visible activities',
+                                            compute='_compute_has_visible_activities',
+                                            search='_search_has_visible_activities')
+    has_user_visible_activities = fields.Boolean('Has user visible activities',
+                                                 compute='_compute_has_user_visible_activities',
+                                                 search='_search_has_user_visible_activities')
     activity_state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
@@ -191,6 +198,56 @@ class MailActivityMixin(models.AbstractModel):
             },
         )
         return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
+
+    def _has_visible_activities(self, partner_id=None):
+        activities = self.activity_ids.filtered(lambda a: a.user_id == partner_id) if partner_id else self.activity_ids
+        if activities:
+            self.has_visible_activities = True
+            return
+        display_activity_types = self.env['mail.activity.type']._get_display_completed(self._name).ids
+        if not display_activity_types:
+            self.has_visible_activities = False
+            return
+        domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
+        if partner_id:
+            domain.append(('author_id', '=', partner_id.id))
+        return bool(self.env['mail.message'].search(domain, limit=1))
+
+    def _compute_has_visible_activities(self):
+        self.has_visible_activities = self._has_visible_activities()
+
+    @api.depends_context('uid')
+    def _compute_has_user_visible_activities(self):
+        self.has_user_visible_activities = self._has_visible_activities(self.env.user.partner_id)
+
+    def _search_has_visible_activities(self, operator, value, user=None):
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        if user:
+            domain = [('id', operator_new, ("SELECT res_id FROM mail_activity WHERE res_model=%s AND user_id=%s",
+                                            [self._name, user.id]))]
+        else:
+            domain = [('id', operator_new, ("SELECT res_id FROM mail_activity WHERE res_model=%s", [self._name]))]
+        display_activity_type_ids = self.env['mail.activity.type']._get_display_completed(self._name).ids
+        if display_activity_type_ids:
+            if user:
+                partner_id = user.partner_id
+                query_ids = (
+                    "SELECT res_id FROM mail_message WHERE model=%s AND mail_activity_type_id IN %s AND author_id=%s",
+                    [self._name, tuple(display_activity_type_ids), partner_id.id]
+                )
+            else:
+                query_ids = (
+                    "SELECT res_id FROM mail_message WHERE model=%s AND mail_activity_type_id IN %s",
+                    [self._name, tuple(display_activity_type_ids)]
+                )
+            domain = ['|', *domain, ('id', operator_new, query_ids)]
+        return domain
+
+    def _search_has_user_visible_activities(self, operator, value):
+        return self._search_has_visible_activities(operator, value, self.env.user)
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):

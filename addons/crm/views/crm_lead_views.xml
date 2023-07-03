@@ -1116,7 +1116,7 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
             <field name="view_id" ref="crm_lead_view_list_activities"/>
-            <field name="domain">[('activity_ids','!=',False)]</field>
+            <field name="domain">[('has_visible_activities', '=', True)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
             <field name="context">{'default_type': 'opportunity',
                     'search_default_assigned_to_me': 1}

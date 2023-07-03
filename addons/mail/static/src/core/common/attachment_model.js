@@ -34,6 +34,8 @@ export class Attachment extends Record {
 
     accessToken;
     checksum;
+    /** @type {string} */
+    create_date;
     extension;
     filename;
     id;
@@ -50,8 +52,6 @@ export class Attachment extends Record {
     uploading;
     /** @type {import("@mail/core/common/message_model").Message} */
     message;
-    /** @type {string} */
-    create_date;
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {

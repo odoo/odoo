@@ -22,6 +22,8 @@ export class Store {
     ChatWindow;
     /** @type {typeof import("@mail/core/common/composer_model").Composer} */
     Composer;
+    /** @type {typeof import("@mail/core/web/completed_activity_model").CompletedActivity} */
+    CompletedActivity;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */

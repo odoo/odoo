@@ -753,6 +753,27 @@ class Message(models.Model):
     # DISCUSS API
     # ------------------------------------------------------
 
+    def _completed_activity_format(self):
+        return [
+            {
+                'activity_type_id': record.mail_activity_type_id,
+                'attachment_ids': [a['id'] for a in record.attachment_ids],
+                **({
+                       'completed_by': {
+                           'name': record.author_id.name,
+                           'id': record.author_id.id,
+                       }
+                   } if record.author_id else {}),
+                'date_done': record.date.date(),
+                'icon': record.mail_activity_type_id.icon,
+                'id': record.id,
+                'summary': record.description or record.mail_activity_type_id.name,
+                'res_model': record.model,
+                'res_id': record.res_id,
+            }
+            for record in self
+        ]
+
     @api.model
     def mark_all_as_read(self, domain=None):
         # not really efficient method: it does one db request for the

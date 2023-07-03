@@ -1,10 +1,15 @@
 /* @odoo-module */
 
+import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
     async _performRPC(route, args) {
+        if (args.model === "mail.message" && args.method === "_completed_activity_format") {
+            const ids = args.args[0];
+            return this._mockMailMessage_CompletedActivityFormat(ids);
+        }
         if (args.model === "mail.message" && args.method === "mark_all_as_read") {
             const domain = args.args[0] || args.kwargs.domain;
             return this._mockMailMessageMarkAllAsRead(domain);
@@ -40,6 +45,37 @@ patch(MockServer.prototype, {
             this._mockMailGuest__getGuestFromContext();
         }
         return this.pyEnv.currentPartner;
+    },
+    /**
+     * Simulates `_completed_activity_format` on `mail.message`.
+     *
+     * @param {Array} ids
+     * @private
+     */
+    _mockMailMessage_completedActivityFormat(ids) {
+        const messages = this.getRecords("mail.message", [["id", "in", ids]]);
+        const authorById = Object.fromEntries(
+            this.getRecords("res.users", [["id", "in", messages.map((m) => m.author_id)]]).map((u) => [u.id, u]));
+        return messages.map((message) => {
+            const author = authorById[message.author_id];
+            const description = message.subject ? message.subject : message.inlineBody.slice(0, 30);
+            return {
+                activity_type_id: message.mail_activity_type_id,
+                attachment_ids: message.attachment_ids,
+                ...(author ? {
+                    completed_by: {
+                        name: author?.name,
+                        id: author?.id,
+                    }
+                } : {}),
+                date_done: serializeDate(deserializeDateTime(message.date)), // Convert datetime str to date str
+                icon: message.mail_activity_type_id.icon,
+                id: message.id,
+                summary: description || this.getRecords("mail.activity.type", [["id", "=", message.mail_activity_type_id]])[0].name,
+                res_model: message.model,
+                res_id: message.res_id,
+            };
+        });
     },
     /**
      * Simulates `_message_reaction` on `mail.message`.

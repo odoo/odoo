@@ -530,9 +530,23 @@ patch(MockServer.prototype, {
             const activities = this.pyEnv["mail.activity"].searchRead([
                 ["id", "in", thread.activity_ids || []],
             ]);
-            res["activities"] = this._mockMailActivityActivityFormat(
+            res.activities = this._mockMailActivityActivityFormat(
                 activities.map((activity) => activity.id)
             );
+            const displayDoneActivityTypeIds = this.pyEnv["mail.activity.type"].search([
+                '&',
+                '|',
+                ['res_model', '=', thread_model],
+                ['res_model', '=', false],
+                ['display_done', '=', true]]);
+            res.completed_activities = this._mockMailMessage_completedActivityFormat(this.pyEnv["mail.message"].search(
+                [['model', '=', thread_model],
+                    ['res_id', '=', thread_id],
+                    ['mail_activity_type_id', 'in', displayDoneActivityTypeIds]]));
+            const attachmentIds = res.completed_activities.map((a) => a.attachment_ids).flat();
+            if (!request_list.includes('attachments') && attachmentIds.length) {
+                res.attachments = this._mockIrAttachment_attachmentFormat(attachmentIds);
+            }
         }
         if (request_list.includes("attachments")) {
             const attachments = this.pyEnv["ir.attachment"].searchRead([

@@ -9,6 +9,7 @@ import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 
 export class ActivityRenderer extends Component {
@@ -42,7 +43,7 @@ export class ActivityRenderer extends Component {
                 active: null,
             },
             activityTypeId: null,
-            resIds: [],
+            resIds: new Set(Object.keys(this.props.groupedActivities)),
         });
 
         this.storageKey = ["activity_columns", this.props.resModel, this.env.config.viewId];
@@ -56,34 +57,50 @@ export class ActivityRenderer extends Component {
      */
     get activityResIds() {
         return [...this.props.activityResIds].sort((a) =>
-            this.activeFilter.resIds.includes(a) ? -1 : 0
+            this.activeFilter.resIds.has(a) ? -1 : 0
         );
     }
 
     getGroupInfo(group) {
         const types = {
+            done: {
+                color: "secondary",
+                inProgressBar: false,
+                label: _t('done'), // activity_mixin.activity_state has no done state, so we add it manually here
+                value: 0,
+            },
             planned: {
                 color: "success",
+                inProgressBar: true,
                 value: 0,
             },
             today: {
                 color: "warning",
+                inProgressBar: true,
                 value: 0,
             },
             overdue: {
-                value: 0,
                 color: "danger",
+                inProgressBar: true,
+                value: 0,
             },
         };
+        for (const [type, label] of this.props.fields.activity_state.selection) {
+            types[type].label = label;
+        }
         const typeId = group[0];
         const isColumnFiltered = this.activeFilter.activityTypeId === group[0];
         const progressValue = isColumnFiltered ? this.activeFilter.progressValue : { active: null };
 
-        let totalCount = 0;
+        let totalCountWithoutDone = 0;
         for (const activities of Object.values(this.props.groupedActivities)) {
             if (typeId in activities) {
-                types[activities[typeId].state].value += 1;
-                totalCount++;
+                for (const [state, stateCount] of Object.entries(activities[typeId].count_by_state)) {
+                    types[state].value += stateCount;
+                    if (state !== 'done') {
+                        totalCountWithoutDone += stateCount;
+                    }
+                }
             }
         }
 
@@ -92,21 +109,31 @@ export class ActivityRenderer extends Component {
             activeBar: isColumnFiltered ? this.activeFilter.progressValue.active : null,
         };
         for (const [value, count] of Object.entries(types)) {
-            progressBar.bars.push({
-                count: count.value,
-                value,
-                string: this.props.fields.activity_state.selection.find((e) => e[0] === value)[1],
-                color: count.color,
-            });
+            if (count.inProgressBar) {
+                progressBar.bars.push({
+                    count: count.value,
+                    value,
+                    string: types[value].label,
+                    color: count.color,
+                });
+            }
         }
 
+        const ongoingActivityCount = types.overdue.value + types.today.value + types.planned.value;
+        const ongoingAndDoneCount = ongoingActivityCount + types.done.value;
+        const labelAggregate = `${types.overdue.label} + ${types.today.label} + ${types.planned.label}`;
+        const aggregateOn = (ongoingAndDoneCount && this.isTypeDisplayDone(typeId)) ? {
+            title: `${types.done.label} + ${labelAggregate}`,
+            value: ongoingAndDoneCount,
+        } : undefined;
         return {
             aggregate: {
-                title: group[1],
-                value: isColumnFiltered ? types[progressValue.active].value : totalCount,
+                title: labelAggregate,
+                value: isColumnFiltered ? types[progressValue.active].value : ongoingActivityCount,
             },
+            aggregateOn: aggregateOn,
             data: {
-                count: totalCount,
+                count: totalCountWithoutDone,
                 filterProgressValue: (name) => this.onSetProgressBarState(typeId, name),
                 progressBar,
                 progressValue,
@@ -118,18 +145,23 @@ export class ActivityRenderer extends Component {
         return this.props.records.find((r) => r.resId === resId);
     }
 
+    isTypeDisplayDone(typeId) {
+        return this.props.activityTypes.find((a) => a[0] === typeId)[3];
+    }
+
     onSetProgressBarState(typeId, bar) {
         const name = bar.value;
         if (this.activeFilter.progressValue.active === name) {
             this.activeFilter.progressValue.active = null;
             this.activeFilter.activityTypeId = null;
-            this.activeFilter.resIds = [];
+            this.activeFilter.resIds = new Set(Object.keys(this.props.groupedActivities));
         } else {
             this.activeFilter.progressValue.active = name;
             this.activeFilter.activityTypeId = typeId;
-            this.activeFilter.resIds = Object.entries(this.props.groupedActivities)
-                .filter(([, resIds]) => typeId in resIds && resIds[typeId].state === name)
-                .map(([key]) => parseInt(key));
+            this.activeFilter.resIds = new Set(
+                Object.entries(this.props.groupedActivities)
+                    .filter(([, resIds]) => typeId in resIds && name in resIds[typeId].count_by_state)
+                    .map(([key]) => parseInt(key)));
         }
     }
 

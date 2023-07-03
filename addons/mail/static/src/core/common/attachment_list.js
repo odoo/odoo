@@ -16,7 +16,7 @@ import { url } from "@web/core/utils/urls";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight"];
+    static props = ["attachments", "unlinkAttachment?", "imagesHeight"];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -52,6 +52,13 @@ export class AttachmentList extends Component {
             width: this.imagesWidth,
             height: this.props.imagesHeight,
         });
+    }
+
+    /**
+     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     */
+    canDelete(attachment) {
+        return this.props.unlinkAttachment && attachment.isDeletable;
     }
 
     /**

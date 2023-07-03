@@ -4160,6 +4160,15 @@ class MailThread(models.AbstractModel):
             pass
         if 'activities' in request_list:
             res['activities'] = self.activity_ids.activity_format()
+            display_done_activity_type_ids = self.env['mail.activity.type']._get_display_completed(self._name)
+            res['completed_activities'] = self.message_ids.filtered(
+                lambda m: m.mail_activity_type_id in display_done_activity_type_ids
+            )._completed_activity_format() if display_done_activity_type_ids else []
+            attachment_ids = {attachment_ids
+                              for activity in res['completed_activities']
+                              for attachment_ids in activity['attachment_ids']}
+            if 'attachments' not in request_list and attachment_ids:
+                res['attachments'] = self.env['ir.attachment'].browse(list(attachment_ids))._attachment_format()
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
         if 'followers' in request_list:

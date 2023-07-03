@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
+import { CompletedActivity } from "@mail/core/web/completed_activity";
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
@@ -17,10 +18,14 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class ActivityListPopover extends Component {
-    static components = { ActivityListPopoverItem };
+    static components = {
+        ActivityListPopoverItem,
+        CompletedActivity,
+    };
     static props = [
         "activityIds",
         "close",
+        "completedActivityIds?",
         "defaultActivityTypeId?",
         "onActivityChanged",
         "resId",
@@ -31,6 +36,8 @@ export class ActivityListPopover extends Component {
     setup() {
         this.orm = useService("orm");
         this.user = useService("user");
+        /** @type {import("@mail/core/web/activity_service").ActivityService} */
+        this.activityService = useService("mail.activity");
         this.store = useState(useService("mail.store"));
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));
@@ -46,6 +53,21 @@ export class ActivityListPopover extends Component {
                     return a.id - b.id;
                 }
                 return a.date_deadline < b.date_deadline ? -1 : 1;
+            });
+    }
+
+    get completedActivities() {
+        if (!this.props.completedActivityIds) {
+            return [];
+        }
+        const allCompletedActivities = Object.values(this.store.CompletedActivity.records);
+        return allCompletedActivities
+            .filter((activity) => this.props.completedActivityIds.includes(activity.id))
+            .sort(function (a, b) {
+                if (a.date_done === b.date_done) {
+                    return b.id - a.id;
+                }
+                return b.date_done < a.date_done ? -1 : 1;
             });
     }
 
@@ -74,16 +96,6 @@ export class ActivityListPopover extends Component {
     }
 
     async updateFromProps(props) {
-        const activitiesData = await this.orm.silent.call(
-            "mail.activity",
-            "activity_format",
-            [props.activityIds],
-            {
-                context: this.user.user_context,
-            }
-        );
-        for (const activityData of activitiesData) {
-            this.store.Activity.insert(activityData);
-        }
+        this.activityService.fetchData(props.activityIds, props.completedActivityIds);
     }
 }

@@ -1,22 +1,37 @@
 /* @odoo-module */
 
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
+import { serverDateToLocalDateShortFormat } from "@mail/utils/common/format";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
 import { Component, useRef } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class ActivityCell extends Component {
+    static components = {
+        Avatar,
+    };
     static props = {
         activityIds: {
             type: Array,
             elements: Number,
         },
+        attachments: {
+            optional: true,
+            type: Object,
+        },
         activityTypeId: Number,
-        closestDeadline: String,
+        closestDate: String,
+        completedActivityIds: {
+            type: Array,
+            elements: Number,
+        },
+        countByState: Object,
         reloadFunc: Function,
         resId: Number,
         resModel: String,
+        userIdsOrderedByDeadline: Array,
     };
     static template = "mail.ActivityCell";
 
@@ -25,21 +40,20 @@ export class ActivityCell extends Component {
         this.contentRef = useRef("content");
     }
 
-    get closestDeadlineFormatted() {
-        const date = luxon.DateTime.fromISO(this.props.closestDeadline);
-        // To remove year only if current year
-        if (luxon.DateTime.now().year === date.year) {
-            return date.toLocaleString({
-                day: "numeric",
-                month: "short",
-            });
-        } else {
-            return date.toLocaleString({
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-            });
-        }
+    get closestDateFormatted() {
+        return serverDateToLocalDateShortFormat(this.props.closestDate);
+    }
+
+    get lastAttachmentDateFormatted() {
+        return serverDateToLocalDateShortFormat(this.props.closestDate);
+    }
+
+    get ongoingActivityCount() {
+        return this.props.activityIds.length;
+    }
+
+    get totalActivityCount() {
+        return this.props.activityIds.length + (this.props.completedActivityIds?.length ?? 0);
     }
 
     onClick() {
@@ -48,6 +62,7 @@ export class ActivityCell extends Component {
         } else {
             this.popover.open(this.contentRef.el, {
                 activityIds: this.props.activityIds,
+                completedActivityIds: this.props.completedActivityIds,
                 defaultActivityTypeId: this.props.activityTypeId,
                 onActivityChanged: () => {
                     this.props.reloadFunc();

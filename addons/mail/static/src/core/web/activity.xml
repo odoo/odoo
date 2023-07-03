@@ -19,7 +19,8 @@
         </div>
         <div class="flex-grow px-3">
             <div class="o-mail-Activity-info lh-1">
-                <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
+                <span class="fw-bolder text-secondary" t-if="activity.state === 'done'">Done on <t t-out="dateDoneFormatted"/>:</span>
+                <span class="fw-bolder text-success" t-elif="delay === 1">Tomorrow:</span>
                 <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
                 <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday:</span>
                 <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
@@ -42,7 +43,7 @@
             <div t-if="activity.mail_template_ids.length > 0" class="o-mail-Activity-mailTemplates">
                 <ActivityMailTemplate activity="activity" onUpdate="props.onUpdate"/>
             </div>
-            <div t-if="activity.can_write" class="lh-lg">
+            <div t-if="activity.can_write and activity.state != 'done'" class="lh-lg">
                 <t name="tools">
                     <span class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="onClickMarkAsDone"><i class="fa fa-check"/> Mark Done</span>
                     <FileUploader t-if="activity.activity_category === 'upload_file'" onUploaded.bind="onFileUploaded">

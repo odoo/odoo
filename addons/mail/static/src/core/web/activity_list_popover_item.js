@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { formatDate } from "@web/core/l10n/dates";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
@@ -11,6 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
+const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -61,6 +63,10 @@ export class ActivityListPopoverItem extends Component {
         } else {
             return _t("Due in %s days", Math.round(Math.abs(diff)));
         }
+    }
+
+    get dateDoneFormatted() {
+        return formatDate(DateTime.fromSQL(this.props.activity.date_done, { zone: 'utc' }).toLocal());
     }
 
     get hasEditButton() {

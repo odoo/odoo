@@ -7,7 +7,11 @@ export class ActivityModel extends RelationalModel {
 
     async load(params = {}) {
         this.originalDomain = params.domain ? [...params.domain] : [];
-        params.domain?.push(["activity_ids", "!=", false]);
+        params.domain = params?.domain ?? [...(this.env.searchModel?._domain ?? [])];
+        if (!params.domain.flat(Infinity).find((p) =>
+            (['has_visible_activities', 'has_user_visible_activities'].includes(p)))) {
+            params.domain.push(['has_visible_activities', '=', true]);
+        }
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }

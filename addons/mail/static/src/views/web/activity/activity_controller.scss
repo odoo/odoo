@@ -5,14 +5,47 @@
         }
     }
     .o_activity_summary_cell {
+        .o-mail-ActivityCell-counter {
+            color: map-get($theme-colors, 'dark');
+        }
         &.planned {
             background-color: map-get($theme-colors, 'success');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.overdue {
             background-color: map-get($theme-colors, 'danger');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.today {
             background-color: map-get($theme-colors, 'warning');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.done {
+            background-color: map-get($theme-colors, 'secondary');
+            a {
+                color: map-get($theme-colors, 'dark');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.o_activity_empty_cell {
             > i {
