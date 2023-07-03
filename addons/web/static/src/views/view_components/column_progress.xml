@@ -21,13 +21,21 @@
                 />
             </t>
         </div>
-        <AnimatedNumber
-            value="props.aggregate.value"
-            title="props.aggregate.title"
-            duration="1000"
-            currency="props.aggregate.currency"
-            animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
-        />
+        <div class="d-flex">
+            <AnimatedNumber
+                value="props.aggregate.value"
+                title="props.aggregate.title"
+                duration="1000"
+                currency="props.aggregate.currency"
+                animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
+            />
+            <t t-if="props.aggregateOn">
+                <div class="text-900 text-nowrap cursor-default"
+                     t-att-title="props.aggregateOn.title">
+                    /<span class="o_column_progress_aggregated_on" t-out="props.aggregateOn.value"/>
+                </div>
+            </t>
+        </div>
     </t>
 
 </templates>

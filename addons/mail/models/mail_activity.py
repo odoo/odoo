@@ -4,14 +4,13 @@
 import logging
 import pytz
 
-from collections import defaultdict
+from collections import defaultdict, Counter
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
-from odoo.osv import expression
 from odoo.tools import is_html_empty
-from odoo.tools.misc import clean_context, get_lang
+from odoo.tools.misc import clean_context, get_lang, groupby, unique
 
 _logger = logging.getLogger(__name__)
 
@@ -580,44 +579,128 @@ class MailActivity(models.Model):
 
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0):
-        activity_domain = [('res_model', '=', res_model)]
-        if domain or limit or offset:
-            res = self.env[res_model].search(domain or [], limit=limit, offset=offset)
-            activity_domain.append(('res_id', 'in', res.ids))
-        grouped_activities = self.env['mail.activity']._read_group(
-            activity_domain,
-            ['res_id', 'activity_type_id'],
-            ['id:array_agg', 'date_deadline:min', '__count'])
-        # filter out unreadable records
-        if not domain:
-            res_ids = tuple(res_id for res_id, *_ in grouped_activities)
-            res_ids_set = set(self.env[res_model].search([('id', 'in', res_ids)])._ids)
-            grouped_activities = [a for a in grouped_activities if a[0] in res_ids_set]
-        res_id_to_deadline = {}
-        activity_data = defaultdict(dict)
-        for res_id, activity_type, ids, date_deadline, count in grouped_activities:
-            activity_type_id = activity_type.id
-            res_id_to_deadline[res_id] = date_deadline if (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
-            state = self._compute_state_from_date(date_deadline, self.user_id.sudo().tz)
-            activity_data[res_id][activity_type_id] = {
-                'count': count,
-                'ids': ids,
-                'state': state,
-                'o_closest_deadline': date_deadline,
-            }
-        activity_type_infos = []
-        activity_type_ids = self.env['mail.activity.type'].search(
+        user_tz = self.user_id.sudo().tz
+        Model = self.env[res_model]
+
+        # 1. Retrieve all ongoing and completed activities according to the parameters
+        activity_types = self.env['mail.activity.type'].search(
             ['|', ('res_model', '=', res_model), ('res_model', '=', False)])
-        for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
+        display_done_activity_type_ids = [a.id for a in activity_types if a.display_done]
+        activity_domain = [('res_model', '=', res_model)]
+        is_filtered = domain or limit or offset
+        domain_res_ids = Model.search(domain or [], offset, limit).ids if is_filtered else []
+        if is_filtered:
+            activity_domain.append(('res_id', 'in', domain_res_ids))
+        all_ongoing_activities = self.env['mail.activity'].search_read(
+            activity_domain,
+            ['activity_type_id', 'res_id', 'date_deadline', 'user_id'],
+        )
+        if display_done_activity_type_ids:
+            mail_domain = [('mail_activity_type_id', 'in', display_done_activity_type_ids),
+                           ('model', '=', res_model)]
+            if is_filtered:
+                mail_domain.append(('res_id', 'in', domain_res_ids))
+            all_completed_activities = list(map(lambda a: {
+                'activity_type_id': a['mail_activity_type_id'],
+                'attachment_ids': a['attachment_ids'],
+                'date_done': a['date'].date(),
+                'id': a['id'],
+                'res_id': a['res_id'],
+            }, self.env['mail.message'].search_read(
+                mail_domain,
+                ['attachment_ids', 'date', 'mail_activity_type_id', 'res_id'])))
+        else:
+            all_completed_activities = []
+
+        # 2. Get attachment of completed activities
+        if all_completed_activities:
+            all_attachment_ids = [
+                attachment_id
+                for completed_activity in all_completed_activities if completed_activity['attachment_ids']
+                for attachment_id in completed_activity['attachment_ids']]
+            attachments_by_id = {
+                a['id']: a
+                for a in self.env['ir.attachment'].search_read([['id', 'in', all_attachment_ids]],
+                                                               ['create_date', 'name'])
+            } if all_attachment_ids else {}
+        else:
+            attachments_by_id = dict()
+
+        # 3. Group activities per records and activity type
+        grouped_completed_activities = dict(groupby(all_completed_activities,
+                                                    key=lambda a: (a['res_id'], a['activity_type_id'][0])))
+        grouped_ongoing_activities = dict(groupby(all_ongoing_activities,
+                                                  key=lambda a: (a['res_id'], a['activity_type_id'][0])))
+
+        # 4. Filter out unreadable records
+        all_res_id_activity_type_id = grouped_ongoing_activities.keys() | grouped_completed_activities.keys()
+        if not is_filtered:
+            res_ids = list({res_id for res_id, __ in all_res_id_activity_type_id})
+            res_ids_set = set(Model.search([('id', 'in', res_ids)])._ids)
+            all_res_id_activity_type_id = [(res_id, activity_type_id)
+                                           for res_id, activity_type_id in all_res_id_activity_type_id
+                                           if res_id in res_ids_set]
+
+        # 5. Format data
+        res_id_to_date_done = {}
+        res_id_to_deadline = {}
+        grouped_activities = defaultdict(dict)
+        for res_id, activity_type_id in all_res_id_activity_type_id:
+            ongoing_activities = grouped_ongoing_activities.get((res_id, activity_type_id), [])
+            completed_activities = grouped_completed_activities.get((res_id, activity_type_id), [])
+            date_done = max((a['date_done'] for a in completed_activities), default=None)
+            date_deadline = min((a['date_deadline'] for a in ongoing_activities), default=None)
+            is_all_activities_done = len(ongoing_activities) == 0
+            if date_deadline and (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]):
+                res_id_to_deadline[res_id] = date_deadline
+            if date_done and (res_id not in res_id_to_date_done or date_done > res_id_to_date_done[res_id]):
+                res_id_to_date_done[res_id] = date_done
+            distinct_assignees = list(unique(v['user_id'][0]
+                                             for v in sorted(ongoing_activities, key=lambda v: v['date_deadline'])
+                                             if v['user_id']))
+            activity_attachments = [attachments_by_id[attachment_id]
+                                    for activity in completed_activities if activity.get('attachment_ids')
+                                    for attachment_id in activity['attachment_ids']]
+            attachments_info = {}
+            if activity_attachments:
+                last_attachment = max(activity_attachments, key=lambda a: a['create_date'])
+                attachments_info['attachments'] = {
+                    'last': {
+                        'id': last_attachment['id'],
+                        'name': last_attachment['name']
+                    },
+                    'count': len(activity_attachments),
+                }
+            grouped_activities[res_id][activity_type_id] = {
+                'count_by_state': {
+                    **dict(Counter(map(lambda a: self._compute_state_from_date(a['date_deadline'], user_tz),
+                                       ongoing_activities))),
+                    **({'done': len(completed_activities)} if completed_activities else {}),
+                },
+                'ids': [a['id'] for a in ongoing_activities],
+                'completed_activity_ids': [a['id'] for a in completed_activities],
+                'o_closest_date': date_done if is_all_activities_done else date_deadline,
+                'state': 'done' if is_all_activities_done else self._compute_state_from_date(date_deadline, user_tz),
+                'user_ids_ordered_by_deadline': distinct_assignees,
+                **attachments_info
+            }
+
+        activity_type_infos = []
+        for activity_type in sorted(activity_types, key=lambda item: item.sequence):
             mail_template_info = []
-            for mail_template_id in elem.mail_template_ids:
+            for mail_template_id in activity_type.mail_template_ids:
                 mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
-            activity_type_infos.append([elem.id, elem.name, mail_template_info])
+            activity_type_infos.append([activity_type.id, activity_type.name, mail_template_info,
+                                        activity_type.display_done])
 
         return {
             'activity_types': activity_type_infos,
-            'activity_res_ids': sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]),
-            'grouped_activities': activity_data,
+            'activity_res_ids': (  # record with ongoing activities followed by the ones with all completed activities
+                    sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]) +
+                    sorted({k: v for k, v in res_id_to_date_done.items() if k not in res_id_to_deadline},
+                           key=lambda item: res_id_to_date_done[item], reverse=True)
+            ),
+            'grouped_activities': grouped_activities,
         }
 
     # ----------------------------------------------------------------------

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.CompletedActivity">
+    <div class="o-mail-CompletedActivity d-flex flex-column border-bottom py-2">
+        <div t-if="props.activity.completed_by" class="d-flex align-items-center flex-wrap mx-3 mt-1">
+            <t t-set="iconSize" t-value="props.largeIcon ? 2.3 : 1.5"/>
+            <img t-attf-src="/web/image/res.partner/{{props.activity.completed_by.id}}/avatar_128" alt="Completed by"
+                 class="me-2 rounded" t-attf-style="max-width: #{iconSize}rem; max-height: #{iconSize}rem;"/>
+            <div>
+                <div>
+                    <small class="text-truncate" t-esc="props.activity.completed_by.name"/>
+                    -
+                    <small class="fw-bold" t-att-title="dateCompletionFormatted" t-out="dateCompletionFormatted"/>
+                </div>
+                <div class="overflow-auto d-flex align-items-baseline">
+                    <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>
+                </div>
+            </div>
+        </div>
+        <div t-else="">
+            <div>
+                <small class="fw-bold" t-att-title="dateCompletionFormatted" t-out="dateCompletionFormatted"/>
+            </div>
+            <div class="overflow-auto d-flex align-items-baseline">
+                <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
+                <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>
+            </div>
+        </div>
+        <div t-if="attachments?.length" class="mx-3 my-1">
+            <AttachmentList attachments="attachments" imagesHeight="50"/>
+        </div>
+    </div>
+</t>
+
+</templates>

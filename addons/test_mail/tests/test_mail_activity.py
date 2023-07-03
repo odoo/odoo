@@ -24,6 +24,7 @@ class TestActivityCommon(MailCommon):
     def setUpClass(cls):
         super(TestActivityCommon, cls).setUpClass()
         cls.test_record = cls.env['mail.test.activity'].with_context(cls._test_context).create({'name': 'Test'})
+        cls.test_record_2 = cls.env['mail.test.activity'].with_context(cls._test_context).create({'name': 'Test_2'})
         # reset ctx
         cls._reset_mail_context(cls.test_record)
 
@@ -341,6 +342,7 @@ class TestActivityMixin(TestActivityCommon):
                 user_id=self.user_admin.id,
                 feedback='Test feedback',)
             self.assertEqual(self.test_record.activity_ids, act2 | act3)
+            self.assertFalse(act1.exists())
 
             # Reschedule all activities, should update the record state
             self.assertEqual(self.test_record.activity_state, 'overdue')
@@ -354,6 +356,7 @@ class TestActivityMixin(TestActivityCommon):
             self.test_record.activity_feedback(
                 ['test_mail.mail_act_test_todo'],
                 feedback='Test feedback')
+            self.assertFalse(act3.exists())
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
@@ -366,6 +369,8 @@ class TestActivityMixin(TestActivityCommon):
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
+            self.assertFalse(self.test_record.activity_state)
+            self.assertFalse(act2.exists())
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
@@ -715,6 +720,201 @@ class TestActivityMixin(TestActivityCommon):
         with self.with_user('employee'):
             record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
             self.assertEqual(test_record_1, record)
+
+
+@tests.tagged('mail_activity')
+class TestMailActivity(TestActivityCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.type_todo = cls.env.ref('test_mail.mail_act_test_todo')
+        cls.type_call = cls.env.ref('test_mail.mail_act_test_call')
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            name='Employee2',
+            login='employee2',
+        )
+
+    def get_grouped_activity_for_compare(self, grouped_activities):
+        return {
+            record_id: {
+                activity_type_id: {
+                    **activity_data,
+                    'ids': set(activity_data['ids']),
+                    'completed_activity_ids': set(activity_data['completed_activity_ids']),
+                } for activity_type_id, activity_data in record_data.items()
+            } for record_id, record_data in grouped_activities.items()
+        }
+
+    def test_get_activity_data(self):
+        self.user_employee.tz = self.user_admin.tz
+        MailMessage = self.env['mail.message']
+        with self.with_user('employee'):
+            self.test_record = self.env['mail.test.activity'].browse(self.test_record.id)
+            self.test_record_2 = self.env['mail.test.activity'].browse(self.test_record_2.id)
+            self.assertEqual(self.test_record.env.user, self.user_employee)
+            self.assertEqual(self.test_record_2.env.user, self.user_employee)
+            now_utc = datetime.now(pytz.UTC)
+            now_user = now_utc.astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
+            today_user = now_user.date()
+
+            todo_r1_a1 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                today_user + relativedelta(days=1),
+                user_id=self.user_employee.id)
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {self.test_record.id: {
+                    self.type_todo.id: {'count_by_state': {'planned': 1},
+                                        'ids': set(todo_r1_a1.ids),
+                                        'completed_activity_ids': set(),
+                                        'o_closest_date': todo_r1_a1.date_deadline,
+                                        'state': 'planned',
+                                        'user_ids_ordered_by_deadline': [self.user_employee.id]}}}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], self.test_record.ids)
+            todo_r1_a2 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                today_user,
+                user_id=self.user_admin.id)
+            todo_r1_a3 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                today_user,
+                user_id=self.user_admin.id)
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {self.test_record.id: {
+                    self.type_todo.id: {'count_by_state': {'planned': 1, 'today': 2},
+                                        'ids': set((todo_r1_a2 | todo_r1_a3 | todo_r1_a1).ids),
+                                        'completed_activity_ids': set(),
+                                        'o_closest_date': todo_r1_a2.date_deadline,
+                                        'state': 'today',
+                                        'user_ids_ordered_by_deadline': [
+                                            self.user_admin.id, self.user_employee.id]}}}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], self.test_record.ids)
+            todo_r1_a4 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                today_user + relativedelta(days=-1),
+                user_id=self.user_employee_2.id)
+            call_r1_a5 = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_call',
+                today_user + relativedelta(days=-1),
+                user_id=self.user_employee.id)
+            call_r2_a1 = self.test_record_2.activity_schedule(
+                'test_mail.mail_act_test_call',
+                today_user + relativedelta(days=-5),
+                user_id=self.user_employee.id)
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {
+                    self.test_record.id: {
+                        self.type_todo.id: {'count_by_state': {'overdue': 1, 'planned': 1, 'today': 2},
+                                            'ids': set((todo_r1_a4 | todo_r1_a2 | todo_r1_a3 | todo_r1_a1).ids),
+                                            'completed_activity_ids': set(),
+                                            'o_closest_date': todo_r1_a4.date_deadline,
+                                            'state': 'overdue',
+                                            'user_ids_ordered_by_deadline': [
+                                                self.user_employee_2.id, self.user_admin.id, self.user_employee.id]},
+                        self.type_call.id: {'count_by_state': {'overdue': 1},
+                                            'ids': set(call_r1_a5.ids),
+                                            'completed_activity_ids': set(),
+                                            'o_closest_date': call_r1_a5.date_deadline,
+                                            'state': 'overdue',
+                                            'user_ids_ordered_by_deadline': [self.user_employee.id]},
+                    },
+                    self.test_record_2.id: {
+                        self.type_call.id: {'count_by_state': {'overdue': 1},
+                                            'ids': set(call_r2_a1.ids),
+                                            'completed_activity_ids': set(),
+                                            'o_closest_date': call_r2_a1.date_deadline,
+                                            'state': 'overdue',
+                                            'user_ids_ordered_by_deadline': [self.user_employee.id]},
+                    }
+                }
+            )
+            self.assertEqual(activity_data['activity_res_ids'], [self.test_record_2.id, self.test_record.id])
+            call_r1_a5_done_id = call_r1_a5.action_feedback(feedback='Done')
+            call_r2_a1_done_id = call_r2_a1.action_feedback(feedback='Done')
+            todo_r1_a2_done_id = todo_r1_a2.action_feedback(feedback='Done')
+            todo_r1_a3_done_id = todo_r1_a3.action_feedback(feedback='Done')
+            todo_r1_a4_done_id = todo_r1_a4.action_feedback(feedback='Done')
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {self.test_record.id: {
+                    self.type_todo.id: {'count_by_state': {'planned': 1},
+                                        'ids': set(todo_r1_a1.ids),
+                                        'completed_activity_ids': set(),
+                                        'o_closest_date': todo_r1_a1.date_deadline,
+                                        'state': 'planned',
+                                        'user_ids_ordered_by_deadline': [self.user_employee.id]}}}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], self.test_record.ids)
+            self.type_todo.display_done = True
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {self.test_record.id: {
+                    self.type_todo.id: {'count_by_state': {'planned': 1, 'done': 3},
+                                        'ids': set(todo_r1_a1.ids),
+                                        'completed_activity_ids': {todo_r1_a2_done_id, todo_r1_a3_done_id,
+                                                                   todo_r1_a4_done_id},
+                                        'o_closest_date': todo_r1_a1.date_deadline,
+                                        'state': 'planned',
+                                        'user_ids_ordered_by_deadline': [self.user_employee.id]}}}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], self.test_record.ids)
+            self.type_call.display_done = True
+            record_expected_grouped_activity = {
+                    self.test_record.id: {
+                        self.type_todo.id: {'count_by_state': {'planned': 1, 'done': 3},
+                                            'ids': set(todo_r1_a1.ids),
+                                            'completed_activity_ids': {todo_r1_a2_done_id, todo_r1_a3_done_id,
+                                                                       todo_r1_a4_done_id},
+                                            'o_closest_date': todo_r1_a1.date_deadline,
+                                            'state': 'planned',
+                                            'user_ids_ordered_by_deadline': [self.user_employee.id]},
+                        self.type_call.id: {'count_by_state': {'done': 1},
+                                            'ids': set(),
+                                            'completed_activity_ids': {call_r1_a5_done_id},
+                                            'o_closest_date':
+                                                MailMessage.browse([call_r1_a5_done_id]).create_date.date(),
+                                            'state': 'done',
+                                            'user_ids_ordered_by_deadline': []},
+                    }
+            }
+            record2_expected_grouped_activity = {
+                self.test_record_2.id: {
+                    self.type_call.id: {'count_by_state': {'done': 1},
+                                        'ids': set(),
+                                        'completed_activity_ids': {call_r2_a1_done_id},
+                                        'o_closest_date': MailMessage.browse([call_r2_a1_done_id]).create_date.date(),
+                                        'state': 'done',
+                                        'user_ids_ordered_by_deadline': []},
+                }
+            }
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {**record_expected_grouped_activity, **record2_expected_grouped_activity}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], [self.test_record.id, self.test_record_2.id])
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None, limit=1)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {**record_expected_grouped_activity}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], [self.test_record.id])
+            activity_data = self.env['mail.activity'].get_activity_data('mail.test.activity', None, offset=1)
+            self.assertEqual(
+                self.get_grouped_activity_for_compare(activity_data['grouped_activities']),
+                {**record2_expected_grouped_activity}
+            )
+            self.assertEqual(activity_data['activity_res_ids'], [self.test_record_2.id])
 
 
 @tests.tagged('mail_activity')

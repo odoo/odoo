@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class MailActivityType(models.Model):
@@ -71,6 +72,8 @@ class MailActivityType(models.Model):
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
     default_user_id = fields.Many2one("res.users", string="Default User")
     default_note = fields.Html(string="Default Note", translate=True)
+    display_done = fields.Boolean(string="Display Done Activities", default=False,
+                                  help='Keep activities marked as done in the activity view')
 
     #Fields for display purpose only
     initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,
@@ -119,3 +122,11 @@ class MailActivityType(models.Model):
                 activity_type.chaining_type = 'trigger'
             else:
                 activity_type.chaining_type = 'suggest'
+
+    @api.model
+    def _get_display_done_types(self, res_models):
+        return self.env['mail.activity.type'].search(
+            expression.AND([
+                expression.OR([[('res_model', 'in', res_models)], [('res_model', '=', False)]]),
+                [('display_done', '=', True)],
+            ]))

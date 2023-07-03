@@ -235,7 +235,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
-    assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
+    assert.verifySteps(["web_search_read", "activity_fetch_and_format", "action_feedback", "web_read"]);
 });
 
 QUnit.test("list activity exception widget with activity", async () => {

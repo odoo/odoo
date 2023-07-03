@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { formatDate } from "@web/core/l10n/dates";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
@@ -13,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -92,6 +94,10 @@ export class Activity extends Component {
                 id: this.props.data.user_id[0],
             });
         }
+    }
+
+    get dateDoneFormatted() {
+        return formatDate(DateTime.fromSQL(this.props.data.date_done, { zone: 'utc' }).toLocal());
     }
 
     async edit() {

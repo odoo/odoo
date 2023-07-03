@@ -62,6 +62,17 @@ patch(ThreadService.prototype, {
                 }
             }
         }
+        if ("completed_activities" in result) {
+            const existingIds = new Set();
+            for (const activity of result.completed_activities) {
+                existingIds.add(this.store.CompletedActivity.insert(activity).id);
+            }
+            for (const activity of thread.completedActivities) {
+                if (!existingIds.has(activity.id)) {
+                    this.activityService.deleteCompleted(activity);
+                }
+            }
+        }
         if ("attachments" in result) {
             thread.update({
                 areAttachmentsLoaded: true,

@@ -2,10 +2,37 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityCell">
-        <div class="h-100 cursor-pointer p-3" t-on-click="onClick">
-            <div class="h-100 d-flex align-items-center justify-content-center position-relative" t-ref="content">
-                <div class="o-mail-ActivityCell-deadline text-white" t-out="closestDeadlineFormatted"/>
-                <span t-if="props.activityIds.length > 1" class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
+        <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="onClick">
+            <div class="d-flex align-items-center justify-content-center position-relative" t-ref="content">
+                <div class="o-mail-ActivityCell-deadline" t-out="closestDateFormatted"/>
+                <t t-if="totalActivityCount > 1">
+                    <span class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0">
+                        <t t-if="totalActivityCount == ongoingActivityCount or ongoingActivityCount == 0"
+                           t-out="totalActivityCount"/>
+                        <t t-else="">
+                            <t t-out="ongoingActivityCount"/> / <t t-out="totalActivityCount"/>
+                        </t>
+                    </span>
+                </t>
+            </div>
+            <div t-if="props.attachments and ongoingActivityCount == 0" class="d-flex w-100 justify-content-center gap-1 px-2">
+                <a t-attf-href="/web/content/#{props.attachments.last.id}?download=true" t-on-click.stop=""
+                   t-out="props.attachments.last.name"
+                   class="d-inline-block text-truncate" style="max-width: 120px;"/>
+                <div t-if="props.attachments.count > 1" class="text-nowrap">
+                    +<t t-out="props.attachments.count - 1"/>
+                </div>
+            </div>
+            <div t-if="props.userIdsOrderedByDeadline" class="d-flex align-items-start">
+                <Avatar t-if="props.userIdsOrderedByDeadline.length > 0"
+                        resModel="'res.users'" resId="props.userIdsOrderedByDeadline[0]"
+                        displayName="''" noSpacing="true"/>
+                <Avatar t-if="props.userIdsOrderedByDeadline.length > 1"
+                        resModel="'res.users'" resId="props.userIdsOrderedByDeadline[1]"
+                        displayName="''" noSpacing="true"/>
+                <t t-set="nAdditionalAssignee"
+                   t-value="props.userIdsOrderedByDeadline.length - 2"/>
+                <span t-if="nAdditionalAssignee > 0">+<t t-out="nAdditionalAssignee"/></span>
             </div>
         </div>
     </t>

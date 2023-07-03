@@ -16,7 +16,7 @@ import { url } from "@web/core/utils/urls";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight"];
+    static props = ["attachments", "unlinkAttachment?", "imagesHeight"];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -105,7 +105,7 @@ export class AttachmentList extends Component {
 
     get showDelete() {
         return (
-            (this.attachment.isDeletable &&
+            (this.attachment.isDeletable && this.props.unlinkAttachment &&
                 (!this.env.message || this.env.message?.hasTextContent)) ||
             this.env.inComposer ||
             this.props.attachments.length > 1

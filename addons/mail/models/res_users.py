@@ -298,6 +298,7 @@ class Users(models.Model):
                 "today_count": 0,
                 "overdue_count": 0,
                 "planned_count": 0,
+                "done_count": 0,
             }
             for record, activities in activities_by_record.items():
                 if record not in allowed_records:

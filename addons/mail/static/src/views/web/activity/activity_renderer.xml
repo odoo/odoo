@@ -24,7 +24,7 @@
                 </div>
                 <div class="o_activity_counter d-flex align-items-center justify-content-between mb-3 h-0 mt24">
                     <t t-set="group" t-value="getGroupInfo(type)"/>
-                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
+                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" aggregateOn="group.aggregateOn" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
                 </div>
             </th>
             <th class="align-middle" style="width: 32px; min-width: 32px">
@@ -65,7 +65,7 @@
 <t t-name="mail.ActivityViewRow">
     <t t-set="record" t-value="getRecord(resId)"/>
     <t t-if="record">
-        <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
+        <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
                 <ActivityRecord archInfo="props.archInfo" record="record" openRecord="props.openRecord" />
                 <t t-foreach="activeColumns" t-as="type" t-key="type[0]">
                     <t t-call="mail.ActivityViewCell"/>
@@ -77,14 +77,22 @@
 
 <t t-name="mail.ActivityViewCell">
     <t t-set="activityGroup" t-value="props.groupedActivities[resId] and props.groupedActivities[resId][type[0]] or {count: 0, ids: [], state: false}"/>
-    <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
+    <t t-set="isCellHidden" t-value="!activeFilter.resIds.has(resId) and activeFilter.activityTypeId === type[0]"/>
     <td t-if="activityGroup.state and !isCellHidden"
-        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
-        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc="props.onReloadData" resId="record.resId" resModel="record.resModel"/>
+        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]"
+                      attachments="activityGroup.attachments"
+                      closestDate="activityGroup.o_closest_date"
+                      completedActivityIds="activityGroup.completed_activity_ids"
+                      countByState="activityGroup.count_by_state"
+                      reloadFunc="props.onReloadData"
+                      resId="record.resId" resModel="record.resModel"
+                      userIdsOrderedByDeadline="activityGroup.user_ids_ordered_by_deadline"
+        />
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
-        t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
+        t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
         t-on-click.prevent.stop="() => props.onEmptyCell(resId, type[0])">
         <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
     </td>

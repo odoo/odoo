@@ -2,7 +2,9 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { serializeDate } from "@web/core/l10n/dates";
 import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
+import { serverDateToLocalDateShortFormat } from "@mail/utils/common/format";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -16,6 +18,8 @@ import {
     insertText,
     scroll,
 } from "@web/../tests/utils";
+
+const { DateTime } = luxon;
 
 QUnit.module("chatter");
 
@@ -534,6 +538,137 @@ QUnit.test("basic chatter rendering without activities", async () => {
 
     await contains(".o-mail-Followers");
     await contains(".o-mail-Thread");
+});
+
+QUnit.test("Chatter rendering with activities", async (assert) => {
+    function selectContaining(domElement, selector, containings) {
+        return Array.from(domElement.querySelectorAll(selector)).filter(
+            (sel) => containings.every((containing) => sel.textContent.includes(containing)));
+    }
+
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const todoActivityType = pyEnv["mail.activity.type"].create({ name: 'To do' });
+    const uploadActivityType = pyEnv["mail.activity.type"].create({ name: 'upload' });
+    const previousWeek = serializeDate(DateTime.now().plus({ days: -7 }));
+    const todoDoneDate = serverDateToLocalDateShortFormat(previousWeek);
+    const yesterday = serializeDate(DateTime.now().plus({ days: -1 }));
+    const uploadDoneDate = serverDateToLocalDateShortFormat(yesterday);
+    const today = serializeDate(DateTime.now());
+    const nextWeek = serializeDate(DateTime.now().plus({ days: 7 }));
+    for (const [activityType, name, date, state] of [
+        [todoActivityType, "Write specification", previousWeek, "done"],
+        [uploadActivityType, "Upload specification", yesterday, "done"],
+        [todoActivityType, "Implementation", today, "today"],
+        [todoActivityType, "Write tests", nextWeek, "planned"],
+    ]) {
+        if (state === 'done') {
+            pyEnv["mail.message"].create({
+                attachment_ids: (activityType === uploadActivityType) ? [pyEnv["ir.attachment"].create({
+                    create_date: date,
+                    mimetype: "text/plain",
+                    name: "test.txt",
+                    res_id: partnerId, // attach to the document as well because they are retrieved from the record
+                    res_model: "res.partner",
+                })] : [],
+                body: name,
+                date: date,
+                mail_activity_type_id: activityType,
+                model: "res.partner",
+                res_id: partnerId,
+                subject: name,
+            });
+        } else {
+            pyEnv["mail.activity"].create({
+                display_name: name,
+                date_deadline: date,
+                state: state,
+                activity_type_id: activityType,
+                res_id: partnerId,
+                res_model: "res.partner",
+            });
+        }
+    }
+    const views = {
+        "res.partner,false,form": `
+        <form string="Partners">
+            <sheet>
+                <field name="name"/>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="activity_ids"/>
+            </div>
+        </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    for (const [displayTodoDone, displayUploadDone] of [[true, false], [false, true], [true, true], [false, false]]) {
+        const displayDone = displayTodoDone || displayUploadDone;
+        const nCompleted = (displayTodoDone ? 1 : 0) + (displayUploadDone ? 1 : 0);
+        pyEnv["mail.activity.type"].write([todoActivityType], { display_done: displayTodoDone });
+        pyEnv["mail.activity.type"].write([uploadActivityType], { display_done: displayUploadDone });
+        await openView({
+            res_model: "res.partner",
+            res_id: partnerId,
+            views: [[false, "form"]],
+        });
+        await contains(".o-mail-Chatter-content");
+        await contains(".o-mail-ActivityList");
+        await contains(".o-mail-ActivityList", { text: "Planned Activities" });
+        if (displayDone) {
+            await contains(".o-mail-ActivityList", { text: "Completed Activities" });
+        }
+        // By default, only planned activities are displayed
+        await contains(".o-mail-ActivityList .o-mail-Activity", { count: 2 }); // 2 ongoing activities
+        assert.ok(selectContaining(document, ".o-mail-ActivityList .o-mail-Activity", ['Due in']));
+        assert.ok(selectContaining(document, ".o-mail-ActivityList .o-mail-Activity", ['Today']));
+        await contains('.o-mail-ActivityList .o-mail-CompletedActivity', { text: todoDoneDate, count: 0 });
+        await contains('.o-mail-ActivityList .o-mail-CompletedActivity', { text: uploadDoneDate, count: 0 });
+        // Display completed activities as well
+        if (displayDone) {
+            await click(".fa-caret-right",
+                { parent: ['.o-mail-ActivityList div div', { text: 'Completed Activities'}] });
+            await contains(".o-mail-ActivityList .o-mail-Activity-info", { count: 2 }); // 2 ongoing
+            await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { count: nCompleted });
+            if (displayTodoDone) {
+                await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { text: todoDoneDate });
+            }
+            if (displayUploadDone) {
+                await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { text: uploadDoneDate });
+                await contains(".o-mail-AttachmentCard", { text: 'test.txt' });
+            } else {
+                await contains(".o-mail-AttachmentCard", { text: 'test.txt', count: 0 });
+            }
+        } else {
+            await contains(".o-mail-ActivityList", { text: 'Completed Activities', count: 0 });
+            await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { count: 0 });
+        }
+        // Hide planned activities
+        await click(".fa-caret-down",
+            { parent: [".o-mail-ActivityList div div", { text: "Planned Activities" }] });
+        await contains(".o-mail-ActivityList .o-mail-Activity-info", { count: 0 });
+        await contains(".o-mail-ActivityList .o-mail-Activity", { text: "Due in", count: 0 });
+        await contains(".o-mail-ActivityList .o-mail-Activity", { text: "Today", count: 0 });
+        if (displayDone) {
+            await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { count: nCompleted });
+            if (displayTodoDone) {
+                await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { text: todoDoneDate });
+            }
+            if (displayUploadDone) {
+                await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { text: uploadDoneDate });
+                await contains(".o-mail-AttachmentCard", { text: 'test.txt' });
+            } else {
+                await contains(".o-mail-AttachmentCard", { text: 'test.txt', count: 0 });
+            }
+        } else {
+            await contains(".o-mail-ActivityList .o-mail-CompletedActivity", { count: 0 });
+        }
+        // Hide completed activities
+        if (displayDone) {
+            await click(".fa-caret-down",
+                { parent: [".o-mail-ActivityList div div", { text: "Completed Activities"}] });
+            await contains(".o-mail-ActivityList .o-mail-Activity", { count: 0 }); // Ongoing and completed activities hidden
+        }
+    }
 });
 
 QUnit.test(

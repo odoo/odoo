@@ -131,6 +131,21 @@
                 <Activity data="activity" onUpdate.bind="load" reloadParentView.bind="reloadParentView"/>
             </t>
         </t>
+        <div t-if="completedActivities.length" class="d-flex pt-4 cursor-pointer fw-bolder"
+             t-on-click="toggleCompletedActivities">
+            <hr class="flex-grow-1"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showCompletedActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <span>Completed Activities</span>
+                <span t-if="!state.showCompletedActivities" class="badge rounded-pill ms-2 text-bg-secondary"><t t-esc="completedActivities.length"/></span>
+            </div>
+            <hr class="flex-grow-1"/>
+        </div>
+        <t t-if="state.showCompletedActivities">
+            <t t-foreach="completedActivities" t-as="activity" t-key="activity.id">
+                <CompletedActivity activity="activity" largeIcon="true"/>
+            </t>
+        </t>
     </div>
 </t>
 

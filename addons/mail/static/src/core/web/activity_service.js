@@ -21,6 +21,8 @@ export class ActivityService {
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
+        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
+        this.attachmentService = services["mail.attachment"];
     }
 
     /**
@@ -84,6 +86,30 @@ export class ActivityService {
         }
     }
 
+    deleteCompleted(activity) {
+        activity.delete();
+    }
+
+    /**
+     * @param {Array} activityIds
+     * @param {Array|false} messageIds
+     */
+    async fetchData(activityIds, messageIds){
+        const data = await this.orm.call("mail.activity.mixin", "activity_fetch_and_format", [], {
+            activity_ids: activityIds,
+            message_ids: messageIds,
+        });
+        for (const attachment of data["attachments"]) {
+            this.store.Attachment.insert(attachment);
+        }
+        for (const activity of data["completed_activities"]) {
+            this.store.CompletedActivity.insert(activity);
+        }
+        for (const activity of data["activities"]) {
+            this.store.Activity.insert(activity);
+        }
+    }
+
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
@@ -116,7 +142,7 @@ export class ActivityService {
 }
 
 export const activityService = {
-    dependencies: ["mail.store", "orm"],
+    dependencies: ["mail.attachment", "mail.store", "orm"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

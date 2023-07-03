@@ -82,7 +82,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
     let actionChecks = {
         context: { force_search_count: 1 },
-        domain: [["activity_ids.user_id", "=", session.uid]],
+        domain: [["has_user_visible_activities", "=", true]],
     }
     patchWithCleanup(env.services.action, {
         doAction(action) {

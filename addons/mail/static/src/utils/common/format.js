@@ -245,3 +245,19 @@ export function convertBrToLineBreak(str) {
 export function cleanTerm(term) {
     return unaccent((typeof term === "string" ? term : "").toLowerCase());
 }
+
+export function serverDateToLocalDateShortFormat(dateStr) {
+    const date = luxon.DateTime.fromSQL(dateStr, { zone: 'utc' });
+    // To remove year only if current year
+    if (luxon.DateTime.now().year === date.year) {
+        return date.toLocaleString({
+            day: "numeric",
+            month: "short",
+        });
+    }
+    return date.toLocaleString({
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
+}

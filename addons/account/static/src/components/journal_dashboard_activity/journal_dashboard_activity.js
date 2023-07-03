@@ -43,7 +43,7 @@ export class JournalDashboardActivity extends Component {
             res_model: 'account.move',
             views: [[false, 'kanban'], [false, 'form']],
             search_view_id: [false],
-            domain: [['journal_id', '=', this.props.record.resId], ['activity_ids', '!=', false]],
+            domain: [['journal_id', '=', this.props.record.resId], ['has_visible_activities', '=', true]],
         });
     }
 }

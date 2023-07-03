@@ -66,8 +66,8 @@ QUnit.module("test_mail", {}, function () {
                 },
             ]);
             pyEnv["mail.test.activity"].create([
-                { name: "Meeting Room Furnitures", activity_ids: [mailActivityIds[0]] },
-                { name: "Office planning", activity_ids: [mailActivityIds[1], mailActivityIds[2]] },
+                { name: "Meeting Room Furnitures", activity_ids: [mailActivityIds[0]], has_visible_activities: true },
+                { name: "Office planning", activity_ids: [mailActivityIds[1], mailActivityIds[2]], has_visible_activities: true },
             ]);
             serverData = {
                 views: {
@@ -100,6 +100,7 @@ QUnit.module("test_mail", {}, function () {
         assert.expect(14);
         const mailTestActivityIds = pyEnv["mail.test.activity"].search([]);
         const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
+        pyEnv["mail.test.activity"].write(mailTestActivityIds, { has_visible_activities: true });
 
         const { env, openView } = await start({
             serverData,
@@ -241,7 +242,11 @@ QUnit.module("test_mail", {}, function () {
             }
             const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
             for (let i = 0; i < 101; i++) {
-                recordsToCreate.push({ name: "pagerTestRecord" + i, activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]] });
+                recordsToCreate.push({
+                    activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]],
+                    has_visible_activities: true,
+                    name: "pagerTestRecord" + i,
+                });
             }
             pyEnv["mail.test.activity"].create(recordsToCreate);
 
@@ -302,6 +307,7 @@ QUnit.module("test_mail", {}, function () {
         assert.expect(6);
 
         const mailTestActivityIds = pyEnv["mail.test.activity"].search([]);
+        pyEnv["mail.test.activity"].write(mailTestActivityIds, { has_visible_activities: true });
         const mailTemplateIds = pyEnv["mail.template"].search([]);
         const { openView } = await start({
             serverData,
@@ -376,8 +382,8 @@ QUnit.module("test_mail", {}, function () {
         });
 
         assert.verifySteps([
-            JSON.stringify([["activity_ids", "!=", false]]),
-            JSON.stringify([["activity_ids", "!=", false]]),
+            JSON.stringify([["has_visible_activities", "=", true]]),
+            JSON.stringify([["has_visible_activities", "=", true]]),
         ]);
     });
 
@@ -388,6 +394,7 @@ QUnit.module("test_mail", {}, function () {
         const [mailTestActivityId2] = pyEnv["mail.test.activity"].search([
             ["name", "=", "Office planning"],
         ]);
+        pyEnv["mail.test.activity"].write([mailTestActivityId2], { has_visible_activities: true });
         const [mailTemplateId1] = pyEnv["mail.template"].search([["name", "=", "Template1"]]);
         const { env, openView } = await start({
             mockRPC: function (route, args) {
@@ -559,7 +566,7 @@ QUnit.module("test_mail", {}, function () {
         patchWithCleanup(ActivityModel.prototype, {
             async load(params) {
                 // force params to have a groupBy set, the model should ignore this value during the load
-                params.groupBy = ["user_id"];
+                params.groupBy = ["activity_user_id"];
                 await super.load(params);
             },
         });

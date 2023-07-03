@@ -6,6 +6,7 @@ import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Thread } from "@mail/core/common/thread";
 import { Activity } from "@mail/core/web/activity";
+import { CompletedActivity } from "@mail/core/web/completed_activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { useHover, useScrollPosition } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -47,6 +48,7 @@ export class Chatter extends Component {
         AttachmentList,
         Dropdown,
         Thread,
+        CompletedActivity,
         Composer,
         Activity,
         FileUploader,
@@ -100,6 +102,7 @@ export class Chatter extends Component {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
             scrollToAttachments: 0,
+            showCompletedActivities: false,
             showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("models").Thread} */
@@ -204,6 +207,10 @@ export class Chatter extends Component {
      */
     get activities() {
         return this.state.thread.activities;
+    }
+
+    get completedActivities() {
+        return this.state.thread.completedActivities;
     }
 
     get followerButtonLabel() {
@@ -345,6 +352,10 @@ export class Chatter extends Component {
             };
             this.props.saveRecord?.();
         }
+    }
+
+    toggleCompletedActivities() {
+        this.state.showCompletedActivities = !this.state.showCompletedActivities;
     }
 
     toggleActivities() {

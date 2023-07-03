@@ -71,6 +71,7 @@ export class ActivityButton extends Component {
         } else {
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
+                completedActivityIds: false, // We don't support completed activity here
                 onActivityChanged: () => {
                     this.props.record.load();
                     this.popover.close();

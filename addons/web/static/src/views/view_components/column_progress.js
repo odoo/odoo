@@ -10,6 +10,7 @@ export class ColumnProgress extends Component {
     static template = "web.ColumnProgress";
     static props = {
         aggregate: { type: Object },
+        aggregateOn: { type: Object, optional: true },
         group: { type: Object },
         onBarClicked: { type: Function, optional: true },
         progressBar: { type: Object },

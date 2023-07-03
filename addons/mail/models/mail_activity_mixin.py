@@ -51,6 +51,12 @@ class MailActivityMixin(models.AbstractModel):
         'mail.activity', 'res_id', 'Activities',
         auto_join=True,
         groups="base.group_user",)
+    has_visible_activities = fields.Boolean(
+        store=False, search='_search_has_visible_activities',
+        help="This is a dummy field to filter record that has activities for the activity view.")
+    has_user_visible_activities = fields.Boolean(
+        store=False, search='_search_has_user_visible_activities',
+        help="This is a dummy field to filter record that has user-specific activities for the activity view.")
     activity_state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
@@ -191,6 +197,35 @@ class MailActivityMixin(models.AbstractModel):
             },
         )
         return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
+
+    def _search_has_visible_activities(self, operator, value, user=None):
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        if user:
+            domain = [('id', operator_new, ("SELECT res_id FROM mail_activity WHERE res_model=%s AND user_id=%s",
+                                            [self._name, user.id]))]
+        else:
+            domain = [('id', operator_new, ("SELECT res_id FROM mail_activity WHERE res_model=%s", [self._name]))]
+        display_activity_type_ids = self.env['mail.activity.type']._get_display_done_types([self._name]).ids
+        if display_activity_type_ids:
+            if user:
+                partner_id = user.partner_id
+                query_ids = (
+                    "SELECT res_id FROM mail_message WHERE model=%s AND mail_activity_type_id IN %s AND author_id=%s",
+                    [self._name, tuple(display_activity_type_ids), partner_id.id]
+                )
+            else:
+                query_ids = (
+                    "SELECT res_id FROM mail_message WHERE model=%s AND mail_activity_type_id IN %s",
+                    [self._name, tuple(display_activity_type_ids)]
+                )
+            domain = expression.OR([domain, [('id', operator_new, query_ids)]])
+        return domain
+
+    def _search_has_user_visible_activities(self, operator, value):
+        return self._search_has_visible_activities(operator, value, self.env.user)
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
@@ -458,3 +493,41 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    @api.model
+    def _activity_format(self, activity_ids, message_ids=None, fetch_related_attachment=True):
+        completed_activities = [
+            {
+                'activity_type_id': record.mail_activity_type_id,
+                'attachment_ids': [a['id'] for a in record.attachment_ids],
+                **({
+                       'completed_by': {
+                           'name': record.author_id.name,
+                           'id': record.author_id.id,
+                       }
+                   } if record.author_id else {}),
+                'date_done': record.date.date(),
+                'icon': record.mail_activity_type_id.icon,
+                'id': record.id,
+                'res_id': record.res_id,
+                'res_model': record.model,
+                'summary': record.description or record.mail_activity_type_id.name,
+            }
+            for record in message_ids or self.env['mail.message']
+        ]
+        res = {
+            'activities': activity_ids.activity_format(),
+            'completed_activities': completed_activities,
+        }
+        if fetch_related_attachment:
+            att_ids = list({attachment_id
+                            for activity in completed_activities
+                            for attachment_id in activity['attachment_ids']})
+            res['attachments'] = self.env['ir.attachment'].browse(att_ids)._attachment_format() if att_ids else []
+        return res
+
+    @api.model
+    def activity_fetch_and_format(self, activity_ids, message_ids=None, fetch_related_attachment=True):
+        return self._activity_format(
+            self.env['mail.activity'].browse(activity_ids), self.env['mail.message'].browse(message_ids or []),
+            fetch_related_attachment)

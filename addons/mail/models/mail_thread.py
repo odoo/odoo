@@ -4159,7 +4159,13 @@ class MailThread(models.AbstractModel):
         except AccessError:
             pass
         if 'activities' in request_list:
-            res['activities'] = self.activity_ids.activity_format()
+            display_done_activity_type_ids = self.env['mail.activity.type']._get_display_done_types([self._name])
+            res.update(self.env['mail.activity.mixin']._activity_format(
+                self.activity_ids,
+                message_ids=(
+                    self.message_ids.filtered(lambda m: m.mail_activity_type_id in display_done_activity_type_ids)
+                    if display_done_activity_type_ids else self.env['mail.message']),
+                fetch_related_attachment='attachments' not in request_list))
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
         if 'followers' in request_list:

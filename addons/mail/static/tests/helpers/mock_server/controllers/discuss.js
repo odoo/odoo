@@ -527,12 +527,20 @@ patch(MockServer.prototype, {
         }
         res["canPostOnReadonly"] = thread_model === "discuss.channel"; // model that have attr _mail_post_access='read'
         if (request_list.includes("activities")) {
-            const activities = this.pyEnv["mail.activity"].searchRead([
-                ["id", "in", thread.activity_ids || []],
-            ]);
-            res["activities"] = this._mockMailActivityActivityFormat(
-                activities.map((activity) => activity.id)
-            );
+            const displayDoneActivityTypeIds = this.pyEnv["mail.activity.type"].search([
+                '&',
+                '|',
+                ['res_model', '=', thread_model],
+                ['res_model', '=', false],
+                ['display_done', '=', true]]);
+            Object.assign(res, this._mockMailActivityFetchAndFormat(
+                thread.activity_ids || [],
+                this.pyEnv["mail.message"].search(
+                    [['model', '=', thread_model],
+                        ['res_id', '=', thread_id],
+                        ['mail_activity_type_id', 'in', displayDoneActivityTypeIds]]),
+                !request_list.includes('attachments')
+            ));
         }
         if (request_list.includes("attachments")) {
             const attachments = this.pyEnv["ir.attachment"].searchRead([
