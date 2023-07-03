@@ -517,17 +517,14 @@ class TestBoM(TestMrpCommon):
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare biscuits'
                 operation.time_cycle_manual = 5
-                operation.bom_id = bom_crumble  # Can't handle by the testing env
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare butter'
                 operation.time_cycle_manual = 3
-                operation.bom_id = bom_crumble
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix manually'
                 operation.time_cycle_manual = 5
-                operation.bom_id = bom_crumble
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
@@ -619,12 +616,10 @@ class TestBoM(TestMrpCommon):
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix cheese and crumble'
                 operation.time_cycle_manual = 10
-                operation.bom_id = bom_cheese_cake
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter_2
                 operation.name = 'Cake mounting'
                 operation.time_cycle_manual = 5
-                operation.bom_id = bom_cheese_cake
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
@@ -686,7 +681,6 @@ class TestBoM(TestMrpCommon):
                 operation.workcenter_id = workcenter
                 operation.name = 'Screw drawer'
                 operation.time_cycle_manual = 5
-                operation.bom_id = bom_drawer
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)
