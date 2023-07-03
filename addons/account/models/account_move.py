@@ -31,6 +31,7 @@ from odoo.tools import (
     get_lang,
     index_exists,
     is_html_empty,
+    groupby,
 )
 
 _logger = logging.getLogger(__name__)
@@ -2397,12 +2398,12 @@ class AccountMove(models.Model):
                 # Hash the move
                 if vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
-                    moves_hashes = self\
-                        .filtered(lambda m: m.restrict_mode_hash_table and not m.inalterable_hash)\
-                        .sorted(lambda m: (m.sequence_prefix, m.sequence_number))\
-                        ._hash_compute()
-                    for move, inalterable_hash in moves_hashes.items():
-                        res |= super(AccountMove, move).write({'inalterable_hash': inalterable_hash})
+                    grouped = groupby(self.filtered(lambda m: m.restrict_mode_hash_table and not m.inalterable_hash), key=lambda m: m.sequence_prefix)
+                    for prefix, moves in grouped:
+                        moves = sorted(moves, key=lambda m: m.sequence_number)
+                        moves_hashes = self.env['account.move'].browse([m.id for m in moves])._hash_compute()
+                        for move, inalterable_hash in moves_hashes.items():
+                            res |= super(AccountMove, move).write({'inalterable_hash': inalterable_hash})
 
             self._synchronize_business_models(set(vals.keys()))
 
