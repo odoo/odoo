@@ -7,7 +7,7 @@ import requests
 from werkzeug.urls import url_encode, url_join, url_parse
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe import const
@@ -132,6 +132,16 @@ class PaymentProvider(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+
+        if self.env.company.country_id.code not in const.SUPPORTED_COUNTRIES:
+            raise RedirectWarning(
+                _(
+                    "Stripe Connect is not available in your country, please use another payment"
+                    " provider."
+                ),
+                self.env.ref('payment.action_payment_provider').id,
+                _("Other Payment Providers"),
+            )
 
         if self.state == 'enabled':
             self.env['onboarding.onboarding.step'].action_validate_step_payment_provider()
@@ -415,7 +425,7 @@ class PaymentProvider(models.Model):
         response_content = response.json()
         if response_content.get('error'):  # An exception was raised on the proxy
             error_data = response_content['error']['data']
-            _logger.error("request forwarded with error: %s", error_data['message'])
+            _logger.warning("request forwarded with error: %s", error_data['message'])
             raise ValidationError(_("Stripe Proxy error: %(error)s", error=error_data['message']))
 
         return response_content.get('result', {})
