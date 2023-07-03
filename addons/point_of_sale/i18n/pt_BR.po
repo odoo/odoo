@@ -11,9 +11,10 @@
 # ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
 # Leonardo Meneguzzi, 2023
 # Martin Trigaux, 2023
-# Layna Nascimento, 2023
 # Kevilyn Rosa, 2023
 # Diego Sayron, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Diego Sayron, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,7 +281,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Um identificador global para está configuração do POS é usado para evitar "
+"Um identificador global para está configuração do PDV é usado para evitar "
 "conflitos entre informações geradas nos clientes"
 
 #. module: point_of_sale
@@ -1741,7 +1742,7 @@ msgstr "Nota do cliente"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
 msgid "Customer Portal URL"
-msgstr "Endereço do Portal do Consumidor"
+msgstr "URL do portal do cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2213,7 +2214,7 @@ msgid ""
 "form."
 msgstr ""
 "Os funcionários podem escanear seus crachás ou inserir um PIN para fazer "
-"login em uma sessão de PoS. Essas credenciais são configuráveis ​​na guia "
+"login em uma sessão de PDV. Essas credenciais são configuráveis ​​na guia "
 "*Definições de RH* no formulário do funcionário."
 
 #. module: point_of_sale
@@ -2981,7 +2982,7 @@ msgstr "Itens do Diário"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr "Valor total Pos Kpi"
+msgstr "Valor total Pdv Kpi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.led_lamp_product_template
@@ -3741,7 +3742,7 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Somente usuários com direitos de acesso de gerente para o aplicativo PoS "
+"Somente usuários com direitos de acesso de gerente para o aplicativo PdV "
 "podem modificar os preços dos produtos nos pedidos."
 
 #. module: point_of_sale
@@ -3776,7 +3777,7 @@ msgstr "Abrir Sessão"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr "Sessão aberta"
+msgstr "Abrir Sessão"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4025,7 +4026,7 @@ msgstr "Pedidos do PDV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "Ordens linhas POS"
+msgstr "Linhas Pedidos PDV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
@@ -4350,7 +4351,7 @@ msgid ""
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
 "Verifique se a impressora ainda está conectada. \n"
-"Alguns navegadores não permitem chamadas HTTP de sites para dispositivos na rede (por motivos de segurança). Se esse for o caso, você precisará seguir a documentação do Odoo para \"Certificado autoassinado para impressoras ePOS\" e \"Conexão segura (HTTPS)\" para resolver o problema"
+"Alguns navegadores não permitem chamadas HTTP de sites para dispositivos na rede (por motivos de segurança). Se esse for o caso, você precisará seguir a documentação do Odoo para \"Certificado autoassinado para impressoras ePDV\" e \"Conexão segura (HTTPS)\" para resolver o problema"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5689,7 +5690,7 @@ msgstr "Ids de sessão:"
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr "Sessão aberta em 7 dias"
+msgstr "Sessão aberta durante 7 dias"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -6687,7 +6688,7 @@ msgid ""
 "of his session saying that he needs to contact his manager."
 msgstr ""
 "Este campo mostra a diferença máxima permitida entre o saldo final eo "
-"dinheiro teórico ao fechar a sessão, para os gestores não-POS. Se esta "
+"dinheiro teórico ao fechar a sessão, para os gestores não-PDV. Se esta "
 "máxima for atingida, o usuário terá uma mensagem de erro no encerramento de "
 "sua sessão dizendo que ele precisa entrar em contato com o seu gerente."
 
@@ -7072,7 +7073,7 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
-"Incapaz de modificar esta configuração de PoS porque você não pode modificar"
+"Incapaz de modificar esta configuração de PdV porque você não pode modificar"
 " %s enquanto a sessão estiver aberta."
 
 #. module: point_of_sale
@@ -7357,7 +7358,7 @@ msgid ""
 "session using it is already opened."
 msgstr ""
 "Você não tem permissão para alterar a configuração de arredondamento de "
-"dinheiro enquanto uma sessão POS que a utiliza já está aberta."
+"dinheiro enquanto uma sessão PDV que a utiliza já está aberta."
 
 #. module: point_of_sale
 #. odoo-javascript

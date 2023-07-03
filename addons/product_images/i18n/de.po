@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +27,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
-"%(matching_images_count)s passende Bilder wurden für "
-"%(product_count)sProdukte gefunden."
+"%(matching_images_count)s passende Bilder wurden für %(product_count)s "
+"Produkte gefunden."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -56,7 +56,7 @@ msgstr ""
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
 msgid "API Key"
-msgstr "API key"
+msgstr "API-Schlüssel"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -106,7 +106,7 @@ msgstr "Bilder von Google Images erhalten"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
 msgid "Google Custom Search API Key"
-msgstr "Google Custom Search API-Schlüssel"
+msgstr "API-Schlüssel von Google Custom Search"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
@@ -146,7 +146,7 @@ msgstr "Anzahl der zu verarbeitenden Produkte"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
 msgid "Number of selected products"
-msgstr "Anzahl ausgewählter Produkte"
+msgstr "Anzahl der ausgewählten Produkte"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -167,7 +167,7 @@ msgstr "Produktbilder: Produktbilder von Google abrufen"
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -200,7 +200,7 @@ msgstr "Suchmaschinen-ID"
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
 msgstr ""
-"Der API-Schlüssel und die Suchmaschinen-ID müssen in den allgemeinen "
+"Der API-Schlüssel und die Suchmaschinen-ID müssen in den Allgemeinen "
 "Einstellungen festgelegt werden."
 
 #. module: product_images
@@ -212,7 +212,7 @@ msgid ""
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
 "Die benutzerdefinierte Such-API ist in Ihrem Google-Projekt nicht aktiviert."
-" Bitte besuchen Sie Ihre Google Cloud Platform-Projektseite, aktivieren Sie "
+" Bitte besuchen Sie Ihre Google-Cloud-Platform-Projektseite, aktivieren Sie "
 "sie und versuchen Sie es dann erneut. Wenn Sie diese API vor kurzem "
 "aktiviert haben, warten Sie bitte ein paar Minuten und versuchen Sie es "
 "erneut."
@@ -228,8 +228,8 @@ msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
 msgstr ""
-"Die Liste der ausgewählten Produkte, die die Kriterien erfüllen (einen "
-"Strichcode und kein Bild haben)"
+"Die Liste der ausgewählten Produkte, die die Kriterien erfüllen (haben einen"
+" Barcode und kein Bild)"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -240,9 +240,9 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
-"Die geplante Aktion \"Produktbilder: Produktbilder von Google abrufen\" "
-"wurde gelöscht. Bitte kontaktieren Sie Ihren Administrator, um die Aktion "
-"wiederherzustellen oder das Modul \"product_images\" neu zu installieren."
+"Die geplante Aktion „Produktbilder: Produktbilder von Google abrufen“ wurde "
+"gelöscht. Bitte kontaktieren Sie Ihren Administrator, um die Aktion "
+"wiederherzustellen oder das Modul „product_images“ neu zu installieren."
 
 #. module: product_images
 #: code:addons/product_images/models/ir_cron_trigger.py:0
@@ -266,7 +266,7 @@ msgstr ""
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr "SIe haben ausgewählt"
+msgstr "Sie haben"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -277,7 +277,7 @@ msgstr "Ihr API-Schlüssel oder Ihre Suchmaschinen-ID ist falsch."
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr "derer verarbeitet werden."
+msgstr "verarbeitet werden."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -287,10 +287,10 @@ msgid ""
 "                            number is not set."
 msgstr ""
 "Produkte werden nicht\n"
-"verarbeitet, weil sie entweder bereits ein Bild haben oder ihre Barcode-\n"
-"Nummer nicht festgelegt ist."
+"verarbeitet, weil sie entweder bereits ein Bild haben oder ihre Barcodenummer\n"
+"nicht festgelegt ist."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "products,"
-msgstr "Produkte,"
+msgstr "Produkte ausgewählt, wovon"
