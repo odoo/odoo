@@ -134,7 +134,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         if self.state == 'enabled':
-            self.env["onboarding.onboarding.step"].action_validate_step_payment_provider()
+            self.env['onboarding.onboarding.step'].action_validate_step_payment_provider()
             action = {'type': 'ir.actions.act_window_close'}
         else:
             # Account creation
