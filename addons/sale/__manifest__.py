@@ -39,6 +39,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'wizard/sale_order_cancel_views.xml',
+        'wizard/sale_order_discount_views.xml',
 
         # Define sale order views before their references
         'views/sale_order_views.xml',
@@ -68,7 +69,6 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/scss/sale_onboarding.scss',
             'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
-            'sale/static/src/js/product_discount_field.js',
             'sale/static/src/js/sale_product_field.js',
             'sale/static/src/js/product_catalog/**/*',
             'sale/static/src/xml/**/*',

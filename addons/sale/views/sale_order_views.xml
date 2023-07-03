@@ -559,7 +559,7 @@
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
-                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="sol_discount"/>
+                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
                                 <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
                                 <field name="price_total"
@@ -659,8 +659,12 @@
                             </kanban>
                         </field>
                         <div class="oe_right d-flex gap-1 mb-2 ms-1"
-                             invisible="1"
                              name="so_button_below_order_lines">
+                            <button string="Discount"
+                                    name="action_open_discount_wizard"
+                                    type="object"
+                                    class="btn btn-secondary"
+                                    groups="product.group_discount_per_so_line"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">
