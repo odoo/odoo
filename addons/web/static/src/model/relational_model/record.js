@@ -37,6 +37,16 @@ export class Record extends DataPoint {
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
 
+        const parentRecord = this._parentRecord;
+        if (parentRecord) {
+            this.evalContext = {
+                get parent() {
+                    return parentRecord.evalContext;
+                },
+            };
+        } else {
+            this.evalContext = {};
+        }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };
         const vals = this._parseServerValues(data);
@@ -55,23 +65,12 @@ export class Record extends DataPoint {
         // expose string values (false fallbacks on the empty string) in this.data.
         this._textValues = markRaw({});
         this._setTextValues(data);
+        this._setEvalContext();
         this._savePoint = markRaw({
             dirty: false,
             changes: { ...this._changes },
             textValues: { ...this._textValues },
         });
-
-        const parentRecord = this._parentRecord;
-        if (parentRecord) {
-            this.evalContext = {
-                get parent() {
-                    return parentRecord.evalContext;
-                },
-            };
-        } else {
-            this.evalContext = {};
-        }
-        this._setEvalContext();
     }
 
     // -------------------------------------------------------------------------
