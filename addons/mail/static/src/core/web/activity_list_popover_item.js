@@ -93,7 +93,7 @@ export class ActivityListPopoverItem extends Component {
 
     async onFileUploaded(data) {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
+        await this.env.services["mail.activity"].markAsDone(this.props.activity, attachmentId);
         this.props.onActivityChanged();
     }
 

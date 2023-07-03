@@ -96,7 +96,8 @@ export class Chatter extends Component {
         this.state = useState({
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
-            showActivities: true,
+            showDoneActivities: false,
+            showNotDoneActivities: true,
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
         });
@@ -176,6 +177,14 @@ export class Chatter extends Component {
      */
     get activities() {
         return this.state.thread.activities;
+    }
+
+    get notDoneActivities() {
+        return this.activities.filter((activity) => activity.state !== "done");
+    }
+
+    get doneActivities() {
+        return this.activities.filter((activity) => activity.state === "done");
     }
 
     get followerButtonLabel() {
@@ -368,8 +377,12 @@ export class Chatter extends Component {
         }
     }
 
-    toggleActivities() {
-        this.state.showActivities = !this.state.showActivities;
+    toggleDoneActivities() {
+        this.state.showDoneActivities = !this.state.showDoneActivities;
+    }
+
+    toggleNotDoneActivities() {
+        this.state.showNotDoneActivities = !this.state.showNotDoneActivities;
     }
 
     async scheduleActivity() {

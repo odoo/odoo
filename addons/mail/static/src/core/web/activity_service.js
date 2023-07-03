@@ -19,11 +19,11 @@ export class ActivityService {
 
     /**
      * @param {import("@mail/core/web/activity_model").Activity} activity
-     * @param {number[]} attachmentIds
+     * @param {number|false} attachmentId
      */
-    async markAsDone(activity, attachmentIds = []) {
-        await this.orm.call("mail.activity", "action_feedback", [[activity.id]], {
-            attachment_ids: attachmentIds,
+    async markAsDone(activity, attachmentId = false) {
+        await this.orm.call("mail.activity", "action_feedback_and_link_attachment", [[activity.id]], {
+            attachment_id: attachmentId,
             feedback: activity.feedback,
         });
         this.broadcastChannel.postMessage({
