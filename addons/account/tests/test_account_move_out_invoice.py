@@ -2735,6 +2735,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 120.0,  'debit': 60.0,  'credit': 0.0,      'account_id': wizard.revenue_accrual_account.id,        'reconciled': True},
         ])
 
+    @freeze_time('2019-01-16')
+    def test_out_invoice_change_period_past_move_date(self):
+        move = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date=fields.Date.from_string('2019-01-01'),
+            amounts=[1000.0],
+            post=True,
+        )
+
+        context = {
+            'default_move_type': 'out_invoice',
+            'active_model': 'account.move.line',
+            'active_ids': move.mapped('invoice_line_ids').ids
+        }
+        wizard = self.env['account.automatic.entry.wizard'] \
+            .with_context(context) \
+            .create({
+                'action': 'change_period',
+                'journal_id': self.company_data['default_journal_misc'],
+                'revenue_accrual_account': self.company_data['default_account_assets'].id,
+            })
+        wizard_res = wizard.do_action()
+
+        accrual_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+        self.assertRecordValues(accrual_moves, [
+            {'state': 'posted', 'date': fields.Date.from_string('2019-01-16')},
+            {'state': 'posted', 'date': fields.Date.from_string('2019-01-16')},
+        ])
+
     def test_out_invoice_multi_date_change_period_accrual(self):
         dates = ['2017-01-01', '2017-01-01', '2017-02-01']
         values = []
