@@ -12,7 +12,7 @@ class OnboardingController(http.Controller):
 
     @http.route(_onboarding_return_url, type='http', methods=['GET'], auth='user')
     def stripe_return_from_onboarding(self, provider_id, menu_id):
-        """Redirect the user to the provider form of the onboarded Stripe account.
+        """ Redirect the user to the provider form of the onboarded Stripe account.
 
         The user is redirected to this route by Stripe after or during (if the user clicks on a
         dedicated button) the onboarding.
