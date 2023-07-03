@@ -529,6 +529,7 @@ class MrpProduction(models.Model):
             if production.state != 'draft':
                 continue
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: not wo.operation_id)]
+            workorders_list += [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id != production.bom_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
             if production.product_id != production._origin.product_id:
@@ -776,12 +777,24 @@ class MrpProduction(models.Model):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
                 raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(order.move_byproduct_ids.mapped('cost_share')) > 100:
+            if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
     def write(self, vals):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
+            del vals['move_byproduct_ids']
+        if 'bom_id' in vals and 'move_byproduct_ids' in vals and 'move_finished_ids' in vals:
+            # If byproducts are given, they take precedence over move_finished for byproduts definition
+            bom = self.env['mrp.bom'].browse(vals.get('bom_id'))
+            bom_product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            joined_move_ids = vals.get('move_byproduct_ids', [])
+            for move_finished in vals.get('move_finished_ids', []):
+                # Remove CREATE lines from finished_ids as they do not reflect the form current state (nor the byproduct vals)
+                if move_finished[0] == Command.CREATE and move_finished[2].get('product_id') != bom_product.id:
+                    continue
+                joined_move_ids.append(move_finished)
+            vals['move_finished_ids'] = joined_move_ids
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)

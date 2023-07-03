@@ -1673,7 +1673,7 @@ class AccountMove(models.Model):
             if move.invoice_cash_rounding_id.strategy == 'add_invoice_line' and not move.invoice_cash_rounding_id.profit_account_id:
                 return {'warning': {
                     'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
-                    'message': _("You must specifiy the Profit Account (company dependent)")
+                    'message': _("You must specify the Profit Account (company dependent)")
                 }}
 
     # -------------------------------------------------------------------------
@@ -2064,6 +2064,10 @@ class AccountMove(models.Model):
         existing_after = existing()
         needed_after = needed()
 
+        # Filter out deleted lines from `needed_before` to not recompute lines if not necessary or wanted
+        line_ids = set(self.env['account.move.line'].browse(k['id'] for k in needed_before if 'id' in k).exists().ids)
+        needed_before = {k: v for k, v in needed_before.items() if 'id' not in k or k['id'] in line_ids}
+
         # old key to new key for the same line
         inv_existing_before = {v: k for k, v in existing_before.items()}
         inv_existing_after = {v: k for k, v in existing_after.items()}
@@ -2073,16 +2077,6 @@ class AccountMove(models.Model):
             if bline in inv_existing_after
         }
 
-        # # do not alter manually inputted values if there is no change done in business field
-        # if set(needed_before) == set(needed_after) and all(
-        #     needed_before[key]['amount_currency'] == needed_after[key]['amount_currency']
-        #     for key in needed_after
-        #     if 'amount_currency' in needed_after[key]
-        # ):
-        #     for key in needed_after:
-        #         if 'amount_currency' in needed_after[key]:
-        #             del needed_after[key]['amount_currency']
-        #             del needed_before[key]['amount_currency']
         if needed_after == needed_before:
             return
 
