@@ -819,6 +819,12 @@ msgid "All"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -862,6 +868,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1229,6 +1236,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr ""
 
@@ -3356,6 +3364,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr ""
@@ -4901,6 +4910,14 @@ msgstr ""
 msgid ""
 "Only messages type comment can have their content updated on model "
 "'mail.channel'"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
 msgstr ""
 
 #. module: mail
@@ -6512,6 +6529,12 @@ msgid "Targeted model"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr ""
@@ -6617,8 +6640,26 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
 msgstr ""
 
 #. module: mail
@@ -6944,6 +6985,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
 msgstr ""
 
 #. module: mail
@@ -7337,12 +7383,6 @@ msgid ""
 "Using your own email server is required to send/receive emails in Community "
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
 msgstr ""
 
 #. module: mail
@@ -7810,6 +7850,11 @@ msgid "assigned you an activity"
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -7882,6 +7927,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
 msgstr ""
 
 #. module: mail
@@ -8083,6 +8133,11 @@ msgid "other members."
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr ""
@@ -8126,6 +8181,11 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "results out of"
+msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
 msgstr ""
 
 #. module: mail
