@@ -118,13 +118,13 @@ class SaleOrder(models.Model):
             for lines in grouped_order_lines.values():
                 if lines.reward_id.reward_type != 'discount':
                     continue
-                if self.env.user.has_group('sale.group_show_price_subtotal'):
-                    price_unit = sum(lines.mapped('price_subtotal'))
-                else:
-                    price_unit = sum(lines.mapped('price_total'))
                 new_lines += self.env['sale.order.line'].new({
                     'product_id': lines[0].product_id.id,
-                    'price_unit': price_unit,
+                    'tax_id': False,
+                    'price_unit': sum(lines.mapped('price_unit')),
+                    'price_subtotal': sum(lines.mapped('price_subtotal')),
+                    'price_total': sum(lines.mapped('price_total')),
+                    'discount': 0.0,
                     'name': lines[0].name_short if lines.reward_id.reward_type != 'product' else lines[0].name,
                     'product_uom_qty': 1,
                     'product_uom': lines[0].product_uom.id,

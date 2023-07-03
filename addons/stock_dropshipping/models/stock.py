@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, models, fields
 
 
@@ -47,3 +46,25 @@ class StockPickingType(models.Model):
         super()._compute_warehouse_id()
         if self.default_location_src_id.usage == 'supplier' and self.default_location_dest_id.usage == 'customer':
             self.warehouse_id = False
+
+
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
+
+    def _compute_delivery_ids(self):
+        super()._compute_delivery_ids()
+        for lot in self:
+            if lot.delivery_count > 0:
+                last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)
+                if last_delivery.is_dropship:
+                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_id
+
+    def _get_delivery_ids_by_lot_domain(self):
+        return [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|',
+            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False),
+            # dropship transfers have an incoming picking_code but should be considered as well
+            ('location_dest_id.usage', '=', 'customer'), ('location_id.usage', '=', 'supplier')
+        ]

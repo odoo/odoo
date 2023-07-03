@@ -5,10 +5,11 @@
 # Translators:
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1009,6 +1010,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"    ロック日を不可逆にします：\n"
+"\n"
+"    * アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日は請求書ロック日よりも前（または同じ）でなければなりません。\n"
+"    * まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
+"    * 新しい全てのユーザーのロック日は、前の日付より後（または同じ）である必要があります。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1719,6 +1727,7 @@ msgid ""
 "inclusion of rating directly within the customer portal discuss widget.\n"
 "        "
 msgstr ""
+"\n"
 "ポータルに評価機能を追加するブリッジモジュール。特に、カスタマーポータルのディスカッションウィジェット内に直接評価を含めることが含まれます。"
 
 #. module: base
@@ -1732,6 +1741,7 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"\n"
 "リーフをタイムシートに統合するためのブリッジモジュール\n"
 "================================================\n"
 "\n"
@@ -1858,6 +1868,7 @@ msgid ""
 "Allows to contact directly the employee in case of unjustified absence.\n"
 "    "
 msgstr ""
+"\n"
 "従業員のプレゼンスを制御する\n"
 "==========================\n"
 "\n"
@@ -1908,6 +1919,7 @@ msgid ""
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
 "美しい調査を作成し、回答を視覚化する\n"
 "==============================================\n"
 "異なるユーザーによるいくつかの質問の回答またはレビューに依存します。\n"
@@ -2088,6 +2100,9 @@ msgid ""
 "Display your booths on your website for the users to register.\n"
 "    "
 msgstr ""
+"\n"
+"ウェブサイトにブースを表示し、ユーザが登録できるようにします。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_stock_ddt
@@ -2263,6 +2278,7 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
 "機能\n"
 "----------\n"
 "\n"
@@ -2277,7 +2293,7 @@ msgstr ""
 "ローカリゼーションに必要な場合、このロジックはこのモジュールを依存関係として追加し、ローカリゼーションモジュールに拡張する必要があります。\n"
 "\n"
 "*会社の_localization_use_documents()メソッドを拡張します。\n"
-"*特定の国に存在するドキュメントタイプのデータを作成します。ドキュメントタイプには国フィールドがあります"
+"*特定の国に存在するドキュメントタイプのデータを作成します。ドキュメントタイプには国フィールドがあります\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -4701,8 +4717,8 @@ msgstr ""
 "\n"
 "このモジュールを使用すると、購入契約を管理できます。\n"
 "===========================================================\n"
-"入札募集および包括注文を管理します。入札募集は、さまざまなベンダーから競合するオファーを取得し、\n"
-"最適なものを選択するために使用されます。包括注文は、事前に決定された価格設定の恩恵を受けるためにベンダーと締結している契約です。\n"
+"入札募集および包括オーダを管理します。入札募集は、さまざまな仕入先から競合するオファーを取得し、\n"
+"最適なものを選択するために使用されます。包括オーダは、事前に決定された価格設定の恩恵を受けるために仕入先と締結している契約です。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_hourly_cost
@@ -5505,6 +5521,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Implementation details\n"
+"\n"
+"### Supported features\n"
+"\n"
+"- リダイレクトフローによる支払\n"
+"- クレジットカード、デビットカード、クレジットカード、その他 [others]など、さまざまな支払い方法があります。\n"
+" (https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- [Webhook](https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  通知\n"
+"\n"
+"### Not implemented features\n"
+"\n"
+"- [Manual capture](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Partial refunds](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API and gateway\n"
+"\n"
+"当社は以下の組み合わせで統合することを選択しました\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) と\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing) 解決方法：\n"
+"リダイレクトを含む支払フローは顧客にCheckout ProのJavaScript SDKが内部で行うようにフォームがエンコードされたペイロードと\n"
+" HTTPリクエストを送付することで開始されます。残存しているAPIコールは\n"
+"Checkout APIのドキュメント化に応じて実施されます。 Checkout Proとの統合が不可能だったのは、Checkout APIのみでも\n"
+"顧客を決済ページにリダイレクトすることのみ許可しているからで、\n"
+"加盟店のウェブサイトから直接支払いを受け付けるには、カスタム支払いフォームを作成する必要があるためです。\n"
+"\n"
+"他のゲートウェイは除外されています。他のゲートウェイについての詳細はタスクの開発者メモを参照して下さい。\n"
+"\n"
+"このモジュールが実装するAPIはバージョン管理されていません。\n"
+"\n"
+"## Merge details\n"
+"\n"
+"モジュールの最初のバージョンは、以下のタスクに規定されています：\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) また以下と統合されています：PR\n"
+"odoo/odoo#83957 in `saas-15.5`.\n"
+"\n"
+"## Testing instructions\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -7880,7 +7937,7 @@ msgstr "連絡先の自動マージのリストを実行してもよろしいで
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Are you sure you want to hide these onboarding tips?"
-msgstr ""
+msgstr "このオンボーディングのヒントを非表示にしても大丈夫ですか？"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -8517,7 +8574,7 @@ msgstr "ベリーズ"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "以下の文章は提案であり、Odoo S.A.ではその責任を負いかねます。"
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -9031,7 +9088,7 @@ msgstr "アドレス帳を一元化する"
 #. module: base
 #: model:ir.module.module,summary:base.module_knowledge
 msgid "Centralize, manage, share and grow your knowledge library"
-msgstr ""
+msgstr "ナレッジライブラリの一元化、管理、共有、育成"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -9595,6 +9652,13 @@ msgstr "完全な名前"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "集計日"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -10525,7 +10589,7 @@ msgstr "顧客リファレンス"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr "顧客関係管理"
+msgstr "CRM"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -18440,7 +18504,7 @@ msgstr "店頭で決済・ピッキング"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Onboarding Tips"
-msgstr ""
+msgstr "オンボーディングのヒント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
@@ -21134,7 +21198,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "標準的な販売条件"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -21239,7 +21303,7 @@ msgstr "サービスアウトソーシングに基づく販売。"
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
-msgstr "営業"
+msgstr "販売"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -23038,6 +23102,7 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"標準的な当該販売条件の後に作成されたものであっても、顧客は、顧客自身の標準販売条件を明示的に放棄するものとします。いかなる逸脱も、それを有効にするためには事前に書面で明示的に合意されなければなりません。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -25910,6 +25975,12 @@ msgstr "現在ログインしているユーザを無効にすることはでき
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -26005,7 +26076,7 @@ msgstr "他の検索条件を試してみてください。"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "お客様のT&amp;Cを反映させるために、この文書を更新する必要があります。"
 
 #. module: base
 #. odoo-python

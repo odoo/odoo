@@ -758,7 +758,7 @@ class WebsiteSlides(WebsiteProfile):
             return request.redirect(slide.channel_id.website_url)
 
         if slide.can_self_mark_completed and not slide.user_has_completed \
-           and slide.channel_id.channel_type == 'training':
+           and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
             self._slide_mark_completed(slide)
         else:
             self._set_viewed_slide(slide)

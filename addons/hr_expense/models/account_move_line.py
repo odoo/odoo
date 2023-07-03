@@ -8,7 +8,7 @@ from odoo.tools.misc import frozendict
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    expense_id = fields.Many2one('hr.expense', string='Expense', copy=False)
+    expense_id = fields.Many2one('hr.expense', string='Expense', copy=True)
 
     @api.constrains('account_id', 'display_type')
     def _check_payable_receivable(self):

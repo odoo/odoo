@@ -1049,6 +1049,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.user_employee_id).create(trigger_error_leave)
 
+    @freeze_time('2022-06-13 10:00:00')
     def test_current_leave_status(self):
         types = ('no_validation', 'manager', 'hr', 'both')
         employee = self.employee_emp

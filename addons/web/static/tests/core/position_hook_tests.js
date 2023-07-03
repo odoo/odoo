@@ -14,7 +14,7 @@ import {
 } from "../helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useRef, xml } from "@odoo/owl";
 let container;
 
 /**
@@ -138,21 +138,9 @@ QUnit.test("can add margin", async (assert) => {
 
 QUnit.test("is restricted to its container, even with margins", async (assert) => {
     // Add a sheet to set a margin on the popper
-    const SHEET_MARGINS = {
-        top: 11,
-        right: 12,
-        bottom: 13,
-        left: 14,
-    };
+    const SHEET_MARGIN = 11;
     const sheet = document.createElement("style");
-    sheet.textContent = `
-        #popper {
-            margin-top: ${SHEET_MARGINS.top}px;
-            margin-right: ${SHEET_MARGINS.right}px;
-            margin-bottom: ${SHEET_MARGINS.bottom}px;
-            margin-left: ${SHEET_MARGINS.left}px;
-        }
-    `;
+    sheet.textContent = `#popper { margin: ${SHEET_MARGIN}px; }`;
     document.head.appendChild(sheet);
     registerCleanup(() => sheet.remove());
 
@@ -178,21 +166,21 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "bottom" });
     assert.verifySteps(["bottom-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top - 1}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "bottom" });
     assert.verifySteps(["right-start"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top + margin}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "bottom", margin });
     assert.verifySteps(["bottom-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top + margin - 1}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "bottom", margin });
     assert.verifySteps(["right-start"]);
 
@@ -202,22 +190,22 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "top" });
     assert.verifySteps(["top-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom - 1}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "top" });
     assert.verifySteps(["right-end"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom + margin}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "top", margin });
     assert.verifySteps(["top-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
     Object.assign(container.style, {
-        height: `${minSize + SHEET_MARGINS.bottom + margin - 1}px`,
+        height: `${minSize + margin + SHEET_MARGIN - 1}px`,
     });
     await _mountTestComponentAndDestroy({ position: "top", margin });
     assert.verifySteps(["right-end"]);
@@ -230,22 +218,22 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "left" });
     assert.verifySteps(["left-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right - 1}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "left" });
     assert.verifySteps(["bottom-end"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right + margin}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "left", margin });
     assert.verifySteps(["left-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
     Object.assign(container.style, {
-        width: `${minSize + SHEET_MARGINS.right + margin - 1}px`,
+        width: `${minSize + margin + SHEET_MARGIN - 1}px`,
     });
     await _mountTestComponentAndDestroy({ position: "left", margin });
     assert.verifySteps(["bottom-end"]);
@@ -256,21 +244,21 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "right" });
     assert.verifySteps(["right-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left - 1}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "right" });
     assert.verifySteps(["top-start"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left + margin}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "right", margin });
     assert.verifySteps(["right-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left + margin - 1}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "right", margin });
     assert.verifySteps(["top-start"]);
 });
@@ -334,6 +322,18 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
+QUnit.test("reposition popper when a load event occurs", async (assert) => {
+    const TestComp = getTestComponent({
+        onPositioned: () => {
+            assert.step("onPositioned called");
+        },
+    });
+    await mount(TestComp, container);
+    assert.verifySteps(["onPositioned called"], "onPositioned called when component mounted");
+    await document.querySelector('[id="popper"]').dispatchEvent(new Event("load"));
+    assert.verifySteps(["onPositioned called"], "onPositioned called when load event is triggered");
+});
+
 QUnit.test("is positioned relative to its containing block", async (assert) => {
     const fixtureBox = getFixture().getBoundingClientRect();
     // offset the container
@@ -369,6 +369,68 @@ QUnit.test("is positioned relative to its containing block", async (assert) => {
     // best positions are the same relative to the viewport
     assert.equal(popBox1.top, popBox2.top);
     assert.equal(popBox1.left, popBox2.left);
+});
+
+QUnit.test("popper as child of another", async (assert) => {
+    class Child extends Component {
+        setup() {
+            const ref = useRef("ref");
+            usePosition(() => ref.el, { popper: "popper", container, position: "left" });
+        }
+    }
+    Child.template = /* xml */ xml`
+        <div id="child">
+            <div class="ref" t-ref="ref" />
+            <div class="popper" t-ref="popper" />
+        </div>
+    `;
+    const reference = container.querySelector("#reference");
+    class Parent extends Component {
+        setup() {
+            usePosition(reference, { container });
+        }
+    }
+    Parent.components = { Child };
+    Parent.template = /* xml */ xml`
+        <div id="popper">
+            <Child/>
+        </div>
+    `;
+
+    const sheet = document.createElement("style");
+    sheet.textContent = `
+        #child .ref {
+            background-color: salmon;
+            height: 100px;
+            width: 10px;
+        }
+        #child .popper {
+            background-color: olive;
+            height: 100px;
+            width: 100px;
+        }
+    `;
+    document.head.appendChild(sheet);
+    registerCleanup(() => sheet.remove());
+
+    await mount(Parent, container);
+    const parentPopBox1 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox1 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await triggerEvent(document, null, "scroll");
+
+    const parentPopBox2 = container.querySelector("#popper").getBoundingClientRect();
+    const childPopBox2 = container.querySelector("#child .popper").getBoundingClientRect();
+
+    assert.strictEqual(parentPopBox1.top, parentPopBox2.top);
+    assert.strictEqual(childPopBox1.top, childPopBox2.top);
+    assert.strictEqual(parentPopBox2.left, parentPopBox1.left + spacer.offsetWidth * 0.5);
+    assert.strictEqual(childPopBox2.left, childPopBox1.left + spacer.offsetWidth * 0.5);
 });
 
 function getPositionTest(position, positionToCheck) {

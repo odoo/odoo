@@ -137,7 +137,7 @@ class AccountMove(models.Model):
     journal_id = fields.Many2one(
         'account.journal',
         string='Journal',
-        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
+        compute='_compute_journal_id', inverse='_inverse_journal_id', store=True, readonly=False, precompute=True,
         required=True,
         states={'draft': [('readonly', False)]},
         check_company=True,
@@ -615,14 +615,6 @@ class AccountMove(models.Model):
     def _compute_journal_id(self):
         for record in self:
             record.journal_id = record._search_default_journal()
-        self._conditional_add_to_compute('company_id', lambda m: (
-            not m.company_id
-            or m.company_id != m.journal_id.company_id
-        ))
-        self._conditional_add_to_compute('currency_id', lambda m: (
-            not m.currency_id
-            or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
-        ))
 
     def _search_default_journal(self):
         if self.payment_id and self.payment_id.journal_id:
@@ -645,10 +637,13 @@ class AccountMove(models.Model):
         domain = [('company_id', '=', company_id), ('type', 'in', journal_types)]
 
         journal = None
-        currency_id = self.currency_id.id or self._context.get('default_currency_id')
-        if currency_id and currency_id != self.company_id.currency_id.id:
-            currency_domain = domain + [('currency_id', '=', currency_id)]
-            journal = self.env['account.journal'].search(currency_domain, limit=1)
+        # the currency is not a hard dependence, it triggers via manual add_to_compute
+        # avoid computing the currency before all it's dependences are set (like the journal...)
+        if self.env.cache.contains(self, self._fields['currency_id']):
+            currency_id = self.currency_id.id or self._context.get('default_currency_id')
+            if currency_id and currency_id != self.company_id.currency_id.id:
+                currency_domain = domain + [('currency_id', '=', currency_id)]
+                journal = self.env['account.journal'].search(currency_domain, limit=1)
 
         if not journal:
             journal = self.env['account.journal'].search(domain, limit=1)
@@ -689,7 +684,7 @@ class AccountMove(models.Model):
                     if move._get_last_sequence(lock=False):
                         # The name does not match the date and the move is not the first in the period:
                         # Reset to draft
-                        move.name = '/'
+                        move.name = False
                         continue
                 else:
                     if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence(lock=False):
@@ -701,7 +696,7 @@ class AccountMove(models.Model):
             if move.date and (not move_has_name or not move._sequence_matches_date()):
                 move._set_next_sequence()
 
-        self.filtered(lambda m: not m.name).name = '/'
+        self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
 
 
@@ -894,7 +889,8 @@ class AccountMove(models.Model):
                         ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
                             FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
-                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment
+                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
+                        BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
                     JOIN account_account account ON account.id = source_line.account_id
@@ -937,7 +933,7 @@ class AccountMove(models.Model):
                 if payment_state_matters:
 
                     if currency.is_zero(invoice.amount_residual):
-                        if any(x['has_payment'] for x in reconciliation_vals):
+                        if any(x['has_payment'] or x['has_st_line'] for x in reconciliation_vals):
 
                             # Check if the invoice/expense entry is fully paid or 'in_payment'.
                             if all(x['all_payments_matched'] for x in reconciliation_vals):
@@ -1204,11 +1200,27 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                         ))
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
-                rounding_line = move.line_ids.filtered(lambda l: l.display_type == 'rounding')
-                if rounding_line:
-                    amount_total_rounded = move.tax_totals['amount_total'] + sign * rounding_line.amount_currency
-                    move.tax_totals['amount_total_rounded'] = amount_total_rounded
-                    move.tax_totals['formatted_amount_total_rounded'] = formatLang(self.env, amount_total_rounded, currency_obj=move.currency_id) or ''
+                if move.invoice_cash_rounding_id:
+                    rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
+                    totals = move.tax_totals
+                    totals['display_rounding'] = True
+                    if rounding_amount:
+                        if move.invoice_cash_rounding_id.strategy == 'add_invoice_line':
+                            totals['rounding_amount'] = rounding_amount
+                            totals['formatted_rounding_amount'] = formatLang(self.env, totals['rounding_amount'], currency_obj=move.currency_id)
+                            totals['amount_total_rounded'] = totals['amount_total'] + rounding_amount
+                            totals['formatted_amount_total_rounded'] = formatLang(self.env, totals['amount_total_rounded'], currency_obj=move.currency_id)
+                        elif move.invoice_cash_rounding_id.strategy == 'biggest_tax':
+                            if totals['subtotals_order']:
+                                max_tax_group = max((
+                                    tax_group
+                                    for tax_groups in totals['groups_by_subtotal'].values()
+                                    for tax_group in tax_groups
+                                ), key=lambda tax_group: tax_group['tax_group_amount'])
+                                max_tax_group['tax_group_amount'] += rounding_amount
+                                max_tax_group['formatted_tax_group_amount'] = formatLang(self.env, max_tax_group['tax_group_amount'], currency_obj=move.currency_id)
+                                totals['amount_total'] += rounding_amount
+                                totals['formatted_amount_total'] = formatLang(self.env, totals['amount_total'], currency_obj=move.currency_id)
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
@@ -1510,15 +1522,31 @@ class AccountMove(models.Model):
 
     @api.onchange('company_id')
     def _inverse_company_id(self):
-        for move in self:
-            if move.journal_id.company_id != move.company_id:
-                self.env.add_to_compute(self._fields['journal_id'], move)
+        self._conditional_add_to_compute('journal_id', lambda m: (
+            m.journal_id.company_id != m.company_id
+        ))
 
     @api.onchange('currency_id')
     def _inverse_currency_id(self):
-        for invoice in self:
-            if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
-                self.env.add_to_compute(self._fields['journal_id'], invoice)
+        self._conditional_add_to_compute('journal_id', lambda m: (
+            m.journal_id.currency_id
+            and m.journal_id.currency_id != m.currency_id
+        ))
+        (self.line_ids | self.invoice_line_ids)._conditional_add_to_compute('currency_id', lambda l: (
+            l.move_id.is_invoice(True)
+            and l.move_id.currency_id != l.currency_id
+        ))
+
+    @api.onchange('journal_id')
+    def _inverse_journal_id(self):
+        self._conditional_add_to_compute('company_id', lambda m: (
+            not m.company_id
+            or m.company_id != m.journal_id.company_id
+        ))
+        self._conditional_add_to_compute('currency_id', lambda m: (
+            not m.currency_id
+            or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
+        ))
 
     def _inverse_payment_reference(self):
         self.line_ids._conditional_add_to_compute('name', lambda line: (
@@ -1642,7 +1670,7 @@ class AccountMove(models.Model):
     @api.onchange('invoice_cash_rounding_id')
     def _onchange_invoice_cash_rounding_id(self):
         for move in self:
-            if move.invoice_cash_rounding_id and not move.invoice_cash_rounding_id.profit_account_id:
+            if move.invoice_cash_rounding_id.strategy == 'add_invoice_line' and not move.invoice_cash_rounding_id.profit_account_id:
                 return {'warning': {
                     'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
                     'message': _("You must specifiy the Profit Account (company dependent)")
@@ -1862,7 +1890,7 @@ class AccountMove(models.Model):
             if self.invoice_cash_rounding_id.strategy == 'biggest_tax':
                 biggest_tax_line = None
                 for tax_line in self.line_ids.filtered('tax_repartition_line_id'):
-                    if not biggest_tax_line or tax_line.price_subtotal > biggest_tax_line.price_subtotal:
+                    if not biggest_tax_line or abs(tax_line.balance) > abs(biggest_tax_line.balance):
                         biggest_tax_line = tax_line
 
                 # No tax found.
@@ -2002,6 +2030,19 @@ class AccountMove(models.Model):
                                     ignore = False
                         if ignore:
                             del res[key]
+
+            # Convert float values to their "ORM cache" one to prevent different rounding calculations
+            for dict_key in res:
+                move_id = dict_key.get('move_id')
+                if not move_id:
+                    continue
+                record = self.env['account.move'].browse(move_id)
+                for fname, current_value in res[dict_key].items():
+                    field = self.env['account.move.line']._fields[fname]
+                    if isinstance(current_value, float):
+                        new_value = field.convert_to_cache(current_value, record)
+                        res[dict_key][fname] = new_value
+
             return res
 
         def dirty():
@@ -2045,17 +2086,18 @@ class AccountMove(models.Model):
         if needed_after == needed_before:
             return
 
-        to_delete = sorted({
+        to_delete = [
             line.id
             for key, line in existing_before.items()
             if key not in needed_after
             and key in existing_after
             and before2after[key] not in needed_after
-        } | {
-            line.id
+        ]
+        to_delete_set = set(to_delete)
+        to_delete.extend(line.id
             for key, line in existing_after.items()
-            if key not in needed_after
-        })
+            if key not in needed_after and line.id not in to_delete_set
+        )
         to_create = {
             key: values
             for key, values in needed_after.items()
@@ -2169,6 +2211,9 @@ class AccountMove(models.Model):
                     if command == Command.CREATE
                     and line_vals.get('display_type') not in ('payment_term', 'tax', 'rounding')
                 ]
+            elif move.move_type == 'entry':
+                if 'partner_id' not in data:
+                    data['partner_id'] = False
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
         return data_list
@@ -2178,8 +2223,6 @@ class AccountMove(models.Model):
         default = dict(default or {})
         if (fields.Date.to_date(default.get('date')) or self.date) <= self.company_id._get_user_fiscal_lock_date():
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
-        if self.move_type == 'entry':
-            default['partner_id'] = False
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
             '<br/>' + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link())
@@ -2192,7 +2235,7 @@ class AccountMove(models.Model):
         return copied_am
 
     def _sanitize_vals(self, vals):
-        if 'invoice_line_ids' in vals and 'line_ids' in vals:
+        if vals.get('invoice_line_ids') and vals.get('line_ids'):
             # values can sometimes be in only one of the two fields, sometimes in
             # both fields, sometimes one field can be explicitely empty while the other
             # one is not, sometimes not...
@@ -2606,8 +2649,29 @@ class AccountMove(models.Model):
                     self.journal_id.company_id.account_purchase_tax_id
                 )
             taxes = self.fiscal_position_id.map_tax(taxes)
-        price_untaxed = taxes.with_context(force_price_include=True).compute_all(
-            self.quick_edit_total_amount - self.tax_totals['amount_total'])['total_excluded']
+
+        # When a payment term has an early payment discount and the company's epd computation is set to 'mixed', recomputing
+        # the untaxed amount should take in consideration the discount percentage otherwise we'd get a wrong value.
+        # Since in a payment term we can have multiple lines with multiple discounts, handling all cases can get
+        # complicated. For this we check that we have only one line with one discount and handle only this case.
+        # We also check that we have one percentage tax for the same reason.
+        # In one example: let's say: base = 100, discount = 2%, tax = 21%
+        # the total will be calculated as: total = base + (base * (1 - discount)) * tax
+        # If we manipulate the equation to get the base from the total, we'll have base = total / ((1 - discount) * tax + 1)
+        term_lines = self.invoice_payment_term_id.line_ids
+        discount_percentage = term_lines.discount_percentage if len(term_lines) == 1 else 0
+        remaining_amount = self.quick_edit_total_amount - self.tax_totals['amount_total']
+
+        if (
+                discount_percentage
+                and self.company_id.early_pay_discount_computation == 'mixed'
+                and len(taxes) == 1
+                and taxes.amount_type == 'percent'
+        ):
+            price_untaxed = self.currency_id.round(
+                remaining_amount / (((1.0 - discount_percentage / 100.0) * (taxes.amount / 100.0)) + 1.0))
+        else:
+            price_untaxed = taxes.with_context(force_price_include=True).compute_all(remaining_amount)['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
     @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
@@ -3245,6 +3309,7 @@ class AccountMove(models.Model):
             default_values.update({
                 'move_type': TYPE_REVERSE_MAP[move.move_type],
                 'reversed_entry_id': move.id,
+                'partner_id': move.partner_id.id,
             })
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,

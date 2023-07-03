@@ -76,7 +76,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
-        assert.containsOnce(target, '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin"]');
+        assert.containsOnce(target, '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
     });
 
     QUnit.test("readonly sandboxed preview", async (assert) => {
@@ -111,7 +111,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
-        const readonlyIframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin"]');
+        const readonlyIframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
         assert.ok(readonlyIframe);
         await iframeReady(readonlyIframe);
         assert.strictEqual(readonlyIframe.contentDocument.body.innerText, 'Hello');
@@ -178,7 +178,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         });
 
         // check original displayed content
-        let iframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin"]');
+        let iframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
         assert.ok(iframe, 'Should use a sanboxed iframe');
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hello');
@@ -196,7 +196,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(target, '#codeview-btn-group > button');
         await togglePromises[togglePromiseId];
         // check dispayed content after edit
-        iframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin"]');
+        iframe = target.querySelector('.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hi');
         assert.strictEqual(iframe.contentDocument.head.querySelector('style').textContent.trim().replace(/\s/g, ''),
@@ -253,7 +253,36 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 </form>`,
         });
 
-        assert.containsOnce(target, '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin"]');
+        assert.containsOnce(target, '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
     });
 
+    QUnit.module('Readonly mode');
+
+    QUnit.test("Links should open on a new tab", async (assert) => {
+        assert.expect(6);
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+                <body>
+                    <a href="/contactus">Relative link</a>
+                    <a href="${location.origin}/contactus">Internal link</a>
+                    <a href="https://google.com">External link</a>
+                </body>`,
+        }];
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" readonly="1"/>
+                </form>`,
+        });
+
+        for (const link of target.querySelectorAll('a')) {
+            assert.strictEqual(link.getAttribute('target'), '_blank');
+            assert.strictEqual(link.getAttribute('rel'), 'noreferrer');
+        }
+    });
 });

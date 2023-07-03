@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api
+from odoo.tools import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -12,11 +13,8 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            for line in move.line_ids:
-                # if a line has correction layers hide the 'Reset to Darft' button
-                if line.sudo()._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
-                    move.show_reset_to_draft_button = False
-                    break
+            if move.sudo().line_ids.stock_valuation_layer_ids:
+                move.show_reset_to_draft_button = False
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
@@ -106,6 +104,7 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
@@ -130,6 +129,9 @@ class AccountMove(models.Model):
                 sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 amount_currency = sign * line.quantity * price_unit
+
+                if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+                    continue
 
                 # Add interim account line.
                 lines_vals_list.append({
@@ -180,6 +182,8 @@ class AccountMove(models.Model):
                 continue
 
             stock_moves = move._stock_account_get_last_step_stock_moves()
+            # In case we return a return, we have to provide the related AMLs so all can be reconciled
+            stock_moves |= stock_moves.origin_returned_move_id
 
             if not stock_moves:
                 continue

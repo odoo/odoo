@@ -82,7 +82,7 @@
             <field name="refuse_reason_id" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="v" groups="hr_recruitment.group_hr_recruitment_user"
-                        class="o_create_employee" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
+                        class="o_create_employee" attrs="{'invisible': ['|', '|', ('emp_id', '!=', False), ('active', '=', False), ('date_closed', '=', False)]}"/>
                 <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}" data-hotkey="x"/>
                 <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}" data-hotkey="z"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
@@ -616,7 +616,7 @@
                         <field name="active" invisible="1"/>
                     </div>
                     <group>
-                        <field name="template_id"/>
+                        <field name="template_id" context="{'default_model': 'hr.applicant'}"/>
                     </group>
                 </sheet>
             </form>
@@ -629,7 +629,7 @@
         <field name="arch" type="xml">
             <tree string="Refuse Reason" editable="bottom">
                 <field name="name"/>
-                <field name="template_id"/>
+                <field name="template_id" context="{'default_model': 'hr.applicant'}"/>
             </tree>
         </field>
     </record>

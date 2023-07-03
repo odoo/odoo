@@ -223,6 +223,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.name or ''\">أوسكار مورغان</t>،<br>\n"
+"    نشكرك على استفسارك.<br>\n"
+"    إليك شارة الفعالية <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>.<br>\n"
+"    لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"    <br><br>\n"
+"    شكراً لك،\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>ميتشل آدمن</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3206,6 +3218,14 @@ msgid ""
 msgstr ""
 "لا يمكن أن يقع تاريخ الإيقاف قبل تاريخ البدء. يرجى التحقق من التذكرة "
 "%(ticket_name)s "
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
 
 #. module: event
 #. odoo-python

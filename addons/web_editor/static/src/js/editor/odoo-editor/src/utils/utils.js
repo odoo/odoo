@@ -55,6 +55,7 @@ export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi'
 export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
+export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
 
 //------------------------------------------------------------------------------
 // Position and sizes
@@ -157,10 +158,10 @@ const PATH_END_REASONS = {
  *
  * @see leftLeafFirstPath
  * @see leftLeafOnlyNotBlockPath
- * @see leftLeafOnlyInScopeNotBlockNoEditablePath
+ * @see leftLeafOnlyInScopeNotBlockEditablePath
  * @see rightLeafOnlyNotBlockPath
  * @see rightLeafOnlyPathNotBlockNotEditablePath
- * @see rightLeafOnlyInScopeNotBlockPath
+ * @see rightLeafOnlyInScopeNotBlockEditablePath
  * @see rightLeafOnlyNotBlockNotEditablePath
  *
  * @param {number} direction
@@ -469,9 +470,17 @@ export function hasValidSelection(editable) {
  *     positions which are not possible, like the cursor inside an image).
  */
 export function getNormalizedCursorPosition(node, offset, full = true) {
-    if (isVisibleEmpty(node) || !closestElement(node).isContentEditable) {
-        // Cannot put cursor inside those elements, put it after instead.
-        [node, offset] = rightPos(node);
+    const editable = closestElement(node, '.odoo-editor-editable');
+    let closest = closestElement(node);
+    while (
+        closest &&
+        closest !== editable &&
+        (isVisibleEmpty(node) || !closest.isContentEditable)
+    ) {
+        // Cannot put the cursor inside those elements, put it before if the
+        // offset is 0 and the node is not empty, else after instead.
+        [node, offset] = offset || !nodeSize(node) ? rightPos(node) : leftPos(node);
+        closest = closestElement(node);
     }
 
     // Be permissive about the received offset.
@@ -495,8 +504,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             }
         }
         if (el) {
-            const leftInlineNode = leftLeafOnlyInScopeNotBlockNoEditablePath(el, elOffset).next()
-                .value;
+            const leftInlineNode = leftLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next().value;
             let leftVisibleEmpty = false;
             if (leftInlineNode) {
                 leftVisibleEmpty =
@@ -507,7 +515,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
                     : endPos(leftInlineNode);
             }
             if (!leftInlineNode || leftVisibleEmpty) {
-                const rightInlineNode = rightLeafOnlyInScopeNotBlockPath(el, elOffset).next().value;
+                const rightInlineNode = rightLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next().value;
                 if (rightInlineNode) {
                     const closest = closestElement(rightInlineNode);
                     const rightVisibleEmpty =
@@ -1008,7 +1016,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 
     const selectedTextNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE);
+        .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable);
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
@@ -2547,7 +2555,7 @@ export const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, 
     stopTraverseFunction: isBlock,
     stopFunction: isBlock,
 });
-export const leftLeafOnlyInScopeNotBlockNoEditablePath = createDOMPathGenerator(DIRECTIONS.LEFT, {
+export const leftLeafOnlyInScopeNotBlockEditablePath = createDOMPathGenerator(DIRECTIONS.LEFT, {
     leafOnly: true,
     inScope: true,
     stopTraverseFunction: node => isNotEditableNode(node) || isBlock(node),
@@ -2563,11 +2571,11 @@ export const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT
 export const rightLeafOnlyPathNotBlockNotEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
 });
-export const rightLeafOnlyInScopeNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
+export const rightLeafOnlyInScopeNotBlockEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
     inScope: true,
-    stopTraverseFunction: isBlock,
-    stopFunction: isBlock,
+    stopTraverseFunction: node => isNotEditableNode(node) || isBlock(node),
+    stopFunction: node => isNotEditableNode(node) || isBlock(node),
 });
 export const rightLeafOnlyNotBlockNotEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
