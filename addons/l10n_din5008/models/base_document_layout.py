@@ -44,6 +44,7 @@ class BaseDocumentLayout(models.TransientModel):
             (_("Invoice No."), 'INV/2021/12345'),
             (_("Invoice Date"), format_date(self.env, fields.Date.today())),
             (_("Due Date"), format_date(self.env, fields.Date.add(fields.Date.today(), days=7))),
+            (_("Delivery Date"), format_date(self.env, fields.Date.add(fields.Date.today(), days=7))),
             (_("Reference"), 'SO/2021/45678'),
         ]
 
