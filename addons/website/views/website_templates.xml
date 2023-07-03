@@ -60,8 +60,15 @@
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
+        <!-- The `and '1' or '0'` in `data-can-optimize-seo` property is there
+        only for stable compliance as if omitted, `False` will not display the
+        property in the DOM (it's how `t-att` works), meaning we won't be able
+        to differentiate old database without `-u` and database with the fix.
+        TODO: Remove this part of the condition in master.
+        -->
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get() and '1' or '0',
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': editable_in_backend,
         })"/>
