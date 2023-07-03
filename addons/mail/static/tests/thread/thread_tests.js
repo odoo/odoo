@@ -209,9 +209,12 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
 QUnit.test("mention a channel with space in the name", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -221,9 +224,12 @@ QUnit.test("mention a channel with space in the name", async (assert) => {
 QUnit.test('mention a channel with "&" in the name', async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -608,10 +614,13 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
 QUnit.test("mention a channel on a second line when the first line contains #", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    const { openDiscuss } = await start();
+    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n");
     await insertText(".o-mail-Composer-input", "#");
+    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+    await nextTick();
+    await nextTick();
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -623,9 +632,12 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-        const { openDiscuss } = await start();
+        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "#");
+        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
+        await nextTick();
+        await nextTick();
         await click(".o-mail-Composer-suggestion");
         const text = $(".o-mail-Composer-input").val();
         $(".o-mail-Composer-input").val(text.slice(0, -1));
