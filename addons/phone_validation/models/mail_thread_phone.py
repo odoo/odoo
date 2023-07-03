@@ -228,7 +228,7 @@ class MailThreadPhone(models.AbstractModel):
         can_access = self.env['phone.blacklist'].has_access('write')
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Phone Number?',
+                'name': self.env._('Are you sure you want to unblacklist this Phone Number?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'phone.blacklist.remove',
