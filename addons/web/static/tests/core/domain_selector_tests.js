@@ -1397,4 +1397,12 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(getSelectedOperator(target), `not =?`);
     });
+
+    QUnit.test("display of an operator without negation defined (edit)", async (assert) => {
+        await makeDomainSelector({
+            resModel: "partner",
+            domain: `["!", (expr, "parent_of", "a")]`,
+        });
+        assert.strictEqual(getSelectedOperator(target), `not parent of`);
+    });
 });

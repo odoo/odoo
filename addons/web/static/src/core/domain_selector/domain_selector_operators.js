@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
-import { formatValue } from "@web/core/domain_tree";
+import { formatValue, toValue } from "@web/core/domain_tree";
 import { sprintf } from "@web/core/utils/strings";
+import { parseExpr } from "@web/core/py_js/py";
 
 /**
  * @typedef {Object} OperatorInfo
@@ -41,6 +42,22 @@ export const OPERATOR_DESCRIPTIONS = {
     between: { label: _lt("is between"), valueCount: 2 },
 };
 
+function toKey(operator, negate = false) {
+    if (!negate && typeof operator === "string" && operator in OPERATOR_DESCRIPTIONS) {
+        // this case is the main one. We keep it simple
+        return operator;
+    }
+    return JSON.stringify([formatValue(operator), negate]);
+}
+
+export function toOperator(key) {
+    if (!key.includes("[")) {
+        return [key, false];
+    }
+    const [expr, negate] = JSON.parse(key);
+    return [toValue(parseExpr(expr)), negate];
+}
+
 /**
  * @param {import("@web/core/domain_tree").Value} operator
  * @param {boolean} [negate=false]
@@ -48,12 +65,19 @@ export const OPERATOR_DESCRIPTIONS = {
  */
 export function getOperatorInfo(operator, negate = false) {
     let operatorInfo;
+    const key = toKey(operator, negate);
     if (typeof operator === "string" && operator in OPERATOR_DESCRIPTIONS) {
         const { label, valueCount } = OPERATOR_DESCRIPTIONS[operator];
-        operatorInfo = { key: operator, label: label.toString(), operator, negate, valueCount };
+        operatorInfo = {
+            key,
+            label: label.toString(),
+            operator,
+            negate,
+            valueCount,
+        };
     } else {
         operatorInfo = {
-            key: "__unknown__",
+            key,
             label: formatValue(operator),
             operator,
             negate,
