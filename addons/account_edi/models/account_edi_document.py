@@ -172,8 +172,7 @@ class AccountEdiDocument(models.Model):
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
                     })
-
-            if moves_to_cancel:
+            if moves_to_cancel and all((doc.state == 'cancelled' and doc.blocking_level != 'error') or not doc.edi_format_id._needs_web_services() for doc in moves_to_cancel.edi_document_ids):
                 moves_to_cancel.button_draft()
                 moves_to_cancel.button_cancel()
 
