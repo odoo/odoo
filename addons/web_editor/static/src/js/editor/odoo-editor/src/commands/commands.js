@@ -1,5 +1,4 @@
 /** @odoo-module **/
-import { OdooEditor } from '../OdooEditor.js';
 import { REGEX_BOOTSTRAP_COLUMN } from '../utils/constants.js';
 import {
     ancestors,
