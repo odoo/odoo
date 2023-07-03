@@ -133,10 +133,7 @@ export function formatBoolean(value) {
 }
 
 /**
- * Returns a string representing a char.  If the value is false, then we return
- * an empty string.
- *
- * @param {string|false} value
+ * @param {string} value
  * @param {Object} [options] additional options
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @param {boolean} [options.isPassword=false] if true, returns '********'
@@ -144,7 +141,6 @@ export function formatBoolean(value) {
  * @returns {string}
  */
 export function formatChar(value, options) {
-    value = typeof value === "string" ? value : "";
     if (options && options.isPassword) {
         return "*".repeat(value ? value.length : 0);
     }
@@ -487,16 +483,6 @@ export function formatSelection(value, options = {}) {
     return option ? option[1] : "";
 }
 
-/**
- * Returns the value or an empty string if it's falsy.
- *
- * @param {string | false} value
- * @returns {string}
- */
-export function formatText(value) {
-    return value || "";
-}
-
 export function formatJson(value) {
     return (value && JSON.stringify(value)) || "";
 }
@@ -524,4 +510,4 @@ registry
     .add("properties_definition", formatProperties)
     .add("reference", formatReference)
     .add("selection", formatSelection)
-    .add("text", formatText);
+    .add("text", (value) => value);

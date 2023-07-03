@@ -1236,6 +1236,34 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("invisible attrs char fields", async function (assert) {
+        // For a char/text field, the server can return false or "" (empty string),
+        // depending if the field isn't set in db (NULL) or set to the empty string.
+        // This makes no difference in the UI, but it matters when evaluating modifiers.
+        serverData.models.partner.records[0].display_name = false;
+        serverData.models.partner.records[0].foo = "";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <div class="a" attrs='{"invisible": [("foo", "=", False)]}'>a</div>
+                    <div class="b" attrs='{"invisible": [("foo", "=", "")]}'>b</div>
+                    <div class="c" attrs='{"invisible": [("display_name", "=", False)]}'>c</div>
+                    <div class="d" attrs='{"invisible": [("display_name", "=", "")]}'>d</div>
+                    <field name="foo" invisible="1"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, "div.a");
+        assert.containsNone(target, "div.b");
+        assert.containsNone(target, "div.c");
+        assert.containsOnce(target, "div.d");
+    });
+
     QUnit.test(
         "properly handle modifiers and attributes on notebook tags",
         async function (assert) {

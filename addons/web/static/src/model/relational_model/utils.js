@@ -333,14 +333,14 @@ export function parseServerValue(field, value) {
         case "text": {
             return value || "";
         }
+        case "html": {
+            return markup(value || "");
+        }
         case "date": {
             return value ? deserializeDate(value) : false;
         }
         case "datetime": {
             return value ? deserializeDateTime(value) : false;
-        }
-        case "html": {
-            return markup(value || "");
         }
         case "selection": {
             if (value === false) {
