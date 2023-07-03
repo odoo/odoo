@@ -587,6 +587,19 @@ font[class*='bg-'] {
     }
 }
 
+// Badges
+.badge {
+    // Similarly to list-group-item-x and alert-* classes, override text-bg-*
+    // classes behavior when used on badges.
+    @each $-color, $-value in $theme-colors {
+        &.text-bg-#{$-color} {
+            $-bg: tint-color($-value, 80%);
+            background-color: $-bg !important;
+            border: $border-width solid $-value;
+            color: increase-contrast($-value , $-bg) !important;
+        }
+    }
+}
 
 // Background Images
 .oe_img_bg {

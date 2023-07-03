@@ -187,9 +187,9 @@
                             t-att-src="sponsor_other.partner_id.country_id.image_url"
                             t-att-alt="sponsor_other.partner_id.country_id.name"/>
                             <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
-                                t-att-class="'badge text-bg-light ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
+                                t-att-class="'badge text-white ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
-                            <span t-else="" class="badge text-bg-light"
+                            <span t-else="" class="badge text-bg-info"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
                         </div>
                         <div class="flex-grow-1 overflow-auto px-2">

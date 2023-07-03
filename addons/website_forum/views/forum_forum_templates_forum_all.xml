@@ -44,12 +44,12 @@
                 <div class="mt-5 pt-5">
                     <h3 class="mb-0 fw-bold" t-field="forum.name"/>
                     <t t-if="is_view_active('website_forum.opt_post_count')">
-                        <span t-if="forum.total_posts > 0" class="badge text-bg-dark">
+                        <span t-if="forum.total_posts > 0" class="badge text-bg-info">
                             <span t-out="forum.total_posts" class="me-1"/>
                             <t t-if="forum.total_posts > 1">posts</t>
                             <t t-else="">post</t>
                         </span>
-                        <span t-else="" class="badge text-dark">No posts yet</span>
+                        <span t-else="" class="badge text-bg-dark">No posts yet</span>
                     </t>
                     <div t-if="is_view_active('website_forum.opt_last_post') and forum.last_post_id" class="text-truncate">
                         <span class="badge bg-dark me-1">Last post:</span>
