@@ -9,7 +9,7 @@
                 <search string="Tasks">
                     <field name="name" string="Tasks" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
                     <field name="tag_ids"/>
-                    <field name="user_ids" filter_domain="[('user_ids', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                    <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
                     <field name="partner_id" operator="child_of"/>
