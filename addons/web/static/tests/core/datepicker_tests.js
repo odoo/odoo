@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
+import { Component, useState, xml } from "@odoo/owl";
 import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import ActionModel from "web.ActionModel";
 import CustomFilterItem from "web.CustomFilterItem";
 import { createComponent } from "web.test_utils";
@@ -12,10 +14,16 @@ import { editSelect } from "web.test_utils_fields";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    mount,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 
-import { Component, useState, xml } from "@odoo/owl";
-const { DateTime } = luxon;
+const { DateTime, Settings } = luxon;
 
 const serviceRegistry = registry.category("services");
 
@@ -81,40 +89,44 @@ function useFRLocale() {
 }
 
 var symbolMap = {
-    '1': '૧',
-    '2': '૨',
-    '3': '૩',
-    '4': '૪',
-    '5': '૫',
-    '6': '૬',
-    '7': '૭',
-    '8': '૮',
-    '9': '૯',
-    '0': '૦'
+    1: "૧",
+    2: "૨",
+    3: "૩",
+    4: "૪",
+    5: "૫",
+    6: "૬",
+    7: "૭",
+    8: "૮",
+    9: "૯",
+    0: "૦",
 };
 var numberMap = {
-    '૧': '1',
-    '૨': '2',
-    '૩': '3',
-    '૪': '4',
-    '૫': '5',
-    '૬': '6',
-    '૭': '7',
-    '૮': '8',
-    '૯': '9',
-    '૦': '0'
+    "૧": "1",
+    "૨": "2",
+    "૩": "3",
+    "૪": "4",
+    "૫": "5",
+    "૬": "6",
+    "૭": "7",
+    "૮": "8",
+    "૯": "9",
+    "૦": "0",
 };
 
 function useGULocale() {
     if (!window.moment.locales().includes("gu")) {
         const originalLocale = window.moment.locale();
         window.moment.defineLocale("gu", {
-            months: 'જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર'.split('_'),
-            monthsShort: 'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split('_'),
+            months: "જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર".split(
+                "_"
+            ),
+            monthsShort: "જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.".split(
+                "_"
+            ),
             monthsParseExact: true,
             week: {
                 dow: 0, // Sunday is the first day of the week.
-                doy: 6 // The week that contains Jan 1st is the first week of the year.
+                doy: 6, // The week that contains Jan 1st is the first week of the year.
             },
             preparse: function (string) {
                 return string.replace(/[૧૨૩૪૫૬૭૮૯૦]/g, function (match) {
@@ -173,11 +185,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsOnce(target, "span.o_datepicker_button");
         assert.containsNone(document.body, "div.bootstrap-datetimepicker-widget");
 
-        const input = target.querySelector("input.o_input.o_datepicker_input");
+        const datePicker = target.querySelector(".o_datepicker");
+        const input = datePicker.querySelector("input.o_input.o_datepicker_input");
         assert.strictEqual(input.value, "09/01/1997", "Value should be the one given");
         assert.strictEqual(
-            input.dataset.target,
-            `#${target.querySelector(".o_datepicker").id}`,
+            datePicker.dataset.targetInput,
+            `#${datePicker.querySelector("input[type=hidden]").id}`,
             "DatePicker id should match its input target"
         );
 
@@ -284,9 +297,9 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await mountPicker(DatePicker, {
             date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", {
-                zone: "utc" ,
+                zone: "utc",
                 locale: useGULocale(),
-                }),
+            }),
             format: "dd MMM, yyyy",
             onDateTimeChanged: (date) => {
                 assert.step("datetime-changed");
@@ -302,7 +315,9 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(input.value, "09 જાન્યુ, 1997");
 
         await click(input);
-        assert.strictEqual(input.value, "૧૯૯૭/૦૧/૦૯");
+
+        assert.strictEqual(input.value, "09 જાન્યુ, 1997");
+
         await click(document.querySelector(".datepicker .picker-switch")); // month picker
         await click(document.querySelectorAll(".datepicker .month")[8]); // september
         await click(document.querySelectorAll(".datepicker .day")[1]); // first day of september
@@ -360,6 +375,46 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(input.value, "1997/01/09");
     });
 
+    QUnit.test("Validate input date with 'Enter'", async (assert) => {
+        await mountPicker(DatePicker, {
+            date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", { zone: "utc" }),
+            format: "dd/MM/yyyy",
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "09/01/1997");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+
+        input.value = "23/03/2022";
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+
+        assert.strictEqual(input.value, "23/03/2022");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+    });
+
+    QUnit.test("Validate input date with 'Escape'", async (assert) => {
+        await mountPicker(DatePicker, {
+            date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", { zone: "utc" }),
+            format: "dd/MM/yyyy",
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "09/01/1997");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+
+        input.value = "23/03/2022";
+        await triggerEvent(input, null, "keydown", { key: "Escape" });
+
+        assert.strictEqual(input.value, "23/03/2022");
+        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+    });
+
     QUnit.module("DateTimePicker");
 
     QUnit.test("basic rendering", async function (assert) {
@@ -373,11 +428,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsOnce(target, "span.o_datepicker_button");
         assert.containsNone(document.body, "div.bootstrap-datetimepicker-widget");
 
-        const input = target.querySelector("input.o_input.o_datepicker_input");
+        const datePicker = target.querySelector(".o_datepicker");
+        const input = datePicker.querySelector("input.o_input.o_datepicker_input");
         assert.strictEqual(input.value, "09/01/1997 12:30:01", "Value should be the one given");
         assert.strictEqual(
-            input.dataset.target,
-            `#${target.querySelector(".o_datepicker").id}`,
+            datePicker.dataset.targetInput,
+            `#${datePicker.querySelector("input[type=hidden]").id}`,
             "DateTimePicker id should match its input target"
         );
 
@@ -607,7 +663,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await click(input);
 
-        assert.strictEqual(input.value, "1997/04/09");
+        assert.strictEqual(input.value, "09 apr., 1997");
 
         const days = [...document.querySelectorAll(".datepicker .day")];
         await click(days.find((d) => d.innerText.trim() === "1")); // first day of april
@@ -623,7 +679,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             date: DateTime.fromFormat("10/03/2023 13:14:27", "dd/MM/yyyy HH:mm:ss"),
             format: "dd.MM,yyyy",
         });
-        let input = target.querySelector(".o_datepicker_input");
+        const input = target.querySelector(".o_datepicker_input");
 
         assert.strictEqual(input.value, "10.03,2023");
 
@@ -690,5 +746,31 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         assert.verifySteps(["datetime-changed"]);
         assert.strictEqual(input.value, "08/02/1997 15:45:05");
+    });
+
+    QUnit.test("arab locale, latin numbering system as input", async (assert) => {
+        const dateFormat = "dd MMM, yyyy";
+        const timeFormat = "hh:mm:ss";
+        const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+
+        patchWithCleanup(localization, { dateFormat, timeFormat, dateTimeFormat });
+        patchWithCleanup(Settings, {
+            defaultLocale: "ar-001",
+            defaultNumberingSystem: "arab",
+        });
+
+        await mountPicker(DateTimePicker, {
+            format: dateTimeFormat,
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+
+        await editInput(input, null, "٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
+
+        assert.strictEqual(input.value, "٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
+
+        await editInput(input, null, "15 07, 2020 12:30:43");
+
+        assert.strictEqual(input.value, "١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣");
     });
 });

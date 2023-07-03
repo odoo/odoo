@@ -275,7 +275,7 @@ msgid ""
 msgstr ""
 "- Un nouveau champ \"Total (toutes taxes comprises)\" pour accélérer et "
 "contrôler l'encodage en automatisant la création de lignes avec le bon "
-"compte de taxe."
+"compte et taxe."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -849,7 +849,7 @@ msgid ""
 "<span class=\"o_form_label\">Cash Discount Tax Reduction</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Réduction de taxe pour paiement en espèce</span>\n"
+"<span class=\"o_form_label\">Réduction d'impôt pour escompte</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont spécifiques à l'entreprise.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
@@ -1210,7 +1210,7 @@ msgstr "<span>Télécharger</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "<span>Vue</span>"
+msgstr "<span>Voir</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2231,7 +2231,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Add a bank account"
-msgstr "Ajouter un compte en banque"
+msgstr "Ajouter un compte bancaire"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3317,7 +3317,7 @@ msgstr "Base"
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
 #: model:ir.model.fields,field_description:account.field_account_tax_template__is_base_affected
 msgid "Base Affected by Previous Taxes"
-msgstr "Assiette affectée par les impôts antérieurs"
+msgstr "Base affectée par les impôts antérieurs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
@@ -3329,7 +3329,7 @@ msgstr "Montant de base"
 #: model:ir.model.fields,field_description:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "Base de la taxe perçue"
+msgstr "Compte de base de la taxe perçue"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -3540,12 +3540,12 @@ msgstr "Import CAMT"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "TRANSPORT ET ASSURANCE PAYÉS À"
+msgstr "PORT PAYÉ, ASSURANCE COMPRISE JUSQU'À"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "TRANSPORT PAYÉ À"
+msgstr "PORT PAYÉ JUSQU'À"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
@@ -3572,12 +3572,12 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
 msgid "Can Edit Body"
-msgstr "Peut éditer le corps de l'email"
+msgstr "Peut modifier le corps de l'email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
-msgstr "Peut éditer l'assistant"
+msgstr "Peut modifier l'assistant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
@@ -3784,7 +3784,7 @@ msgstr "Gain d'escompte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Gain account"
-msgstr "Compte de gain d'escompte"
+msgstr "Compte des gains d'escompte"
 
 #. module: account
 #. odoo-python
@@ -3796,24 +3796,24 @@ msgstr "Perte d'escompte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Loss account"
-msgstr "Compte de perte d'escompte"
+msgstr "Compte des pertes d'escompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr "Réduction d'impôt pour paiement en espèces"
+msgstr "Réduction d'impôt pour escompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_gain_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "Compte de gain d'annulation d'escompte"
+msgstr "Compte des gains d'annulation d'escompte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_early_pay_discount_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "Compte de perte d'annulation d'escompte"
+msgstr "Compte des pertes d'annulation d'escompte"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -4073,7 +4073,7 @@ msgid ""
 "\"cancel\" if the invoice is already reconciled."
 msgstr ""
 "Choisissez comment vous souhaitez créditer cette facture. Vous ne pouvez pas"
-" \"éditer\" ou \"annuler\" si la facture est déjà rapprochée."
+" \"modifier\" ou \"annuler\" si la facture est déjà rapprochée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -5909,7 +5909,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Document Digitization"
-msgstr "Numérisation du document"
+msgstr "Numérisation de documents"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
@@ -6130,7 +6130,7 @@ msgstr "Vente à distance intracommunautaire UE"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr "DÉPART USINE"
+msgstr "À L'USINE"
 
 #. module: account
 #. odoo-python
@@ -6178,7 +6178,7 @@ msgstr "Escompte accordé pour cette ligne"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "Éditer"
+msgstr "Modifier"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -6186,7 +6186,7 @@ msgstr "Éditer"
 #: model:ir.model.fields,help:account.field_account_payment__tax_totals
 msgid "Edit Tax amounts if you encounter rounding issues."
 msgstr ""
-"Editez les montants de taxes si vous rencontrez des problèmes d'arrondis."
+"Modifiez les montants de taxes si vous rencontrez des problèmes d'arrondis."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -6351,7 +6351,7 @@ msgstr "Epd requis"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Equity"
-msgstr "Capitaux propres"
+msgstr "Fonds propres"
 
 #. module: account
 #. odoo-python
@@ -6496,7 +6496,7 @@ msgstr "FRANCO TRANSPORTEUR"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "FRANCO À BORD"
+msgstr "FRANCO À BORD DU NAVIRE"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -6605,7 +6605,7 @@ msgstr "Première écriture"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Hash"
-msgstr "Premier hash"
+msgstr "Premier hachage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__first_line_index
@@ -6750,7 +6750,7 @@ msgstr "Montant fixe"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_fixed
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_fixed
 msgid "Fixed Assets"
-msgstr "Immobilisations corporelles"
+msgstr "Immobilisations"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__float
@@ -7015,13 +7015,13 @@ msgstr "Activités futures"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_id
 msgid "Gain Account"
-msgstr "Compte de profit"
+msgstr "Compte des gains"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__income_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__income_currency_exchange_account_id
 msgid "Gain Exchange Rate Account"
-msgstr "Compte de gain de change"
+msgstr "Compte des gains de change"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_param
@@ -7058,7 +7058,7 @@ msgstr "Déclaration de TVA générique "
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
 msgid "Get hash integrity result as PDF."
-msgstr "Obtenez le résultat de l'intégrité du hash au format PDF."
+msgstr "Obtenez le résultat de l'intégrité du hachage au format PDF."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7196,12 +7196,12 @@ msgstr "Présente des écritures non lettrées"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Hash Integrity Result -"
-msgstr "Résultat de l'intégrité du hash"
+msgstr "Résultat de l'intégrité du hachage"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
-msgstr "Résultat de l'intégrité du hash au format PDF"
+msgstr "Résultat de l'intégrité du hachage au format PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -7482,7 +7482,7 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
-"Si elle est cochée, l'écriture comptable ou la facture reçoit un hash dès "
+"Si elle est cochée, l'écriture comptable ou la facture est hachée dès "
 "qu'elle est comptabilisée et ne peut plus être modifiée."
 
 #. module: account
@@ -7640,7 +7640,7 @@ msgstr "Inactif"
 #: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
 #: model:ir.model.fields,field_description:account.field_account_payment__inalterable_hash
 msgid "Inalterability Hash"
-msgstr "Hash inaltérable"
+msgstr "Hachage inaltérable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8794,7 +8794,7 @@ msgstr "Dernière entrée"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Hash"
-msgstr "Dernier hash"
+msgstr "Dernier hachage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account____last_update
@@ -9144,7 +9144,7 @@ msgstr "Limite de chargement"
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr "Verrouiller les écritures comptabilisées avec hash"
+msgstr "Verrouiller les écritures comptabilisées avec hachage"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -9173,13 +9173,13 @@ msgstr "Parfait !"
 #: model:ir.model.fields,field_description:account.field_account_journal__loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_id
 msgid "Loss Account"
-msgstr "Compte de perte"
+msgstr "Compte des pertes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__expense_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__expense_currency_exchange_account_id
 msgid "Loss Exchange Rate Account"
-msgstr "Compte de perte de change"
+msgstr "Compte des pertes de change"
 
 #. module: account
 #. odoo-python
@@ -9888,7 +9888,7 @@ msgstr "Créances non commerciales"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_non_current
 msgid "Non-current Assets"
-msgstr "Autres immobilisations"
+msgstr "Actif immobilisé"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
@@ -10185,7 +10185,7 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"Quand tout est fait, vous pouvez continuer. Vous pourrez éditer ceci plus "
+"Quand tout est fait, vous pouvez continuer. Vous pourrez modifier ceci plus "
 "tard dans le menu <b> Clients </b>."
 
 #. module: account
@@ -10746,7 +10746,7 @@ msgstr "Le partenaire est défini"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Livre des tiers"
+msgstr "Grand livre des partenaires"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -11392,7 +11392,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_prepayments
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_prepayments
 msgid "Prepayments"
-msgstr "Paiement anticipé"
+msgstr "Acomptes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model
@@ -12354,23 +12354,23 @@ msgstr "Numéro de compte nettoyé"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Enregistrer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Save as a new template"
-msgstr "Sauvegarder comme un nouveau modèle"
+msgstr "Enregistrer comme un nouveau modèle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Save as new template"
-msgstr "Sauvegarder en tant que nouveau modèle"
+msgstr "Enregistrer en tant que nouveau modèle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
 msgstr ""
-"Sauvegardez cette page, vous pouvez y revenir pour appliquer vos nouvelles "
+"Enregistrez cette page, vous pouvez y revenir pour appliquer vos nouvelles "
 "fonctionnalités."
 
 #. module: account
@@ -13418,7 +13418,7 @@ msgstr "Ecriture basée sur la comptabilité de caisse de"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Journal basé sur la comptabilité de caisse"
+msgstr "Journal basé sur la comptabilité de trésorerie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
@@ -13926,6 +13926,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+"%s a atteint un statut invalide en ce qui concerne sa ligne de relevé associée. \n"
+"Pour être cohérent, la pièce comptable doit toujours avoir exactement une ligne de compte d'attente."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14031,7 +14042,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
-msgstr "Le journal comptable correspondant a ce compte en banque."
+msgstr "Le journal comptable correspondant a ce compte bancaire"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_exchange_journal_id
@@ -14090,8 +14101,8 @@ msgstr ""
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr ""
-"Le compte en banque d'un journal de banque doit appartenir à la même société"
-" (%s)."
+"Le compte bancaire d'un journal de banque doit appartenir à la même société "
+"(%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -14211,7 +14222,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
-msgstr "L'avoir est créé en brouillon et peut être édité avant d'être émis."
+msgstr "L'avoir est créé en brouillon et peut être modifié avant d'être émis."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -14402,7 +14413,7 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
-"La chaîne de hash est conforme : il n'est pas possible de modifier les\n"
+"La chaîne de hachage est conforme : il n'est pas possible de modifier les\n"
 "données sans casser la chaîne de hachage pour les parties suivantes."
 
 #. module: account
@@ -15920,6 +15931,11 @@ msgid "Upload"
 msgstr "Charger"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr "Charger des factures"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
@@ -16065,7 +16081,7 @@ msgstr "Utilisateur"
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Champ utile pour indiquer le montant de la monnaie"
+msgstr "Champ utile pour indiquer le montant de la devise"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_storno
@@ -16507,7 +16523,7 @@ msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
 "Vous ne pouvez pas réorganiser la séquence par date lorsque le journal est "
-"verrouillé avec un hash."
+"verrouillé avec un hachage."
 
 #. module: account
 #. odoo-python
@@ -16904,8 +16920,8 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
-"Vous ne pouvez pas éditer les champs suivants : %s.\n"
-"Les écritures suivantes sont déjà hashées :\n"
+"Vous ne pouvez pas modifier les champs suivants : %s.\n"
+"Les écritures suivantes sont déjà hachées :\n"
 "%s"
 
 #. module: account
@@ -16926,7 +16942,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
-"Vous ne pouvez pas éditer le journal d'une écriture comptable déjà postée."
+"Vous ne pouvez pas modifier le journal d'une écriture comptable déjà postée."
 
 #. module: account
 #. odoo-python
@@ -17218,9 +17234,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Vous devriez configurer le \"Journal de change\" dans les paramètres de "
-"votre société pour automatiser les écritures comptables liées aux "
-"différences de change."
+"Vous devriez configurer le \"Journal des gains et des pertes de change\" "
+"dans les paramètres de votre société pour automatiser les écritures "
+"comptables liées aux différences de change."
 
 #. module: account
 #. odoo-python
@@ -17244,8 +17260,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Vous devriez configurer le 'Compte de perte de change' dans les paramètres "
-"de votre société pour automatiser les écritures comptables liées aux "
+"Vous devriez configurer le 'Compte des pertes de change' dans les paramètres"
+" de votre société pour automatiser les écritures comptables liées aux "
 "différences de change."
 
 #. module: account

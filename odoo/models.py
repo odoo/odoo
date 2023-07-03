@@ -2859,7 +2859,7 @@ class BaseModel(metaclass=MetaModel):
         :return: provided fields if fields is truthy (or the fields
           readable by the current user).
         :rtype: list
-        :raise AccessDenied: if the user is not allowed to access
+        :raise AccessError: if the user is not allowed to access
           the provided fields.
         """
         if self.env.su:
@@ -3053,8 +3053,8 @@ class BaseModel(metaclass=MetaModel):
                 else next((v for v in translations.values() if v is not None), None)
             self.invalidate_recordset([field_name])
             self._cr.execute(f'''
-                UPDATE {self._table}
-                SET {field_name} = NULLIF(
+                UPDATE "{self._table}"
+                SET "{field_name}" = NULLIF(
                     jsonb_strip_nulls(%s || COALESCE("{field_name}", '{{}}'::jsonb) || %s),
                     '{{}}'::jsonb)
                 WHERE id = %s

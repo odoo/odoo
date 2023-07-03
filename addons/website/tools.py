@@ -61,6 +61,7 @@ def MockRequest(
         context=env.context,
         lang=env['res.lang']._lang_get(lang_code),
         website=website,
+        render=lambda *a, **kw: '<MockResponse>',
     )
     if website:
         request.website_routing = website.id

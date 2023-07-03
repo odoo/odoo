@@ -25,6 +25,7 @@ class Job(models.Model):
         'Process Details',
         translate=True,
         help="Complementary information that will appear on the job submission page",
+        sanitize_attributes=False,
         default="""
             <span class="text-muted small">Time to Answer</span>
             <h6>2 open days</h6>
@@ -41,7 +42,6 @@ class Job(models.Model):
             self.is_published = True
         else:
             self.is_published = False
-            self.website_id = False
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()

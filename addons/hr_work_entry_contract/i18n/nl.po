@@ -3,9 +3,9 @@
 # 	* hr_work_entry_contract
 # 
 # Translators:
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +34,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Bepaalt de bron voor de werkinvoergeneratie\n"
+"        Bepaalt de bron voor de werkboekinggeneratie\n"
 "\n"
-"        Werkschema: Werkinvoeren worden gegenereerd voor onderstaande werkuren.\n"
-"        Aanwezigheden: Werkinvoeren worden gegenereerd op basis van de werknemer's aanwezigheden (Aanwezigheden app vereist)\n"
-"        Planning: Werkinvoeren worden gegenereerd op basis van de werknemer's planning (Planning app vereist)\n"
+"        Werkschema: Werkboekingen worden gegenereerd voor onderstaande werkuren.\n"
+"        Aanwezigheden: Werkboekingen worden gegenereerd op basis van de werknemer's aanwezigheden (Aanwezigheden app vereist)\n"
+"        Planning: Werkboekingen worden gegenereerd op basis van de werknemer's planning (Planning app vereist)\n"
 "    "
 
 #. module: hr_work_entry_contract
@@ -56,8 +56,8 @@ msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
 msgstr ""
-"%sheeft meerdere contracten van %s t/m %s. Een werkinvoer mag niet meerdere "
-"contracten overlappen."
+"%sheeft meerdere contracten van %s t/m %s. Een werkboeking mag niet meerdere"
+" contracten overlappen."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -66,7 +66,7 @@ msgid ""
 "allowed to regenerate validated work entries"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Het is je "
-"niet toegestaan om gevalideerde werkinvoeren opnieuw te genereren"
+"niet toegestaan om gevalideerde werkboekingen opnieuw te genereren"
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -164,7 +164,7 @@ msgstr "Van"
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
-msgstr "Genereer ontbrekende werkinvoeren"
+msgstr "Genereer ontbrekende werkboekingen"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -189,7 +189,7 @@ msgstr "HR werkboeking"
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "HR werk boekingssoort"
+msgstr "HR werkboekingssoort"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
@@ -213,7 +213,7 @@ msgid ""
 msgstr ""
 "Om de werkboekingen opnieuw te genereren, moet je de wizard voorzien van een"
 " employee_id, een date_from en een date_to. Daarnaast mag het tijdsinterval "
-"gedefinieerd door date_from en date_to geen gevalideerde werkinvoeren "
+"gedefinieerd door date_from en date_to geen gevalideerde werkboekingen "
 "bevatten."
 
 #. module: hr_work_entry_contract
@@ -302,7 +302,7 @@ msgid ""
 msgstr ""
 "De vanaf-datum moet> = '%(earliest_available_date)s' zijn en de t/m-datum "
 "moet <= '%(latest_available_date)s' zijn, wat overeenkomt met het "
-"gegenereerde tijdsinterval voor werkinvoer."
+"gegenereerde tijdsinterval voor werkboeking."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit

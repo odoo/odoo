@@ -24,6 +24,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
+                quantity: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
                 client: this._barcodePartnerAction,
@@ -236,7 +237,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     foundProductIds = await this.rpc({
                         model: 'product.product',
                         method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
+                        args: [[['barcode', '=', code.base_code], ['sale_ok', '=', true]]],
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
@@ -277,7 +278,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         price_manually_set: true,
                     },
                 });
-            } else if (code.type === 'weight') {
+            } else if (code.type === 'weight' || code.type === 'quantity') {
                 Object.assign(options, {
                     quantity: code.value,
                     merge: false,
@@ -309,20 +310,24 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 last_orderline.set_discount(code.value);
             }
         }
+        async _parseElementsFromGS1(parsed_results) {
+            const productBarcode = parsed_results.find(element => element.type === 'product');
+            const lotBarcode = parsed_results.find(element => element.type === 'lot');
+            const product = await this._getProductByBarcode(productBarcode);
+            return { product, lotBarcode, customProductOptions: {} }
+        }
         /**
          * Add a product to the current order using the product identifier and lot number from parsed results.
          * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
          * It then uses these values to retrieve the product and add it to the current order.
          */
         async _barcodeGS1Action(parsed_results) {
-            const productBarcode = parsed_results.find(element => element.type === 'product');
-            const lotBarcode = parsed_results.find(element => element.type === 'lot');
-            const product = await this._getProductByBarcode(productBarcode);
+            const { product, lotBarcode, customProductOptions } = await this._parseElementsFromGS1(parsed_results)
             if (!product) {
                 return;
             }
             const options = await this._getAddProductOptions(product, lotBarcode);
-            await this.currentOrder.add_product(product, options);
+            await this.currentOrder.add_product(product, { ...options, ...customProductOptions });
             NumberBuffer.reset();
         }
         // IMPROVEMENT: The following two methods should be in PosScreenComponent?

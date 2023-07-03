@@ -390,6 +390,7 @@ export class MassMailingHtmlField extends HtmlField {
                 }
                 // mark selection done for tour testing
                 $editable.addClass('theme_selection_done');
+                this.onIframeUpdated();
             }, 0);
         });
 

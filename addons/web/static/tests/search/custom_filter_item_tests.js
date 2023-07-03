@@ -428,7 +428,7 @@ QUnit.module("Search", (hooks) => {
         await editConditionField(target, 0, "json_field");
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ["Json contains \"\""]);
+        assert.deepEqual(getFacetTexts(target), ['Json contains ""']);
         assert.deepEqual(getDomain(controlPanel), [["json_field", "ilike", ""]]);
 
         await removeFacet(target);
@@ -438,9 +438,8 @@ QUnit.module("Search", (hooks) => {
         await editConditionOperator(target, 0, "!=");
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ["Json is not equal to \"\""]);
+        assert.deepEqual(getFacetTexts(target), ['Json is not equal to ""']);
         assert.deepEqual(getDomain(controlPanel), [["json_field", "!=", ""]]);
-
     });
 
     QUnit.test("selection field: default and updated value", async function (assert) {
@@ -609,7 +608,9 @@ QUnit.module("Search", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_generator_menu_value input")].map((v) => v.value),
+            [...target.querySelectorAll(".o_generator_menu_value input[type=text]")].map(
+                (v) => v.value
+            ),
             ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 
@@ -653,7 +654,9 @@ QUnit.module("Search", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_generator_menu_operator").value, "between");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_generator_menu_value input")].map((v) => v.value),
+            [...target.querySelectorAll(".o_generator_menu_value input[type=text]")].map(
+                (v) => v.value
+            ),
             ["02/22/2017 00:00:00", "02/22/2017 23:59:59"]
         );
 

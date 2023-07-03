@@ -56,3 +56,4 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.employee_hrmanager_id = cls.employee_hrmanager.id
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
+        cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8

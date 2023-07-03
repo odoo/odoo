@@ -18,29 +18,29 @@ export class BoardController extends Component {
         this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
         if (this.env.isSmall) {
-            this.board.layout = "1";
-            this.board.colNumber = 1;
+            this.selectLayout("1", false);
+        } else {
+            const mainRef = useRef("main");
+            useSortable({
+                ref: mainRef,
+                elements: ".o-dashboard-action",
+                handle: ".o-dashboard-action-header",
+                cursor: "move",
+                groups: ".o-dashboard-column",
+                connectGroups: true,
+                onDrop: ({ element, previous, parent }) => {
+                    const fromColIdx = parseInt(element.parentElement.dataset.idx, 10);
+                    const fromActionIdx = parseInt(element.dataset.idx, 10);
+                    const toColIdx = parseInt(parent.dataset.idx, 10);
+                    const toActionIdx = previous ? parseInt(previous.dataset.idx, 10) + 1 : 0;
+                    if (fromColIdx !== toColIdx) {
+                        // to reduce visual flickering
+                        element.classList.add("d-none");
+                    }
+                    this.moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx);
+                },
+            });
         }
-        const mainRef = useRef("main");
-        useSortable({
-            ref: mainRef,
-            elements: ".o-dashboard-action",
-            handle: ".o-dashboard-action-header",
-            cursor: "move",
-            groups: ".o-dashboard-column",
-            connectGroups: true,
-            onDrop: ({ element, previous, parent }) => {
-                const fromColIdx = parseInt(element.parentElement.dataset.idx, 10);
-                const fromActionIdx = parseInt(element.dataset.idx, 10);
-                const toColIdx = parseInt(parent.dataset.idx, 10);
-                const toActionIdx = previous ? parseInt(previous.dataset.idx, 10) + 1 : 0;
-                if (fromColIdx !== toColIdx) {
-                    // to reduce visual flickering
-                    element.classList.add("d-none");
-                }
-                this.moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx);
-            },
-        });
     }
 
     moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx) {
@@ -66,7 +66,7 @@ export class BoardController extends Component {
         this.saveBoard();
     }
 
-    selectLayout(layout) {
+    selectLayout(layout, save = true) {
         const currentColNbr = this.board.colNumber;
         const nextColNbr = layout.split("-").length;
         if (nextColNbr < currentColNbr) {
@@ -80,7 +80,9 @@ export class BoardController extends Component {
         }
         this.board.layout = layout;
         this.board.colNumber = nextColNbr;
-        this.saveBoard();
+        if (save) {
+            this.saveBoard();
+        }
         if (document.querySelector("canvas")) {
             // horrible hack to force charts to be recreated so they pick up the
             // proper size. also, no idea why raf is needed :(
@@ -100,9 +102,11 @@ export class BoardController extends Component {
         });
     }
 
-    toggleAction(action) {
+    toggleAction(action, save = true) {
         action.isFolded = !action.isFolded;
-        this.saveBoard();
+        if (save) {
+            this.saveBoard();
+        }
     }
 
     saveBoard() {
