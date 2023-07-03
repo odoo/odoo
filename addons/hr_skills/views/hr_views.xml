@@ -323,6 +323,18 @@
         </field>
     </record>
 
+     <record id="hr_skill_type_view_search" model="ir.ui.view">
+        <field name="name">hr.skill.type.search</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Skill Type">
+                <field name="active" invisible="1"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_skill_type_view_tree" model="ir.ui.view">
         <field name="name">hr.skill.type.tree</field>
         <field name="model">hr.skill.type</field>
@@ -341,10 +353,12 @@
             <form string="Skill Type">
                 <field name="id" invisible="1"/>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name" string="Skill Type"/>
                         <h1>
                             <field name="name" placeholder="e.g. Languages" required="True"/>
+                            <field name="active" invisible="1"/>
                         </h1>
                     </div>
                     <group string="Skills">

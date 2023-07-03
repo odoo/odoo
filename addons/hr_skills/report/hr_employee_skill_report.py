@@ -36,5 +36,7 @@ class HrEmployeeSkillReport(models.BaseModel):
             FROM hr_employee e
             LEFT OUTER JOIN hr_employee_skill s ON e.id = s.employee_id
             LEFT OUTER JOIN hr_skill_level sl ON sl.id = s.skill_level_id
+            LEFT OUTER JOIN hr_skill_type st ON st.id = sl.skill_type_id
+            WHERE st.active IS True
         )
         """ % (self._table, ))
