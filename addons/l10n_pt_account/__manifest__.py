@@ -18,6 +18,7 @@
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/ir_config_parameter_data.xml',
     ],
     'license': 'LGPL-3',
 }

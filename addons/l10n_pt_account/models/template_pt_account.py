@@ -6,8 +6,19 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('pt')
-    def _get_pt_template_data(self):
+    @template('pt_account', 'account.journal')
+    def _get_pt_account_account_journal(self):
+        journal_config = {
+            'refund_sequence': True,
+            'restrict_mode_hash_table': True,
+        }
+        return {
+            'sale': journal_config,
+            'purchase': journal_config,
+        }
+
+    @template('pt_account')
+    def _get_pt_account_template_data(self):
         return {
             'property_account_receivable_id': 'chart_2111',
             'property_account_payable_id': 'chart_2211',
@@ -19,8 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_receivable_account_id': 'chart_2437',
         }
 
-    @template('pt', 'res.company')
-    def _get_pt_res_company(self):
+    @template('pt_account', 'res.company')
+    def _get_pt_account_res_company(self):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.pt',

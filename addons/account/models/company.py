@@ -537,7 +537,7 @@ class ResCompany(models.Model):
                 if not hash_corrupted:
                     results.append({
                         'name': f"{journal.name} [{prefix}]",
-                        'status': 'ok',
+                        'status': 'verified',
                         'msg': _("Entries are correctly hashed"),
                         'from_name': build_move_info(moves[0])[0],
                         'from_hash': build_move_info(moves[0])[1],
