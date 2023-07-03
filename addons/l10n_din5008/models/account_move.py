@@ -18,6 +18,8 @@ class AccountMove(models.Model):
                 data.append((_("Invoice Date"), format_date(self.env, record.invoice_date)))
             if record.invoice_date_due:
                 data.append((_("Due Date"), format_date(self.env, record.invoice_date_due)))
+            if record.delivery_date:
+                data.append((_("Delivery Date"), format_date(self.env, record.delivery_date)))
             if record.invoice_origin:
                 data.append((_("Source"), record.invoice_origin))
             if record.ref:
