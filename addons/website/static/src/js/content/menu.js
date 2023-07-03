@@ -640,22 +640,9 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @override
      */
     start: function () {
-        if (this.editableMode) {
-            this._onPageClick = this._onPageClick.bind(this);
-            this.el.closest('#wrapwrap').addEventListener('click', this._onPageClick, {capture: true});
-        }
         this.$dropdownMenus = this.$el.find('.dropdown-menu');
         this.$dropdownToggles = this.$el.find('.dropdown-toggle');
         this._dropdownHover();
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        if (this.editableMode) {
-            this.el.closest('#wrapwrap').removeEventListener('click', this._onPageClick, {capture: true});
-        }
         return this._super.apply(this, arguments);
     },
 
@@ -674,16 +661,6 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         } else {
             this.$dropdownMenus.css('margin-top', '');
             this.$dropdownMenus.css('top', '');
-        }
-    },
-    /**
-     * Hides all opened dropdowns.
-     *
-     * @private
-     */
-    _hideDropdowns() {
-        for (const toggleEl of this.el.querySelectorAll('.dropdown-toggle.show')) {
-            Dropdown.getOrCreateInstance(toggleEl).hide();
         }
     },
     /**
@@ -751,19 +728,6 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             return;
         }
         this._updateDropdownVisibility(ev, false);
-    },
-    /**
-     * Called when the page is clicked anywhere.
-     * Closes the shown dropdown if the click is outside of it.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onPageClick(ev) {
-        if (ev.target.closest('.dropdown-menu.show')) {
-            return;
-        }
-        this._hideDropdowns();
     },
 });
 
