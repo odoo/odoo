@@ -25,7 +25,7 @@
             users having a high karma can see offensive posts to moderate
             them.
         </div>
-        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="js_website_submit_form">
+        <form t-attf-action="/forum/#{ slug(forum) }/#{'post' if offensive else 'question'}/#{slug(question)}/#{'mark_as_offensive' if offensive else 'close'}" method="post" role="form" class="js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="row g-0 mb-3">
@@ -146,12 +146,12 @@
                         <b t-else="">Question:</b>
                     </h6>
                     <div class="col d-flex align-items-center justify-content-between">
-                        <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
+                        <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
                             t-attf-title="Read: #{question.name}"
                             t-attf-class="text-reset"
                             t-out="question.name"/>
                     </div>
-                    <div class="col-lg-3 d-lg-flex">
+                    <div class="col-lg-3 d-lg-flex align-items-baseline">
                         <span t-if="not question.active and question.state=='offensive'" class="badge bg-warning text-wrap flex-grow-1">Offensive</span>
                         <span t-if="not question.active and question.state=='offensive' and question.closed_reason_id" class="badge bg-warning text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
                         <span t-if="question.closed_reason_id" class="badge bg-danger text-wrap flex-grow-1" t-out="question.closed_reason_id.name.capitalize()"/>
@@ -173,7 +173,7 @@
                                     <t t-set="compact" t-value="True"/>
                                 </t>
                                 <small class="text-muted">
-                                    <i class="ms-4 mr4 fa fa-calendar"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                    <i class="fa fa-calendar ms-4 me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 </small>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                                 <t t-set="url" t-valuef="/forum/#{ slug(forum) }/question/#{ slug(question) }/reopen"/>
                                 <t t-set="label">Reopen</t>
                                 <t t-set="icon" t-value="'fa fa-folder-open'"/>
-                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                                <t t-set="karma" t-value="question.karma_close if not question.can_close else 0"/>
                                 <t t-set="form_classes" t-value="'d-flex'"/>
                                 <t t-set="classes" t-value="'btn-outline-primary flex-grow-1'"/>
                             </t>
@@ -209,7 +209,7 @@
                                 <t t-set="url" t-valuef="#{ post_url }/delete"/>
                                 <t t-set="label">Delete</t>
                                 <t t-set="icon" t-value="'fa fa-trash'"/>
-                                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
+                                <t t-set="karma" t-value="question.karma_unlink if not question.can_unlink else 0"/>
                                 <t t-set="form_classes" t-value="'d-flex'"/>
                                 <t t-set="classes" t-value="'btn-outline-danger flex-grow-1'"/>
                             </t>

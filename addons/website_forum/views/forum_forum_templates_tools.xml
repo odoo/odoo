@@ -15,10 +15,10 @@
 </template>
 
 <template id="link_button">
-    <form t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and ''}">
+    <form t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-if="label" t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item ps-3' or 'btn'} #{classes}#{karma > 0 and ' karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
-            <i t-if="icon and label" t-attf-class="fa fa-fw #{icon} #{inDropdown and 'me-1'}"/>
+        <button t-if="label" t-attf-class="#{('fa ' + icon) if icon and not label else ''} #{ 'dropdown-item ps-3' if inDropdown else 'btn'} #{classes}#{ ' karma_required text-muted' if karma > 0 else ''}" t-attf-data-karma="#{karma}" t-att-title="title">
+            <i t-if="icon and label" t-attf-class="fa fa-fw #{icon} #{ 'me-1' if inDropdown else ''}"/>
             <t t-out="label"/>
         </button>
         <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
@@ -31,6 +31,8 @@
 <!-- FAQ Layout -->
 <template id="faq" name="Frequently Asked Questions">
     <t t-call="website_forum.header">
+        <t t-set="_page_name" t-value="'guidelines'"/>
+        <t t-set="_page_name_label">Guidelines</t>
         <div t-field="forum.description" class="mb-4"/>
         <div t-field="forum.faq"/>
     </t>
@@ -103,17 +105,17 @@
     <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div t-attf-class="vote d-inline-flex align-items-center ms-n2 #{classes} text-muted text-center">
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
-            t-attf-class="btn vote_up #{own_vote == 1 and 'text-success'} #{not can_upvote and 'karma_required text-reset opacity-25'}#{post_id.create_uid.id == uid and ' text-300'}"
+            t-attf-class="btn vote_up #{ 'text-success' if own_vote == 1 else '' } #{ 'karma_required text-reset opacity-25' if not can_upvote else ''}#{ ' text-300' if post_id.create_uid.id == uid else ''}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
             t-att-data-can-upvote="can_upvote"
             aria-label="Upvote" title="Upvote">
             <i class="fa fa-caret-up" data-bs-toggle="tooltip" data-bs-placement="top" title="Upvote"/>
         </button>
-        <small t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger') or post.vote_count == 0 and not own_vote and 'text-muted opacity-75'}"
+        <small t-attf-class="vote_count #{ 'text-success' if own_vote == 1 else 'text-danger' if own_vote == -1 else ('text-muted opacity-75' if post.vote_count == 0 and not own_vote else '') }"
             t-out="post.vote_count"/>
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
-            t-attf-class="btn vote_down #{own_vote == -1 and 'text-danger'} #{not can_downvote and 'karma_required text-reset opacity-25'}#{post_id.create_uid.id == uid and ' text-300'}"
+            t-attf-class="btn vote_down #{ 'text-danger' if own_vote == -1 else ''} #{'karma_required text-reset opacity-25' if not can_downvote else '' }#{' text-300' if post_id.create_uid.id == uid else '' }"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
@@ -138,21 +140,21 @@
             </div>
         </div>
     </t>
-    <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info '}#{compact and 'o_compact align-items-center '}#{bio_popover_data and 'o_wforum_bio_popover '}#{_box_classes}"
+    <div t-attf-class="o_wforum_author_box d-inline-flex #{ 'o_show_info ' if display_info else '' }#{ 'o_compact align-items-center ' if compact else '' }#{ 'o_wforum_bio_popover ' if bio_popover_data else ''}#{_box_classes}"
          t-att-data-bs-content="bio_popover_data"
          data-bs-placement="top">
         <t t-set="user_profile_url" t-value="False"/>
         <t t-if="'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
             <t t-set="user_profile_url" t-valuef="/forum/#{ slug(object.forum_id) }/user/#{ object.create_uid.id }?forum_origin=#{ request.httprequest.path }"/>
         </t>
-        <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ not user_profile_url and 'pe-none' }">
+        <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
             <img t-attf-class="o_wforum_avatar rounded-circle #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
         </a>
-        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{compact and 'align-items-baseline' or 'flex-column justify-content-around'} #{show_image and 'ms-2'}">
-            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{compact and 'small'}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
+        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{ 'align-items-baseline' if compact else 'flex-column justify-content-around' } #{ 'ms-2' if show_image else '' }">
+            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{ 'small' if compact else ''}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
             <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-out="object.create_uid.karma"/>xp</small>
 
-            <div t-if="show_date or show_karma" t-attf-class="text-muted small #{compact and 'd-flex align-items-baseline'}">
+            <div t-if="show_date or show_karma" t-attf-class="text-muted small #{ 'd-flex align-items-baseline' if compact else '' }">
                 <div t-if="show_date">
                     <time  class="text-muted" t-field="object.create_date" t-options="{ 'format': 'd MMMM y ' }"/>
                     at
