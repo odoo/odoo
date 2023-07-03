@@ -8,5 +8,5 @@ class OnboardingStep(models.Model):
 
     @api.model
     def action_validate_step_payment_provider(self):
-        """Override to validate other steps as well."""
-        return self.action_validate_step("payment.onboarding_onboarding_step_payment_provider")
+        """ Override of `onboarding` to validate other steps as well. """
+        return self.action_validate_step('payment.onboarding_onboarding_step_payment_provider')
