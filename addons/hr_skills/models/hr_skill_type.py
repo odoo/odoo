@@ -9,6 +9,7 @@ class SkillType(models.Model):
     _description = "Skill Type"
     _order = "name"
 
+    active = fields.Boolean('Active', default=True)
     name = fields.Char(required=True)
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels")
