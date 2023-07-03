@@ -154,13 +154,6 @@
                                 <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                             </div>
                         </setting>
-                        <setting id="down_payments"
-                            string="Down Payments"
-                            help="Product used for down payments"
-                            documentation="/applications/sales/sales/invoicing/down_payment.html"
-                            company_dependent="1">
-                            <field name="deposit_default_product_id" context="{'default_detailed_type': 'service'}"/>
-                        </setting>
                     </block>
                     <block title="Connectors" id="connectors_setting_container">
                         <setting id="amazon_connector" documentation="/applications/sales/sales/amazon_connector/setup.html" help="Import Amazon orders and sync deliveries">
