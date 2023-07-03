@@ -2,10 +2,35 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityCell" owl="1">
-        <div class="h-100 cursor-pointer p-3" t-on-click="onClick">
-            <div class="h-100 d-flex align-items-center justify-content-center position-relative" t-ref="content">
-                <div class="o-mail-ActivityCell-deadline text-white" t-out="closestDeadlineFormatted"/>
-                <span t-if="props.activityIds.length > 1" class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
+        <div class="h-100 cursor-pointer" t-on-click="onClick">
+            <div class="h-100 d-flex flex-column justify-content-between">
+                <div t-if="props.attachments" class="d-flex align-items-center justify-content-center position-relative">
+                    <div>
+                        <a t-attf-href="/web/content/#{props.attachments.last.id}?download=true" t-on-click.stop="">
+                            <t t-out="props.attachments.last.name"/>
+                        </a>
+                        on <t t-out="lastAttachmentDateFormatted"/>
+                        <span> </span>
+                        <span t-if="props.attachments.count > 1" class="badge bg-light rounded-pill border-0">
+                            +<t t-out="props.attachments.count-1"/>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-center position-relative" t-ref="content">
+                    <div class="o-mail-ActivityCell-deadline text-white" t-out="closestDateFormatted"/>
+                    <span t-if="props.activityIds.length > 1" class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0" t-out="props.activityIds.length"/>
+                </div>
+                <div t-if="props.userIdsOrderedByDeadline" class="d-flex align-items-start">
+                    <Avatar t-if="props.userIdsOrderedByDeadline.length > 0"
+                            resModel="'res.users'" resId="props.userIdsOrderedByDeadline[0]"
+                            displayName="''" noSpacing="true"/>
+                    <Avatar t-if="props.userIdsOrderedByDeadline.length > 1"
+                            resModel="'res.users'" resId="props.userIdsOrderedByDeadline[1]"
+                            displayName="''" noSpacing="true"/>
+                    <t t-set="nAdditionalAssignee"
+                       t-value="props.userIdsOrderedByDeadline.length - 2"/>
+                    <span t-if="nAdditionalAssignee > 0">+<t t-out="nAdditionalAssignee"/></span>
+                </div>
             </div>
         </div>
     </t>

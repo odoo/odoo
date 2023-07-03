@@ -1,12 +1,13 @@
 /* @odoo-module */
 
-import { sortBy } from "@web/core/utils/arrays";
+import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, "mail/models/mail_activity", {
     async _performRPC(route, args) {
-        if (args.model === "mail.activity" && args.method === "action_feedback") {
+        if (args.model === "mail.activity" &&
+            ["action_feedback", "action_feedback_and_link_attachment"].includes(args.method)) {
             const ids = args.args[0];
             return this._mockMailActivityActionFeedback(ids);
         }
@@ -104,6 +105,25 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
         };
     },
     /**
+     * Simulate partially (time zone not supported) `_compute_state_from_dates` on `mail.activity`.
+     *
+     * @param {string} dateDone (format YYYY-MM-DD)
+     * @param {string} dateDeadline (format YYYY-MM-DD)
+     * @returns {string} state
+     * @private
+     */
+    _mockComputeStateFromDates(dateDone, dateDeadline) {
+        if (dateDone) {
+            return 'done';
+        }
+        if (dateDeadline === moment().format("YYYY-MM-DD")) {
+            return "today";
+        } else if (moment(dateDeadline) > moment()) {
+            return "planned";
+        }
+        return "overdue";
+    },
+    /**
      * Simulates `get_activity_data` on `mail.activity`.
      *
      * @private
@@ -112,54 +132,53 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
      * @returns {Object}
      */
     _mockMailActivityGetActivityData(res_model, domain) {
+        function infinityToFalse(value) {
+            if ( (value === -Infinity) || (value === Infinity) ) {
+                return false;
+            }
+            return value;
+        }
         const self = this;
         const records = this.getRecords(res_model, domain);
-
-        const activityTypes = this.getRecords("mail.activity.type", []);
         const activityIds = records.map((x) => x.activity_ids).flat();
+        const activityTypes = this.getRecords("mail.activity.type", []);
 
-        const groupedActivities = {};
+        const allActivities = this.getRecords("mail.activity", [["id", "in", activityIds]]);
+        const groupedActivities = groupBy(allActivities, a => [a.res_id, a.activity_type_id]);
+        // TODO: attachments for upload activity
         const resIdToDeadline = {};
-        const groups = self.mockReadGroup("mail.activity", {
-            domain: [["id", "in", activityIds]],
-            fields: [
-                "res_id",
-                "activity_type_id",
-                "ids:array_agg(id)",
-                "date_deadline:min(date_deadline)",
-            ],
-            groupby: ["res_id", "activity_type_id"],
-            lazy: false,
-        });
-        groups.forEach(function (group) {
-            // mockReadGroup doesn't correctly return all asked fields
-            const activites = self.getRecords("mail.activity", group.__domain);
-            group.activity_type_id = group.activity_type_id[0];
-            let minDate;
-            activites.forEach(function (activity) {
-                if (!minDate || moment(activity.date_deadline) < moment(minDate)) {
-                    minDate = activity.date_deadline;
-                }
-            });
-            group.date_deadline = minDate;
-            resIdToDeadline[group.res_id] = minDate;
-            let state;
-            if (group.date_deadline === moment().format("YYYY-MM-DD")) {
-                state = "today";
-            } else if (moment(group.date_deadline) > moment()) {
-                state = "planned";
-            } else {
-                state = "overdue";
+        const resIdToDateDone = {};
+        const activityData = {};
+        Object.values(groupedActivities).forEach(function (activities) {
+            const resId = activities[0].res_id;
+            const activityTypeId = activities[0].activity_type_id;
+            const activitiesDone = activities.filter(a => a.date_done);
+            const activitiesNotDone = activities.filter(a => !a.date_done);
+            const isAllActivitiesDone = activitiesNotDone.length === 0;
+            const dateDoneUnix = infinityToFalse(Math.max(...activitiesDone.map(a => moment(a.date_done).unix())));
+            const dateDeadlineUnix = infinityToFalse(Math.min(...activitiesNotDone.map(a => moment(a.date_deadline).unix())));
+            if (dateDeadlineUnix && ((resIdToDeadline[resId] === undefined) || (dateDeadlineUnix < resIdToDeadline[resId]))) {
+                resIdToDeadline[resId] = dateDeadlineUnix;
             }
-            if (!groupedActivities[group.res_id]) {
-                groupedActivities[group.res_id] = {};
+            if (dateDoneUnix && ((resIdToDateDone[resId] === undefined) || (dateDoneUnix > resIdToDateDone[resId]))) {
+                resIdToDateDone[resId] = dateDoneUnix;
             }
-            groupedActivities[group.res_id][group.activity_type_id] = {
-                count: group.__count,
-                state: state,
-                o_closest_deadline: group.date_deadline,
-                ids: activites.map((x) => x.id),
+            const distinctAssignees = unique(sortBy(activitiesDone
+                .filter(a => a.user_id), a => a.date_deadline)
+                .map(a => a.user_id));
+            const closestDateUnix = isAllActivitiesDone ? dateDoneUnix : dateDeadlineUnix;
+            const data = {
+                user_ids_ordered_by_deadline: distinctAssignees,
+                count: activities.length,
+                ids: activities.map(a => a.id),
+                o_closest_date: closestDateUnix ? moment.unix(closestDateUnix).format("YYYY-MM-DD") : false,
+                state: self._mockComputeStateFromDates(isAllActivitiesDone, moment.unix(dateDeadlineUnix).format("YYYY-MM-DD")),
             };
+            // TODO: add attachments
+            if (!(resId in activityData)) {
+                activityData[resId] = {};
+            }
+            activityData[resId][activityTypeId] = data
         });
 
         return {
@@ -178,11 +197,13 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
                 }
                 return [type.id, type.display_name, mailTemplates];
             }),
-            activity_res_ids: sortBy(
-                records.map((x) => x.id),
-                (id) => moment(resIdToDeadline[id])
-            ),
-            grouped_activities: groupedActivities,
+            activity_res_ids: sortBy(Object.keys(resIdToDeadline), item => resIdToDeadline[item]).concat(
+                sortBy(
+                    Object.keys(resIdToDateDone).filter(resId => !(resId in resIdToDeadline)),
+                    item => resIdToDateDone[item]
+                )
+            ).map(idStr => Number(idStr)),
+            grouped_activities: activityData,
         };
     },
 });

@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
 from odoo.tools import is_html_empty
-from odoo.tools.misc import clean_context, get_lang
+from odoo.tools.misc import clean_context, get_lang, groupby, unique, partition
 
 
 class MailActivity(models.Model):
@@ -75,9 +75,11 @@ class MailActivity(models.Model):
     summary = fields.Char('Summary')
     note = fields.Html('Note', sanitize_style=True)
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.context_today)
+    date_done = fields.Date('Done Date')
     automated = fields.Boolean(
         'Automated activity', readonly=True,
         help='Indicates this activity has been created automatically and not by any user.')
+    attachment_id = fields.Many2one('ir.attachment', ondelete='set null', copy=False)
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
@@ -87,7 +89,8 @@ class MailActivity(models.Model):
     state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
-        ('planned', 'Planned')], 'State',
+        ('planned', 'Planned'),
+        ('done', 'Done')], 'State',
         compute='_compute_state')
     recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type")
     previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type', readonly=True)
@@ -125,15 +128,17 @@ class MailActivity(models.Model):
             activity.res_name = activity.res_model and \
                 self.env[activity.res_model].browse(activity.res_id).display_name
 
-    @api.depends('date_deadline')
+    @api.depends('date_deadline', 'date_done')
     def _compute_state(self):
-        for record in self.filtered(lambda activity: activity.date_deadline):
+        for record in self:
             tz = record.user_id.sudo().tz
             date_deadline = record.date_deadline
-            record.state = self._compute_state_from_date(date_deadline, tz)
+            record.state = self._compute_state_from_dates(record.date_done, date_deadline, tz)
 
     @api.model
-    def _compute_state_from_date(self, date_deadline, tz=False):
+    def _compute_state_from_dates(self, date_done, date_deadline, tz=False):
+        if date_done:
+            return 'done'
         date_deadline = fields.Date.from_string(date_deadline)
         today_default = date.today()
         today = today_default
@@ -458,6 +463,12 @@ class MailActivity(models.Model):
         )._action_done(feedback=feedback, attachment_ids=attachment_ids)
         return messages[0].id if messages else False
 
+    def action_feedback_and_link_attachment(self, feedback=False, attachment_id=False):
+        self.ensure_one()
+        if attachment_id and self.activity_type_id.keep_done:
+            self.attachment_id = attachment_id
+        return self.action_feedback(feedback, attachment_ids=[attachment_id] if attachment_id else None)
+
     def action_done_schedule_next(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
@@ -486,7 +497,8 @@ class MailActivity(models.Model):
 
     def _action_done(self, feedback=False, attachment_ids=None):
         """ Private implementation of marking activity as done: posting a message, deleting activity
-            (since done), and eventually create the automatical next activity (depending on config).
+            (since done) unless related activity type keep_done is True, and eventually create the
+            automatical next activity (depending on config).
             :param feedback: optional feedback from user when marking activity as done
             :param attachment_ids: list of ir.attachment ids to attach to the posted mail.message
             :returns (messages, activities) where
@@ -547,7 +559,9 @@ class MailActivity(models.Model):
         if next_activities_values:
             next_activities = self.env['mail.activity'].create(next_activities_values)
 
-        self.unlink()  # will unlink activity, dont access `self` after that
+        activity_to_keep = self.filtered(lambda a: a.activity_type_id.keep_done)
+        activity_to_keep.date_done = date.today()
+        (self - activity_to_keep).unlink()  # will unlink activity, dont access `self` after that
 
         return messages, next_activities
 
@@ -581,27 +595,56 @@ class MailActivity(models.Model):
         if domain:
             res = self.env[res_model].search(domain)
             activity_domain.append(('res_id', 'in', res.ids))
-        grouped_activities = self.env['mail.activity']._read_group(
+        all_activities = self.env['mail.activity'].search_read(
             activity_domain,
-            ['res_id', 'activity_type_id'],
-            ['id:array_agg', 'date_deadline:min', '__count'])
+            ['activity_type_id', 'attachment_id', 'date_done', 'res_id', 'date_deadline', 'user_id'],
+        )
+        all_attachment_ids = [a['attachment_id'][0] for a in all_activities if a['attachment_id']]
+        attachments_by_id = {
+            a['id']: a
+            for a in self.env['ir.attachment'].search_read([['id', 'in', all_attachment_ids]], ['create_date', 'name'])
+        } if all_attachment_ids else {}
+        grouped_activities = groupby(all_activities, key=lambda a: (a['res_id'], a['activity_type_id'][0]))
+
         # filter out unreadable records
         if not domain:
-            res_ids = tuple(res_id for res_id, *_ in grouped_activities)
+            res_ids = tuple(res_id for (res_id, __), __ in grouped_activities)
             res_ids_set = set(self.env[res_model].search([('id', 'in', res_ids)])._ids)
             grouped_activities = [a for a in grouped_activities if a[0] in res_ids_set]
+        res_id_to_date_done = {}
         res_id_to_deadline = {}
         activity_data = defaultdict(dict)
-        for res_id, activity_type, ids, date_deadline, count in grouped_activities:
-            activity_type_id = activity_type.id
-            res_id_to_deadline[res_id] = date_deadline if (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
-            state = self._compute_state_from_date(date_deadline, self.user_id.sudo().tz)
-            activity_data[res_id][activity_type_id] = {
-                'count': count,
-                'ids': ids,
-                'state': state,
-                'o_closest_deadline': date_deadline,
+        for (res_id, activity_type_id), activities in grouped_activities:
+            activities_done, activities_not_done = partition(lambda a: bool(a['date_done']), activities)
+            date_done = max((a['date_done'] for a in activities_done), default=None)
+            date_deadline = min((a['date_deadline'] for a in activities_not_done), default=None)
+            is_all_activities_done = len(activities_not_done) == 0
+            if date_deadline and (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]):
+                res_id_to_deadline[res_id] = date_deadline
+            if date_done and (res_id not in res_id_to_date_done or date_done > res_id_to_date_done[res_id]):
+                res_id_to_date_done[res_id] = date_done
+            distinct_assignees = list(unique(v['user_id'][0]
+                                             for v in sorted(activities_not_done, key=lambda v: v['date_deadline'])
+                                             if v['user_id']))
+            data = {
+                'user_ids_ordered_by_deadline': distinct_assignees,
+                'count': len(activities),
+                'ids': [v['id'] for v in activities],
+                'o_closest_date': date_done if is_all_activities_done else date_deadline,
+                'state': self._compute_state_from_dates(is_all_activities_done, date_deadline, self.user_id.sudo().tz),
             }
+            activity_attachments = [attachments_by_id[a['attachment_id'][0]] for a in activities if a['attachment_id']]
+            if activity_attachments:
+                last_attachment = max(activity_attachments, key=lambda a: a['create_date'])
+                data['attachments'] = {
+                    'last': {
+                        'create_date': last_attachment['create_date'],
+                        'id': last_attachment['id'],
+                        'name': last_attachment['name']
+                    },
+                    'count': len(activity_attachments),
+                }
+            activity_data[res_id][activity_type_id] = data
         activity_type_infos = []
         activity_type_ids = self.env['mail.activity.type'].search(
             ['|', ('res_model', '=', res_model), ('res_model', '=', False)])
@@ -613,7 +656,11 @@ class MailActivity(models.Model):
 
         return {
             'activity_types': activity_type_infos,
-            'activity_res_ids': sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]),
+            'activity_res_ids': (  # record with not done activities followed by ones with all activities done
+                    sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]) +
+                    sorted({k: v for k, v in res_id_to_date_done.items() if k not in res_id_to_deadline},
+                           key=lambda item: res_id_to_date_done[item])
+            ),
             'grouped_activities': activity_data,
         }
 

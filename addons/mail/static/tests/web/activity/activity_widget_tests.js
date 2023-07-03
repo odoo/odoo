@@ -190,7 +190,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
             ) {
                 assert.step(args.method || route);
             }
-            if (args.method === "action_feedback") {
+            if (args.method === "action_feedback_and_link_attachment") {
                 pyEnv["res.users"].write([pyEnv.currentUserId], {
                     activity_ids: [activityId_2],
                     activity_state: "planned",
@@ -226,7 +226,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     assert.verifySteps([
         "web_search_read",
         "activity_format",
-        "action_feedback",
+        "action_feedback_and_link_attachment",
         "web_search_read",
     ]);
 });

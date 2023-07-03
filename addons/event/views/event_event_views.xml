@@ -139,6 +139,24 @@
         </field>
     </record>
 
+    <record id="project_project_view_activity" model="ir.ui.view">
+        <field name="name">event.event.view.activity</field>
+        <field name="model">event.event</field>
+        <field name="arch" type="xml">
+            <activity string="Event">
+                <templates>
+                    <div t-name="activity-box" class="d-flex w-100">
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <div class="flex-grow-1">
+                            <field name="name" string="Event Name" class="w-100 text-truncate"/>
+                            <field name="date_begin_located"/> - <field name="date_end_located"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="event_event_view_form_quick_create" model="ir.ui.view">
         <field name="name">event.event.form.quick_create</field>
         <field name="model">event.event</field>
@@ -257,6 +275,8 @@
                 <field name="user_id"/>
                 <field name="address_search"/>
                 <field name="stage_id"/>
+                <field name="activity_user_id" string="Activity assigned to"/>
+                <field name="activity_create_uid" string="Activity created by"/>
                 <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Upcoming/Running" name="upcoming"
@@ -288,7 +308,7 @@
     <record model="ir.actions.act_window" id="action_event_view">
        <field name="name">Events</field>
        <field name="res_model">event.event</field>
-       <field name="view_mode">kanban,calendar,tree,form,pivot,graph</field>
+       <field name="view_mode">kanban,calendar,tree,form,pivot,graph,activity</field>
        <field name="search_view_id" ref="view_event_search"/>
        <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

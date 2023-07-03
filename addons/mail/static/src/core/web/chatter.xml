@@ -142,17 +142,31 @@
 
 <t t-name="mail.ActivityList" owl="1">
     <div class="o-mail-ActivityList">
-        <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleActivities">
+        <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleNotDoneActivities">
             <hr class="flex-grow-1"/>
             <div class="d-flex align-items-center px-3">
-                <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <i class="fa fa-fw" t-att-class="state.showNotDoneActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
-                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
+                <span t-if="!state.showNotDoneActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="notDoneActivities.length"/></span>
             </div>
             <hr class="flex-grow-1"/>
         </div>
-        <t t-if="state.showActivities">
-            <t t-foreach="activities" t-as="activity" t-key="activity.id">
+        <t t-if="state.showNotDoneActivities">
+            <t t-foreach="notDoneActivities" t-as="activity" t-key="activity.id">
+                <Activity data="activity" onUpdate.bind="load" reloadParentView.bind="reloadParentView"/>
+            </t>
+        </t>
+        <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleDoneActivities">
+            <hr class="flex-grow-1"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showDoneActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Completed Activities
+                <span t-if="!state.showDoneActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="doneActivities.length"/></span>
+            </div>
+            <hr class="flex-grow-1"/>
+        </div>
+        <t t-if="state.showDoneActivities">
+            <t t-foreach="doneActivities" t-as="activity" t-key="activity.id">
                 <Activity data="activity" onUpdate.bind="load" reloadParentView.bind="reloadParentView"/>
             </t>
         </t>

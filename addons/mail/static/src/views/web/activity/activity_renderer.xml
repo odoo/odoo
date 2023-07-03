@@ -24,7 +24,7 @@
                 </div>
                 <div class="o_activity_counter d-flex align-items-center justify-content-between mb-3 h-0 mt24">
                     <t t-set="group" t-value="getGroupInfo(type)"/>
-                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
+                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" aggregateOn="group.aggregateOn" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
                 </div>
             </th>
             <th class="align-middle" style="width: 32px; min-width: 32px">
@@ -78,7 +78,13 @@
     <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
     <td t-if="activityGroup.state and !isCellHidden"
         t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
-        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]" closestDeadline="activityGroup.o_closest_deadline" reloadFunc="props.onReloadData" resId="record.resId" resModel="record.resModel"/>
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type[0]"
+                      attachments="activityGroup.attachments"
+                      closestDate="activityGroup.o_closest_date"
+                      reloadFunc="props.onReloadData"
+                      resId="record.resId" resModel="record.resModel"
+                      userIdsOrderedByDeadline="activityGroup.user_ids_ordered_by_deadline"
+        />
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
@@ -91,7 +97,7 @@
 <t t-name="mail.ActivityViewFooter" owl="1">
     <tfoot>
         <tr class="o_data_row">
-            <td class="o_record_selector p-3 cursor-pointer" t-on-click.prevent.stop="props.scheduleActivity">
+            <td class="o_record_selector p-3 cursor-pointer" colspan="3" t-on-click.prevent.stop="props.scheduleActivity">
                 <span class="btn btn-link"><i class="fa fa-plus pe-2"/><span>Schedule activity</span></span>
             </td>
         </tr>

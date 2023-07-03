@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { formatDate } from "@web/core/l10n/dates";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
@@ -12,6 +13,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
+const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -64,6 +66,10 @@ export class ActivityListPopoverItem extends Component {
         }
     }
 
+    get dateDoneFormatted() {
+        return formatDate(DateTime.fromSQL(this.props.activity.date_done, { zone: 'utc' }).toLocal());
+    }
+
     get hasEditButton() {
         return this.props.activity.chaining_type === "suggest" && this.props.activity.can_write;
     }
@@ -93,7 +99,7 @@ export class ActivityListPopoverItem extends Component {
 
     async onFileUploaded(data) {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
+        await this.env.services["mail.activity"].markAsDone(this.props.activity, attachmentId);
         this.props.onActivityChanged();
     }
 
