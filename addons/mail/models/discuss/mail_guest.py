@@ -103,7 +103,7 @@ class MailGuest(models.Model):
         self.ensure_one()
         odoobot = self.env.ref('base.partner_root')
         return {
-            'channels': self.channel_ids.channel_info(),
+            'channels': self.channel_ids._channel_info(),
             'companyName': self.env.company.name,
             'currentGuest': {
                 'id': self.id,

@@ -59,11 +59,11 @@ class DiscussChannel(models.Model):
                 notifications = self._channel_channel_notifications(unpinned_members.partner_id.ids) + notifications
         return notifications
 
-    def channel_info(self):
+    def _channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        channel_infos = super().channel_info()
+        channel_infos = super()._channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             channel_infos_dict[channel.id]['channel']['anonymous_name'] = channel.anonymous_name

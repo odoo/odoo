@@ -1070,7 +1070,7 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
     const { env, openDiscuss } = await start({
         mockRPC(route, args, originalRPC) {
-            if (args.method === "channel_info") {
+            if (route === "/discuss/channel/info") {
                 assert.step("channel_info");
             }
             return originalRPC(route, args);
