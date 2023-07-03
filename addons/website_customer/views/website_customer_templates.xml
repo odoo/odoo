@@ -48,7 +48,7 @@
                                             <t t-foreach="industries" t-as="industry_dict">
                                                 <t t-if="industry_dict['industry_id']">
                                                     <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }" 
+                                                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }"
                                                             class="text-reset" aria-label="See industries filters">
                                                             <div class="form-check">
                                                                 <input class="form-check-input pe-none" type="radio" t-attf-name="#{industry_dict['industry_id'][1]}" t-att-checked="industry_dict['industry_id'][0] == current_industry_id and true or false"/>
@@ -239,7 +239,7 @@
 <template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
     <xpath expr="//div[hasclass('o_wcrm_filters_top')]" position="after">
         <div class="d-flex align-items-center gap-2 my-4" t-if="len(tags)">
-            <a class="badge text-bg-light" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All
             </a>
             <t t-foreach="tags" t-as="o_tag">
@@ -317,8 +317,8 @@
                 <t t-if="reference.website_published">
                     <div class="row">
                         <div class="col-md-2">
-                            <span t-field="reference.avatar_128" 
-                                class="d-flex justify-content-center justify-content-center h-100" 
+                            <span t-field="reference.avatar_128"
+                                class="d-flex justify-content-center justify-content-center h-100"
                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded"}'/>
                         </div>
                         <div class="card-body col-md-10">
