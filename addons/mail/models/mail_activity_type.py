@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.translate import _
 
 
 class MailActivityType(models.Model):
@@ -71,11 +72,22 @@ class MailActivityType(models.Model):
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
     default_user_id = fields.Many2one("res.users", string="Default User")
     default_note = fields.Html(string="Default Note", translate=True)
+    keep_done = fields.Boolean(string="Keep Done", help='Get reporting on done activities')
 
     #Fields for display purpose only
     initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,
             help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", default=False, store=False)
+
+    @api.onchange('keep_done')
+    def _onchange_keep_done(self):
+        if not self.keep_done:
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'type': 'danger',
+                'title': _('All completed activities will be deleted'),
+                'message': _('By disabling keep_done you will loose all completed activity of this type when saving.'),
+                'sticky': True,
+            })
 
     @api.onchange('res_model')
     def _onchange_res_model(self):
@@ -119,3 +131,14 @@ class MailActivityType(models.Model):
                 activity_type.chaining_type = 'trigger'
             else:
                 activity_type.chaining_type = 'suggest'
+
+    def write(self, vals):
+        was_done_kept = {record.id: record.keep_done for record in self}
+        res = super().write(vals)
+        type_not_keep_done_anymore = self.filtered(lambda record: was_done_kept[record.id] and not record.keep_done)
+        if type_not_keep_done_anymore:
+            self.env['mail.activity'].sudo().search(
+                [('activity_type_id', 'in', type_not_keep_done_anymore.ids),
+                 ('date_done', '!=', False)]
+            ).unlink()
+        return res

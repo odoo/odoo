@@ -124,7 +124,7 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'today'
             elif 'planned' in states:
                 record.activity_state = 'planned'
-            else:
+            else:  # 'done' states are mapped to False
                 record.activity_state = False
 
     def _search_activity_state(self, operator, value):

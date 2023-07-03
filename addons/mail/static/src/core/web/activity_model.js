@@ -48,6 +48,8 @@ export class Activity {
     /** @type {string} */
     date_deadline;
     /** @type {string} */
+    date_done;
+    /** @type {string} */
     display_name;
     /** @type {boolean} */
     has_recommended_activities;
@@ -75,7 +77,7 @@ export class Activity {
     res_name;
     /** @type {number|false} */
     request_partner_id;
-    /** @type {'overdue'|'planned'|'today'} */
+    /** @type {'overdue'|'planned'|'today'|'done'} */
     state;
     /** @type {string} */
     summary;
