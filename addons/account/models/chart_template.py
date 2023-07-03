@@ -948,7 +948,7 @@ class AccountChartTemplate(models.AbstractModel):
                                     else value
                                 )
                                 for key, value in row.items()
-                                if key != 'id' and value != ""
+                                if key != 'id' and value != "" and ('@' in key or '/' in key or key in model_fields)
                             }
                         create_added = set()
                         for key, value in row.items():
@@ -976,7 +976,8 @@ class AccountChartTemplate(models.AbstractModel):
         :type companies: Model<res.company>
         """
         langs = langs or [code for code, _name in self.env['res.lang'].get_installed()]
-        companies = companies or self.env['res.company'].search([('chart_template', '!=', False)])
+        available_template_codes = list(self._get_chart_template_mapping(get_all=True))
+        companies = companies or self.env['res.company'].search([('chart_template', 'in', available_template_codes)])
 
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
