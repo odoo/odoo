@@ -174,7 +174,7 @@ class LoyaltyReward(models.Model):
 
     def _search_reward_product_ids(self, operator, value):
         if operator not in ('=', '!=', 'in'):
-            raise NotImplementedError("Unsupported search operator")
+            raise NotImplementedError(_("Unsupported search operator"))
         return [
             '&', ('reward_type', '=', 'product'),
             '|', ('reward_product_id', operator, value),
