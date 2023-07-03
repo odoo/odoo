@@ -205,7 +205,7 @@ class ImLivechatChannel(models.Model):
             discuss_channel = self.env["discuss.channel"].with_context(mail_create_nosubscribe=False).sudo().create(discuss_channel_vals)
             if user_operator:
                 discuss_channel._broadcast([user_operator.partner_id.id])
-            return discuss_channel.sudo().channel_info()[0]
+            return discuss_channel.sudo()._channel_info()[0]
         else:
             operator_partner_id = user_operator.partner_id if user_operator else chatbot_script.operator_partner_id
             display_name = operator_partner_id.user_livechat_username or operator_partner_id.display_name

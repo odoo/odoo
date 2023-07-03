@@ -45,6 +45,13 @@ class ChannelController(http.Controller):
             raise NotFound()
         channel.write({"image_128": data})
 
+    @http.route("/discuss/channel/info", methods=["POST"], type="json")
+    def discuss_channel_info(self, channel_id):
+        member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
+            request=request, channel_id=int(channel_id)
+        )
+        return member_sudo.channel_id._channel_info()
+
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
