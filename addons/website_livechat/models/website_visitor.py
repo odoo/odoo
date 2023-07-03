@@ -92,7 +92,7 @@ class WebsiteVisitor(models.Model):
                 'fold_state': 'open',
                 'is_minimized': True,
             })
-            discuss_channels_info = discuss_channels.channel_info()
+            discuss_channels_info = discuss_channels._channel_info()
             notifications = []
             for discuss_channel_info in discuss_channels_info:
                 notifications.append([operator.partner_id, 'website_livechat.send_chat_request', discuss_channel_info])

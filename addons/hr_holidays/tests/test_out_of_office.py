@@ -49,7 +49,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'channel_type': 'chat',
             'name': 'test'
         })
-        channel_info = channel.channel_info()[0]
+        channel_info = channel._channel_info()[0]
         # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
         members_data = channel_info['channel']['channelMembers'][0][1]
         self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")

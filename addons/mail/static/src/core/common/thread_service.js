@@ -83,7 +83,7 @@ export class ThreadService {
      * @returns {Promise<Thread>}
      */
     async fetchChannel(id) {
-        const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+        const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
         return this.insert({
             ...channelData,
             model: "discuss.channel",

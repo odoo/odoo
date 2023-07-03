@@ -327,7 +327,7 @@ class Channel(models.Model):
         self.message_unsubscribe(partner.ids)
         if partner not in self.with_context(active_test=False).channel_partner_ids:
             return True
-        channel_info = self.channel_info()[0]  # must be computed before leaving the channel (access rights)
+        channel_info = self._channel_info()[0]  # must be computed before leaving the channel (access rights)
         member = self.env['discuss.channel.member'].search([('channel_id', '=', self.id), ('partner_id', '=', partner.id)])
         member_id = member.id
         member.unlink()
@@ -393,7 +393,7 @@ class Channel(models.Model):
                 user = member.partner_id.user_ids[0] if member.partner_id.user_ids else self.env['res.users']
                 if user:
                     notifications.append((member.partner_id, 'discuss.channel/joined', {
-                        'channel': member.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
+                        'channel': member.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo()._channel_info()[0],
                         'invited_by_user_id': self.env.user.id,
                         'open_chat_window': open_chat_window,
                     }))
@@ -411,7 +411,7 @@ class Channel(models.Model):
                 guest = member.guest_id
                 if guest:
                     notifications.append((guest, 'discuss.channel/joined', {
-                        'channel': member.channel_id.sudo().channel_info()[0],
+                        'channel': member.channel_id.sudo()._channel_info()[0],
                     }))
             notifications.append((channel, 'mail.record/insert', {
                 'Channel': {
@@ -670,7 +670,7 @@ class Channel(models.Model):
                 user_channels = self.with_user(user_id).with_context(
                     allowed_company_ids=user_id.company_ids.ids
                 )
-                for channel_info in user_channels.channel_info():
+                for channel_info in user_channels._channel_info():
                     notifications.append((partner, 'discuss.channel/legacy_insert', channel_info))
         return notifications
 
@@ -747,7 +747,7 @@ class Channel(models.Model):
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
-    def channel_info(self):
+    def _channel_info(self):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
@@ -919,7 +919,7 @@ class Channel(models.Model):
                 'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
             })
             channel._broadcast(partners_to)
-        return channel.channel_info()[0]
+        return channel._channel_info()[0]
 
     def channel_fold(self, state=None):
         """ Update the fold_state of the given session. In order to syncronize web browser
@@ -960,7 +960,7 @@ class Channel(models.Model):
         if not pinned:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/legacy_insert', self.channel_info()[0])
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/legacy_insert', self._channel_info()[0])
 
     def _channel_seen(self, last_message_id=None, allow_older=False):
         """
@@ -1095,7 +1095,7 @@ class Channel(models.Model):
             'link': Markup('<a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a>') % (new_channel.id, new_channel.name)
         }
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        channel_info = new_channel.channel_info()[0]
+        channel_info = new_channel._channel_info()[0]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/legacy_insert', channel_info)
         return channel_info
 
@@ -1117,7 +1117,7 @@ class Channel(models.Model):
             'name': name,
         })
         channel._broadcast(partners_to)
-        return channel.channel_info()[0]
+        return channel._channel_info()[0]
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):

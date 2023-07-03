@@ -145,7 +145,7 @@ class PublicPageController(http.Controller):
             "mail.discuss_public_channel_template",
             {
                 "data": {
-                    "channelData": channel_sudo.channel_info()[0],
+                    "channelData": channel_sudo._channel_info()[0],
                     "discussPublicViewData": dict(
                         {
                             "channel": [("insert", {"id": channel_sudo.id, "model": "discuss.channel"})],

@@ -381,14 +381,14 @@ class TestChannelInternals(MailCommon):
 
         chat._channel_seen(msg_2.id)
         self.assertEqual(
-            chat.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
+            chat._channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
             msg_2.id,
             "Last message id should have been updated"
         )
 
         chat._channel_seen(msg_1.id)
         self.assertEqual(
-            chat.channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
+            chat._channel_info()[0]['seen_partners_info'][0]['seen_message_id'],
             msg_2.id,
             "Last message id should stay the same after mark channel as seen with an older message"
         )

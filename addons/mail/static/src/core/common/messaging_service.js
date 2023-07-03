@@ -450,7 +450,7 @@ export class Messaging {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.threads[createLocalId("discuss.channel", id)];
         if (!channel || !channel.type) {
-            const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+            const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
             channel = this.threadService.insert({
                 model: "discuss.channel",
                 type: channelData.channel.channel_type,
