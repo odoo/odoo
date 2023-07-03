@@ -121,7 +121,7 @@ export const websiteService = {
                 if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
+                    const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
                     const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
                         menu.dataset.menu_name,
                         menu.dataset.content_menu_id,
@@ -131,6 +131,7 @@ export const websiteService = {
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
                         isPublished: isPublished === 'True',
+                        canOptimizeSeo: canOptimizeSeo === 'True',
                         canPublish: canPublish === 'True',
                         editableInBackend: editableInBackend === 'True',
                         title: document.title,
