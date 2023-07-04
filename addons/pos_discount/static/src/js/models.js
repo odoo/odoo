@@ -9,8 +9,8 @@ patch(Orderline.prototype, "pos_discount.Orderline", {
      * @returns Boolean
      */
     isGlobalDiscountApplicable() {
-        const isTipsProduct =
-            this.pos.config.tip_product_id && this.product.id === this.pos.config.tip_product_id[0];
-        return !this.reward_id && !isTipsProduct;
+        return !(
+            this.pos.config.tip_product_id && this.product.id === this.pos.config.tip_product_id[0]
+        );
     },
 });
