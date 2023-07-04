@@ -153,7 +153,7 @@
                             <t t-set="slide" t-value="aside_slide"/>
                         </t>
                         <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
-                            <span t-esc="aside_slide.name" class="mr-2 text-truncate"/>
+                            <span t-esc="aside_slide.name" class="mr-2"/>
                         </div>
                         <div class="ml-auto" t-if="aside_slide.question_ids">
                             <span t-att-class="'badge badge-pill %s' % ('badge-success' if channel_progress[aside_slide.id].get('completed') else 'badge-light text-600')">
