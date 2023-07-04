@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Portugal - Accounting',
+    'name': 'Portugal',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['pt'],
@@ -10,19 +10,10 @@
     'description': 'Portugal - Accounting',
     'depends': [
         'base',
-        'account',
-        'base_vat',
-        'l10n_pt',
-    ],
-    'auto_install': [
-        'account',
-        'l10n_pt',
-    ],
-    'data': [
-        'data/account_tax_report.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/ir_config_parameter_data.xml',
     ],
     'license': 'LGPL-3',
 }

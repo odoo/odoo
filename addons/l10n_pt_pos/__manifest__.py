@@ -11,10 +11,16 @@
         'point_of_sale',
         'l10n_pt',
     ],
-    'installable': True,
     'auto_install': [
         'point_of_sale',
         'l10n_pt',
     ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'l10n_pt_pos/static/src/js/**/*',
+            'l10n_pt_pos/static/src/xml/**/*',
+        ],
+    },
+    'installable': True,
     'license': 'LGPL-3',
 }
