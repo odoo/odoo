@@ -56,7 +56,7 @@ class SeoMetadata(models.AbstractModel):
             'og:type': 'website',
             'og:title': title,
             'og:site_name': request.website.name,
-            'og:url': url_join(request.httprequest.url_root, url_for(request.httprequest.path)),
+            'og:url': url_join(request.website.domain or request.httprequest.url_root, url_for(request.httprequest.path)),
             'og:image': request.website.image_url(request.website, img_field),
         }
         # Default meta for Twitter
@@ -82,7 +82,7 @@ class SeoMetadata(models.AbstractModel):
             override `_default_website_meta` method instead of this method. This
             method only replaces user custom values in defaults.
         """
-        root_url = request.httprequest.url_root.strip('/')
+        root_url = request.website.domain or request.httprequest.url_root.strip('/')
         default_meta = self._default_website_meta()
         opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
         if self.website_meta_title:
