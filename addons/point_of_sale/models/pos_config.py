@@ -325,6 +325,20 @@ class PosConfig(models.Model):
                 _("You must have at least one payment method configured to launch a session.")
             )
 
+    @api.constrains('limited_partners_amount', 'limited_partners_loading')
+    def _check_limited_partners(self):
+        for rec in self:
+            if rec.limited_partners_loading and not self.limited_partners_amount:
+                raise ValidationError(
+                    _("Number of partners loaded can not be 0"))
+
+    @api.constrains('limited_products_amount', 'limited_products_loading')
+    def _check_limited_products(self):
+        for rec in self:
+            if rec.limited_products_loading and not self.limited_products_amount:
+                raise ValidationError(
+                    _("Number of product loaded can not be 0"))
+
     @api.constrains('pricelist_id', 'available_pricelist_ids')
     def _check_pricelists(self):
         self._check_companies()
