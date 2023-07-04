@@ -20,3 +20,4 @@ from . import test_report
 from . import test_report_stock_quantity
 from . import test_report_tours
 from . import test_stock_return_picking
+from . import test_picking
