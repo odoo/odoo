@@ -5743,7 +5743,7 @@ class BaseModel(metaclass=MetaModel):
                 matching_ids = set()
                 for record in self:
                     data = record.mapped(key)
-                    if isinstance(data, BaseModel):
+                    if isinstance(data, BaseModel) and comparator not in ('any', 'not any'):
                         v = value
                         if isinstance(value, (list, tuple, set)) and value:
                             v = next(iter(value))
@@ -5789,6 +5789,10 @@ class BaseModel(metaclass=MetaModel):
                     elif comparator == '=ilike':
                         data = [(x or "").lower() for x in data]
                         ok = fnmatch.filter(data, value and value_esc.lower())
+                    elif comparator == 'any':
+                        ok = data.filtered_domain(value)
+                    elif comparator == 'not any':
+                        ok = not data.filtered_domain(value)
                     else:
                         raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
 
