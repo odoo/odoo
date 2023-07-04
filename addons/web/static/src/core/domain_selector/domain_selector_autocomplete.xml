@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelector.AutoCompleteWithSources" owl="1" >
+        <AutoComplete
+            value="props.value"
+            autoSelect="true"
+            resetOnSelect="props.multiSelect"
+            class="props.className"
+            sources="sources"
+            onSelect.bind="onSelect"
+            onChange.bind="onChange"
+        />
+    </t>
+
+    <t t-name="web.DomainSelector.DomainSelectorAutocomplete" owl="1" >
+        <div class="d-flex flex-wrap h-100 gap-1">
+            <TagsList tags="tags"/>
+            <AutoCompleteWithSources
+                resModel="props.resModel"
+                value="''"
+                className="'o_input o_domain_leaf_value_input flex-grow-1'"
+                fieldString="props.fieldString"
+                multiSelect="true"
+                getIds.bind="getIds"
+                update.bind="update"
+            />
+        </div>
+    </t>
+
+    <t t-name="web.DomainSelector.DomainSelectorSingleAutocomplete" owl="1" >
+        <AutoCompleteWithSources
+            resModel="props.resModel"
+            value="displayName"
+            className="'o_input o_domain_leaf_value_input h-100'"
+            fieldString="props.fieldString"
+            multiSelect="false"
+            getIds="() => []"
+            update.bind="update"
+        />
+    </t>
+
+</templates>
