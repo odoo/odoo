@@ -146,7 +146,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     [0, 0, {'lot_name': '1002'}],
                 ]
             })],
-            'pricelist_id': 1,
+            'pricelist_id': self.pos_config.pricelist_id.id,
             'amount_paid': 12.0,
             'amount_total': 12.0,
             'amount_tax': 0.0,
@@ -1463,7 +1463,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     [0, 0, {'lot_name': '1001'}],
                 ]
             })],
-            'pricelist_id': 1,
+            'pricelist_id': self.pos_config.pricelist_id.id,
             'amount_paid': 6.0,
             'amount_total': 6.0,
             'amount_tax': 0.0,
@@ -1572,7 +1572,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal': 6,
                 'price_subtotal_incl': 6,
             })],
-            'pricelist_id': 1,
+            'pricelist_id': self.pos_config.pricelist_id.id,
             'amount_paid': 6.0,
             'amount_total': 6.0,
             'amount_tax': 0.0,
