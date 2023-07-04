@@ -561,6 +561,10 @@ QUnit.test("error notifications should not be shown in Inbox", async (assert) =>
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
     assert.containsOnce($, ".o-mail-Message-header:contains(on Demo User)");
+    assert.containsOnce(
+        $,
+        `.o-mail-Message-header a:contains(Demo User)[href*='/web#model=res.partner&id=${partnerId}']`
+    );
     assert.containsNone($, ".o-mail-Message-notification");
 });
 
