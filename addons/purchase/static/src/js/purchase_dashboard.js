@@ -159,7 +159,7 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
      * @private
      * @returns {Promise}
      */
-    _render: function () {
+    _renderView: function (){
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             var values = self.state.dashboardValues;
