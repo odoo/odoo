@@ -149,9 +149,19 @@ export const editorCommands = {
      * @param {OdooEditor} editor 
      * @param {Node[]} content
      */
-    insert: (editor, content) => {
+    insert: (editor, content, {
+        option = false,
+        container,
+        insertBefore: insertBefore2,
+        currentNode,
+        lastChildNode,
+        insertBeforeTmp
+
+    }) => {
         if (!content) return;
+        /** @type {Selection} */
         const selection = editor.document.getSelection();
+        /** @type {Range} */
         const range = selection.getRangeAt(0);
         let startNode;
         let insertBefore = false;
@@ -165,50 +175,74 @@ export const editorCommands = {
             editor.deleteRange(selection);
         }
 
-        const container = document.createElement('fake-element');
-        const containerFirstChild = document.createElement('fake-element-fc');
-        const containerLastChild = document.createElement('fake-element-lc');
-
-        if (content instanceof Node) {
-            container.replaceChildren(content);
-        } else {
-            container.textContent = content;
-        }
-
-        // In case the html inserted starts with a list and will be inserted within
-        // a list, unwrap the list elements from the list.
-        if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            container.replaceChildren(...container.firstChild.childNodes);
-        }
-
-        startNode = startNode || editor.document.getSelection().anchorNode;
-        // If the selection anchorNode is the editable itself, the content
-        // should not be unwrapped.
-        if (selection.anchorNode.oid !== 'root') {
-            // In case the html inserted is all contained in a single root <p> or <li>
-            // tag, we take the all content of the <p> or <li> and avoid inserting the
-            // <p> or <li>. The same is true for a <pre> inside a <pre>.
-            if (container.childElementCount === 1 && (
-                container.firstChild.nodeName === 'P' ||
-                container.firstChild.nodeName === 'LI' ||
-                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-            )) {
-                const p = container.firstElementChild;
-                container.replaceChildren(...p.childNodes);
-            } else if (container.childElementCount > 1) {
-                // Grab the content of the first child block and isolate it.
-                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
-                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                    container.firstElementChild.remove();
+        /**
+         * Isolation of the containers calculation
+         * @param {Node []} content 
+         * @param {Selection} selection
+         */
+        const unwrap = (content, selection) => {
+            const getInitStartNode = (editor, selection) => {
+                const range = selection.getRangeAt(0);
+                let startNode;
+                if (selection.isCollapsed && range.startContainer.nodeType === Node.TEXT_NODE) {
+                    startNode = range.startContainer;
                 }
-                // Grab the content of the last child block and isolate it.
-                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                    container.lastElementChild.remove();
+                return startNode || editor.document.getSelection().anchorNode;
+            }
+
+            const container = document.createElement('fake-element');
+            const containerFirstChild = document.createElement('fake-element-fc');
+            const containerLastChild = document.createElement('fake-element-lc');
+
+            const startNode = getInitStartNode()
+
+            if (content instanceof Node) {
+                container.replaceChildren(content);
+            } else {
+                container.textContent = content;
+            }
+
+            // In case the html inserted starts with a list and will be inserted within
+            // a list, unwrap the list elements from the list.
+            if (closestElement(selection.anchorNode, 'UL, OL') &&
+                (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
+                container.replaceChildren(...container.firstChild.childNodes);
+            }
+
+            // If the selection anchorNode is the editable itself, the content
+            // should not be unwrapped.
+            if (selection.anchorNode.oid !== 'root') {
+                // In case the html inserted is all contained in a single root <p> or <li>
+                // tag, we take the all content of the <p> or <li> and avoid inserting the
+                // <p> or <li>. The same is true for a <pre> inside a <pre>.
+                if (container.childElementCount === 1 && (
+                    container.firstChild.nodeName === 'P' ||
+                    container.firstChild.nodeName === 'LI' ||
+                    container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+                )) {
+                    const p = container.firstElementChild;
+                    container.replaceChildren(...p.childNodes);
+                } else if (container.childElementCount > 1) {
+                    // Grab the content of the first child block and isolate it.
+                    if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+                        containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                        container.firstElementChild.remove();
+                    }
+                    // Grab the content of the last child block and isolate it.
+                    if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                        containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                        container.lastElementChild.remove();
+                    }
                 }
             }
+
+            return [container, containerFirstChild, containerLastChild]
         }
+
+        const [container] = unwrap(content, selection);
+        /** @type {Node} */
+        startNode = startNode || editor.document.getSelection().anchorNode;
+
 
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
@@ -226,26 +260,38 @@ export const editorCommands = {
 
         // If we have isolated block content, first we split the current focus
         // element if it's a block then we insert the content in the right places.
-        let currentNode = startNode;
-        let lastChildNode = false;
-        const _insertAt = (reference, nodes, insertBefore) => {
-            for (const child of (insertBefore ? nodes.reverse() : nodes)) {
-                reference[insertBefore ? 'before' : 'after'](child);
-                reference = child;
+
+        const insertFirstAndLastChild = (startNode, containerFirstChild, containerLastChild, insertBefore) => {
+            const _insertAt = (reference, nodes, insertBefore) => {
+                for (const child of (insertBefore ? nodes.reverse() : nodes)) {
+                    reference[insertBefore ? 'before' : 'after'](child);
+                    reference = child;
+                }
             }
+            let lastChildNode = false;
+            let currentNode = startNode;
+            if (containerLastChild.hasChildNodes()) {
+                const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
+                _insertAt(currentNode, [...toInsert], insertBefore);
+                currentNode = insertBefore ? toInsert[0] : currentNode;
+                lastChildNode = toInsert[toInsert.length - 1];
+            }
+            if (containerFirstChild.hasChildNodes()) {
+                const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
+                _insertAt(currentNode, [...toInsert], insertBefore);
+                currentNode = toInsert[toInsert.length - 1];
+                insertBefore = false;
+            }
+
+            return [currentNode, lastChildNode, insertBefore]
         }
-        if (containerLastChild.hasChildNodes()) {
-            const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
-            _insertAt(currentNode, [...toInsert], insertBefore);
-            currentNode = insertBefore ? toInsert[0] : currentNode;
-            lastChildNode = toInsert[toInsert.length - 1];
-        }
-        if (containerFirstChild.hasChildNodes()) {
-            const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
-            _insertAt(currentNode, [...toInsert], insertBefore);
-            currentNode = toInsert[toInsert.length - 1];
-            insertBefore = false;
-        }
+
+        let [
+            currentNode,
+            lastChildNode,
+            insertBeforeTmp
+        ] = insertFirstAndLastChild(startNode, containerFirstChild, containerLastChild, insertBefore)
+        insertBefore = insertBeforeTmp;
 
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
