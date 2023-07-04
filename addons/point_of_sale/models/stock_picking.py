@@ -127,7 +127,7 @@ class StockPicking(models.Model):
                 for line in rec.pos_order_id.lines:
                     if line.product_id.type != 'product':
                         continue
-                    out = line.product_id.categ_id.property_stock_account_output_categ_id
+                    out = line.product_id.categ_id.property_stock_account_output_categ_id or rec.company_id.property_stock_account_output_categ_id
                     exp = line.product_id._get_product_accounts()['expense']
                     cost_per_account[(out, exp)] += line.total_cost
                 move_vals = []
