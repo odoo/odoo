@@ -288,10 +288,12 @@ export class StaticList extends DataPoint {
         });
     }
 
-    leaveEditMode({ discard, canAbandon, validate } = {}) {
+    async leaveEditMode({ discard, canAbandon, validate } = {}) {
+        if (this.editedRecord) {
+            await this.editedRecord._askChanges(false);
+        }
         return this.model.mutex.exec(async () => {
             if (this.editedRecord) {
-                await this.editedRecord._askChanges();
                 const isValid = this.editedRecord._checkValidity();
                 if (!isValid && validate) {
                     return false;
