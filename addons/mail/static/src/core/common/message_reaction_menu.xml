@@ -14,7 +14,7 @@
                 </div>
                 <div class="d-flex overflow-auto flex-column flex-grow-1 bg-view p-2 h-100">
                     <div t-foreach="state.reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{ 'o-isDeviceSmall': ui.isSmall }">
-                        <img class="rounded-circle o_object_fit_cover o-mail-MessageReactionMenu-avatar" t-att-src="threadService.avatarUrl(persona, props.message.originThread)"/>
+                        <img class="rounded o_object_fit_cover o-mail-MessageReactionMenu-avatar" t-att-src="threadService.avatarUrl(persona, props.message.originThread)"/>
                         <span class="d-flex flex-grow-1 align-items-center">
                             <span class="mx-2 text-truncate fs-6" t-esc="persona.name"/>
                             <div class="flex-grow-1"/>
