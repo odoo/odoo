@@ -668,8 +668,8 @@ class AssetsBundle(object):
                 rtlcss = misc.find_in_path('rtlcss.cmd')
             except IOError:
                 rtlcss = 'rtlcss'
-        cmd = [rtlcss, '-']
 
+        cmd = [rtlcss, '-c', get_resource_path("base", "data/rtlcss.json"), '-']
 
         try:
             rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
