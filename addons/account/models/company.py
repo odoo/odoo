@@ -179,6 +179,10 @@ class ResCompany(models.Model):
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
         string="Quick encoding")
 
+    # Separate account for allocation of discounts
+    account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
+    account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
+
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',
