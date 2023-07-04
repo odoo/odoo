@@ -13177,4 +13177,62 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.verifySteps([]);
     });
+
+    QUnit.test(
+        "one2many: save a record before the onchange is complete in a form dialog",
+        async function (assert) {
+            serverData.models.turtle.onchanges = {
+                display_name: function () {},
+            };
+
+            serverData.views = {
+                "turtle,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                    </form>`,
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="turtles">
+                            <tree>
+                                <field name="display_name" required="1"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (
+                        args.method === "onchange2" &&
+                        args.args[2].length === 1 &&
+                        args.args[2][0] === "display_name"
+                    ) {
+                        await def;
+                    }
+                },
+            });
+            await addRow(target);
+            assert.containsOnce(target, ".modal");
+
+            await editInput(target, ".o_field_widget[name=display_name] input", "new name");
+            await click(target, ".modal .o_form_button_save");
+            assert.containsOnce(target, ".modal");
+
+            def.resolve();
+            await nextTick();
+            assert.containsNone(target, ".modal");
+            assert.containsN(target, ".o_data_row", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_row [name='display_name']")].map(
+                    (el) => el.textContent
+                ),
+                ["donatello", "new name"]
+            );
+        }
+    );
 });
