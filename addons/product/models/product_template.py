@@ -791,7 +791,11 @@ class ProductTemplate(models.Model):
         archived_products = self.with_context(active_test=False).product_variant_ids.filtered(lambda l: not l.active)
         return {
             'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
-            'archived_combinations': [product.product_template_attribute_value_ids.ids for product in archived_products],
+            'archived_combinations': [
+                product.product_template_attribute_value_ids.ids
+                for product in archived_products
+                if product.product_template_attribute_value_ids
+            ],
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
             'parent_product_name': parent_name,
