@@ -414,6 +414,11 @@ class Property(models.Model):
                 target_names = target.name_search(value, operator=operator, limit=None)
                 target_ids = [n[0] for n in target_names]
                 operator, value = 'in', [makeref(v) for v in target_ids]
+            elif operator in ('any', 'not any'):
+                if operator == 'not any':
+                    negate = True
+                operator = 'in'
+                value = list(map(makeref, self.env[field.comodel_name]._search(value)))
 
         elif field.type in ('integer', 'float'):
             # No record is created in ir.property if the field's type is float or integer with a value
