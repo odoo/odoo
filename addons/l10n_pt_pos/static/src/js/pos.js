@@ -4,7 +4,6 @@ import { Order } from "@point_of_sale/app/store/models";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { patch } from "@web/core/utils/patch";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useService } from "@web/core/utils/hooks";
 
 patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
     is_portuguese_country() {
