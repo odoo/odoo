@@ -169,20 +169,17 @@ class LivechatController(http.Controller):
         )
 
     def _post_feedback_message(self, channel, rating, reason):
+        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
         body = Markup('''
             <div class="o_mail_notification o_hide_author">
-                %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/><br> %(reason)s
+                %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s
             </div>
         ''') % {
             'rating': _('Rating'),
             'rating_url': rating.rating_image_url,
             'reason': reason,
         }
-        channel.message_post(
-            body=Markup(re.sub(r'\r\n|\r|\n', '<br>', body)),
-            message_type='notification',
-            subtype_xmlid='mail.mt_comment'
-        )
+        channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
