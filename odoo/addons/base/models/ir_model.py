@@ -1267,8 +1267,8 @@ class IrModelSelection(models.Model):
         for field in fields:
             model = self.env[field.model_name]
             for value, modules in field._selection_modules(model).items():
-                if module in modules:
-                    xml_id = selection_xmlid(module, field.model_name, field.name, value)
+                for m in modules:
+                    xml_id = selection_xmlid(m, field.model_name, field.name, value)
                     record = self.browse(selection_ids[field.model_name, field.name, value])
                     data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
