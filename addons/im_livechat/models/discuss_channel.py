@@ -101,8 +101,10 @@ class DiscussChannel(models.Model):
             message_body = '<ul>%s</ul>' % (''.join(html_links))
         self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
-    def _message_update_content(self, message, body, attachment_ids=None, strict=True, **kwargs):
-        super()._message_update_content(message=message, body=body, attachment_ids=attachment_ids, strict=strict, **kwargs)
+    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None, strict=True, **kwargs):
+        super()._message_update_content(
+            message=message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids, strict=strict, **kwargs
+        )
         if self.channel_type == 'livechat':
             self.env['bus.bus']._sendone(self.uuid, 'mail.record/insert', {
                 'Message': {
