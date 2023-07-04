@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from itertools import combinations
 
+from odoo import Command
 from odoo.tests import common
 
 
-class test_domain(common.TransactionCase):
-
-    def setUp(self):
-        super(test_domain, self).setUp()
-        self.bool = self.env['domain.bool']
+class TestDomain(common.TransactionCase):
 
     def test_00_test_bool_undefined(self):
         """
@@ -28,7 +25,7 @@ class test_domain(common.TransactionCase):
         self.env.ref('test_new_api.bool_3').write({'x_bool_new_undefined': True})
         self.env.ref('test_new_api.bool_4').write({'x_bool_new_undefined': False})
 
-        model = self.bool
+        model = self.env['domain.bool']
         all_bool = model.search([])
         for f in ['bool_true', 'bool_false', 'bool_undefined', 'x_bool_new_undefined']:
             eq_1 = model.search([(f, '=', False)])
@@ -107,3 +104,116 @@ class test_domain(common.TransactionCase):
                 self.assertListEqual(records_fr.search([('name', 'in', sublist)]).mapped('name'), sublist)
                 sublist_remained = [v for v in values if v not in subset]
                 self.assertListEqual(records_fr.search([('name', 'not in', sublist)]).mapped('name'), sublist_remained)
+
+    def test_anys_many2one(self):
+        Parent = self.env['test_new_api.any.parent']
+        Child = self.env['test_new_api.any.child']
+
+        parent_1, parent_2 = Parent.create([
+            {
+                'name': 'Jean',
+                'child_ids': [
+                    Command.create({'quantity': 1}),
+                    Command.create({'quantity': 10}),
+                ],
+            },
+            {
+                'name': 'Clude',
+                'child_ids': [
+                    Command.create({'quantity': 2}),
+                    Command.create({'quantity': 20}),
+                ],
+            },
+        ])
+        # Link parent_1.child_1 to parent_1.child_2
+        parent_1.child_ids[0].link_sibling_id = parent_1.child_ids[1]
+        # Link parent_2.child_2 to parent_2.child_1
+        parent_2.child_ids[1].link_sibling_id = parent_2.child_ids[0]
+
+        # Check any/not any traversing normal Many2one
+        res_search = Child.search([('link_sibling_id', 'any', [('quantity', '>', 5)])])
+        self.assertEqual(res_search, parent_1.child_ids[0])
+
+        res_search = Child.search([('link_sibling_id', 'not any', [('quantity', '>', 5)])])
+        self.assertEqual(res_search, parent_1.child_ids[1] + parent_2.child_ids)
+
+        # Check any/not any traversing auto_join Many2one
+        self.assertFalse(Child._fields['link_sibling_id'].auto_join)
+        self.patch(Child._fields['link_sibling_id'], 'auto_join', True)
+        self.assertTrue(Child._fields['link_sibling_id'].auto_join)
+
+        res_search = Child.search([('link_sibling_id', 'any', [('quantity', '>', 5)])])
+        self.assertEqual(res_search, parent_1.child_ids[0])
+
+        res_search = Child.search([('link_sibling_id', 'not any', [('quantity', '>', 5)])])
+        self.assertEqual(res_search, parent_1.child_ids[1] + parent_2.child_ids)
+
+        # Check any/not any traversing delegate Many2one
+        res_search = Child.search([('parent_id', 'any', [('name', '=', 'Jean')])])
+        self.assertEqual(res_search, parent_1.child_ids)
+
+        res_search = Child.search([('parent_id', 'not any', [('name', '=', 'Jean')])])
+        self.assertEqual(res_search, parent_2.child_ids)
+
+    def test_anys_one2many(self):
+        Parent = self.env['test_new_api.any.parent']
+
+        parent_1, parent_2, parent_3 = Parent.create([
+            {
+                'child_ids': [
+                    Command.create({'quantity': 1}),
+                    Command.create({'quantity': 10}),
+                ],
+            },
+            {
+                'child_ids': [
+                    Command.create({'quantity': 2}),
+                    Command.create({'quantity': 20}),
+                ],
+            },
+            {},
+        ])
+
+        # Check any/not any traversing normal one2many
+        res_search = Parent.search([('child_ids', 'any', [('quantity', '=', 1)])])
+        self.assertEqual(res_search, parent_1)
+
+        res_search = Parent.search([('child_ids', 'not any', [('quantity', '=', 1)])])
+        self.assertEqual(res_search, parent_2 + parent_3)
+
+        # Check any/not any traversing auto_join Many2one
+        self.assertFalse(Parent._fields['child_ids'].auto_join)
+        self.patch(Parent._fields['child_ids'], 'auto_join', True)
+        self.assertTrue(Parent._fields['child_ids'].auto_join)
+
+        res_search = Parent.search([('child_ids', 'any', [('quantity', '=', 1)])])
+        self.assertEqual(res_search, parent_1)
+
+        res_search = Parent.search([('child_ids', 'not any', [('quantity', '=', 1)])])
+        self.assertEqual(res_search, parent_2 + parent_3)
+
+    def test_anys_many2many(self):
+        # auto_join + without
+        Child = self.env['test_new_api.any.child']
+
+        child_1, child_2, child_3 = Child.create([
+            {
+                'tag_ids': [
+                    Command.create({'name': 'Urgent'}),
+                    Command.create({'name': 'Important'}),
+                ],
+            },
+            {
+                'tag_ids': [
+                    Command.create({'name': 'Other'}),
+                ],
+            },
+            {},
+        ])
+
+        # Check any/not any traversing normal Many2Many
+        res_search = Child.search([('tag_ids', 'any', [('name', '=', 'Urgent')])])
+        self.assertEqual(res_search, child_1)
+
+        res_search = Child.search([('tag_ids', 'not any', [('name', '=', 'Urgent')])])
+        self.assertEqual(res_search, child_2 + child_3)

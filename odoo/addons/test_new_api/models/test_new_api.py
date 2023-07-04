@@ -1801,3 +1801,32 @@ class UnsearchableO2M(models.Model):
     def _compute_parent_id(self):
         for r in self:
             r.parent_id = r.stored_parent_id
+
+
+class AnyParent(models.Model):
+    _name = 'test_new_api.any.parent'
+    _description = 'Any Parent'
+
+    name = fields.Char()
+    child_ids = fields.One2many('test_new_api.any.child', 'parent_id')
+
+
+class AnyChild(models.Model):
+    _name = 'test_new_api.any.child'
+    _description = 'Any Child'
+    _inherits = {
+        'test_new_api.any.parent': 'parent_id',
+    }
+
+    parent_id = fields.Many2one('test_new_api.any.parent', required=True, ondelete='cascade')
+    link_sibling_id = fields.Many2one('test_new_api.any.child')
+    quantity = fields.Integer()
+    tag_ids = fields.Many2many('test_new_api.any.tag')
+
+
+class AnyTag(models.Model):
+    _name = 'test_new_api.any.tag'
+    _description = 'Any tag'
+
+    name = fields.Char()
+    child_ids = fields.Many2many('test_new_api.any.child')

@@ -1077,7 +1077,7 @@ class expression(object):
                 )
 
                 if operator == 'not any':
-                    right = ['!', *right]
+                    right = ['|', ('id', '=', False), '!', *right]
 
                 for leaf in right:
                     push(leaf, comodel, coalias)
@@ -1094,7 +1094,11 @@ class expression(object):
 
             elif operator in ('any', 'not any') and field.store and field.type == 'many2one':
                 right_ids = comodel.with_context(active_test=False)._search(right)
-                push((left, ANY_IN[operator], right_ids), model, alias)
+                if operator == 'any':
+                    push((left, 'in', right_ids), model, alias)
+                else:
+                    for dom_leaf in ('|', (left, 'not in', right_ids), (left, '=', False)):
+                        push(dom_leaf, model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif operator in ('any', 'not any') and field.store and field.type in ('many2many', 'one2many'):
