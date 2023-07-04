@@ -2316,6 +2316,13 @@ class AccountMove(models.Model):
                 stack.enter_context(self._sync_unbalanced_lines(misc_container))
                 stack.enter_context(self._sync_rounding_lines(invoice_container))
                 stack.enter_context(self._sync_dynamic_line(
+                    existing_key_fname='discount_allocation_key',
+                    needed_vals_fname='line_ids.discount_allocation_needed',
+                    needed_dirty_fname='line_ids.discount_allocation_dirty',
+                    line_type='discount',
+                    container=invoice_container,
+                ))
+                stack.enter_context(self._sync_dynamic_line(
                     existing_key_fname='tax_key',
                     needed_vals_fname='line_ids.compute_all_tax',
                     needed_dirty_fname='line_ids.compute_all_tax_dirty',
@@ -4374,6 +4381,13 @@ class AccountMove(models.Model):
         })
 
         return res
+
+    def _get_discount_allocation_account(self):
+        if self.is_sale_document(include_receipts=True) and self.company_id.account_discount_expense_allocation_id:
+            return self.company_id.account_discount_expense_allocation_id
+        if self.is_purchase_document(include_receipts=True) and self.company_id.account_discount_income_allocation_id:
+            return self.company_id.account_discount_income_allocation_id
+        return None
 
     # -------------------------------------------------------------------------
     # TOOLING

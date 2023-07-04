@@ -275,6 +275,19 @@
                                         </div>
                                     </div>
                                 </setting>
+                                <setting string="Separate discount accounts on invoices"
+                                         title="If empty, the discount will be discounted directly on the income/expense account. If set, discount on invoices will be realized in separate accounts.">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="account_discount_expense_allocation_id" class="col-lg-5 o_light_label" string="Customer Invoices"/>
+                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_discount_income_allocation_id" class="col-lg-5 o_light_label" string="Vendor Bills"/>
+                                            <field name="account_discount_income_allocation_id" placeholder="Same Account"/>
+                                        </div>
+                                    </div>
+                                </setting>
                                 <setting string="Post discounts in:">
                                     <div class="content-group">
                                         <div class="row mt8">

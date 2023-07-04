@@ -287,6 +287,7 @@ class AccountMoveLine(models.Model):
             ('product', 'Product'),
             ('cogs', 'Cost of Goods Sold'),
             ('tax', 'Tax'),
+            ('discount', "Discount"),
             ('rounding', "Rounding"),
             ('payment_term', 'Payment Term'),
             ('line_section', 'Section'),
@@ -361,6 +362,9 @@ class AccountMoveLine(models.Model):
     epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
     epd_needed = fields.Binary(compute='_compute_epd_needed', exportable=False)
     epd_dirty = fields.Boolean(compute='_compute_epd_needed')
+    discount_allocation_key = fields.Binary(compute='_compute_discount_allocation_key', exportable=False)
+    discount_allocation_needed = fields.Binary(compute='_compute_discount_allocation_needed', exportable=False)
+    discount_allocation_dirty = fields.Boolean(compute='_compute_discount_allocation_needed')
 
     # === Analytic fields === #
     analytic_line_ids = fields.One2many(
@@ -960,6 +964,55 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, compute_all_currency['base_tags'])],
                 }
 
+    @api.depends('account_id', 'company_id')
+    def _compute_discount_allocation_key(self):
+        for line in self:
+            if line.display_type == 'discount':
+                line.discount_allocation_key = frozendict({
+                    'account_id': line.account_id.id,
+                    'move_id': line.move_id.id,
+                })
+            else:
+                line.discount_allocation_key = False
+
+    @api.depends('account_id', 'company_id', 'discount', 'price_unit', 'quantity')
+    def _compute_discount_allocation_needed(self):
+        for line in self:
+            line.discount_allocation_dirty = True
+            discount_allocation_account = line.move_id._get_discount_allocation_account()
+
+            if not discount_allocation_account or line.display_type != 'product' or line.currency_id.is_zero(line.discount):
+                line.discount_allocation_needed = False
+                continue
+
+            discounted_amount_currency = line.currency_id.round(line.move_id.direction_sign * line.quantity * line.price_unit * line.discount/100)
+            discount_allocation_needed = {}
+            discount_allocation_needed_vals = discount_allocation_needed.setdefault(
+                frozendict({
+                    'account_id': line.account_id.id,
+                    'move_id': line.move_id.id,
+                }),
+                {
+                    'display_type': 'discount',
+                    'name': _("Discount"),
+                    'amount_currency': 0.0,
+                },
+            )
+            discount_allocation_needed_vals['amount_currency'] += discounted_amount_currency
+            discount_allocation_needed_vals = discount_allocation_needed.setdefault(
+                frozendict({
+                    'move_id': line.move_id.id,
+                    'account_id': discount_allocation_account.id,
+                }),
+                {
+                    'display_type': 'discount',
+                    'name': _("Discount"),
+                    'amount_currency': 0.0,
+                },
+            )
+            discount_allocation_needed_vals['amount_currency'] -= discounted_amount_currency
+            line.discount_allocation_needed = {k: frozendict(v) for k, v in discount_allocation_needed.items()}
+
     @api.depends('tax_ids', 'account_id', 'company_id')
     def _compute_epd_key(self):
         for line in self:
@@ -1265,7 +1318,7 @@ class AccountMoveLine(models.Model):
     def check_field_access_rights(self, operation, field_names):
         result = super().check_field_access_rights(operation, field_names)
         if not fields:
-            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed']
+            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed', 'discount_allocation_key', 'discount_allocation_needed']
             result = [fname for fname in result if fname not in weirdos]
         return result
 
