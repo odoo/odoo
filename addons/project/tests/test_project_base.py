@@ -2,6 +2,7 @@
 
 from lxml import etree
 
+from odoo.osv import expression
 from odoo.tests import users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
@@ -215,17 +216,20 @@ class TestProjectBase(TestProjectCommon):
         tasks = parent | child
 
         other_projects = self.project_goats + self.project_pigs
+        other_projects.allow_milestones = True
+        # Restrict all searches to the three test projects to avoid interacting with other data
+        base_domain = [('project_root_id', 'in', [project.id] + other_projects.ids)]
 
         self.assertFalse(child.project_id)
         self.assertEqual(child.project_root_id, parent.project_id)
         self.assertEqual(parent.project_root_id, parent.project_id)
-        self.assertEqual(ProjectTask.search([('project_root_id', '=', project.id)]), tasks)
-        self.assertEqual(ProjectTask.search([('project_root_id', 'in', project.ids)]), tasks)
-        self.assertEqual(ProjectTask.search([('project_root_id.allow_milestones', '=', False)]), tasks)
-        self.assertEqual(ProjectTask.search(['!', ('project_root_id.allow_milestones', '=', True)]), tasks)
-        self.assertEqual(ProjectTask.search([('project_root_id', '=?', project.id)]), tasks)
-        self.assertEqual(ProjectTask.search([('project_root_id', 'not in', other_projects.ids), ('id', 'in', tasks.ids)]), tasks)
-        self.assertEqual(ProjectTask.search([('project_root_id', '!=', self.project_pigs.id), ('id', 'in', tasks.ids)]), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id', '=', project.id)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id', 'in', project.ids)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id.allow_milestones', '=', False)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, ['!', ('project_root_id.allow_milestones', '=', True)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id', '=?', project.id)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id', 'not in', other_projects.ids), ('id', 'in', tasks.ids)]])), tasks)
+        self.assertEqual(ProjectTask.search(expression.AND([base_domain, [('project_root_id', '!=', self.project_pigs.id), ('id', 'in', tasks.ids)]])), tasks)
 
     def test_add_customer_rating_project(self):
         """ Tests that the rating_ids field contains a rating once created
