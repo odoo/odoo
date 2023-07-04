@@ -6,7 +6,7 @@ import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 
-import { Component, onMounted, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -37,17 +37,12 @@ export class Activity extends Component {
         this.activityService = useService("mail.activity");
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
-        this.state = useState({
-            showDetails: false,
-            delay: computeDelay(this.props.data.date_deadline),
-        });
+        this.state = useState({ showDetails: false });
         this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
         onMounted(() => {
             this.updateDelayAtNight();
         });
-        onWillUpdateProps((nextProps) => {
-            this.state.delay = computeDelay(nextProps.data.date_deadline);
-        });
+        onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
         this.attachmentUploader = useAttachmentUploader(this.thread);
     }
 
@@ -59,10 +54,15 @@ export class Activity extends Component {
     }
 
     updateDelayAtNight() {
-        browser.setTimeout(() => {
-            this.state.delay = computeDelay(this.props.data.date_deadline);
-            this.updateDelayAtNight();
-        }, getMsToTomorrow() + 100); // Make sure there is no race condition
+        browser.clearTimeout(this.updateDelayMidnightTimeout);
+        this.updateDelayMidnightTimeout = browser.setTimeout(
+            () => this.render(),
+            getMsToTomorrow() + 100
+        ); // Make sure there is no race condition
+    }
+
+    get delay() {
+        return computeDelay(this.props.data.date_deadline);
     }
 
     toggleDetails() {
