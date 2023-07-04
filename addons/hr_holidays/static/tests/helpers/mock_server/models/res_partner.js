@@ -5,14 +5,14 @@ import '@mail/../tests/helpers/mock_server/models/res_partner'; // ensure mail o
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'hr_holidays/models/res_partner', {
+patch(MockServer.prototype, {
     /**
      * Overrides to add out of office to employees.
      *
      * @override
      */
     _mockResPartnerMailPartnerFormat(ids) {
-        const partnerFormats = this._super(...arguments);
+        const partnerFormats = super._mockResPartnerMailPartnerFormat(...arguments);
         const partners = this.getRecords(
             'res.partner',
             [['id', 'in', ids]],

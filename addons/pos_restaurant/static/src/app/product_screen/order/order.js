@@ -5,7 +5,7 @@ import { OrderWidget } from "@point_of_sale/app/screens/product_screen/order/ord
 import { AlertPopup } from "@point_of_sale/app/utils/alert_popup/alert_popup";
 import { _t } from "@web/core/l10n/translation";
 
-patch(OrderWidget.prototype, "pos_restaurant.OrderWidget", {
+patch(OrderWidget.prototype, {
     releaseTable() {
         const currentTable = this.pos.table;
         const orderOnTable = this.pos.orders.filter(

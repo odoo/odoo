@@ -436,7 +436,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         let fileInput;
         patchWithCleanup(AttachDocumentWidget.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 fileInput = this.fileInput;
             },
         });

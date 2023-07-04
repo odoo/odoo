@@ -70,18 +70,17 @@ function getCreateXHR() {
         let route = "";
         const self = this;
         xhr.status = 200;
-        patch(xhr, "mail", {
+        patch(xhr, {
             open(method, dest) {
                 route = dest;
-                return this._super(method, dest);
+                return super.open(method, dest);
             },
             async send(data) {
-                const _super = this._super;
                 await new Promise(setTimeout);
                 response = JSON.stringify(
                     await self.env.services.rpc(route, { body: data, method: "POST" })
                 );
-                return _super(data);
+                return super.send(data);
             },
             upload: new EventTarget(),
             abort() {
@@ -141,8 +140,7 @@ export const setupManager = {
                     audio.play = () => {};
                     return audio;
                 },
-            },
-            { pure: true }
+            }
         );
         patchWithCleanup(session, { show_effect: true });
         services["messagingValues"] = services["messagingValues"] ?? {

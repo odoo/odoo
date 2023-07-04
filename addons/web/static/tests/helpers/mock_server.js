@@ -2598,7 +2598,7 @@ export async function makeMockServer(serverData, mockRPC) {
     if (mockRPC) {
         const { loadJS, loadCSS } = assets;
         patchWithCleanup(assets, {
-            loadJS: async function (resource) {
+            async loadJS(resource) {
                 let res = await mockRPC(resource, {});
                 if (res === undefined) {
                     res = await loadJS(resource);
@@ -2607,7 +2607,7 @@ export async function makeMockServer(serverData, mockRPC) {
                 }
                 return res;
             },
-            loadCSS: async function (resource) {
+            async loadCSS(resource) {
                 let res = await mockRPC(resource, {});
                 if (res === undefined) {
                     res = await loadCSS(resource);

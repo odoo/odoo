@@ -4,7 +4,7 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { Order, Payment } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(PosStore.prototype, "pos_mercury.PosStore", {
+patch(PosStore.prototype, {
     getOnlinePaymentMethods() {
         var online_payment_methods = [];
 
@@ -85,9 +85,9 @@ patch(PosStore.prototype, "pos_mercury.PosStore", {
     },
 });
 
-patch(Payment.prototype, "pos_mercury.Payment", {
+patch(Payment.prototype, {
     init_from_JSON(json) {
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
 
         this.paid = json.paid;
         this.mercury_card_number = json.mercury_card_number;
@@ -103,7 +103,7 @@ patch(Payment.prototype, "pos_mercury.Payment", {
         this.set_credit_card_name();
     },
     export_as_JSON() {
-        const result = this._super(...arguments);
+        const result = super.export_as_JSON(...arguments);
         if (!result) {
             return result;
         }
@@ -126,20 +126,20 @@ patch(Payment.prototype, "pos_mercury.Payment", {
         }
     },
     is_done() {
-        var res = this._super(...arguments);
+        var res = super.is_done(...arguments);
         return res && !this.mercury_swipe_pending;
     },
     export_for_printing() {
-        const result = this._super(...arguments);
+        const result = super.export_for_printing(...arguments);
         result.mercury_data = this.mercury_data;
         result.mercury_auth_code = this.mercury_auth_code;
         return result;
     },
 });
 
-patch(Order.prototype, "pos_mercury.Order", {
+patch(Order.prototype, {
     electronic_payment_in_progress() {
-        var res = this._super(...arguments);
+        var res = super.electronic_payment_in_progress(...arguments);
         return res || this.get_paymentlines().some((line) => line.mercury_swipe_pending);
     },
 });

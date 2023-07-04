@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { registry } from '@web/core/registry';
 import { utils, clearRegistryWithCleanup } from '@web/../tests/helpers/mock_env';
 
@@ -40,7 +40,7 @@ function makeFakeWebsiteCustomMenusService() {
 }
 
 const serviceRegistry = registry.category('services');
-patch(utils, 'website_test_registries', {
+patch(utils, {
     prepareRegistriesWithCleanup() {
         prepareRegistriesWithCleanup(...arguments);
         serviceRegistry.add('website', makeFakeWebsiteService());

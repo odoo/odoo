@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { ForecastedDetails } from '@stock/stock_forecasted/forecasted_details';
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 
-patch(ForecastedDetails.prototype, 'mrp.ForecastedDetails',{
+patch(ForecastedDetails.prototype, {
 
     canReserveOperation(line){
-        return this._super(line) || line.move_out?.raw_material_production_id;
+        return super.canReserveOperation(line) || line.move_out?.raw_material_production_id;
     }
 });

@@ -129,8 +129,7 @@ QUnit.test("should display invitations", async (assert) => {
                     assert.step("play_sound_effect");
                 }
             },
-        },
-        { pure: true }
+        }
     );
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

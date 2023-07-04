@@ -3,9 +3,9 @@
 import { ActivityService } from "@mail/core/web/activity_service";
 import { patch } from "@web/core/utils/patch";
 
-patch(ActivityService.prototype, "calendar/activity_service", {
+patch(ActivityService.prototype, {
     insert(data) {
-        const activity = this._super(...arguments);
+        const activity = super.insert(...arguments);
         const { calendar_event_id: calendarEventId } = data;
         if (calendarEventId) {
             activity["calendar_event_id"] = calendarEventId;

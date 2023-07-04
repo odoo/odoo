@@ -3,13 +3,13 @@
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
 
-patch(AttendeeCalendarModel, "google_calendar_google_calendar_model", {
+patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services, "rpc"],
 });
 
-patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_functions", {
+patch(AttendeeCalendarModel.prototype, {
     setup(params, { rpc }) {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.rpc = rpc;
         this.googleIsSync = true;
         this.googlePendingSync = false;
@@ -19,9 +19,8 @@ patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_fu
      * @override
      */
     async updateData() {
-        const _super = this._super.bind(this);
         if (this.googlePendingSync) {
-            return _super(...arguments);
+            return super.updateData(...arguments);
         }
         try {
             await Promise.race([
@@ -35,7 +34,7 @@ patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_fu
             console.error("Could not synchronize Google events now.", error);
             this.googlePendingSync = false;
         }
-        return _super(...arguments);
+        return super.updateData(...arguments);
     },
 
     async syncGoogleCalendar(silent = false) {

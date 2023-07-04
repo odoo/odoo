@@ -101,7 +101,7 @@ QUnit.module("ActionManager", (hooks) => {
         let form;
         patchWithCleanup(formView.Controller.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 form = this;
             },
         });
@@ -123,7 +123,7 @@ QUnit.module("ActionManager", (hooks) => {
         let list;
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 list = this;
             },
         });
@@ -156,7 +156,7 @@ QUnit.module("ActionManager", (hooks) => {
             let list;
             patchWithCleanup(listView.Controller.prototype, {
                 setup() {
-                    this._super(...arguments);
+                    super.setup(...arguments);
                     list = this;
                 },
             });

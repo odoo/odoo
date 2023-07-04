@@ -3,7 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
 
-patch(Dialog.prototype, "mail/views/web", {
+patch(Dialog.prototype, {
     /**
      * @override
      */
@@ -11,6 +11,6 @@ patch(Dialog.prototype, "mail/views/web", {
         if (this.data.model === "mail.compose.message") {
             return;
         }
-        this._super();
+        super.onEscape();
     },
 });

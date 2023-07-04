@@ -20,12 +20,12 @@ const NON_IDLE_EVENTS = [
 ];
 let IDLE_TIMER_SETTER;
 
-patch(PosStore.prototype, "pos_restaurant.PosStore", {
+patch(PosStore.prototype, {
     /**
      * @override
      */
     async setup() {
-        await this._super(...arguments);
+        await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.table?.floor || null });
@@ -71,18 +71,18 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         );
     },
     showScreen(screenName) {
-        this._super(...arguments);
+        super.showScreen(...arguments);
         this.setIdleTimer();
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.get_order()) {
             return this.showScreen("FloorScreen");
         }
-        return this._super(...arguments);
+        return super.closeScreen(...arguments);
     },
     addOrderIfEmpty() {
         if (!this.config.module_pos_restaurant) {
-            return this._super(...arguments);
+            return super.addOrderIfEmpty(...arguments);
         }
     },
     /**
@@ -96,18 +96,18 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
                 window.removeEventListener(event, IDLE_TIMER_SETTER);
             }
         }
-        return this._super(...arguments);
+        return super.closePos(...arguments);
     },
     showBackButton() {
         return (
-            this._super(...arguments) ||
+            super.showBackButton(...arguments) ||
             this.mainScreen.component === TipScreen ||
             (this.mainScreen.component === ProductScreen && this.config.module_pos_restaurant)
         );
     },
     //@override
     async _processData(loadedData) {
-        await this._super(...arguments);
+        await super._processData(...arguments);
         if (this.config.module_pos_restaurant) {
             this.floors = loadedData["restaurant.floor"];
             this.loadRestaurantFloor();
@@ -115,7 +115,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     },
     //@override
     async after_load_server_data() {
-        var res = await this._super(...arguments);
+        var res = await super.after_load_server_data(...arguments);
         if (this.config.module_pos_restaurant) {
             this.table = null;
         }
@@ -126,12 +126,12 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     // set when the user selects a table.
     set_start_order() {
         if (!this.config.module_pos_restaurant) {
-            this._super(...arguments);
+            super.set_start_order(...arguments);
         }
     },
     //@override
     add_new_order() {
-        const order = this._super(...arguments);
+        const order = super.add_new_order(...arguments);
         this.ordersToUpdateSet.add(order);
         return order;
     },
@@ -184,23 +184,23 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
             return ordersJsons;
         } else {
-            return await this._super();
+            return await super._getOrdersJson();
         }
     },
     _shouldRemoveOrder(order) {
-        return this._super(...arguments) && !this.transferredOrdersSet.has(order);
+        return super._shouldRemoveOrder(...arguments) && !this.transferredOrdersSet.has(order);
     },
     _shouldCreateOrder(json) {
         return (
             (!this._transferredOrder(json) || this._isSameTable(json)) &&
-            (!this.selectedOrder || this._super(...arguments))
+            (!this.selectedOrder || super._shouldCreateOrder(...arguments))
         );
     },
     _shouldRemoveSelectedOrder(removeSelected) {
-        return this.selectedOrder && this._super(...arguments);
+        return this.selectedOrder && super._shouldRemoveSelectedOrder(...arguments);
     },
     _isSelectedOrder(json) {
-        return !this.selectedOrder || this._super(...arguments);
+        return !this.selectedOrder || super._isSelectedOrder(...arguments);
     },
     _isSameTable(json) {
         const transferredOrder = this._transferredOrder(json);
@@ -215,7 +215,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             // this means we transferred back to the original table, we'll prioritize the server state
             this.removeOrder(transferredOrder, false);
         }
-        return this._super(...arguments);
+        return super._createOrder(...arguments);
     },
     loadRestaurantFloor() {
         // we do this in the front end due to the circular/recursive reference needed
@@ -283,7 +283,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
     },
     isOpenOrderShareable() {
-        return this._super(...arguments) || this.config.module_pos_restaurant;
+        return super.isOpenOrderShareable(...arguments) || this.config.module_pos_restaurant;
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;

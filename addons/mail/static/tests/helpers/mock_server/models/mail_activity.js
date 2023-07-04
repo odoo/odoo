@@ -7,7 +7,7 @@ import { serializeDate, deserializeDate } from "@web/core/l10n/dates";
 
 const { DateTime} = luxon;
 
-patch(MockServer.prototype, "mail/models/mail_activity", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "mail.activity" && args.method === "action_feedback") {
             const ids = args.args[0];
@@ -26,7 +26,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
             const domain = args.args[1] || args.kwargs.domain;
             return this._mockMailActivityGetActivityData(res_model, domain);
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `activity_format` on `mail.activity`.

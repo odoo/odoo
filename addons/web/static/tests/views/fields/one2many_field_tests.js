@@ -2475,7 +2475,7 @@ QUnit.module("Fields", (hooks) => {
                     if (this.resModel === "turtle") {
                         assert.step(`${this.resId}`);
                     }
-                    return this._super(...arguments);
+                    return super._update(...arguments);
                 },
             });
 

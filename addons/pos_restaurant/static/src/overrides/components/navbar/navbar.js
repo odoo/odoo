@@ -3,7 +3,7 @@
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { patch } from "@web/core/utils/patch";
 
-patch(Navbar.prototype, "pos_restaurant.Navbar", {
+patch(Navbar.prototype, {
     /**
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
@@ -12,10 +12,10 @@ patch(Navbar.prototype, "pos_restaurant.Navbar", {
         if (this.pos.config.module_pos_restaurant && this.pos.table) {
             return this.pos.getTableOrders(this.pos.table.id).length;
         }
-        return this._super(...arguments);
+        return super.orderCount;
     },
     _shouldLoadOrders() {
-        return this._super() || (this.pos.config.module_pos_restaurant && !this.pos.table);
+        return super._shouldLoadOrders() || (this.pos.config.module_pos_restaurant && !this.pos.table);
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle == "kanban" ? "default" : "kanban";
@@ -27,7 +27,7 @@ patch(Navbar.prototype, "pos_restaurant.Navbar", {
     },
     showBackButton() {
         return (
-            this._super(...arguments) ||
+            super.showBackButton(...arguments) ||
             (this.pos.showBackButton() && this.pos.config.module_pos_restaurant)
         );
     },

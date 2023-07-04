@@ -28,4 +28,4 @@ const ActivityPatch = {
     },
 };
 
-patch(Activity.prototype, "website_slides", ActivityPatch);
+patch(Activity.prototype, ActivityPatch);

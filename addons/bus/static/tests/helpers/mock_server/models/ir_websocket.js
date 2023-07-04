@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "bus/models/ir_websocket", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_update_presence` on `ir.websocket`.
      *

@@ -88,7 +88,7 @@ QUnit.test("Jump to message", async (assert) => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
-            return this._super(true);
+            return super.scrollIntoView(true);
         },
     });
     const pyEnv = await startServer();
@@ -119,7 +119,7 @@ QUnit.test("Jump to message from notification", async (assert) => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
-            return this._super(true);
+            return super.scrollIntoView(true);
         },
     });
     const pyEnv = await startServer();

@@ -6,9 +6,9 @@ import { MessageService } from "@mail/core/common/message_service";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(MessageService.prototype, "im_livechat", {
+patch(MessageService.prototype, {
     insert(data) {
-        const message = this._super(data);
+        const message = super.insert(data);
         if (data.chatbotStep) {
             message.chatbotStep = new ChatbotStep(data.chatbotStep);
         }

@@ -18,13 +18,7 @@ QUnit.module("download", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         let error;
         try {
@@ -47,13 +41,7 @@ QUnit.module("download", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         let error;
         try {
@@ -87,13 +75,7 @@ QUnit.module("download", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         let error;
         try {
@@ -122,13 +104,7 @@ QUnit.module("download", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         let error;
         try {
@@ -161,13 +137,7 @@ QUnit.module("download", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         assert.containsNone(document.body, "a[download]");
 

@@ -3,9 +3,9 @@
 import { patch } from "@web/core/utils/patch";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
-patch(ListRenderer.prototype, "mail/views/web", {
+patch(ListRenderer.prototype, {
     getPropertyFieldColumns(_, list) {
-        const columns = this._super(...arguments);
+        const columns = super.getPropertyFieldColumns(...arguments);
         for (const column of columns) {
             const { relation, type } = list.fields[column.name];
             if (relation === "res.users") {

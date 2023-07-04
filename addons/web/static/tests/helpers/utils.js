@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
 import { Deferred } from "@web/core/utils/concurrency";
-import { patch, unpatch } from "@web/core/utils/patch";
+import { patch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
 
@@ -129,19 +129,15 @@ export function patchTimeZone(offset) {
     patchWithCleanup(luxon.Settings, { defaultZone: new luxon.FixedOffsetZone.instance(offset) });
 }
 
-let nextId = 1;
-
 /**
  *
  * @param {Object} obj object to patch
  * @param {Object} patchValue the actual patch description
- * @param {{pure?: boolean}} [options]
  */
-export function patchWithCleanup(obj, patchValue, options) {
-    const patchName = `__test_patch_${nextId++}__`;
-    patch(obj, patchName, patchValue, options);
+export function patchWithCleanup(obj, patchValue) {
+    const unpatch = patch(obj, patchValue);
     registerCleanup(() => {
-        unpatch(obj, patchName);
+        unpatch();
     });
 }
 

@@ -3,13 +3,13 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/ir_attachment", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.model === "ir.attachment" && args.method === "register_as_main_attachment") {
             const ids = args.args[0];
             return this._mockIrAttachmentRegisterAsMainAttachment(ids);
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `_attachment_format` on `ir.attachment`.

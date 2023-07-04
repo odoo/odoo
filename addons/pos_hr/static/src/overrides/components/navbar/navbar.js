@@ -3,10 +3,10 @@
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { patch } from "@web/core/utils/patch";
 
-patch(Navbar.prototype, "pos_hr.Navbar", {
+patch(Navbar.prototype, {
     get showCashMoveButton() {
         const { cashier } = this.pos;
-        return this._super(...arguments) && (!cashier || cashier.role == "manager");
+        return super.showCashMoveButton && (!cashier || cashier.role == "manager");
     },
     get showCloseSessionButton() {
         return (

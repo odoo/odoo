@@ -5,12 +5,12 @@ import "@mail/../tests/helpers/mock_server/models/discuss_channel"; // ensure ma
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/models/discuss_channel", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
     _mockDiscussChannelChannelInfo(ids) {
-        const channelInfos = this._super(...arguments);
+        const channelInfos = super._mockDiscussChannelChannelInfo(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this.getRecords("discuss.channel", [["id", "=", channelInfo.id]])[0];
             channelInfo["channel"]["anonymous_name"] = channel.anonymous_name;

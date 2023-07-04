@@ -78,7 +78,7 @@ QUnit.module("base_automation", {}, function () {
                     errorContext,
                     "Received the correct error context"
                 );
-                this._super();
+                super.setup();
             },
         });
 

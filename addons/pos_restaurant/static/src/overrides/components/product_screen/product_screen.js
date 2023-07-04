@@ -3,7 +3,7 @@
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { patch } from "@web/core/utils/patch";
 
-patch(ProductScreen.prototype, "pos_restaurant.ProductScreen", {
+patch(ProductScreen.prototype, {
     /**
      * @override
      */
@@ -23,7 +23,7 @@ patch(ProductScreen.prototype, "pos_restaurant.ProductScreen", {
             );
             return changes ? changes.quantity : false;
         }
-        return this._super(...arguments);
+        return super.selectedOrderlineQuantity;
     },
     get selectedOrderlineTotal() {
         return this.env.utils.formatCurrency(
@@ -42,7 +42,7 @@ patch(ProductScreen.prototype, "pos_restaurant.ProductScreen", {
     primaryPayButton() {
         return (
             !this.currentOrder.is_empty() &&
-            ((!this.swapButton && this._super(...arguments)) ||
+            ((!this.swapButton && super.primaryPayButton(...arguments)) ||
                 (this.swapButton && this.pos.get_order().getOrderChanges().count > 0))
         );
     },

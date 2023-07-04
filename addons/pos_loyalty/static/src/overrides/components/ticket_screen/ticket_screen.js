@@ -7,9 +7,9 @@ import { patch } from "@web/core/utils/patch";
 /**
  * Prevent refunding ewallet/gift card lines.
  */
-patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
+patch(TicketScreen.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.notification = useService("pos_notification");
     },
     _onUpdateSelectedOrderline() {
@@ -23,7 +23,7 @@ patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
             this._showNotAllowedRefundNotification();
             return this.numberBuffer.reset();
         }
-        return this._super(...arguments);
+        return super._onUpdateSelectedOrderline(...arguments);
     },
     _prepareAutoRefundOnOrder(order) {
         const selectedOrderlineId = this.getSelectedOrderlineId();
@@ -32,7 +32,7 @@ patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
             this._showNotAllowedRefundNotification();
             return false;
         }
-        return this._super(...arguments);
+        return super._prepareAutoRefundOnOrder(...arguments);
     },
     _showNotAllowedRefundNotification() {
         this.notification.add(

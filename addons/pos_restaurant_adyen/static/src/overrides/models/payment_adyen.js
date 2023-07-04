@@ -3,9 +3,9 @@
 import { PaymentAdyen } from "@pos_adyen/app/payment_adyen";
 import { patch } from "@web/core/utils/patch";
 
-patch(PaymentAdyen.prototype, "pos_restaurant_adyen.PaymentAdyen", {
+patch(PaymentAdyen.prototype, {
     _adyen_pay_data() {
-        var data = this._super(...arguments);
+        var data = super._adyen_pay_data(...arguments);
 
         if (data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData) {
             data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData +=

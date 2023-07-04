@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { Order, Payment } from "@point_of_sale/app/store/models";
 import { floatIsZero } from "@web/core/utils/numbers";
 
-patch(Order.prototype, "pos_online_payment.Order", {
+patch(Order.prototype, {
     _get_online_payment_url() {
         return `${this.pos.base_url}/pos/pay/${this.server_id}?access_token=${this.access_token}`;
     },
@@ -91,13 +91,13 @@ patch(Order.prototype, "pos_online_payment.Order", {
     },
 });
 
-patch(Payment.prototype, "pos_online_payment.Payment", {
+patch(Payment.prototype, {
     //@override
     export_as_JSON() {
         if (this.payment_method.is_online_payment) {
             return null; // It is the role of the server to save the online payment, not the role of the POS session.
         } else {
-            return this._super();
+            return super.export_as_JSON();
         }
     },
     //@override
@@ -105,7 +105,7 @@ patch(Payment.prototype, "pos_online_payment.Payment", {
         if (this.payment_method.is_online_payment) {
             return false;
         } else {
-            return this._super();
+            return super.canBeAdjusted();
         }
     },
 });

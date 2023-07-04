@@ -4,10 +4,10 @@ import { MessagingMenu } from "@mail/core/web/messaging_menu";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenu.prototype, "snailmail/messaging_menu", {
+patch(MessagingMenu.prototype, {
     openFailureView(failure) {
         if (failure.type !== "snail") {
-            return this._super(failure);
+            return super.openFailureView(failure);
         }
         this.env.services.action.doAction({
             name: _t("Snailmail Failures"),

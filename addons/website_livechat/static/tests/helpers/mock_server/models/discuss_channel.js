@@ -5,14 +5,14 @@ import "@im_livechat/../tests/helpers/mock_server/models/discuss_channel"; // en
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "website_livechat/models/discuss_channel", {
+patch(MockServer.prototype, {
     /**
      * Overrides to add visitor information to livechat channels.
      *
      * @override
      */
     _mockDiscussChannelChannelInfo(ids) {
-        const channelInfos = this._super(...arguments);
+        const channelInfos = super._mockDiscussChannelChannelInfo(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this.getRecords("discuss.channel", [["id", "=", channelInfo.id]])[0];
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {

@@ -3,9 +3,9 @@
 import { patch } from "@web/core/utils/patch";
 import { popupService } from "@point_of_sale/app/popup/popup_service";
 
-patch(popupService, "pos_restaurant.popupService", {
+patch(popupService, {
     start() {
-        return Object.assign(this._super(...arguments), {
+        return Object.assign(super.start(...arguments), {
             closePopupsButError() {
                 const popups = Object.values(this.popups);
                 const isErrorPopupOpen = popups.some((popup) =>

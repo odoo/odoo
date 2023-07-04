@@ -3,13 +3,13 @@
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
 
-patch(AttendeeCalendarModel, "microsoft_calendar_microsoft_calendar_model", {
+patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services, "rpc"],
 });
 
-patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_model_functions", {
+patch(AttendeeCalendarModel.prototype, {
     setup(params, { rpc }) {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.rpc = rpc;
         this.microsoftIsSync = true;
         this.microsoftPendingSync = false;
@@ -19,9 +19,8 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
      * @override
      */
     async updateData() {
-        const _super = this._super.bind(this);
         if (this.microsoftPendingSync) {
-            return _super(...arguments);
+            return super.updateData(...arguments);
         }
         try {
             await Promise.race([
@@ -35,7 +34,7 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
             console.error("Could not synchronize microsoft events now.", error);
             this.microsoftPendingSync = false;
         }
-        return _super(...arguments);
+        return super.updateData(...arguments);
     },
 
     async syncMicrosoftCalendar(silent = false) {

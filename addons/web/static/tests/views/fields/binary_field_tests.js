@@ -96,13 +96,7 @@ QUnit.module("Fields", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         await makeView({
             serverData,
@@ -169,13 +163,7 @@ QUnit.module("Fields", (hooks) => {
         }
         const MockXHR = makeMockXHR("", send);
 
-        patchWithCleanup(
-            browser,
-            {
-                XMLHttpRequest: MockXHR,
-            },
-            { pure: true }
-        );
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
         await makeView({
             serverData,
@@ -352,13 +340,7 @@ QUnit.module("Fields", (hooks) => {
             }
             const MockXHR = makeMockXHR("", download);
 
-            patchWithCleanup(
-                browser,
-                {
-                    XMLHttpRequest: MockXHR,
-                },
-                { pure: true }
-            );
+            patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
             serverData.models.partner.onchanges = {
                 product_id: function (obj) {

@@ -6,12 +6,12 @@ import { useService } from "@web/core/utils/hooks";
 
 export const patchAvatarCardPopover = {
     setup() {
-        this._super();
+        super.setup();
         this.userInfoTemplate = "hr.avatarCardUserInfos",
         this.actionService = useService("action");
     },
     get fieldNames(){
-        let fields = this._super();
+        let fields = super.fieldNames;
         return fields.concat([
             "work_phone", 
             "job_title", 
@@ -27,4 +27,4 @@ export const patchAvatarCardPopover = {
     }
 };
 
-patch(AvatarCardPopover.prototype, "hr", patchAvatarCardPopover);
+export const unpatchAvatarCardPopover = patch(AvatarCardPopover.prototype, patchAvatarCardPopover);

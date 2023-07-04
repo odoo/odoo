@@ -5,7 +5,7 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 import { datetime_to_str } from "@web/legacy/js/core/time";
 
-patch(MockServer.prototype, "mail/models/mail_thread", {
+patch(MockServer.prototype, {
     async _performRPC(route, args) {
         if (args.method === "message_subscribe") {
             const ids = args.args[0];
@@ -37,7 +37,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                 args.kwargs.notification_type
             );
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates `_message_compute_author` on `mail.thread`.

@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
-patch(ThreadService.prototype, "discuss/core/common", {
+patch(ThreadService.prototype, {
     /**
      * @override
      * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -25,6 +25,6 @@ patch(ThreadService.prototype, "discuss/core/common", {
                 return;
             }
         }
-        return this._super(...arguments);
+        return super.post(...arguments);
     },
 });

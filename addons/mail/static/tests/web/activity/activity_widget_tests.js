@@ -208,7 +208,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     });
     patchWithCleanup(ListController.prototype, {
         setup() {
-            this._super();
+            super.setup();
             const selectRecord = this.props.selectRecord;
             this.props.selectRecord = (...args) => {
                 assert.step(`select_record ${JSON.stringify(args)}`);

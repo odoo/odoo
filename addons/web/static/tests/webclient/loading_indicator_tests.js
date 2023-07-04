@@ -3,7 +3,6 @@
 import { browser as originalBrowser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { patch, unpatch } from "@web/core/utils/patch";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
@@ -131,7 +130,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
 
 QUnit.test("loading indicator blocks UI", async (assert) => {
     const env = await makeTestEnv();
-    patch(originalBrowser, "mock.settimeout", {
+    patchWithCleanup(originalBrowser, {
         setTimeout: async (callback, delay) => {
             assert.step(`set timeout ${delay}`);
             await Promise.resolve();
@@ -151,7 +150,6 @@ QUnit.test("loading indicator blocks UI", async (assert) => {
     env.bus.trigger("RPC:RESPONSE", payload(1));
     await nextTick();
     assert.verifySteps(["set timeout 250", "set timeout 3000", "block", "unblock"]);
-    unpatch(originalBrowser, "mock.settimeout");
 });
 
 QUnit.test("loading indicator doesn't unblock ui if it didn't block it", async (assert) => {

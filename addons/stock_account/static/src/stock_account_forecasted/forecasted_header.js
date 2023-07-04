@@ -1,11 +1,11 @@
 /** @odoo-module **/
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 
 import { ForecastedHeader as Parent } from "@stock/stock_forecasted/forecasted_header";
 
 export class StockAccountForecastedHeader extends Parent{}
 
-patch(Parent.prototype, 'stock_account.ForecastedHeader', {
+patch(Parent.prototype, {
     async _onClickValuation() {
         const context = this._getActionContext();
         return this.action.doAction({

@@ -385,7 +385,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(actionService, {
             start() {
-                const service = this._super(...arguments);
+                const service = super.start(...arguments);
                 return {
                     ...service,
                     doAction(action) {

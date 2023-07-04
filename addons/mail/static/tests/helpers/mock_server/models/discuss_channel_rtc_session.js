@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/discuss_channel_rtc_session", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_mail_rtc_session_format` on `discuss.channel.rtc.session`.
      *

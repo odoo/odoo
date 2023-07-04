@@ -3,12 +3,12 @@
 // ensure mail override is applied first.
 import '@mail/../tests/helpers/mock_server/models/res_users';
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
 import { datetime_to_str } from '@web/legacy/js/core/time';
 
-patch(MockServer.prototype, 'calendar/models/res_users', {
+patch(MockServer.prototype, {
     /**
      * Simulates `_systray_get_calendar_event_domain` on `res.users`.
      *
@@ -41,7 +41,7 @@ patch(MockServer.prototype, 'calendar/models/res_users', {
      * @override
      */
     _mockResUsersSystrayGetActivities() {
-        const activities = this._super(...arguments);
+        const activities = super._mockResUsersSystrayGetActivities(...arguments);
         const meetingsLines = this.pyEnv['calendar.event'].searchRead(
             this._mockResUsers_SystrayGetCalendarEventDomain(),
             {

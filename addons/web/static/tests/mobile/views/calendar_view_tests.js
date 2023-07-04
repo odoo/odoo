@@ -236,11 +236,11 @@ QUnit.module("Views", ({ beforeEach }) => {
         patchWithCleanup(CalendarCommonRenderer.prototype, {
             onDateClick(...args) {
                 assert.step("dateClick");
-                return this._super(...args);
+                return super.onDateClick(...args);
             },
             onSelect(...args) {
                 assert.step("select");
-                return this._super(...args);
+                return super.onSelect(...args);
             },
         });
 
@@ -266,20 +266,20 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.test('calendar: select range on "Free Zone" opens quick create', async function (assert) {
         patchWithCleanup(CalendarCommonRenderer.prototype, {
             get options() {
-                return Object.assign({}, this._super(), {
+                return Object.assign({}, super.options, {
                     selectLongPressDelay: 0,
                 });
             },
             onDateClick(info) {
                 assert.step("dateClick");
-                return this._super(info);
+                return super.onDateClick(info);
             },
             onSelect(info) {
                 assert.step("select");
                 const { startStr, endStr } = info;
                 assert.equal(startStr, "2016-12-12T01:00:00+01:00");
                 assert.equal(endStr, "2016-12-12T02:00:00+01:00");
-                return this._super(info);
+                return super.onSelect(info);
             },
         });
 
@@ -307,21 +307,21 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.test("calendar (year): select date range opens quick create", async function (assert) {
         patchWithCleanup(CalendarYearRenderer.prototype, {
             get options() {
-                return Object.assign({}, this._super(), {
+                return Object.assign({}, super.options, {
                     longPressDelay: 0,
                     selectLongPressDelay: 0,
                 });
             },
             onDateClick(info) {
                 assert.step("dateClick");
-                return this._super(info);
+                return super.onDateClick(info);
             },
             onSelect(info) {
                 assert.step("select");
                 const { startStr, endStr } = info;
                 assert.equal(startStr, "2016-02-02");
                 assert.equal(endStr, "2016-02-06"); // end date is exclusive
-                return this._super(info);
+                return super.onSelect(info);
             },
         });
 

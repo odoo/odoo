@@ -4,9 +4,9 @@ import { Order, Orderline, Payment } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 // New orders are now associated with the current table, if any.
-patch(Order.prototype, "pos_restaurant.Order", {
+patch(Order.prototype, {
     setup(options) {
-        this._super(...arguments);
+        super.setup(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (!this.tableId && !options.json && this.pos.table) {
                 this.tableId = this.pos.table.id;
@@ -16,7 +16,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     },
     //@override
     export_as_JSON() {
-        const json = this._super(...arguments);
+        const json = super.export_as_JSON(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             json.table_id = this.tableId;
             json.customer_count = this.customerCount;
@@ -26,7 +26,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     },
     //@override
     init_from_JSON(json) {
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             this.tableId = json.table_id;
             this.validation_date = moment.utc(json.creation_date).local().toDate();
@@ -35,7 +35,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     },
     //@override
     export_for_printing() {
-        const json = this._super(...arguments);
+        const json = super.export_for_printing(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (this.getTable()) {
                 json.table = this.getTable().name;
@@ -58,20 +58,20 @@ patch(Order.prototype, "pos_restaurant.Order", {
     },
 });
 
-patch(Orderline.prototype, "pos_restaurant.Orderline", {
+patch(Orderline.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.note = this.note || "";
     },
     //@override
     clone() {
-        const orderline = this._super(...arguments);
+        const orderline = super.clone(...arguments);
         orderline.note = this.note;
         return orderline;
     },
     //@override
     export_as_JSON() {
-        const json = this._super(...arguments);
+        const json = super.export_as_JSON(...arguments);
         json.note = this.note;
         if (this.pos.config.iface_printers) {
             json.uuid = this.uuid;
@@ -80,7 +80,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
     },
     //@override
     init_from_JSON(json) {
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
         this.note = json.note;
         if (this.pos.config.iface_printers) {
             this.uuid = json.uuid;
@@ -95,7 +95,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
     },
 });
 
-patch(Payment.prototype, "pos_restaurant.Payment", {
+patch(Payment.prototype, {
     /**
      * Override this method to be able to show the 'Adjust Authorisation' button
      * on a validated payment_line and to show the tip screen which allow

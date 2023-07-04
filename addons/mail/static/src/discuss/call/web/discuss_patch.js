@@ -5,9 +5,9 @@ import { useChildSubEnv, useEffect, useState } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Discuss.prototype, "discuss/call/web", {
+patch(Discuss.prototype, {
     setup(...args) {
-        this._super(...args);
+        super.setup(...args);
         const state = useState({ openInviteButton: 0 });
         useChildSubEnv({
             onStartMeeting: () => {

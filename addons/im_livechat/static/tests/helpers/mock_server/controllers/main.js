@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/controllers/main", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
@@ -50,7 +50,7 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
         if (route === "/im_livechat/chat_history") {
             return this._mockRouteImLivechatChatHistory(args.uuid, args.last_id, args.limit);
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
     /**
      * Simulates the `/im_livechat/get_session` route.

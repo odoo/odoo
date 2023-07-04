@@ -3,10 +3,10 @@
 import { ChannelMemberService } from "@mail/core/common/channel_member_service";
 import { patch } from "@web/core/utils/patch";
 
-patch(ChannelMemberService.prototype, "im_livechat", {
+patch(ChannelMemberService.prototype, {
     getName(member) {
         if (member.thread.type !== "livechat") {
-            return this._super(member);
+            return super.getName(member);
         }
         if (member.persona.user_livechat_username) {
             return member.persona.user_livechat_username;
@@ -14,6 +14,6 @@ patch(ChannelMemberService.prototype, "im_livechat", {
         if (member.persona.is_public) {
             return member.thread.anonymous_name;
         }
-        return this._super(member);
+        return super.getName(member);
     },
 });
