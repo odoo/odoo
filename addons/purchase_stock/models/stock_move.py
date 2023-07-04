@@ -44,7 +44,7 @@ class StockMove(models.Model):
             receipt_value = 0
             if move_layer:
                 receipt_value += sum(move_layer.mapped(lambda l: l.currency_id._convert(
-                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+                    l.value, order.currency_id, order.company_id, l.account_move_id.date or fields.Date.context_today(self), round=False)))
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
