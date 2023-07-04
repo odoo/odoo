@@ -162,7 +162,7 @@
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="aside_slide"/>
                             </t>
-                            <div class="o_wslides_lesson_link_name" t-att-title="aside_slide.name">
+                            <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
                                 <span t-esc="aside_slide.name"/>
                                 <span class="align-items-end" t-if="aside_slide.question_ids">
                                     <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-light text-600')">
