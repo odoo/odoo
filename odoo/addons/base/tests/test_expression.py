@@ -897,6 +897,25 @@ class TestExpression(SavepointCaseWithUserDemo):
         domain = ['|', ('id', '=', id2), ('id', '=', id1)]
         self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
 
+    def test_filtered_domain_any_operator(self):
+        Partner = self.env['res.partner']
+
+        all_partner = self._search(Partner, [])
+        partner = self.partners[0]
+
+        children_partner_1 = self._search(Partner, [('parent_id', 'any', [('name', '=', partner.name)])])
+        self.assertEqual(children_partner_1, partner.child_ids)
+
+        children_other_partners = self._search(Partner, [('parent_id', 'not any', [('name', '=', partner.name)])])
+        self.assertEqual(children_other_partners, all_partner - partner.child_ids)
+
+        one_child_partner = partner.child_ids[0]
+        parent_partner = self._search(Partner, [('child_ids', 'any', [('name', '=', one_child_partner.name)])])
+        self.assertEqual(parent_partner, partner)
+
+        other_partners = self._search(Partner, [('child_ids', 'not any', [('name', '=', one_child_partner.name)])])
+        self.assertEqual(other_partners, all_partner - partner)
+
 
 class TestExpression2(TransactionCase):
 
