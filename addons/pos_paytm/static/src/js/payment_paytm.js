@@ -32,12 +32,8 @@ let PaymentPaytm = PaymentInterface.extend({
         const transactionAmount = line.amount*100;
         const timeStamp = Math.floor(Date.now() / 1000);
         const response = await this.makePaymentRequest(transactionAmount, orderId, timeStamp);
-        if (!response || response['body']['resultInfo']['resultCode'] === "F") {
-            let errorMessage = "Unable to establish connection with PayTM";
-            if (response) {
-                errorMessage = response['body']['resultInfo']['resultMsg'];
-            }
-            this._showError(errorMessage);
+        if (response['body']['resultInfo']['resultCode'] === "F") {
+            this._showError(response['body']['resultInfo']['resultMsg']);
             line.set_payment_status('force_done');
             this._incrementRetry(order.uid);
             throw false;
@@ -91,11 +87,11 @@ let PaymentPaytm = PaymentInterface.extend({
                 else {
                     this.pollTimeout = setTimeout(fetchPaymentStatus, 5000, resolve, reject);
                 }
-            } catch {
+            } catch (error) {
                 const order = this.pos.selectedOrder;
                 this._incrementRetry(order.uid);
                 line.set_payment_status('force_done');
-                this._showError('Unable to establish connection with PayTM API');
+                this._showError(error.message.data.message);
                 throw false;
             };
         };
@@ -115,8 +111,8 @@ let PaymentPaytm = PaymentInterface.extend({
                 throw data.error;
             }
             return data;
-        } catch {
-            this._showError('Unable to establish connection with PayTM API');
+        } catch (error) {
+            this._showError(error.message.data.message);
             throw false;
         };
     },

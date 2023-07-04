@@ -48,7 +48,7 @@ class PosPaymentMethod(models.Model):
             response.raise_for_status()
         except requests.exceptions.RequestException:
             _logger.warning("Cannot connect with PayTM")
-            return {'body':{'resultInfo': {'resultCode': "F", "resultMsg": _("Unable to establish connection with PayTM.")}}}
+            raise ValidationError(_("Unable to establish connection with PayTM."))
         return response.json()
 
     def paytm_make_payment_request(self, amount, transaction, timestamp):
@@ -76,7 +76,7 @@ class PosPaymentMethod(models.Model):
     def _paytm_get_request_body(self, transaction, timestamp):
         paytm_payment_provider = self._get_paytm_payment_provider()
         if paytm_payment_provider.state == 'disabled':
-            raise UserError('PayTM payment provider is disabled.')
+            raise UserError(_('PayTM payment provider is disabled.'))
         time = datetime.fromtimestamp(timestamp).astimezone(tz=tz.gettz('Asia/Kolkata')).strftime("%Y-%m-%d %H:%M:%S")
         return {
             'paytmMid': paytm_payment_provider.paytm_mid,
@@ -97,7 +97,7 @@ class PosPaymentMethod(models.Model):
     def _check_paytm_terminal(self):
         for record in self:
             if record.use_payment_terminal == 'paytm' and record.company_id.currency_id.name != 'INR':
-                raise UserError('This Payment Terminal is only valid for INR Currency')
+                raise UserError(_('This Payment Terminal is only valid for INR Currency'))
 
     def action_paytm_key(self):
         res_id = self._get_paytm_payment_provider().id
