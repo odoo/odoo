@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { PaymentTransactionPopup } from "@pos_mercury/js/PaymentTransactionPopup";
+import { PaymentTransactionPopup } from "@pos_mercury/app/payment_transaction_popup/payment_transaction_popup";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 
 // Lookup table to store status and error messages

@@ -2,7 +2,7 @@
 
 import { Order } from "@point_of_sale/app/store/models";
 
-import { SplitOrderline } from "@pos_restaurant/js/Screens/SplitBillScreen/SplitOrderline";
+import { SplitOrderline } from "@pos_restaurant/app/split_bill_screen/split_orderline/split_orderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState } from "@odoo/owl";
