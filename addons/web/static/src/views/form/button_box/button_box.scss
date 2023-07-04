@@ -67,14 +67,14 @@
 
             .o_stat_text {
                 @extend %-stat-button-text;
+                
+                .o_field_empty {
+                    display: none;
+                }
             }
 
             .o_stat_value {
                 @extend %-stat-button-value;
-            }
-
-            .o_field_empty {
-                display: none;
             }
         }
 
