@@ -5,7 +5,7 @@
         <div class="o-mail-NavigableList bg-white m-0 p-0" t-ref="root" t-att-class="props.class">
             <div t-if="show" class="o-open border" t-on-mousedown.prevent="">
                 <div t-if="state.isLoading" class="o-mail-NavigableList-item">
-                    <a href="#" class="d-flex align-items-center w-100 py-2 px-4">
+                    <a href="#" class="d-flex align-items-center w-100 py-2 px-4 gap-1">
                         <i class="fa fa-spin fa-circle-o-notch"/>
                         <t t-esc="props.placeholder"/>
                     </a>
