@@ -307,7 +307,7 @@ export class Record extends DataPoint {
     _askChanges() {
         const proms = [];
         this.model.bus.trigger("NEED_LOCAL_CHANGES", { proms });
-        return Promise.all(proms);
+        return Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
     }
 
     _checkValidity({ silent } = {}) {
