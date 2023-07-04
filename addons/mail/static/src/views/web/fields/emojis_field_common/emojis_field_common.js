@@ -7,7 +7,7 @@ import { useRef } from "@odoo/owl";
 /*
  * Common code for EmojisTextField and EmojisCharField
  */
-export const EmojisFieldCommon = {
+export const EmojisFieldCommon = (T) => class EmojisFieldCommon extends T {
     /**
      * Create an emoji textfield view to enable opening an emoji popover
      */
@@ -38,5 +38,5 @@ export const EmojisFieldCommon = {
                 position: "bottom",
             }
         );
-    },
+    }
 };

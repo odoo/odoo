@@ -5,7 +5,6 @@ import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { patch } from "@web/core/utils/patch";
 import {
     Many2OneAvatarField,
     many2OneAvatarField,
@@ -16,9 +15,9 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { browser } from "@web/core/browser/browser";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
-const userChatter = {
+const WithUserChatter = (T) => class extends T {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.openChat = useOpenChat(this.relation);
         if (this.props.withCommand) {
             useAssignUserCommand();
@@ -27,14 +26,14 @@ const userChatter = {
             closeOnHoverAway: true,
         });
         this.openTimeout = false;
-    },
+    }
 
     onClickAvatar() {
         const id = this.props.record.data[this.props.name][0] ?? false;
         if (id !== false) {
             this.openChat(id);
         }
-    },
+    }
 
     openCard(ev) {
         if (this.env.isSmall || this.relation !== "res.users") {
@@ -51,15 +50,15 @@ const userChatter = {
                 });
             }
         }, 350);
-    },
+    }
 
     clearTimeout() {
         browser.clearTimeout(this.openTimeout);
         delete this.openTimeout;
-    },
+    }
 };
 
-export class Many2OneAvatarUserField extends Many2OneAvatarField {
+export class Many2OneAvatarUserField extends WithUserChatter(Many2OneAvatarField) {
     static template = "mail.Many2OneAvatarUserField";
     static props = {
         ...Many2OneAvatarField.props,
@@ -68,7 +67,6 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
         withCommand: { type: Boolean, optional: true },
     };
 }
-patch(Many2OneAvatarUserField.prototype, "mail/fields/web", userChatter);
 
 export const many2OneAvatarUserField = {
     ...many2OneAvatarField,
@@ -85,7 +83,7 @@ export const many2OneAvatarUserField = {
 
 registry.category("fields").add("many2one_avatar_user", many2OneAvatarUserField);
 
-export class KanbanMany2OneAvatarUserField extends KanbanMany2OneAvatarField {
+export class KanbanMany2OneAvatarUserField extends WithUserChatter(KanbanMany2OneAvatarField) {
     static template = "mail.KanbanMany2OneAvatarUserField";
     static props = {
         ...KanbanMany2OneAvatarField.props,
@@ -101,7 +99,6 @@ export class KanbanMany2OneAvatarUserField extends KanbanMany2OneAvatarField {
         return props;
     }
 }
-patch(KanbanMany2OneAvatarUserField.prototype, "mail/fields/web", userChatter);
 
 export const kanbanMany2OneAvatarUserField = {
     ...kanbanMany2OneAvatarField,
