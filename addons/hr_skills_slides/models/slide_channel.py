@@ -90,14 +90,9 @@ class Channel(models.Model):
 
     def _message_employee_chatter(self, msg, partners):
         for partner in partners:
-            employee = self.env['hr.employee']
-            if partner.employee:
-                employee = partner.employee
-            elif partner.user_ids:
-                # If the partner is related to a company, we need the employee who belongs to that same company.
-                employee = partner.user_ids.sudo().filtered(
-                    lambda u: u.employee_id and (not partner.company_id or u.employee_id.company_id == partner.company_id)
-                ).employee_id
+            employee = partner.user_ids.sudo().filtered(
+                lambda u: u.employee_id and (not partner.company_id or u.employee_id.company_id == partner.company_id)
+            ).employee_id
 
             if employee:
                 employee.sudo().message_post(body=msg)
