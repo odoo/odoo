@@ -1,22 +1,60 @@
 /** @odoo-module **/
 
 /**
- * @typedef {{
- *   name: string;
- *   patch: object;
- *   pure: boolean;
- * }} PatchDescription
+ *  @typedef {{
+ *      originalProperties: Map<string, PropertyDescriptor>;
+ *      skeleton: object;
+ *      extensions: Set<object>;
+ *  }} PatchDescription
  */
+
+/** @type {WeakMap<object, PatchDescription>} */
+const patchDescriptions = new WeakMap();
 
 /**
- * @typedef {{
- *   original: object;
- *   patches: PatchDescription[];
- * }} ObjectPatchDescription
+ * Create or get the patch description for the given `objToPatch`.
+ * @param {object} objToPatch
+ * @returns {PatchDescription}
  */
+function getPatchDescription(objToPatch) {
+    if (!patchDescriptions.has(objToPatch)) {
+        patchDescriptions.set(objToPatch, {
+            originalProperties: new Map(),
+            skeleton: Object.create(Object.getPrototypeOf(objToPatch)),
+            extensions: new Set(),
+        });
+    }
+    return patchDescriptions.get(objToPatch);
+}
 
-/** @type {WeakMap<any, ObjectPatchDescription>} */
-const patchMap = new WeakMap();
+/**
+ * @param {object} objToPatch
+ * @returns {boolean}
+ */
+function isClassPrototype(objToPatch) {
+    // class A {}
+    // isClassPrototype(A) === false
+    // isClassPrototype(A.prototype) === true
+    // isClassPrototype(new A()) === false
+    // isClassPrototype({}) === false
+    return Object.hasOwn(objToPatch, "constructor") && objToPatch.constructor?.prototype === objToPatch;
+}
+
+/**
+ * Traverse the prototype chain to find a potential property.
+ * @param {object} objToPatch
+ * @param {string} key
+ * @returns {object}
+ */
+function findAncestorPropertyDescriptor(objToPatch, key) {
+    let descriptor = null;
+    let prototype = objToPatch;
+    do {
+        descriptor = Object.getOwnPropertyDescriptor(prototype, key);
+        prototype = Object.getPrototypeOf(prototype);
+    } while (!descriptor && prototype);
+    return descriptor;
+}
 
 /**
  * Patch an object
@@ -25,135 +63,74 @@ const patchMap = new WeakMap();
  * you want to patch static properties/methods.
  *
  * @template T
- * @template {Partial<T>} U
- * @param {T} obj Object to patch
- * @param {string} patchName
- * @param {U} patchValue
- * @param {{pure?: boolean}} [options]
+ * @template {T} U
+ * @param {T} objToPatch The object to patch
+ * @param {U} extension The object containing the patched properties
+ * @returns {() => void} Returns an unpatch function
  */
-export function patch(obj, patchName, patchValue, options = {}) {
-    if (typeof patchName !== "string") {
-        throw new Error("Incorrect use of patch: second argument should be the patchName");
+export function patch(objToPatch, extension) {
+    if (typeof extension === "string") {
+        throw new Error(`Patch "${extension}": Second argument is not the patch name anymore, it should be the object containing the patched properties`);
     }
-    const pure = Boolean(options.pure);
-    if (!patchMap.has(obj)) {
-        patchMap.set(obj, {
-            original: {},
-            patches: [],
-        });
-    }
-    const objDesc = patchMap.get(obj);
-    if (objDesc.patches.some((p) => p.name === patchName)) {
-        throw new Error(`Class ${obj.name} already has a patch ${patchName}`);
-    }
-    objDesc.patches.push({
-        name: patchName,
-        patch: patchValue,
-        pure,
-    });
 
-    for (const k in patchValue) {
-        let prevDesc = null;
-        let proto = obj;
-        do {
-            prevDesc = Object.getOwnPropertyDescriptor(proto, k);
-            proto = Object.getPrototypeOf(proto);
-        } while (!prevDesc && proto);
+    const description = getPatchDescription(objToPatch);
+    description.extensions.add(extension);
 
-        let newDesc = Object.getOwnPropertyDescriptor(patchValue, k);
-        if (!Object.hasOwnProperty.call(objDesc.original, k)) {
-            objDesc.original[k] = Object.getOwnPropertyDescriptor(obj, k);
+    const properties = Object.getOwnPropertyDescriptors(extension);
+    for (const [key, newProperty] of Object.entries(properties)) {
+        const oldProperty = Object.getOwnPropertyDescriptor(objToPatch, key);
+        if (oldProperty) {
+            // Store the old property on the skeleton.
+            Object.defineProperty(description.skeleton, key, oldProperty);
         }
 
-        if (prevDesc) {
-            const patchedFnName = `${k} (patch ${patchName})`;
+        if (!description.originalProperties.has(key)) {
+            // Keep a trace of original property (prop before first patch), useful for unpatching.
+            description.originalProperties.set(key, oldProperty);
+        }
 
-            if (prevDesc.value && typeof newDesc.value === "function") {
-                newDesc = { ...prevDesc, value: newDesc.value };
-                makeIntermediateFunction("value", prevDesc, newDesc, patchedFnName);
-            }
-            if ((newDesc.get || newDesc.set) && (prevDesc.get || prevDesc.set)) {
-                // get and set are defined together. If they are both defined
-                // in the previous descriptor but only one in the new descriptor
-                // then the other will be undefined so we need to apply the
-                // previous descriptor in the new one.
-                newDesc = {
-                    ...prevDesc,
-                    get: newDesc.get || prevDesc.get,
-                    set: newDesc.set || prevDesc.set,
-                };
-                if (prevDesc.get && typeof newDesc.get === "function") {
-                    makeIntermediateFunction("get", prevDesc, newDesc, patchedFnName);
-                }
-                if (prevDesc.set && typeof newDesc.set === "function") {
-                    makeIntermediateFunction("set", prevDesc, newDesc, patchedFnName);
-                }
+        if (isClassPrototype(objToPatch)) {
+            // A property is enumerable on POJO ({ prop: 1 }) but not on classes (class A {}).
+            // Here, we only check if we patch a class prototype.
+            newProperty.enumerable = false;
+        }
+
+        if ((newProperty.get && 1) ^ (newProperty.set && 1)) {
+            // get and set are defined together. If they are both defined
+            // in the previous descriptor but only one in the new descriptor
+            // then the other will be undefined so we need to apply the
+            // previous descriptor in the new one.
+            const ancestorProperty = findAncestorPropertyDescriptor(objToPatch, key);
+            newProperty.get = newProperty.get ?? ancestorProperty?.get;
+            newProperty.set = newProperty.set ?? ancestorProperty?.set;
+        }
+
+        // Replace the old property by the new one.
+        Object.defineProperty(objToPatch, key, newProperty);
+    }
+
+    // Sets the current skeleton as the extension's prototype to make
+    // `super` keyword working and then set extension as the new skeleton.
+    description.skeleton = Object.setPrototypeOf(extension, description.skeleton);
+
+    return () => {
+        // Remove the description to start with a fresh base.
+        patchDescriptions.delete(objToPatch);
+
+        for (const [key, property] of description.originalProperties) {
+            if (property) {
+                // Restore the original property on the `objToPatch` object.
+                Object.defineProperty(objToPatch, key, property);
+            } else {
+                // Or remove the property if it did not exist at first.
+                delete objToPatch[key];
             }
         }
 
-        Object.defineProperty(obj, k, newDesc);
-    }
-
-    function makeIntermediateFunction(key, prevDesc, newDesc, patchedFnName) {
-        const _superFn = prevDesc[key];
-        const patchFn = newDesc[key];
-        if (pure) {
-            newDesc[key] = patchFn;
-        } else {
-            newDesc[key] = {
-                [patchedFnName](...args) {
-                    let prevSuper;
-                    if (this) {
-                        prevSuper = this._super;
-                        Object.defineProperty(this, "_super", {
-                            value: _superFn.bind(this),
-                            configurable: true,
-                            writable: true,
-                        });
-                    }
-                    const result = patchFn.call(this, ...args);
-                    if (this) {
-                        Object.defineProperty(this, "_super", {
-                            value: prevSuper,
-                            configurable: true,
-                            writable: true,
-                        });
-                    }
-                    return result;
-                },
-            }[patchedFnName];
+        // Re-apply the patches without the current one.
+        description.extensions.delete(extension);
+        for (const extension of description.extensions) {
+            patch(objToPatch, extension);
         }
-    }
-}
-
-/**
- * We define here an unpatch function.  This is mostly useful if we want to
- * remove a patch.  For example, for testing purposes
- *
- * @template T
- * @param {T} obj
- * @param {string} patchName
- */
-export function unpatch(obj, patchName) {
-    const objDesc = patchMap.get(obj);
-    if (!objDesc.patches.some((p) => p.name === patchName)) {
-        throw new Error(`Class ${obj.name} does not have any patch ${patchName}`);
-    }
-    patchMap.delete(obj);
-
-    // Restore original methods on the prototype and the class.
-    for (const k in objDesc.original) {
-        if (objDesc.original[k] === undefined) {
-            delete obj[k];
-        } else {
-            Object.defineProperty(obj, k, objDesc.original[k]);
-        }
-    }
-
-    // Re-apply the patches except the one to remove.
-    for (const patchDesc of objDesc.patches) {
-        if (patchDesc.name !== patchName) {
-            patch(obj, patchDesc.name, patchDesc.patch, { pure: patchDesc.pure });
-        }
-    }
+    };
 }
