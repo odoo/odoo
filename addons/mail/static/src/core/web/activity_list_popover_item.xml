@@ -27,7 +27,7 @@
                 </t>
             </div>
             <div class="d-flex align-items-center flex-wrap mx-3">
-                <img t-if="props.activity.user_id[0]" class="me-2 rounded-circle" t-att-src="activityAssigneeAvatar" style="max-width: 1.5rem; max-height: 1.5rem;"/>
+                <img t-if="props.activity.user_id[0]" class="me-2 rounded" t-att-src="activityAssigneeAvatar" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div class="mt-1">
                     <t t-if="props.activity.user_id[0]">
                         <small class="text-truncate" t-esc="props.activity.user_id[1]"/>
