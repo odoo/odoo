@@ -271,7 +271,7 @@ const RELATIONAL = {
     operators: ["=", "!=", "ilike", "not ilike", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
-        equal: RELATIONAL_EDITOR_EQUALITY,
+        "=": RELATIONAL_EDITOR_EQUALITY,
         "!=": RELATIONAL_EDITOR_EQUALITY,
     },
     defaultValue: ({ type }) => (type === "many2one" ? 1 : []),
