@@ -12,9 +12,9 @@ import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-patch(FormRenderer.prototype, "mail/views/web", {
+patch(FormRenderer.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.mailComponents = {
             AttachmentView,
             Chatter,
@@ -48,7 +48,7 @@ patch(FormRenderer.prototype, "mail/views/web", {
     },
 });
 
-patch(FormRenderer.props, "mail/views/web", {
+patch(FormRenderer.props, {
     // Template props : added by the FormCompiler
     saveButtonClicked: { type: Function, optional: true },
 });

@@ -3,10 +3,10 @@
 import { patch } from "@web/core/utils/patch";
 import { RATING, LivechatService } from "@im_livechat/embed/core/livechat_service";
 
-patch(LivechatService.prototype, "website_livechat", {
+patch(LivechatService.prototype, {
     sendFeedback() {
         document.body.classList.add("feedback_sent");
-        return this._super(...arguments);
+        return super.sendFeedback(...arguments);
     },
 });
 

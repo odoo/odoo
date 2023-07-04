@@ -52,15 +52,15 @@
         const { patch } = odoo.__DEBUG__.services["@web/core/utils/patch"];
         const { WithSearch } = odoo.__DEBUG__.services["@web/search/with_search/with_search"];
 
-        patch(WithSearch.prototype, "PatchedWithSearch", {
+        patch(WithSearch.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 onWillStart(() => {
                     viewUpdateCount++;
                 });
             },
             async render() {
-                await this._super(...arguments);
+                await super.render(...arguments);
                 viewUpdateCount++;
             },
         });

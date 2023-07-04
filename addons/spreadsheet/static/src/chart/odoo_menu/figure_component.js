@@ -4,9 +4,9 @@ import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { useService } from "@web/core/utils/hooks";
 
-patch(spreadsheet.components.FigureComponent.prototype, "spreadsheet.FigureComponent", {
+patch(spreadsheet.components.FigureComponent.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.menuService = useService("menu");
         this.actionService = useService("action");
     },

@@ -70,7 +70,7 @@ QUnit.test("receive and display simple notification as sticky", async (assert) =
              * Sticky notifications are removed after a delay. If the notification is still
              * present when this delay is set to 0 it means it is a sticky one.
              */
-            return this._super(fn, 0);
+            return super.setTimeout(fn, 0);
         },
     });
     await afterNextRender(() => {

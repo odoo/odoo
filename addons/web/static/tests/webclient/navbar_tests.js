@@ -231,7 +231,7 @@ QUnit.test("navbar updates after adding a systray item", async (assert) => {
                     systrayRegistry.add("addon.myitem2", { Component: MyItem2 });
                 }
             });
-            this._super();
+            super.setup();
         },
     });
 

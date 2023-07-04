@@ -6,10 +6,10 @@ import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ThreadService.prototype, "im_livechat", {
+patch(ThreadService.prototype, {
     insert(data) {
         const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
-        const thread = this._super(data);
+        const thread = super.insert(data);
         if (thread.type === "livechat") {
             if (data?.channel) {
                 assignDefined(thread, data.channel, ["anonymous_name"]);
@@ -34,7 +34,7 @@ patch(ThreadService.prototype, "im_livechat", {
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState) {
-        this._super(thread, pushState);
+        super.setDiscussThread(thread, pushState);
         if (this.ui.isSmall && thread.type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
@@ -43,29 +43,29 @@ patch(ThreadService.prototype, "im_livechat", {
         if (thread.type === "livechat") {
             removeFromArray(this.store.discuss.livechat.threads, thread.localId);
         }
-        this._super(thread);
+        super.remove(thread);
     },
 
     canLeave(thread) {
-        return thread.type !== "livechat" && this._super(thread);
+        return thread.type !== "livechat" && super.canLeave(thread);
     },
 
     canUnpin(thread) {
         if (thread.type === "livechat") {
             return thread.message_unread_counter === 0;
         }
-        return this._super(thread);
+        return super.canUnpin(thread);
     },
 
     getCounter(thread) {
         if (thread.type === "livechat") {
             return thread.message_unread_counter;
         }
-        return this._super(thread);
+        return super.getCounter(thread);
     },
 
     sortChannels() {
-        this._super();
+        super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
         this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
             const thread1 = this.store.threads[localId_1];

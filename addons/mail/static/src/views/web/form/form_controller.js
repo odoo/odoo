@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 
-patch(FormController.prototype, "mail/views/web", {
+patch(FormController.prototype, {
     onWillLoadRoot(nextConfiguration) {
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&

@@ -12,9 +12,9 @@ import { patch } from "@web/core/utils/patch";
 
 let nextId = 1;
 
-patch(ThreadService.prototype, "mail/core/web", {
+patch(ThreadService.prototype, {
     setup(env, services) {
-        this._super(env, services);
+        super.setup(env, services);
         this.action = services.action;
         /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
@@ -182,7 +182,7 @@ patch(ThreadService.prototype, "mail/core/web", {
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
-        this._super(...arguments);
+        super.leaveChannel(...arguments);
     },
     async loadMoreFollowers(thread) {
         const followers = await this.orm.call(thread.model, "message_get_followers", [
@@ -217,7 +217,7 @@ patch(ThreadService.prototype, "mail/core/web", {
             });
             return;
         }
-        this._super(thread, replaceNewMessageChatWindow);
+        super.open(thread, replaceNewMessageChatWindow);
     },
     /**
      * @param {import("@mail/core/common/follower_model").Follower} follower
@@ -240,7 +240,7 @@ patch(ThreadService.prototype, "mail/core/web", {
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
-        this._super(...arguments);
+        super.unpin(...arguments);
     },
     _openChatWindow(thread, replaceNewMessageChatWindow) {
         const chatWindow = this.chatWindowService.insert({
@@ -256,7 +256,7 @@ patch(ThreadService.prototype, "mail/core/web", {
     },
 });
 
-patch(threadService, "mail/core/web", {
+patch(threadService, {
     dependencies: [
         ...threadService.dependencies,
         "action",

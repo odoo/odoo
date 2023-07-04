@@ -69,8 +69,7 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
             WebSocket: function () {
                 return new WebSocketMock();
             },
-        },
-        { pure: true }
+        }
     );
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
@@ -85,8 +84,7 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
                 });
                 return sharedWorker;
             },
-        },
-        { pure: true }
+        }
     );
     registerCleanup(() => {
         if (websocketWorker) {

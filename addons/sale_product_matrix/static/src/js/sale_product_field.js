@@ -7,10 +7,10 @@ import { useService } from "@web/core/utils/hooks";
 import "@sale_product_configurator/js/sale_product_field";
 
 
-patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
+patch(SaleOrderLineProductField.prototype, {
 
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.dialog = useService("dialog");
     },
 
@@ -50,7 +50,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
         if (edit && this.props.record.data.product_add_mode == 'matrix') {
             this._openGridConfigurator(true);
         } else {
-            this._super(...arguments);
+            super._openProductConfigurator(...arguments);
         }
     },
 
@@ -64,7 +64,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
      *
      * @private
     */
-    _openMatrixConfigurator: function (jsonInfo, productTemplateId, editedCellAttributes) {
+    _openMatrixConfigurator(jsonInfo, productTemplateId, editedCellAttributes) {
         const infos = JSON.parse(jsonInfo);
         this.dialog.add(ProductMatrixDialog, {
             header: infos.header,

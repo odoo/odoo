@@ -10,9 +10,9 @@ import { PropertyValue } from "@web/views/fields/properties/property_value";
  * Allow to open the chatter of the user when we click on the avatar of a Many2one
  * property (like we do for many2one_avatar_user widget).
  */
-patch(PropertyValue.prototype, "mail/views/web", {
+patch(PropertyValue.prototype, {
     setup() {
-        this._super();
+        super.setup();
 
         if (this.env.services["mail.thread"]) {
             // work only for the res.users model

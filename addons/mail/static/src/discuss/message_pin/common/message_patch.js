@@ -6,13 +6,13 @@ import { useMessagePinService } from "@mail/discuss/message_pin/common/message_p
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(Message, "discuss/message_pin/common", {
+patch(Message, {
     components: { ...Message.components },
 });
 
-patch(Message.prototype, "discuss/message_pin/common", {
+patch(Message.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.messagePinService = useMessagePinService();
     },
     onClickPin() {
@@ -24,7 +24,7 @@ patch(Message.prototype, "discuss/message_pin/common", {
         }
     },
     get attClass() {
-        const res = this._super();
+        const res = super.attClass;
         return Object.assign(res, {
             "o-cancelSelfAuthored": this.env.pinnedPanel,
             "mt-1": res["mt-1"] && !this.env.pinnedPanel,
@@ -32,7 +32,7 @@ patch(Message.prototype, "discuss/message_pin/common", {
         });
     },
     get isAlignedRight() {
-        return !this.env.pinnedPanel && this._super();
+        return !this.env.pinnedPanel && super.isAlignedRight;
     },
     getPinOptionText() {
         return this.messagePinService.getPinnedAt(this.message.id) ? _t("Unpin") : _t("Pin");
@@ -41,6 +41,6 @@ patch(Message.prototype, "discuss/message_pin/common", {
         if (this.env.pinnedPanel) {
             return true;
         }
-        return this._super();
+        return super.shouldDisplayAuthorName;
     },
 });

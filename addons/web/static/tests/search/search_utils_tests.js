@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
-import { patchDate, patchTimeZone } from "@web/../tests/helpers/utils";
+import { patchDate, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
-import { patch, unpatch } from "@web/core/utils/patch";
 import { constructDateDomain } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
@@ -487,7 +486,7 @@ QUnit.module("Search", () => {
     QUnit.test("Quarter option: custom translation", async function (assert) {
         patchDate(2020, 5, 1, 13, 0, 0);
         const referenceMoment = DateTime.local().setLocale("en");
-        patch(translatedTerms, "add_translations", { Q2: "Deuxième trimestre de l'an de grâce" });
+        patchWithCleanup(translatedTerms, { Q2: "Deuxième trimestre de l'an de grâce" });
         assert.deepEqual(
             constructDateDomain(referenceMoment, "date_field", "date", [
                 "second_quarter",
@@ -501,17 +500,12 @@ QUnit.module("Search", () => {
             },
             "Quarter term should be translated"
         );
-        unpatch(translatedTerms, "add_translations");
     });
 
     QUnit.test("Quarter option: right to left", async function (assert) {
         patchDate(2020, 5, 1, 13, 0, 0);
         const referenceMoment = DateTime.local().setLocale("en");
-        patch(
-            localization,
-            "rtl_localization",
-            Object.assign({}, defaultLocalization, { direction: "rtl" })
-        );
+        patchWithCleanup(localization, { ...defaultLocalization, direction: "rtl" });
         assert.deepEqual(
             constructDateDomain(referenceMoment, "date_field", "date", [
                 "second_quarter",
@@ -525,18 +519,13 @@ QUnit.module("Search", () => {
             },
             "Notation should be right to left"
         );
-        unpatch(localization, "rtl_localization");
     });
 
     QUnit.test("Quarter option: custom translation and right to left", async function (assert) {
         patchDate(2020, 5, 1, 13, 0, 0);
         const referenceMoment = DateTime.local().setLocale("en");
-        patch(
-            localization,
-            "rtl_localization",
-            Object.assign({}, defaultLocalization, { direction: "rtl" })
-        );
-        patch(translatedTerms, "add_translations", { Q2: "2e Trimestre" });
+        patchWithCleanup(localization, { ...defaultLocalization, direction: "rtl" });
+        patchWithCleanup(translatedTerms, { Q2: "2e Trimestre" });
         assert.deepEqual(
             constructDateDomain(referenceMoment, "date_field", "date", [
                 "second_quarter",
@@ -550,8 +539,6 @@ QUnit.module("Search", () => {
             },
             "Quarter term should be translated and notation should be right to left"
         );
-        unpatch(localization, "rtl_localization");
-        unpatch(translatedTerms, "add_translations");
     });
 
     QUnit.skip(

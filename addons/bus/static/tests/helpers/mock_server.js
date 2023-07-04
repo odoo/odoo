@@ -6,15 +6,15 @@ import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_webs
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "bus", {
+patch(MockServer.prototype, {
     init() {
-        this._super(...arguments);
+        super.init(...arguments);
         Object.assign(this, TEST_USER_IDS);
         const self = this;
         this.websocketWorker = patchWebsocketWorkerWithCleanup({
             _sendToServer(message) {
                 self._performWebsocketRequest(message);
-                this._super(message);
+                super._sendToServer(message);
             },
         });
         this.notificationsToBeResolved = [];

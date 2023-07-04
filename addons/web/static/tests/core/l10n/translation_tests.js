@@ -8,7 +8,6 @@ import { browser } from "@web/core/browser/browser";
 import { localizationService } from "@web/core/l10n/localization_service";
 import { translatedTerms, translationLoaded, _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 import { Component, xml } from "@odoo/owl";
@@ -59,11 +58,10 @@ QUnit.test("can translate a text node", async (assert) => {
     TestComponent.template = xml`<div>Hello</div>`;
     serviceRegistry.add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
-    patch(translatedTerms, "add translations", terms);
+    patchWithCleanup(translatedTerms, { ...terms });
     const target = getFixture();
     await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
-    unpatch(translatedTerms, "add translations");
 });
 
 QUnit.test("can lazy translate", async (assert) => {
@@ -77,12 +75,11 @@ QUnit.test("can lazy translate", async (assert) => {
 
     serviceRegistry.add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
-    patch(translatedTerms, "add translations", terms);
+    patchWithCleanup(translatedTerms, { ...terms });
     translatedTerms[translationLoaded] = true;
     const target = getFixture();
     await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
-    unpatch(translatedTerms, "add translations");
 });
 
 QUnit.test("_t is in env", async (assert) => {
@@ -90,11 +87,10 @@ QUnit.test("_t is in env", async (assert) => {
     TestComponent.template = xml`<div><t t-esc="env._t('Hello')"/></div>`;
     serviceRegistry.add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
-    patch(translatedTerms, "add translations", terms);
+    patchWithCleanup(translatedTerms, { ...terms });
     const target = getFixture();
     await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
-    unpatch(translatedTerms, "add translations");
 });
 
 QUnit.test("luxon is configured in the correct lang", async (assert) => {

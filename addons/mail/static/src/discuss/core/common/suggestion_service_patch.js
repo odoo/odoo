@@ -8,9 +8,9 @@ import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
-patch(SuggestionService.prototype, "discuss/core/common", {
+patch(SuggestionService.prototype, {
     getSupportedDelimiters(thread) {
-        const res = this._super(thread);
+        const res = super.getSupportedDelimiters(thread);
         return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
     },
     /**
@@ -20,7 +20,7 @@ patch(SuggestionService.prototype, "discuss/core/common", {
         if (delimiter === "/") {
             return this.searchChannelCommand(cleanTerm(term), thread, sort);
         }
-        return this._super(...arguments);
+        return super.searchSuggestions(...arguments);
     },
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
         if (!thread.isChannel) {

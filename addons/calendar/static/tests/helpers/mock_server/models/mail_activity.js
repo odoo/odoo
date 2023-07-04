@@ -3,10 +3,10 @@
 // ensure mail override is applied first.
 import '@mail/../tests/helpers/mock_server/models/mail_activity';
 
-import { patch } from '@web/core/utils/patch';
+import { patch } from "@web/core/utils/patch";
 import { MockServer } from '@web/../tests/helpers/mock_server';
 
-patch(MockServer.prototype, 'calendar/models/mail_activity', {
+patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -25,6 +25,6 @@ patch(MockServer.prototype, 'calendar/models/mail_activity', {
                 target: 'current',
             };
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
 });

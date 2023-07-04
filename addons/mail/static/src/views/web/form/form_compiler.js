@@ -80,10 +80,10 @@ registry.category("form_compilers").add("attachment_preview_compiler", {
     fn: compileAttachmentPreview,
 });
 
-patch(FormCompiler.prototype, "mail/views/web", {
+patch(FormCompiler.prototype, {
     compile(node, params) {
         // TODO no chatter if in dialog?
-        const res = this._super(node, params);
+        const res = super.compile(node, params);
         const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is

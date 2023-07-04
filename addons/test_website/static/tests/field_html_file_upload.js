@@ -46,8 +46,8 @@ QUnit.module('field html file upload', {
         assert.expect(4);
         const onAttachmentChangeTriggered = testUtils.makeTestPromise();
         patchWithCleanup(HtmlField.prototype, {
-            '_onAttachmentChange': function (event) {
-                this._super(event);
+            _onAttachmentChange(event) {
+                super._onAttachmentChange(event);
                 onAttachmentChangeTriggered.resolve(true);
             }
         });
@@ -55,13 +55,13 @@ QUnit.module('field html file upload', {
         const onChangeTriggered = testUtils.makeTestPromise();
         patchWithCleanup(FileSelectorControlPanel.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 useEffect(() => {
                     defFileSelector.resolve(true);
                 }, () => []);
             },
             async onChangeFileInput() {
-                this._super();
+                super.onChangeFileInput();
                 onChangeTriggered.resolve(true);
             }
         });

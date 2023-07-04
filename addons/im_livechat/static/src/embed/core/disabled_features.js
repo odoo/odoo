@@ -9,25 +9,25 @@ import { ThreadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Composer.prototype, "im_livechat/disabled", {
+patch(Composer.prototype, {
     get allowUpload() {
         return false;
     },
 });
 
-patch(MessageModel.prototype, "im_livechat/disabled", {
+patch(MessageModel.prototype, {
     get hasActions() {
         return false;
     },
 });
 
-patch(Thread.prototype, "im_livechat/disabled", {
+patch(Thread.prototype, {
     get hasMemberList() {
         return false;
     },
 });
 
-patch(ThreadService.prototype, "im_livechat/disabled", {
+patch(ThreadService.prototype, {
     async fetchNewMessages(thread) {
         return;
     },
@@ -36,9 +36,9 @@ patch(ThreadService.prototype, "im_livechat/disabled", {
     },
 });
 
-patch(Store.prototype, "im_livechat/disabled", {
+patch(Store.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.hasLinkPreviewFeature = false;
     },
 });

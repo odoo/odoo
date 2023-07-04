@@ -7,9 +7,9 @@ import { session } from "@web/session";
 
 Message.props.push("isTypingMessage?");
 
-patch(Message.prototype, "im_livechat", {
+patch(Message.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.session = session;
     },
 

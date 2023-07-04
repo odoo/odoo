@@ -4,7 +4,7 @@ import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attende
 import { serializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
 
-patch(AttendeeCalendarModel.prototype, "calendar_model_calendarApp", {
+patch(AttendeeCalendarModel.prototype, {
     fetchEventLocation(data) {
         let attendeeIds;
         const filters = data.filterSections.partner_ids.filters;
@@ -92,7 +92,7 @@ patch(AttendeeCalendarModel.prototype, "calendar_model_calendarApp", {
      * @override
      */
     async updateData(data){
-        await this._super(...arguments)
+        await super.updateData(...arguments)
         this.partnerColorMap = this.mapPartnersToColor(data);
         data.worklocations = await this.loadWorkLocations(data);
     }

@@ -6,7 +6,7 @@ import { assignDefined } from "@mail/utils/common/misc";
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
-patch(Thread.prototype, "discuss/core/common", {
+patch(Thread.prototype, {
     get imgUrl() {
         if (this.type === "channel" || this.type === "group") {
             return url(
@@ -17,6 +17,6 @@ patch(Thread.prototype, "discuss/core/common", {
         if (this.type === "chat") {
             return `/web/image/res.partner/${this.chatPartnerId}/avatar_128`;
         }
-        return this._super();
+        return super.imgUrl;
     },
 });

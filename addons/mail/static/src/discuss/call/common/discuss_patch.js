@@ -8,9 +8,9 @@ import { patch } from "@web/core/utils/patch";
 
 Object.assign(Discuss.components, { Call });
 
-patch(Discuss.prototype, "discuss/call/common", {
+patch(Discuss.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.rtc = useRtc();
     },
 });

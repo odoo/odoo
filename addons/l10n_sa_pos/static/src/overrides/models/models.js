@@ -3,9 +3,9 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(Order.prototype, "l10n_sa_pos.Order", {
+patch(Order.prototype, {
     export_for_printing() {
-        const result = this._super(...arguments);
+        const result = super.export_for_printing(...arguments);
         if (this.pos.company.country && this.pos.company.country.code === "SA") {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {

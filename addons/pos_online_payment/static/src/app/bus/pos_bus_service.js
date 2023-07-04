@@ -3,10 +3,10 @@
 import { patch } from "@web/core/utils/patch";
 import { PosBus } from "@point_of_sale/app/bus/pos_bus_service";
 
-patch(PosBus.prototype, "pos_online_payment.PosBus", {
+patch(PosBus.prototype, {
     //@override
     dispatch(message) {
-        this._super(...arguments);
+        super.dispatch(...arguments);
 
         if (message.type === "ONLINE_PAYMENTS_NOTIFICATION") {
             // The bus communication is only protected by the name of the channel.

@@ -4,9 +4,9 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 
-patch(PaymentScreen.prototype, "pos_adyen.PaymentScreen", {
+patch(PaymentScreen.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         onMounted(() => {
             const pendingPaymentLine = this.currentOrder.paymentlines.find(
                 (paymentLine) =>

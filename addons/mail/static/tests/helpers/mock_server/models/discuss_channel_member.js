@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/discuss_channel_member", {
+patch(MockServer.prototype, {
     /**
      * Simulates `notify_typing` on `discuss.channel.member`.
      *

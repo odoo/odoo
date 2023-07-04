@@ -95,7 +95,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
         assert.expect(2);
         const webClient = await createWebClient({ serverData });
-        patchWithCleanup(window, { console: hushConsole }, { pure: true });
+        patchWithCleanup(window, { console: hushConsole });
         patchWithCleanup(webClient.env.services.notification, {
             add(message) {
                 assert.strictEqual(message, "No action with id '4448' could be found");
@@ -246,7 +246,7 @@ QUnit.module("ActionManager", (hooks) => {
         let list;
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 list = this;
             },
         });
@@ -418,7 +418,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             patchWithCleanup(ClientAction.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     onWillStart(() => {
                         return def;
                     });

@@ -113,8 +113,7 @@ QUnit.module(
                     window,
                     {
                         setTimeout: (callback) => oldSetTimeout(callback, 0),
-                    },
-                    { pure: true }
+                    }
                 );
 
                 const pyEnv = await startServer();
@@ -217,7 +216,7 @@ QUnit.module(
                         if (eventName === "pagehide") {
                             return;
                         }
-                        this._super(eventName, callback);
+                        super.addEventListener(eventName, callback);
                     },
                 });
                 const secondEnv = await makeTestEnv({ activateMockServer: true });
@@ -255,22 +254,22 @@ QUnit.module(
         QUnit.test("two tabs calling addChannel simultaneously", async function (assert) {
             assert.expect(5);
 
-            const channelPatch = {
+            const channelPatch = () => ({
                 addChannel(channel) {
                     assert.step("Tab " + this.__tabId__ + ": addChannel " + channel);
-                    this._super.apply(this, arguments);
+                    super.addChannel(...arguments);
                 },
                 deleteChannel(channel) {
                     assert.step("Tab " + this.__tabId__ + ": deleteChannel " + channel);
-                    this._super.apply(this, arguments);
+                    super.deleteChannel(...arguments);
                 },
-            };
+            });
             const firstTabEnv = await makeTestEnv({ activateMockServer: true });
             const secondTabEnv = await makeTestEnv({ activateMockServer: true });
             firstTabEnv.services["bus_service"].__tabId__ = 1;
             secondTabEnv.services["bus_service"].__tabId__ = 2;
-            patchWithCleanup(firstTabEnv.services["bus_service"], channelPatch);
-            patchWithCleanup(secondTabEnv.services["bus_service"], channelPatch);
+            patchWithCleanup(firstTabEnv.services["bus_service"], channelPatch());
+            patchWithCleanup(secondTabEnv.services["bus_service"], channelPatch());
             firstTabEnv.services["bus_service"].addChannel("alpha");
             secondTabEnv.services["bus_service"].addChannel("alpha");
             firstTabEnv.services["bus_service"].addChannel("beta");
@@ -391,7 +390,7 @@ QUnit.module(
                             assert.step(`${action} - ${data["lastNotificationId"]}`);
                             updateLastNotificationDeferred.resolve();
                         }
-                        return this._super(...arguments);
+                        return super._onClientMessage(...arguments);
                     },
                 });
                 const env1 = await makeTestEnv();
@@ -426,7 +425,7 @@ QUnit.module(
             let connectionOpenedDeferred = makeDeferred();
             patchWebsocketWorkerWithCleanup({
                 _initializeConnection(client, data) {
-                    this._super(client, data);
+                    super._initializeConnection(client, data);
                     connectionInitializedDeferred.resolve();
                 },
             });
@@ -466,7 +465,7 @@ QUnit.module(
             let websocketConnectedDeferred = makeDeferred();
             patchWebsocketWorkerWithCleanup({
                 _initializeConnection(client, data) {
-                    this._super(client, data);
+                    super._initializeConnection(client, data);
                     connectionInitializedDeferred.resolve();
                 },
             });
@@ -503,7 +502,7 @@ QUnit.module(
                 patchWithCleanup(busParametersService, {
                     start() {
                         return {
-                            ...this._super(...arguments),
+                            ...super.start(...arguments),
                             serverURL,
                         };
                     },
@@ -517,8 +516,7 @@ QUnit.module(
                             websocketCreatedDeferred.resolve();
                             return new EventTarget();
                         },
-                    },
-                    { pure: true }
+                    }
                 );
                 const env = await makeTestEnv();
                 env.services["bus_service"].start();
@@ -573,7 +571,7 @@ QUnit.module(
             let openDeferred = makeDeferred();
             const worker = patchWebsocketWorkerWithCleanup({
                 _onWebsocketOpen() {
-                    this._super();
+                    super._onWebsocketOpen();
                     openDeferred.resolve();
                 },
                 _sendToServer({ event_name }) {
@@ -589,14 +587,13 @@ QUnit.module(
             patchWithCleanup(worker.websocket, {
                 close(code = WEBSOCKET_CLOSE_CODES.CLEAN, reason) {
                     this.readyState = 2;
-                    const _super = this._super;
                     if (code === WEBSOCKET_CLOSE_CODES.CLEAN) {
                         closeDeferred.then(() => {
                             // Simulate that the connection could not be closed cleanly.
-                            _super(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE, reason);
+                            super.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE, reason);
                         });
                     } else {
-                        _super(code, reason);
+                        super.close(code, reason);
                     }
                 },
             });
@@ -659,8 +656,7 @@ QUnit.module(
                             assert.step("worker creation");
                             return new originalWorker(url, options);
                         },
-                    },
-                    { pure: true }
+                    }
                 );
                 patchWithCleanup(window.console, {
                     warn(message) {

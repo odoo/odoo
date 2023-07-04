@@ -1623,7 +1623,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         let compiled = undefined;
         patchWithCleanup(SettingsFormCompiler.prototype, {
             compile() {
-                const _compiled = this._super(...arguments);
+                const _compiled = super.compile(...arguments);
                 compiled = _compiled;
                 return _compiled;
             },
@@ -1665,7 +1665,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         let compiled = undefined;
         patchWithCleanup(SettingsFormCompiler.prototype, {
             compile() {
-                const _compiled = this._super(...arguments);
+                const _compiled = super.compile(...arguments);
                 compiled = _compiled;
                 return _compiled;
             },

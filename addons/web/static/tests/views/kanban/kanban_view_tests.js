@@ -1047,7 +1047,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("view button and string interpolated attribute in kanban", async (assert) => {
         patchWithCleanup(ViewButton.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 assert.step(
                     `[${this.props.clickParams["name"]}] className: '${this.props.className}'`
                 );
@@ -13501,7 +13501,7 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(SampleServer.prototype, {
             async _mockWebReadGroup() {
-                const result = await this._super(...arguments);
+                const result = await super._mockWebReadGroup(...arguments);
                 const { "date:month": dateValue } = result.groups[0];
                 assert.strictEqual(dateValue, "December 2022");
                 return result;

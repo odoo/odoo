@@ -4224,7 +4224,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("single chart rendering on search", async function (assert) {
         patchWithCleanup(GraphRenderer.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 onRendered(() => {
                     assert.step("rendering");
                 });

@@ -4,19 +4,19 @@ import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wys
 import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
 
-patch(WysiwygAdapterComponent.prototype, 'website_blog/static/src/js/wysiwyg.js', {
+patch(WysiwygAdapterComponent.prototype, {
     /**
      * @override
      */
     init() {
-        this._super(...arguments);
+        super.init(...arguments);
         this.blogTagsPerBlogPost = {};
     },
     /**
      * @override
      */
     async startEdition() {
-        await this._super(...arguments);
+        await super.startEdition(...arguments);
         $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },
 
@@ -28,7 +28,7 @@ patch(WysiwygAdapterComponent.prototype, 'website_blog/static/src/js/wysiwyg.js'
      * @override
      */
     async _saveViewBlocks() {
-        const ret = await this._super(...arguments);
+        const ret = await super._saveViewBlocks(...arguments);
         await this._saveBlogTags(); // Note: important to be called after save otherwise cleanForSave is not called before
         return ret;
     },
@@ -77,7 +77,7 @@ patch(WysiwygAdapterComponent.prototype, 'website_blog/static/src/js/wysiwyg.js'
             this._onSetBlogPostUpdatedTags(ev);
             return;
         } else {
-            return this._super(...arguments);
+            return super._trigger_up(...arguments);
         }
     },
 });

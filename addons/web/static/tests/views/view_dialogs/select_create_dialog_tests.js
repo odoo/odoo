@@ -355,7 +355,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 useSetupAction({
                     getContext: () => ({ shouldBeInFilterContext: true }),
                 });

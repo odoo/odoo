@@ -8,13 +8,13 @@ import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
-patch(personaService, "hr_holidays", {
+patch(personaService, {
     dependencies: [...new Set([...personaService.dependencies, "user"])],
 });
 
-patch(PersonaService.prototype, "hr_holidays", {
+patch(PersonaService.prototype, {
     setup(env, services) {
-        this._super(env, services);
+        super.setup(env, services);
         this.userService = services.user;
     },
 

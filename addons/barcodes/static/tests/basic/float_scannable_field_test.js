@@ -104,7 +104,7 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(FormController.prototype, {
             onPagerUpdate() {
                 assert.step("update");
-                return this._super.apply(this, arguments);
+                return super.onPagerUpdate(...arguments);
             },
         });
 

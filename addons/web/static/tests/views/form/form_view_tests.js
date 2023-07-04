@@ -6762,7 +6762,7 @@ QUnit.module("Views", (hooks) => {
         let form;
         patchWithCleanup(FormController.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup(...arguments);
                 form = this;
             },
         });
@@ -11105,13 +11105,13 @@ QUnit.module("Views", (hooks) => {
         "form view with inline tree view with optional fields and local storage mock",
         async function (assert) {
             patchWithCleanup(browser.localStorage, {
-                getItem: function (key) {
+                getItem(key) {
                     assert.step("getItem " + key);
-                    return this._super(key);
+                    return super.getItem(key);
                 },
-                setItem: function (key, value) {
+                setItem(key, value) {
                     assert.step("setItem " + key + " to " + value);
-                    return this._super(key, value);
+                    return super.setItem(key, value);
                 },
             });
 
@@ -11189,13 +11189,13 @@ QUnit.module("Views", (hooks) => {
         "form view with tree_view_ref with optional fields and local storage mock",
         async function (assert) {
             patchWithCleanup(browser.localStorage, {
-                getItem: function (key) {
+                getItem(key) {
                     assert.step("getItem " + key);
-                    return this._super(key);
+                    return super.getItem(key);
                 },
-                setItem: function (key, value) {
+                setItem(key, value) {
                     assert.step("setItem " + key + " to " + value);
-                    return this._super(key, value);
+                    return super.setItem(key, value);
                 },
             });
 
@@ -13467,7 +13467,7 @@ QUnit.module("Views", (hooks) => {
         function logLifeCycle(Component) {
             patchWithCleanup(Component.prototype, {
                 setup() {
-                    this._super(...arguments);
+                    super.setup(...arguments);
                     const prefix = `${this.constructor.name} ${this.props.name}`;
                     owl.onMounted(() => assert.step(`[${prefix}] onMounted`));
                     owl.onPatched(() => assert.step(`[${prefix}] onPatched`));
@@ -13524,7 +13524,7 @@ QUnit.module("Views", (hooks) => {
             function logLifeCycle(Component) {
                 patchWithCleanup(Component.prototype, {
                     setup() {
-                        this._super(...arguments);
+                        super.setup(...arguments);
                         const prefix = `${this.constructor.name} ${this.props.name}`;
                         owl.onMounted(() => assert.step(`[${prefix}] onMounted`));
                         owl.onPatched(() => assert.step(`[${prefix}] onPatched`));

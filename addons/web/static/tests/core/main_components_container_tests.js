@@ -2,7 +2,7 @@
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { patch, unpatch } from "@web/core/utils/patch";
+import { patch } from "@web/core/utils/patch";
 import { getFixture, mount, nextTick } from "../helpers/utils";
 
 import { Component, useState, xml } from "@odoo/owl";
@@ -73,14 +73,14 @@ QUnit.module("Components", (hooks) => {
         window.addEventListener("unhandledrejection", handler);
         // fake error service so that the odoo qunit handlers don't think that they need to handle the error
         registry.category("services").add("error", { start: () => {} });
-        patch(QUnit, "MainComponentsContainer QUnit patch", {
+        const unpatch = patch(QUnit, {
             onUnhandledRejection: () => {},
         });
         compA.state.shouldThrow = true;
         await nextTick();
         window.removeEventListener("unhandledrejection", handler);
         // unpatch QUnit asap so any other errors can be caught by it
-        unpatch(QUnit, "MainComponentsContainer QUnit patch");
+        unpatch();
         assert.verifySteps([
             'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
             "BOOM",
@@ -128,14 +128,14 @@ QUnit.module("Components", (hooks) => {
         window.addEventListener("unhandledrejection", handler);
         // fake error service so that the odoo qunit handlers don't think that they need to handle the error
         registry.category("services").add("error", { start: () => {} });
-        patch(QUnit, "MainComponentsContainer QUnit patch", {
+        const unpatch = patch(QUnit, {
             onUnhandledRejection: () => {},
         });
         compB.state.shouldThrow = true;
         await nextTick();
         window.removeEventListener("unhandledrejection", handler);
         // unpatch QUnit asap so any other errors can be caught by it
-        unpatch(QUnit, "MainComponentsContainer QUnit patch");
+        unpatch();
         assert.verifySteps([
             'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
             "BOOM",

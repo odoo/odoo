@@ -45,7 +45,7 @@ QUnit.module("Widgets", (hooks) => {
         let fileInput;
         patchWithCleanup(AttachDocumentWidget.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 fileInput = this.fileInput;
             },
         });
@@ -103,7 +103,7 @@ QUnit.module("Widgets", (hooks) => {
             let fileInput;
             patchWithCleanup(AttachDocumentWidget.prototype, {
                 setup() {
-                    this._super();
+                    super.setup();
                     fileInput = this.fileInput;
                 },
             });
