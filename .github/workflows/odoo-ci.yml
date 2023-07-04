@@ -1,0 +1,43 @@
+name: Odoo CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set up PostgreSQL
+        uses: postgresql/setup-postgres@v1
+        with:
+          postgresql-version: '12'
+
+      - name: Start PostgreSQL
+        run: sudo service postgresql start
+
+      - name: Initialize Odoo database
+        run: odoo/odoo-bin -d testdb --db-filter=testdb --addons-path=addons -i base --stop-after-init
+
+      - name: Run Odoo tests
+        run: odoo/odoo-bin -d testdb --db-filter=testdb --addons-path=addons -i base -u all --test-enable --stop-after-init
+
+      - name: Stop PostgreSQL
+        run: sudo service postgresql stop
