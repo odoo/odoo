@@ -13,7 +13,7 @@
                     'py-1': !props.squashed,
                     'mt-2': !props.squashed and props.thread and !env.pinnedPanel,
                     'px-3': !props.isInChatWindow and !env.pinnedPanel,
-                    'px-1': props.isInChatWindow,
+                    'px-2': props.isInChatWindow,
                     'opacity-50': props.messageToReplyTo?.isNotSelected(props.thread, props.message),
                 }"
                 role="group"
