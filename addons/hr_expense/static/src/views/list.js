@@ -5,7 +5,6 @@ import { ExpenseMobileQRCode } from '../mixins/qrcode';
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';
 
 import { registry } from '@web/core/registry';
-import { patch } from '@web/core/utils/patch';
 import { useService } from '@web/core/utils/hooks';
 import { listView } from "@web/views/list/list_view";
 
@@ -14,7 +13,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 
 const { onWillStart } = owl;
 
-export class ExpenseListController extends ListController {
+export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
     setup() {
         super.setup();
         this.orm = useService('orm');
@@ -81,11 +80,8 @@ export class ExpenseListController extends ListController {
         }
     }
 }
-patch(ExpenseListController.prototype, 'expense_list_controller_upload', ExpenseDocumentUpload);
 
-export class ExpenseListRenderer extends ListRenderer {}
-patch(ExpenseListRenderer.prototype, 'expense_list_renderer_qrcode', ExpenseMobileQRCode);
-patch(ExpenseListRenderer.prototype, 'expense_list_renderer_qrcode_dzone', ExpenseDocumentDropZone);
+export class ExpenseListRenderer extends ExpenseDocumentDropZone(ExpenseMobileQRCode(ListRenderer)) {}
 ExpenseListRenderer.template = 'hr_expense.ListRenderer';
 
 export class ExpenseDashboardListRenderer extends ExpenseListRenderer {}
