@@ -596,11 +596,9 @@ class IrModelFields(models.Model):
         for field in self:
             safe_eval(field.domain or '[]')
 
-    @api.constrains('name', 'state')
+    @api.constrains('name')
     def _check_name(self):
         for field in self:
-            if field.state == 'manual' and not field.name.startswith('x_'):
-                raise ValidationError(_("Custom fields must have a name that starts with 'x_'!"))
             try:
                 models.check_pg_name(field.name)
             except ValidationError:
@@ -610,6 +608,11 @@ class IrModelFields(models.Model):
     _sql_constraints = [
         ('name_unique', 'UNIQUE(model, name)', "Field names must be unique per model."),
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
+        (
+            "name_manual_field",
+            "CHECK (state != 'manual' OR name LIKE 'x_%')",
+            "Custom fields must have a name that starts with 'x_'!"
+        ),
     ]
 
     def _related_field(self):
