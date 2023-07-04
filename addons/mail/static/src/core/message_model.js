@@ -172,8 +172,8 @@ export class Message {
         return this._store.threads[createLocalId(this.resModel, this.resId)];
     }
 
-    get url() {
-        return `${url("/web")}#model=${this.resModel}&id=${this.id}`;
+    get resUrl() {
+        return `${url("/web")}#model=${this.resModel}&id=${this.resId}`;
     }
 
     get editDate() {
