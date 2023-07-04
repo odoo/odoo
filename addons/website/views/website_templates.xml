@@ -2557,6 +2557,7 @@
 User-agent: *
 <t t-if="website.domain and not website._is_indexable_url(url_root)">
 Disallow: /
+Sitemap: <t t-esc="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
 Sitemap: <t t-esc="url_root"/>sitemap.xml
