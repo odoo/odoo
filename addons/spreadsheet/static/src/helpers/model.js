@@ -1,12 +1,11 @@
 /** @odoo-module */
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { Model, parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 
-const { Model, tokenize } = spreadsheet;
-const { toCartesian } = spreadsheet.helpers;
+const { toCartesian } = helpers;
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
     const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
@@ -106,11 +105,17 @@ export function getItemId(item, itemsDic) {
  * @returns {boolean}
  */
 function containsOdooFunction(content) {
-    if (!content || !content.startsWith("=") || !content.includes("ODOO.")) {
+    if (!content || !content.startsWith("=") || !content.toUpperCase().includes("ODOO.")) {
         return false;
     }
-    const tokens = tokenize(content);
-    return tokens.some((token) => token.type === "FUNCTION" && token.value.startsWith("ODOO."));
+    try {
+        const ast = parse(content);
+        return iterateAstNodes(ast).some(
+            (ast) => ast.type === "FUNCALL" && ast.value.toUpperCase().startsWith("ODOO.")
+        );
+    } catch {
+        return false;
+    }
 }
 
 function isLoaded(model) {

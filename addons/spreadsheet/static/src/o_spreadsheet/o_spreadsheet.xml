@@ -438,7 +438,7 @@
     <div class="o-composer-container w-100 h-100">
       <div
         class="o-composer w-100 text-start"
-        t-att-class="{ 'text-muted': env.model.getters.isReadonly(), 'unfocusable': env.model.getters.isReadonly(), 'active': props.focus !== 'inactive' }"
+        t-att-class="{ 'text-muted': env.model.getters.isReadonly(), 'active': props.focus !== 'inactive' }"
         t-att-style="props.inputStyle"
         t-ref="o_composer"
         tabindex="1"
@@ -558,7 +558,10 @@
   </t>
 
   <t t-name="o-spreadsheet-TopBarComposer" owl="1">
-    <div class="o-topbar-composer bg-white" t-att-style="containerStyle">
+    <div
+      class="o-topbar-composer bg-white user-select-text"
+      t-on-click.stop=""
+      t-att-style="containerStyle">
       <Composer
         focus="props.focus"
         inputStyle="composerStyle"
@@ -3934,7 +3937,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.6';
-  __info__.date = '2023-06-28T11:44:20.029Z';
-  __info__.hash = '7d15d3c';
+  __info__.version = '16.4.0-alpha.7';
+  __info__.date = '2023-07-04T14:12:26.682Z';
+  __info__.hash = 'b04cf78';
 -->
