@@ -93,6 +93,9 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        if (ev.target.closest(".o-dropdown")) {
+            return;
+        }
         switch (ev.key) {
             case "Escape":
                 if (
