@@ -17,9 +17,6 @@ class ResCompany(models.Model):
         if not self.env.user.has_group('account.group_account_user'):
             raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
 
-        def build_move_info(move):
-            return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
-
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
         results = []
 
@@ -72,12 +69,12 @@ class ResCompany(models.Model):
                         'name': f"{journal.name} [{prefix}]",
                         'status': 'verified',
                         'msg': _("Entries are correctly hashed"),
-                        'from_name': build_move_info(moves[0])[0],
-                        'from_hash': build_move_info(moves[0])[1],
-                        'from_date': build_move_info(moves[0])[2],
-                        'to_name': build_move_info(moves[-1])[0],
-                        'to_hash': build_move_info(moves[-1])[1],
-                        'to_date': build_move_info(moves[-1])[2],
+                        'from_name': moves[0].name,
+                        'from_hash': moves[0].inalterable_hash,
+                        'from_date': fields.Date.to_string(moves[0].date),
+                        'to_name': moves[-1].name,
+                        'to_hash': moves[-1].inalterable_hash,
+                        'to_date': fields.Date.to_string(moves[-1].date),
                     })
 
         return {

@@ -66,7 +66,7 @@ class PosOrder(models.Model):
             if result.get('error'):
                 raise Exception(result['error'])
             for record_id, record_info in result.items():
-                res[self.browse(int(record_id))] = f"${record_info['signature_version']}${record_info['signature']}"
+                res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
         except ConnectionError as e:
             _logger.error("Error while contacting the IAP endpoint: %s", e)
             raise UserError(_("Unable to connect to the IAP endpoint to sign the documents. Please check your internet connection."))
@@ -112,8 +112,8 @@ class PosOrder(models.Model):
                 padding.PKCS1v15(),
                 hashes.SHA1(),
             )
-            res[order] = f"${current_key_version}${base64.b64encode(signature).decode()}"
-            previous_hash = res[order]
+            res[order.id] = f"${current_key_version}${base64.b64encode(signature).decode()}"
+            previous_hash = res[order.id]
         return res
 
     def _l10n_pt_verify_integrity(self, previous_hash):

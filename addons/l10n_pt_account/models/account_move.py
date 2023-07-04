@@ -67,7 +67,7 @@ class AccountMove(models.Model):
             if result.get('error'):
                 raise Exception(result['error'])
             for record_id, record_info in result.items():
-                res[self.browse(int(record_id))] = f"${record_info['signature_version']}${record_info['signature']}"
+                res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
         except ConnectionError as e:
             _logger.error("Error while contacting the IAP endpoint: %s", e)
             raise UserError(_("Unable to connect to the IAP endpoint to sign the documents. Please check your internet connection."))
@@ -111,8 +111,8 @@ class AccountMove(models.Model):
                 padding.PKCS1v15(),
                 hashes.SHA1(),
             )
-            res[move] = f"${current_key_version}${base64.b64encode(signature).decode()}"
-            previous_hash = res[move]
+            res[move.id] = f"${current_key_version}${base64.b64encode(signature).decode()}"
+            previous_hash = res[move.id]
         return res
 
     def _l10n_pt_verify_integrity(self, previous_hash):
@@ -155,8 +155,8 @@ class AccountMove(models.Model):
         for prefix, moves in grouped:
             moves = sorted(moves, key=lambda m: m.sequence_number)
             moves_hashes = self.env['account.move'].browse([m.id for m in moves]).with_context(l10n_pt_force_compute_signature=True)._hash_compute()
-            for move, inalterable_hash in moves_hashes.items():
-                super(AccountMove, move).write({'inalterable_hash': inalterable_hash})
+            for move_id, inalterable_hash in moves_hashes.items():
+                super(AccountMove, self.env['account.move'].browse(move_id)).write({'inalterable_hash': inalterable_hash})
 
     def preview_invoice(self):
         self.l10n_pt_compute_missing_hashes(self.company_id.id)

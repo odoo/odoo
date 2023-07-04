@@ -80,6 +80,12 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         )
         moves |= second_chain_moves
 
+        # First sequence again
+        first_chain_moves_new_move = self.init_invoice("out_invoice", self.partner_a, "2023-01-08", amounts=[1000, 2000])
+        first_chain_moves_new_move.name = first_chain_moves[-1].name[:-1] + str(int(first_chain_moves[-1].name[-1]) + 1)
+        first_chain_moves_new_move.action_post()
+        first_chain_moves |= first_chain_moves_new_move
+
         # Verification of the two chains. After grouping, the chains are ordered by sequence_prefix,
         # so, the first chain is the second one in the list.
         integrity_check = moves.company_id._check_hash_integrity()['results']
