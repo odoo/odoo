@@ -273,6 +273,18 @@ class PickingType(models.Model):
         for record in self:
             record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
 
+    @api.constrains('sequence_id')
+    def _check_sequence_code(self):
+        domain = expression.OR([[('company_id', '=', record.company_id.id), ('name', '=', record.sequence_id.name)]
+                                for record in self])
+        record_counts = self.env['ir.sequence'].read_group(
+            domain, ['company_id', 'name'], ['company_id', 'name'], lazy=False)
+        duplicate_records = list(filter(
+            lambda r: r['__count'] > 1, record_counts))
+        if duplicate_records:
+            duplicate_names = list(map(lambda r: r['name'], duplicate_records))
+            raise UserError(_("Sequences %s already exist.",
+                            ', '.join(duplicate_names)))
 
 class Picking(models.Model):
     _name = "stock.picking"
