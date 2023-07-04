@@ -10,6 +10,7 @@ import {
     nextTick,
     patchDate,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
 import { Component, useState, xml } from "@odoo/owl";
@@ -28,13 +29,38 @@ import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
 import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 import { nameService } from "@web/core/name_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { browser } from "@web/core/browser/browser";
 
 let serverData;
 let target;
 
+function addProductIds() {
+    serverData.models.partner.fields.product_ids = {
+        string: "Products",
+        type: "many2many",
+        relation: "product",
+        searchable: true,
+    };
+}
+
+async function selectOperator(el, operator, index = 0) {
+    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
+    await editSelect(select, null, operator);
+}
+
+function getOperatorOptions(el, index = 0) {
+    const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
+    return [...select.options].map((o) => o.label);
+}
+
 function getSelectedOperator(el, index = 0) {
     const select = el.querySelectorAll("select.o_domain_leaf_operator_select")[index];
     return select.options[select.selectedIndex].label;
+}
+
+function getAutocompletValue(target, index = 0) {
+    return target.querySelectorAll(".o_ds_value_cell .o-autocomplete--input")[index].value;
 }
 
 async function mountComponent(Component, params = {}) {
@@ -132,6 +158,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("field", fieldService);
         registry.category("services").add("name", nameService);
+        registry.category("services").add("dialog", dialogService);
 
         target = getFixture();
     });
@@ -338,7 +365,7 @@ QUnit.module("Components", (hooks) => {
         await makeDomainSelector({
             domain: `[("int", "=", id)]`,
             update(domain) {
-                assert.strictEqual(domain, `[("int", "<", id)]`);
+                assert.strictEqual(domain, `[("int", "<", 1)]`);
             },
         });
 
@@ -351,29 +378,29 @@ QUnit.module("Components", (hooks) => {
         await editSelect(target, ".o_domain_leaf_operator_select", "<");
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "<");
-        assert.containsNone(target, ".o_ds_value_cell input");
-        assert.containsOnce(target, ".o_ds_expr_value");
-        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
+        assert.containsOnce(target, ".o_ds_value_cell input");
+        assert.containsNone(target, ".o_ds_expr_value");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell input").value, "1");
     });
 
     QUnit.test("building a domain with a m2o without following the relation", async (assert) => {
-        assert.expect(1);
-
         await makeDomainSelector({
             domain: `[("product_id", "ilike", 1)]`,
             isDebugMode: true,
             update: (domain) => {
-                assert.strictEqual(
-                    domain,
-                    `[("product_id", "ilike", "pad")]`,
-                    "string should have been allowed as m2o value"
-                );
+                assert.step(domain);
             },
         });
+        assert.verifySteps([]);
+        assert.containsOnce(target, ".o_ds_expr_value");
+
+        await click(target, ".o_ds_expr_value button");
+        assert.verifySteps([`[("product_id", "ilike", "")]`]);
 
         const input = target.querySelector(".o_domain_leaf_value_input");
         input.value = "pad";
         await triggerEvent(input, null, "change");
+        assert.verifySteps([`[("product_id", "ilike", "pad")]`]);
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
@@ -514,7 +541,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("operator fallback (edit mode)", async (assert) => {
         OPERATOR_DESCRIPTIONS.test = {
             label: "test",
-            valueMode: "none",
+            valueCount: 0,
         };
         registerCleanup(() => {
             delete OPERATOR_DESCRIPTIONS.test;
@@ -1584,11 +1611,11 @@ QUnit.module("Components", (hooks) => {
             },
             {
                 domain: `[("product_id", "=", False)]`,
-                text: "Product is not set ",
+                text: "Product = false",
             },
             {
                 domain: `[("product_id", "!=", False)]`,
-                text: "Product is set ",
+                text: "Product != false",
             },
             {
                 domain: `[("product_id", "in", [])]`,
@@ -1624,5 +1651,367 @@ QUnit.module("Components", (hooks) => {
             await parent.set(domain);
             assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
         }
+    });
+
+    QUnit.test("many2one field operators (edit)", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("product_id", "=", false)]`,
+        });
+        assert.deepEqual(getOperatorOptions(target), [
+            "is in",
+            "is not in",
+            "=",
+            "!=",
+            "contains",
+            "does not contain",
+        ]);
+    });
+
+    QUnit.test("many2one field: operator switch (edit)", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("product_id", "=", false)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        await selectOperator(target, "in");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "in", [])]`]);
+
+        await selectOperator(target, "=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "=", False)]`]);
+
+        await selectOperator(target, "not in");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "not in", [])]`]);
+
+        await selectOperator(target, "ilike");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.verifySteps([`[("product_id", "ilike", "")]`]);
+
+        await selectOperator(target, "!=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "!=", False)]`]);
+
+        await selectOperator(target, "not ilike");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.verifySteps([`[("product_id", "not ilike", "")]`]);
+    });
+
+    QUnit.test("many2one field and operator =/!= (edit)", async (assert) => {
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_id", "=", False)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editInput(target, ".o-autocomplete--input", "xph");
+
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
+            "xphone",
+        ]);
+        assert.strictEqual(getSelectedOperator(target), "=");
+        assert.strictEqual(getAutocompletValue(target), "xph");
+
+        await click(target, ".dropdown-menu li");
+        assert.strictEqual(getSelectedOperator(target), "=");
+        assert.strictEqual(getAutocompletValue(target), "xphone");
+        assert.verifySteps([`[("product_id", "=", 37)]`]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editInput(target, ".o-autocomplete--input", "");
+        assert.strictEqual(getSelectedOperator(target), "=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "=", False)]`]);
+
+        await selectOperator(target, "!=");
+        assert.strictEqual(getSelectedOperator(target), "!=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_id", "!=", False)]`]);
+
+        await editInput(target, ".o-autocomplete--input", "xpa");
+        await click(target, ".dropdown-menu li");
+        assert.strictEqual(getSelectedOperator(target), "!=");
+        assert.strictEqual(getAutocompletValue(target), "xpad");
+        assert.verifySteps([`[("product_id", "!=", 41)]`]);
+    });
+
+    QUnit.test("many2one field and operator in/not in (edit)", async (assert) => {
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_id", "in", [37])]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "is in");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+        ]);
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editInput(target, ".o-autocomplete--input", "x");
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
+            "xpad",
+        ]);
+
+        await click(target, ".dropdown-menu li");
+        assert.verifySteps([`[("product_id", "in", [37, 41])]`]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+            "xpad",
+        ]);
+        assert.strictEqual(getAutocompletValue(target), "");
+
+        await selectOperator(target, "not in");
+        assert.strictEqual(getSelectedOperator(target), "is not in");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+            "xpad",
+        ]);
+        assert.verifySteps([`[("product_id", "not in", [37, 41])]`]);
+
+        await click(target.querySelector(".o_tag .o_delete"));
+        assert.strictEqual(getSelectedOperator(target), "is not in");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xpad",
+        ]);
+        assert.verifySteps([`[("product_id", "not in", [41])]`]);
+    });
+
+    QUnit.test("many2one field and operator ilike/not ilike (edit)", async (assert) => {
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_id", "ilike", "abc")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.containsNone(target, ".o-autocomplete--input");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+        assert.verifySteps([]);
+
+        await editInput(target, ".o_ds_value_cell .o_input", "def");
+        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.verifySteps([`[("product_id", "ilike", "def")]`]);
+
+        await selectOperator(target, "not ilike");
+        assert.strictEqual(getSelectedOperator(target), "does not contain");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.verifySteps([`[("product_id", "not ilike", "def")]`]);
+    });
+
+    QUnit.test("x2many field operators (edit)", async (assert) => {
+        addProductIds();
+        await makeDomainSelector({
+            domain: `[("product_ids", "=", false)]`,
+        });
+        assert.deepEqual(getOperatorOptions(target), [
+            "is in",
+            "is not in",
+            "=",
+            "!=",
+            "contains",
+            "does not contain",
+            "is set",
+            "is not set",
+        ]);
+    });
+
+    QUnit.test("x2many field: operator switch (edit)", async (assert) => {
+        addProductIds();
+        await makeDomainSelector({
+            domain: `[("product_ids", "=", false)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        await selectOperator(target, "in");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_ids", "in", [])]`]);
+
+        await selectOperator(target, "=");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_ids", "=", [])]`]);
+
+        await selectOperator(target, "not in");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_ids", "not in", [])]`]);
+
+        await selectOperator(target, "ilike");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.verifySteps([`[("product_ids", "ilike", "")]`]);
+
+        await selectOperator(target, "not_set");
+        assert.containsNone(target, ".o_ds_value_cell");
+        assert.verifySteps([`[("product_ids", "=", False)]`]);
+
+        await selectOperator(target, "!=");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([`[("product_ids", "!=", [])]`]);
+
+        await selectOperator(target, "not ilike");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "");
+        assert.verifySteps([`[("product_ids", "not ilike", "")]`]);
+
+        await selectOperator(target, "set");
+        assert.containsNone(target, ".o_ds_value_cell");
+        assert.verifySteps([`[("product_ids", "!=", False)]`]);
+    });
+
+    QUnit.test("many2many field and operator =/!=/in/not in (edit)", async (assert) => {
+        addProductIds();
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_ids", "in", [37])]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "is in");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+        ]);
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.verifySteps([]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editInput(target, ".o-autocomplete--input", "x");
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
+            "xpad",
+        ]);
+
+        await click(target, ".dropdown-menu li");
+        assert.verifySteps([`[("product_ids", "in", [37, 41])]`]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+            "xpad",
+        ]);
+        assert.strictEqual(getAutocompletValue(target), "");
+
+        await selectOperator(target, "not in");
+        assert.strictEqual(getSelectedOperator(target), "is not in");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xphone",
+            "xpad",
+        ]);
+        assert.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
+
+        await click(target.querySelector(".o_tag .o_delete"));
+        assert.strictEqual(getSelectedOperator(target), "is not in");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "xpad",
+        ]);
+        assert.verifySteps([`[("product_ids", "not in", [41])]`]);
+
+        await selectOperator(target, "=");
+        assert.strictEqual(getSelectedOperator(target), "=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        ); // to improve -> should be [xpad]
+        assert.verifySteps([`[("product_ids", "=", [])]`]);
+
+        await selectOperator(target, "!=");
+        assert.strictEqual(getSelectedOperator(target), "!=");
+        assert.strictEqual(getAutocompletValue(target), "");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")),
+            []
+        );
+        assert.verifySteps([`[("product_ids", "!=", [])]`]);
+    });
+
+    QUnit.test("many2many field and operator ilike/not ilike (edit)", async (assert) => {
+        addProductIds();
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_ids", "ilike", "abc")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.containsNone(target, ".o-autocomplete--input");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+        assert.verifySteps([]);
+
+        await editInput(target, ".o_ds_value_cell .o_input", "def");
+        assert.strictEqual(getSelectedOperator(target), "contains");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.verifySteps([`[("product_ids", "ilike", "def")]`]);
+
+        await selectOperator(target, "not ilike");
+        assert.strictEqual(getSelectedOperator(target), "does not contain");
+        assert.containsOnce(target, ".o_ds_value_cell .o_input");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "def");
+        assert.verifySteps([`[("product_ids", "not ilike", "def")]`]);
+    });
+
+    QUnit.test("many2many field and operator set/not set (edit)", async (assert) => {
+        addProductIds();
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        await makeDomainSelector({
+            domain: `[("product_ids", "=", False)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getSelectedOperator(target), "is not set");
+        assert.containsNone(target, ".o_ds_value_cell");
+        assert.verifySteps([]);
+
+        await selectOperator(target, "set");
+        assert.strictEqual(getSelectedOperator(target), "is set");
+        assert.containsNone(target, ".o_ds_value_cell");
+        assert.verifySteps([`[("product_ids", "!=", False)]`]);
     });
 });

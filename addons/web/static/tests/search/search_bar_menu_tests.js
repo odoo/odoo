@@ -1549,6 +1549,7 @@ QUnit.module("Search", (hooks) => {
                 serverData.models.foo.fields.country_id = {
                     string: "Country",
                     type: "many2one",
+                    relation: "country",
                 };
                 await makeWithSearch({
                     serverData,

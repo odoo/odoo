@@ -18,13 +18,13 @@ import { getOperatorInfo, toOperator } from "@web/core/domain_selector/domain_se
 import {
     Editor,
     PathEditor,
-    getDefaultFieldValue,
-    getEditorInfo,
+    getDefaultOperator,
+    getDefaultValue,
     getOperatorsInfo,
+    getEditorInfo,
 } from "@web/core/domain_selector/domain_selector_fields";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
-import { Expression } from "@web/core/domain_tree";
 
 export class DomainSelector extends Component {
     static template = "web._DomainSelector";
@@ -133,10 +133,6 @@ export class DomainSelector extends Component {
         return null;
     }
 
-    getDefaultFieldValue(path, operator) {
-        return getDefaultFieldValue(this.getFieldDef(path), operator);
-    }
-
     async loadFieldDefs(resModel, paths) {
         const promises = [];
         const fieldDefs = {};
@@ -216,18 +212,23 @@ export class DomainSelector extends Component {
             Object.assign(node, this.createNewLeaf());
         } else {
             node.path = path;
-            const operatorInfo = getOperatorsInfo(fieldDef)[0];
-            node.operator = operatorInfo.operator;
-            node.value = getDefaultFieldValue(fieldDef, node.operator);
+            node.operator = getDefaultOperator(fieldDef);
+            node.value = getDefaultValue(fieldDef, node.operator);
         }
         this.notifyChanges();
     }
 
     updateLeafOperator(node, operatorKey) {
-        const [operator, negate] = toOperator(operatorKey);
         const previousOperatorInfo = getOperatorInfo(node.operator);
+        const [operator, negate] = toOperator(operatorKey);
         node.negate = negate;
         node.operator = operator;
+
+        const editorInfo = this.getEditorInfo(node);
+        if (!editorInfo.isSupported(node.value) || editorInfo.shouldResetValue?.(node.value)) {
+            node.value = getDefaultValue(this.getFieldDef(node.path), node.operator);
+        }
+
         const operatorInfo = getOperatorInfo(operator);
         if (previousOperatorInfo.valueCount !== operatorInfo.valueCount) {
             switch (operatorInfo.valueCount) {
@@ -243,12 +244,15 @@ export class DomainSelector extends Component {
                 }
                 // binary operator with a non array value
                 case 1: {
-                    node.value = this.getDefaultFieldValue(node.path, operator);
+                    node.value = getDefaultValue(this.getFieldDef(node.path), node.operator);
                     break;
                 }
                 // binary operator with a fixed sized array value
                 default: {
-                    const defaultValue = this.getDefaultFieldValue(node.path, operator);
+                    const defaultValue = getDefaultValue(
+                        this.getFieldDef(node.path),
+                        node.operator
+                    );
                     node.value = Array(operatorInfo.valueCount).fill(defaultValue);
                     break;
                 }
@@ -260,14 +264,6 @@ export class DomainSelector extends Component {
     updateLeafValue(node, value) {
         node.value = value;
         this.notifyChanges();
-    }
-
-    isExprValue(value) {
-        return value instanceof Expression;
-    }
-
-    removeExprValue(node) {
-        this.updateLeafValue(node, this.getDefaultFieldValue(node.path, node.operator));
     }
 
     onDebugValueChange(value) {
