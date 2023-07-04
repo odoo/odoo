@@ -16,7 +16,7 @@ This module correct some behaviors when both module are installed.
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_sale_loyalty/static/src/js/**/*.js',
+            'pos_sale_loyalty/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

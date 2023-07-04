@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
+import { PosLoyalty } from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";

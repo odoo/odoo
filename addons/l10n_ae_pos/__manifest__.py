@@ -14,7 +14,7 @@ United Arab Emirates POS Localization
     'license': 'LGPL-3',
     'assets': {
         'point_of_sale._assets_pos': [
-            'l10n_ae_pos/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml',
+            'l10n_ae_pos/static/src/**/*',
         ],
     },
 }

@@ -2,7 +2,7 @@
 
 import { BackButton } from "@point_of_sale/app/navbar/back_button/back_button";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { TipScreen } from "@pos_restaurant/js/Screens/TipScreen";
+import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { patch } from "@web/core/utils/patch";
 
 patch(BackButton.prototype, "pos_restaurant.BackButton", {
