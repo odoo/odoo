@@ -84,6 +84,8 @@ class HrContract(models.Model):
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         for contract in self:
+            if contract.work_entry_source != 'calendar':
+                continue
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
