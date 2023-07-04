@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, useState, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -37,17 +37,12 @@ export class Activity extends Component {
         this.activityService = useService("mail.activity");
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
-        this.state = useState({
-            showDetails: false,
-            delay: computeDelay(this.props.data.date_deadline),
-        });
+        this.state = useState({ showDetails: false });
         this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
         onMounted(() => {
             this.updateDelayAtNight();
         });
-        onWillUpdateProps((nextProps) => {
-            this.state.delay = computeDelay(nextProps.data.date_deadline);
-        });
+        onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
         this.attachmentUploader = useAttachmentUploader(this.thread);
     }
 
@@ -59,10 +54,15 @@ export class Activity extends Component {
     }
 
     updateDelayAtNight() {
-        browser.setTimeout(() => {
-            this.state.delay = computeDelay(this.props.data.date_deadline);
-            this.updateDelayAtNight();
-        }, getMsToTomorrow() + 100); // Make sure there is no race condition
+        browser.clearTimeout(this.updateDelayMidnightTimeout);
+        this.updateDelayMidnightTimeout = browser.setTimeout(
+            () => this.render(),
+            getMsToTomorrow() + 100
+        ); // Make sure there is no race condition
+    }
+
+    get delay() {
+        return computeDelay(this.props.data.date_deadline);
     }
 
     toggleDetails() {
