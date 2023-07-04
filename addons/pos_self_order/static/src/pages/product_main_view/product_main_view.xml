@@ -84,13 +84,13 @@
                             </div>
                         </div>
                     </t>
-                    <div t-if="selfOrder.table">
+                    <div t-if="selfOrder.ordering">
                         <label class="form-label fw-bold" for="note">Add a note:</label>
                         <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="state.customer_note"/>
                     </div>
                 </div>
             </div>
-            <div t-if="selfOrder.table" class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg" style="z-index:1">
+            <div t-if="selfOrder.ordering" class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg" style="z-index:1">
                 <div class="o_self_order_incr_button btn-group text-center border-light mb-1" role="group" aria-label="Quantity select">
                     <button type="button"
                         t-on-click = "() => this.changeQuantity(false)"

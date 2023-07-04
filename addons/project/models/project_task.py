@@ -189,7 +189,7 @@ class Task(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="['!', ('id', 'child_of', id)]")
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count')
@@ -1116,7 +1116,7 @@ class Task(models.Model):
     # Subtasks
     # ---------------------------------------------------
 
-    @api.depends('parent_id', 'project_id', 'is_private')
+    @api.depends('parent_id.partner_id', 'project_id', 'is_private')
     def _compute_partner_id(self):
         """ Compute the partner_id when the tasks have no partner_id.
 

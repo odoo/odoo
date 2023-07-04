@@ -14,7 +14,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends' : ['base_setup', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -22,6 +22,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/digest_data.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
+        'data/onboarding_data.xml',
         'views/account_payment_view.xml',
         'wizard/account_automatic_entry_wizard_views.xml',
         'wizard/account_unreconcile_view.xml',
@@ -59,7 +60,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_journal_dashboard_view.xml',
         'views/account_portal_templates.xml',
         'views/report_payment_receipt_templates.xml',
-        'views/account_onboarding_templates.xml',
         'data/service_cron.xml',
         'views/account_incoterms_view.xml',
         'data/account_incoterms_data.xml',
@@ -94,6 +94,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/components/**/*',
             'account/static/src/js/tours/account.js',
             'account/static/src/xml/**/*',
+            'account/static/src/views/**/*.js',
         ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',

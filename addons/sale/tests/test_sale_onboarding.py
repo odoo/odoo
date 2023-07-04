@@ -15,4 +15,4 @@ class TestOnboarding(HttpCase):
             ('state', '=', 'draft')
         ]).state = 'cancel'
         self.env['product.product'].search([]).active = False
-        self.env.company._get_sample_sales_order()
+        self.env['onboarding.onboarding.step']._get_sample_sales_order()

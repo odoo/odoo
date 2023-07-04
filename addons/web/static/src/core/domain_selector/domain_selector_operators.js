@@ -1,48 +1,75 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
+import { formatValue } from "@web/core/domain_tree";
+import { sprintf } from "@web/core/utils/strings";
 
-export const OPERATOR_DESCRIPTIONS = [
+/**
+ * @typedef {Object} OperatorInfo
+ * @property {import("@web/core/domain_tree").Value} operator
+ * @property {string} label
+ * @property {number|"variable"} valueCount
+ */
+
+export const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    { key: "equal", label: "=", symbol: "=", valueCount: 1 },
-    { key: "not_equal", label: "!=", symbol: "!=", valueCount: 1 },
-    { key: "less_equal", label: "<=", symbol: "<=", valueCount: 1 },
-    { key: "less_than", label: "<", symbol: "<", valueCount: 1 },
-    { key: "greater_than", label: ">", symbol: ">", valueCount: 1 },
-    { key: "greater_equal", label: ">=", symbol: ">=", valueCount: 1 },
-    { key: "equal_question", label: "=?", symbol: "=?", valueCount: 1 },
-    { key: "equal_like", label: _lt("=like"), symbol: "=like", valueCount: 1 },
-    { key: "equal_ilike", label: _lt("=ilike"), symbol: "=ilike", valueCount: 1 },
-    { key: "like", label: _lt("like"), symbol: "like", valueCount: 1 },
-    { key: "not_like", label: _lt("not like"), symbol: "not like", valueCount: 1 },
-    { key: "ilike", label: _lt("contains"), symbol: "ilike", valueCount: 1 },
-    { key: "not_ilike", label: _lt("does not contain"), symbol: "not ilike", valueCount: 1 },
-    { key: "in", label: _lt("in"), symbol: "in", valueCount: "variable" },
-    { key: "not_in", label: _lt("not in"), symbol: "not in", valueCount: "variable" },
-    { key: "child_of", label: _lt("child of"), symbol: "child_of", valueCount: 1 },
-    { key: "parent_of", label: _lt("parent of"), symbol: "parent_of", valueCount: 1 },
+    "=": { label: "=", valueCount: 1 },
+    "!=": { label: "!=", valueCount: 1 },
+    "<=": { label: "<=", valueCount: 1 },
+    "<": { label: "<", valueCount: 1 },
+    ">": { label: ">", valueCount: 1 },
+    ">=": { label: ">=", valueCount: 1 },
+    "=?": { label: "=?", valueCount: 1 },
+    "=like": { label: _lt("=like"), valueCount: 1 },
+    "=ilike": { label: _lt("=ilike"), valueCount: 1 },
+    like: { label: _lt("like"), valueCount: 1 },
+    "not like": { label: _lt("not like"), valueCount: 1 },
+    ilike: { label: _lt("contains"), valueCount: 1 },
+    "not ilike": { label: _lt("does not contain"), valueCount: 1 },
+    in: { label: _lt("is in"), valueCount: "variable" },
+    "not in": { label: _lt("is not in"), valueCount: "variable" },
+    child_of: { label: _lt("child of"), valueCount: 1 },
+    parent_of: { label: _lt("parent of"), valueCount: 1 },
 
     // virtual operators (replace = and != in some cases)
-    { key: "is", label: _lt("is"), symbol: "=", valueCount: 1 },
-    { key: "is_not", label: _lt("is not"), symbol: "!=", valueCount: 1 },
-    { key: "set", label: _lt("is set"), symbol: "!=", valueCount: 0 },
-    { key: "not_set", label: _lt("is not set"), symbol: "=", valueCount: 0 },
+    is: { label: _lt("is"), valueCount: 1 },
+    is_not: { label: _lt("is not"), valueCount: 1 },
+    set: { label: _lt("is set"), valueCount: 0 },
+    not_set: { label: _lt("is not set"), valueCount: 0 },
 
     // virtual operator (equivalent to a couple (>=,<=))
-    { key: "between", label: _lt("is between"), symbol: "between", valueCount: 2 },
-];
+    between: { label: _lt("is between"), valueCount: 2 },
+};
 
-export function findOperator(key) {
-    return OPERATOR_DESCRIPTIONS.find((op) => op.key === key);
+/**
+ * @param {import("@web/core/domain_tree").Value} operator
+ * @param {boolean} [negate=false]
+ * @returns {OperatorInfo}
+ */
+export function getOperatorInfo(operator, negate = false) {
+    let operatorInfo;
+    if (typeof operator === "string" && operator in OPERATOR_DESCRIPTIONS) {
+        const { label, valueCount } = OPERATOR_DESCRIPTIONS[operator];
+        operatorInfo = { key: operator, label: label.toString(), operator, negate, valueCount };
+    } else {
+        operatorInfo = {
+            key: "__unknown__",
+            label: formatValue(operator),
+            operator,
+            negate,
+            valueCount: 0,
+        };
+    }
+    if (negate) {
+        operatorInfo.label = sprintf(`not %s`, operatorInfo.label);
+    }
+    return operatorInfo;
 }
 
-export function selectOperators(keys) {
-    const operators = Object.fromEntries(OPERATOR_DESCRIPTIONS.map((op) => [op.key, op]));
-    return keys.map((key) => operators[key]);
-}
-
-export function parseOperator(symbol) {
-    return OPERATOR_DESCRIPTIONS.filter(
-        (op) => !["is", "is_not", "set", "not_set"].includes(op.key)
-    ).find((op) => op.symbol === symbol);
+/**
+ * @param {import("@web/core/domain_tree").Value[]} operators
+ * @returns {(OperatorInfo)[]}
+ */
+export function selectOperators(operators) {
+    return operators.map((operator) => getOperatorInfo(operator));
 }

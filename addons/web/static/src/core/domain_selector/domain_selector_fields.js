@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { selectOperators } from "@web/core/domain_selector/domain_selector_operators";
 import {
     deserializeDate,
@@ -13,7 +13,9 @@ import { evaluateExpr, formatAST } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
 import { DateTimeInput } from "../datetime/datetime_input";
-import { DomainValueExpr } from "./domain_selector_nodes";
+import { TagsList } from "@web/core/tags_list/tags_list";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { Expression, formatValue } from "@web/core/domain_tree";
 
 const { DateTime } = luxon;
 
@@ -24,7 +26,29 @@ export class Editor extends Component {
     static template = "web.DomainSelector.Editor";
 
     get isExprValue() {
-        return this.props.value instanceof DomainValueExpr;
+        return this.props.value instanceof Expression;
+    }
+}
+
+export class PathEditor extends Editor {
+    static props = ["isDebugMode", "readonly", "resModel", "path", "update"];
+    static template = "web.DomainSelector.PathEditor";
+
+    get component() {
+        return ModelFieldSelector;
+    }
+
+    get isSupportedPath() {
+        const { path } = this.props;
+        return [0, 1].includes(path) || typeof path === "string";
+    }
+
+    get stringifiedPath() {
+        return formatValue(this.props.path);
+    }
+
+    onClear() {
+        this.props.update();
     }
 }
 
@@ -47,32 +71,25 @@ class Select extends Component {
 }
 
 class TagInput extends Component {
+    static components = { TagsList };
     static props = ["value", "update"];
     static template = "web.DomainSelector.TagInput";
-
-    setup() {
-        this.inputRef = useRef("input");
+    get value() {
+        return Array.isArray(this.props.value) ? this.props.value : [this.props.value];
     }
-
-    getTagValue(tag) {
-        return tag instanceof DomainValueExpr ? tag.expr : tag;
+    get tags() {
+        return this.value.map((val, index) => ({
+            text: String(val),
+            colorIndex: typeof val === "string" ? 0 : 2,
+            onDelete: () => {
+                this.props.update([...this.value.slice(0, index), ...this.value.slice(index + 1)]);
+            },
+        }));
     }
-
-    removeTag(tagIndex) {
-        return this.props.update([
-            ...this.props.value.slice(0, tagIndex),
-            ...this.props.value.slice(tagIndex + 1),
-        ]);
-    }
-
-    addTag(value) {
-        return this.props.update([...this.props.value, value]);
-    }
-
-    onBtnClick() {
-        const value = this.inputRef.el.value;
-        this.inputRef.el.value = "";
-        return this.addTag(value);
+    onChange(ev) {
+        const newVal = ev.currentTarget.value;
+        ev.currentTarget.value = "";
+        this.props.update([...this.value, newVal]);
     }
 }
 
@@ -139,22 +156,22 @@ const genericDeserializeDate = (type, ...args) =>
 
 const DEFAULT = {
     operators: [
-        "equal",
-        "not_equal",
-        "greater_than",
-        "greater_equal",
-        "less_than",
-        "less_equal",
+        "=",
+        "!=",
+        ">",
+        ">=",
+        "<",
+        "<=",
         "ilike",
-        "not_ilike",
+        "not ilike",
         "like",
-        "not_like",
-        "equal_like",
-        "equal_ilike",
+        "not like",
+        "=like",
+        "=ilike",
         "child_of",
         "parent_of",
         "in",
-        "not_in",
+        "not in",
         "set",
         "not_set",
     ],
@@ -195,17 +212,7 @@ const DATETIME_EDITOR_BETWEEN = makeEditor(Range, ({ value, update, fieldDef }) 
 }));
 
 const DATETIME = {
-    operators: [
-        "equal",
-        "not_equal",
-        "greater_than",
-        "greater_equal",
-        "less_than",
-        "less_equal",
-        "between",
-        "set",
-        "not_set",
-    ],
+    operators: ["=", "!=", ">", ">=", "<", "<=", "between", "set", "not_set"],
     editors: {
         default: makeEditor(DateTimeInput, ({ value, update, fieldDef }) => ({
             value: genericDeserializeDate(fieldDef.type, value),
@@ -221,11 +228,11 @@ const DATETIME = {
 // ----------------------------------------------------------------------------
 
 const TEXT = {
-    operators: ["equal", "not_equal", "ilike", "not_ilike", "in", "not_in", "set", "not_set"],
+    operators: ["=", "!=", "ilike", "not ilike", "in", "not in", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
         in: makeEditor(TagInput),
-        not_in: makeEditor(TagInput),
+        "not in": makeEditor(TagInput),
     },
     defaultValue: () => "",
 };
@@ -233,19 +240,7 @@ const TEXT = {
 // ----------------------------------------------------------------------------
 
 const NUMBER = {
-    operators: [
-        "equal",
-        "not_equal",
-        "greater_than",
-        "greater_equal",
-        "less_than",
-        "less_equal",
-        "between",
-        "ilike",
-        "not_ilike",
-        "set",
-        "not_set",
-    ],
+    operators: ["=", "!=", ">", ">=", "<", "<=", "between", "ilike", "not ilike", "set", "not_set"],
     editors: {
         default: makeEditor(Input, ({ value, update, fieldDef }) => ({
             value: String(value),
@@ -273,11 +268,11 @@ const RELATIONAL_EDITOR_EQUALITY = makeEditor(Input, ({ value, update }) => ({
 }));
 
 const RELATIONAL = {
-    operators: ["equal", "not_equal", "ilike", "not_ilike", "set", "not_set"],
+    operators: ["=", "!=", "ilike", "not ilike", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
         equal: RELATIONAL_EDITOR_EQUALITY,
-        not_equal: RELATIONAL_EDITOR_EQUALITY,
+        "!=": RELATIONAL_EDITOR_EQUALITY,
     },
     defaultValue: ({ type }) => (type === "many2one" ? 1 : []),
 };
@@ -290,7 +285,7 @@ const SELECTION_EDITOR_IN = makeEditor(Input, ({ value, update }) => ({
 }));
 
 const SELECTION = {
-    operators: ["equal", "not_equal", "in", "not_in", "set", "not_set"],
+    operators: ["=", "!=", "in", "not in", "set", "not_set"],
     editors: {
         default: makeEditor(Select, ({ value, update, fieldDef }) => ({
             value,
@@ -298,7 +293,7 @@ const SELECTION = {
             options: fieldDef.selection || [],
         })),
         in: SELECTION_EDITOR_IN,
-        not_in: SELECTION_EDITOR_IN,
+        "not in": SELECTION_EDITOR_IN,
     },
     defaultValue: (fieldDef) => fieldDef.selection[0][0] ?? false,
 };
@@ -311,7 +306,7 @@ const PROPERTIES = {
 };
 
 const PROPERTIES_SELECTION = {
-    operators: ["equal", "not_equal", "set", "not_set"],
+    operators: ["=", "!=", "set", "not_set"],
     editors: {
         default: makeEditor(Select, ({ value, update, fieldDef }) => ({
             value,
@@ -323,7 +318,7 @@ const PROPERTIES_SELECTION = {
 };
 
 const PROPERTIES_RELATIONAL = {
-    operators: ["equal", "not_equal", "set", "not_set"],
+    operators: ["=", "!=", "set", "not_set"],
     editors: { default: makeEditor(Input) },
     defaultValue: (fieldDef) => (fieldDef.type === "many2one" ? 1 : []),
 };
@@ -331,7 +326,7 @@ const PROPERTIES_RELATIONAL = {
 // ----------------------------------------------------------------------------
 
 const JSON_FIELD = {
-    operators: ["equal", "not_equal", "ilike", "not_ilike","set", "not_set"],
+    operators: ["=", "!=", "ilike", "not ilike", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
     },
@@ -378,9 +373,9 @@ export function getFieldInfo(fieldDef) {
     }
 }
 
-export function getEditorInfo(fieldDef, operatorKey) {
+export function getEditorInfo(fieldDef, operator) {
     const descr = getFieldInfo(fieldDef);
-    return descr.editors[operatorKey] || descr.editors.default;
+    return descr.editors[operator] || descr.editors.default;
 }
 
 export function getOperatorsInfo(fieldDef) {
@@ -388,12 +383,12 @@ export function getOperatorsInfo(fieldDef) {
     return selectOperators(descr.operators);
 }
 
-export function getDefaultFieldValue(fieldDef) {
+export function getDefaultFieldValue(fieldDef, operator) {
     const descr = getFieldInfo(fieldDef);
-    return descr.defaultValue(fieldDef);
+    return descr.defaultValue(fieldDef, operator);
 }
 
 export function getDefaultOperator(fieldDef) {
     const [firstOperator] = getOperatorsInfo(fieldDef);
-    return firstOperator.symbol;
+    return firstOperator;
 }

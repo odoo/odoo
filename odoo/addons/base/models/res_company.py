@@ -68,8 +68,6 @@ class Company(models.Model):
     company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
-    base_onboarding_company_state = fields.Selection([
-        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal')], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
@@ -283,40 +281,6 @@ class Company(models.Model):
             docids = self.env[active_model].browse(active_ids)
             return (self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
                         .report_action(docids))
-
-    @api.model
-    def action_open_base_onboarding_company(self):
-        """ Onboarding step for company basic information. """
-        action = self.env["ir.actions.actions"]._for_xml_id("base.action_open_base_onboarding_company")
-        action['res_id'] = self.env.company.id
-        return action
-
-    def set_onboarding_step_done(self, step_name):
-        if self[step_name] == 'not_done':
-            self[step_name] = 'just_done'
-
-    def _get_and_update_onboarding_state(self, onboarding_state, steps_states):
-        """ Needed to display onboarding animations only one time. """
-        old_values = {}
-        all_done = True
-        for step_state in steps_states:
-            old_values[step_state] = self[step_state]
-            if self[step_state] == 'just_done':
-                self[step_state] = 'done'
-            all_done = all_done and self[step_state] == 'done'
-
-        if all_done:
-            if self[onboarding_state] == 'not_done':
-                # string `onboarding_state` instead of variable name is not an error
-                old_values['onboarding_state'] = 'just_done'
-            else:
-                old_values['onboarding_state'] = 'done'
-            self[onboarding_state] = 'done'
-        return old_values
-
-    def action_save_onboarding_company_step(self):
-        if bool(self.street):
-            self.set_onboarding_step_done('base_onboarding_company_state')
 
     @api.model
     def _get_main_company(self):

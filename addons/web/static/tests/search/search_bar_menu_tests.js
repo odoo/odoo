@@ -1637,7 +1637,7 @@ QUnit.module("Search", (hooks) => {
                 "Filter",
                 "ID = 1",
                 "ID = 1",
-                "( ID = 1 and ID = 1 ) or ID in ( 1 , 1 )",
+                "( ID = 1 and ID = 1 ) or ID is in ( 1 , 1 )",
             ]);
             assert.deepEqual(getDomain(controlPanel), [
                 "&",
@@ -1675,7 +1675,7 @@ QUnit.module("Search", (hooks) => {
             await editInput(target, ".o_domain_debug_input", `[("foo", "in", [uid, 1, "a"])]`);
             await click(target.querySelector(".modal footer button"));
 
-            assert.deepEqual(getFacetTexts(target), [`Foo in ( uid , 1 , a )`]);
+            assert.deepEqual(getFacetTexts(target), [`Foo is in ( uid , 1 , a )`]);
             assert.deepEqual(getDomain(controlPanel), [
                 ["foo", "in", [7, 1, "a"]], // uid = 7
             ]);

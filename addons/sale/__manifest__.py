@@ -31,6 +31,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/ir_config_parameter.xml', # Needs mail_template_data
+        'data/onboarding_data.xml',
 
         'wizard/account_accrued_orders_wizard_views.xml',
         'wizard/mass_cancel_orders_views.xml',
@@ -51,7 +52,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/product_product_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
-        'views/sale_onboarding_views.xml',
         'views/sale_order_line_views.xml',
         'views/sale_portal_templates.xml',
         'views/utm_campaign_views.xml',
@@ -83,7 +83,8 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            'sale/static/tests/sales_team_dashboard_tests.js',
+            'sale/static/tests/**/*',
+            ('remove', 'sale/static/tests/tours/**/*')
         ],
         'web.report_assets_common': [
             'sale/static/src/scss/sale_report.scss',

@@ -329,7 +329,10 @@ class ChatbotScriptStep(models.Model):
         posted_message = False
 
         if discuss_channel.livechat_channel_id:
-            human_operator = discuss_channel.livechat_channel_id._get_random_operator()
+            human_operator = discuss_channel.livechat_channel_id._get_random_operator(
+                lang=discuss_channel.livechat_visitor_id.lang_id.code,
+                country_id=discuss_channel.country_id.id
+            )
 
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)
@@ -346,7 +349,8 @@ class ChatbotScriptStep(models.Model):
             # then post a small custom 'Operator has joined' notification
             discuss_channel._chatbot_post_message(
                 self.chatbot_script_id,
-                Markup('<div class="o_mail_notification">%s</div>') % _('%s has joined', human_operator.partner_id.name))
+                Markup('<div class="o_mail_notification">%s</div>')
+                % _('%s has joined', human_operator.livechat_username or human_operator.partner_id.name))
 
             discuss_channel._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)

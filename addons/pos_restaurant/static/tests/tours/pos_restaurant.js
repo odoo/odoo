@@ -68,12 +68,16 @@ Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0001");
 Chrome.do.confirmPopup();
+Chrome.check.isSyncStatusPending();
+Chrome.check.isSyncStatusConnected();
 TicketScreen.do.selectOrder("-0003");
 Chrome.do.backToFloor();
 
 // There should be 1 synced draft order.
 FloorScreen.check.orderCountSyncedInTableIs("5", "2");
-registry.category("web_tour.tours").add("pos_restaurant_sync", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("pos_restaurant_sync", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -112,4 +116,6 @@ ProductScreen.check.totalAmountIs("2.20");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("4", "1");
 
-registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui", steps: getSteps() });

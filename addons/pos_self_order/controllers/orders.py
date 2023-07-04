@@ -2,31 +2,17 @@
 
 from datetime import timedelta
 import uuid
-
 from odoo import http, fields, Command
 from odoo.http import request
-from odoo.addons.pos_self_order.controllers.utils import (
-    get_pos_config_sudo,
-    get_table_sudo,
-)
-
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order", auth="public", type="json", website=True)
-    def process_new_order(self, order, table_access_token):
-        pos_config_id = order.get('pos_config_id')
+    def process_new_order(self, order, access_token, table_identifier):
         lines = order.get('lines')
 
-        pos_config_sudo = get_pos_config_sudo(pos_config_id)
+        pos_config_sudo, table_sudo = self._verify_authorization(access_token, table_identifier)
         pos_session_sudo = pos_config_sudo.current_session_id
-        table_sudo = get_table_sudo(table_access_token)
-
-        if not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
-            raise Unauthorized
-        if not table_sudo or not pos_session_sudo:
-            raise Unauthorized
-
         sequence_number = self._get_sequence_number(table_sudo.id, pos_session_sudo.id)
         unique_id = self._generate_unique_id(pos_session_sudo.id, table_sudo.id, sequence_number)
 
@@ -41,18 +27,18 @@ class PosSelfOrderController(http.Controller):
                 'sequence_number': sequence_number,
                 'access_token': uuid.uuid4().hex,
                 'pos_session_id': pos_session_sudo.id,
-                'table_id': table_sudo.id,
-                "partner_id": False,
-                "creation_date": str(fields.Datetime.now()),
-                "fiscal_position_id": pos_config_sudo.default_fiscal_position_id,
-                "statement_ids": [],
-                "lines": [],
+                'table_id': table_sudo.id if table_sudo else False,
+                'partner_id': False,
+                'creation_date': str(fields.Datetime.now()),
+                'fiscal_position_id': pos_config_sudo.default_fiscal_position_id,
+                'statement_ids': [],
+                'lines': [],
                 'amount_tax': 0,
                 'amount_total': 0,
                 'amount_paid': 0,
                 'amount_return': 0,
             },
-            "to_invoice": False,
+            'to_invoice': False,
             'session_id': pos_session_sudo.id,
         }
 
@@ -76,11 +62,11 @@ class PosSelfOrderController(http.Controller):
         return order_sudo._export_for_self_order()
 
     @http.route('/pos-self-order/get-orders-taxes', auth='public', type='json', website=True)
-    def get_order_taxes(self, order, pos_config_id):
-        pos_config_sudo = get_pos_config_sudo(pos_config_id)
+    def get_order_taxes(self, order, access_token):
+        pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
 
-        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode:
-            raise Unauthorized
+        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+            raise Unauthorized("Invalid access token")
 
         lines = self._process_lines(order.get('lines'), pos_config_sudo, 0)
         amount_total, amount_untaxed = self._get_order_prices(lines)
@@ -96,21 +82,21 @@ class PosSelfOrderController(http.Controller):
         }
 
     @http.route('/pos-self-order/update-existing-order', auth="public", type="json", website=True)
-    def update_existing_order(self, order):
-        order_pos_reference = order.get('pos_reference')
+    def update_existing_order(self, order, access_token, table_identifier):
+        order_id = order.get('id')
         order_access_token = order.get('access_token')
-        pos_config_id = order.get('pos_config_id')
-        pos_config_sudo = get_pos_config_sudo(pos_config_id)
+        pos_config_sudo, table_sudo = self._verify_authorization(access_token, table_identifier)
 
         order_sudo = request.env['pos.order'].sudo().search([
-            ('pos_reference', '=', order_pos_reference),
+            ('id', '=', order_id),
             ('access_token', '=', order_access_token),
+            ('table_id', '=', table_sudo.id)
         ])
 
         if not order_sudo:
             raise Unauthorized("Order not found in the server !")
         elif order_sudo.state != 'draft':
-            raise BadRequest("Order is not in draft state")
+            raise Unauthorized("Order is not in draft state")
 
         lines = self._process_lines(order.get('lines'), pos_config_sudo, order_sudo.id)
         for line in lines:
@@ -135,20 +121,34 @@ class PosSelfOrderController(http.Controller):
         return order_sudo._export_for_self_order()
 
     @http.route('/pos-self-order/get-orders', auth='public', type='json', website=True)
-    def get_orders_by_access_token(self, access_tokens):
+    def get_orders_by_access_token(self, order_access_tokens):
         orders_sudo = request.env["pos.order"].sudo().search([
-            ("access_token", "in", access_tokens),
+            ("access_token", "in", order_access_tokens),
             ("date_order", ">=", fields.Datetime.now() - timedelta(days=7)),
         ])
 
         if not orders_sudo:
-            raise NotFound()
+            raise NotFound("Orders not found")
 
         orders = []
         for order in orders_sudo:
             orders.append(order._export_for_self_order())
 
         return orders
+
+    @http.route('/pos-self-order/get-tables', auth='public', type='json', website=True)
+    def get_tables(self, access_token):
+        pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
+
+        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+            raise Unauthorized("Invalid access token")
+
+        tables = pos_config_sudo.floor_ids.table_ids.filtered(lambda t: t.active).read(['id', 'name', 'identifier', 'floor_id'])
+
+        for table in tables:
+            table['floor_name'] = table.get('floor_id')[1]
+
+        return tables
 
     def _process_lines(self, lines, pos_config_sudo, pos_order_id):
         newLines = []
@@ -204,10 +204,22 @@ class PosSelfOrderController(http.Controller):
 
         return f"Self-Order {first_part}-{second_part}-{third_part}"
 
-    def _get_sequence_number(self, table_id: int, session_id: int) -> int:
+    def _get_sequence_number(self, table_id, session_id):
         order_sudo = request.env["pos.order"].sudo().search([(
             'pos_reference',
             'like',
             f"Self-Order {session_id:0>5}-{table_id:0>3}")], order='id desc', limit=1)
 
         return (order_sudo.sequence_number + 1) or 1
+
+    def _verify_authorization(self, access_token, table_identifier):
+        table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
+        pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
+
+        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+            raise Unauthorized("Invalid access token")
+
+        if not table_sudo:
+            raise Unauthorized("Table not found")
+
+        return pos_config_sudo, table_sudo

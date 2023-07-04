@@ -224,18 +224,23 @@ export class Thread {
         return this.name;
     }
 
-    /** @type {import("@mail/core/common/persona_model").Persona|undefined} */
-    get correspondent() {
-        if (this.type === "channel") {
-            return undefined;
-        }
-        const correspondents = this.channelMembers
+    /** @type {import("@mail/core/common/persona_model").Persona[]} */
+    get correspondents() {
+        return this.channelMembers
             .map((member) => member.persona)
             .filter((persona) => !!persona)
             .filter(
                 ({ id, type }) =>
                     id !== (type === "partner" ? this._store.user?.id : this._store.guest?.id)
             );
+    }
+
+    /** @type {import("@mail/core/common/persona_model").Persona|undefined} */
+    get correspondent() {
+        if (this.type === "channel") {
+            return undefined;
+        }
+        const correspondents = this.correspondents;
         if (correspondents.length === 1) {
             // 2 members chat.
             return correspondents[0];

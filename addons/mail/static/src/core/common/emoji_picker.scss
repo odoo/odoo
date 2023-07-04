@@ -1,13 +1,19 @@
-.o-mail-EmojiPicker {
+.popover .o-mail-EmojiPicker {
     width: 285px;
     height: 350px;
+}
+
+.o-mail-EmojiPicker {
 
     display: grid;
     grid-template-areas:
-    "header"
-    "search"
-    "content";
-    grid-template-rows: 30px 35px 1fr;
+        "search"
+        "content"
+        "navbar";
+
+    &:not(.o-small) {
+        grid-template-rows: 40px 1fr 32px;
+    }
 
     .o-mail-Emoji {
         width: 30px;
@@ -17,12 +23,17 @@
         }
     }
 
+    &.o-small .o-mail-Emoji {
+        width: 40px;
+        font-size: 1.5rem;
+    }
+
     .o-mail-EmojiPicker-content {
         grid-area: content;
     }
 
-    .o-mail-EmojiPicker-header {
-        grid-area: header;
+    .o-mail-EmojiPicker-navbar {
+        grid-area: navbar;
         .o-mail-Emoji {
             filter: grayscale(1);
         }
@@ -32,43 +43,25 @@
         filter: grayscale(1);
     }
 
-    .o-mail-EmojiPicker-searchContainer {
-        border: $input-border-width solid $border-color !important;
-
-        &:focus-within {
-            border-color: $input-focus-border-color !important;
-
-            i {
-                opacity: 100% !important;
-            }
-        }
-    }
-
     .o-mail-EmojiPicker-search {
         grid-area: search;
-        border-radius: 0%;
-        background-color: $input-focus-bg;
+        background-color: $input-bg;
 
         input {
-            appearance: none;
-            color: inherit;
-            background: inherit;
+            &:focus, &:hover {
+                & + .oi-search {
+                    @extend .bg-white !optional;
+                }
+            }
+            &:not(:focus) + i.oi-search {
+                opacity: 60%;
+            }
         }
     }
 
     .o-mail-EmojiPicker-empty {
         font-size: 5rem !important;
         filter: grayscale(0.25);
-    }
-
-    input:not(:focus) {
-        &::placeholder {
-            opacity: 75%;
-        }
-
-        & + i.oi-search {
-            opacity: 60%;
-        }
     }
 }
 

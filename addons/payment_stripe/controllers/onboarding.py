@@ -23,7 +23,9 @@ class OnboardingController(http.Controller):
                             `ir.ui.menu` id
         """
         stripe_provider = request.env['payment.provider'].browse(int(provider_id))
-        stripe_provider.company_id._mark_payment_onboarding_step_as_done()
+        request.env['onboarding.onboarding.step'].with_company(
+            stripe_provider.company_id
+        ).action_validate_step_payment_provider()
         action = request.env.ref('payment_stripe.action_payment_provider_onboarding')
         get_params_string = url_encode({'action': action.id, 'id': provider_id, 'menu_id': menu_id})
         return request.redirect(f'/web?#{get_params_string}')

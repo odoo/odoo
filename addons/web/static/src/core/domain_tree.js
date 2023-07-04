@@ -18,16 +18,83 @@ const TERM_OPERATORS_NEGATION = {
     "not ilike": "ilike",
 };
 
+export class Expression {
+    constructor(ast) {
+        this._ast = ast;
+        this._expr = formatAST(ast);
+    }
+
+    toAST() {
+        return this._ast;
+    }
+
+    toString() {
+        return this._expr;
+    }
+}
+
+export function formatValue(value) {
+    return formatAST(toAST(value));
+}
+
+export function normalizeValue(value) {
+    return toValue(toAST(value)); // no array in array (see isWithinArray)
+}
+
+/**
+ * @param {import("@web/core/py_js/py_parser").AST} ast
+ * @returns {Value}
+ */
+export function toValue(ast, isWithinArray = false) {
+    if ([4, 10].includes(ast.type) && !isWithinArray) {
+        /** 4: list, 10: tuple */
+        return ast.value.map((v) => toValue(v, true));
+    } else if ([0, 1, 2].includes(ast.type)) {
+        /** 0: number, 1: string, 2: boolean */
+        return ast.value;
+    } else if (ast.type === 6 && ast.op === "-" && ast.right.type === 0) {
+        /** 6: unary operator */
+        return -ast.right.value;
+    } else if (ast.type === 5 && ["false", "true"].includes(ast.value)) {
+        /** 5: name */
+        return JSON.parse(ast.value);
+    } else {
+        return new Expression(ast);
+    }
+}
+
+/**
+ * @param {Value} value
+ * @returns  {import("@web/core/py_js/py_parser").AST}
+ */
+export function toAST(value) {
+    if (value instanceof Expression) {
+        return value.toAST();
+    }
+    if (Array.isArray(value)) {
+        return { type: 4, value: value.map(toAST) };
+    }
+    return toPyValue(value);
+}
+
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
 
 /**
+ * @typedef {number|string|boolean|Expression} Atom
+ */
+
+/**
+ * @typedef {Atom|Atom[]} Value
+ */
+
+/**
  * @typedef {Object} Condition
  * @property {"condition"} type
- * @property {string|1|0} path
- * @property {string} operator
- * @property {AST} valueAST
- * @property {boolean} negate // used in case operator has no negation defined
+ * @property {Value} path
+ * @property {Value} operator
+ * @property {Value} value
+ * @property {boolean} negate
  */
 
 /**
@@ -75,14 +142,15 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         tree.children = [];
     } else {
         const [pathAST, operatorAST, valueAST] = firstAST.value;
-        tree.path = pathAST.value;
-        if (negate && TERM_OPERATORS_NEGATION[operatorAST.value]) {
-            tree.operator = TERM_OPERATORS_NEGATION[operatorAST.value];
+        tree.path = toValue(pathAST);
+        const operator = toValue(operatorAST);
+        if (negate && typeof operator === "string" && TERM_OPERATORS_NEGATION[operator]) {
+            tree.operator = TERM_OPERATORS_NEGATION[operator];
         } else {
-            tree.operator = operatorAST.value;
+            tree.operator = operator;
             tree.negate = negate;
         }
-        tree.valueAST = valueAST;
+        tree.value = toValue(valueAST);
     }
     let remaimingASTs = tailASTs;
     if (tree.type === "connector") {
@@ -126,22 +194,24 @@ function construcTree(initialASTs, options) {
  * @returns {AST[]}
  */
 function getASTs(tree) {
+    const ASTs = [];
     if (tree.type === "condition") {
-        return [
-            {
-                type: 10,
-                value: [toPyValue(tree.path), toPyValue(tree.operator), tree.valueAST],
-            },
-        ];
+        if (tree.negate) {
+            ASTs.push(toAST("!"));
+        }
+        ASTs.push({
+            type: 10,
+            value: [tree.path, tree.operator, tree.value].map(toAST),
+        });
+        return ASTs;
     }
 
-    const ASTs = [];
     const length = tree.children.length;
     if (length && tree.negate) {
-        ASTs.push(toPyValue("!"));
+        ASTs.push(toAST("!"));
     }
     for (let i = 0; i < length - 1; i++) {
-        ASTs.push(toPyValue(tree.value));
+        ASTs.push(toAST(tree.value));
     }
     for (const child of tree.children) {
         ASTs.push(...getASTs(child));
@@ -170,18 +240,16 @@ function createBetweenOperators(tree, isRoot = true) {
             child1.type === "condition" &&
             child2 &&
             child2.type === "condition" &&
-            child1.path === child2.path &&
+            formatValue(child1.path) === formatValue(child2.path) &&
             child1.operator === ">=" &&
             child2.operator === "<="
         ) {
             children.push({
                 type: "condition",
+                negate: false,
                 path: child1.path,
                 operator: "between",
-                valueAST: {
-                    type: 4,
-                    value: [child1.valueAST, child2.valueAST],
-                },
+                value: normalizeValue([child1.value, child2.value]),
             });
             i += 1;
         } else {
@@ -203,13 +271,26 @@ function removeBetweenOperators(tree) {
         if (tree.operator !== "between") {
             return tree;
         }
-        const { path, valueAST } = tree;
+        const { negate, path, value } = tree;
         return {
             type: "connector",
+            negate,
             value: "&",
             children: [
-                { type: "condition", path, operator: ">=", valueAST: valueAST.value[0] },
-                { type: "condition", path, operator: "<=", valueAST: valueAST.value[1] },
+                {
+                    type: "condition",
+                    negate: false,
+                    path,
+                    operator: ">=",
+                    value: value[0],
+                },
+                {
+                    type: "condition",
+                    negate: false,
+                    path,
+                    operator: "<=",
+                    value: value[1],
+                },
             ],
         };
     }

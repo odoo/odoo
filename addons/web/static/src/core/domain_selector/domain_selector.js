@@ -1,13 +1,9 @@
 /** @odoo-module **/
 
 import {
-    BranchDomainNode,
-    DomainValueExpr,
-    LeafDomainNode,
-} from "@web/core/domain_selector/domain_selector_nodes";
-import {
     buildDomain,
     buildDomainSelectorTree,
+    cloneTree,
     extractPathsFromDomain,
     useGetDefaultLeafDomain,
 } from "@web/core/domain_selector/utils";
@@ -15,15 +11,17 @@ import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { findOperator } from "@web/core/domain_selector/domain_selector_operators";
+import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
 import {
     Editor,
+    PathEditor,
     getDefaultFieldValue,
     getEditorInfo,
     getOperatorsInfo,
 } from "@web/core/domain_selector/domain_selector_fields";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
+import { Expression } from "@web/core/domain_tree";
 
 export class DomainSelector extends Component {
     static template = "web._DomainSelector";
@@ -32,6 +30,7 @@ export class DomainSelector extends Component {
         DropdownItem,
         ModelFieldSelector,
         Editor,
+        PathEditor,
     };
     static props = {
         domain: String,
@@ -54,7 +53,7 @@ export class DomainSelector extends Component {
     setup() {
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.loadFieldInfo = useLoadFieldInfo();
-        this.tree = { root: null };
+        this.tree = null;
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((np) => this.onPropsUpdated(np));
     }
@@ -87,8 +86,7 @@ export class DomainSelector extends Component {
         }
 
         if (!isSupported) {
-            this.tree.isSupported = false;
-            this.tree.root = buildDomainSelectorTree(new Domain(`[]`), {});
+            this.tree = null;
             return;
         }
 
@@ -97,110 +95,124 @@ export class DomainSelector extends Component {
             ...extractPathsFromDomain(defaultLeafDomain),
         ]);
 
-        const pathsInfo = await this.loadPathsInfo(p.resModel, paths);
-
-        this.tree.isSupported = true;
+        await this.loadFieldDefs(p.resModel, paths);
 
         const options = {
             defaultConnector: p.defaultConnector,
             distributeNot: !p.isDebugMode,
-            previousTree: this.tree.root,
         };
-        this.tree.root = buildDomainSelectorTree(domain, pathsInfo, options);
-        this.defaultLeaf = buildDomainSelectorTree(
+        this.tree = buildDomainSelectorTree(domain, this.getFieldDef.bind(this), options);
+        this.defaultCondition = buildDomainSelectorTree(
             defaultLeafDomain,
-            pathsInfo,
+            this.getFieldDef.bind(this),
             options
         ).children[0];
     }
 
     notifyChanges() {
-        this.props.update(buildDomain(this.tree.root));
+        const domain = this.tree ? buildDomain(this.tree) : `[]`;
+        this.props.update(domain);
     }
 
-    async loadPathsInfo(resModel, paths) {
+    getFieldDef(path) {
+        if (typeof path === "string") {
+            return this.fieldDefs[path];
+        }
+        if ([0, 1].includes(path)) {
+            return { type: "integer", string: String(path) };
+        }
+        return null;
+    }
+
+    getDefaultFieldValue(path, operator) {
+        return getDefaultFieldValue(this.getFieldDef(path), operator);
+    }
+
+    async loadFieldDefs(resModel, paths) {
         const promises = [];
-        const pathsInfo = {};
+        const fieldDefs = {};
         for (const path of paths) {
-            promises.push(
-                this.loadFieldDef(resModel, path).then((pathInfo) => {
-                    pathsInfo[path] = pathInfo;
-                })
-            );
+            if (typeof path === "string") {
+                promises.push(
+                    this.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
+                        fieldDefs[path] = fieldDef;
+                    })
+                );
+            }
         }
         await Promise.all(promises);
-        return pathsInfo;
-    }
-
-    /**
-     *
-     * @param {string} resModel
-     * @param {any} path
-     * @returns {Object|null}
-     */
-    async loadFieldDef(resModel, path) {
-        if ([0, 1].includes(path)) {
-            return { fieldDef: { type: "integer", string: String(path) }, path };
-        }
-        const { fieldDef } = await this.loadFieldInfo(resModel, path);
-        return { fieldDef, path };
+        this.fieldDefs = fieldDefs;
     }
 
     createNewLeaf() {
-        return this.defaultLeaf.clone();
+        return cloneTree(this.defaultCondition);
     }
 
     createNewBranch(connector) {
-        return new BranchDomainNode(connector, [this.createNewLeaf(), this.createNewLeaf()]);
+        return {
+            type: "connector",
+            value: connector,
+            negate: false,
+            children: [this.createNewLeaf(), this.createNewLeaf()],
+        };
     }
 
     insertRootLeaf(parent) {
-        parent.add(this.createNewLeaf());
+        parent.children.push(this.createNewLeaf());
         this.notifyChanges();
     }
 
     insertLeaf(parent, node) {
-        parent.insertAfter(
-            node.id,
-            node instanceof LeafDomainNode ? node.clone() : this.createNewLeaf()
-        );
+        const newNode = node.type === "condition" ? cloneTree(node) : this.createNewLeaf();
+        const index = parent.children.indexOf(node);
+        parent.children.splice(index + 1, 0, newNode);
         this.notifyChanges();
     }
 
     insertBranch(parent, node) {
-        const nextConnector = parent.connector === "AND" ? "OR" : "AND";
-        parent.insertAfter(node.id, this.createNewBranch(nextConnector));
+        const nextConnector = parent.value === "&" ? "|" : "&";
+        const newNode = this.createNewBranch(nextConnector);
+        const index = parent.children.indexOf(node);
+        parent.children.splice(index + 1, 0, newNode);
         this.notifyChanges();
     }
 
     delete(parent, node) {
-        parent.delete(node.id);
+        const index = parent.children.indexOf(node);
+        parent.children.splice(index, 1);
         this.notifyChanges();
     }
 
     resetDomain() {
+        this.tree = buildDomainSelectorTree(new Domain(`[]`));
         this.notifyChanges();
     }
 
     updateBranchConnector(node, connector) {
-        node.connector = connector;
+        node.value = connector;
         node.negate = false;
         this.notifyChanges();
     }
 
-    async updatePath(node, path, { fieldDef }) {
-        const pathInfo = { path, fieldDef };
-        node.pathInfo = pathInfo;
-        node.operatorInfo = getOperatorsInfo(pathInfo.fieldDef)[0];
-        node.value = getDefaultFieldValue(pathInfo.fieldDef);
+    updatePath(node, path, { fieldDef } = {}) {
+        if (!path) {
+            // don't like that
+            Object.assign(node, this.createNewLeaf());
+        } else {
+            node.path = path;
+            const operatorInfo = getOperatorsInfo(fieldDef)[0];
+            node.operator = operatorInfo.operator;
+            node.value = getDefaultFieldValue(fieldDef, node.operator);
+        }
         this.notifyChanges();
     }
 
-    updateLeafOperator(node, operatorInfo) {
-        const previousOperator = node.operatorInfo;
-        node.operatorInfo = findOperator(operatorInfo);
-        if (previousOperator.valueCount !== node.operatorInfo.valueCount) {
-            switch (node.operatorInfo.valueCount) {
+    updateLeafOperator(node, operator) {
+        const previousOperatorInfo = getOperatorInfo(node.operator);
+        node.operator = operator;
+        const operatorInfo = getOperatorInfo(operator);
+        if (previousOperatorInfo.valueCount !== operatorInfo.valueCount) {
+            switch (operatorInfo.valueCount) {
                 // binary operator with a variable sized array value
                 case "variable": {
                     node.value = [];
@@ -213,13 +225,13 @@ export class DomainSelector extends Component {
                 }
                 // binary operator with a non array value
                 case 1: {
-                    node.value = getDefaultFieldValue(node.pathInfo.fieldDef);
+                    node.value = this.getDefaultFieldValue(node.path, operator);
                     break;
                 }
                 // binary operator with a fixed sized array value
                 default: {
-                    const defaultValue = getDefaultFieldValue(node.pathInfo.fieldDef);
-                    node.value = Array(node.operatorInfo.valueCount).fill(defaultValue);
+                    const defaultValue = this.getDefaultFieldValue(node.path, operator);
+                    node.value = Array(operatorInfo.valueCount).fill(defaultValue);
                     break;
                 }
             }
@@ -233,11 +245,11 @@ export class DomainSelector extends Component {
     }
 
     isExprValue(value) {
-        return value instanceof DomainValueExpr;
+        return value instanceof Expression;
     }
 
     removeExprValue(node) {
-        this.updateLeafValue(node, getDefaultFieldValue(node.pathInfo.fieldDef));
+        this.updateLeafValue(node, this.getDefaultFieldValue(node.path, node.operator));
     }
 
     onDebugValueChange(value) {
@@ -245,15 +257,23 @@ export class DomainSelector extends Component {
     }
 
     getEditorInfo(node) {
-        return getEditorInfo(node.pathInfo.fieldDef, node.operatorInfo.key);
+        return getEditorInfo(this.getFieldDef(node.path), node.operator);
+    }
+
+    getOperatorInfo(node) {
+        return getOperatorInfo(node.operator, node.negate);
     }
 
     getOperatorsInfo(node) {
-        const operators = getOperatorsInfo(node.pathInfo.fieldDef);
-        if (!operators.some((op) => op.key === node.operatorInfo.key)) {
-            operators.push(node.operatorInfo);
+        const fieldDef = this.getFieldDef(node.path);
+        const operatorsInfo = getOperatorsInfo(fieldDef);
+        if (
+            !operatorsInfo.some((op) => op.operator === node.operator && op.negate === node.negate)
+        ) {
+            const operatorInfo = this.getOperatorInfo(node);
+            operatorsInfo.push(operatorInfo);
         }
-        return operators;
+        return operatorsInfo;
     }
 
     highlightNode(target, toggle, classNames) {

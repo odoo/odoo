@@ -26,7 +26,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
         # ensure visitor info are correct with anonymous
         operator = self.operators[0]
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_discuss_channel(anonymous_name='Visitor 22', previous_operator_id=operator.partner_id.id, country_id=belgium.id)
+        channel_info = self.livechat_channel.with_user(public_user).sudo()._open_livechat_discuss_channel(anonymous_name='Visitor 22', previous_operator_id=operator.partner_id.id, country_id=belgium.id)
         self.assertEqual(channel_info['channel']['anonymous_name'], "Visitor 22")
         self.assertEqual(channel_info['channel']['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
 
@@ -36,17 +36,19 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             'active': True,
             'country': [('clear',)],
             'id': operator.partner_id.id,
+            'is_bot': False,
             'is_public': False,
             'user_livechat_username': 'Michel Operator',
         }, {
             'active': False,
             'id': public_user.partner_id.id,
+            'is_bot': False,
             'is_public': True,
             'name': 'Public user',
         }], key=lambda m: m['id']))
 
         # ensure visitor info are correct with real user
-        channel_info = self.livechat_channel.with_user(test_user)._open_livechat_discuss_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=test_user.id)
+        channel_info = self.livechat_channel.with_user(test_user).sudo()._open_livechat_discuss_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=test_user.id)
         self.assertFalse(channel_info['channel']['anonymous_name'])
         self.assertEqual(channel_info['channel']['anonymous_country'], [('clear',)])
         self.assertEqual(channel_info['channel']['channelMembers'], [('insert', [
@@ -58,6 +60,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                         'active': True,
                         'country': [('clear',)],
                         'id': operator.partner_id.id,
+                        'is_bot': False,
                         'is_public': False,
                         'user_livechat_username': 'Michel Operator',
                     },
@@ -75,6 +78,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                             'name': 'Belgium',
                         },
                         'id': test_user.partner_id.id,
+                        'is_bot': False,
                         'is_public': False,
                         'name': 'Roger',
                     },
@@ -97,6 +101,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                         'active': True,
                         'country': [('clear',)],
                         'id': operator.partner_id.id,
+                        'is_bot': False,
                         'is_public': False,
                         'user_livechat_username': 'Michel Operator',
                     },
@@ -117,7 +122,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
     def test_channel_not_pinned_for_operator_before_first_message(self):
         public_user = self.env.ref('base.public_user')
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_discuss_channel(anonymous_name='whatever')
+        channel_info = self.livechat_channel.with_user(public_user).sudo()._open_livechat_discuss_channel(anonymous_name='whatever')
         operator_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         self.assertEqual(len(operator_channel_member), 1, "operator should be member of channel")
         self.assertFalse(operator_channel_member.is_pinned, "channel should not be pinned for operator initially")
@@ -145,7 +150,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
         public_user = self.env.ref('base.public_user')
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_discuss_channel(anonymous_name='visitor')
+        channel_info = self.livechat_channel.with_user(public_user).sudo()._open_livechat_discuss_channel(anonymous_name='visitor')
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         message = self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
         member_of_operator.channel_id.with_user(self.operators.filtered(
@@ -157,7 +162,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
     def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
         public_user = self.env.ref('base.public_user')
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_discuss_channel(anonymous_name='visitor')
+        channel_info = self.livechat_channel.with_user(public_user).sudo()._open_livechat_discuss_channel(anonymous_name='visitor')
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
         with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):

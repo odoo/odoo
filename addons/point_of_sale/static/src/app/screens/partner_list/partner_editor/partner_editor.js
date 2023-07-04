@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class PartnerDetailsEdit extends Component {
@@ -15,11 +15,21 @@ export class PartnerDetailsEdit extends Component {
         this.pos = usePos();
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
-        this.changes = {
-            country_id: partner.country_id && partner.country_id[0],
+        this.changes = useState({
+            name: partner.name || "",
+            street: partner.street || "",
+            city: partner.city || "",
+            zip: partner.zip || "",
             state_id: partner.state_id && partner.state_id[0],
+            country_id: partner.country_id && partner.country_id[0],
+            lang: partner.lang || "",
+            email: partner.email || "",
+            phone: partner.phone || "",
+            mobile: partner.mobile || "",
+            barcode: partner.barcode || "",
+            vat: partner.vat || "",
             property_product_pricelist: this.setDefaultPricelist(partner),
-        };
+        });
         Object.assign(this.props.imperativeHandle, {
             save: () => this.saveChanges(),
         });
@@ -48,12 +58,6 @@ export class PartnerDetailsEdit extends Component {
             return false;
         }
     }
-    /**
-     * Save to field `changes` all input changes from the form fields.
-     */
-    captureChange(event) {
-        this.changes[event.target.name] = event.target.value;
-    }
     saveChanges() {
         const processedChanges = {};
         for (const [key, value] of Object.entries(this.changes)) {
@@ -63,6 +67,14 @@ export class PartnerDetailsEdit extends Component {
                 processedChanges[key] = value;
             }
         }
+        if (
+            processedChanges.state_id &&
+            this.pos.states.find((state) => state.id === processedChanges.state_id)
+                .country_id[0] !== processedChanges.country_id
+        ) {
+            processedChanges.state_id = false;
+        }
+
         if ((!this.props.partner.name && !processedChanges.name) || processedChanges.name === "") {
             return this.popup.add(ErrorPopup, {
                 title: _t("A Customer Name Is Required"),

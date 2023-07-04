@@ -4,7 +4,7 @@
     <t t-name="web.DomainSelector.Editor" owl="1">
         <t t-if="isExprValue">
             <div class="o_ds_expr_value o_input d-flex align-items-center p-0" data-tooltip="Expressions can not be edited">
-                <span class="ms-2" t-esc="props.value.expr" />
+                <span class="ms-2" t-esc="props.value" />
                 <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Expression" />
                 <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.onExprRemove()">
                     <i class="fa fa-times" />
@@ -13,6 +13,21 @@
         </t>
         <t t-else="">
             <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
+        </t>
+    </t>
+
+    <t t-name="web.DomainSelector.PathEditor" owl="1">
+        <t t-if="isSupportedPath">
+            <t t-component="component" isDebugMode="props.isDebugMode" readonly="props.readonly" resModel="props.resModel" path="props.path" update="props.update"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex align-items-center p-0">
+                <span class="ms-2" t-esc="stringifiedPath" />
+                <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Path not supported" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="onClear">
+                    <i class="fa fa-times" />
+                </button>
+            </div>
         </t>
     </t>
 
@@ -29,17 +44,9 @@
     </t>
 
     <t t-name="web.DomainSelector.TagInput" owl="1">
-        <div class="o_domain_leaf_value_input">
-            <t t-foreach="props.value" t-as="tag" t-key="tag_index">
-                <span class="badge rounded-pill">
-                    <t t-esc="getTagValue(tag)" />
-                    <i class="o_domain_leaf_value_remove_tag_button fa fa-times" role="img" aria-label="Remove tag" title="Remove tag" t-on-click="() => this.removeTag(tag_index)" />
-                </span>
-            </t>
-        </div>
-        <div class="o_domain_leaf_value_tags">
-            <input type="text" class="o_input" placeholder="Add new value" t-ref="input" />
-            <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag" t-on-click="onBtnClick" />
+        <div class="d-flex flex-wrap">
+            <TagsList tags="tags"/>
+            <input class="o_input o_domain_leaf_value_input flex-grow-1" t-on-change="onChange"/>
         </div>
     </t>
 

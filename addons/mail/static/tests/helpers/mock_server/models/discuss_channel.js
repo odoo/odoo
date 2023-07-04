@@ -49,9 +49,9 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
                     : undefined;
             return this._mockDiscussChannelChannelGet(partners_to, pin);
         }
-        if (args.model === "discuss.channel" && args.method === "channel_info") {
-            const ids = args.args[0];
-            return this._mockDiscussChannelChannelInfo(ids);
+        if (route === "/discuss/channel/info") {
+            const id = args.channel_id;
+            return this._mockDiscussChannelChannelInfo([id]);
         }
         if (args.model === "discuss.channel" && args.method === "add_members") {
             const ids = args.args[0];

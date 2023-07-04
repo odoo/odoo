@@ -10,7 +10,12 @@ import {
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId, onChange, nullifyClearCommands } from "@mail/utils/common/misc";
+import {
+    assignDefined,
+    createLocalId,
+    onChange,
+    nullifyClearCommands,
+} from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -78,7 +83,7 @@ export class ThreadService {
      * @returns {Promise<Thread>}
      */
     async fetchChannel(id) {
-        const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+        const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
         return this.insert({
             ...channelData,
             model: "discuss.channel",
@@ -885,7 +890,7 @@ export class ThreadService {
     async post(
         thread,
         body,
-        { attachments = [], isNote = false, parentId, rawMentions, cannedResponseIds }
+        { attachments = [], isNote = false, parentId, rawMentions = {}, cannedResponseIds } = {}
     ) {
         let tmpMsg;
         const params = await this.getMessagePostParams({

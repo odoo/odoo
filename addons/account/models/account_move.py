@@ -935,7 +935,8 @@ class AccountMove(models.Model):
                         ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
                             FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
-                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment
+                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
+                        BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
                     JOIN account_account account ON account.id = source_line.account_id
@@ -978,7 +979,7 @@ class AccountMove(models.Model):
                 if payment_state_matters:
 
                     if currency.is_zero(invoice.amount_residual):
-                        if any(x['has_payment'] for x in reconciliation_vals):
+                        if any(x['has_payment'] or x['has_st_line'] for x in reconciliation_vals):
 
                             # Check if the invoice/expense entry is fully paid or 'in_payment'.
                             if all(x['all_payments_matched'] for x in reconciliation_vals):
@@ -2112,6 +2113,10 @@ class AccountMove(models.Model):
         existing_after = existing()
         needed_after = needed()
 
+        # Filter out deleted lines from `needed_before` to not recompute lines if not necessary or wanted
+        line_ids = set(self.env['account.move.line'].browse(k['id'] for k in needed_before if 'id' in k).exists().ids)
+        needed_before = {k: v for k, v in needed_before.items() if 'id' not in k or k['id'] in line_ids}
+
         # old key to new key for the same line
         inv_existing_before = {v: k for k, v in existing_before.items()}
         inv_existing_after = {v: k for k, v in existing_after.items()}
@@ -2249,6 +2254,9 @@ class AccountMove(models.Model):
                     if command == Command.CREATE
                     and line_vals.get('display_type') not in ('payment_term', 'tax', 'rounding')
                 ]
+            elif move.move_type == 'entry':
+                if 'partner_id' not in data:
+                    data['partner_id'] = False
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
         return data_list
@@ -2258,8 +2266,6 @@ class AccountMove(models.Model):
         default = dict(default or {})
         if (fields.Date.to_date(default.get('date')) or self.date) <= self.company_id._get_user_fiscal_lock_date():
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
-        if self.move_type == 'entry':
-            default['partner_id'] = False
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
             (Markup('<br/>') + _('This recurring entry originated from %s')) % copied_am.auto_post_origin_id._get_html_link()
@@ -3437,6 +3443,7 @@ class AccountMove(models.Model):
             default_values.update({
                 'move_type': TYPE_REVERSE_MAP[move.move_type],
                 'reversed_entry_id': move.id,
+                'partner_id': move.partner_id.id,
             })
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,

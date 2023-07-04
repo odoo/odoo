@@ -14,7 +14,25 @@ class DoExt extends Do {
     }
 }
 
-class Check {}
+class Check {
+    isSyncStatusPending() {
+        return [
+            {
+                trigger: ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_msg)",
+                run: () => {},
+            },
+        ];
+    }
+    isSyncStatusConnected() {
+        return [
+            {
+                trigger:
+                    ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_connected)",
+                run: () => {},
+            },
+        ];
+    }
+}
 
 class Execute {}
 

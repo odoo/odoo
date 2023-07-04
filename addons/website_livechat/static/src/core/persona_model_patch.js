@@ -1,7 +1,9 @@
 /** @odoo-module */
 
 import { Persona } from "@mail/core/common/persona_model";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { sprintf } from "@web/core/utils/strings";
 
 patch(Persona.prototype, "website_livechat", {
     get countryFlagUrl() {
@@ -11,8 +13,8 @@ patch(Persona.prototype, "website_livechat", {
             : undefined;
     },
     get nameOrDisplayName() {
-        if (this.partner) {
-            return this.partner.nameOrDisplayName;
+        if (this.type === "visitor" && !this.name) {
+            return sprintf(_t("Visitor #%s"), this.id);
         }
         return this._super();
     },

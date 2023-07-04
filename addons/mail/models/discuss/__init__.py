@@ -7,6 +7,7 @@ from . import mail_message
 from . import discuss_channel_member
 from . import discuss_channel_rtc_session
 from . import discuss_channel
+from . import discuss_gif_favorite
 from . import mail_guest
 
 # odoo models
