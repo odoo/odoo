@@ -4668,6 +4668,7 @@ export class OdooEditor extends EventTarget {
                 currentNode = toInsert[toInsert.length - 1];
                 insertBefore = false;
             }
+
             initInsertBefore = selection.isCollapsed && range.startContainer.nodeType === Node.TEXT_NODE && !range.startOffset;
 
             endInsertBefore = !containerFirstChild.hasChildNodes()

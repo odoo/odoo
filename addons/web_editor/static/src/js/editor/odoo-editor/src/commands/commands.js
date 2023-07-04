@@ -149,7 +149,90 @@ export const editorCommands = {
      * @param {OdooEditor} editor 
      * @param {Node[]} content
      */
-    insert: (editor, content, {
+    insertOnPaste: (editor, content) => {
+        const selection = editor.document.getSelection();
+        const range = selection.getRangeAt(0);
+
+        const container = document.createElement('fake-element');
+        const containerFirstChild = document.createElement('fake-element-fc');
+        const containerLastChild = document.createElement('fake-element-lc');
+
+        let startNode;
+        let insertBefore = false;
+        if (selection.isCollapsed && range.startContainer.nodeType === Node.TEXT_NODE) {
+            insertBefore = !range.startOffset;
+            startNode = range.startContainer;
+        }
+        startNode = startNode || editor.document.getSelection().anchorNode;
+
+        if (content instanceof Node) {
+            container.replaceChildren(content);
+        } else if (content instanceof NodeList) {
+            container.replaceChildren(...content)
+        } else {
+            container.textContent = content;
+        }
+
+        // In case the html inserted starts with a list and will be inserted within
+        // a list, unwrap the list elements from the list.
+        if (closestElement(selection.anchorNode, 'UL, OL') &&
+            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
+            content = container.firstChild.childNodes;
+        }
+
+        // If the selection anchorNode is the editable itself, the content
+        // should not be unwrapped.
+        if (selection.anchorNode.oid !== 'root') {
+            // In case the html inserted is all contained in a single root <p> or <li>
+            // tag, we take the all content of the <p> or <li> and avoid inserting the
+            // <p> or <li>. The same is true for a <pre> inside a <pre>.
+            if (container.childElementCount === 1 && (
+                container.firstChild.nodeName === 'P' ||
+                container.firstChild.nodeName === 'LI' ||
+                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+            )) {
+                const p = container.firstElementChild;
+                content = p.childNodes;
+            } else if (container.childElementCount > 1) {
+                // Grab the content of the first child block and isolate it.
+                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                    container.firstElementChild.remove();
+                }
+                // Grab the content of the last child block and isolate it.
+                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                    container.lastElementChild.remove();
+                }
+            }
+        }
+
+        const _insertAt = (reference, nodes, insertBefore) => {
+            for (const child of (insertBefore ? nodes.reverse() : nodes)) {
+                reference[insertBefore ? 'before' : 'after'](child);
+                reference = child;
+            }
+        }
+        let lastChildNode = false;
+        let currentNode = startNode;
+        if (containerLastChild.hasChildNodes()) {
+            const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
+            _insertAt(currentNode, [...toInsert], insertBefore);
+            currentNode = insertBefore ? toInsert[0] : currentNode;
+            lastChildNode = toInsert[toInsert.length - 1];
+        }
+        if (containerFirstChild.hasChildNodes()) {
+            const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
+            _insertAt(currentNode, [...toInsert], insertBefore);
+            currentNode = toInsert[toInsert.length - 1];
+            insertBefore = false;
+        }
+
+        const spread = true;
+        return this.insert(editor, content, spread)
+    },
+
+    insert: (editor, content, spread = false, {
         option = false,
         container,
         insertBefore: insertBefore2,
