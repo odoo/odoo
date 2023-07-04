@@ -83,7 +83,7 @@ class ThreadController(http.Controller):
         return message_data
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
-    def mail_message_update_content(self, message_id, body, attachment_ids, partner_ids):
+    def mail_message_update_content(self, message_id, body, attachment_ids, partner_ids=None):
         guest = request.env["mail.guest"]._get_guest_from_request(request)
         message_sudo = guest.env["mail.message"].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
