@@ -306,7 +306,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         })
         currency = self.env['res.currency'].create({
             'name': 'Dark Chocolate Coin',
-            'symbol': '🍫',
+            'curr_symbol': '🍫',
             'rounding': 0.001,
             'position': 'after',
             'currency_unit_label': 'Dark Choco',

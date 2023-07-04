@@ -622,6 +622,13 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
+        // assert.strictEqual(
+        //     Object.entries(target.querySelectorAll(".o_field_many2one_selection li")),
+        //     "CUSTOM",
+        //     "CUSTOM TEST"
+        // );
+        
+
         // replace bottom with new helpers when they exist
         await click(target, ".o_field_many2one_selection input");
         const euroM2OListItem = Array.from(

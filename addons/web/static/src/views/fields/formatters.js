@@ -9,7 +9,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { humanNumber, insertThousandsSep } from "@web/core/utils/numbers";
 
 import { markup } from "@odoo/owl";
-import { getCurrency } from "@web/core/currency";
+import { getCurrency, getCurrencySymbol } from "@web/core/currency";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -298,11 +298,11 @@ export function formatMonetary(value, options = {}) {
     } else {
         formattedValue = formatFloat(value, { digits });
     }
-
+    let symbol = currency.symbol? currency.symbol: getCurrencySymbol(currencyId);
     if (!currency || options.noSymbol) {
         return formattedValue;
     }
-    const formatted = [currency.symbol, formattedValue];
+    const formatted = [symbol, formattedValue];
     if (currency.position === "after") {
         formatted.reverse();
     }

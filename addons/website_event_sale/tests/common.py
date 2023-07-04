@@ -16,7 +16,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         cls.currency_test = cls.env['res.currency'].create({
             'name': 'eventX',
             'rounding': 0.01,
-            'symbol': 'EX',
+            'curr_symbol': 'EX',
         })
         cls.partner = cls.env['res.partner'].create({'name': 'test'})
         cls.env['res.currency.rate'].search([]).unlink()

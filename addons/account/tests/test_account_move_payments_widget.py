@@ -16,7 +16,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
 
         cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
             'name': 'Stars',
-            'symbol': '☆',
+            'curr_symbol': '☆',
             'currency_unit_label': 'Stars',
             'currency_subunit_label': 'Little Stars',
         }, rate2016=6.0, rate2017=4.0)

@@ -55,13 +55,13 @@ class TestSaleProductAttributeValueCommon(TestProductAttributeValueCommon):
             })
 
     @classmethod
-    def _get_or_create_currency(cls, name, symbol):
+    def _get_or_create_currency(cls, name, curr_symbol):
         """Get or create a currency based on name. This makes the test
         non-reliant on demo data."""
         currency = cls.env['res.currency'].search([('name', '=', name)])
         return currency or currency.create({
             'name': name,
-            'symbol': symbol,
+            'curr_symbol': curr_symbol,
         })
 
 

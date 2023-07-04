@@ -461,7 +461,7 @@ class TestExpenses(TestExpenseCommon):
         # pylint: disable=bad-whitespace
         foreign_currency = self.env['res.currency'].create({
             'name': 'Exposure',
-            'symbol': ' ',
+            'curr_symbol': ' ',
             'rounding': 0.01,
             'position': 'after',
             'currency_unit_label': 'Nothing',

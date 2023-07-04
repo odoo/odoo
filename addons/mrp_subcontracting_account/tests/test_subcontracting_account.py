@@ -448,7 +448,7 @@ class TestBomPriceSubcontracting(TestBomPriceCommon):
         """Test calculation of bom cost with subcontracting and supplier in different currency."""
         currency_a = self.env['res.currency'].create({
             'name': 'ZEN',
-            'symbol': 'Z',
+            'curr_symbol': 'Z',
             'rounding': 0.01,
             'currency_unit_label': 'Zenny',
             'rate_ids': [(0, 0, {

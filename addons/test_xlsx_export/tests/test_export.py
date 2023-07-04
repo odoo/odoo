@@ -350,7 +350,7 @@ class TestGroupedExport(XlsxCreatorCase):
     def test_float_representation(self):
         currency = self.env['res.currency'].create({
             'name': "bottlecap",
-            'symbol': "b",
+            'curr_symbol': "b",
             'rounding': 0.001,
             'decimal_places': 3,
         })

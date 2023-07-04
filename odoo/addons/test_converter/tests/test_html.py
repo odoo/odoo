@@ -108,7 +108,7 @@ class TestCurrencyExport(TestExport):
     def setUp(self):
         super(TestCurrencyExport, self).setUp()
         self.Currency = self.env['res.currency']
-        self.base = self.create(self.Currency, name="Source", symbol=u'source')
+        self.base = self.create(self.Currency, name="Source", curr_symbol='source')
 
     def create(self, model, **values):
         return model.create(values)
@@ -122,7 +122,7 @@ class TestCurrencyExport(TestExport):
         return converter.record_to_html(obj, 'value', options)
 
     def test_currency_post(self):
-        currency = self.create(self.Currency, name="Test", symbol=u"test")
+        currency = self.create(self.Currency, name="Test", curr_symbol="test")
         obj = self.create(self.Model, value=-0.12)
 
         converted = self.convert(obj, dest=currency)
@@ -135,7 +135,7 @@ class TestCurrencyExport(TestExport):
 
     def test_currency_pre(self):
         currency = self.create(
-            self.Currency, name="Test", symbol=u"test", position='before')
+            self.Currency, name="Test", curr_symbol="test", position='before')
         obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
@@ -150,7 +150,7 @@ class TestCurrencyExport(TestExport):
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
-        currency = self.create(self.Currency, name="Test", symbol=u"test",)
+        currency = self.create(self.Currency, name="Test", curr_symbol="test")
         obj = self.create(self.Model, value=0.1234567)
 
         converted = self.convert(obj, dest=currency)

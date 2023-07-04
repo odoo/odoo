@@ -268,7 +268,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         default_values = default_values or {}
         foreign_currency = cls.env['res.currency'].create({
             'name': 'Gold Coin',
-            'symbol': '☺',
+            'curr_symbol': '☺',
             'rounding': 0.001,
             'position': 'after',
             'currency_unit_label': 'Gold',

@@ -1077,7 +1077,7 @@ class Import(models.TransientModel):
             if float_regex.search(split_value[0]) is not None:
                 currency_index = 1
             # Check that currency exists
-            currency = self.env['res.currency'].search([('symbol', '=', split_value[currency_index].strip())])
+            currency = self.env['res.currency'].search(['|', ('symbol', '=', split_value[currency_index].strip()), ('symbol', '=', split_value[currency_index].strip())])
             if len(currency):
                 return split_value[(currency_index + 1) % 2] if not negative else '-' + split_value[(currency_index + 1) % 2]
             # Otherwise it is not a float with a currency symbol

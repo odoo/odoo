@@ -61,7 +61,7 @@ class TestProductPricelist(ProductCommon):
 
         cls.new_currency = cls.env['res.currency'].create({
             'name': 'Wonderful Currency',
-            'symbol': ':)',
+            'curr_symbol': ':)',
             'rate_ids': [Command.create({'rate': 10, 'name': time.strftime('%Y-%m-%d')})],
         })
 

@@ -55,7 +55,7 @@ export class MonetaryField extends Component {
     }
 
     get currencySymbol() {
-        return this.currency ? this.currency.symbol : "";
+        return this.currency? this.currency.symbol: "";
     }
 
     get currencyDigits() {

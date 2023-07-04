@@ -14,7 +14,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         cls.currency_data_3 = cls.setup_multi_currency_data({
             'name': "Umbrella",
-            'symbol': '☂',
+            'curr_symbol': '☂',
             'currency_unit_label': "Umbrella",
             'currency_subunit_label': "Broken Umbrella",
         }, rate2017=0.01)

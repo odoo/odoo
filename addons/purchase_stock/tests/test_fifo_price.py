@@ -139,7 +139,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # We will temporarily change the currency rate on the sixth of June to have the same results all year
         NewUSD = self.env['res.currency'].create({
             'name': 'new_usd',
-            'symbol': '$²',
+            'curr_symbol': '$²',
             'rate_ids': [(0, 0, {'rate': 1.2834, 'name': time.strftime('%Y-%m-%d')})],
         })
 

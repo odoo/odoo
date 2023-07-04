@@ -85,7 +85,8 @@
             <field name="arch" type="xml">
                 <tree string="Currencies" decoration-muted="(not active)">
                     <field name="name"/>
-                    <field name="symbol"/>
+                    <field name="curr_symbol" string="Symbol"/>
+                    <field name="symbol" string="Displayed as"/>
                     <field name="full_name" string="Name" optional="show"/>
                     <field name="date" string="Last Update"/>
                     <field name="rate" digits="[12,6]"/>
@@ -160,7 +161,8 @@
                             </group>
 
                             <group string="Display">
-                                <field name="symbol"/>
+                                <field name="curr_symbol" string="Symbol"/>
+                                <field name="symbol" string="Displayed as"/>
                                 <field name="position"/>
                             </group>
                         </group>

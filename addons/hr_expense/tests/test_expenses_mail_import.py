@@ -97,9 +97,9 @@ class TestExpensesMailImport(TestExpenseCommon):
 
         # subject having other currency then company currency, it should ignore other currency then company currency
         assertParsedValues(
-            "foo bar %s1406.91 royal giant" % self.currency_data['currency'].symbol,
+            "foo bar %s1406.91 royal giant" % self.currency_data['currency'].curr_symbol,
             self.company_data['currency'],
-            "foo bar %s royal giant" % self.currency_data['currency'].symbol,
+            "foo bar %s royal giant" % self.currency_data['currency'].curr_symbol,
             1406.91,
             self.env['product.product'],
         )
@@ -117,7 +117,7 @@ class TestExpensesMailImport(TestExpenseCommon):
 
         # subject having other currency then company currency, it should accept other currency because multi currency is activated
         assertParsedValues(
-            "product_a %s2510.90 chhota bheem" % self.currency_data['currency'].symbol,
+            "product_a %s2510.90 chhota bheem" % self.currency_data['currency'].curr_symbol,
             self.company_data['currency'] + self.currency_data['currency'],
             "chhota bheem",
             2510.90,

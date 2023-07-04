@@ -7,5 +7,18 @@ export const currencies = session.currencies || {};
 delete session.currencies;
 
 export function getCurrency(id) {
-    return currencies[id];
+    if (id && ((currencies && currencies[id]) || (currencies.currencies && currencies.currencies[id]))) {
+        return currencies[id]? currencies[id]:
+        currencies.currencies[id]? currencies.currencies[id]: false;
+    }
+    return false;
 }
+
+export function getCurrencySymbol(id) {
+    if (id && ((currencies && currencies[id]) || (currencies.currencies && currencies.currencies[id]))) {
+        return currencies[id]? currencies[id].symbol:
+        currencies.currencies[id]? currencies.currencies[id].symbol: false;
+    }
+    return false;
+}
+

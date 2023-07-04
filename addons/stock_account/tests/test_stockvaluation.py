@@ -3838,7 +3838,7 @@ class TestStockValuation(TransactionCase):
         # Creates two new currencies.
         currency_1 = self.env['res.currency'].create({
             'name': 'UNF',
-            'symbol': 'U',
+            'curr_symbol': 'U',
             'rounding': 0.01,
             'currency_unit_label': 'Unifranc',
             'rate': 1,
@@ -3846,7 +3846,7 @@ class TestStockValuation(TransactionCase):
         })
         currency_2 = self.env['res.currency'].create({
             'name': 'DBL',
-            'symbol': 'DD',
+            'curr_symbol': 'DD',
             'rounding': 0.01,
             'currency_unit_label': 'Doublard',
             'rate': 2,

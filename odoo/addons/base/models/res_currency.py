@@ -28,7 +28,10 @@ class Currency(models.Model):
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
     full_name = fields.Char(string='Name')
-    symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
+    curr_symbol = fields.Char(string="Currency's symbol", help="Currency symbol. Not always used for display.")
+    symbol = fields.Char(compute='_compute_symbol', store=True,
+                                string='Currency symbol used for display. Differs from the actual symbol if it is shared with other currencies.',
+                                help='Symbol used to represent in a unique way the currency.')
     rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=0,
                         help='The rate of the currency to the currency of rate 1.')
     inverse_rate = fields.Float(compute='_compute_current_rate', digits=0, readonly=True,
@@ -65,9 +68,8 @@ class Currency(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if 'active' not in vals:
-            return res
-        self._toggle_group_multi_currency()
+        if 'active' in vals:
+            self._toggle_group_multi_currency()
         return res
 
     @api.model
@@ -127,6 +129,24 @@ class Currency(models.Model):
     def _compute_is_current_company_currency(self):
         for currency in self:
             currency.is_current_company_currency = self.env.company.root_id.currency_id == currency
+
+    @api.depends('name', 'curr_symbol', 'active', 'symbol')
+    def _compute_symbol(self):
+        for currency in self:
+            active_currencies_same_symbol = self.env['res.currency'].search([('name', '!=', currency.name), ('curr_symbol', '=', currency.curr_symbol), ('active', '=', True)])
+            if currency.active:
+                if not active_currencies_same_symbol:
+                    currency.symbol = currency.curr_symbol
+                else:
+                    currency.symbol = currency.name
+                    if len(active_currencies_same_symbol) == 1:
+                        other_currency = active_currencies_same_symbol[0]
+                        other_currency.symbol = other_currency.name
+            else:
+                currency.symbol = currency.curr_symbol
+                if len(active_currencies_same_symbol) == 1:
+                    other_currency = active_currencies_same_symbol[0]
+                    other_currency.symbol = other_currency.curr_symbol
 
     @api.depends('rate_ids.rate')
     def _compute_current_rate(self):

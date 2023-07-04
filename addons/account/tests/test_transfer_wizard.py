@@ -24,17 +24,17 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         # Create test currencies
         cls.test_currency_1 = cls.env['res.currency'].create({
             'name': "PMK",
-            'symbol':'P',
+            'curr_symbol':'P',
         })
 
         cls.test_currency_2 = cls.env['res.currency'].create({
             'name': "toto",
-            'symbol':'To',
+            'curr_symbol':'To',
         })
 
         cls.test_currency_3 = cls.env['res.currency'].create({
             'name': "titi",
-            'symbol':'Ti',
+            'curr_symbol':'Ti',
         })
 
         # Create test rates

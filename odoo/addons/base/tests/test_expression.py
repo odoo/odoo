@@ -580,7 +580,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         ])
 
         # create a currency and a currency rate
-        currency = Currency.create({'name': 'ZZZ', 'symbol': 'ZZZ', 'rounding': 1.0})
+        currency = Currency.create({'name': 'ZZZ', 'curr_symbol': 'ZZZ', 'rounding': 1.0})
         currency_rate = CurrencyRate.create({'name': '2010-01-01', 'currency_id': currency.id, 'rate': 1.0})
         non_currency_id = currency_rate.id + 1000
         default_currency = Currency.browse(1)

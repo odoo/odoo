@@ -315,7 +315,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
     def test_currency_precision_and_standard_svl_value(self):
         currency = self.env['res.currency'].create({
             'name': 'Odoo',
-            'symbol': 'O',
+            'curr_symbol': 'O',
             'rounding': 1,
         })
         new_company = self.env['res.company'].create({
@@ -789,7 +789,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
     def test_currency_precision_and_fifo_svl_value(self):
         currency = self.env['res.currency'].create({
             'name': 'Odoo',
-            'symbol': 'O',
+            'curr_symbol': 'O',
             'rounding': 1,
         })
         new_company = self.env['res.company'].create({

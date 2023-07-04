@@ -8,12 +8,12 @@ class TestCurrencyRates(TransactionCase):
             [
                 {
                     "name": "MC1",
-                    "symbol": ":D",
+                    "curr_symbol": ":D",
                     "rounding": 0.001,
                 },
                 {
                     "name": "MC2",
-                    "symbol": "§",
+                    "curr_symbol": "§",
                 },
             ]
         )

@@ -36,7 +36,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         cls.currency_data_2 = cls.setup_multi_currency_data(default_values={
             'name': 'Diamond',
-            'symbol': '💎',
+            'curr_symbol': '💎',
             'currency_unit_label': 'Diamond',
             'currency_subunit_label': 'Carbon',
         }, rate2016=6.0, rate2017=4.0)
@@ -367,7 +367,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         currency_1 = self.currency_data['currency']
         currency_2 = self.setup_multi_currency_data({
             'name': 'Bretonnian Ecu',
-            'symbol': '👑',
+            'curr_symbol': '👑',
             'currency_unit_label': 'Ecu',
             'currency_subunit_label': 'Bretonnian Denier',
         })['currency']
@@ -1862,7 +1862,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.env['res.currency'].create({
             'name': "Sushi",
-            'symbol': '🍣',
+            'curr_symbol': '🍣',
             'rounding': 0.01,
             'rate_ids': [
                 Command.create({'name': '2019-09-24', 'rate': 0.050800000000}),
@@ -2163,7 +2163,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.env['res.currency'].create({
             'name': "Sushi",
-            'symbol': '🍣',
+            'curr_symbol': '🍣',
             'rounding': 0.01,
             'rate_ids': [
                 Command.create({'name': '2019-09-24', 'rate': 0.050800000000}),
@@ -2541,7 +2541,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         rate = 1/1.5289
         currency = self.setup_multi_currency_data(default_values={
             'name': 'XXX',
-            'symbol': 'XXX',
+            'curr_symbol': 'XXX',
             'currency_unit_label': 'XX',
             'currency_subunit_label': 'X',
             'rounding': 0.01,
@@ -3250,7 +3250,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.env.company.tax_exigibility = True
         currency_id = self.setup_multi_currency_data(default_values={
             'name': 'bitcoin',
-            'symbol': 'bc',
+            'curr_symbol': 'bc',
             'currency_unit_label': 'Bitcoin',
             'currency_subunit_label': 'Tiny bitcoin',
         }, rate2016=0.5, rate2017=0.66666666666666)['currency'].id
@@ -3333,7 +3333,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.env.company.tax_exigibility = True
         currency_id = self.setup_multi_currency_data(default_values={
             'name': 'bitcoin',
-            'symbol': 'bc',
+            'curr_symbol': 'bc',
             'currency_unit_label': 'Bitcoin',
             'currency_subunit_label': 'Tiny bitcoin',
             'rounding': 0.01,
@@ -3527,7 +3527,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.env.company.tax_exigibility = True
         rates_data = self.setup_multi_currency_data(default_values={
             'name': 'Playmock',
-            'symbol': '🦌',
+            'curr_symbol': '🦌',
             'rounding': 0.01,
             'currency_unit_label': 'Playmock',
             'currency_subunit_label': 'Cent',
