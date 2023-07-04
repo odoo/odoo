@@ -1617,19 +1617,29 @@ def get_diff(data_from, data_to, custom_style=False):
         to_append = {
             'diff_header': 'bg-600 text-center align-top px-2',
             'diff_next': 'd-none',
-            'diff_add': 'bg-success',
-            'diff_chg': 'bg-warning',
-            'diff_sub': 'bg-danger',
         }
         for old, new in to_append.items():
             html_diff = html_diff.replace(old, "%s %s" % (old, new))
         html_diff = html_diff.replace('nowrap', '')
         html_diff += custom_style or '''
             <style>
+                .modal-dialog.modal-lg:has(table.diff) {
+                    max-width: 1600px;
+                    padding-left: 1.75rem;
+                    padding-right: 1.75rem;
+                }
                 table.diff { width: 100%; }
                 table.diff th.diff_header { width: 50%; }
                 table.diff td.diff_header { white-space: nowrap; }
-                table.diff td { word-break: break-all; }
+                table.diff td { word-break: break-all; vertical-align: top; }
+                table.diff .diff_chg, table.diff .diff_sub, table.diff .diff_add {
+                    display: inline-block;
+                    color: inherit;
+                }
+                table.diff .diff_sub, table.diff td:nth-child(3) > .diff_chg { background-color: #ffc1c0; }
+                table.diff .diff_add, table.diff td:nth-child(6) > .diff_chg { background-color: #abf2bc; }
+                table.diff td:nth-child(3):has(>.diff_chg, .diff_sub) { background-color: #ffebe9; }
+                table.diff td:nth-child(6):has(>.diff_chg, .diff_add) { background-color: #e6ffec; }
             </style>
         '''
         return html_diff
