@@ -79,7 +79,7 @@ export class Call extends Component {
         const invitationCards = [];
         const filterVideos = this.props.thread.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of Object.values(this.props.thread.rtcSessions)) {
-            if (!filterVideos || session.videoStream) {
+            if (!filterVideos || session.isSendingVideo) {
                 const data = {
                     key: "session_" + session.id,
                     session,

@@ -108,7 +108,7 @@ export class CallSettings extends Component {
         const showOnlyVideo = ev.target.checked;
         this.props.thread.showOnlyVideo = showOnlyVideo;
         const activeRtcSession = this.props.thread.activeRtcSession;
-        if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
+        if (showOnlyVideo && activeRtcSession && !activeRtcSession.isSendingVideo) {
             this.props.thread.activeRtcSession = undefined;
         }
     }
