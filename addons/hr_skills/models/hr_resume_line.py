@@ -20,5 +20,5 @@ class ResumeLine(models.Model):
     display_type = fields.Selection([('classic', 'Classic')], string="Display Type", default='classic')
 
     _sql_constraints = [
-        ('date_check', "CHECK ((date_start <= date_end OR date_end = NULL))", "The start date must be anterior to the end date."),
+        ('date_check', "CHECK ((date_start <= date_end OR date_end IS NULL))", "The start date must be anterior to the end date."),
     ]
