@@ -19,18 +19,16 @@ var SlideQuizFinishModal = Dialog.extend({
         this.quiz = options.quiz;
         this.hasNext = options.hasNext;
         this.userId = options.userId;
-        options = Object.assign({
-            size: 'medium',
-            dialogClass: 'd-flex p-0',
-            technical: false,
-            renderHeader: false,
-            renderFooter: false
-        }, options || {});
         this._super.apply(this, arguments);
+        this.size = "medium";
+        this.dialogClass = "d-flex p-0";
+        this.technical = false;
+        this.renderHeader = false;
+        this.renderFooter = false;
         this.opened(function () {
             self._animateProgressBar();
             self._animateText();
-        })
+        });
     },
 
     start: function() {
