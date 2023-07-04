@@ -165,19 +165,20 @@ export const editorCommands = {
         }
         startNode = startNode || editor.document.getSelection().anchorNode;
 
-        if (content instanceof Node) {
-            container.replaceChildren(content);
-        } else if (content instanceof NodeList) {
-            container.replaceChildren(...content)
-        } else {
-            container.textContent = content;
-        }
-
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
         if (closestElement(selection.anchorNode, 'UL, OL') &&
             (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            content = container.firstChild.childNodes;
+            content = Array.from(container.firstChild.childNodes);
+        }
+
+        removeEdgeChild = (content, position) => {
+            content = Array.from(content)
+            if (position === "first") {
+                content.shift()
+            } else if (position === "last") {
+                content.pop()
+            }
         }
 
         // If the selection anchorNode is the editable itself, the content
@@ -186,27 +187,28 @@ export const editorCommands = {
             // In case the html inserted is all contained in a single root <p> or <li>
             // tag, we take the all content of the <p> or <li> and avoid inserting the
             // <p> or <li>. The same is true for a <pre> inside a <pre>.
-            if (container.childElementCount === 1 && (
-                container.firstChild.nodeName === 'P' ||
-                container.firstChild.nodeName === 'LI' ||
-                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+            if (content.length === 1 && (
+                content[0].nodeName === 'P' ||
+                content[0].nodeName === 'LI' ||
+                content[0].nodeName === 'PRE' && closestElement(startNode, 'pre')
             )) {
-                const p = container.firstElementChild;
-                content = p.childNodes;
+                content = Array.from(content[0].childNodes);
             } else if (container.childElementCount > 1) {
                 // Grab the content of the first child block and isolate it.
-                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+                if (isBlock(content[0]) && !['TABLE', 'UL', 'OL'].includes(content[0].nodeName)) {
                     containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                    container.firstElementChild.remove();
+                    content.shift();
                 }
                 // Grab the content of the last child block and isolate it.
-                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                    container.lastElementChild.remove();
+                if (isBlock(content[content.length - 1]) && !['TABLE', 'UL', 'OL'].includes(content[content.length - 1].nodeName)) {
+                    containerLastChild.replaceChildren(...content[content.length - 1].childNodes);
+                    content.pop();
                 }
             }
         }
 
+
+        // Insert first and last child
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                 reference[insertBefore ? 'before' : 'after'](child);
@@ -229,7 +231,7 @@ export const editorCommands = {
         }
 
         const spread = true;
-        return this.insert(editor, content, spread)
+        return this.insert(editor, content)
     },
 
     insert: (editor, content, spread = false, {
@@ -326,6 +328,13 @@ export const editorCommands = {
         /** @type {Node} */
         startNode = startNode || editor.document.getSelection().anchorNode;
 
+        if (content instanceof Node) {
+            container.replaceChildren(content);
+        } else if (content instanceof NodeList) {
+            container.replaceChildren(...content)
+        } else {
+            container.textContent = content;
+        }
 
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {

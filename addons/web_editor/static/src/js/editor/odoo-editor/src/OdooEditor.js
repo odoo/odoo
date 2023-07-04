@@ -4703,7 +4703,7 @@ export class OdooEditor extends EventTarget {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this._applyCommand('insert', fragment);
+                this._applyCommand('insertOnPaste', fragment);
             }
         } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
@@ -4713,7 +4713,7 @@ export class OdooEditor extends EventTarget {
             // the clipboard picture.
             if (files.length && !clipboardElem.querySelector('table')) {
                 this.addImagesFiles(files).then(html => {
-                    const imageNodes = this._applyCommand('insert', this._prepareClipboardData(html));
+                    const imageNodes = this._applyCommand('insertOnPaste', this._prepareClipboardData(html));
                     if (imageNodes && this.options.dropImageAsAttachment) {
                         // Mark images as having to be saved as attachments.
                         for (const imageNode of imageNodes) {
@@ -4722,7 +4722,7 @@ export class OdooEditor extends EventTarget {
                     }
                 });
             } else {
-                this._applyCommand('insert', clipboardElem);
+                this._applyCommand('insertOnPaste', clipboardElem);
             }
         } else {
             const text = ev.clipboardData.getData('text/plain');
@@ -4744,9 +4744,9 @@ export class OdooEditor extends EventTarget {
                     if (isImageUrl) {
                         const img = document.createElement('IMG');
                         img.setAttribute('src', url);
-                        this._applyCommand('insert', img);
+                        this._applyCommand('insertOnPaste', img);
                     } else {
-                        this._applyCommand('insert', text);
+                        this._applyCommand('insertOnPaste', text);
                     }
                 } else if (isImageUrl || youtubeUrl) {
                     // Open powerbox with commands to embed media or paste as link.
@@ -4756,7 +4756,7 @@ export class OdooEditor extends EventTarget {
                     this.observerFlush();
                     const currentStepMutations = [...this._currentStep.mutations];
                     // Insert URL as text, revert it later.
-                    this._applyCommand('insert', text);
+                    this._applyCommand('insertOnPaste', text);
                     const revertTextInsertion = () => {
                         this.historyRevertUntil(stepIndexBeforeInsert);
                         this.historyStep(true);
@@ -4771,7 +4771,7 @@ export class OdooEditor extends EventTarget {
                         fontawesome: 'fa-link',
                         callback: () => {
                             revertTextInsertion();
-                            this._applyRawCommand('insert', this._createLink(text, url))
+                            this._applyRawCommand('insertOnPaste', this._createLink(text, url))
                         },
                     };
                     if (isImageUrl) {
@@ -4784,7 +4784,7 @@ export class OdooEditor extends EventTarget {
                                 const img = document.createElement('IMG');
                                 img.setAttribute('src', url);
 
-                                this._applyRawCommand('insert', img);
+                                this._applyRawCommand('insertOnPaste', img);
                             },
                         };
                         commands = [embedImageCommand, pasteAsURLCommand];
@@ -4815,14 +4815,14 @@ export class OdooEditor extends EventTarget {
                                     );
                                     videoElement.setAttribute('allowfullscreen', '1');
                                 }
-                                this._applyRawCommand('insert', videoElement);
+                                this._applyRawCommand('insertOnPaste', videoElement);
                             },
                         };
                         commands = [embedVideoCommand, pasteAsURLCommand];
                     }
                     this.powerbox.open(commands);
                 } else {
-                    this._applyCommand('insert', this._createLink(text, url));
+                    this._applyCommand('insertOnPaste', this._createLink(text, url));
                 }
             } else {
                 this.historyPauseSteps();
@@ -4833,12 +4833,12 @@ export class OdooEditor extends EventTarget {
                     // Even indexes will always be plain text, and odd indexes will always be URL.
                     // only allow images emebed inside an existing link. No other url or video embed.
                     if (i % 2 && !selectionIsInsideALink) {
-                        this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
+                        this._applyCommand('insertOnPaste', this._createLink(splitAroundUrl[i], url));
                     } else if (splitAroundUrl[i] !== '') {
                         const textFragments = splitAroundUrl[i].split(/\r?\n/);
                         let textIndex = 1;
                         for (const textFragment of textFragments) {
-                            this._applyCommand('insert', textFragment);
+                            this._applyCommand('insertOnPaste', textFragment);
                             if (textIndex < textFragments.length) {
                                 this._applyCommand('oShiftEnter');
                             }
