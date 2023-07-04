@@ -25,7 +25,7 @@ class FleetVehicle(models.Model):
     _rec_names_search = ['name', 'driver_id.name']
 
     def _get_default_state(self):
-        state = self.env.ref('fleet.fleet_vehicle_state_registered', raise_if_not_found=False)
+        state = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
         return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
@@ -118,6 +118,7 @@ class FleetVehicle(models.Model):
         ('overdue', 'Overdue'),
         ('today', 'Today'),
     ], compute='_compute_service_activity')
+    vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
 
     @api.depends('log_services')
     def _compute_service_activity(self):
