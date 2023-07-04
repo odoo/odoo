@@ -816,6 +816,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'active': True,
                                         'country': [('clear',)],
                                         'id': self.users[0].partner_id.id,
+                                        'is_bot': False,
                                         'is_public': False,
                                         'name': 'Ernest Employee',
                                     },
@@ -831,6 +832,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'active': True,
                                         'country': [('clear',)],
                                         'id': self.users[1].partner_id.id,
+                                        'is_bot': False,
                                         'is_public': False,
                                         'name': 'test1',
                                     },
@@ -897,6 +899,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'active': True,
                                         'country': [('clear',)],
                                         'id': self.users[0].partner_id.id,
+                                        'is_bot': False,
                                         'is_public': False,
                                         'name': 'Ernest Employee',
                                     },
@@ -911,6 +914,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'partner': {
                                         'active': False,
                                         'id': self.env.ref('base.public_partner').id,
+                                        'is_bot': False,
                                         'is_public': True,
                                         'name': 'Public user',
                                     },
@@ -1012,4 +1016,4 @@ class TestDiscussFullPerformance(TransactionCase):
             Returns the expected query count.
             The point of having a separate getter is to allow it to be overriden.
         """
-        return 75
+        return 66

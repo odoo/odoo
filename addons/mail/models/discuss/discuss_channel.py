@@ -758,13 +758,27 @@ class Channel(models.Model):
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel()
         channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        all_needed_members_domain = expression.OR([
-            [('channel_id.channel_type', '!=', 'channel')],
-            [('rtc_inviting_session_id', '!=', False)],
-            [('partner_id', '=', current_partner.id) if current_partner else expression.FALSE_LEAF],
-            [('guest_id', '=', current_guest.id) if current_guest else expression.FALSE_LEAF],
-        ])
-        all_needed_members = self.env['discuss.channel.member'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]), order='id')
+        self.env['discuss.channel'].flush_model()
+        self.env['discuss.channel.member'].flush_model()
+        # Query instead of ORM for performance reasons: "LEFT JOIN" is more
+        # efficient than "id IN" for the cross-table condition between channel
+        # (for channel_type) and member (for other fields).
+        self.env.cr.execute("""
+                 SELECT discuss_channel_member.id
+                   FROM discuss_channel_member
+              LEFT JOIN discuss_channel
+                     ON discuss_channel.id = discuss_channel_member.channel_id
+                    AND discuss_channel.channel_type != 'channel'
+                  WHERE discuss_channel_member.channel_id in %(channel_ids)s
+                    AND (
+                        discuss_channel.id IS NOT NULL
+                     OR discuss_channel_member.rtc_inviting_session_id IS NOT NULL
+                     OR discuss_channel_member.partner_id = %(current_partner_id)s
+                     OR discuss_channel_member.guest_id = %(current_guest_id)s
+                    )
+               ORDER BY discuss_channel_member.id ASC
+        """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
+        all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
         all_needed_members.partner_id.sudo().mail_partner_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
