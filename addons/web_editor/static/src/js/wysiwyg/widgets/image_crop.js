@@ -76,6 +76,7 @@ export class ImageCrop extends Component {
         if (this.$cropperImage) {
             this.$cropperImage.cropper('destroy');
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+            this.document.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
@@ -151,6 +152,9 @@ export class ImageCrop extends Component {
         this.$cropperImage = this.$('.o_we_cropper_img');
         const cropperImage = this.$cropperImage[0];
         [cropperImage.style.width, cropperImage.style.height] = [this.$media.width() + 'px', this.$media.height() + 'px'];
+        
+        const sel = this.document.getSelection();
+        sel && sel.removeAllRanges();
 
         // Overlaying the cropper image over the real image
         const offset = this.$media.offset();
@@ -166,9 +170,11 @@ export class ImageCrop extends Component {
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
+        this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
         this.document.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+        this.document.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
     }
     /**
      * Updates the DOM image with cropped data and associates required
@@ -261,6 +267,17 @@ export class ImageCrop extends Component {
     _onDocumentMousedown(ev) {
         if (document.body.contains(ev.target) && this.$(ev.target).length === 0) {
             return this._closeCropper();
+        }
+    }
+    /**
+     * Save crop if user hits enter.
+     * 
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onDocumentKeydown(ev) {
+        if(ev.key === 'Enter') {
+            return this._save();
         }
     }
     /**
