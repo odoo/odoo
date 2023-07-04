@@ -1550,8 +1550,8 @@ class AccountMoveLine(models.Model):
         # Check the lines are not reconciled (partially or not).
         self._check_reconciliation()
 
-        # Check the lock date.
-        self.move_id._check_fiscalyear_lock_date()
+        # Check the lock date. (Only relevant if the move is posted)
+        self.move_id.filtered(lambda m: m.state == 'posted')._check_fiscalyear_lock_date()
 
         # Check the tax lock date.
         self._check_tax_lock_date()
