@@ -520,10 +520,10 @@ class ResCompany(models.Model):
                 previous_hash = ''
                 current_hash_version = 1
                 for move in moves:
-                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move]
+                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move.id]
                     while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
                         current_hash_version += 1
-                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move]
+                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move.id]
                     if move.inalterable_hash != computed_hash:
                         results.append({
                             'name': f"{journal.name} [{prefix}]",

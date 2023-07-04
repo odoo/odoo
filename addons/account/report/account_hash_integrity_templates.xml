@@ -15,33 +15,19 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <table class="table table-bordered" style="table-layout: fixed" id="hash_config_table">
-                                        <thead style="display: table-row-group">
-                                            <tr>
-                                                <th class="text-center" style="width: 30%" scope="col">Journal / sequence</th>
-                                                <th class="text-center" style="width: 80%" scope="col">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="data['results']" t-as="result">
-                                                <tr>
-                                                    <td>
-                                                        <span t-out="result['name']"/>
-                                                    </td>
-                                                    <t t-if="result['status'] != 'ok'">
-                                                        <td><span t-out="result['msg']"/></td>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <td>
-                                                            <span t-out="result['msg']"/> <br/>
-                                                            From <b><span t-out="result['from_name']"/></b> (<span t-out="result['from_date']"/>) : <span t-out="result['from_hash']"/><br/>
-                                                            To <b><span t-out="result['to_name']"/></b> (<span t-out="result['to_date']"/>) : <span t-out="result['to_hash']"/>
-                                                        </td>
-                                                    </t>
-                                                </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
+                                    <t t-foreach="data['results']" t-as="result">
+                                        <h4><span t-out="result['name']"/></h4>
+                                        <t t-if="result['status'] != 'verified'">
+                                            <div><span t-out="result['msg']"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div>
+                                                <span t-out="result['msg']"/> from <span t-out="result['from_name']"/> (<span t-out="result['from_date']"/>) to <span t-out="result['to_name']"/> (<span t-out="result['to_date']"/>)<br/>
+                                                First hash: <span t-out="result['from_hash']"/><br/>
+                                                Last hash: <span t-out="result['to_hash']"/><br/>
+                                            </div>
+                                        </t>
+                                    </t>
                                 </div>
                             </div>
                         </div>

@@ -2402,8 +2402,8 @@ class AccountMove(models.Model):
                     for prefix, moves in grouped:
                         moves = sorted(moves, key=lambda m: m.sequence_number)
                         moves_hashes = self.env['account.move'].browse([m.id for m in moves])._hash_compute()
-                        for move, inalterable_hash in moves_hashes.items():
-                            res |= super(AccountMove, move).write({'inalterable_hash': inalterable_hash})
+                        for move_id, inalterable_hash in moves_hashes.items():
+                            res |= super(AccountMove, self.env['account.move'].browse(move_id)).write({'inalterable_hash': inalterable_hash})
 
             self._synchronize_business_models(set(vals.keys()))
 
@@ -2882,8 +2882,8 @@ class AccountMove(models.Model):
                     })
             current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
             hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
-            res[move] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
-            previous_hash = res[move]
+            res[move.id] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+            previous_hash = res[move.id]
         return res
 
     # -------------------------------------------------------------------------
