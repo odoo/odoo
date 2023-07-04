@@ -10,7 +10,7 @@
                 'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
                 'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
                 }"
-        t-on-keydown.stop="onKeydown"
+        t-on-keydown="onKeydown"
         tabindex="1"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">

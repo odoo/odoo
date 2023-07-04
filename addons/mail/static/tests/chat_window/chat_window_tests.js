@@ -1023,3 +1023,56 @@ QUnit.test("Open chat window of new inviter", async (assert) => {
         ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"
     );
 });
+
+QUnit.test(
+    "keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem");
+        await afterNextRender(() => {
+            $(".o-mail-Message")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
+        });
+        await click(".o-mail-Message [title='Expand']");
+        $(".o-mail-Message [title='Expand']")[0].focus(); // necessary otherwise focus is in composer input
+        assert.containsOnce($, ".o-mail-Message-moreMenu.dropdown-menu");
+        await triggerHotkey("ArrowDown");
+        assert.containsOnce($, ".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
+        await triggerHotkey("ArrowDown");
+        assert.containsOnce($, ".o-mail-Message-moreMenu .dropdown-item:eq(1).focus");
+    }
+);
+
+QUnit.test(
+    "Close dropdown in chat window with ESCAPE does not also close the chat window",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem");
+        await afterNextRender(() => {
+            $(".o-mail-Message")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
+        });
+        await click(".o-mail-Message [title='Expand']");
+        $(".o-mail-Message [title='Expand']")[0].focus(); // necessary otherwise focus is in composer input
+        assert.containsOnce($, ".o-mail-Message-moreMenu.dropdown-menu");
+        await triggerHotkey("Escape");
+        assert.containsNone($, ".o-mail-Message-moreMenu.dropdown-menu");
+        assert.containsOnce($, ".o-mail-ChatWindow");
+    }
+);
