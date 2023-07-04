@@ -19,10 +19,10 @@
         $-text: map-get($colors, 'o-cc#{$index}-text') or color-contrast(o-color('o-cc#{$index}-bg'));
         $-headings: map-get($colors, 'o-cc#{$index}-headings') or $-text;
         $-h2: map-get($colors, 'o-cc#{$index}-h2') or $-headings;
-        $-h3: map-get($colors, 'o-cc#{$index}-h3') or $-h2;
-        $-h4: map-get($colors, 'o-cc#{$index}-h4') or $-h3;
-        $-h5: map-get($colors, 'o-cc#{$index}-h5') or $-h4;
-        $-h6: map-get($colors, 'o-cc#{$index}-h6') or $-h5;
+        $-h3: map-get($colors, 'o-cc#{$index}-h3') or $-headings;
+        $-h4: map-get($colors, 'o-cc#{$index}-h4') or $-headings;
+        $-h5: map-get($colors, 'o-cc#{$index}-h5') or $-headings;
+        $-h6: map-get($colors, 'o-cc#{$index}-h6') or $-headings;
 
         @if not map-get($colors, 'o-cc#{$index}-text') {
             @include print-variable('o-cc#{$index}-text', $-text);
@@ -729,16 +729,16 @@ blockquote {
                 // 'inherit' comes from the o-bg-color mixin
                 color: o-color($-headings);
             }
-            h2, h3, h4, h5, h6 {
+            h2 {
                 color: o-color($-h2);
             }
-            h3, h4, h5, h6 {
+            h3 {
                 color: o-color($-h3);
             }
-            h4, h5, h6 {
+            h4 {
                 color: o-color($-h4);
             }
-            h5, h6 {
+            h5 {
                 color: o-color($-h5);
             }
             h6 {
