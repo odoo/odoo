@@ -379,13 +379,13 @@ class TestCustomFields(common.TransactionCase):
 
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.create_field('foo')
 
     def test_rename_custom(self):
         """ custom field names must be start with 'x_' """
         field = self.create_field('x_foo')
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             field.name = 'foo'
 
     def test_create_valid(self):
@@ -398,6 +398,26 @@ class TestCustomFields(common.TransactionCase):
         field = self.create_field('x_foo')
         with self.assertRaises(ValidationError):
             field.name = 'x_foo bar'
+
+    def test_add_field_valid(self):
+        """ custom field names must start with 'x_', even when bypassing the constraints
+
+        If a user bypasses all constraints to add a custom field not starting by `x_`,
+        it must not be loaded in the registry.
+
+        This is to forbid users to override class attributes.
+        """
+        field = self.create_field('x_foo')
+        # Drop the SQL constraint, to bypass it,
+        # as a user could do through a SQL shell or a `cr.execute` in a server action
+        self.env.cr.execute("ALTER TABLE ir_model_fields DROP CONSTRAINT ir_model_fields_name_manual_field")
+        self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
+        with self.assertLogs('odoo.addons.base.models.ir_model') as log_catcher:
+            # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
+            field.write({'field_description': 'foo'})
+            self.assertIn(
+                f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
+            )
 
     def test_create_unique(self):
         """ one cannot create two fields with the same name on a given model """
