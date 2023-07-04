@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/controllers/discuss", {
+patch(MockServer.prototype, {
     /**
      * @override
      */
@@ -29,7 +29,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 size: attachment.file_size,
             };
         }
-        return this._super(...arguments);
+        return super.performRPC(...arguments);
     },
     /**
      * @override
@@ -179,7 +179,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         if (route === "/discuss/gif/favorites") {
             return [[]];
         }
-        return this._super(route, args);
+        return super._performRPC(route, args);
     },
     /**
      * Simulates the `/discuss/channel/pinned_messages` route.

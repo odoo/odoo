@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 import { PhoneField, phoneField, formPhoneField } from "@web/views/fields/phone/phone_field";
 import { SendSMSButton } from '@sms/components/sms_button/sms_button';
 
-patch(PhoneField, "sms.PhoneField", {
+patch(PhoneField, {
     components: {
         ...PhoneField.components,
         SendSMSButton
@@ -20,9 +20,9 @@ patch(PhoneField, "sms.PhoneField", {
     },
 });
 
-const patchDescr = {
+const patchDescr = () => ({
     extractProps({ options }) {
-        const props = this._super(...arguments);
+        const props = super.extractProps(...arguments);
         props.enableButton = options.enable_sms;
         return props;
     },
@@ -32,7 +32,7 @@ const patchDescr = {
         type: "boolean",
         default: true,
     }],
-};
+});
 
-patch(phoneField, "sms.PhoneField", patchDescr);
-patch(formPhoneField, "sms.PhoneField", patchDescr);
+patch(phoneField, patchDescr());
+patch(formPhoneField, patchDescr());

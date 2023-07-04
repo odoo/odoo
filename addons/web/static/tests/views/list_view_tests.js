@@ -9375,7 +9375,7 @@ QUnit.module("Views", (hooks) => {
 
             patchWithCleanup(actionService, {
                 start() {
-                    const result = this._super(...arguments);
+                    const result = super.start(...arguments);
                     return {
                         ...result,
                         doAction(id, { additionalContext }) {
@@ -9458,7 +9458,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             patchWithCleanup(actionService, {
                 start() {
-                    const result = this._super(...arguments);
+                    const result = super.start(...arguments);
                     return {
                         ...result,
                         doAction(id, { additionalContext }) {
@@ -13181,7 +13181,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("list should ask to scroll to top on page changes", async function (assert) {
         patchWithCleanup(ListController.prototype, {
             onPageChangeScroll() {
-                this._super(...arguments);
+                super.onPageChangeScroll(...arguments);
                 assert.step("scroll");
             },
         });
@@ -16039,11 +16039,11 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(browser.localStorage, {
                 getItem(key) {
                     assert.step("getItem " + key);
-                    return forceLocalStorage ? '["m2o"]' : this._super(arguments);
+                    return forceLocalStorage ? '["m2o"]' : super.getItem(arguments);
                 },
                 setItem(key, value) {
                     assert.step("setItem " + key + " to " + JSON.stringify(value));
-                    return this._super(arguments);
+                    return super.setItem(arguments);
                 },
             });
 

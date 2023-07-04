@@ -3,9 +3,10 @@
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer"
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
-patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_renderer", {
+
+patch(AttendeeCalendarCommonRenderer.prototype, {
     get options(){
-        let a = Object.assign(this._super(), {
+        let a = Object.assign(super.options, {
             columnHeaderHtml: function(date) {
                 if (this.props.model.scale === 'week'){
                       return "<div>" + moment(date).format("ddd DD") +"</div>" + renderToString(this.constructor.HeaderCalendarTemplate, {date: date, today : new Date()});
@@ -31,7 +32,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
         })
     },
     fcEventToRecord(event) {
-        const res = this._super(...arguments);
+        const res = super.fcEventToRecord(...arguments);
         res.homework = event.homework;
         return res;
     },
@@ -53,7 +54,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
         return events;
     },
     mapRecordsToEvents() {
-        let event = this._super(...arguments);
+        let event = super.mapRecordsToEvents(...arguments);
         let work = [];
         if (this.props.model.multiCalendar) {
             for (const day in this.props.model.worklocations) {
@@ -114,7 +115,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
             const {children } = new DOMParser().parseFromString(content, "text/html").body
             box.appendChild(...children)
         }
-        this._super(...arguments);
+        super.onDayRender(...arguments);
     },
     onEventRender(info) {
         const { el, event } = info;
@@ -149,14 +150,14 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
             const { children } = domParser.parseFromString(injectedContentStr, "text/html").body;
             el.querySelector(".fc-content").replaceWith(...children);
         } else {
-            this._super(...arguments);
+            super.onEventRender(...arguments);
         }
     },
     onDblClick(info) {
         if (info.event.extendedProps.worklocation) {
             this.onClick(info);
         } else {
-            this._super(...arguments);
+            super.onDblClick(...arguments);
         }
     },
     onClick(info){
@@ -185,7 +186,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
             this.openPopover(info.el, wl);
             this.highlightEvent(info.event, "o_cw_custom_highlight");
         } else {
-            this._super(...arguments);
+            super.onClick(...arguments);
         }
     },
     onDateClick(info){
@@ -193,12 +194,11 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
             info.homework = true
             this.props.createRecord(this.fcEventToRecord(info));
         } else {
-            this._super(...arguments)
+            super.onDateClick(...arguments)
         }
     }
-},
+});
 
-AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.worklocation",
-AttendeeCalendarCommonRenderer.HeaderCalendarTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation",
-AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation",
-)
+AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.worklocation";
+AttendeeCalendarCommonRenderer.HeaderCalendarTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation";
+AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation";

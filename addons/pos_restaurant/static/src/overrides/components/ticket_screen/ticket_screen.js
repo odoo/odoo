@@ -6,12 +6,12 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { Component, useState } from "@odoo/owl";
 
-patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
+patch(TicketScreen.prototype, {
     _getScreenToStatusMap() {
-        return Object.assign(this._super(...arguments), {
+        return Object.assign(super._getScreenToStatusMap(...arguments), {
             PaymentScreen: this.pos.config.set_tip_after_payment
                 ? "OPEN"
-                : this._super(...arguments).PaymentScreen,
+                : super._getScreenToStatusMap(...arguments).PaymentScreen,
             TipScreen: "TIPPING",
         });
     },
@@ -31,9 +31,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     //@override
     _getSearchFields() {
         if (!this.pos.config.module_pos_restaurant) {
-            return this._super(...arguments);
+            return super._getSearchFields(...arguments);
         }
-        return Object.assign({}, this._super(...arguments), {
+        return Object.assign({}, super._getSearchFields(...arguments), {
             TABLE: {
                 repr: this.getTable.bind(this),
                 displayName: this.env._t("Table"),
@@ -43,7 +43,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     async _setOrder(order) {
         if (!this.pos.config.module_pos_restaurant || this.pos.table) {
-            return this._super(...arguments);
+            return super._setOrder(...arguments);
         }
         // we came from the FloorScreen
         const orderTable = order.getTable();
@@ -53,13 +53,13 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     get allowNewOrders() {
         return this.pos.config.module_pos_restaurant
             ? Boolean(this.pos.table)
-            : this._super(...arguments);
+            : super.allowNewOrders;
     },
     _getOrderList() {
         if (this.pos.table) {
             return this.pos.getTableOrders(this.pos.table.id);
         }
-        return this._super(...arguments);
+        return super._getOrderList(...arguments);
     },
     async settleTips() {
         // set tip in each order
@@ -115,7 +115,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         await this.orm.call("pos.order", "set_no_tip", [serverId]);
     },
     _getOrderStates() {
-        const result = this._super(...arguments);
+        const result = super._getOrderStates(...arguments);
         if (this.pos.config.set_tip_after_payment) {
             result.delete("PAYMENT");
             result.set("OPEN", { text: this.env._t("Open"), indented: true });
@@ -128,13 +128,13 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         if (this.pos.config.module_pos_restaurant && order && !this.pos.table) {
             this.pos.setTable(order.table ? order.table : Object.values(this.pos.tables_by_id)[0]);
         }
-        this._super(...arguments);
+        super.onDoRefund(...arguments);
     },
     isDefaultOrderEmpty(order) {
         if (this.pos.config.module_pos_restaurant) {
             return false;
         }
-        return this._super(...arguments);
+        return super.isDefaultOrderEmpty(...arguments);
     },
 });
 
@@ -162,6 +162,6 @@ export class TipCell extends Component {
     }
 }
 
-patch(TicketScreen, "pos_restaurant.TicketScreen.components", {
+patch(TicketScreen, {
     components: { ...TicketScreen.components, TipCell },
 });

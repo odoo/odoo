@@ -1054,7 +1054,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
         patchWithCleanup(ImportBlockUI.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 if (this.props.message === "Importing") {
                     assert.step("Block UI received the right text");
                 }
@@ -1063,7 +1063,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 useEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {
@@ -1146,7 +1146,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
         patchWithCleanup(ImportBlockUI.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 if (this.props.message === "Testing") {
                     assert.step("Block UI received the right text");
                 }
@@ -1155,7 +1155,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 useEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {

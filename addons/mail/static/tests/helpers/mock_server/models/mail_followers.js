@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/mail_followers", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_format_for_chatter` on `mail.followers`.
      *

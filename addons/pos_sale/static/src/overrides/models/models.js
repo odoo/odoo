@@ -3,25 +3,25 @@
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(Order.prototype, "pos_sale.Order", {
+patch(Order.prototype, {
     //@override
     select_orderline(orderline) {
-        this._super(...arguments);
+        super.select_orderline(...arguments);
         if (orderline && orderline.product.id === this.pos.config.down_payment_product_id[0]) {
             this.pos.numpadMode = "price";
         }
     },
     //@override
     _get_ignored_product_ids_total_discount() {
-        const productIds = this._super(...arguments);
+        const productIds = super._get_ignored_product_ids_total_discount(...arguments);
         productIds.push(this.pos.config.down_payment_product_id[0]);
         return productIds;
     },
 });
 
-patch(Orderline.prototype, "pos_sale.Orderline", {
+patch(Orderline.prototype, {
     setup(_defaultObj, options) {
-        this._super(...arguments);
+        super.setup(...arguments);
         // It is possible that this orderline is initialized using `init_from_JSON`,
         // meaning, it is loaded from localStorage or from export_for_ui. This means
         // that some fields has already been assigned. Therefore, we only set the options
@@ -35,14 +35,14 @@ patch(Orderline.prototype, "pos_sale.Orderline", {
         }
     },
     init_from_JSON(json) {
-        this._super(...arguments);
+        super.init_from_JSON(...arguments);
         this.sale_order_origin_id = json.sale_order_origin_id;
         this.sale_order_line_id = json.sale_order_line_id;
         this.down_payment_details =
             json.down_payment_details && JSON.parse(json.down_payment_details);
     },
     export_as_JSON() {
-        const json = this._super(...arguments);
+        const json = super.export_as_JSON(...arguments);
         json.sale_order_origin_id = this.sale_order_origin_id;
         json.sale_order_line_id = this.sale_order_line_id;
         json.down_payment_details =
@@ -61,7 +61,7 @@ patch(Orderline.prototype, "pos_sale.Orderline", {
         return false;
     },
     export_for_printing() {
-        var json = this._super(...arguments);
+        var json = super.export_for_printing(...arguments);
         json.down_payment_details = this.down_payment_details;
         if (this.sale_order_origin_id) {
             json.so_reference = this.sale_order_origin_id.name;

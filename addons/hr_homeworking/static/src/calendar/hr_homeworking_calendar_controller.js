@@ -6,9 +6,9 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller"
 import { serializeDate} from "@web/core/l10n/dates";
 
-patch(AttendeeCalendarController.prototype, "hr_homeworking_calendar_controller",{
+patch(AttendeeCalendarController.prototype, {
     setup() {
-        this._super()
+        super.setup()
         this.action = useService("action");
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
@@ -26,7 +26,7 @@ patch(AttendeeCalendarController.prototype, "hr_homeworking_calendar_controller"
                 },
             });
         }
-        return this._super(...arguments)
+        return super.editRecord(...arguments)
     },
     createRecord(record) {
         if (record.homework) {
@@ -42,7 +42,7 @@ patch(AttendeeCalendarController.prototype, "hr_homeworking_calendar_controller"
                 },
             });
         } else {
-            return this._super(record);
+            return super.createRecord(record);
         }
     },
     deleteRecord(record) {
@@ -64,7 +64,7 @@ patch(AttendeeCalendarController.prototype, "hr_homeworking_calendar_controller"
                 });
             }
         } else {
-            this._super(...arguments)
+            super.deleteRecord(...arguments)
         }
     },
 

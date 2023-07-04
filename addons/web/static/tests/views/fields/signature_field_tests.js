@@ -115,7 +115,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("Set simple field in 'full_name' node option", async function (assert) {
         patchWithCleanup(NameAndSignature.prototype, {
             setup() {
-                this._super.apply(this, arguments);
+                super.setup(...arguments);
                 assert.step(this.props.signature.name);
             },
         });
@@ -159,7 +159,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("Set m2o field in 'full_name' node option", async function (assert) {
         patchWithCleanup(NameAndSignature.prototype, {
             setup() {
-                this._super.apply(this, arguments);
+                super.setup(...arguments);
                 assert.step(this.props.signature.name);
             },
         });

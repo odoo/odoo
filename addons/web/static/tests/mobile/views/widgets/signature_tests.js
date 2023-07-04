@@ -53,11 +53,11 @@ QUnit.module("Widgets", (hooks) => {
         assert.expect(7);
         patchWithCleanup(SignatureWidget.prototype, {
             async onClickSignature() {
-                await this._super.apply(this, arguments);
+                await super.onClickSignature(...arguments);
                 assert.step("onClickSignature");
             },
             async uploadSignature({signatureImage}) {
-                await this._super.apply(this, arguments);
+                await super.uploadSignature(...arguments);
                 assert.step("uploadSignature");
             },
         });

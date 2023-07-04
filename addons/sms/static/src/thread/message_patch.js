@@ -4,7 +4,7 @@ import { Message } from "@mail/core/common/message";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Message.prototype, "sms", {
+patch(Message.prototype, {
     onClickFailure() {
         if (this.message.type === "sms") {
             this.env.services.action.doAction("sms.sms_resend_action", {
@@ -13,7 +13,7 @@ patch(Message.prototype, "sms", {
                 },
             });
         } else {
-            this._super(...arguments);
+            super.onClickFailure(...arguments);
         }
     },
 });

@@ -6,7 +6,7 @@ import "@bus/../tests/helpers/mock_server";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/ir_websocket", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_get_im_status` on `ir.websocket`.
      *
@@ -15,7 +15,7 @@ patch(MockServer.prototype, "mail/models/ir_websocket", {
      * should be monitored.
      */
     _mockIrWebsocket__getImStatus(imStatusIdsByModel) {
-        const imStatus = this._super(imStatusIdsByModel);
+        const imStatus = super._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         const { "mail.guest": guestIds } = imStatusIdsByModel;
         if (guestIds) {
             imStatus["Guest"] = this.pyEnv["mail.guest"].searchRead([["id", "in", guestIds]], {

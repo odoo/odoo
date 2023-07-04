@@ -4,13 +4,13 @@
 import { Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(Orderline.prototype, "pos_sale_loyalty.Orderline", {
+patch(Orderline.prototype, {
     //@override
     ignoreLoyaltyPoints(args) {
         if (this.sale_order_origin_id) {
             return true;
         }
-        return this._super(args);
+        return super.ignoreLoyaltyPoints(args);
     },
     //@override
     setQuantityFromSOL(saleOrderLine) {
@@ -18,7 +18,7 @@ patch(Orderline.prototype, "pos_sale_loyalty.Orderline", {
         if (saleOrderLine.reward_id) {
             this.set_quantity(saleOrderLine.product_uom_qty);
         } else {
-            this._super(...arguments);
+            super.setQuantityFromSOL(...arguments);
         }
     },
 });

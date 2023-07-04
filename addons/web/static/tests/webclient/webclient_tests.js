@@ -62,7 +62,7 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
     patchWithCleanup(WebClient.prototype, {
         /** @param {MouseEvent} ev */
         onGlobalClick(ev) {
-            this._super(ev);
+            super.onGlobalClick(ev);
             if (ev.ctrlKey) {
                 assert.ok(
                     ev.defaultPrevented === false,

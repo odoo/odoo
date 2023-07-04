@@ -69,10 +69,10 @@ export async function loadDefaultConfig() {
     return livechatChannelId;
 }
 
-patch(App.prototype, "im_livechat", {
+patch(App.prototype, {
     mount() {
         registerCleanup(() => this.destroy());
-        return this._super(...arguments);
+        return super.mount(...arguments);
     },
 });
 
@@ -108,7 +108,7 @@ export async function start({ mockRPC } = {}) {
     const livechatButtonAvailableDeferred = makeDeferred();
     patchWithCleanup(LivechatButton.prototype, {
         setup() {
-            this._super(...arguments);
+            super.setup(...arguments);
             onMounted(() => livechatButtonAvailableDeferred.resolve());
         },
     });

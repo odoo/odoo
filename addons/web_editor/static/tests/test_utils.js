@@ -95,7 +95,7 @@ const SNIPPETS_TEMPLATE = `
         </div>
     </div>`;
 
-coreUtils.patch(MockServer.prototype, 'web_editor', {
+coreUtils.patch(MockServer.prototype, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -114,7 +114,7 @@ coreUtils.patch(MockServer.prototype, 'web_editor', {
                 return SNIPPETS_TEMPLATE;
             }
         }
-        return this._super(...arguments);
+        return super._performRPC(...arguments);
     },
 });
 MockServerLegacy.include({

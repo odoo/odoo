@@ -7,13 +7,13 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(Message.prototype, "discuss/core/web", {
+patch(Message.prototype, {
     getAuthorText() {
-        return this.hasOpenChatFeature() ? _t("Open chat") : this._super();
+        return this.hasOpenChatFeature() ? _t("Open chat") : super.getAuthorText();
     },
     hasAuthorClickable() {
         return (
-            this._super() &&
+            super.hasAuthorClickable() &&
             this.message.author.type !== "guest" &&
             this.message.originThread?.channel?.channel_type !== "chat"
         );
@@ -27,6 +27,6 @@ patch(Message.prototype, "discuss/core/web", {
             this.threadService.openChat({ partnerId: this.message.author.id });
             return;
         }
-        return this._super(ev);
+        return super.onClickAuthor(ev);
     },
 });

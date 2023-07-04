@@ -4,13 +4,13 @@ import { ChatWindowService } from "@mail/core/common/chat_window_service";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(ChatWindowService.prototype, "discuss/core/web", {
+patch(ChatWindowService.prototype, {
     close(chatWindow) {
-        this._super(...arguments);
+        super.close(...arguments);
         this.notifyState(chatWindow);
     },
     hide(chatWindow) {
-        this._super(...arguments);
+        super.hide(...arguments);
         this.notifyState(chatWindow);
     },
     notifyState(chatWindow) {
@@ -29,15 +29,15 @@ patch(ChatWindowService.prototype, "discuss/core/web", {
         }
     },
     open() {
-        const chatWindow = this._super(...arguments);
+        const chatWindow = super.open(...arguments);
         this.notifyState(chatWindow);
     },
     show(chatWindow) {
-        this._super(...arguments);
+        super.show(...arguments);
         this.notifyState(chatWindow);
     },
     toggleFold(chatWindow) {
-        this._super(...arguments);
+        super.toggleFold(...arguments);
         this.notifyState(chatWindow);
     },
 });

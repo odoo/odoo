@@ -5,12 +5,12 @@ import { MessagingMenu } from "@mail/core/web/messaging_menu";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(MessagingMenu.prototype, "im_livechat", {
+patch(MessagingMenu.prototype, {
     /**
      * @override
      */
     tabToThreadType(tab) {
-        const threadTypes = this._super(tab);
+        const threadTypes = super.tabToThreadType(tab);
         if (tab === "chat" && !this.ui.isSmall) {
             threadTypes.push("livechat");
         }
@@ -23,7 +23,7 @@ patch(MessagingMenu.prototype, "im_livechat", {
      * @override
      */
     get tabs() {
-        const items = this._super();
+        const items = super.tabs;
         const hasLivechats = Object.values(this.store.threads).some(
             ({ type }) => type === "livechat"
         );

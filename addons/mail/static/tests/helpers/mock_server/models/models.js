@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/models", {
+patch(MockServer.prototype, {
     /**
      * Simulates `_mail_track` on `base`
      *

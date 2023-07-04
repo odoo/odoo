@@ -469,7 +469,7 @@ QUnit.module("Form Renderer", (hooks) => {
     QUnit.test("invisible is correctly computed with another t-if", (assert) => {
         patchWithCleanup(FormCompiler.prototype, {
             setup() {
-                this._super();
+                super.setup();
                 this.compilers.push({
                     selector: "myNode",
                     fn: () => {

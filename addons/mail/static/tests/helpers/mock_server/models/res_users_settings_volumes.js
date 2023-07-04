@@ -6,7 +6,7 @@ import "@bus/../tests/helpers/mock_server";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "mail/models/res_users_settings_volumes", {
+patch(MockServer.prototype, {
     /**
      * Simulates `discuss_users_settings_volume_format` on `res.users.settings.volumes`.
      *

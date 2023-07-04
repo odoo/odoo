@@ -4,10 +4,10 @@ import { patch } from "@web/core/utils/patch";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 import { Field } from "@web/views/fields/field"
 
-patch(AttendeeCalendarCommonPopover.prototype, "hr_homeworking_calendar_common_popover",{
+patch(AttendeeCalendarCommonPopover.prototype, {
     setup() {
         this.fieldNames = ["work_location_id", "work_location_name", "work_location_type", "employee_id", "weekday", "weekly", "start_date", "employee_name"];
-        this._super(...arguments)
+        super.setup(...arguments)
     },
     isWorkLocationEvent(){
         return this.props.record.rawRecord['resModel'] === 'hr.employee.location';
@@ -19,19 +19,19 @@ patch(AttendeeCalendarCommonPopover.prototype, "hr_homeworking_calendar_common_p
         return this.isWorkLocationEvent() && this.props.record.userId === this.slot.record.model.user.userId;
     },
     get isEventEditable() {
-        return ('resModel' in this.props.record.rawRecord) || this._super(...arguments)
+        return ('resModel' in this.props.record.rawRecord) || super.isEventEditable;
     },
     get isEventViewable() {
-        return !('resModel' in this.props.record.rawRecord) || this._super(...arguments)
+        return !('resModel' in this.props.record.rawRecord) || super.isEventViewable;
     },
     get isEventDeletable() {
-        return ('resModel' in this.props.record.rawRecord) || this._super(...arguments)
+        return ('resModel' in this.props.record.rawRecord) || super.isEventDeletable;
     },
     get displayAttendeeAnswerChoice() {
-        return !('resModel' in this.props.record.rawRecord) && this._super(...arguments)
+        return !('resModel' in this.props.record.rawRecord) && super.displayAttendeeAnswerChoice;
     },
     get isCurrentUserAttendee() {
-        return !('resModel' in this.props.record.rawRecord) && this._super(...arguments)
+        return !('resModel' in this.props.record.rawRecord) && super.isCurrentUserAttendee;
     }
 })
 

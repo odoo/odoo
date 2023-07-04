@@ -6,7 +6,7 @@ import { nbsp } from "@web/core/utils/strings";
  * @props partner
  */
 
-patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
+patch(ActionpadWidget.prototype, {
     get swapButton() {
         return this.props.actionType === "payment" && this.pos.config.module_pos_restaurant;
     },
@@ -45,7 +45,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     },
     get highlightPay() {
         return (
-            this._super(...arguments) &&
+            super.highlightPay &&
             !this.currentOrder.hasChangesToPrint() &&
             this.hasQuantity(this.currentOrder)
         );

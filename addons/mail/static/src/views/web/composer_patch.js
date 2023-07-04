@@ -4,7 +4,7 @@ import { Composer } from "@mail/core/common/composer";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(Composer.prototype, "web", {
+patch(Composer.prototype, {
     get placeholder() {
         if (this.thread && this.thread.model !== "discuss.channel") {
             if (this.props.type === "message") {
@@ -13,6 +13,6 @@ patch(Composer.prototype, "web", {
                 return _t("Log an internal note...");
             }
         }
-        return this._super();
+        return super.placeholder;
     },
 });

@@ -5,37 +5,37 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread.prototype, "im_livechat", {
+patch(Thread.prototype, {
     get isChannel() {
-        return this.type === "livechat" || this._super();
+        return this.type === "livechat" || super.isChannel;
     },
 
     get hasMemberList() {
-        return this.type === "livechat" || this._super();
+        return this.type === "livechat" || super.hasMemberList;
     },
 
     get isChatChannel() {
-        return this.type === "livechat" || this._super();
+        return this.type === "livechat" || super.isChatChannel;
     },
 
     get allowSetLastSeenMessage() {
-        return this.type === "livechat" || this._super();
+        return this.type === "livechat" || super.allowSetLastSeenMessage;
     },
 
     get allowReactions() {
-        return this.type === "livechat" ? false : this._super();
+        return this.type === "livechat" ? false : super.allowReactions;
     },
 
     get allowReplies() {
-        return this.type === "livechat" ? false : this._super();
+        return this.type === "livechat" ? false : super.allowReplies;
     },
 
     get correspondents() {
-        return this._super().filter((correspondent) => !correspondent.is_bot);
+        return super.correspondents.filter((correspondent) => !correspondent.is_bot);
     },
 
     get correspondent() {
-        let correspondent = this._super();
+        let correspondent = super.correspondent;
         if (this.type === "livechat" && !correspondent) {
             // For livechat threads, the correspondent is the first
             // channel member that is not the operator.
@@ -52,7 +52,7 @@ patch(Thread.prototype, "im_livechat", {
 
     get displayName() {
         if (this.type !== "livechat" || !this.correspondent) {
-            return this._super();
+            return super.displayName;
         }
         if (!this.correspondent.is_public && this.correspondent.country) {
             return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
@@ -67,7 +67,7 @@ patch(Thread.prototype, "im_livechat", {
 
     get imgUrl() {
         if (this.type !== "livechat") {
-            return this._super();
+            return super.imgUrl;
         }
         return this.correspondent && !this.correspondent.is_public
             ? `/web/image/res.partner/${this.correspondent.id}/avatar_128`
@@ -80,7 +80,7 @@ patch(Thread.prototype, "im_livechat", {
      */
     getMemberName(persona) {
         if (this.type !== "livechat") {
-            return this._super(persona);
+            return super.getMemberName(persona);
         }
         if (persona.user_livechat_username) {
             return persona.user_livechat_username;
@@ -88,6 +88,6 @@ patch(Thread.prototype, "im_livechat", {
         if (persona.is_public && this.anonymous_name) {
             return this.anonymous_name;
         }
-        return this._super(persona);
+        return super.getMemberName(persona);
     },
 });

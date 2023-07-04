@@ -5,10 +5,9 @@ import { patch } from "@web/core/utils/patch";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
+patch(PaymentScreen.prototype, {
     //@override
     async validateOrder(isForceValidate) {
-        const _super = this._super;
         const pointChanges = {};
         const newCodes = [];
         for (const pe of Object.values(this.currentOrder.couponPointChanges)) {
@@ -72,14 +71,13 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                 // it should not be blocking.
             }
         }
-        await _super(...arguments);
+        await super.validateOrder(...arguments);
     },
     /**
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
         // Compile data for our function
-        const _super = this._super;
         const { program_by_id, reward_by_id, couponCache } = this.pos;
         const rewardLines = order._get_reward_lines();
         const partner = order.get_partner();
@@ -163,6 +161,6 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
             }
             order.new_coupon_info = payload.new_coupon_info;
         }
-        return _super(order, server_ids);
+        return super._postPushOrderResolve(order, server_ids);
     },
 });

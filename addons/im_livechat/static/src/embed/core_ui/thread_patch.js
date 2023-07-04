@@ -8,9 +8,9 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
-patch(Thread.prototype, "im_livechat", {
+patch(Thread.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.session = session;
         this.chatbotService = useState(useService("im_livechat.chatbot"));
         this.livechatService = useState(useService("im_livechat.livechat"));

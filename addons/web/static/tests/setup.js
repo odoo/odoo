@@ -100,7 +100,7 @@ function patchOwlApp() {
     patchWithCleanup(App.prototype, {
         destroy() {
             if (!this.destroyed) {
-                this._super(...arguments);
+                super.destroy(...arguments);
                 this.destroyed = true;
             }
         },
@@ -108,7 +108,7 @@ function patchOwlApp() {
             registerCleanup(() => {
                 delete this.constructor.sharedTemplates[name];
             });
-            return this._super(...arguments);
+            return super.addTemplate(...arguments);
         },
     });
 }
@@ -199,8 +199,7 @@ function patchBrowserWithCleanup() {
                     registerCleanup(() => this.close());
                 }
             },
-        },
-        { pure: true }
+        }
     );
 }
 
@@ -226,7 +225,7 @@ function patchLegacyBus() {
     // during a test (e.g. during the deployment of a service)
     patchWithCleanup(LegacyBus.prototype, {
         on() {
-            this._super(...arguments);
+            super.on(...arguments);
             registerCleanup(() => {
                 this.off(...arguments);
             });
@@ -307,7 +306,7 @@ function removeUnwantedAttrsFromTemplates(attrs) {
 
 function patchAssets() {
     const { loadXML, getBundle, loadJS, loadCSS } = assets;
-    patch(assets, "TestAssetsLoadXML", {
+    patch(assets, {
         loadXML: function (templates) {
             console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
             // Clean up new templates that might be added later.
@@ -355,7 +354,7 @@ function patchAssets() {
 function patchEventBus() {
     patchWithCleanup(EventBus.prototype, {
         addEventListener() {
-            this._super(...arguments);
+            super.addEventListener(...arguments);
             registerCleanup(() => this.removeEventListener(...arguments));
         },
     });

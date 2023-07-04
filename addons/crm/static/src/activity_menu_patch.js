@@ -3,7 +3,7 @@
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { patch } from "@web/core/utils/patch";
 
-patch(ActivityMenu.prototype, "crm", {
+patch(ActivityMenu.prototype, {
     availableViews(group) {
         if (group.model === "crm.lead") {
             return [
@@ -16,7 +16,7 @@ patch(ActivityMenu.prototype, "crm", {
                 [false, "activity"],
             ];
         }
-        return this._super(...arguments);
+        return super.availableViews(...arguments);
     },
 
     openActivityGroup(group, filter = "all") {
@@ -38,7 +38,7 @@ patch(ActivityMenu.prototype, "crm", {
                 clearBreadcrumbs: true,
             });
         } else {
-            return this._super(group, filter);
+            return super.openActivityGroup(group, filter);
         }
     },
 });

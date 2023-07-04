@@ -13,12 +13,12 @@ import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
 
 const { onRendered } = owl;
-patch(WysiwygAdapterComponent.prototype, 'website_sale/static/src/js/website_sale.editor.js', {
+patch(WysiwygAdapterComponent.prototype, {
     /**
      * @override
      */
     async init() {
-        await this._super(...arguments);
+        await super.init(...arguments);
 
         let ribbons = [];
         if (this._isProductListPage()) {
@@ -40,9 +40,8 @@ patch(WysiwygAdapterComponent.prototype, 'website_sale/static/src/js/website_sal
      * @override
      */
     async _saveViewBlocks() {
-        const _super = this._super.bind(this);
         await this._saveRibbons();
-        return _super(...arguments);
+        return super._saveViewBlocks(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -206,7 +205,7 @@ patch(WysiwygAdapterComponent.prototype, 'website_sale/static/src/js/website_sal
         if (methods[ev.name]) {
             return methods[ev.name](ev);
         } else {
-            return this._super(...arguments);
+            return super._trigger_up(...arguments);
         }
     }
 });

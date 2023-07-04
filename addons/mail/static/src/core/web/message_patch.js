@@ -14,9 +14,9 @@ import fieldUtils from "@web/legacy/js/fields/field_utils";
 const format = fieldUtils.format
 const formatters = registry.category("formatters");
 
-patch(Message.prototype, "mail/core/web", {
+patch(Message.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.action = useService("action");
         this.userService = useService("user");
     },

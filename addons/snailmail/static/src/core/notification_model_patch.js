@@ -4,12 +4,12 @@ import { Notification } from "@mail/core/common/notification_model";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
-patch(Notification.prototype, "snailmail", {
+patch(Notification.prototype, {
     get icon() {
         if (this.notification_type === "snail") {
             return "fa fa-paper-plane";
         }
-        return this._super();
+        return super.icon;
     },
 
     get statusIcon() {
@@ -25,7 +25,7 @@ patch(Notification.prototype, "snailmail", {
                     return "fa fa-exclamation text-danger";
             }
         }
-        return this._super();
+        return super.statusIcon;
     },
 
     get statusTitle() {
@@ -41,6 +41,6 @@ patch(Notification.prototype, "snailmail", {
                     return _t("Error");
             }
         }
-        return this._super();
+        return super.statusTitle;
     },
 });

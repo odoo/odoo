@@ -3,9 +3,9 @@
 import { PersonaService } from "@mail/core/common/persona_service";
 import { patch } from "@web/core/utils/patch";
 
-patch(PersonaService.prototype, "website_livechat", {
+patch(PersonaService.prototype, {
     update(persona, data) {
-        this._super(persona, data);
+        super.update(persona, data);
         if (persona.type === "visitor") {
             persona.history = data.history ?? persona.history;
             persona.isConnected = data.is_connected ?? persona.isConnected;

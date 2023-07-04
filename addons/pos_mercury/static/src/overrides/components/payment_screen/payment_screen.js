@@ -93,9 +93,9 @@ const lookUpCodeTransaction = {
     },
 };
 
-patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
+patch(PaymentScreen.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         if (this.pos.getOnlinePaymentMethods().length !== 0) {
             useBarcodeReader({
                 credit: this.credit_code_action,
@@ -117,7 +117,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     get _getNumberBufferConfig() {
-        const res = this._super(...arguments);
+        const res = super._getNumberBufferConfig;
         res["useWithBarcode"] = true;
         return res;
     },
@@ -512,7 +512,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         if (line.mercury_data) {
             this.do_reversal(line, false);
         } else {
-            this._super(cid);
+            super.deletePaymentLine(cid);
         }
     },
     /**
@@ -520,7 +520,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      */
     addNewPaymentLine(paymentMethod) {
         const order = this.pos.get_order();
-        const res = this._super(...arguments);
+        const res = super.addNewPaymentLine(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
             order.selected_paymentline.mercury_swipe_pending = true;
         }

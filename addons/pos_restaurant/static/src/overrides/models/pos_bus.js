@@ -3,10 +3,10 @@
 import { patch } from "@web/core/utils/patch";
 import { PosBus } from "@point_of_sale/app/bus/pos_bus_service";
 
-patch(PosBus.prototype, "pos_restaurant.PosBus", {
+patch(PosBus.prototype, {
     // Override
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
 
         if (this.pos.config.module_pos_restaurant) {
             this.initTableOrderCount();
@@ -25,7 +25,7 @@ patch(PosBus.prototype, "pos_restaurant.PosBus", {
 
     // Override
     dispatch(message) {
-        this._super(...arguments);
+        super.dispatch(...arguments);
 
         if (message.type === "TABLE_ORDER_COUNT") {
             this.ws_syncTableCount(message.payload);

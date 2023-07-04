@@ -1089,7 +1089,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         let counter = 0;
         patchWithCleanup(dialogService, {
             start() {
-                const result = this._super(...arguments);
+                const result = super.start(...arguments);
                 return {
                     ...result,
                     add() {

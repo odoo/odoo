@@ -37,17 +37,17 @@ async function applyProduct(record, product) {
     });
 };
 
-patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
+patch(SaleOrderLineProductField.prototype, {
 
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
 
         this.dialog = useService("dialog");
         this.orm = useService("orm");
     },
 
     async _onProductTemplateUpdate() {
-        this._super(...arguments);
+        super._onProductTemplateUpdate(...arguments);
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
@@ -78,14 +78,14 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
     },
 
     _editProductConfiguration() {
-        this._super(...arguments);
+        super._editProductConfiguration(...arguments);
         if (this.props.record.data.is_configurable_product) {
             this._openProductConfigurator(true);
         }
     },
 
     get isConfigurableTemplate() {
-        return this._super(...arguments) || this.props.record.data.is_configurable_product;
+        return super.isConfigurableTemplate || this.props.record.data.is_configurable_product;
     },
 
     async _openProductConfigurator(edit=false) {

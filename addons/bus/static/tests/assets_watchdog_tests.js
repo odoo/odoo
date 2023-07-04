@@ -24,7 +24,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         serviceRegistry.add("multi_tab", multiTabService);
         patchWithCleanup(browser, {
             setTimeout(fn) {
-                return this._super(fn, 0);
+                return super.setTimeout(fn, 0);
             },
             location: {
                 reload: () => assert.step("reloadPage"),

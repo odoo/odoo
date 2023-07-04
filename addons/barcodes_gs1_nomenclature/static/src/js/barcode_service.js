@@ -7,12 +7,12 @@ import { barcodeService } from '@barcodes/barcode_service';
 import { FNC1_CHAR } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 
 
-patch(barcodeService, 'barcodes_gs1_nomenclature', {
+patch(barcodeService, {
     // Use the regex given by the session, else use an impossible one
     gs1SeparatorRegex: new RegExp(session.gs1_group_separator_encodings || '.^', 'g'),
 
-    cleanBarcode: function(barcode) {
+    cleanBarcode(barcode) {
         barcode = barcode.replace(barcodeService.gs1SeparatorRegex, FNC1_CHAR);
-        return this._super(barcode);
+        return super.cleanBarcode(barcode);
     },
 });

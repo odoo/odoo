@@ -3,9 +3,9 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { patch } from "@web/core/utils/patch";
 
-patch(ActivityListPopoverItem.prototype, "calendar", {
+patch(ActivityListPopoverItem.prototype, {
     get hasEditButton() {
-        return this._super() && !this.props.activity.calendar_event_id;
+        return super.hasEditButton && !this.props.activity.calendar_event_id;
     },
 
     async onClickReschedule() {

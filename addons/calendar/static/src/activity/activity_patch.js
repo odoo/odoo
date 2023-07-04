@@ -4,9 +4,9 @@ import { Activity } from "@mail/core/web/activity";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
-patch(Activity.prototype, "calendar", {
+patch(Activity.prototype, {
     setup() {
-        this._super();
+        super.setup();
         this.orm = useService("orm");
     },
     async onClickReschedule() {
@@ -20,7 +20,7 @@ patch(Activity.prototype, "calendar", {
             await this.orm.call("mail.activity", "unlink_w_meeting", [[this.props.data.id]]);
             this.props.onUpdate();
         } else {
-            this._super();
+            super.unlink();
         }
     },
 });

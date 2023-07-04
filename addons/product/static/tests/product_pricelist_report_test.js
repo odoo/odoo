@@ -50,14 +50,14 @@ QUnit.module('Product Pricelist Report', {
 
         let Qty = [1, 5, 10]; // default quantities
         patchWithCleanup(ProductPricelistReport.prototype, {
-                onSelectPricelist: function (event) {
+                onSelectPricelist(event) {
                     assert.step('pricelist_changed');
-                    this._super(...arguments)
+                    super.onSelectPricelist(...arguments)
                 },
-                onClickAddQty: function (event) {
+                onClickAddQty(event) {
                     assert.deepEqual(this.quantities, Qty.sort((a, b) => a - b), "changed quantity should be same.");
                     assert.step('qty_added');
-                    this._super(...arguments);
+                    super.onClickAddQty(...arguments);
                 },
             });
 

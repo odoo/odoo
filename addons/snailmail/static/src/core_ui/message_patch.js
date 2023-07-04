@@ -7,7 +7,7 @@ import { SnailmailNotificationPopover } from "./snailmail_notification_popover";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Message.prototype, "snailmail", {
+patch(Message.prototype, {
     onClickFailure() {
         if (this.message.type === "snailmail") {
             const failureType = this.message.notifications[0].failure_type;
@@ -29,7 +29,7 @@ patch(Message.prototype, "snailmail", {
                     break;
             }
         } else {
-            this._super(...arguments);
+            super.onClickFailure(...arguments);
         }
     },
 
