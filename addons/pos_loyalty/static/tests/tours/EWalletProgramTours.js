@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
+import { PosLoyalty } from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";

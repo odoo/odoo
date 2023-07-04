@@ -2,7 +2,7 @@
 
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { PosLoyaltyCard } from "@pos_loyalty/js/Loyalty";
+import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {

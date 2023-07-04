@@ -8,7 +8,7 @@ import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
-import { PosLoyaltyCard } from "@pos_loyalty/js/Loyalty";
+import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 

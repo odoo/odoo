@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PaymentAdyen } from "@pos_adyen/js/payment_adyen";
+import { PaymentAdyen } from "@pos_adyen/app/payment_adyen";
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentAdyen.prototype, "pos_restaurant_adyen.PaymentAdyen", {

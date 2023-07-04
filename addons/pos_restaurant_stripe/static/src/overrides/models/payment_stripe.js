@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PaymentStripe } from "@pos_stripe/js/payment_stripe";
+import { PaymentStripe } from "@pos_stripe/app/payment_stripe";
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentStripe.prototype, "pos_restaurant_stripe.PaymentStripe", {

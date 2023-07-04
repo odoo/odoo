@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { EpsonPrinter } from "@pos_epson_printer/js/epson_printer";
+import { EpsonPrinter } from "@pos_epson_printer/app/epson_printer";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, "pos_epson_printer.PosStore", {

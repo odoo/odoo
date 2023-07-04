@@ -26,13 +26,10 @@
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_loyalty/static/src/css/Loyalty.scss',
-            'pos_loyalty/static/src/app/**/*',
-            'pos_loyalty/static/src/js/**/*',
-            'pos_loyalty/static/src/xml/**/*',
+            'pos_loyalty/static/src/**/*',
         ],
         'web.assets_tests': [
-            'pos_loyalty/static/src/tours/**/*',
+            'pos_loyalty/static/tests/tours/**/*',
         ],
     },
     'license': 'LGPL-3',
