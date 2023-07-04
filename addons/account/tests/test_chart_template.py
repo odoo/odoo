@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.models.chart_template import AccountChartTemplate
+from odoo.addons.account.models.chart_template import TEMPLATE_MODELS
 from odoo.addons.account.tests.common import instantiate_accountman
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -52,11 +53,19 @@ def test_get_data(self, template_code):
                 ('Tax 2', 'test_tax_2_template', 0),
             ]
         },
+        'account.group': {
+            'test_account_group_1': {
+                'name': 'test_account_group_name_1',
+                'code_prefix_start': 222220,
+                'code_prefix_end': 222229,
+            }
+        },
         'account.account': {
             'test_account_income_template': {
                 'name': 'property_income_account',
                 'code': '222221',
                 'account_type': 'income',
+                'group_id': 'test_account_group_1',
             },
             'test_account_expense_template': {
                 'name': 'property_expense_account',
@@ -77,6 +86,16 @@ def test_get_data(self, template_code):
                 ]
             }
         },
+        'account.reconcile.model': {
+            'test_account_reconcile_model_1': {
+                'name': 'test_reconcile_model_with_payment_tolerance',
+                'rule_type': 'invoice_matching',
+                'allow_payment_tolerance': True,
+                'payment_tolerance_type': 'percentage',
+                'payment_tolerance_param': 2.0,
+                'line_ids': [Command.create({'account_id': 'test_account_income_template'})],
+            }
+        }
     }
 
 def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=True):
@@ -363,3 +382,27 @@ class TestChartTemplate(TransactionCase):
         self.assertFalse(parent_tax.active, "The parent tax should be inactive.")
         self.assertEqual(len(children_taxes), 2, "Two children should have been created, even if they are inactive.")
         self.assertEqual(children_taxes.mapped('active'), [False] * 2, "Children taxes should be inactive.")
+
+    def test_update_reload_no_new_data(self):
+        """ Tests that the reload does nothing when data are left unchanged.
+        Tested models: account.group, account.account, account.tax.group, account.tax, account.journal,
+        account.reconcile.model, account.fiscal.position, account.fiscal.position.tax, account.tax.repartition.line,
+        account.account.tag.
+        """
+        def get_domain(model):
+            if model == 'account.account.tag':
+                return [('country_id', '=', self.company_1.country_id.id)]
+            else:
+                return [('company_id', '=', self.company_1.id)]
+
+        sub_models = ('account.fiscal.position.tax', 'account.tax.repartition.line', 'account.account.tag')
+        data_before = {}
+        for model in TEMPLATE_MODELS + sub_models:
+            data_before[model] = self.env[model].search(get_domain(model))
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        for model in TEMPLATE_MODELS + sub_models:
+            data_after = self.env[model].search(get_domain(model))
+            self.assertEqual(data_before[model], data_after)
