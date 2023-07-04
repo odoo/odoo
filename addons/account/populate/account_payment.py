@@ -61,7 +61,7 @@ class AccountPayment(models.Model):
             :return list<int>: list of ids of payment methods of the selected type
             """
             need_bank_account = self._get_method_codes_needing_bank_account()
-            other_blacklist = ['sdd']
+            other_blacklist = ['sdd', 'bacs_dd']
             return self.env['account.payment.method.line'].search([
                 ('journal_id', '=', journal),
                 ('payment_method_id.payment_type', '=', payment_type),
