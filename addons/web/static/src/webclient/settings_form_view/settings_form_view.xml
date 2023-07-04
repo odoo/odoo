@@ -37,7 +37,10 @@
     </t>
 
     <t t-name="web.SettingsFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary" owl="1">
-        <xpath expr="//div[hasclass('o_form_buttons_edit')]" position="inside">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="attributes">
+            <attribute name="class" add="order-first w-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="after">
             <span t-if="model.root.isDirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
         </xpath>
     </t>
