@@ -14,6 +14,7 @@ class TestSoLineMilestones(TestSaleCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.product_delivery_milestones1 = cls.env['product.product'].create({
