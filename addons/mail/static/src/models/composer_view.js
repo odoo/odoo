@@ -706,6 +706,7 @@ registerModel({
             let data = {
                 body: this._generateMessageBody(),
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
+                attachment_tokens: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.accessToken),
             };
             const messageViewInEditing = this.messageViewInEditing;
             await messageViewInEditing.message.updateContent(data);
@@ -851,6 +852,7 @@ registerModel({
         _getMessageData() {
             return {
                 attachment_ids: this.composer.attachments.map(attachment => attachment.id),
+                attachment_tokens: this.composer.attachments.map(attachment => attachment.accessToken),
                 body: this._generateMessageBody(),
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),
