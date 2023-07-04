@@ -281,10 +281,7 @@ class MrpWorkorder(models.Model):
     @api.depends('production_id', 'product_id')
     def _compute_display_name(self):
         for wo in self:
-            if len(wo.production_id.workorder_ids) == 1:
-                wo.display_name = f"{wo.production_id.name} - {wo.product_id.name} - {wo.name}"
-            else:
-                wo.display_name = f"{wo.production_id.workorder_ids.ids.index(wo._origin.id) + 1} - {wo.production_id.name} - {wo.product_id.name} - {wo.name}"
+            wo.display_name = f"{wo.production_id.name} - {wo.name}"
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
