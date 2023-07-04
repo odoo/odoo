@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { getDefaultFieldValue, getDefaultOperator } from "./domain_selector_fields";
+import { getDefaultValue, getDefaultOperator } from "./domain_selector_fields";
 import { useService } from "@web/core/utils/hooks";
 import { Expression, toValue, toDomain, toTree } from "@web/core/domain_tree";
 import { _t } from "@web/core/l10n/translation";
@@ -20,7 +20,7 @@ export function createVirtualOperators(tree, getFieldDef) {
             const fieldDef = getFieldDef(path);
             if (fieldDef?.type === "boolean") {
                 return { ...tree, operator: operator === "=" ? "is" : "is_not" };
-            } else if (value === false) {
+            } else if (fieldDef?.type !== "many2one" && value === false) {
                 return { ...tree, operator: operator === "=" ? "not_set" : "set" };
             }
         }
@@ -255,13 +255,13 @@ function getDefaultDomain(fieldDefs) {
     for (const name of SPECIAL_FIELDS) {
         fieldDef = fieldDefs[name];
         if (fieldDef) {
-            const operatorInfo = getDefaultOperator(fieldDef);
-            const value = getDefaultFieldValue(fieldDef, operatorInfo.operator);
+            const operator = getDefaultOperator(fieldDef);
+            const value = getDefaultValue(fieldDef, operator);
             return buildDomain({
                 type: "condition",
                 negate: false,
                 path: fieldDef.name,
-                operator: operatorInfo.operator,
+                operator,
                 value,
             });
         }

@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainSelector.Editor" owl="1">
-        <t t-if="isExprValue">
-            <div class="o_ds_expr_value o_input d-flex align-items-center p-0" data-tooltip="Expressions can not be edited">
-                <span class="ms-2" t-esc="props.value" />
-                <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Expression" />
-                <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.onExprRemove()">
+        <t t-if="props.info.isSupported(props.value)">
+            <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
+        </t>
+        <t t-else="">
+            <div class="o_ds_expr_value o_input d-flex align-items-center p-0">
+                <span class="ms-2" t-esc="stringifiedValue" />
+                <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Value not supported" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.update(props.info.defaultValue())">
                     <i class="fa fa-times" />
                 </button>
             </div>
-        </t>
-        <t t-else="">
-            <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
         </t>
     </t>
 
@@ -52,9 +52,9 @@
 
     <t t-name="web.DomainSelector.Range" owl="1">
         <div class="d-flex h-100 align-items-center">
-            <Editor info="editorInfo" value="getValue(0)" update="getUpdater(0)" onExprRemove="getExprRemover(0)" />
+            <Editor info="props.editorInfo" value="getValue(0)" update="getUpdater(0)" fieldDef="props.fieldDef" />
             <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
-            <Editor info="editorInfo" value="getValue(1)" update="getUpdater(1)" onExprRemove="getExprRemover(1)" />
+            <Editor info="props.editorInfo" value="getValue(1)" update="getUpdater(1)" fieldDef="props.fieldDef" />
         </div>
     </t>
 

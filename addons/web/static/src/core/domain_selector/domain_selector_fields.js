@@ -16,17 +16,24 @@ import { DateTimeInput } from "../datetime/datetime_input";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { Expression, formatValue } from "@web/core/domain_tree";
+import {
+    DomainSelectorAutocomplete,
+    DomainSelectorSingleAutocomplete,
+} from "./domain_selector_autocomplete";
 
 const { DateTime } = luxon;
+
+const identity = (x) => x;
+const isString = (value) => typeof value === "string";
 
 // ============================================================================
 
 export class Editor extends Component {
-    static props = ["info", "value", "update", "fieldDef?", "onExprRemove"];
+    static props = ["info", "value", "update", "fieldDef?"];
     static template = "web.DomainSelector.Editor";
 
-    get isExprValue() {
-        return this.props.value instanceof Expression;
+    get stringifiedValue() {
+        return formatValue(this.props.value);
     }
 }
 
@@ -94,13 +101,9 @@ class TagInput extends Component {
 }
 
 class Range extends Component {
-    static props = ["value", "update", "component", "subProps", "getValueOnExprRemove"];
+    static props = ["value", "update", "editorInfo", "fieldDef"];
     static template = "web.DomainSelector.Range";
     static components = { Editor };
-
-    get editorInfo() {
-        return { component: this.props.component, extractProps: this.props.subProps };
-    }
 
     update(index, newValue) {
         const result = [...this.props.value];
@@ -114,10 +117,6 @@ class Range extends Component {
 
     getUpdater(index) {
         return (newValue) => this.update(index, newValue);
-    }
-
-    getExprRemover(index) {
-        return () => this.update(index, this.props.getValueOnExprRemove());
     }
 }
 
@@ -133,10 +132,54 @@ function parseValue(fieldType, value) {
     }
 }
 
-function makeEditor(component, props) {
+function makeEditor(component, { props, isSupported, defaultValue } = {}) {
     return {
         component,
         extractProps: props || (({ value, update }) => ({ value, update })),
+        isSupported: isSupported || ((value) => !(value instanceof Expression)),
+        defaultValue:
+            defaultValue ||
+            ((fieldDef, operator) => {
+                switch (operator) {
+                    case "in":
+                    case "not in":
+                        return [];
+                    case "set":
+                    case "not_set":
+                    case "child_of":
+                    case "parent_of":
+                        return false;
+                    case "is":
+                    case "is_not":
+                        return true;
+                    case "=like":
+                    case "=ilike":
+                    case "like":
+                    case "not like":
+                    case "ilike":
+                    case "not ilike":
+                        return "";
+                    default: {
+                        let val;
+                        switch (fieldDef?.type) {
+                            case "integer":
+                            case "float":
+                            case "monetary":
+                                val = 1;
+                                break;
+                            case "boolean":
+                                val = false;
+                                break;
+                            default:
+                                val = "";
+                        }
+                        if (operator === "between") {
+                            return [val, val];
+                        }
+                        return val;
+                    }
+                }
+            }),
     };
 }
 
@@ -179,47 +222,53 @@ const DEFAULT = {
     defaultValue: () => "",
 };
 
+const SET_NOT_SET_EDITOR = {
+    component: null,
+    extractProps: identity,
+    isSupported: (value) => value === false,
+};
+
 // ----------------------------------------------------------------------------
 
 const BOOLEAN = {
     operators: ["is", "is_not"],
     editors: {
-        default: makeEditor(Select, ({ value, update }) => ({
-            value,
-            update,
-            options: [
-                [true, _lt("set")],
-                [false, _lt("not set")],
-            ],
-        })),
+        default: makeEditor(Select, {
+            props: ({ value, update }) => ({
+                value,
+                update,
+                options: [
+                    [true, _lt("set")],
+                    [false, _lt("not set")],
+                ],
+            }),
+        }),
     },
     defaultValue: () => true,
 };
 
 // ----------------------------------------------------------------------------
 
-const DATETIME_EDITOR_BETWEEN = makeEditor(Range, ({ value, update, fieldDef }) => ({
-    value,
-    update,
-    getValueOnExprRemove: () => genericSerializeDate(fieldDef.type, DateTime.local()),
-    component: DateTimeInput,
-    subProps: ({ value, update }) => ({
-        value: genericDeserializeDate(fieldDef.type, value),
-        type: fieldDef.type,
-        onApply: (value) =>
-            update(value ? genericSerializeDate(fieldDef.type, value) : DateTime.local()),
+const DATETIME_EDITOR_BETWEEN = makeEditor(Range, {
+    props: ({ value, update, fieldDef }) => ({
+        value,
+        update,
+        editorInfo: getEditorInfo(fieldDef),
+        fieldDef,
     }),
-}));
+});
 
 const DATETIME = {
     operators: ["=", "!=", ">", ">=", "<", "<=", "between", "set", "not_set"],
     editors: {
-        default: makeEditor(DateTimeInput, ({ value, update, fieldDef }) => ({
-            value: genericDeserializeDate(fieldDef.type, value),
-            type: fieldDef.type,
-            onApply: (value) =>
-                update(value ? genericSerializeDate(fieldDef.type, value) : DateTime.local()),
-        })),
+        default: makeEditor(DateTimeInput, {
+            props: ({ value, update, fieldDef }) => ({
+                value: genericDeserializeDate(fieldDef.type, value),
+                type: fieldDef.type,
+                onApply: (value) =>
+                    update(value ? genericSerializeDate(fieldDef.type, value) : DateTime.local()),
+            }),
+        }),
         between: DATETIME_EDITOR_BETWEEN,
     },
     defaultValue: ({ type }) => genericSerializeDate(type, DateTime.local()),
@@ -242,56 +291,126 @@ const TEXT = {
 const NUMBER = {
     operators: ["=", "!=", ">", ">=", "<", "<=", "between", "ilike", "not ilike", "set", "not_set"],
     editors: {
-        default: makeEditor(Input, ({ value, update, fieldDef }) => ({
-            value: String(value),
-            update: (value) => update(parseValue(fieldDef.type, value)),
-        })),
-        between: makeEditor(Range, ({ value, update, fieldDef }) => ({
-            value,
-            update,
-            getValueOnExprRemove: () => 1,
-            component: Input,
-            subProps: ({ value, update }) => ({
+        default: makeEditor(Input, {
+            props: ({ value, update, fieldDef }) => ({
                 value: String(value),
-                update: (newValue) => update(parseValue(fieldDef.type, newValue)),
+                update: (value) => update(parseValue(fieldDef.type, value)),
             }),
-        })),
+        }),
+        between: makeEditor(Range, {
+            props: ({ value, update, fieldDef }) => ({
+                value,
+                update,
+                editorInfo: getEditorInfo(fieldDef),
+                fieldDef,
+            }),
+        }),
     },
     defaultValue: () => 1,
 };
 
 // ----------------------------------------------------------------------------
 
-const RELATIONAL_EDITOR_EQUALITY = makeEditor(Input, ({ value, update }) => ({
-    value: `${value}`,
-    update: (value) => update(parseValue("integer", value)),
-}));
+const isId = (value) => Number.isInteger(value) && value >= 1;
 
-const RELATIONAL = {
-    operators: ["=", "!=", "ilike", "not ilike", "set", "not_set"],
-    editors: {
-        default: makeEditor(Input),
-        equal: RELATIONAL_EDITOR_EQUALITY,
-        "!=": RELATIONAL_EDITOR_EQUALITY,
+const RELATIONAL_EDITOR_EQUALITY = makeEditor(DomainSelectorSingleAutocomplete, {
+    props: ({ value, update, fieldDef }) => {
+        return {
+            resModel: fieldDef.relation,
+            fieldString: fieldDef.string,
+            update,
+            value,
+        };
     },
-    defaultValue: ({ type }) => (type === "many2one" ? 1 : []),
+    isSupported: () => true,
+});
+RELATIONAL_EDITOR_EQUALITY.shouldResetValue = (value) => value !== false || !isId(value);
+
+const RELATIONAL_EDITOR_IN = makeEditor(DomainSelectorAutocomplete, {
+    props: ({ value, update, fieldDef }) => {
+        return {
+            resModel: fieldDef.relation,
+            fieldString: fieldDef.string,
+            update: (value) => update([...new Set(value)]),
+            value: Array.isArray(value) ? [...new Set(value)] : value,
+        };
+    },
+    isSupported: (value) => Array.isArray(value),
+});
+
+const MANY2ONE = {
+    operators: ["in", "not in", "=", "!=", "ilike", "not ilike", "set", "not_set"],
+    editors: {
+        default: makeEditor(Input, { isSupported: isString }), // ilike, not ilike + others (found in original domain)
+        "=": RELATIONAL_EDITOR_EQUALITY,
+        "!=": RELATIONAL_EDITOR_EQUALITY,
+        in: RELATIONAL_EDITOR_IN,
+        "not in": RELATIONAL_EDITOR_IN,
+        set: SET_NOT_SET_EDITOR,
+        not_set: SET_NOT_SET_EDITOR,
+    },
+    defaultValue: (_, operator) => {
+        switch (operator) {
+            case "in":
+            case "not in":
+                return [];
+            case "=":
+            case "!=":
+            case "set":
+            case "not_set":
+                return false;
+            default:
+                return "";
+        }
+    },
+};
+
+const X2MANY = {
+    operators: ["in", "not in", "=", "!=", "ilike", "not ilike", "set", "not_set"],
+    editors: {
+        default: makeEditor(Input, { isSupported: isString }), // ilike, not ilike + others (found in original domain)
+        in: RELATIONAL_EDITOR_IN,
+        "not in": RELATIONAL_EDITOR_IN,
+        "=": RELATIONAL_EDITOR_IN,
+        "!=": RELATIONAL_EDITOR_IN,
+        set: SET_NOT_SET_EDITOR,
+        not_set: SET_NOT_SET_EDITOR,
+    },
+    defaultValue: (_, operator) => {
+        switch (operator) {
+            case "in":
+            case "not in":
+            case "=":
+            case "!=":
+                return [];
+            case "set":
+            case "not_set":
+                return false;
+            default:
+                return "";
+        }
+    },
 };
 
 // ----------------------------------------------------------------------------
 
-const SELECTION_EDITOR_IN = makeEditor(Input, ({ value, update }) => ({
-    value: formatAST(toPyValue(value)),
-    update: (value) => update(evaluateExpr(value)),
-}));
+const SELECTION_EDITOR_IN = makeEditor(Input, {
+    props: ({ value, update }) => ({
+        value: formatAST(toPyValue(value)),
+        update: (value) => update(evaluateExpr(value)),
+    }),
+});
 
 const SELECTION = {
     operators: ["=", "!=", "in", "not in", "set", "not_set"],
     editors: {
-        default: makeEditor(Select, ({ value, update, fieldDef }) => ({
-            value,
-            update,
-            options: fieldDef.selection || [],
-        })),
+        default: makeEditor(Select, {
+            props: ({ value, update, fieldDef }) => ({
+                value,
+                update,
+                options: fieldDef.selection || [],
+            }),
+        }),
         in: SELECTION_EDITOR_IN,
         "not in": SELECTION_EDITOR_IN,
     },
@@ -308,11 +427,13 @@ const PROPERTIES = {
 const PROPERTIES_SELECTION = {
     operators: ["=", "!=", "set", "not_set"],
     editors: {
-        default: makeEditor(Select, ({ value, update, fieldDef }) => ({
-            value,
-            update,
-            options: fieldDef.selection || [],
-        })),
+        default: makeEditor(Select, {
+            props: ({ value, update, fieldDef }) => ({
+                value,
+                update,
+                options: fieldDef.selection || [],
+            }),
+        }),
     },
     defaultValue: ({ selection }) => selection?.[0]?.[0] ?? false,
 };
@@ -344,10 +465,10 @@ export const FIELD_DESCRIPTIONS = {
     html: TEXT,
     integer: NUMBER,
     json: JSON_FIELD,
-    many2many: RELATIONAL,
-    many2one: RELATIONAL,
+    many2many: X2MANY,
+    many2one: MANY2ONE,
     monetary: NUMBER,
-    one2many: RELATIONAL,
+    one2many: X2MANY,
     properties: PROPERTIES,
     properties_definition: PROPERTIES,
     selection: SELECTION,
@@ -375,7 +496,9 @@ export function getFieldInfo(fieldDef) {
 
 export function getEditorInfo(fieldDef, operator) {
     const descr = getFieldInfo(fieldDef);
-    return descr.editors[operator] || descr.editors.default;
+    const editorInfo = descr.editors[operator] || descr.editors.default;
+    editorInfo.defaultValue = () => getDefaultValue(fieldDef, operator);
+    return editorInfo;
 }
 
 export function getOperatorsInfo(fieldDef) {
@@ -383,12 +506,12 @@ export function getOperatorsInfo(fieldDef) {
     return selectOperators(descr.operators);
 }
 
-export function getDefaultFieldValue(fieldDef, operator) {
+export function getDefaultValue(fieldDef, operator) {
     const descr = getFieldInfo(fieldDef);
     return descr.defaultValue(fieldDef, operator);
 }
 
 export function getDefaultOperator(fieldDef) {
-    const [firstOperator] = getOperatorsInfo(fieldDef);
-    return firstOperator;
+    const descr = getFieldInfo(fieldDef);
+    return descr.operators[0];
 }

@@ -9,6 +9,7 @@ import { escape } from "@web/core/utils/strings";
 import { FormViewDialog } from "./form_view_dialog";
 
 import { Component, markup, useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 export class SelectCreateDialog extends Component {
     setup() {
@@ -108,3 +109,5 @@ SelectCreateDialog.defaultProps = {
     domain: [],
     context: {},
 };
+
+registry.category("dialogs").add("select_create", SelectCreateDialog);

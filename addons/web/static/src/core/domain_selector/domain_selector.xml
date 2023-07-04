@@ -168,9 +168,9 @@
                 </t>
             </select>
         </div>
-        <t t-if="getOperatorInfo(node).valueCount">
+        <t t-if="getOperatorInfo(node).valueCount !== 0">
             <div class="o_ds_value_cell">
-                <Editor info="getEditorInfo(node)" value="node.value" update="(value) => this.updateLeafValue(node, value)" fieldDef="getFieldDef(node.path)" onExprRemove="() => this.removeExprValue(node)" />
+                <Editor info="getEditorInfo(node)" value="node.value" update="(value) => this.updateLeafValue(node, value)" fieldDef="getFieldDef(node.path)"/>
             </div>
         </t>
        
