@@ -49,6 +49,10 @@ class TestProjectRecurrence(TransactionCase):
             self.assertFalse(bool(task.recurrence_id), 'the recurrence should be deleted')
 
     def test_recurrent_tasks_fields(self):
+        self.env['project.tags'].create({
+            'name': 'Test Tag',
+        })
+
         with freeze_time(self.date_01_01):
             form = Form(self.env['project.task'])
             form.project_id = self.project_recurring
