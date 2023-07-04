@@ -191,8 +191,6 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
-            if self.env.context.get('import_file') and vals.get('product_uom_qty'):
-                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
 
         mls = super().create(vals_list)
 
@@ -204,6 +202,8 @@ class StockMoveLine(models.Model):
         # If this picking is already done we should generate an
         # associated done move.
         for move_line in mls:
+            if self.env.context.get('import_file') and move_line.product_uom_qty and not move_line._should_bypass_reservation(move_line.location_id):
+                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
