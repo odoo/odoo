@@ -413,51 +413,51 @@ class LoyaltyProgram(models.Model):
         if ctx_menu_type == 'gift_ewallet':
             return {
                 'gift_card': {
-                    'title': _('Gift Card'),
-                    'description': _('Sell Gift Cards, that allows to purchase products'),
+                    'title': _("Gift Card"),
+                    'description': _("Sell Gift Cards, that allows to purchase products"),
                     'icon': 'gift_card',
                 },
                 'ewallet': {
-                    'title': _('eWallet'),
-                    'description': _('Fill in your eWallet, to pay future orders'),
+                    'title': _("eWallet"),
+                    'description': _("Fill in your eWallet, to pay future orders"),
                     'icon': 'ewallet',
                 },
             }
         return {
-            'promo_code': {
-                'title': _('Promo Code'),
-                'description': _('Get 10% of on some products, with a code'),
-                'icon': 'promo_code',
-            },
-            'loyalty': {
-                'title': _('Loyalty Cards'),
-                'description': _('Win points with each purchases, and claim gifts'),
-                'icon': 'loyalty_cards',
-            },
-            'fidelity': {
-                'title': _('Fidelity Cards'),
-                'description': _('Buy 10 products to get 10$ off on the 11th one'),
-                'icon': 'fidelity_cards',
-            },
             'promotion': {
-                'title': _('Promotional Program'),
-                'description': _('Automatic promo: 10% off on orders higher than $50'),
+                'title': _("Promotional Program"),
+                'description': _("Automatic promo: 10% off on orders higher than $50"),
                 'icon': 'promotional_program',
             },
-            'coupons': {
-                'title': _('Coupons'),
-                'description': _('Send unique coupons that give access to rewards'),
-                'icon': 'coupons',
+            'promo_code': {
+                'title': _("Promo Code"),
+                'description': _("Get 10% off on some products, with a code"),
+                'icon': 'promo_code',
             },
             'buy_x_get_y': {
-                'title': _('2+1 Free'),
-                'description': _('Buy 2 products and get a third one for free'),
+                'title': _("Buy X Get Y"),
+                'description': _("Buy 2 products and get a third one for free"),
                 'icon': '2_plus_1',
             },
             'next_order_coupons': {
-                'title': _('Next Order Coupons'),
-                'description': _('Send a coupon after an order, valid for next purchase'),
+                'title': _("Next Order Coupon"),
+                'description': _("Send a coupon after an order, valid for next purchase"),
                 'icon': 'coupons',
+            },
+            'loyalty': {
+                'title': _("Loyalty Card"),
+                'description': _("Win points with each purchase, and claim gifts"),
+                'icon': 'loyalty_cards',
+            },
+            'coupons': {
+                'title': _("Coupon"),
+                'description': _("Generate and share unique coupons with your customers"),
+                'icon': 'coupons',
+            },
+            'fidelity': {
+                'title': _("Fidelity Card"),
+                'description': _("Buy 10 products to get 10$ off on the 11th one"),
+                'icon': 'fidelity_cards',
             },
         }
 
