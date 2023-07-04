@@ -4,15 +4,15 @@ import { useService } from "@web/core/utils/hooks";
 
 const { onMounted, onPatched, useRef } = owl;
 
-export const ExpenseMobileQRCode = {
+export const ExpenseMobileQRCode = (T) => class ExpenseMobileQRCode extends T {
     setup() {
-        this._super();
+        super.setup();
         this.root = useRef('root');
         this.actionService = useService('action');
 
         onMounted(this.bindAppsIcons);
         onPatched(this.bindAppsIcons);
-    },
+    }
 
     bindAppsIcons() {
         const apps = this.root.el.querySelectorAll('.o_expense_mobile_app');
@@ -24,7 +24,7 @@ export const ExpenseMobileQRCode = {
         for (const app of apps) {
             app.addEventListener('click', handler);
         }
-    },
+    }
 
     handleClick(ev) {
         ev.preventDefault();

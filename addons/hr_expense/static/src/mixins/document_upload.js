@@ -4,9 +4,9 @@ import { useBus, useService } from '@web/core/utils/hooks';
 
 const { useRef, useEffect, useState } = owl;
 
-export const ExpenseDocumentDropZone = {
+export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
     setup() {
-        this._super();
+        super.setup();
         this.dragState = useState({
             showDragZone: false,
         });
@@ -31,31 +31,31 @@ export const ExpenseDocumentDropZone = {
             },
             () => [document.querySelector('.o_content')]
         );
-    },
+    }
 
     highlight(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         this.dragState.showDragZone = true;
-    },
+    }
 
     unhighlight(ev) {
         ev.stopPropagation();
         ev.preventDefault();
         this.dragState.showDragZone = false;
-    },
+    }
 
     async onDrop(ev) {
         ev.preventDefault();
         await this.env.bus.trigger("change_file_input", {
             files: ev.dataTransfer.files,
         });        
-    },
+    }
 };
 
-export const ExpenseDocumentUpload = {
+export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends T {
     setup() {
-        this._super();
+        super.setup();
         this.actionService = useService('action');
         this.notification = useService('notification');
         this.orm = useService('orm');
@@ -67,11 +67,11 @@ export const ExpenseDocumentUpload = {
             this.fileInput.el.files = ev.detail.files;
             await this.onChangeFileInput();
         });
-    },
+    }
 
     uploadDocument() {
         this.fileInput.el.click();
-    },
+    }
 
     async onChangeFileInput() {
         const params = {
@@ -87,7 +87,7 @@ export const ExpenseDocumentUpload = {
             throw new Error(attachments.error);
         }
         this.onUpload(attachments);
-    },
+    }
 
     async onUpload(attachments) {
         const attachmentIds = attachments.map((a) => a.id);
@@ -100,5 +100,5 @@ export const ExpenseDocumentUpload = {
 
         const action = await this.orm.call('hr.expense', 'create_expense_from_attachments', ["", attachmentIds]);
         this.actionService.doAction(action);
-    },
+    }
 };

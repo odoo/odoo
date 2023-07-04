@@ -5,7 +5,6 @@ import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command
 
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
-import { patch } from "@web/core/utils/patch";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { browser } from "@web/core/browser/browser";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
@@ -22,9 +21,9 @@ import {
 export class Many2ManyAvatarUserTagsList extends TagsList {}
 Many2ManyAvatarUserTagsList.template = "mail.Many2ManyAvatarUserTagsList";
 
-const userChatter = {
+const WithUserChatter = (T) => class UserChatterMixin extends T {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         this.openChat = useOpenChat(this.relation);
         if (this.props.withCommand) {
             useAssignUserCommand();
@@ -34,11 +33,11 @@ const userChatter = {
         });
         this.openTimeout = false;
         this.lastOpenedId = 0;
-    },
+    }
 
     getTagProps(record) {
         return {
-            ...this._super(...arguments),
+            ...super.getTagProps(...arguments),
             onImageClicked: () => this.openChat(record.resId),
             openCard: (ev) => {
                 if (this.env.isSmall || this.relation !== "res.users") {
@@ -62,15 +61,15 @@ const userChatter = {
                 delete this.openTimeout;
             },
         };
-    },
-};
-export class Many2ManyTagsAvatarUserField extends Many2ManyTagsAvatarField {
+    }
+}
+
+export class Many2ManyTagsAvatarUserField extends WithUserChatter(Many2ManyTagsAvatarField) {
     static components = {
         ...Many2ManyTagsAvatarField.components,
         TagsList: Many2ManyAvatarUserTagsList,
     };
 }
-patch(Many2ManyTagsAvatarUserField.prototype, "mail/fields/web", userChatter);
 
 export const many2ManyTagsAvatarUserField = {
     ...many2ManyTagsAvatarField,
@@ -84,7 +83,7 @@ export class KanbanMany2ManyAvatarUserTagsList extends KanbanMany2ManyTagsAvatar
     static template = "mail.KanbanMany2ManyAvatarUserTagsList";
 }
 
-export class KanbanMany2ManyTagsAvatarUserField extends KanbanMany2ManyTagsAvatarField {
+export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(KanbanMany2ManyTagsAvatarField) {
     static template = "mail.KanbanMany2ManyTagsAvatarUserField";
     static components = {
         ...KanbanMany2ManyTagsAvatarField.components,
@@ -94,7 +93,6 @@ export class KanbanMany2ManyTagsAvatarUserField extends KanbanMany2ManyTagsAvata
         return !this.props.readonly;
     }
 }
-patch(KanbanMany2ManyTagsAvatarUserField.prototype, "mail/fields/web", userChatter);
 export const kanbanMany2ManyTagsAvatarUserField = {
     ...kanbanMany2ManyTagsAvatarField,
     component: KanbanMany2ManyTagsAvatarUserField,
@@ -102,7 +100,7 @@ export const kanbanMany2ManyTagsAvatarUserField = {
 };
 registry.category("fields").add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
 
-export class ListMany2ManyTagsAvatarUserField extends ListMany2ManyTagsAvatarField {
+export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(ListMany2ManyTagsAvatarField) {
     static template = "mail.ListMany2ManyTagsAvatarUserField";
     static components = {
         ...ListMany2ManyTagsAvatarField.components,
@@ -113,7 +111,6 @@ export class ListMany2ManyTagsAvatarUserField extends ListMany2ManyTagsAvatarFie
         return this.props.record.data[this.props.name].records.length === 1 || !this.props.readonly;
     }
 }
-patch(ListMany2ManyTagsAvatarUserField.prototype, "mail/fields/web", userChatter);
 
 export const listMany2ManyTagsAvatarUserField = {
     ...listMany2ManyTagsAvatarField,
