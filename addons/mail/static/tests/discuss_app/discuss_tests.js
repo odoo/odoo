@@ -814,17 +814,17 @@ QUnit.test("rendering of inbox message", async (assert) => {
     const $message = $(".o-mail-Message");
     assert.containsOnce($message, ".o-mail-Message-header:contains(on Refactoring)");
     assert.containsN($message, ".o-mail-Message-actions i", 4);
-    assert.containsOnce($message, "[title='Add a Reaction']");
     assert.containsOnce($message, "[title='Reply']");
     assert.containsOnce($message, "[title='Mark as Todo']");
+    assert.containsOnce($message, "[title='Mark as Read']");
     assert.containsOnce($message, "[title='Expand']");
     await click("[title='Expand']");
     assert.containsN($message, ".o-mail-Message-actions i", 5);
-    assert.containsOnce($message, "[title='Add a Reaction']");
     assert.containsOnce($message, "[title='Reply']");
     assert.containsOnce($message, "[title='Mark as Todo']");
-    assert.containsOnce($message, "[title='Expand']");
     assert.containsOnce($message, "[title='Mark as Read']");
+    assert.containsOnce($message, "[title='Expand']");
+    assert.containsOnce($message, "[title='Add a Reaction']");
 });
 
 QUnit.test("Unfollow message", async function (assert) {
