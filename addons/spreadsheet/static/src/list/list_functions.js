@@ -24,6 +24,7 @@ functionRegistry.add("ODOO.LIST", {
         arg("index (string)", _t("Position of the record in the list.")),
         arg("field_name (string)", _t("Name of the field.")),
     ],
+    category: "Odoo",
     compute: function (listId, index, fieldName) {
         const id = toString(listId);
         const position = toNumber(index, this.locale) - 1;
@@ -65,6 +66,7 @@ functionRegistry.add("ODOO.LIST.HEADER", {
         arg("list_id (string)", _t("ID of the list.")),
         arg("field_name (string)", _t("Name of the field.")),
     ],
+    category: "Odoo",
     compute: function (listId, fieldName) {
         const id = toString(listId);
         const field = toString(fieldName);

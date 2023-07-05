@@ -145,6 +145,7 @@ const ODOO_FIN_ARGS = () => [
 functionRegistry.add("ODOO.CREDIT", {
     description: _lt("Get the total credit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
+    category: "Odoo",
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -179,6 +180,7 @@ functionRegistry.add("ODOO.CREDIT", {
 functionRegistry.add("ODOO.DEBIT", {
     description: _lt("Get the total debit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
+    category: "Odoo",
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -213,6 +215,7 @@ functionRegistry.add("ODOO.DEBIT", {
 functionRegistry.add("ODOO.BALANCE", {
     description: _lt("Get the total balance for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
+    category: "Odoo",
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -261,6 +264,7 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
         arg("date (date)", _lt("Reference date.")),
         arg("company_id (number, optional)", _lt("The company.")),
     ],
+    category: "Odoo",
     returns: ["NUMBER"],
     computeFormat: function () {
         return this.locale.dateFormat;
@@ -280,6 +284,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
         arg("date (date)", _lt("Reference date.")),
         arg("company_id (number, optional)", _lt("The company.")),
     ],
+    category: "Odoo",
     returns: ["NUMBER"],
     computeFormat: function () {
         return this.locale.dateFormat;
@@ -296,6 +301,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     description: _lt("Returns the account ids of a given group."),
     args: [arg("type (string)", _lt("Account type."))],
+    category: "Odoo",
     returns: ["NUMBER"],
     compute: function (accountType) {
         const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));
