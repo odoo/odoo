@@ -452,16 +452,36 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             'deposit_account_id': self.revenue_account.id,
         }).create_invoices()
 
+        invoice = sale_order.invoice_ids
+
         # Check that the warning does not appear even though we are creating an invoice
         # that should bring partner_a's credit above its limit.
-        self.assertEqual(sale_order.invoice_ids.partner_credit_warning, '')
+        self.assertEqual(invoice.partner_credit_warning, '')
+
 
         # Make the down payment invoice amount larger than the Amount to Invoice
         # and check that the warning appears with the correct amounts,
         # i.e. 1.500 instead of 2.500 (1.000 SO + 1.500 down payment invoice).
-        sale_order.invoice_ids.invoice_line_ids.quantity = 3
+        invoice.invoice_line_ids.quantity = 3
         self.assertEqual(
-            sale_order.invoice_ids.partner_credit_warning,
+            invoice.partner_credit_warning,
             "partner_a has reached its Credit Limit of: $\xa01,000.00\n"
             "Total amount due (including this document): $\xa01,500.00"
         )
+
+        invoice.invoice_line_ids.quantity = 1
+        invoice.action_post()
+
+        # Create a credit note reversing the invoice
+        self.env['account.move.reversal'].with_company(self.env.company).create(
+            {
+                'move_ids': [Command.set((invoice.id,))],
+                'journal_id': invoice.journal_id.id
+            }
+        ).reverse_moves()
+
+        credit_note = sale_order.invoice_ids[1]
+        credit_note.action_post()
+
+        # Check that the credit note is accounted for correctly for the amount_to_invoice
+        self.assertEqual(sale_order.amount_to_invoice, sale_order.amount_total)
