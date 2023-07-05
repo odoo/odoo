@@ -20,6 +20,7 @@
     ],
     'data': [
         'data/account_tax_report.xml',
+        'data/account_data.xml',
         'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
