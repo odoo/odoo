@@ -5566,7 +5566,7 @@ QUnit.module("Fields", (hooks) => {
                     const fieldValues = args.args[1];
                     assert.deepEqual(
                         fieldValues.trululu,
-                        { foo: "hello" },
+                        { foo: "hello", id: 1 },
                         "should have properly sent the parent changes"
                     );
                 }
@@ -5612,11 +5612,12 @@ QUnit.module("Fields", (hooks) => {
                         const fieldValues = args.args[1];
                         if (count === 1) {
                             assert.deepEqual(fieldValues.trululu, {
-                                foo: "hello",
+                                foo: "hello", id: 1,
                             });
                         } else if (count === 2) {
                             assert.deepEqual(fieldValues.trululu, {
                                 foo: "hello",
+                                id: 1,
                                 p: [[1, 1, { display_name: "new val" }]],
                             });
                         }

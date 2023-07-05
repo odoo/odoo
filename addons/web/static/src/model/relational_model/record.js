@@ -894,6 +894,9 @@ export class Record extends DataPoint {
             );
             if (this.config.relationField) {
                 localChanges[this.config.relationField] = this._parentRecord._getChanges();
+                if (!this._parentRecord.isNew) {
+                    localChanges[this.config.relationField].id = this._parentRecord.resId;
+                }
             }
             const otherChanges = await this.model._onchange(this.config, {
                 changes: localChanges,
