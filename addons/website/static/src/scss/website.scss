@@ -543,6 +543,9 @@ table.table_desc tr td {
     }
     // Content
     .carousel-inner {
+        // Create a new stacking context to ensure that elements like indicators
+        // and arrows will always appear on top of the carousel content.
+        isolation: isolate;
         overflow: hidden;
         height: 100%;
         .carousel-item {

@@ -47,6 +47,7 @@ class ChannelUsersRelation(models.Model):
     ]
 
     def _recompute_completion(self):
+        slides_marked_uncompleted = self.env.context.get("slides_marked_uncompleted")
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -64,13 +65,16 @@ class ChannelUsersRelation(models.Model):
         uncompleted_records = self.env['slide.channel.partner']
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
+            if record.completed and not slides_marked_uncompleted:
+                record.completion = 100.0
+            else:
+                record.completion = round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
 
             if not record.channel_id.active:
                 continue
             elif not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
-            elif record.completed and record.completed_slides_count < record.channel_id.total_slides:
+            elif slides_marked_uncompleted and record.completed and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
 
         if completed_records:

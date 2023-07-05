@@ -1731,15 +1731,30 @@ class MrpProduction(models.Model):
 
             move = moves and moves.pop(0)
             move_qty_to_reserve = move.product_qty
+
+            for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
+                taken_qty = min(quantity, move_qty_to_reserve)
+                taken_qty_uom = min(product_uom._compute_quantity(taken_qty, move_line.product_uom_id), move_line.qty_done)
+                if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
+                    continue
+                move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                move_qty_to_reserve -= taken_qty_uom
+                ml_by_move[index] = (quantity - taken_qty_uom, move_line, ml_vals)
+
+                if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    assigned_moves.add(move.id)
+                    move = moves and moves.pop(0)
+                    move_qty_to_reserve = move and move.product_qty or 0
+
             for quantity, move_line, ml_vals in ml_by_move:
                 while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
                     # Do not create `stock.move.line` if there is no initial demand on `stock.move`
                     taken_qty = min(move_qty_to_reserve, quantity)
                     taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
                     if move == initial_move:
-                        move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                        move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
                         if set_consumed_qty:
-                            move_line.qty_done = taken_qty_uom
+                            move_line.qty_done += taken_qty_uom
                     elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
                         new_ml_vals = dict(
                             ml_vals,
