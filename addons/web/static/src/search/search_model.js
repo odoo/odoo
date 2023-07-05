@@ -234,15 +234,13 @@ export function getDomainTreeDescription(tree, getDescription, isSubExpression =
     const { path, operator, value } = tree;
     const operatorInfo = getOperatorInfo(operator);
 
-    let description = getDescription(path);
-    if (typeof value === "boolean") {
-        description += ` is`;
-        if (value ? ["is_not", "!="].includes(operator) : ["is", "="].includes(operator)) {
-            description += ` not`;
-        }
-        description += ` set`;
+    let description = `${getDescription(path)} ${operatorInfo.label} `;
+
+    if (["set", "not_set"].includes(operatorInfo.key)) {
+        description = description.trim();
+    } else if (["is", "is_not"].includes(operatorInfo.key)) {
+        description += value ? _t("set") : _t("not set");
     } else {
-        description += ` ${operatorInfo.label} `;
         const values = Array.isArray(value) ? value : [value];
         let join;
         let addParenthesis;

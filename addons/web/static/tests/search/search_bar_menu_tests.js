@@ -3,6 +3,7 @@
 import {
     click,
     editInput,
+    editSelect,
     getFixture,
     getNodesTextContent,
     patchDate,
@@ -28,6 +29,7 @@ import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { registry } from "@web/core/registry";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import { createWebClient, doAction } from "../webclient/helpers";
+import { openModelFieldSelectorPopover } from "@web/../tests/core/model_field_selector_tests";
 
 function getDomain(searchable) {
     return searchable.env.searchModel.domain;
@@ -1731,6 +1733,66 @@ QUnit.module("Search", (hooks) => {
 
             assert.deepEqual(getFacetTexts(target), [`! ( Foo = 1 or ID = 2 )`]);
             assert.deepEqual(getDomain(controlPanel), ["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
+        });
+
+        QUnit.test("display of is (not) (not) set in facets", async function (assert) {
+            serverData.models.foo.fields.boolean = {
+                type: "boolean",
+                string: "Boolean",
+                searchable: true,
+            };
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+            });
+            assert.deepEqual(getFacetTexts(target), []);
+            assert.deepEqual(getDomain(controlPanel), []);
+
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+            await editSelect(target, ".o_domain_leaf_operator_select", "not_set");
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["ID is not set"]);
+            assert.deepEqual(getDomain(controlPanel), [["id", "=", false]]);
+
+            await click(target, ".o_searchview_facet_label");
+            await editSelect(target, ".o_domain_leaf_operator_select", "set");
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["ID is set"]);
+            assert.deepEqual(getDomain(controlPanel), [["id", "!=", false]]);
+
+            await click(target, ".o_searchview_facet_label");
+            await openModelFieldSelectorPopover(target);
+            await click(target.querySelector(".o_model_field_selector_popover_item_name"));
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["Boolean is set"]);
+            assert.deepEqual(getDomain(controlPanel), [["boolean", "=", true]]);
+
+            await click(target, ".o_searchview_facet_label");
+            await editSelect(target, ".o_domain_leaf_value_input", false);
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["Boolean is not set"]);
+            assert.deepEqual(getDomain(controlPanel), [["boolean", "=", false]]);
+
+            await click(target, ".o_searchview_facet_label");
+            await editSelect(target, ".o_domain_leaf_operator_select", "is_not");
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["Boolean is not not set"]);
+            assert.deepEqual(getDomain(controlPanel), [["boolean", "!=", false]]);
+
+            await click(target, ".o_searchview_facet_label");
+            await editSelect(target, ".o_domain_leaf_value_input", true);
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), ["Boolean is not set"]);
+            assert.deepEqual(getDomain(controlPanel), [["boolean", "!=", true]]);
         });
     });
 });
