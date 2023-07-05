@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanHeader" owl="1">
-        <div class="o_kanban_header position-sticky top-0 z-index-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-2' : 'py-3' }}">
+        <div class="o_kanban_header position-sticky top-0 z-index-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-2' : 'py-2' }}">
             <div class="o_kanban_header_title position-relative d-flex lh-lg">
                 <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1"
                      t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
