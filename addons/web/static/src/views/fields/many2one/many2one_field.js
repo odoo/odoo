@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _lt } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -53,7 +54,7 @@ export class Many2OneField extends Component {
         canWrite: { type: Boolean, optional: true },
         canQuickCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
-        context: { type: Object, optional: true },
+        context: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
         nameCreateField: { type: String, optional: true },
         searchLimit: { type: Number, optional: true },
@@ -161,7 +162,11 @@ export class Many2OneField extends Component {
         return this.props.canOpen && !!this.value && !this.state.isFloating;
     }
     get context() {
-        return this.props.context;
+        const { context, record } = this.props;
+        const evalContext = record.getEvalContext
+            ? record.getEvalContext(false)
+            : record.evalContext;
+        return makeContext([context], evalContext);
     }
     get classFromDecoration() {
         const evalContext = this.props.record.evalContext;
@@ -334,7 +339,7 @@ export const many2OneField = {
         },
     ],
     supportedTypes: ["many2one"],
-    extractProps({ attrs, decorations, options, string }, dynamicInfo) {
+    extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
         const canCreate =
             attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
         return {
@@ -344,7 +349,7 @@ export const many2OneField = {
             canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
             canQuickCreate: canCreate && !options.no_quick_create,
             canCreateEdit: canCreate && !options.no_create_edit,
-            context: dynamicInfo.context,
+            context: context,
             decorations,
             domain: dynamicInfo.domain,
             nameCreateField: options.create_name_field,

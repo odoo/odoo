@@ -4316,7 +4316,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,search": "<search></search>",
             "turtle,false,list": `
                 <tree readonly="1">
-                    <field name="product_id" widget="many2one"/>
+                    <field name="product_id" widget="many2one" context="{'field': 'Yes'}"/>
                 </tree>`,
             "product,false,search": "<search></search>",
             "product,false,form": "<form></form>",
@@ -4328,6 +4328,7 @@ QUnit.module("Fields", (hooks) => {
                 res_id: 1,
                 type: "ir.actions.act_window",
                 views: [[false, "form"]],
+                context: { global: "No" },
             },
         };
         const webClient = await createWebClient({
@@ -4336,6 +4337,8 @@ QUnit.module("Fields", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "get_formview_action") {
                     assert.step("get_formview_action");
+                    assert.strictEqual(args.kwargs.context.field, "Yes");
+                    assert.notOk("global" in args.kwargs.context);
                     return {
                         type: "ir.actions.act_window",
                         res_model: "product",
