@@ -154,3 +154,7 @@ class Home(http.Controller):
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers)
+
+    @http.route(['/robots.txt'], type='http', auth="none")
+    def robots(self, **kwargs):
+        return "User-agent: *\nDisallow: /\n"
