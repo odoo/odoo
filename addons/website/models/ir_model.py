@@ -42,6 +42,7 @@ class BaseModel(models.AbstractModel):
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """
-        if website := ir_http.get_request_website():
+        website = ir_http.get_request_website()
+        if website:
             return website.default_lang_id.code
         return super()._get_base_lang()
