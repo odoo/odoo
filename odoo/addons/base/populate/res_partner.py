@@ -96,7 +96,7 @@ class Partner(models.Model):
             ('employee', populate.cartesian([True, False], [0.1, 0.9])),
             ('email', populate.iterate(
                 [False, '', 'email{counter}@example.com', '<contact 万> contact{counter}@anotherexample.com', 'invalid_email'])),
-            ('type', populate.constant('contact')),  # todo add more logic, manage 'invoice', 'delivery', 'other', 'private'
+            ('type', populate.constant('contact')),  # todo add more logic, manage 'invoice', 'delivery', 'other'
             ('is_company', populate.iterate([True, False], [0.05, 0.95])),
             ('_address', generate_address),
             ('state_id', populate.compute(get_state)),

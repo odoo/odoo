@@ -3,7 +3,8 @@
     <data noupdate="1">
 
         <record id="hr.employee_mit" model="hr.employee">
-            <field name="address_home_id" ref="base.res_partner_address_3"/>
+            <field name="private_email">douglas.fletcher51@example.com</field>
+            <field name="private_phone">(132)-553-7242</field>
         </record>
 
         <record id="hr_expense_account_journal" model="account.journal">
@@ -15,22 +16,18 @@
             <field name="alias_name">purchase_expense</field>
         </record>
 
-        <record id="res_partner_address_fp" model="res.partner">
-            <field name="name">Pieter Parter's Farm</field>
-            <field name="parent_id" ref="base.partner_root"/>
-            <field name="street">Chaussée de Namur, 40</field>
-            <field name="zip">1367</field>
-            <field name="city">Grand-Rosière-Hottomont</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="type">private</field>
-        </record>
-
         <record id="hr.employee_fme" model="hr.employee">
-            <field name="address_home_id" ref="res_partner_address_fp"/>
+            <field name="private_street">Chaussée de Namur, 40</field>
+            <field name="private_zip">1367</field>
+            <field name="private_city">Grand-Rosière-Hottomont</field>
+            <field name="private_country_id" ref="base.be"/>
         </record>
 
         <record id="hr.employee_al" model="hr.employee">
-            <field name="address_home_id" ref="res_partner_address_fp"/>
+            <field name="private_street">Chaussée de Namur, 40</field>
+            <field name="private_zip">1367</field>
+            <field name="private_city">Grand-Rosière-Hottomont</field>
+            <field name="private_country_id" ref="base.be"/>
         </record>
 
         <!-- ++++++++++++++ Expense sheet for Admin ++++++++++++++-->

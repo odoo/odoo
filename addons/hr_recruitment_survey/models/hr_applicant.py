@@ -40,7 +40,6 @@ class Applicant(models.Model):
                 raise UserError(_('Please provide an applicant name.'))
             self.partner_id = self.env['res.partner'].sudo().create({
                 'is_company': False,
-                'type': 'private',
                 'name': self.partner_name,
                 'email': self.email_from,
                 'phone': self.partner_phone,

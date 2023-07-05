@@ -54,6 +54,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="last_activity_time" invisible="1"/>
                     <field name="last_activity" invisible="1"/>
+                    <field name="work_contact_id" invisible="1"/>
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
@@ -135,15 +136,18 @@
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <field name="address_home_id"
-                                            context="{
-                                                'show_address': 1,
-                                                'default_type': 'private',
-                                                'form_view_ref': 'base.res_partner_view_form_private'}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format">
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                        </div>
                                         <field name="private_email" string="Email"/>
-                                        <field name="phone" string="Phone" readonly="True"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                        <field name="private_phone" string="Phone"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" attrs="{'readonly': [('id', '=', False)]}"/>
                                         <field name="lang" string="Language"/>
                                         <label for="km_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
@@ -212,30 +216,6 @@
                         <field name="message_ids"/>
                     </div>
                 </form>
-            </field>
-        </record>
-
-        <!-- This part of the view_employee_form is defined separately so that the
-             smartbutton can have lower priority and therefore be last in the list. -->
-        <record id="view_employee_form_smartbutton" model="ir.ui.view">
-            <field name="name">view.employee.form.smartbutton</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="view_employee_form"/>
-            <field name="priority" eval="1000"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <field name="related_contacts_count" invisible="1"/>
-                    <button name="action_related_contacts"
-                        class="oe_stat_button"
-                        icon="fa-address-card-o"
-                        type="object"
-                        attrs="{'invisible': ['|', ('id', '=', False), ('related_contacts_count', '=', 0)]}">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_value"><field name="related_contacts_count"/></span>
-                            <span class="o_stat_text">Contacts</span>
-                        </div>
-                    </button>
-                </div>
             </field>
         </record>
 

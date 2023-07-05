@@ -117,7 +117,7 @@ class TestExpenses(TestExpenseCommon):
             'journal_id': self.company_data['default_journal_bank'].id,
             'payment_ref': 'pay_ref',
             'amount': -350.0,
-            'partner_id': self.expense_employee.address_home_id.id,
+            'partner_id': self.expense_employee.work_contact_id.id,
         })
 
         # Reconcile without the bank reconciliation widget since the widget is in enterprise.

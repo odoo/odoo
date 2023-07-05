@@ -5,7 +5,10 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import new_test_user
 
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests import tagged
 
+
+@tagged('recruitment_interviewer')
 class TestRecruitmentInterviewer(MailCommon):
     @classmethod
     def setUpClass(cls):
@@ -98,30 +101,3 @@ class TestRecruitmentInterviewer(MailCommon):
 
         with self.assertRaises(AccessError):
             applicant.with_user(self.interviewer_user).create_employee_from_applicant()
-
-    def test_interviewer_chatter(self):
-        self.manager_user.notification_type = 'email'
-        self.interviewer_user.notification_type = 'email'
-        applicant = self.env['hr.applicant'].create({
-            'name': 'toto',
-            'partner_name': 'toto',
-            'job_id': self.job.id,
-            'interviewer_ids': self.interviewer_user.ids,
-        })
-
-        applicant.message_subscribe(partner_ids=[self.interviewer_user.partner_id.id])
-
-        with self.mock_mail_gateway():
-            message = applicant.message_post(body='A super secret message', message_type='comment', subtype_xmlid='mail.mt_comment')
-
-        with self.assertRaises(AccessError):
-            message.with_user(self.interviewer_user).read()
-
-        try:
-            self._find_mail_mail_wpartners(self.interviewer_user.partner_id, None)
-        except AssertionError:
-            pass
-        else:
-            raise AssertionError('No mail.mail should be sent to members of Interviewer group')
-
-        self.assertSentEmail(self.env.user.partner_id, [self.manager_user.partner_id])

@@ -27,7 +27,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.driver_id:
                 vehicle.driver_employee_id = self.env['hr.employee'].search([
-                    ('address_home_id', '=', vehicle.driver_id.id),
+                    ('work_contact_id', '=', vehicle.driver_id.id),
                 ], limit=1)
             else:
                 vehicle.driver_employee_id = False
@@ -37,7 +37,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             if vehicle.future_driver_id:
                 vehicle.future_driver_employee_id = self.env['hr.employee'].search([
-                    ('address_home_id', '=', vehicle.future_driver_id.id),
+                    ('work_contact_id', '=', vehicle.future_driver_id.id),
                 ], limit=1)
             else:
                 vehicle.future_driver_employee_id = False
@@ -47,7 +47,7 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             employee = self.env['hr.employee']
             if vehicle.driver_id:
-                employee = employee.search([('address_home_id', '=', vehicle.driver_id.id)], limit=1)
+                employee = employee.search([('work_contact_id', '=', vehicle.driver_id.id)], limit=1)
                 if not employee:
                     employee = employee.search([('user_id.partner_id', '=', vehicle.driver_id.id)], limit=1)
             vehicle.mobility_card = employee.mobility_card
@@ -57,7 +57,7 @@ class FleetVehicle(models.Model):
             partner = False
             if vals['driver_employee_id']:
                 employee = self.env['hr.employee'].sudo().browse(vals['driver_employee_id'])
-                partner = employee.address_home_id.id
+                partner = employee.work_contact_id.id
             vals['driver_id'] = partner
         elif 'driver_id' in vals:
             # Reverse the process if we can find a single employee
@@ -65,7 +65,7 @@ class FleetVehicle(models.Model):
             if vals['driver_id']:
                 # Limit to 2, we only care about the first one if he is the only one
                 employee_ids = self.env['hr.employee'].sudo().search([
-                    ('address_home_id', '=', vals['driver_id'])
+                    ('work_contact_id', '=', vals['driver_id'])
                 ], limit=2)
                 if len(employee_ids) == 1:
                     employee = employee_ids[0].id
@@ -76,7 +76,7 @@ class FleetVehicle(models.Model):
             partner = False
             if vals['future_driver_employee_id']:
                 employee = self.env['hr.employee'].sudo().browse(vals['future_driver_employee_id'])
-                partner = employee.address_home_id.id
+                partner = employee.work_contact_id.id
             vals['future_driver_id'] = partner
         elif 'future_driver_id' in vals:
             # Reverse the process if we can find a single employee
@@ -84,7 +84,7 @@ class FleetVehicle(models.Model):
             if vals['future_driver_id']:
                 # Limit to 2, we only care about the first one if he is the only one
                 employee_ids = self.env['hr.employee'].sudo().search([
-                    ('address_home_id', '=', vals['future_driver_id'])
+                    ('work_contact_id', '=', vals['future_driver_id'])
                 ], limit=2)
                 if len(employee_ids) == 1:
                     employee = employee_ids[0].id

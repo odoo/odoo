@@ -40,7 +40,7 @@ class Invite(models.TransientModel):
 
     res_model = fields.Char('Related Document Model', required=True, help='Model of the followed resource')
     res_id = fields.Integer('Related Document ID', help='Id of the followed resource')
-    partner_ids = fields.Many2many('res.partner', string='Recipients', domain=[('type', '!=', 'private')])
+    partner_ids = fields.Many2many('res.partner', string='Recipients')
     message = fields.Html('Message')
     notify = fields.Boolean('Send Notification', default=True)
 

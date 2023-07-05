@@ -74,12 +74,6 @@ class MailComposer(models.TransientModel):
             for fname in result if fname in fields_list
         }
 
-    def _partner_ids_domain(self):
-        return expression.OR([
-            [('type', '!=', 'private')],
-            [('id', 'in', self.env.context.get('default_partner_ids', []))],
-        ])
-
     # content
     subject = fields.Char(
         'Subject',
@@ -158,7 +152,6 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
-        domain=_partner_ids_domain,
         compute='_compute_partner_ids', readonly=False, store=True)
     # sending
     auto_delete = fields.Boolean(

@@ -385,7 +385,6 @@ class Applicant(models.Model):
                 raise UserError(_('You must define a Contact Name for this applicant.'))
             self.partner_id = self.env['res.partner'].create({
                 'is_company': False,
-                'type': 'private',
                 'name': self.partner_name,
                 'email': self.email_from,
                 'phone': self.partner_phone,
@@ -550,7 +549,6 @@ class Applicant(models.Model):
             if new_partner:
                 if new_partner.create_date.date() == fields.Date.today():
                     new_partner.write({
-                        'type': 'private',
                         'name': self.partner_name or self.email_from,
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
@@ -571,7 +569,6 @@ class Applicant(models.Model):
                 raise UserError(_('Please provide an applicant name.'))
             self.partner_id = self.env['res.partner'].create({
                 'is_company': False,
-                'type': 'private',
                 'name': self.partner_name,
                 'email': self.email_from,
                 'phone': self.partner_phone,
@@ -586,11 +583,21 @@ class Applicant(models.Model):
     def _get_employee_create_vals(self):
         self.ensure_one()
         address_id = self.partner_id.address_get(['contact'])['contact']
+        address_sudo = self.env['res.partner'].sudo().browse(address_id)
         return {
             'name': self.partner_name or self.partner_id.display_name,
+            'work_contact_id': self.partner_id.id,
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
-            'address_home_id': address_id,
+            'private_street': address_sudo.street,
+            'private_street2': address_sudo.street2,
+            'private_city': address_sudo.city,
+            'private_state_id': address_sudo.state_id,
+            'private_zip': address_sudo.zip,
+            'private_country_id': address_sudo.country_id,
+            'private_phone': address_sudo.phone,
+            'private_email': address_sudo.email,
+            'lang': address_sudo.lang,
             'department_id': self.department_id.id,
             'address_id': self.company_id.partner_id.id,
             'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default

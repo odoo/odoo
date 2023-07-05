@@ -20,6 +20,9 @@
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <field name="share" position="after">
+                    <field name="work_contact_id" invisible="1"/>
+                </field>
             </field>
         </record>
 
@@ -134,20 +137,18 @@
                         <group>
                             <group string="Contact Information">
                                 <field name="employee_ids" invisible="1"/>
-                                <field name="address_home_id" invisible="1"/>
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
-                                    <field name="private_street" placeholder="Street..." class="o_address_street"/>
-                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="private_city" placeholder="City" class="o_address_city"/>
-                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
-                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
-                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    <field name="private_street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 </div>
-
-                                <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
-                                <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
-                                <field name="private_lang" string="Language" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
+                                <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="private_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="private_lang" string="Language" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                             </group>
