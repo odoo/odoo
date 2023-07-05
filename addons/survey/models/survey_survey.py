@@ -374,13 +374,19 @@ class Survey(models.Model):
         if default and 'question_ids' in default:
             return clone
 
-        questions_map = {src.id: dst.id for src, dst in zip(self.question_ids, clone.question_ids)}
+        src_questions = self.question_ids
+        dst_questions = clone.question_ids.sorted()
+
+        questions_map = {src.id: dst.id for src, dst in zip(src_questions, dst_questions)}
         answers_map = {
-            source_answer.id: copy_answer.id
-            for source_answer, copy_answer
-            in zip(self.question_ids.suggested_answer_ids, clone.question_ids.suggested_answer_ids)
+            src_answer.id: dst_answer.id
+            for src, dst
+            in zip(src_questions, dst_questions)
+            for src_answer, dst_answer
+            in zip(src.suggested_answer_ids, dst.suggested_answer_ids.sorted())
         }
-        for src, dst in zip(self.question_ids, clone.question_ids):
+
+        for src, dst in zip(src_questions, dst_questions):
             if src.is_conditional:
                 dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
                 dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
