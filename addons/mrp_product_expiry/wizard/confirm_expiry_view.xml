@@ -21,12 +21,12 @@
             </xpath>
             <xpath expr="//button[@name='process']" position="after">
                 <!-- From Produce Product wizard -->
-                <button name="confirm_produce"
+                <button name="confirm_produce" data-hotkey="q"
                     string="Confirm"
                     type="object"
                     attrs="{'invisible': [('production_ids', '=', [])]}"
                     class="btn-primary"/>
-                <button special="cancel" data-hotkey="z"
+                <button special="cancel" data-hotkey="x"
                     string="Discard"
                     attrs="{'invisible': [('production_ids', '=', [])]}"
                     class="btn-secondary"/>

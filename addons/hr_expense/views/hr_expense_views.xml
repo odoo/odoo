@@ -678,7 +678,7 @@
                     <button name="action_approve_expense_sheets"
                             string="Approve"
                             type="object"
-                            data-hotkey="v"
+                            data-hotkey="q"
                             context="{'validate_analytic': True}"
                             attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'submit')]}"
                             class="oe_highlight o_expense_sheet_approve"/>
@@ -711,7 +711,7 @@
                             string="Reset to Draft"
                             type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ('submit', 'cancel', 'approve'))]}"
-                            data-hotkey="q"/>
+                            data-hotkey="k"/>
                     <button name="action_reset_expense_sheets"
                             string="Reset to Draft"
                             type="object"
