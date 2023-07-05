@@ -357,13 +357,15 @@ ListRenderer.include({
     },
     /**
      * Returns whether the list is in multiple record edition from a given record.
+     * If only one record is selected, it behaves as if the `editable` property is set
      *
      * @private
      * @param {string} recordId
      * @returns {boolean}
      */
     isInMultipleRecordEdition: function (recordId) {
-        return this.isEditable() && this.isMultiEditable && this.selection.includes(recordId);
+        return this.isEditable() && this.isMultiEditable
+            && this.selection.includes(recordId) && this.selection.length > 1;
     },
     /**
      * Returns whether the list can be edited.
