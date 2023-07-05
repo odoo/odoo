@@ -163,7 +163,7 @@ class Field(MetaField('DummyField', (object,), {})):
     :type default: value or callable
 
     :param dict states: a dictionary mapping state values to lists of UI attribute-value
-        pairs; possible attributes are: ``readonly``, ``required``, ``invisible``.
+        pairs; possible attributes are: ``readonly``, ``required``.
 
         .. warning:: Any state-based condition requires the ``state`` field value to be
             available on the client-side UI. This is typically done by including it in
@@ -318,7 +318,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -537,6 +536,12 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.setup_related(model)
             else:
                 self.setup_nonrelated(model)
+
+            if not isinstance(self.required, bool):
+                warnings.warn(f'Property {self}.required should be a boolean ({self.required}).')
+
+            if not isinstance(self.readonly, bool):
+                warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
 
             if self.states:
                 warnings.warn(f'"states" property on the field "{self}" is no longer used', DeprecationWarning)
