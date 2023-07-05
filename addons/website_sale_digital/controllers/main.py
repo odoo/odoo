@@ -70,8 +70,10 @@ class WebsiteSaleDigital(CustomerPortal):
     @http.route([
         '/my/download',
     ], type='http', auth='public')
-    def download_attachment(self, attachment_id):
+    def download_attachment(self, attachment_id=False):
         # Check if this is a valid attachment id
+        if not attachment_id or not attachment_id.isnumeric():
+            return redirect(self.orders_page)
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
             ["name", "datas", "mimetype", "res_model", "res_id", "type", "url"]
