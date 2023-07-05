@@ -136,6 +136,9 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.text, file.getvalue())
 
+    def test_misc7_robotstxt(self):
+        self.nodb_url_open('/robots.txt').raise_for_status()
+
 @tagged('post_install', '-at_install')
 class TestHttpCors(TestHttpBase):
     def test_cors0_http_default(self):
