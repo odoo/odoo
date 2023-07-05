@@ -2,10 +2,13 @@
 
 import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { loadJS, templates } from "@web/core/assets";
+import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
 
 import { App } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -20,6 +23,38 @@ export async function mountSpreadsheet(model) {
         props: { model },
         templates: templates,
         env: model.config.custom.env,
+        test: true,
+    });
+    registerCleanup(() => app.destroy());
+    const fixture = getFixture();
+    await app.mount(fixture);
+    return fixture;
+}
+
+/**
+ * Mount public spreadsheet component with the given data
+ * @param {Model} model
+ * @returns {Promise<HTMLElement>}
+ */
+export async function mountPublicSpreadsheet(data, dataUrl, mode) {
+    const serviceRegistry = registry.category("services");
+    const fakeHTTPService = {
+        start() {
+            return {
+                get: (route, params) => {
+                    if (route === dataUrl) {
+                        return data;
+                    }
+                },
+            };
+        },
+    };
+    serviceRegistry.add("http", fakeHTTPService);
+    const env = await makeTestEnv();
+    const app = new App(PublicReadonlySpreadsheet, {
+        props: { dataUrl, downloadExcelUrl: "downloadUrl", mode },
+        templates,
+        env,
         test: true,
     });
     registerCleanup(() => app.destroy());

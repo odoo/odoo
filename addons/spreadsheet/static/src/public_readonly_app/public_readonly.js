@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, useChildSubEnv } from "@odoo/owl";
+import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 
@@ -20,10 +20,14 @@ export class PublicReadonlySpreadsheet extends Component {
     static props = {
         dataUrl: String,
         downloadExcelUrl: String,
+        mode: { type: String, optional: true },
     };
 
     setup() {
         this.http = useService("http");
+        this.state = useState({
+            isFilterShown: false,
+        });
         useChildSubEnv({
             downloadExcel: () =>
                 download({
@@ -35,16 +39,35 @@ export class PublicReadonlySpreadsheet extends Component {
         onWillStart(this.createModel.bind(this));
     }
 
+    get showFilterButton() {
+        return (
+            this.props.mode === "dashboard" &&
+            this.globalFilters.length > 0 &&
+            !this.state.isFilterShown
+        );
+    }
+
+    get globalFilters() {
+        if (!this.data.globalFilters || this.data.globalFilters.length === 0) {
+            return [];
+        }
+        return this.data.globalFilters.filter((filter) => filter.value !== "");
+    }
+
     async createModel() {
-        const data = await this.http.get(this.props.dataUrl);
-        this.model = new Model(migrate(data), {
-            mode: "readonly",
+        this.data = await this.http.get(this.props.dataUrl);
+        this.model = new Model(migrate(this.data), {
+            mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
         });
         if (this.env.debug) {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
             spreadsheet.__DEBUG__.model = this.model;
         }
+    }
+
+    toggleGlobalFilters() {
+        this.state.isFilterShown = !this.state.isFilterShown;
     }
 }
 

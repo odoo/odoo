@@ -1,12 +1,38 @@
+$filter-panel-width: 300px;
+
 #spreadsheet-mount-anchor {
   background-color: #DDDDDD;
-  flex-grow : 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row-reverse;
 }
 .o-spreadsheet {
   font-size: 12px;
   height: 100%;
+  flex-grow: 1;
 
   .o-topbar-toolbar .o-readonly-toolbar.text-muted {
       color: $info !important;
+  }
+}
+
+.o-public-spreadsheet-filters {
+  background-color: #E7E9ED;
+  gap: 20px 70px;
+  width: $filter-panel-width;
+
+  .o-public-spreadsheet-filters-close-button {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+}
+
+.o-public-spreadsheet-filter-button {
+  z-index: 100;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #E7E9ED;
   }
 }
