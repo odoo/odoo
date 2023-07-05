@@ -119,7 +119,7 @@ class TestConvertBack(common.TransactionCase):
         super(TestConvertBack, self).setUp()
         self.env = self.env(context={'inherit_branding': True})
 
-    def field_rountrip_result(self, field, value, expected):
+    def field_rountrip_result(self, field, value, expected, is_embed_field=False):
         model = 'web_editor.converter.test'
         record = self.env[model].create({field: value})
 
@@ -132,7 +132,8 @@ class TestConvertBack(common.TransactionCase):
         rendered = self.env['ir.qweb']._render(t, {'record': record})
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
-        model = 'ir.qweb.field.' + element.get('data-oe-type', '')
+        field_type = 'data-oe-field' if is_embed_field else 'data-oe-type'
+        model = 'ir.qweb.field.' + element.get(field_type, '')
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
         value_back = converter.from_html(model, record._fields[field], element)
 
@@ -140,8 +141,10 @@ class TestConvertBack(common.TransactionCase):
             expected = expected.decode('utf-8')
         self.assertEqual(value_back, expected)
 
-    def field_roundtrip(self, field, value):
-        self.field_rountrip_result(field, value, value)
+    def field_roundtrip(self, field, value, expected=None, is_embed_field=False):
+        if not expected:
+            expected = value
+        self.field_rountrip_result(field, value, expected, is_embed_field)
 
     def test_integer(self):
         self.field_roundtrip('integer', 42)
@@ -150,6 +153,10 @@ class TestConvertBack(common.TransactionCase):
     def test_float(self):
         self.field_roundtrip('float', 42.567890)
         self.field_roundtrip('float', 324542.567890)
+
+    def test_float_time(self):
+        self.field_roundtrip('float_time', '42:00', 42.00, True)
+        self.field_roundtrip('float_time', '42:80', 43.33, True)
 
     def test_numeric(self):
         self.field_roundtrip('numeric', 42.77)

@@ -32,6 +32,7 @@ import odoo.modules
 from odoo import api, models, fields
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
+from odoo.tools.float_utils import float_round
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.addons.base.models import ir_qweb
 
@@ -188,6 +189,19 @@ class Float(models.AbstractModel):
         value = element.text_content().strip()
         return float(value.replace(lang.thousands_sep or '', '')
                           .replace(lang.decimal_point, '.'))
+
+
+class FloatTimeConverter(models.AbstractModel):
+    _name = 'ir.qweb.field.float_time'
+    _description = 'Qweb Field Float Time'
+    _inherit = 'ir.qweb.field.float_time'
+
+    @api.model
+    def from_html(self, model, field, element):
+        if ':' in element.text_content():
+            hours, minutes = map(int, element.text_content().split(':'))
+            return float_round((hours + (minutes / 60)), 2)
+        return float(element.text_content())
 
 
 class ManyToOne(models.AbstractModel):
