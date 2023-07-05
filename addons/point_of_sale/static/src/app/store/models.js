@@ -1046,6 +1046,14 @@ export class Orderline extends PosModel {
     get_total_cost() {
         return this.product.standard_price * this.quantity;
     }
+    /**
+     * Checks if the current line is a tip from a customer.
+     * @returns Boolean
+     */
+    isTipLine() {
+        const tipProduct = this.pos.config.tip_product_id;
+        return tipProduct && this.product.id === tipProduct[0];
+    }
 }
 
 export class Packlotline extends PosModel {
