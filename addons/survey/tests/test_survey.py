@@ -349,6 +349,46 @@ class TestSurveyInternals(common.TestSurveyCommon):
                             q_is_vegetarian.suggested_answer_ids[1].id)
 
     @users('survey_manager')
+    def test_copy_conditional_question_with_sequence_changed(self):
+        """ Create a survey with two questions, change the sequence of the questions,
+        set the second question as conditional on the first one, and check that the conditional
+        question is still conditional on the first one after copying the survey."""
+
+        def get_question_by_title(survey, title):
+            return survey.question_ids.filtered(lambda q: q.title == title)[0]
+
+        # Create the survey questions
+        q_1 = self._add_question(
+            self.page_0, 'Q1', 'multiple_choice', survey_id=self.survey.id,
+            sequence=200, labels=[{'value': 'Yes'}, {'value': 'No'}])
+        q_2 = self._add_question(
+            self.page_0, 'Q2', 'multiple_choice', survey_id=self.survey.id,
+            sequence=300, labels=[{'value': 'Yes'}, {'value': 'No'}])
+
+        # Change the sequence of the second question to be before the first one
+        q_2.write({'sequence': 100})
+
+        # Set a conditional question on the first question
+        q_1.write({
+            'is_conditional': True,
+            'triggering_question_id': q_2.id,
+            'triggering_answer_id': q_2.suggested_answer_ids[0].id,
+        })
+
+        (q_1 | q_2).invalidate_recordset()
+
+        # Clone the survey
+        cloned_survey = self.survey.copy()
+
+        # Check that the sequence of the questions are the same as the original survey
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q1').sequence, q_1.sequence)
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q2').sequence, q_2.sequence)
+
+        # Check that the conditional question is correctly copied to the right question
+        self.assertEqual(get_question_by_title(cloned_survey, 'Q1').triggering_question_id.title, q_1.triggering_question_id.title)
+        self.assertFalse(get_question_by_title(cloned_survey, 'Q2').triggering_question_id)
+
+    @users('survey_manager')
     def test_unlink_triggers(self):
         # Create the survey questions
         q_is_vegetarian_text = 'Are you vegetarian?'
