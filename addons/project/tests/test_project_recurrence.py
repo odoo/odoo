@@ -113,3 +113,46 @@ class TestProjectRecurrence(TransactionCase):
             .create({'group_project_recurring_tasks': False}) \
             .execute()
         self.assertFalse(test_task.recurring_task, 'The "Recurring" feature should not be enabled by default.')
+
+    def test_recurrence_disabled_with_single_task(self):
+        config_settings = self.env['res.config.settings'].create({'group_project_recurring_tasks': True})
+        config_settings.execute()
+        with freeze_time(self.date_01_01):
+            form = Form(self.env['project.task'])
+            form.name = 'recurring task'
+            form.project_id = self.project_recurring
+            form.recurring_task = True
+            form.repeat_interval = 5
+            form.repeat_unit = 'month'
+            form.repeat_type = 'forever'
+            task = form.save()
+        self.assertTrue(task.recurrence_id, 'Should create a recurrence')
+        config_settings = self.env['res.config.settings'].create({'group_project_recurring_tasks': False})
+        config_settings.execute()
+        self.assertFalse(task.recurring_task, 'Recurrence should be disabled')
+
+    def test_recurrence_disabled_multi_tasks(self):
+        config_settings = self.env['res.config.settings'].create({'group_project_recurring_tasks': True})
+        config_settings.execute()
+        with freeze_time(self.date_01_01):
+            form = Form(self.env['project.task'])
+            form.name = 'recurring task'
+            form.project_id = self.project_recurring
+            form.recurring_task = True
+            form.repeat_interval = 5
+            form.repeat_unit = 'month'
+            form.repeat_type = 'forever'
+            task = form.save()
+        with freeze_time(self.date_01_01 + relativedelta(months=1)):
+            task.state = '1_done'
+            form.save()
+        task2 = task.recurrence_id.task_ids.filtered(lambda t: t.id != task.id)
+        task2.recurring_task = False
+        form.save()
+        self.assertTrue(task.recurrence_id, 'Recurrence id should be in tasks')
+        self.assertTrue(task2.recurrence_id, 'Recurrence id should be in tasks')
+        with freeze_time(self.date_01_01 + relativedelta(months=2)):
+            task2.state = '1_done'
+            form.save()
+        task3 = task.recurrence_id.task_ids.filtered(lambda t: t.id not in [task2.id, task.id])
+        self.assertFalse(task3, 'The task should not be created')
