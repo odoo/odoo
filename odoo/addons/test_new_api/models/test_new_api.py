@@ -1818,3 +1818,12 @@ class UnsearchableO2M(models.Model):
     def _compute_parent_id(self):
         for r in self:
             r.parent_id = r.stored_parent_id
+
+class SimpleTask(models.Model):
+    _name = 'test_new_api.simple.task'
+    _description = 'Simplified version of a task that can have siblings and owner'
+
+    name = fields.Char('Name')
+    user_id = fields.Many2one('res.users', string="Owner") # Read access restricted to that user if set
+    sibling_ids = fields.Many2many('test_new_api.simple.task', relation='sibling_tasks_rel', column1='pointer_task_id', column2='pointed_task_id')
+    
