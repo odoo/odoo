@@ -1,10 +1,8 @@
 /* @odoo-module */
 
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 import { useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
 
 export function useSuggestion() {
     const comp = useComponent();
@@ -22,7 +20,7 @@ export function useSuggestion() {
             Object.assign(self.search, {
                 delimiter: undefined,
                 position: undefined,
-                term: undefined,
+                term: "",
             });
             self.state.items = undefined;
         },
@@ -121,15 +119,14 @@ export function useSuggestion() {
         search: {
             delimiter: undefined,
             position: undefined,
-            term: undefined,
+            term: "",
         },
         state: useState({
             count: 0,
             items: undefined,
-            loading: false,
         }),
         update() {
-            if (!self.search.delimiter || self.state.loading) {
+            if (!self.search.delimiter) {
                 return;
             }
             const suggestions = suggestionService.searchSuggestions(
@@ -153,10 +150,6 @@ export function useSuggestion() {
             self.state.items = { type, mainSuggestions, extraSuggestions };
         },
     };
-    const debouncedFetchSuggestions = useDebounced(
-        (...args) => suggestionService.fetchSuggestions(...args),
-        DEBOUNCE_FETCH_SUGGESTION_TIME
-    );
     useEffect(
         () => {
             self.update();
@@ -164,14 +157,12 @@ export function useSuggestion() {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
-                self.state.loading = true;
-                await debouncedFetchSuggestions(self.search, {
+                await suggestionService.fetchSuggestions(self.search, {
                     thread: self.thread,
                     onFetched() {
                         if (owl.status(comp) === "destroyed") {
                             return;
                         }
-                        self.state.loading = false;
                         self.update();
                     },
                 });

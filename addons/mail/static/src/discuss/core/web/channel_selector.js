@@ -2,7 +2,6 @@
 
 import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -13,7 +12,6 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
@@ -38,10 +36,6 @@ export class ChannelSelector extends Component {
             onMounted(() => this.inputRef.el.focus());
         }
         this.markEventHandled = markEventHandled;
-        this.debouncedFetchSuggestions = useDebounced(
-            this.fetchSuggestions.bind(this),
-            DEBOUNCE_FETCH_SUGGESTION_TIME
-        );
     }
 
     async fetchSuggestions() {
@@ -205,7 +199,7 @@ export class ChannelSelector extends Component {
                 this.props.category.id === "channels"
                     ? "discuss.ChannelSelector.channel"
                     : "discuss.ChannelSelector.chat",
-            options: this.debouncedFetchSuggestions(),
+            options: this.fetchSuggestions(),
         };
     }
 }
