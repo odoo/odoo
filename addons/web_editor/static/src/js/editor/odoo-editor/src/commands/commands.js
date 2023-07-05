@@ -168,8 +168,8 @@ export const editorCommands = {
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
         if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            content = Array.from(container.firstChild.childNodes);
+            (content[0].nodeName === 'UL' || content[0].nodeName === 'OL')) {
+            content = Array.from(container.firstChild.childNodes); // ?? where does the rest go ?
         }
 
         removeEdgeChild = (content, position) => {
@@ -193,10 +193,10 @@ export const editorCommands = {
                 content[0].nodeName === 'PRE' && closestElement(startNode, 'pre')
             )) {
                 content = Array.from(content[0].childNodes);
-            } else if (container.childElementCount > 1) {
+            } else if (content.length > 1) {
                 // Grab the content of the first child block and isolate it.
                 if (isBlock(content[0]) && !['TABLE', 'UL', 'OL'].includes(content[0].nodeName)) {
-                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                    containerFirstChild.replaceChildren(...content[0].childNodes);
                     content.shift();
                 }
                 // Grab the content of the last child block and isolate it.
@@ -230,14 +230,13 @@ export const editorCommands = {
             insertBefore = false;
         }
 
-        const spread = true;
-        return this.insert(editor, content)
+        return this.insert(editor, content, { insertBefore })
     },
 
     insert: (editor, content, spread = false, {
         option = false,
         container,
-        insertBefore: insertBefore2,
+        insertBefore = false, // dont forget !
         currentNode,
         lastChildNode,
         insertBeforeTmp
