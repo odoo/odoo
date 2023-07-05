@@ -609,7 +609,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'name': self.employee_id.name + ': ' + self.name.split('\n')[0][:64],
             'account_id': account.id,
             'quantity': self.quantity or 1,
-            'price_unit': self.unit_amount,
+            # 'unit_amount' is there when the product selected has a cost defined.
+            # This cost will always be in company currency.
+            'price_unit': self.unit_amount if self.unit_amount != 0 else self.total_amount_company,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
             'analytic_distribution': self.analytic_distribution,
