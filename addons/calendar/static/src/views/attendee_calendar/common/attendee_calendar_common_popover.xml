@@ -15,7 +15,7 @@
         <xpath expr="//t[@t-if='isEventDeletable']" position="after">
             <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
             <div t-if="displayAttendeeAnswerChoice" class="d-inline-block">
-                <Dropdown togglerClass="'btn btn-secondary'">
+                <Dropdown togglerClass="'btn btn-secondary ms-1'">
                     <t t-set-slot="toggler">
                         <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
                     </t>
