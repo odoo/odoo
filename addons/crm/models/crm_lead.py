@@ -2030,7 +2030,8 @@ class Lead(models.Model):
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
+            probability = s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = min(max(round(100 * probability, 2), 0.01), 99.99)
         return lead_probabilities
 
     # ---------------------------------
