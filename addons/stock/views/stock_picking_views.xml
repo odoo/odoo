@@ -126,8 +126,8 @@
                 <field name="company_id" invisible="1"/>
 
                 <header>
-                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="x"/>
-                    <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
+                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
+                    <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('waiting','confirmed', 'draft', 'done', 'cancel')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'assigned', 'done', 'cancel')), ('show_validate', '=', False)]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
                     <button name="action_reset_draft" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" string="Set Draft" type="object" groups="stock.group_stock_user" class="o_highlight" data-hotkey="d"/>
@@ -144,7 +144,7 @@
                     <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': [('state', '!=', 'done')]}" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': [('state', '!=', 'done')]}" type="action" groups="base.group_user" data-hotkey="k"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
-                    <button name="action_cancel" attrs="{'invisible': [('state', 'not in', ('assigned', 'confirmed', 'draft', 'waiting'))]}" string="Cancel" groups="base.group_user" type="object" data-hotkey="z"/>
+                    <button name="action_cancel" attrs="{'invisible': [('state', 'not in', ('assigned', 'confirmed', 'draft', 'waiting'))]}" string="Cancel" groups="base.group_user" type="object" data-hotkey="x"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

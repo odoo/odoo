@@ -572,11 +572,11 @@
                     <header>
                         <!-- Post -->
                         <button name="action_post" string="Post" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice" data-hotkey="v"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
                                 context="{'validate_analytic': True}"
                                 attrs="{'invisible': ['|', ('hide_post_button', '=', True), ('move_type', '!=', 'entry')]}"/>
                         <button name="action_post" string="Confirm" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice" data-hotkey="v"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
                                 context="{'validate_analytic': True}"
                                 attrs="{'invisible': ['|', '|', ('hide_post_button', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}"/>
                         <!-- Send (only invoices) -->
@@ -610,12 +610,12 @@
                                 type='object' groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
                         <!-- Cancel -->
-                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="w"
+                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="x"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '!=', 'entry')]}"/>
-                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="w"
+                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '==', 'entry')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}" data-hotkey="q" />
+                                attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}" data-hotkey="r" />
                         <!-- Set as Checked -->
                         <button name="button_set_checked" string="Set as Checked" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : [('to_check', '=', False)]}" data-hotkey="k" />
