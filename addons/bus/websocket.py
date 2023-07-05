@@ -241,7 +241,11 @@ class Websocket:
         self._channels = set()
         self._last_notif_sent_id = 0
         # Websocket start up
-        self._selector = selectors.DefaultSelector()
+        self._selector = (
+            selectors.PollSelector()
+            if odoo.evented and hasattr(selectors, 'PollSelector')
+            else selectors.DefaultSelector()
+        )
         self._selector.register(self._socket, selectors.EVENT_READ)
         self._selector.register(self._notif_sock_r, selectors.EVENT_READ)
         self.state = ConnectionState.OPEN
