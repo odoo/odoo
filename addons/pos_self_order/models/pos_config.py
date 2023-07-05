@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import Optional, List, Dict, Callable
+from typing import List, Dict
 import uuid
-from werkzeug.urls import url_quote
 import base64
 
-
 from odoo import api, fields, models, modules
-from odoo.tools import file_open, split_every
+from odoo.tools import file_open
 
 from odoo.addons.pos_self_order.models.product_product import ProductProduct
 
@@ -27,16 +25,16 @@ class PosConfig(models.Model):
 
     self_order_view_mode = fields.Boolean(
         string="QR Code Menu",
-        help="Allow customers to view the menu on their phones by scanning the QR code on the table",
+        help="Allow customers to view the menu on their phones by scanning the QR code",
     )
-    self_order_table_mode = fields.Boolean(
+    self_order_ordering_mode = fields.Boolean(
         string="Self Order",
         help="Allow customers to Order from their phones",
     )
     self_order_pay_after = fields.Selection(
-        [("each", "Each Order"), ("meal", "Meal")],
+        [("each", "Each Order")],
         string="Pay After:",
-        default="meal",
+        default="each",
         help="Choose when the customer will pay",
         required=True,
     )
@@ -66,7 +64,6 @@ class PosConfig(models.Model):
 
     def _update_access_token(self):
         self.access_token = self._get_access_token()
-        self.floor_ids.table_ids._update_identifier()
 
     @api.model
     def _init_access_token(self):
@@ -74,53 +71,14 @@ class PosConfig(models.Model):
         for pos_config_id in pos_config_ids:
             pos_config_id.access_token = self._get_access_token()
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        We want self ordering to be enabled by default
-        (This would have been nicer to do using a default value
-        directly on the fields, but `module_pos_restaurant` would not be
-        known at the time that the function for this default value would run)
-        """
-        pos_config_ids = super().create(vals_list)
-
-        for pos_config_id in pos_config_ids:
-            if pos_config_id.module_pos_restaurant:
-                pos_config_id.self_order_view_mode = True
-                pos_config_id.self_order_table_mode = True
-
-        return pos_config_ids
-
-    @api.depends("module_pos_restaurant")
-    def _compute_self_order(self):
-        """
-        Self ordering will only be enabled for restaurants
-        """
-        for record in self:
-            if not record.module_pos_restaurant:
-                record.self_order_view_mode = False
-                record.self_order_table_mode = False
-
-    def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
+    def _get_self_order_route(self) -> str:
         self.ensure_one()
         base_route = f"/menu/{self.id}"
-        table_route = ""
 
-        if not self.self_order_table_mode:
+        if not self.self_order_ordering_mode:
             return base_route
 
-        table = self.env["restaurant.table"].search(
-            [("active", "=", True), ("id", "=", table_id)], limit=1
-        )
-
-        if table:
-            table_route = f"&table_identifier={table.identifier}"
-
-        return f"{base_route}?access_token={self.access_token}{table_route}"
-
-    def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
-        self.ensure_one()
-        return url_quote(self.get_base_url() + self._get_self_order_route(table_id))
+        return self.get_base_url() + f"{base_route}?access_token={self.access_token}"
 
     def preview_self_order_app(self):
         """
@@ -137,7 +95,7 @@ class PosConfig(models.Model):
     def _get_self_order_custom_links(self) -> List[Dict[str, str]]:
         """
         On the landing page of the app we can have a number of custom links
-        that are defined by the restaurant employee in the backend.
+        that are defined by the employee in the backend.
         This function returns a list of dictionaries with the attributes of each link
         that is available for the POS with id pos_config_id.
         """
@@ -157,9 +115,6 @@ class PosConfig(models.Model):
         )
 
     def _get_available_products(self) -> ProductProduct:
-        """
-        This function returns the products that are available in the given PosConfig
-        """
         self.ensure_one()
         return (
             self.env["product.product"]
@@ -190,65 +145,17 @@ class PosConfig(models.Model):
             "has_active_session": self.has_active_session,
         }
 
-    def _generate_data_for_qr_codes_page(self, cols: int = 4) -> Dict[str, List[Dict]]:
-        """
-        :cols: the number of qr codes per row
-        """
-        self.ensure_one()
-        return {
-            "floors": self._split_qr_codes_list(
-                self._get_qr_codes_info(cols * cols),
-                cols,
-            )
+    def _generate_qr_code(self):
+        qr_code = {
+            'data': [
+                {
+                    'name': 'Generics QR code',
+                    'qr_codes':[{
+                        'name': 'Generic',
+                        'url': self._get_self_order_route(),
+                    } for x in range(0, 12)]
+                }
+            ]
         }
 
-    def _get_qr_codes_info(self, total_number: int) -> List[Dict]:
-        """
-        total_number: the number of qr codes to generate (in the case where we don't have
-                floor management)
-        return: a list of dictionaries with the following keys:
-            - name: the name of the floor
-            - tables: a list of dictionaries with the following keys:
-                - id: the id of the table
-                - url: the url of the table
-                - name?: the name of the table
-        """
-        self.ensure_one()
-        if self.self_order_table_mode:
-            return self.floor_ids._get_data_for_qr_codes_page(self._get_self_order_url)
-        else:
-            return self._get_default_qr_codes(total_number, self._get_self_order_url)
-
-    def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
-        """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
-        """
-        self.ensure_one()
-        return [
-            {
-                "name": floor.get("name"),
-                "rows_of_tables": list(split_every(cols, floor["tables"], list)),
-            }
-            for floor in floors
-        ]
-
-    def _get_default_qr_codes(
-        self, number: int, url: Callable[[Optional[int]], str]
-    ) -> List[Dict]:
-        """
-        :number: the number of qr codes to generate
-        :url: a function that takes a table id and returns the url of the table
-        """
-        self.ensure_one()
-        return [
-            {
-                "tables": [
-                    {
-                        "id": 0,
-                        "url": url(),
-                    }
-                ]
-                * number,
-            }
-        ]
+        return qr_code

@@ -4,43 +4,21 @@ from datetime import timedelta
 import uuid
 from odoo import http, fields, Command
 from odoo.http import request
-from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from werkzeug.exceptions import NotFound, Unauthorized
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order", auth="public", type="json", website=True)
-    def process_new_order(self, order, access_token, table_identifier):
+    def process_new_order(self, order, access_token):
         lines = order.get('lines')
 
-        pos_config_sudo, table_sudo = self._verify_authorization(access_token, table_identifier)
+        pos_config_sudo = self._verify_authorization(access_token)
         pos_session_sudo = pos_config_sudo.current_session_id
-        sequence_number = self._get_sequence_number(table_sudo.id, pos_session_sudo.id)
-        unique_id = self._generate_unique_id(pos_session_sudo.id, table_sudo.id, sequence_number)
+        sequence_number = self._get_sequence_number(pos_session_sudo.id)
+        unique_id = self._generate_unique_id(pos_session_sudo.id, sequence_number)
 
         # Create the order without lines and prices computed
         # We need to remap the order because some required fields are not used in the frontend.
-        order = {
-            'id': unique_id,
-            'data': {
-                'uuid': order.get('uuid'),
-                'name': unique_id,
-                'user_id': request.session.uid,
-                'sequence_number': sequence_number,
-                'access_token': uuid.uuid4().hex,
-                'pos_session_id': pos_session_sudo.id,
-                'table_id': table_sudo.id if table_sudo else False,
-                'partner_id': False,
-                'creation_date': str(fields.Datetime.now()),
-                'fiscal_position_id': pos_config_sudo.default_fiscal_position_id,
-                'statement_ids': [],
-                'lines': [],
-                'amount_tax': 0,
-                'amount_total': 0,
-                'amount_paid': 0,
-                'amount_return': 0,
-            },
-            'to_invoice': False,
-            'session_id': pos_session_sudo.id,
-        }
+        order = self._prepare_order_data(unique_id, order, pos_session_sudo, sequence_number, pos_config_sudo)
 
         # Save the order in the database to get the id
         posted_order_id = request.env['pos.order'].sudo().create_from_ui([order], draft=True)[0].get('id')
@@ -61,11 +39,35 @@ class PosSelfOrderController(http.Controller):
 
         return order_sudo._export_for_self_order()
 
+    def _prepare_order_data(self, unique_id, order, pos_session_sudo, sequence_number, pos_config_sudo):
+        return {
+            'id': unique_id,
+            'data': {
+                'uuid': order.get('uuid'),
+                'name': unique_id,
+                'user_id': request.session.uid,
+                'sequence_number': sequence_number,
+                'access_token': uuid.uuid4().hex,
+                'pos_session_id': pos_session_sudo.id,
+                'partner_id': False,
+                'creation_date': str(fields.Datetime.now()),
+                'fiscal_position_id': pos_config_sudo.default_fiscal_position_id,
+                'statement_ids': [],
+                'lines': [],
+                'amount_tax': 0,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_return': 0,
+            },
+            'to_invoice': False,
+            'session_id': pos_session_sudo.id,
+        }
+
     @http.route('/pos-self-order/get-orders-taxes', auth='public', type='json', website=True)
     def get_order_taxes(self, order, access_token):
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
 
-        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+        if not pos_config_sudo or not pos_config_sudo.self_order_ordering_mode or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
 
         lines = self._process_lines(order.get('lines'), pos_config_sudo, 0)
@@ -82,15 +84,14 @@ class PosSelfOrderController(http.Controller):
         }
 
     @http.route('/pos-self-order/update-existing-order', auth="public", type="json", website=True)
-    def update_existing_order(self, order, access_token, table_identifier):
+    def update_existing_order(self, order, access_token):
         order_id = order.get('id')
         order_access_token = order.get('access_token')
-        pos_config_sudo, table_sudo = self._verify_authorization(access_token, table_identifier)
+        pos_config_sudo = self._verify_authorization(access_token)
 
         order_sudo = request.env['pos.order'].sudo().search([
             ('id', '=', order_id),
             ('access_token', '=', order_access_token),
-            ('table_id', '=', table_sudo.id)
         ])
 
         if not order_sudo:
@@ -136,20 +137,6 @@ class PosSelfOrderController(http.Controller):
 
         return orders
 
-    @http.route('/pos-self-order/get-tables', auth='public', type='json', website=True)
-    def get_tables(self, access_token):
-        pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
-
-        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
-            raise Unauthorized("Invalid access token")
-
-        tables = pos_config_sudo.floor_ids.table_ids.filtered(lambda t: t.active).read(['id', 'name', 'identifier', 'floor_id'])
-
-        for table in tables:
-            table['floor_name'] = table.get('floor_id')[1]
-
-        return tables
-
     def _process_lines(self, lines, pos_config_sudo, pos_order_id):
         newLines = []
         pricelist = request.env['product.pricelist'].sudo().browse(pos_config_sudo.pricelist_id.id)
@@ -193,33 +180,27 @@ class PosSelfOrderController(http.Controller):
         return amount_total, amount_untaxed
 
     # The first part will be the session_id of the order.
-    # The second part will be the table_id of the order.
+    # The second part needs to be found
     # Last part the sequence number of the order.
-    # INFO: This is allow a maximum of 999 tables and 9999 orders per table, so about ~1M orders per session.
     # Example: 'Self-Order 00001-001-0001'
-    def _generate_unique_id(self, pos_session_id: int, table_id: int, sequence_number: int) -> str:
+    def _generate_unique_id(self, pos_session_id: int, sequence_number: int) -> str:
         first_part = "{:05d}".format(int(pos_session_id))
-        second_part = "{:03d}".format(int(table_id))
         third_part = "{:04d}".format(int(sequence_number))
 
-        return f"Self-Order {first_part}-{second_part}-{third_part}"
+        return f"Self-Order {first_part}-000-{third_part}"
 
-    def _get_sequence_number(self, table_id, session_id):
+    def _get_sequence_number(self, session_id):
         order_sudo = request.env["pos.order"].sudo().search([(
             'pos_reference',
             'like',
-            f"Self-Order {session_id:0>5}-{table_id:0>3}")], order='id desc', limit=1)
+            f"Self-Order {session_id:0>5}-000-")], order='id desc', limit=1)
 
         return (order_sudo.sequence_number + 1) or 1
 
-    def _verify_authorization(self, access_token, table_identifier):
-        table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
+    def _verify_authorization(self, access_token):
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
 
-        if not pos_config_sudo or not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
+        if not pos_config_sudo or not pos_config_sudo.self_order_ordering_mode or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
 
-        if not table_sudo:
-            raise Unauthorized("Table not found")
-
-        return pos_config_sudo, table_sudo
+        return pos_config_sudo

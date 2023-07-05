@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_self_order_qr_codes_page" model="ir.actions.report">
+            <field name="name">qr.codes</field>
+            <field name="model">pos.config</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_self_order.qr_codes_page</field>
+            <field name="report_file">pos_self_order.qr_codes_page</field>
+            <field name="print_report_name">"QR codes"</field>
+            <field name="binding_model_id" ref="model_pos_config"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="paperformat_qrcodes" model="report.paperformat">
+            <field name="name">QR Codes Page</field>
+            <field name="default" eval="True"/>
+            <field name="header_line" eval="False"/>
+        </record>
+    </data>
+
+    <template id="qr_codes_page">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h1 class="text-center">
+                    QR Code Menus
+                </h1>
+
+                <t t-foreach="data" t-as="qr_codes">
+                    <h3 class="mb-5" t-esc="qr_codes['name']" />
+                    <div class="d-flex flex-wrap justify-content-between align-items-center; page-break-after: always;">
+                        <div t-foreach="qr_codes['qr_codes']" t-as="qr_code" style="width: 33%; box-sizing: page-break-inside: avoid; border-box; text-align: center; margin-bottom: 10px;">
+                            <h4 class="fw-bold text-center" t-esc="qr_code['name']" />
+                            <div class="mb-4 position-relative">
+                                <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(qr_code['url'], 180, 180)" class="position-relative"/>
+                                <svg
+                                    class="position-absolute top-50 start-50"
+                                    style="-webkit-transform: translate(-50%, -50%);"
+                                    t-att-width="45"
+                                    t-att-height="45"
+                                    viewBox="0 0 120 120" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <g>
+                                        <rect width="120" height="120" rx="33" fill="white"/>
+                                        <g>
+                                            <path d="M60 110C87.6142 110 110 87.6142 110 60C110 32.3858 87.6142 10 60 10C32.3858 10 10 32.3858 10 60C10 87.6142 32.3858 110 60 110Z" fill="#9C5789"/>
+                                            <path d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

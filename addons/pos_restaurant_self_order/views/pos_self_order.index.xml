@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_restaurant_self_order_index" inherit_id="pos_self_order.index">
+        <xpath expr="//head" position="inside">
+            <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_restaurant_self_order.assets_tests" />
+        </xpath>
+    </template>
+</odoo>

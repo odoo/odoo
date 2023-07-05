@@ -9,7 +9,7 @@ from markupsafe import escape
 class PosSelfOrderCustomLink(models.Model):
     _name = "pos_self_order.custom_link"
     _description = (
-        "Custom links that the restaurant can configure to be displayed on the self order screen"
+        "Custom links that the user can configure to be displayed on the self order screen"
     )
     name = fields.Char(string="Label", required=True, translate=True)
     url = fields.Char(string="URL", required=True)

@@ -26,7 +26,6 @@ patch(PosBus.prototype, "pos_restaurant.PosBus", {
     // Override
     dispatch(message) {
         this._super(...arguments);
-
         if (message.type === "TABLE_ORDER_COUNT") {
             this.ws_syncTableCount(message.payload);
         }

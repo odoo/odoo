@@ -12,7 +12,7 @@ class PosOrderLine(models.Model):
     # For the moment we need this to keep attributes consistency between the server and client_side.
     selected_attributes = fields.Json(string="Selected Attributes")
 
-    # FIXME: uuid already pass in pos and move note in pos_restaurant.
+    # FIXME: uuid already pass in pos and move note in pos.
     def _export_for_ui(self, orderline):
         return {
             'uuid': orderline.uuid,
@@ -56,6 +56,7 @@ class PosOrder(models.Model):
             "pos_reference": self.pos_reference,
             "access_token": self.access_token,
             "state": self.state,
+            "table_id": self.table_id.id,
             "date_order": str(self.date_order),
             "amount_total": self.amount_total,
             "amount_tax": self.amount_tax,
