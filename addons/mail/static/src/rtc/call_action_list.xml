@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.CallActionList" owl="1">
-        <div class="o-mail-CallActionList d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
-            <div class="d-flex align-items-center flex-wrap">
+        <div class="o-mail-CallActionList d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
+            <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.state.selfSession">
                     <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>
                     <t t-else="" t-set="micText">Mute</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                    <button class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall }"
                         t-att-aria-label="micText"
                         t-att-title="micText"
                         t-on-click="onClickMicrophone">
@@ -23,8 +23,8 @@
                     </button>
                     <t t-if="rtc.state?.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
                     <t t-else="" t-set="headphoneText">Deafen</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                    <button class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall }"
                         t-att-aria-label="headphoneText"
                         t-att-title="headphoneText"
                         t-on-click="onClickDeafen">
@@ -39,8 +39,8 @@
                     </button>
                     <t t-if="rtc.state?.selfSession.raisingHand" t-set="handText">Lower hand</t>
                     <t t-else="" t-set="handText">Raise hand</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall, 'bg-500' : rtc.state?.selfSession.raisingHand }"
+                    <button class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                        t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall, 'bg-500' : rtc.state?.selfSession.raisingHand }"
                         t-att-aria-label="handText"
                         t-att-title="handText"
                         t-on-click="onClickRaiseHand">
@@ -50,10 +50,10 @@
                     </button>
                     <t t-if="rtc.state.sendCamera" t-set="cameraText">Stop camera</t>
                     <t t-else="" t-set="cameraText">Turn camera on</t>
-                    <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                    <button class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{
                             'p-2': isSmall,
-                            'p-3': !isSmall,
+                            'p-3 m-1': !isSmall,
                         }"
                         t-att-aria-label="cameraText"
                         t-att-title="cameraText"
@@ -64,10 +64,10 @@
                     </button>
                     <t t-if="rtc.state.sendScreen" t-set="screenSharingText">Stop screen sharing</t>
                     <t t-else="" t-set="screenSharingText">Share screen</t>
-                    <button t-if="!isMobileOS" class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                    <button t-if="!isMobileOS" class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{
                             'p-2': isSmall,
-                            'p-3': !isSmall,
+                            'p-3 m-1': !isSmall,
                         }"
                         t-att-aria-label="screenSharingText"
                         t-att-title="screenSharingText"
@@ -76,20 +76,20 @@
                             <i class="fa fa-desktop fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall, 'text-success': rtc.state.sendScreen }"/>
                         </div>
                     </button>
-                    <button t-if="!props.fullscreen.isActive" class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                    <button t-if="!props.fullscreen.isActive" class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         aria-label="Enter Full Screen"
                         title="Enter Full Screen"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall }"
                         t-on-click="props.fullscreen.enter"
                     >
                         <div class="fa-stack">
                             <i class="fa fa-arrows-alt fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                         </div>
                     </button>
-                    <button t-if="props.fullscreen.isActive" class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
+                    <button t-if="props.fullscreen.isActive" class="btn d-flex border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         aria-label="Exit Full Screen"
                         title="Exit Full Screen"
-                        t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                        t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall }"
                         t-on-click="props.fullscreen.exit"
                     >
                         <div class="fa-stack">
@@ -97,8 +97,8 @@
                         </div>
                     </button>
                 </t>
-                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
-                    t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn btn-danger d-flex border-0 rounded-circle shadow-none"
+                    t-att-class="{ 'p-2': isSmall, 'p-3 m-1': !isSmall }"
                     aria-label="Reject"
                     title="Reject"
                     t-att-disabled="rtc.state.hasPendingRequest"
@@ -109,9 +109,9 @@
                 </button>
                 <t t-if="props.thread === rtc.state.channel" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
-                <button class="btn d-flex m-1 border-0 rounded-circle shadow-none"
+                <button class="btn d-flex border-0 rounded-circle shadow-none"
                     t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3 m-1': !isSmall, 'btn-success': !isOfActiveCall }"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-att-title="callText"
                     t-on-click="onClickToggleAudioCall">
