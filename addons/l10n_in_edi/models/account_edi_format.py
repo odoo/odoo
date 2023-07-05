@@ -621,8 +621,7 @@ class AccountEdiFormat(models.Model):
         return {'error': [{
             'code': '0',
             'message': _(
-                "Unable to send e-Invoice."
-                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
+                "Ensure GST Number set on company setting and API are Verified."
             )}
         ]}
 
