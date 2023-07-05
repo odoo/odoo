@@ -69,6 +69,7 @@
                     <field name="available_in_pos"/>
                     <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                     <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
+                    <field name="combo_ids" widget="many2many_tags" options="{'no_create': True}"/>
                 </group>
             </xpath>
         </field>
@@ -88,6 +89,11 @@
         action="product_product_action"
         groups="product.group_product_variant"
         sequence="10"/>
+    <menuitem id="point_of_sale.menu_pos_combo" 
+        name="Product Combos" 
+        parent="point_of_sale.pos_config_menu_catalog" 
+        action="point_of_sale.action_pos_combo" 
+        sequence="15" />
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
         action="product.product_pricelist_action2"
