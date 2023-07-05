@@ -153,7 +153,6 @@ export const editorCommands = {
         const selection = editor.document.getSelection();
         const range = selection.getRangeAt(0);
 
-        const container = document.createElement('fake-element');
         const containerFirstChild = document.createElement('fake-element-fc');
         const containerLastChild = document.createElement('fake-element-lc');
 
@@ -170,15 +169,6 @@ export const editorCommands = {
         if (closestElement(selection.anchorNode, 'UL, OL') &&
             (content[0].nodeName === 'UL' || content[0].nodeName === 'OL')) {
             content = Array.from(container.firstChild.childNodes); // ?? where does the rest go ?
-        }
-
-        removeEdgeChild = (content, position) => {
-            content = Array.from(content)
-            if (position === "first") {
-                content.shift()
-            } else if (position === "last") {
-                content.pop()
-            }
         }
 
         // If the selection anchorNode is the editable itself, the content

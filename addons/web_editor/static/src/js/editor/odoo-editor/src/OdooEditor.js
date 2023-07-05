@@ -4703,7 +4703,7 @@ export class OdooEditor extends EventTarget {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this._applyCommand('insertOnPaste', fragment);
+                this._applyCommand('insertOnPaste', preprocessPasteFragment(fragment));
             }
         } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
