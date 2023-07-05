@@ -10,6 +10,7 @@ import {
     onWillDestroy,
     onWillUpdateProps,
 } from "@odoo/owl";
+import { Markup }  from "web.utils";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -135,7 +136,7 @@ export class ImageCrop extends Component {
             this.displayNotification({
               type: 'warning',
               title: _t("This image is an external image"),
-              message: _t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo."),
+              message: Markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
             });
             return this._closeCropper();
         }
