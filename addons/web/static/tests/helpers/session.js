@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.SessionOverrideForTests **/
+/** @odoo-module **/
 
 // Override the Session.session_reload function
 // The wowl test infrastructure does set a correct odoo global value before each test

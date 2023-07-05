@@ -21,7 +21,6 @@ export function memoize(func) {
     }[funcName];
 }
 
-let idCounter = 0;
 /**
  * Generate a unique integer id (unique within the entire client session).
  * Useful for temporary DOM ids.
@@ -30,5 +29,7 @@ let idCounter = 0;
  * @returns {string}
  */
 export function uniqueId(prefix = "") {
-    return `${prefix}${++idCounter}`;
+    return `${prefix}${++uniqueId.nextId}`;
 }
+// set nextId on the function itself to be able to patch then
+uniqueId.nextId = 0;
