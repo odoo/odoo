@@ -1,13 +1,20 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from '@web/core/utils/hooks';
+import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { debounce } from '@web/core/utils/timing';
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
 class VideoOption extends Component {}
 VideoOption.template = 'web_editor.VideoOption';
+
+class VideoIframe extends Component {
+    static template = 'web_editor.VideoIframe';
+    static props = {
+        src: { type: String },
+    };
+}
 
 export class VideoSelector extends Component {
     setup() {
@@ -98,6 +105,8 @@ export class VideoSelector extends Component {
             }));
         });
 
+        useAutofocus();
+
         this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
     }
 
@@ -130,6 +139,12 @@ export class VideoSelector extends Component {
             this.state.options = [];
             this.state.platform = null;
             this.state.errorMessage = '';
+            /**
+             * When the url input is emptied, we need to call the `selectMedia`
+             * callback function to notify the other components that the media
+             * has changed.
+             */
+            this.props.selectMedia({});
             return;
         }
 
@@ -150,7 +165,13 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
-        const { embed_url: src, platform } = await this._getVideoURLData(url, options);
+
+        const {
+            embed_url: src,
+            video_id: videoId,
+            params,
+            platform
+        } = await this._getVideoURLData(url, options);
 
         if (!src) {
             this.state.errorMessage = _t("The provided url is not valid");
@@ -173,7 +194,13 @@ export class VideoSelector extends Component {
         }
 
         this.state.src = src;
-        this.props.selectMedia({ id: src, src });
+        this.props.selectMedia({
+            id: src,
+            src,
+            platform,
+            videoId,
+            params
+        });
         if (platform !== this.state.platform) {
             this.state.platform = platform;
             this.state.options = newOptions;
@@ -213,6 +240,7 @@ VideoSelector.mediaExtraClasses = [];
 VideoSelector.tagNames = ['IFRAME', 'DIV'];
 VideoSelector.template = 'web_editor.VideoSelector';
 VideoSelector.components = {
+    VideoIframe,
     VideoOption,
 };
 VideoSelector.defaultProps = {
