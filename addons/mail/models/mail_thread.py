@@ -457,7 +457,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _get_from_request_or_raise(self, request, thread_id):
-        return self.search([("id", "=", thread_id)])
+        return self.browse(thread_id).exists()
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
