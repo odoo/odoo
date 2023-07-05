@@ -1256,7 +1256,7 @@
     const mdyDateRegexp = /^\d{1,2}(\/|-|\s)\d{1,2}((\/|-|\s)\d{1,4})?$/;
     const ymdDateRegexp = /^\d{3,4}(\/|-|\s)\d{1,2}(\/|-|\s)\d{1,2}$/;
     const dateSeparatorsRegex = /\/|-|\s/;
-    const dateRegexp = /^(\d{1,4})[\/-\s](\d{1,2})([\/-\s](\d{1,4}))?$/;
+    const dateRegexp = /^(\d{1,4})[\/-\s](\d{1,4})([\/-\s](\d{1,4}))?$/;
     const timeRegexp = /((\d+(:\d+)?(:\d+)?\s*(AM|PM))|(\d+:\d+(:\d+)?))$/;
     function isDateTime(str, locale) {
         return parseDateTime(str, locale) !== null;
@@ -1317,6 +1317,10 @@
         }
         const localeDateType = getLocaleDateFormatType(locale);
         if (!part3) {
+            if (part2.length > 2) {
+                // e.g. 11/2023
+                return { month: part1, year: part2, day: undefined, dateString, type: localeDateType };
+            }
             if (localeDateType === "dmy") {
                 return { day: part1, month: part2, year: part3, dateString, type: "dmy" };
             }
@@ -17521,6 +17525,7 @@
                     env.model.dispatch("SELECT_FIGURE", { id: figureId });
                     env.openSidePanel("ChartPanel");
                 },
+                icon: "o-spreadsheet-Icon.EDIT",
             },
             getCopyMenuItem(figureId, env),
             getCutMenuItem(figureId, env),
@@ -17552,6 +17557,7 @@
                         width,
                     });
                 },
+                icon: "o-spreadsheet-Icon.REFRESH",
             },
             getDeleteMenuItem(figureId, onFigureDeleted, env),
         ];
@@ -17568,6 +17574,7 @@
                 env.model.dispatch("COPY");
                 await env.clipboard.write(env.model.getters.getClipboardContent());
             },
+            icon: "o-spreadsheet-Icon.COPY",
         };
     }
     function getCutMenuItem(figureId, env) {
@@ -17581,6 +17588,7 @@
                 env.model.dispatch("CUT");
                 await env.clipboard.write(env.model.getters.getClipboardContent());
             },
+            icon: "o-spreadsheet-Icon.CUT",
         };
     }
     function getDeleteMenuItem(figureId, onFigureDeleted, env) {
@@ -17595,6 +17603,7 @@
                 });
                 onFigureDeleted();
             },
+            icon: "o-spreadsheet-Icon.DELETE",
         };
     }
 
@@ -50307,8 +50316,8 @@
 
 
     __info__.version = '16.4.0-alpha.7';
-    __info__.date = '2023-07-04T14:12:23.240Z';
-    __info__.hash = 'b04cf78';
+    __info__.date = '2023-07-05T18:15:29.956Z';
+    __info__.hash = '996028d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
