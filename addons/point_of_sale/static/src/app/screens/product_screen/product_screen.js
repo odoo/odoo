@@ -81,12 +81,29 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
     async updateSelectedOrderline({ buffer, key }) {
-        if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
+        const order = this.pos.get_order();
+        const selectedLine = order.get_selected_orderline();
+        // This validation must not be affected by `disallowLineQuantityChange`
+        if (selectedLine && selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
+            /**
+             * You can actually type numbers from your keyboard, while a popup is shown, causing
+             * the number buffer storage to be filled up with the data typed. So we force the
+             * clean-up of that buffer whenever we detect this illegal action.
+             */
+            this.numberBuffer.reset();
+            if (key === "Backspace") {
+                this._setValue("remove");
+            } else {
+                this.popup.add(ErrorPopup, {
+                    title: this.env._t("Cannot modify a tip"),
+                    body: this.env._t("Customer tips, cannot be modified directly"),
+                });
+            }
+        } else if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const order = this.pos.get_order();
             if (!order.orderlines.length) {
                 return;
             }
-            const selectedLine = order.get_selected_orderline();
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
