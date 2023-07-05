@@ -1707,7 +1707,8 @@ class _String(Field):
             return False
         if callable(self.translate) and record.env.context.get('edit_translations'):
             terms = self.get_trans_terms(value)
-            if (base_lang := record._get_base_lang()) != (record.env.lang or 'en_US'):
+            base_lang = record._get_base_lang()
+            if base_lang != (record.env.lang or 'en_US'):
                 base_value = record.with_context(edit_translations=None, lang=base_lang)[self.name]
                 base_terms = self.get_trans_terms(base_value)
                 term_to_state = {term: "translated" if base_term != term else "to_translate" for term, base_term in zip(terms, base_terms)}
