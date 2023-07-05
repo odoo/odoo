@@ -246,21 +246,14 @@ export function getDomainTreeDescription(
     const fieldDef = pathFieldDefs[path];
     const operatorInfo = getLeafOperatorInfo(tree, fieldDef);
 
-    let description = pathDescriptions[path];
-    if (valueAST.type === 2 /** boolean */) {
-        const value = valueAST.value;
-        description += ` is`;
-        if (
-            value
-                ? ["is_not", "not_equal"].includes(operatorInfo.key)
-                : ["is", "equal"].includes(operatorInfo.key)
-        ) {
-            description += ` not`;
-        }
-        description += ` set`;
+    let description = `${pathDescriptions[path]} ${operatorInfo.label} `;
+
+    if (["set", "not_set"].includes(operatorInfo.key)) {
+        description = description.trim();
+    } else if (["is", "is_not"].includes(operatorInfo.key)) {
+        description += valueAST.value ? _t("set") : _t("not set");
     } else {
         const value = getValue(valueAST);
-        description += ` ${operatorInfo.label} `;
         const values = Array.isArray(value) ? value : [value];
         const formatValue = (value) => {
             if (typeof value === "string") {
