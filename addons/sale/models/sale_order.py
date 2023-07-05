@@ -116,7 +116,10 @@ class SaleOrder(models.Model):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         if use_invoice_terms and self.env.company.terms_type == "html":
             baseurl = html_keep_url(self._default_note_url() + '/terms')
-            return _('Terms & Conditions: %s', baseurl)
+            context = {'lang': self.partner_id.lang or self.env.user.lang}
+            note = _('Terms & Conditions: %s', baseurl)
+            del context
+            return note
         return use_invoice_terms and self.env.company.invoice_terms or ''
 
     @api.model
@@ -455,7 +458,9 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
             if self.terms_type == 'html' and self.env.company.invoice_terms_html:
                 baseurl = html_keep_url(self.get_base_url() + '/terms')
+                context = {'lang': self.partner_id.lang or self.env.user.lang}
                 values['note'] = _('Terms & Conditions: %s', baseurl)
+                del context
             elif not is_html_empty(self.env.company.invoice_terms):
                 values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:
