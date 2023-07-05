@@ -71,7 +71,7 @@ const deleteSelectedPage = [
     },
     {
         content: "Click on OK",
-        trigger: '.modal-content footer button.btn-primary',
+        trigger: '.modal-content footer button.btn-primary:not([disabled])',
     }
 ];
 const homePage = 'tr:contains("Home")';
