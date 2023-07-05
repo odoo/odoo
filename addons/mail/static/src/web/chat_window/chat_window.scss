@@ -2,6 +2,9 @@
     height: 480px;
     width: $o-mail-ChatWindow-width;
     z-index: 999; // messaging menu is dropdown (1000)
+    &.o-mobile {
+        z-index: 1001; // above messaging menu (chat window takes whole screen)
+    }
     box-shadow: -5px -5px 10px rgba(#000000, 0.09);
     outline: none;
 
