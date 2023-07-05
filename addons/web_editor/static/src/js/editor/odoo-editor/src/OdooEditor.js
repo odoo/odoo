@@ -4592,94 +4592,9 @@ export class OdooEditor extends EventTarget {
         }
         return Promise.all(promises).then(html => html.join(''));
     }
-
-    pasteData(editor, content) {
-        const selection = editor.document.getSelection();
-        const range = selection.getRangeAt(0);
-
-        const container = document.createElement('fake-element');
-        const containerFirstChild = document.createElement('fake-element-fc');
-        const containerLastChild = document.createElement('fake-element-lc');
-
-        let startNode;
-        if (selection.isCollapsed && range.startContainer.nodeType === Node.TEXT_NODE) {
-            startNode = range.startContainer;
-        }
-        startNode = startNode || editor.document.getSelection().anchorNode;
-
-        if (content instanceof Node) {
-            container.replaceChildren(content);
-        } else {
-            container.textContent = content;
-        }
-
-        // In case the html inserted starts with a list and will be inserted within
-        // a list, unwrap the list elements from the list.
-        if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            container.replaceChildren(...container.firstChild.childNodes);
-        }
-
-        // If the selection anchorNode is the editable itself, the content
-        // should not be unwrapped.
-        if (selection.anchorNode.oid !== 'root') {
-            // In case the html inserted is all contained in a single root <p> or <li>
-            // tag, we take the all content of the <p> or <li> and avoid inserting the
-            // <p> or <li>. The same is true for a <pre> inside a <pre>.
-            if (container.childElementCount === 1 && (
-                container.firstChild.nodeName === 'P' ||
-                container.firstChild.nodeName === 'LI' ||
-                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-            )) {
-                const p = container.firstElementChild;
-                container.replaceChildren(...p.childNodes);
-            } else if (container.childElementCount > 1) {
-                // Grab the content of the first child block and isolate it.
-                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
-                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                    container.firstElementChild.remove();
-                }
-                // Grab the content of the last child block and isolate it.
-                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                    container.lastElementChild.remove();
-                }
-            }
-        }
-
-        const insertFirstAndLastChild = (startNode, containerFirstChild, containerLastChild, insertBefore) => {
-            const _insertAt = (reference, nodes, insertBefore) => {
-                for (const child of (insertBefore ? nodes.reverse() : nodes)) {
-                    reference[insertBefore ? 'before' : 'after'](child);
-                    reference = child;
-                }
-            }
-            let lastChildNode = false;
-            let currentNode = startNode;
-            if (containerLastChild.hasChildNodes()) {
-                const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
-                _insertAt(currentNode, [...toInsert], insertBefore);
-                currentNode = insertBefore ? toInsert[0] : currentNode;
-                lastChildNode = toInsert[toInsert.length - 1];
-            }
-            if (containerFirstChild.hasChildNodes()) {
-                const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
-                _insertAt(currentNode, [...toInsert], insertBefore);
-                currentNode = toInsert[toInsert.length - 1];
-                insertBefore = false;
-            }
-
-            initInsertBefore = selection.isCollapsed && range.startContainer.nodeType === Node.TEXT_NODE && !range.startOffset;
-
-            endInsertBefore = !containerFirstChild.hasChildNodes()
-
-            return [currentNode, lastChildNode, insertBefore]
-        }
-
-        return [container, containerFirstChild, containerLastChild]
-    }
-
-    /** @param {ClipboardEvent} ev - Handle safe pasting of html or plain text into the editor. */
+    /**
+     * Handle safe pasting of html or plain text into the editor.
+     */
     _onPaste(ev) {
         ev.preventDefault();
         const sel = this.document.getSelection();
@@ -4699,11 +4614,58 @@ export class OdooEditor extends EventTarget {
             link.remove();
             setSelection(...start, ...start, false);
         }
+
+        const callInsertCommand = (fragment) => {
+            const getUnwrappedInsertData = (content) => {
+                const container = document.createElement('fake-element');
+                const containerFirstChild = document.createElement('fake-element-fc');
+                const containerLastChild = document.createElement('fake-element-lc');
+
+                if (content instanceof Node) {
+                    container.replaceChildren(content);
+                } else {
+                    container.textContent = content;
+                }
+
+                // In case the html inserted is all contained in a single root <p> or <li>
+                // tag, we take the all content of the <p> or <li> and avoid inserting the
+                // <p> or <li>. The same is true for a <pre> inside a <pre>.
+                if (container.childElementCount === 1 && (
+                    container.firstChild.nodeName === 'P' ||
+                    container.firstChild.nodeName === 'LI' ||
+                    container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+                )) {
+                    const p = container.firstElementChild;
+                    container.replaceChildren(...p.childNodes);
+                } else if (container.childElementCount > 1) {
+                    // Grab the content of the first child block and isolate it.
+                    if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+                        containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                        container.firstElementChild.remove();
+                    }
+                    // Grab the content of the last child block and isolate it.
+                    if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                        containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                        container.lastElementChild.remove();
+                    }
+                }
+
+                return { container, containerFirstChild, containerLastChild };
+            }
+
+            const { container, containerFirstChild, containerLastChild } = getUnwrappedInsertData(fragment)
+            return this._applyCommand('insert', fragment, {
+                container,
+                containerFirstChild,
+                containerLastChild,
+            });
+        }
+
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this._applyCommand('insertOnPaste', preprocessPasteFragment(fragment));
+                callInsertCommand(fragment);
             }
         } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
@@ -4713,7 +4675,7 @@ export class OdooEditor extends EventTarget {
             // the clipboard picture.
             if (files.length && !clipboardElem.querySelector('table')) {
                 this.addImagesFiles(files).then(html => {
-                    const imageNodes = this._applyCommand('insertOnPaste', this._prepareClipboardData(html));
+                    const imageNodes = callInsertCommand(this._prepareClipboardData(html));
                     if (imageNodes && this.options.dropImageAsAttachment) {
                         // Mark images as having to be saved as attachments.
                         for (const imageNode of imageNodes) {
@@ -4722,7 +4684,7 @@ export class OdooEditor extends EventTarget {
                     }
                 });
             } else {
-                this._applyCommand('insertOnPaste', clipboardElem);
+                callInsertCommand(clipboardElem);
             }
         } else {
             const text = ev.clipboardData.getData('text/plain');
@@ -4744,9 +4706,9 @@ export class OdooEditor extends EventTarget {
                     if (isImageUrl) {
                         const img = document.createElement('IMG');
                         img.setAttribute('src', url);
-                        this._applyCommand('insertOnPaste', img);
+                        callInsertCommand(img);
                     } else {
-                        this._applyCommand('insertOnPaste', text);
+                        callInsertCommand(text);
                     }
                 } else if (isImageUrl || youtubeUrl) {
                     // Open powerbox with commands to embed media or paste as link.
@@ -4756,7 +4718,7 @@ export class OdooEditor extends EventTarget {
                     this.observerFlush();
                     const currentStepMutations = [...this._currentStep.mutations];
                     // Insert URL as text, revert it later.
-                    this._applyCommand('insertOnPaste', text);
+                    callInsertCommand(text);
                     const revertTextInsertion = () => {
                         this.historyRevertUntil(stepIndexBeforeInsert);
                         this.historyStep(true);
@@ -4771,7 +4733,7 @@ export class OdooEditor extends EventTarget {
                         fontawesome: 'fa-link',
                         callback: () => {
                             revertTextInsertion();
-                            this._applyRawCommand('insertOnPaste', this._createLink(text, url))
+                            this._applyRawCommand('insert', this._createLink(text, url))
                         },
                     };
                     if (isImageUrl) {
@@ -4783,8 +4745,7 @@ export class OdooEditor extends EventTarget {
                                 revertTextInsertion();
                                 const img = document.createElement('IMG');
                                 img.setAttribute('src', url);
-
-                                this._applyRawCommand('insertOnPaste', img);
+                                this._applyRawCommand('insert', img);
                             },
                         };
                         commands = [embedImageCommand, pasteAsURLCommand];
@@ -4815,14 +4776,14 @@ export class OdooEditor extends EventTarget {
                                     );
                                     videoElement.setAttribute('allowfullscreen', '1');
                                 }
-                                this._applyRawCommand('insertOnPaste', videoElement);
+                                this._applyRawCommand('insert', videoElement);
                             },
                         };
                         commands = [embedVideoCommand, pasteAsURLCommand];
                     }
                     this.powerbox.open(commands);
                 } else {
-                    this._applyCommand('insertOnPaste', this._createLink(text, url));
+                    callInsertCommand(this._createLink(text, url));
                 }
             } else {
                 this.historyPauseSteps();
@@ -4833,12 +4794,12 @@ export class OdooEditor extends EventTarget {
                     // Even indexes will always be plain text, and odd indexes will always be URL.
                     // only allow images emebed inside an existing link. No other url or video embed.
                     if (i % 2 && !selectionIsInsideALink) {
-                        this._applyCommand('insertOnPaste', this._createLink(splitAroundUrl[i], url));
+                        callInsertCommand(this._createLink(splitAroundUrl[i], url));
                     } else if (splitAroundUrl[i] !== '') {
                         const textFragments = splitAroundUrl[i].split(/\r?\n/);
                         let textIndex = 1;
                         for (const textFragment of textFragments) {
-                            this._applyCommand('insertOnPaste', textFragment);
+                            callInsertCommand(textFragment);
                             if (textIndex < textFragments.length) {
                                 this._applyCommand('oShiftEnter');
                             }
@@ -4851,15 +4812,13 @@ export class OdooEditor extends EventTarget {
             }
         }
     }
-
-    /** @type {EventListener} */
     _onDragStart(ev) {
         if (ev.target.nodeName === 'IMG') {
             ev.dataTransfer.setData('text/plain', `oid:${ev.target.oid}`);
         }
     }
     /**
-     * @type {EventListener} - Handle safe dropping of html into the editor.
+     * Handle safe dropping of html into the editor.
      */
     _onDrop(ev) {
         ev.preventDefault();
@@ -4917,7 +4876,6 @@ export class OdooEditor extends EventTarget {
         this.historyStep();
     }
 
-    /** @type {EventListener} */
     _onTabulationInTable(ev) {
         const sel = this.document.getSelection();
         const closestTable = closestElement(sel.anchorNode, 'table');
@@ -4936,7 +4894,6 @@ export class OdooEditor extends EventTarget {
             this._onTabulationInTable(ev);
         }
     }
-    /** @type {EventListener} */
     _onTableMenuTogglerClick(ev) {
         const uiWrapper = closestElement(ev.target, '.o_table_ui');
         uiWrapper.classList.toggle('o_open');
@@ -4953,19 +4910,16 @@ export class OdooEditor extends EventTarget {
         }
         ev.stopPropagation();
     }
-    /** @type {EventListener} */
     _onTableMoveUpClick() {
         if (this._rowUiTarget.previousSibling) {
             this._rowUiTarget.previousSibling.before(this._rowUiTarget);
         }
     }
-    /** @type {EventListener} */
     _onTableMoveDownClick() {
         if (this._rowUiTarget.nextSibling) {
             this._rowUiTarget.nextSibling.after(this._rowUiTarget);
         }
     }
-    /** @type {EventListener} */
     _onTableMoveRightClick() {
         const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
         const columnIndex = getColumnIndex(this._columnUiTarget);
@@ -4975,7 +4929,6 @@ export class OdooEditor extends EventTarget {
             target.after(tdToMove);
         }
     }
-    /** @type {EventListener} */
     _onTableMoveLeftClick() {
         const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
         const columnIndex = getColumnIndex(this._columnUiTarget);
@@ -4985,7 +4938,6 @@ export class OdooEditor extends EventTarget {
             target.before(tdToMove);
         }
     }
-    /** @type {EventListener} */
     _onTableDeleteColumnClick() {
         this.historyPauseSteps();
         const rows = [...closestElement(this._columnUiTarget, 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
@@ -4996,7 +4948,6 @@ export class OdooEditor extends EventTarget {
         this.historyUnpauseSteps();
         this.historyStep();
     }
-    /** @type {EventListener} */
     _onTableDeleteRowClick() {
         this.historyPauseSteps();
         const rows = [...this._rowUiTarget.parentElement.children].filter(child => child.nodeName === 'TR');

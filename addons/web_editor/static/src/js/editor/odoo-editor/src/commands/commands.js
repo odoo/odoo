@@ -180,43 +180,6 @@ export const editorCommands = {
             container.replaceChildren(...container.firstChild.childNodes);
         }
 
-        const unwrap = (content) => {
-            const container = document.createElement('fake-element');
-            const containerFirstChild = document.createElement('fake-element-fc');
-            const containerLastChild = document.createElement('fake-element-lc');
-
-            if (content instanceof Node) {
-                container.replaceChildren(content);
-            } else {
-                container.textContent = content;
-            }
-
-            // In case the html inserted is all contained in a single root <p> or <li>
-            // tag, we take the all content of the <p> or <li> and avoid inserting the
-            // <p> or <li>. The same is true for a <pre> inside a <pre>.
-            if (container.childElementCount === 1 && (
-                container.firstChild.nodeName === 'P' ||
-                container.firstChild.nodeName === 'LI' ||
-                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-            )) {
-                const p = container.firstElementChild;
-                container.replaceChildren(...p.childNodes);
-            } else if (container.childElementCount > 1) {
-                // Grab the content of the first child block and isolate it.
-                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
-                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                    container.firstElementChild.remove();
-                }
-                // Grab the content of the last child block and isolate it.
-                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                    container.lastElementChild.remove();
-                }
-            }
-        }
-
-        unwrap()
-
         startNode = startNode || editor.document.getSelection().anchorNode;
         // If the selection anchorNode is the editable itself, the content
         // should not be unwrapped.
@@ -236,9 +199,9 @@ export const editorCommands = {
             }
         }
 
-        // If we have isolated block content, first we split the current focus
-        // element if it's a block then we insert the content in the right places.
         if (containerFirstChild && containerLastChild) {
+            // If we have isolated block content, first we split the current focus
+            // element if it's a block then we insert the content in the right places.
             let currentNode = startNode;
             let lastChildNode = false;
             const _insertAt = (reference, nodes, insertBefore) => {
