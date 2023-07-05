@@ -24,14 +24,14 @@
                         <button string="Archive Employees" type="object" name="action_archive" class="btn btn-primary"
                             attrs="{'invisible': [('has_active_employee', '=', False)]}" data-hotkey="q"/>
                         <button string="See Timesheets" type="object" name="action_open_timesheets" class="btn btn-primary" groups="hr_timesheet.group_hr_timesheet_approver"
-                            attrs="{'invisible': [('has_active_employee', '=', True)]}" data-hotkey="x"/>
+                            attrs="{'invisible': [('has_active_employee', '=', True)]}" data-hotkey="w"/>
                         <button string="See Timesheets" type="object" name="action_open_timesheets" class="btn btn-secondary" groups="hr_timesheet.group_hr_timesheet_approver"
-                            attrs="{'invisible': [('has_active_employee', '=', False)]}" data-hotkey="x"/>
-                        <button string="Discard" special="cancel" data-hotkey="z"/>
+                            attrs="{'invisible': [('has_active_employee', '=', False)]}" data-hotkey="w"/>
+                        <button string="Discard" special="cancel" data-hotkey="x"/>
                     </footer>
                     <footer attrs="{'invisible': [('has_timesheet', '=', True)]}">
                         <button string="Ok" type="object" name="action_confirm_delete" class="btn btn-primary" data-hotkey="q"/>
-                        <button string="Discard" special="cancel" data-hotkey="z"/>
+                        <button string="Discard" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

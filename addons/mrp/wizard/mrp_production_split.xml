@@ -18,7 +18,7 @@
                         </tree>
                     </field>
                     <footer>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>
@@ -63,8 +63,8 @@
                     <field name="valid_details" invisible="1"/>
                     <footer>
                         <button string="Split" class="btn-primary" type="object" name="action_split" data-hotkey="q" attrs="{'invisible': [('valid_details', '=', False)]}"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" attrs="{'invisible': [('production_split_multi_id', '!=', False)]}"/>
-                        <button string="Discard" class="btn-secondary" type="object" name="action_return_to_list" data-hotkey="z" attrs="{'invisible': [('production_split_multi_id', '=', False)]}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" attrs="{'invisible': [('production_split_multi_id', '!=', False)]}"/>
+                        <button string="Discard" class="btn-secondary" type="object" name="action_return_to_list" data-hotkey="x" attrs="{'invisible': [('production_split_multi_id', '=', False)]}"/>
                     </footer>
                 </form>
             </field>

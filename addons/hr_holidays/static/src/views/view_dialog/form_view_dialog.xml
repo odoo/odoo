@@ -3,7 +3,7 @@
 
     <t t-name="hr_holidays.FormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons" owl="1">
         <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
-            <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save</button>
+            <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="q">Save</button>
         </xpath>
 
         <xpath expr="//button[contains(@class, 'o_form_button_cancel')]" position="after">
@@ -14,7 +14,7 @@
                 <button class="btn btn-secondary" t-if="canRefuse" t-on-click="() => this.onClick('action_refuse')" data-hotkey="z">Refuse</button>
                 <button class="btn btn-secondary" t-if="canApprove" t-on-click="() => this.onClick('action_approve')" data-hotkey="g">Approve</button>
                 <button class="btn btn-secondary" t-if="canValidate" t-on-click="() => this.onClick('action_validate')" data-hotkey="v">Validate</button>
-            <div/>
+            </div>
         </xpath>
     </t>
 </templates>

@@ -19,7 +19,7 @@
                 <footer>
                     <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('projects_count', '=', 0)]}" data-hotkey="q"/>
                     <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('projects_count', '>', 0)]}" data-hotkey="w"/>
-                    <button string="Discard" special="cancel" data-hotkey="z" t-att-class="stages_active or projects_count ? '' : 'btn btn-primary'" />
+                    <button string="Discard" special="cancel" data-hotkey="x" t-att-class="stages_active or projects_count ? '' : 'btn btn-primary'" />
                 </footer>
             </form>
         </field>

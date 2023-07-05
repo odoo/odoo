@@ -182,8 +182,8 @@
                            widget="sml_x2_many"/>
                     <footer class="d-flex justify-content-between" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                         <div class="d-flex gap-1">
-                            <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
-                            <button string="Discard" special="cancel" data-hotkey="z"/>
+                            <button string="Confirm" special="save" data-hotkey="q" class="oe_highlight"/>
+                            <button string="Discard" special="cancel" data-hotkey="x"/>
                         </div>
                         <div>
                             <button name="action_open_generate_serial" attrs="{'invisible': [('display_assign_serial', '=', False)]}" string="Generate Serials" type="object" class="float-end btn-link"/>
@@ -191,7 +191,7 @@
                         </div>
                     </footer>
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', '&amp;', ('state', '!=', 'cancel'), ('state', '!=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '!=', True)]}">
-                        <button string="Close" special="cancel" data-hotkey="z"/>
+                        <button string="Close" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

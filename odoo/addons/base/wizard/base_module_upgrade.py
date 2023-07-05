@@ -36,7 +36,7 @@ class BaseModuleUpgrade(models.TransientModel):
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
                                     <button name="config" string="Start Configuration" type="object" class="btn-primary" data-hotkey="q"/>
-                                    <button special="cancel" data-hotkey="z" string="Close" class="btn-secondary"/>
+                                    <button special="cancel" data-hotkey="x" string="Close" class="btn-secondary"/>
                                 </footer>
                              </form>'''
 

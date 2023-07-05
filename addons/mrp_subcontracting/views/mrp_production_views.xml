@@ -49,7 +49,7 @@
                 <footer>
                     <button name="subcontracting_record_component" attrs="{'invisible': ['|', ('state', '=', 'to_close'), ('qty_producing', '&lt;', 0.001)]}" string="Continue" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button name="subcontracting_record_component" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Record Production" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button string="Discard" special="cancel" data-hotkey="z" />
+                    <button string="Discard" special="cancel" data-hotkey="x" />
                 </footer>
             </xpath>
             <xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>
@@ -109,4 +109,3 @@
         </field>
     </record>
 </odoo>
-

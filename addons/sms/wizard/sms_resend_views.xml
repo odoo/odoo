@@ -27,10 +27,10 @@
                     <button string="Send &amp; Close" name="action_resend" type="object" class="btn-primary o_mail_send"
                             attrs="{'invisible': ['|', ('has_unregistered_account', '=', False), ('can_resend', '=', False)]}" data-hotkey="w"/>
                     <button string="Ignore all" name="action_cancel" type="object" class="btn-primary"
-                            attrs="{'invisible': ['|', '|', ('has_insufficient_credit', '=', True), ('has_unregistered_account', '=', True), '&amp;', ('has_unregistered_account', '=', True), ('can_resend', '=', True)]}" data-hotkey="x"/>
+                            attrs="{'invisible': ['|', '|', ('has_insufficient_credit', '=', True), ('has_unregistered_account', '=', True), '&amp;', ('has_unregistered_account', '=', True), ('can_resend', '=', True)]}" data-hotkey="z"/>
                     <button string="Ignore all" name="action_cancel" type="object" class="btn-secondary"
-                            attrs="{'invisible': ['!', '|', '|', ('has_insufficient_credit', '=', True), ('has_unregistered_account', '=', True), '&amp;', ('has_unregistered_account', '=', True), ('can_resend', '=', True)]}" data-hotkey="x"/>
-                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                            attrs="{'invisible': ['!', '|', '|', ('has_insufficient_credit', '=', True), ('has_unregistered_account', '=', True), '&amp;', ('has_unregistered_account', '=', True), ('can_resend', '=', True)]}" data-hotkey="z"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
