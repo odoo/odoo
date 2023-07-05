@@ -389,6 +389,24 @@ class AccountTax(models.Model):
         if self.price_include:
             self.include_base_amount = True
 
+    @api.onchange('invoice_repartition_line_ids')
+    def _onchange_invoice_repartition_line_ids(self):
+        base = False
+        for line in self.invoice_repartition_line_ids:
+            if base:
+                line.repartition_type = 'tax'
+            if line.repartition_type == 'base':
+                base = True
+
+    @api.onchange('refund_repartition_line_ids')
+    def _onchange_refund_repartition_line_ids(self):
+        base = False
+        for line in self.refund_repartition_line_ids:
+            if base:
+                line.repartition_type = 'tax'
+            if line.repartition_type == 'base':
+                base = True
+
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, fixed_multiplicator=1):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
@@ -1321,7 +1339,13 @@ class AccountTaxRepartitionLine(models.Model):
         help="Factor to apply on the account move lines generated from this distribution line, in percents",
     )
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this distribution line")
-    repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
+    repartition_type = fields.Selection(
+        string="Based On",
+        selection=[('base', 'Base'), ('tax', 'of tax')],
+        required=True,
+        default='base',
+        help="Base on which the factor will be applied."
+    )
     document_type = fields.Selection(string="Related to", selection=[('invoice', 'Invoice'), ('refund', 'Refund')], required=True)
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
