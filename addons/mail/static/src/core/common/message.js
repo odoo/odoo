@@ -103,6 +103,7 @@ export class Message extends Component {
         this.attachmentService = useService("mail.attachment");
         this.user = useService("user");
         this.dialog = useService("dialog");
+        this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         useChildSubEnv({
             alignedRight: this.isAlignedRight,
