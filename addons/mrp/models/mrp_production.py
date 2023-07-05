@@ -494,6 +494,7 @@ class MrpProduction(models.Model):
             order.picking_ids = self.env['stock.picking'].search([
                 ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
             ])
+            order.picking_ids |= order.move_raw_ids.move_orig_ids.picking_id
             order.delivery_count = len(order.picking_ids)
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')

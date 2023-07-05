@@ -110,6 +110,14 @@
             <xpath expr="//field[@name='description_picking']" position="after">
                 <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
             </xpath>
+            <xpath expr="//button[@name='action_view_reception_report']" position="after">
+                <button class="oe_stat_button" name="action_view_mrp_production" type="object" icon="fa-wrench" invisible="not production_count" groups="mrp.group_mrp_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="production_count"/></span>
+                        <span class="o_stat_text">Manufacturing</span>
+                    </div>
+                </button>
+            </xpath>
         </field>
     </record>
 
