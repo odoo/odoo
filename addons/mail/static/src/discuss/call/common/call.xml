@@ -25,7 +25,7 @@
                     <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
                 <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
-                    <div t-on-mousemove="onMousemoveOverlay">
+                    <div t-att-class="{ 'w-100': props.compact }" t-on-mousemove="onMousemoveOverlay">
                         <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
                 </div>
