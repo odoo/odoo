@@ -8,7 +8,6 @@ import {
     dragenterFiles,
     start,
 } from "@mail/../tests/helpers/test_utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer (patch)");
@@ -110,13 +109,10 @@ QUnit.test('display canned response suggestions on typing ":"', async (assert) =
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     await insertText(".o-mail-Composer-input", ":");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
 });
 
@@ -135,14 +131,11 @@ QUnit.test("use a canned response", async (assert) => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -167,16 +160,13 @@ QUnit.test("use a canned response some text", async (assert) => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
     await insertText(".o-mail-Composer-input", ":");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -201,14 +191,11 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(

@@ -16,13 +16,11 @@ const { DateTime } = luxon;
 import {
     editInput,
     makeDeferred,
-    nextTick,
     patchWithCleanup,
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { url } from "@web/core/utils/urls";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("message");
 
@@ -320,14 +318,11 @@ QUnit.test("can add new mentions when editing message", async (assert) => {
         res_id: channelId,
         message_type: "comment",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Composer-input", " @");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
     await click(".o-mail-Message a:contains('save')");
     assert.strictEqual($(".o-mail-Message-body")[0].innerText, "Hello @TestPartner");
@@ -1240,15 +1235,12 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
         email: "testpartner@odoo.com",
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
+    const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(Test Partner)");
     await click(".o-mail-Composer-send");
     await click(".o_mail_redirect");
@@ -1291,13 +1283,10 @@ QUnit.test("Channel should be opened after clicking on its mention", async (asse
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "my-channel" });
-    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
+    const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "#");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(my-channel)");
     await click(".o-mail-Composer-send");
     await click(".o_channel_redirect");
