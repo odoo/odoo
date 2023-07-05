@@ -11,6 +11,7 @@ patch(Messaging.prototype, "mail/web", {
         this._super(env, services, initialThreadLocalId);
         /** @type {import("@mail/chat/chat_window_service").ChatWindow} */
         this.chatWindowService = services["mail.chat_window"];
+        this.ui = services.ui;
         this.bus.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
@@ -21,7 +22,7 @@ patch(Messaging.prototype, "mail/web", {
             );
             this.notificationService.add(notification, { type: "info" });
             const chat = await this.threadService.getChat({ partnerId });
-            if (chat) {
+            if (chat && !this.ui.isSmall) {
                 this.chatWindowService.insert({ thread: chat });
             }
         });
@@ -30,7 +31,7 @@ patch(Messaging.prototype, "mail/web", {
         this.loadFailures();
         for (const channelData of data.channels) {
             const thread = this.threadService.createChannelThread(channelData);
-            if (channelData.is_minimized && channelData.state !== "closed") {
+            if (channelData.is_minimized && channelData.state !== "closed" && !this.ui.isSmall) {
                 this.chatWindowService.insert({
                     autofocus: 0,
                     folded: channelData.state === "folded",
@@ -55,5 +56,5 @@ patch(Messaging.prototype, "mail/web", {
 });
 
 patch(messagingService, "mail/web", {
-    dependencies: [...messagingService.dependencies, "mail.chat_window"],
+    dependencies: [...messagingService.dependencies, "mail.chat_window", "ui"],
 });

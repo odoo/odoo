@@ -9,6 +9,7 @@
                 'o-folded': props.chatWindow.folded,
                 'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
                 'rounded-top-3': !props.chatWindow.hidden and !store.isSmall,
+                'o-mobile': ui.isSmall
                 }"
         t-on-keydown="onKeydown"
         tabindex="1"
@@ -52,7 +53,7 @@
                 <button class="o-mail-ChatWindow-command btn d-flex p-2 me-1 opacity-75 opacity-100-hover" t-att-title="lastAction.name" t-on-click.stop="lastAction.onSelect"><i t-att-class="lastAction.icon"/></button>
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
             <button t-if="state.activeMode" class="o-mail-ChatWindow-closePanel btn position-absolute top-0 end-0 btn opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="() => state.activeMode = ''"><i class="fa fa-close"/></button>
             <t t-if="thread">
                 <PinnedMessagesPanel t-if="state.activeMode === 'pinned-messages'" thread="thread"/>

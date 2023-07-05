@@ -193,7 +193,11 @@ export class ChatWindow extends Component {
                 sequence: 20,
             });
         }
-        if (this.thread && this.props.chatWindow.isOpen) {
+        if (
+            this.thread &&
+            this.props.chatWindow.isOpen &&
+            !(this.thread.model === "discuss.channel" && this.ui.isSmall)
+        ) {
             acts.push({
                 id: "expand",
                 name:

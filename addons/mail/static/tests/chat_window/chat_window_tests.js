@@ -1002,6 +1002,35 @@ QUnit.test("Chat window in mobile are not foldable", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow-content"); // content => non-folded
 });
 
+QUnit.test("Server-synced chat windows should not open at page load on mobile", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                fold_state: "open",
+                is_minimized: true,
+                partner_id: pyEnv.currentPartnerId,
+            }),
+        ],
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    assert.containsNone($, ".o-mail-ChatWindow");
+});
+
+QUnit.test("chat window of channels should not have 'Open in Discuss' (mobile)", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce($, "[title='More actions']");
+    await click("[title='More actions']");
+    assert.containsNone($, "[title='Open in Discuss']");
+});
+
 QUnit.test("Open chat window of new inviter", async (assert) => {
     const pyEnv = await startServer();
     await start();
