@@ -120,8 +120,9 @@ export class Message extends Component {
                 this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
         });
+        this.emojiPickerRef = useRef("emoji-picker");
         if (this.props.hasActions && this.canAddReaction) {
-            this.emojiPicker = useEmojiPicker(useRef("emoji-picker"), {
+            this.emojiPicker = useEmojiPicker(this.emojiPickerRef, {
                 onSelect: (emoji) => {
                     const reaction = this.message.reactions.find(
                         ({ content, personas }) =>
