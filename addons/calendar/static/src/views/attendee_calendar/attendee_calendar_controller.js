@@ -57,7 +57,10 @@ export class AttendeeCalendarController extends CalendarController {
                         };
                         this.goToFullEvent(false, fullContext)
                     },
-                    onRecordSaved: () => resolve(onDialogClosed())
+                    onRecordSaved: () => resolve(onDialogClosed()),
+                    onRecordDiscarded: () => resolve(onDialogClosed())
+                }, {
+                    onClose: () => resolve()
                 }
             );
         });
