@@ -23,6 +23,7 @@
         'views/point_of_sale_view.xml',
         'views/pos_order_view.xml',
         'views/pos_category_view.xml',
+        'views/pos_combo_view.xml',
         'views/product_view.xml',
         'views/account_journal_view.xml',
         'views/pos_payment_method_views.xml',
