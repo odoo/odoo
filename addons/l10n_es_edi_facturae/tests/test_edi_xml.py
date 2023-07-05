@@ -8,7 +8,7 @@ from unittest.mock import patch
 import lxml
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -251,3 +251,94 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
 
             self.assertEqual(result['type'], 'ir.actions.act_url')
             self.assertEqual(invoice.invoice_line_ids[0].price_subtotal, 0.0)
+
+    def test_import_multiple_invoices(self):
+        with file_open("l10n_es_edi_facturae/tests/data/import_multiple_invoices.xml", "rt") as f:
+            imported_xml = lxml.etree.fromstring(f.read().encode())
+
+        moves = self.env['account.move'].create({'move_type': 'out_invoice'})
+        moves._import_invoice_facturae(moves, {'xml_tree': imported_xml})
+
+        moves += self.env['account.move'].search([('ref', '=', 'INV/2023/00006'), ('company_id', '=', self.company_data['company'].id)], limit=1)
+
+        partner = self.env['res.partner'].search([
+            ('name', '=', 'Azure Interior'),
+            ('email', '=', 'azure.Interior24@example.com'),
+        ])
+        currency = self.env['res.currency'].search([('name', '=', 'EUR')])
+
+        self.assertRecordValues(moves, [
+            {
+                'partner_id': partner.id,
+                'amount_total': 2186.20,
+                'amount_untaxed': 2119.0,
+                'amount_tax': 67.2,
+                'move_type': 'out_invoice',
+                'currency_id': currency.id,
+                'invoice_date': fields.Date.from_string('2023-08-01'),
+                'invoice_date_due': fields.Date.from_string('2023-08-31'),
+                'ref': 'INV/2023/00005',
+                'narration': '<p>Terms and conditions.</p>',
+            },
+            {
+                'partner_id': partner.id,
+                'amount_total': 1161.60,
+                'amount_untaxed': 960.0,
+                'amount_tax': 201.60,
+                'move_type': 'out_invoice',
+                'currency_id': currency.id,
+                'invoice_date': fields.Date.from_string('2023-07-01'),
+                'invoice_date_due': fields.Date.from_string('2023-07-31'),
+                'ref': 'INV/2023/00006',
+                'narration': '<p>Legal References.</p>',
+            },
+        ])
+
+        # Check first invoice's lines.
+        self.assertRecordValues(moves[0].invoice_line_ids, [
+            {
+                'name': '[E-COM07] Large Cabinet',
+                'price_unit': 320.0,
+                'quantity': 1.0,
+                'price_total': 387.2,
+                'discount': 0.0,
+            },
+            {
+                'name': '[E-COM09] Large Desk',
+                'price_unit': 1799.0,
+                'quantity': 1.0,
+                'price_total': 1799,
+                'discount': 0.0,
+            }
+        ])
+
+        # Check second invoice's lines.
+        self.assertRecordValues(moves[1].invoice_line_ids, [
+            {
+                'name': '[E-COM07] Large Cabinet',
+                'price_unit': 320.0,
+                'quantity': 3.0,
+                'price_total': 1161.60,
+                'discount': 0.0,
+            },
+        ])
+
+    def test_import_withheld_taxes(self):
+        with file_open("l10n_es_edi_facturae/tests/data/import_withholding_invoice.xml", "rt") as f:
+            imported_xml = lxml.etree.fromstring(f.read().encode())
+
+        move = self.env['account.move'].create({'move_type': 'out_invoice'})
+        move._import_invoice_facturae(move, {'xml_tree': imported_xml})
+
+        self.assertRecordValues(move, [
+            {
+                'amount_total': 323.2,
+                'amount_untaxed': 320.0,
+                'amount_tax': 3.2,
+            },
+        ])
+
+        tax_amounts = [tax.amount for tax in move.invoice_line_ids.tax_ids]
+
+        # Check first invoice's lines.
+        self.assertEqual(tax_amounts, [21.0, -20.0])

@@ -1,9 +1,12 @@
-from collections import defaultdict
+import re
 
-from odoo import fields, models, api, _
+from collections import defaultdict
+from markupsafe import escape, Markup
+
+from odoo import fields, models, api, _, Command
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, date_utils
-from odoo.tools.xml_utils import cleanup_xml_node
+from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 
 PHONE_CLEAN_TABLE = str.maketrans({" ": None, "-": None, "(": None, ")": None, "+": None})
 COUNTRY_CODE_MAP = {
@@ -379,3 +382,233 @@ class AccountMove(models.Model):
     def _get_edi_doc_attachments_to_export(self):
         # EXTENDS 'account'
         return super()._get_edi_doc_attachments_to_export() + self.l10n_es_edi_facturae_xml_id
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _get_edi_decoder(self, file_data, new=False):
+        def is_facturae(tree):
+            return tree.tag == '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae'
+
+        if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
+            return self._import_invoice_facturae
+
+        return super()._get_edi_decoder(file_data, new=new)
+
+    def _import_invoice_facturae(self, invoice, file_data, new=False):
+        tree = file_data['xml_tree']
+        is_bill = invoice.move_type.startswith('in_')
+        partner = self._import_get_partner(tree, is_bill)
+        self._import_invoice_facturae_invoices(invoice, partner, tree)
+
+    def _import_get_partner(self, tree, is_bill):
+        # If we're dealing with a vendor bill, then the partner is the seller party, if an invoice then it's the buyer.
+        party = tree.xpath('//SellerParty') if is_bill else tree.xpath('//BuyerParty')
+        if party:
+            partner_vals = self._import_extract_partner_values(party[0])
+            return self._import_create_or_retrieve_partner(partner_vals)
+        return None
+
+    def _import_extract_partner_values(self, party_node):
+        name = find_xml_value('.//CorporateName|.//Name', party_node)
+        first_surname = find_xml_value('.//FirstSurname', party_node)
+        second_surname = find_xml_value('.//SecondSurname', party_node)
+        phone = find_xml_value('.//Telephone', party_node)
+        mail = find_xml_value('.//ElectronicMail', party_node)
+        country_code = find_xml_value('.//CountryCode', party_node)
+        vat = find_xml_value('.//TaxIdentificationNumber', party_node)
+
+        full_name = ' '.join(part for part in [name, first_surname, second_surname] if part)
+
+        return {'name': full_name, 'vat': vat, 'phone': phone, 'email': mail, 'country_code': country_code}
+
+    def _import_create_or_retrieve_partner(self, partner_vals):
+        name = partner_vals['name']
+        vat = partner_vals['vat']
+        phone = partner_vals['phone']
+        mail = partner_vals['email']
+        country_code = partner_vals['country_code']
+
+        partner = self.env['res.partner']._retrieve_partner(name=name, vat=vat, phone=phone, mail=mail)
+
+        if not partner and name:
+            partner_vals = {'name': name, 'email': mail, 'phone': phone}
+            country = self.env['res.country'].search([('code', '=', country_code.lower())]) if country_code else False
+            if country:
+                partner_vals['country_id'] = country.id
+            partner = self.env['res.partner'].create(partner_vals)
+            if vat and self.env['res.partner']._run_vat_test(vat, country):
+                partner.vat = vat
+
+        return partner
+
+    def _import_invoice_facturae_invoices(self, invoice, partner, tree):
+        invoices = tree.xpath('//Invoice')
+        if not invoices:
+            return
+
+        self._import_invoice_facturae_invoice(invoice, partner, invoices[0])
+
+        # There might be other invoices inside the facturae.
+        for node in invoices[1:]:
+            other_invoice = invoice.create({
+                'journal_id': invoice.journal_id.id,
+                'move_type': invoice.move_type
+            })
+            with other_invoice._get_edi_creation():
+                self._import_invoice_facturae_invoice(other_invoice, partner, node)
+                other_invoice.message_post(body=escape(_("Created from attachment in %s")) % invoice._get_html_link())
+
+    def _import_invoice_facturae_invoice(self, invoice, partner, tree):
+        logs = []
+
+        # ==== move_type ====
+        invoice_total = find_xml_value('.//InvoiceTotal', tree)
+        is_refund = float(invoice_total) < 0 if invoice_total else False
+        if is_refund:
+            invoice.move_type = "in_refund" if invoice.move_type.startswith("in_") else "out_refund"
+        ref_multiplier = -1.0 if is_refund else 1.0
+
+        # ==== partner_id ====
+        if partner:
+            invoice.partner_id = partner
+        else:
+            logs.append(_("Customer/Vendor could not be found and could not be created due to missing data in the XML."))
+
+        # ==== currency_id ====
+        invoice_currency_code = find_xml_value('.//InvoiceCurrencyCode', tree)
+        if invoice_currency_code:
+            currency = self.env['res.currency'].search([('name', '=', invoice_currency_code)], limit=1)
+            if currency:
+                invoice.currency_id = currency
+            else:
+                logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option "
+                              "and activate the currency?", invoice_currency_code))
+
+        # ==== invoice date ====
+        if issue_date := find_xml_value('.//IssueDate', tree):
+            invoice.invoice_date = issue_date
+
+        # ==== invoice_date_due ====
+        if end_date := find_xml_value('.//InstallmentDueDate', tree):
+            invoice.invoice_date_due = end_date
+
+        # ==== ref ====
+        if invoice_number := find_xml_value('.//InvoiceNumber', tree):
+            invoice.ref = invoice_number
+
+        # ==== narration ====
+        invoice.narration = "\n".join(
+            ref.text
+            for ref in tree.xpath('.//LegalReference')
+            if ref.text
+        )
+
+        # === invoice_line_ids ===
+        logs += self._import_invoice_fill_lines(invoice, tree, ref_multiplier)
+
+        body = Markup("<strong>%s</strong>") % _("Invoice imported from Factura-E XML file.")
+
+        if logs:
+            body += Markup("<ul>%s</ul>") \
+                    % Markup().join(Markup("<li>%s</li>") % log for log in logs)
+
+        invoice.message_post(body=body)
+
+        return logs
+
+    def _import_invoice_fill_lines(self, invoice, tree, ref_multiplier):
+        lines = tree.xpath('.//InvoiceLine')
+        logs = []
+        vals_list = []
+        for line in lines:
+            line_vals = {'move_id': invoice.id}
+
+            # ==== name ====
+            if item_description := find_xml_value('.//ItemDescription', line):
+                product = self._search_product_for_import(item_description)
+                if product:
+                    line_vals['product_id'] = product.id
+                else:
+                    logs.append(_("The product '%s' could not be found.", item_description))
+                line_vals['name'] = item_description
+
+            # ==== quantity ====
+            line_vals['quantity'] = find_xml_value('.//Quantity', line) or 1
+
+            # ==== price_unit ====
+            price_unit = find_xml_value('.//UnitPriceWithoutTax', line)
+            line_vals['price_unit'] = ref_multiplier * float(price_unit) if price_unit else 1.0
+
+            # ==== discount ====
+            discounts = line.xpath('.//DiscountRate')
+            discount_rate = 0.0
+            for discount in discounts:
+                discount_rate += float(discount.text)
+
+            charges = line.xpath('.//ChargeRate')
+            charge_rate = 0.0
+            for charge in charges:
+                charge_rate += float(charge.text)
+
+            discount_rate -= charge_rate
+            line_vals['discount'] = discount_rate
+
+            # ==== tax_ids ====
+            taxes_withheld_nodes = line.xpath('.//TaxesWithheld/Tax')
+            taxes_outputs_nodes = line.xpath('.//TaxesOutputs/Tax')
+            is_purchase = invoice.move_type.startswith('in')
+            tax_ids = []
+            logs += self._import_fill_invoice_line_taxes(invoice, line_vals, tax_ids, taxes_outputs_nodes, False, is_purchase)
+            logs += self._import_fill_invoice_line_taxes(invoice, line_vals, tax_ids, taxes_withheld_nodes, True, is_purchase)
+            line_vals['tax_ids'] = [Command.set(tax_ids)]
+            vals_list.append(line_vals)
+
+        invoice.invoice_line_ids = self.env['account.move.line'].create(vals_list)
+        return logs
+
+    def _import_fill_invoice_line_taxes(self, invoice, line_vals, tax_ids, tax_nodes, is_withheld, is_purchase):
+        logs = []
+        for tax_node in tax_nodes:
+            tax_rate = find_xml_value('.//TaxRate', tax_node)
+            if tax_rate:
+                # Since the 'TaxRate' node isn't guaranteed to be a percentage, we can find out by
+                # applying the tax rate on the taxable base, and if it's equal to the tax amount
+                # then we can say this is a percentage, otherwise a fixed amount.
+                taxable_base = find_xml_value('.//TaxableBase/TotalAmount', tax_node)
+                tax_amount = find_xml_value('.//TaxAmount/TotalAmount', tax_node)
+                is_fixed = False
+
+                if taxable_base and tax_amount and invoice.currency_id.compare_amounts(float(taxable_base) * (float(tax_rate) / 100), float(tax_amount)) != 0:
+                    is_fixed = True
+
+                tax_excl = self._search_tax_for_import(invoice.company_id, float(tax_rate), is_fixed, is_withheld, is_purchase, price_included=False)
+
+                if tax_excl:
+                    tax_ids.append(tax_excl.id)
+                elif tax_incl := self._search_tax_for_import(invoice.company_id, float(tax_rate), is_fixed, is_withheld, is_purchase, price_included=True):
+                    tax_ids.append(tax_incl)
+                    line_vals['price_unit'] *= (1.0 + float(tax_rate) / 100.0)
+                else:
+                    logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", tax_rate, line_vals.get('name', "")))
+
+        return logs
+
+    def _search_tax_for_import(self, company, amount, is_fixed, is_withheld, is_purchase, price_included):
+        taxes = self.env['account.tax'].search([
+            ('company_id', '=', company.id),
+            ('amount', '=', -1.0 * amount if is_withheld else amount),
+            ('amount_type', '=', 'fixed' if is_fixed else 'percent'),
+            ('type_tax_use', '=', 'purchase' if is_purchase else 'sale'),
+            ('price_include', '=', price_included),
+        ], limit=1)
+
+        return taxes
+
+    def _search_product_for_import(self, item_description):
+        # Exported Odoo XML will have item_description = "[default_code] name".
+        # We can check if it follows the same format and search for the product with the default code and the name.
+        code_and_name = re.match(r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description).groupdict()
+        product = self.env['product.product']._retrieve_product(**code_and_name)
+        return product
