@@ -13,6 +13,7 @@ class AccountMove(models.Model):
     l10n_pt_account_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_qr_code_str', store=True)
     l10n_pt_account_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_inalterable_hash')
     l10n_pt_account_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_inalterable_hash')
+    l10n_pt_account_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_atcud', store=True)
     l10n_pt_account_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
 
     @api.depends('inalterable_hash')
@@ -24,6 +25,20 @@ class AccountMove(models.Model):
                 move.l10n_pt_account_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
             else:
                 move.l10n_pt_account_inalterable_hash_short = False
+
+    @api.depends('sequence_number', 'journal_id.l10n_pt_account_tax_authority_series_id.code', 'inalterable_hash')
+    def _compute_l10n_pt_atcud(self):
+        for move in self:
+            if (
+                move.company_id.account_fiscal_country_id.code == 'PT'
+                and not move.l10n_pt_account_atcud
+                and move.journal_id.l10n_pt_account_tax_authority_series_id
+                and move.inalterable_hash
+            ):
+                move.l10n_pt_account_atcud = f"{move.journal_id.l10n_pt_account_tax_authority_series_id.code}-{move.sequence_number}"
+            else:
+                move.l10n_pt_account_atcud = False
+
 
     @api.depends('state', 'invoice_date', 'company_id.account_fiscal_country_id.code')
     def _compute_l10n_pt_show_future_date_warning(self):
@@ -83,11 +98,13 @@ class AccountMove(models.Model):
                 continue
             company_vat_ok = move.company_id.vat and stdnum.pt.nif.is_valid(move.company_id.vat)
             partner_country_ok = move.partner_id.country_id
+            atcud_ok = move.l10n_pt_account_atcud
 
-            if not company_vat_ok or not partner_country_ok:
+            if not company_vat_ok or not partner_country_ok or not atcud_ok:
                 error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
                 error_msg += _('- The `country of the customer should be defined\n') if not partner_country_ok else ""
+                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's tax authority series") if not atcud_ok else ""
                 raise UserError(error_msg)
 
             company_vat = re.sub(r'\D', '', move.company_id.vat)
@@ -107,7 +124,7 @@ class AccountMove(models.Model):
             qr_code_str += "E:N*"
             qr_code_str += f"F:{format_date(self.env, move.date, date_format='yyyyMMdd')}*"
             qr_code_str += f"G:{move._get_l10n_pt_account_document_number()}*"
-            qr_code_str += "H:0*"  # TODO: ATCUD
+            qr_code_str += f"H:{move.l10n_pt_account_atcud}*"
             qr_code_str += f"{tax_letter}1:{move.company_id.l10n_pt_account_region_code}*"
             if details_by_tax_group.get('E'):
                 qr_code_str += f"{tax_letter}2:{details_by_tax_group.get('E')['base']}*"

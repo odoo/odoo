@@ -42,7 +42,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
         # any lines yet
-        for move in invoices:
+        for move in invoices.sorted('invoice_date'):
             try:
                 move.action_post()
             except (UserError, ValidationError):

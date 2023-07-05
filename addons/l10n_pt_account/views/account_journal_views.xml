@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_pt" model="ir.ui.view">
+            <field name="name">account.journal.pt.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="l10n_pt_account_tax_authority_series_id"
+                           attrs="{
+                                'invisible': [('country_code', '!=', 'PT')],
+                                'required': [('country_code', '=', 'PT'), ('type', '=', 'sale')],
+                           }"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

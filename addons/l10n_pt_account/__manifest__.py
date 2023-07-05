@@ -20,10 +20,14 @@
     ],
     'data': [
         'data/account_tax_report.xml',
+        'security/ir.model.access.csv',
         'views/account_move_views.xml',
+        'views/account_journal_views.xml',
         'views/account_tax_view.xml',
         'views/report_template.xml',
         'views/report_invoice.xml',
+        'views/l10n_pt_account_menuitem.xml',
+        'views/l10n_pt_account_tax_authority_series_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
