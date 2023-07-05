@@ -153,3 +153,35 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         )
         self.assertEqual(report[0]['qty_ordered'], 11)
         self.assertEqual(round(report[0]['price_average'], 2), 46.36)
+
+    def test_po_report_currency(self):
+        """
+            Check that the currency of the report is the one of the current company
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                }),
+            ],
+        })
+        po_2 = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.env['res.currency'].search([('name', '=', 'EUR')], limit=1).id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                }),
+            ],
+        })
+        # flush the POs to make sure the report is up to date
+        po.flush()
+        po_2.flush()
+        report = self.env['purchase.report'].search([('product_id', "=", self.product_a.id)])
+        self.assertEqual(report.currency_id, self.env.company.currency_id)
