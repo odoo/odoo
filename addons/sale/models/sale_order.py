@@ -335,7 +335,9 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
             if order.terms_type == 'html' and self.env.company.invoice_terms_html:
                 baseurl = html_keep_url(order._get_note_url() + '/terms')
+                context = {'lang': order.partner_id.lang or self.env.user.lang}
                 order.note = _('Terms & Conditions: %s', baseurl)
+                del context
             elif not is_html_empty(self.env.company.invoice_terms):
                 order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
 
