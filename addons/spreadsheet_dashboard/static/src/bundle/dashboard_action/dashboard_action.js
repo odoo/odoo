@@ -11,6 +11,7 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
@@ -131,6 +132,17 @@ export class SpreadsheetDashboardAction extends Component {
         );
         return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     }
+
+    async shareSpreadsheet(data, excelExport) {
+        const url = await this.orm.call("spreadsheet.dashboard.share", "action_get_share_url", [
+            {
+                dashboard_id: this.activeDashboardId,
+                spreadsheet_data: JSON.stringify(data),
+                excel_files: excelExport.files,
+            },
+        ]);
+        return url;
+    }
 }
 SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";
 SpreadsheetDashboardAction.components = {
@@ -139,6 +151,7 @@ SpreadsheetDashboardAction.components = {
     FilterValue,
     DashboardMobileSearchPanel,
     MobileFigureContainer,
+    SpreadsheetShareButton,
 };
 SpreadsheetDashboardAction.props = { ...standardActionServiceProps };
 

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import io
+import zipfile
 import base64
 import json
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, MissingError
 
 class SpreadsheetMixin(models.AbstractModel):
     _name = "spreadsheet.mixin"
@@ -69,3 +70,29 @@ class SpreadsheetMixin(models.AbstractModel):
                 "locale": locale,
             }
         }
+
+    def _zip_xslx_files(self, files):
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as doc_zip:
+            for f in files:
+                # to reduce networking load, only the image path is sent.
+                # It's replaced by the image content here.
+                if 'imageSrc' in f:
+                    try:
+                        content = self._get_file_content(f['imageSrc'])
+                        doc_zip.writestr(f['path'], content)
+                    except MissingError:
+                        pass
+                else:
+                    doc_zip.writestr(f['path'], f['content'])
+
+        return stream.getvalue()
+
+    def _get_file_content(self, file_path):
+        _, args = self.env['ir.http']._match(file_path)
+        file_record = self.env['ir.binary']._find_record(
+            xmlid=args.get('xmlid'),
+            res_model=args.get('model', 'ir.attachment'),
+            res_id=args.get('id'),
+        )
+        return self.env['ir.binary']._get_stream_from(file_record).read()

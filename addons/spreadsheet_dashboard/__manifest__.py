@@ -27,7 +27,6 @@
         ],
         "web.qunit_suite_tests": [
             "spreadsheet_dashboard/static/tests/**/*",
-            ("include", "spreadsheet.o_spreadsheet"),
             ("remove", "spreadsheet_dashboard/static/tests/mobile/**/*.js"),
         ],
         "web.qunit_mobile_suite_tests": [
