@@ -30,6 +30,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         if($completed.hasClass('d-none')){
             $completed.removeClass('d-none').addClass('hidden-progressbar-completed-tag');
         }
+        return this._super.apply(this, arguments);
     },
 
     /**
