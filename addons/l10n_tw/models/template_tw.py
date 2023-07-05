@@ -15,8 +15,8 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'tw_217100',
             'property_account_expense_categ_id': 'tw_511100',
             'property_account_income_categ_id': 'tw_411100',
-            'property_stock_account_input_categ_id': 'tw_217150',
-            'property_stock_account_output_categ_id': 'tw_123150',
+            'property_stock_account_input_categ_id': 'tw_124500',
+            'property_stock_account_output_categ_id': 'tw_124600',
             'property_stock_valuation_account_id': 'tw_123100',
         }
 
