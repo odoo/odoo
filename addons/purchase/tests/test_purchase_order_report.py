@@ -150,3 +150,37 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
 
         result_po = self.env['purchase.report'].search([('order_id', '=', po.id)])
         self.assertFalse(result_po, "The report should ignore the notes and sections")
+
+    def test_po_report_currency(self):
+        """
+            Check that the currency of the report is the one of the current company
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                }),
+            ],
+        })
+        currency_eur_id = self.env.ref("base.EUR")
+        currency_eur_id.active = True
+        po_2 = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': currency_eur_id.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                }),
+            ],
+        })
+        # flush the POs to make sure the report is up to date
+        po.flush_model()
+        po_2.flush_model()
+        report = self.env['purchase.report'].search([('product_id', "=", self.product_a.id)])
+        self.assertEqual(report.currency_id, self.env.company.currency_id)
