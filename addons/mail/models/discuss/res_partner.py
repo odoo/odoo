@@ -62,7 +62,6 @@ class ResPartner(models.Model):
                     ]
                 ),
                 [("active", "=", True)],
-                [("type", "!=", "private")],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],
                 [("user_ids.share", "=", False)],

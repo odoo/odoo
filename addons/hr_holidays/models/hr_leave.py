@@ -1587,7 +1587,7 @@ class HolidaysRequest(models.Model):
             if leave.user_id:
                 recipient = leave.user_id.partner_id.id
             elif leave.employee_id:
-                recipient = leave.employee_id.address_home_id.id
+                recipient = leave.employee_id.work_contact_id.id
 
             if recipient:
                 self.env['mail.thread'].sudo().message_notify(

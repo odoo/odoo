@@ -16,7 +16,7 @@ class FleetVehicleLogServices(models.Model):
         internals = self.filtered(lambda r: r.purchaser_employee_id)
         super(FleetVehicleLogServices, (self - internals))._compute_purchaser_id()
         for service in internals:
-            service.purchaser_id = service.purchaser_employee_id.address_home_id
+            service.purchaser_id = service.purchaser_employee_id.work_contact_id
 
     @api.depends('vehicle_id')
     def _compute_purchaser_employee_id(self):

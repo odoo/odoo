@@ -215,14 +215,16 @@ class BaseFollowersTest(MailCommon):
 
     @users('employee')
     def test_followers_private_address(self):
-        """ Test standard API does not subscribe private addresses """
-        private_address = self.env['res.partner'].sudo().create({
+        """ Test standard API does subscribe IDs the user can't read """
+        other_company = self.env['res.company'].sudo().create({'name': 'Other Company'})
+        private_address = self.env['res.partner'].create({
             'name': 'Private Address',
-            'type': 'private',
+            'company_id': other_company.id,
         })
+        self.env.user.write({'company_ids': [(3, other_company.id)]})
         document = self.env['mail.test.simple'].browse(self.test_record.id)
         document.message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
-        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal)
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
 
         # works through low-level API
         document._message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
