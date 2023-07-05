@@ -5,7 +5,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, exceptions, _
-from odoo.tools import float_round
+from odoo.tools import float_round, check_barcode_is_code128
 
 
 class HrEmployee(models.Model):
@@ -38,6 +38,14 @@ class HrEmployee(models.Model):
     total_overtime = fields.Float(
         compute='_compute_total_overtime', compute_sudo=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
+
+    @api.constrains('barcode')
+    def _check_barcode_value(self):
+        for record in self:
+            unsupported_chars = check_barcode_is_code128(record.barcode)
+            if unsupported_chars:
+                raise exceptions.ValidationError(_("Invalid Barcode Format, following characters are not supported: %s",
+                    " ".join(unsupported_chars)))
 
     @api.depends('overtime_ids.duration', 'attendance_ids')
     def _compute_total_overtime(self):

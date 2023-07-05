@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare
+from odoo.tools import float_compare, check_barcode_is_code128
 from odoo.tools.misc import unique
 
 
@@ -88,6 +88,14 @@ class ProductProduct(models.Model):
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
     write_date = fields.Datetime(compute='_compute_write_date', store=True)
+
+    @api.constrains('barcode')
+    def _check_barcode_value(self):
+        for record in self:
+            unsupported_chars = check_barcode_is_code128(record.barcode)
+            if unsupported_chars:
+                raise ValidationError(_("Invalid Barcode Format, following characters are not supported: %s",
+                    " ".join(unsupported_chars)))
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):

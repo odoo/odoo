@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, check_barcode_is_code128
 
 
 class ProductPackaging(models.Model):
@@ -27,6 +27,14 @@ class ProductPackaging(models.Model):
         ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
         ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
     ]
+
+    @api.constrains('barcode')
+    def _check_barcode_value(self):
+        for record in self:
+            unsupported_chars = check_barcode_is_code128(record.barcode)
+            if unsupported_chars:
+                raise ValidationError(_("Invalid Barcode Format, following characters are not supported: %s",
+                    " ".join(unsupported_chars)))
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):

@@ -52,3 +52,8 @@ def check_barcode_encoding(barcode, encoding):
            and len(barcode) == barcode_size \
            and re.match(r"^\d+$", barcode) \
            and get_barcode_check_digit(barcode) == int(barcode[-1])
+
+def check_barcode_is_code128(barcode):
+    if barcode:
+        unsupported_chars = re.findall("[^\x00-\x7F\xF1-\xF4]", barcode)
+        return unsupported_chars

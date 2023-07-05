@@ -11,7 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import check_barcode_encoding, groupby
+from odoo.tools import check_barcode_encoding, groupby, check_barcode_is_code128
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1301,6 +1301,14 @@ class QuantPackage(models.Model):
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
+
+    @api.constrains('name')
+    def _check_barcode_value(self):
+        for record in self:
+            unsupported_chars = check_barcode_is_code128(record.name)
+            if unsupported_chars:
+                raise ValidationError(_("Invalid Barcode Format, following characters are not supported: %s",
+                    " ".join(unsupported_chars)))
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
