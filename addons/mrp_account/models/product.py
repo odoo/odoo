@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
         accounts.update({
-            'production': self.categ_id.property_stock_account_production_cost_id or False,
+            'production': self.categ_id.property_stock_account_production_cost_id,
         })
         return accounts
 
