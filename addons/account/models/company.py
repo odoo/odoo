@@ -475,7 +475,7 @@ class ResCompany(models.Model):
     def _action_check_hash_integrity(self):
         return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
 
-    def _check_hash_integrity(self):
+    def _check_accounting_hash_integrity(self):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """

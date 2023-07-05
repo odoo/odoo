@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_pt_account_report_template_note_certified_program">
+        <t t-if="company.account_fiscal_country_id.code == 'PT'">
+            <div class="row">
+                <div name="l10n_pt_certified_program_note" class="mx-auto text-center text-muted">
+                    <t t-if="o and o._name in ('account.move', 'pos.order', 'stock.picking')">
+                        <t t-if="o.l10n_pt_account_inalterable_hash_short">
+                            <t t-out="o.l10n_pt_account_inalterable_hash_short"/> - Processado por programa certificado n.º TODO/AT
+                        </t>
+                    </t>
+                    <t t-else="">
+                        Este documento não serve de fatura <br/>
+                        Emitido por programa certificado n.º TODO/AT
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="l10n_pt_account_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt_account.l10n_pt_account_report_template_note_certified_program"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_account_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt_account.l10n_pt_account_report_template_note_certified_program"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_account_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt_account.l10n_pt_account_report_template_note_certified_program"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_account_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt_account.l10n_pt_account_report_template_note_certified_program"/>
+        </xpath>
+    </template>
+</odoo>

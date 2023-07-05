@@ -8,13 +8,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('pt_account', 'account.journal')
     def _get_pt_account_account_journal(self):
-        journal_config = {
-            'refund_sequence': True,
-            'restrict_mode_hash_table': True,
-        }
         return {
-            'sale': journal_config,
-            'purchase': journal_config,
+            'sale': {
+                'refund_sequence': True,
+                'restrict_mode_hash_table': True,
+            },
         }
 
     @template('pt_account')

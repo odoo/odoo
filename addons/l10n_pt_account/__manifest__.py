@@ -20,6 +20,10 @@
     ],
     'data': [
         'data/account_tax_report.xml',
+        'views/account_move_views.xml',
+        'views/account_tax_view.xml',
+        'views/report_template.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

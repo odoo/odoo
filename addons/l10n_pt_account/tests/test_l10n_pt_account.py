@@ -138,7 +138,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         out_invoice3 = self.create_invoice('out_invoice', '2022-01-03', post=True)
         out_invoice4 = self.create_invoice('out_invoice', '2022-01-04', post=True)
 
-        integrity_check = self.company_pt._check_hash_integrity()['results'][0]  # [0] = 'out_invoice'
+        integrity_check = self.company_pt._check_accounting_hash_integrity()['results'][0]  # [0] = 'out_invoice'
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertRegex(integrity_check['msg'], 'Entries are correctly hashed')
         self.assertEqual(integrity_check['from_date'], fields.Date.to_string(out_invoice1.date))
@@ -147,14 +147,14 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         # Let's change one of the fields used by the hash. It should be detected by the integrity report.
         # We need to bypass the write method of account.move to do so.
         Model.write(out_invoice3, {'invoice_date': fields.Date.from_string('2022-01-07')})
-        integrity_check = self.company_pt._check_hash_integrity()['results'][0]
+        integrity_check = self.company_pt._check_accounting_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {out_invoice3.id}.')
 
         # Let's try with the inalterable_hash field itself
         Model.write(out_invoice3, {'invoice_date': fields.Date.from_string("2022-01-03")})  # Revert the previous change
         Model.write(out_invoice4, {'inalterable_hash': 'fake_hash'})
-        integrity_check = self.company_pt._check_hash_integrity()['results'][0]
+        integrity_check = self.company_pt._check_accounting_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {out_invoice4.id}.')
 
@@ -184,7 +184,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
             self.assertEqual(in_invoices[-1].inalterable_hash, False)
 
         # Following statement should trigger the compute of the hash
-        integrity_check = self.company_pt._check_hash_integrity()['results']
+        integrity_check = self.company_pt._check_accounting_hash_integrity()['results']
         for in_invoice in in_invoices:
             self.assertNotEqual(in_invoice.inalterable_hash, False)
 

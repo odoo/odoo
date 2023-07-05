@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date, groupby
 
@@ -7,12 +7,24 @@ from odoo.tools.misc import format_date, groupby
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _check_hash_integrity(self):
+    l10n_pt_account_region_code = fields.Char(compute='_compute_l10n_pt_region_code', store=True, readonly=False)
+
+    @api.depends('country_id', 'state_id')
+    def _compute_l10n_pt_region_code(self):
+        for company in self.filtered(lambda c: c.country_id.code == 'PT'):
+            if company.state_id == self.env.ref('base.state_pt_pt-20'):
+                company.l10n_pt_account_region_code = 'PT-AC'
+            elif company.state_id == self.env.ref('base.state_pt_pt-30'):
+                company.l10n_pt_account_region_code = 'PT-MA'
+            else:
+                company.l10n_pt_account_region_code = 'PT'
+
+    def _check_accounting_hash_integrity(self):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
         if self.account_fiscal_country_id.code != 'PT':
-            return super()._check_hash_integrity()
+            return super()._check_accounting_hash_integrity()
 
         if not self.env.user.has_group('account.group_account_user'):
             raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
