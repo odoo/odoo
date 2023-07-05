@@ -75,7 +75,10 @@
         ],
         'web.qunit_suite_tests': [
             'spreadsheet/static/tests/**/*',
-            ('include', 'spreadsheet.o_spreadsheet')
+            ('include', 'spreadsheet.o_spreadsheet'),
+            'spreadsheet/static/src/public_readonly_app/**/*.xml',
+            'spreadsheet/static/src/public_readonly_app/**/*.js',
+            ('remove', 'spreadsheet/static/src/public_readonly_app/main.js'),
         ]
     }
 }

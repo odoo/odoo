@@ -1,6 +1,14 @@
 /** @odoo-module */
 
-import { getFixture, click, nextTick, editInput } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    click,
+    nextTick,
+    editInput,
+    makeDeferred,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
@@ -207,4 +215,109 @@ QUnit.test("Can delete record tag in the filter by hitting Backspace", async fun
     autoCompleteInput.focus();
     await keyDown({ key: "Backspace" });
     assert.equal(filter.querySelectorAll(".o_tag").length, 0);
+});
+
+QUnit.test("share dashboard from dashboard view", async function (assert) {
+    const target = getFixture();
+    patchWithCleanup(browser, {
+        navigator: {
+            clipboard: {
+                writeText: (url) => {
+                    assert.step("share url copied");
+                    assert.strictEqual(url, "localhost:8069/share/url/132465");
+                },
+            },
+        },
+    });
+    const def = makeDeferred();
+    await createSpreadsheetDashboard({
+        mockRPC: async function (route, args) {
+            if (args.method === "action_get_share_url") {
+                await def;
+                assert.step("dashboard_shared");
+                assert.strictEqual(args.model, "spreadsheet.dashboard.share");
+                return "localhost:8069/share/url/132465";
+            }
+        },
+    });
+    assert.strictEqual(target.querySelector(".spreadsheet_share_dropdown"), null);
+    await click(target, "i.fa-share-alt");
+    assert.equal(
+        target.querySelector(".spreadsheet_share_dropdown")?.innerText,
+        "Generating sharing link"
+    );
+    def.resolve();
+    await nextTick();
+    assert.verifySteps(["dashboard_shared", "share url copied"]);
+    assert.strictEqual(
+        target.querySelector(".o_field_CopyClipboardChar").innerText,
+        "localhost:8069/share/url/132465"
+    );
+    await click(target, ".fa-clipboard");
+    assert.verifySteps(["share url copied"]);
+});
+
+QUnit.test("Changing filter values will create a new share", async function (assert) {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Date Filter",
+                rangeType: "year",
+                defaultValue: {},
+                defaultsToCurrentPeriod: true,
+                pivotFields: {},
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    const target = getFixture();
+    let counter = 0;
+    patchWithCleanup(browser, {
+        navigator: {
+            clipboard: {
+                writeText: (url) => {},
+            },
+        },
+    });
+    await createSpreadsheetDashboard({
+        serverData,
+        mockRPC: async function (route, args) {
+            if (args.method === "action_get_share_url") {
+                return `localhost:8069/share/url/${++counter}`;
+            }
+        },
+    });
+    await click(target, "i.fa-share-alt");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_field_CopyClipboardChar").innerText,
+        `localhost:8069/share/url/1`
+    );
+
+    await click(target, "i.fa-share-alt"); // close share dropdown
+
+    await click(target, "i.fa-share-alt");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_field_CopyClipboardChar").innerText,
+        `localhost:8069/share/url/1`
+    );
+
+    await click(target, "i.fa-share-alt");
+    const year = target.querySelector(".o_control_panel_actions input.o_datetime_input");
+    const this_year = luxon.DateTime.local().year;
+    assert.equal(year.value, String(this_year));
+    const input = target.querySelector("input.o_datetime_input");
+    await click(input);
+    await editInput(input, null, String(this_year - 1));
+    await nextTick();
+
+    await click(target, "i.fa-share-alt");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_field_CopyClipboardChar")?.innerText,
+        `localhost:8069/share/url/2`
+    );
 });
