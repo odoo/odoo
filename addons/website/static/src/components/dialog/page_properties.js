@@ -27,7 +27,7 @@ export class PageDependencies extends Component {
 
         useEffect(
             () => {
-                this.onWillStart();
+                this.fetchDependencies();
             },
             () => []
         );
@@ -35,21 +35,6 @@ export class PageDependencies extends Component {
             dependencies: {},
             depText: "...",
         });
-    }
-
-    async onWillStart() {
-        // TODO Remove in master: call fetchDependencies in useEffect.
-        return this.fetchDependencies();
-    }
-
-    // TODO Remove in master: use state from template.
-    get dependencies() {
-        return this.state.dependencies;
-    }
-
-    // TODO Remove in master: use state from template.
-    get depText() {
-        return this.state.depText;
     }
 
     async fetchDependencies() {

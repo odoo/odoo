@@ -2,7 +2,7 @@
 <templates>
 
 <t t-name="website.PageDependencies" owl="1">
-    <t t-if="!!Object.keys(dependencies).length">
+    <t t-if="!!Object.keys(state.dependencies).length">
         <t t-if="props.mode === 'popover'">
             <t t-set="depTemplate">
                 <t t-call="{{ constructor.popoverTemplate }}"/>
@@ -16,13 +16,13 @@
             </t>
             <t t-else="">
                 <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
-                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>)
+                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="state.depText" /></a>)
                 </div>
             </t>
         </t>
         <t t-else="">
             <p class="text-warning">We found these ones:</p>
-            <div t-foreach="dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
+            <div t-foreach="state.dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
                 <a class="collapsed" data-bs-toggle="collapse"
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
                 t-attf-href="#collapseDependencies{{ dependency_index }}"
