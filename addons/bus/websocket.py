@@ -8,6 +8,7 @@ import psycopg2
 import random
 import socket
 import struct
+import signal
 import selectors
 import threading
 import time
@@ -914,3 +915,24 @@ class WebsocketConnectionHandler:
 
 
 CommonServer.on_stop(Websocket._kick_all)
+
+
+def dump_websocket_stats():
+    websocket_states = {
+        ConnectionState.OPEN: 0,
+        ConnectionState.CLOSING: 0,
+        ConnectionState.CLOSED: 0,
+    }
+    for websocket in Websocket._instances:
+        websocket_states[websocket.state] += 1
+    _logger.info(
+        'Number of websockets: %d, Opened: %d, Closing: %d, Closed: %d',
+        len(Websocket._instances),
+        websocket_states[ConnectionState.OPEN],
+        websocket_states[ConnectionState.CLOSING],
+        websocket_states[ConnectionState.CLOSED]
+    )
+
+
+if os.name == 'posix':
+    signal.signal(signal.SIGQUIT, dump_websocket_stats)
