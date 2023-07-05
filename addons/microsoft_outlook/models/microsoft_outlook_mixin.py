@@ -94,7 +94,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return (
             response['refresh_token'],
             response['access_token'],
-            int(time.time()) + response['expires_in'],
+            int(time.time()) + int(response['expires_in']),
         )
 
     def _fetch_outlook_access_token(self, refresh_token):
@@ -107,7 +107,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return (
             response['refresh_token'],
             response['access_token'],
-            int(time.time()) + response['expires_in'],
+            int(time.time()) + int(response['expires_in']),
         )
 
     def _fetch_outlook_token(self, grant_type, **values):
