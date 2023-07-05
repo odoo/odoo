@@ -23,7 +23,7 @@ patch(Messaging.prototype, "mail/core/web", {
             );
             this.notificationService.add(notification, { type: "info" });
             const chat = await this.threadService.getChat({ partnerId });
-            if (chat) {
+            if (chat && !this.ui.isSmall) {
                 this.chatWindowService.insert({ thread: chat });
             }
         });
@@ -32,7 +32,7 @@ patch(Messaging.prototype, "mail/core/web", {
         this.loadFailures();
         for (const channelData of data.channels) {
             const thread = this.threadService.createChannelThread(channelData);
-            if (channelData.is_minimized && channelData.state !== "closed") {
+            if (channelData.is_minimized && channelData.state !== "closed" && !this.ui.isSmall) {
                 this.chatWindowService.insert({
                     autofocus: 0,
                     folded: channelData.state === "folded",

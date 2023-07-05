@@ -5,7 +5,7 @@
     <div class="o-mail-ChatWindow"
         t-att-style="style"
         t-att-class="{
-                'w-100 h-100': ui.isSmall,
+                'w-100 h-100 o-mobile': ui.isSmall,
                 'o-folded': props.chatWindow.folded,
                 'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
                 'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
@@ -54,7 +54,7 @@
                 <t t-set="itemClass" t-value="'me-1'"/>
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
             <button t-if="threadActions.activeAction" class="o-mail-ChatWindow-closePanel btn position-absolute top-0 end-0 btn opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="() => threadActions.activeAction.close()"><i class="fa fa-close"/></button>
             <t t-if="thread" name="thread content">
                 <t t-if="threadActions.activeAction?.componentCondition" t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
