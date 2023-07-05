@@ -473,7 +473,25 @@ odoo.define('pos_coupon.pos', function (require) {
             return rewardsContainer
                 .getAwarded()
                 .map(({ product, unit_price, quantity, program, tax_ids, coupon_id }) => {
+                    let description;
+                    /**
+                     * Improved description only aplicable for rewards of type discount, and the discount is a percentage
+                     * of the price, those are:
+                     * - % discount on specific products.
+                     * - % discount on the whole order.
+                     * - % discount on the cheapest product.
+                     */
+                    if (tax_ids && program.reward_type === "discount" && program.discount_type === "percentage") {
+                        description =
+                            tax_ids.length > 0
+                                ? _.str.sprintf(
+                                    this.pos.env._t("Tax: %s"),
+                                    tax_ids.map((tax_id) => `%${this.pos.taxes_by_id[tax_id].amount}`).join(", ")
+                                )
+                                : this.pos.env._t("No tax");
+                    }
                     const options = {
+                        description,
                         quantity: quantity,
                         price: unit_price,
                         lst_price: unit_price,
