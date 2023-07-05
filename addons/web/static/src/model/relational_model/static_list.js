@@ -602,6 +602,9 @@ export class StaticList extends DataPoint {
         const changes = {};
         if (!params.withoutParent) {
             changes[this.config.relationField] = this._parent._getChanges();
+            if (!this._parent.isNew) {
+                changes[this.config.relationField].id = this._parent.resId;
+            }
         }
         const values = await this.model._loadNewRecord(
             {
