@@ -60,6 +60,10 @@ odoo.define('payment_adyen.payment_form', require => {
                     _t("Please verify your payment details.")
                 );
             }
+            else {
+                this._enableButton();
+                $('body').unblock();
+            }
         },
 
         /**
