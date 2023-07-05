@@ -37,6 +37,7 @@
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]</field>
+        <field name="perm_read" eval="False"/>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
