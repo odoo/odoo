@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, "im_livechat", {
     getSupportedDelimiters(thread) {
-        return thread?.type === "livechat"
+        return thread?.model !== "discuss.channel" || thread.type === "livechat"
             ? [...this._super(...arguments), [":"]]
             : this._super(...arguments);
     },
