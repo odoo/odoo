@@ -59,6 +59,10 @@
                     _t("Please verify your payment details.")
                 );
             }
+            else {
+                this._enableButton();
+                $('body').unblock();
+            }
         },
 
         /**
