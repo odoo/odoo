@@ -1406,6 +1406,49 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "context and domain dependent on an x2m must contain the list of current ids for the x2m",
+        async function (assert) {
+            assert.expect(2);
+
+            serverData.models.partner.fields.turtles.default = [
+                [4, 2],
+                [4, 3],
+            ];
+            serverData.models.partner.fields.turtles.type = "many2many";
+            serverData.views = {
+                "turtle,false,list": '<tree><field name="display_name"/></tree>',
+                "turtle,false,search": '<search><field name="display_name"/></search>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+            <form>
+                <field name="turtles" context="{'test': turtles}" domain="[('id', 'in', turtles)]">
+                    <tree>
+                        <field name="turtle_foo"/>
+                    </tree>
+                </field>
+            </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "unity_web_search_read") {
+                        assert.deepEqual(args.kwargs.domain, [
+                            "&",
+                            ["id", "in", [2, 3]],
+                            "!",
+                            ["id", "in", [2, 3]],
+                        ]);
+                        assert.deepEqual(args.kwargs.context.test, [2, 3]);
+                    }
+                },
+            });
+            await addRow(target);
+        }
+    );
+
     QUnit.test("many2many list with x2many: add a record", async function (assert) {
         serverData.models.partner_type.fields.m2m = {
             string: "M2M",
