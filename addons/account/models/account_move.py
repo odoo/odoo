@@ -3619,7 +3619,7 @@ class AccountMoveLine(models.Model):
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
-        decimal_price = self.env.ref('product.decimal_price')
+        precision_digits = self.env.ref('product.decimal_price')
         price_unit = float_round(price_unit or self.price_unit, precision_digits=decimal_price.digits)
         return self._get_price_total_and_subtotal_model(
             price_unit=self.price_unit if price_unit is None else price_unit,
