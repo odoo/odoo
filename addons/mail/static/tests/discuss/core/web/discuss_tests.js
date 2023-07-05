@@ -7,16 +7,14 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 
-import { editInput, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+import { editInput, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
 
 QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     await startServer();
-    const { advanceTime, openDiscuss } = await start({
-        hasTimeControl: true,
+    const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (
                 route.startsWith("/mail") ||
@@ -37,8 +35,6 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     await afterNextRender(() =>
         editInput(document.body, ".o-discuss-ChannelSelector input", "abc")
     );
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     await click(".o-discuss-ChannelSelector-suggestion");
     assert.containsOnce($, ".o-mail-DiscussCategoryItem");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
@@ -58,15 +54,14 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+        const { openDiscuss } = await start();
         await openDiscuss();
         assert.containsNone($, ".o-mail-DiscussCategoryItem");
 
         await click("i[title='Start a conversation']");
-        await afterNextRender(async () => {
-            editInput(document.body, ".o-discuss-ChannelSelector input", "mario");
-            await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        });
+        await afterNextRender(() =>
+            editInput(document.body, ".o-discuss-ChannelSelector input", "mario")
+        );
         await click(".o-discuss-ChannelSelector-suggestion");
         assert.containsOnce($, ".o-discuss-ChannelSelector span[title='Mario']");
         assert.containsNone($, ".o-mail-DiscussCategoryItem");
@@ -76,10 +71,9 @@ QUnit.test(
         });
         assert.containsNone($, ".o-discuss-ChannelSelector span[title='Mario']");
 
-        await afterNextRender(async () => {
-            editInput(document.body, ".o-discuss-ChannelSelector input", "mario");
-            await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        });
+        await afterNextRender(() =>
+            editInput(document.body, ".o-discuss-ChannelSelector input", "mario")
+        );
         await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
             key: "Enter",
         });
@@ -92,8 +86,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const { advanceTime, openDiscuss } = await start({
-        hasTimeControl: true,
+    const { openDiscuss } = await start({
         mockRPC(route, params) {
             if (
                 route.startsWith("/mail") ||
@@ -114,8 +107,6 @@ QUnit.test("can join a chat conversation", async (assert) => {
     await afterNextRender(() =>
         editInput(document.body, ".o-discuss-ChannelSelector input", "mario")
     );
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     await click(".o-discuss-ChannelSelector-suggestion");
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
@@ -138,17 +129,13 @@ QUnit.test("can create a group chat conversation", async (assert) => {
         { name: "Luigi" },
     ]);
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsNone($, ".o-mail-DiscussCategoryItem");
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Mario");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     await click(".o-discuss-ChannelSelector-suggestion");
     await insertText(".o-discuss-ChannelSelector input", "Luigi");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     await click(".o-discuss-ChannelSelector-suggestion");
     await triggerEvent(document.body, ".o-discuss-ChannelSelector input", "keydown", {
         key: "Enter",
@@ -158,12 +145,10 @@ QUnit.test("can create a group chat conversation", async (assert) => {
 });
 
 QUnit.test("chat search should display no result when no matches found", async (assert) => {
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector", "Rainbow Panda");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     assert.containsOnce($, ".o-discuss-ChannelSelector-suggestion:contains(No results found)");
 });
 
@@ -173,13 +158,11 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Panda" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+        const { openDiscuss } = await start();
         await openDiscuss();
         assert.containsNone($, ".o-mail-DiscussCategoryItem");
         await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
         await insertText(".o-discuss-ChannelSelector", "Panda");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        await nextTick();
         assert.containsOnce($, ".o-discuss-ChannelSelector-suggestion");
         await click(".o-mail-DiscussSidebar");
         assert.containsNone($, ".o-discuss-ChannelSelector-suggestion");
@@ -204,14 +187,12 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jerry Golay" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const tab1 = await start({ asTab: true, hasTimeControl: true });
+    const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss();
     await tab2.openDiscuss();
     await tab1.click(".o-mail-DiscussCategory-chat .o-mail-DiscussCategory-add");
     await tab1.insertText(".o-discuss-ChannelSelector input", "Jer");
-    await tab1.advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
     await tab1.click(".o-discuss-ChannelSelector-suggestion");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsOnce(tab1.target, ".o-mail-DiscussCategoryItem:contains(Jerry Golay)");

@@ -8,7 +8,6 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
 
@@ -23,8 +22,7 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
         name: "test",
     });
     const def = makeDeferred();
-    const { advanceTime, openDiscuss } = await start({
-        hasTimeControl: true,
+    const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === "search_read") {
                 def.resolve();
@@ -34,7 +32,6 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
     await openDiscuss();
     await click(".o-mail-DiscussCategory-add");
     await insertText(".o-discuss-ChannelSelector input", "test");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
     await def;
     await nextAnimationFrame(); // ensures search_read rpc is rendered.
     // When searching for a single existing channel, the results list will have at least 2 lines:
@@ -55,8 +52,7 @@ QUnit.test(
             name: "test",
         });
         const def = makeDeferred();
-        const { advanceTime, openDiscuss } = await start({
-            hasTimeControl: true,
+        const { openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (args.method === "search_read") {
                     def.resolve();
@@ -66,7 +62,6 @@ QUnit.test(
         await openDiscuss();
         await click(".o-mail-DiscussCategory-add");
         await insertText(".o-discuss-ChannelSelector input", "test");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
         await def;
         await nextAnimationFrame(); // ensures search_read rpc is rendered.
         // When searching for a single existing channel, the results list will have at least 2 lines:

@@ -4,8 +4,7 @@ import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -111,7 +110,7 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
             channel_type: "chat",
         },
     ]);
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss();
     await click(".o-mail-DiscussCategoryItem:contains('User 2')");
     await insertText(".o-mail-Composer-input", "This is a test");
@@ -120,9 +119,6 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     await click(".o-mail-DiscussCategoryItem:contains('General')");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "User");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsN($, ".o-mail-Composer-suggestion", 3);
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
