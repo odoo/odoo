@@ -66,17 +66,10 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         # move types (out_invoice, out_refund, ...) are different from the ones used in the link (FT, NC, ...)
         l10n_pt_document_number = ""
 
-        def _compute_l10n_pt_document_number_patched(self_patched):
-            for move_patched in self_patched.filtered(lambda m: (
-                m.company_id.account_fiscal_country_id.code == 'PT'
-                and m.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
-                and m.sequence_prefix
-                and m.sequence_number
-                and not m.l10n_pt_document_number
-            )):
-                move_patched.l10n_pt_document_number = l10n_pt_document_number
+        def _get_l10n_pt_account_document_number_patched(self_patched):
+            return l10n_pt_document_number
 
-        with patch('odoo.addons.l10n_pt_account.models.account_move.AccountMove._compute_l10n_pt_document_number', _compute_l10n_pt_document_number_patched):
+        with patch('odoo.addons.l10n_pt_account.models.account_move.AccountMove._get_l10n_pt_account_document_number', _get_l10n_pt_account_document_number_patched):
             for (l10n_pt_document_number, invoice_date, create_date, amount, expected_hash) in [
                 ('1T 1/1', '2017-03-10', '2017-03-10T15:58:01', 28.07, "vfinNfF+rToGp3dWF1LV6mEctQ76hAeZm+PlhBnV4wokN//N79L7fTNvi71ONnMHzfIzVR/Iz2zOOo9MUrYfYYZhqtpcEgFNHMdET6ZqbVVke7HbfqSACzaKXNdgWZt7lm7AFOfhcizQgC4a66SNvJvPJUqF7bCTUMIJFR9Zfro="),
                 ('1T 1/2', '2017-09-16', '2017-09-16T15:58:10', 235.15, "jABYv0ThJHWoocmbzuLPOJXknl2WHBpLRBPqhIBSYP6GRzo3WiMxh6ryFiaa8rQD2BM9tdLxjhPHOZo1XPeGR5hFGK5BI/NzTXBu9+ponV4wvASOhjy2iomBlOxISN3MYGBcG1XWLfi+aDBw0TLrVwpbsENk0MtypYGU78OPPjg="),
@@ -111,8 +104,6 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, expected_error_msg):
             out_invoice.amount_total = 666
         with self.assertRaisesRegex(UserError, expected_error_msg):
-            out_invoice.l10n_pt_document_number = "Fake document number"
-        with self.assertRaisesRegex(UserError, expected_error_msg):
             out_invoice.sequence_number = 666  # Sequence number is used by l10n_pt_document_number so it cannot be modified either
         with self.assertRaisesRegex(UserError, expected_error_msg):
             out_invoice.sequence_prefix = "FAKE"  # Sequence prefix is used by l10n_pt_document_number so it cannot be modified either
@@ -136,7 +127,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
             ('in_refund', '2022-01-02', 'in_refund RBILL_2022_01/2'),
         ]:
             move = self.create_invoice(move_type, date, post=True)
-            self.assertEqual(move.l10n_pt_document_number, expected)
+            self.assertEqual(move._get_l10n_pt_account_document_number(), expected)
 
     def test_l10n_pt_account_move_hash_integrity_report(self):
         """Test the hash integrity report"""

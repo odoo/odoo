@@ -32,7 +32,7 @@ class TestL10nPtPos(TestPoSCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
         order = self._create_pos_order()
         self.assertEqual(order.l10n_pt_pos_inalterable_hash, False)
-        order.l10n_pt_compute_missing_hashes(order.company_id.id)  # Called when printing the receipt
+        order.l10n_pt_pos_compute_missing_hashes(order.company_id.id)  # Called when printing the receipt
 
         expected_error_msg = "You cannot edit the following fields.*"
 
@@ -54,7 +54,7 @@ class TestL10nPtPos(TestPoSCommon):
         """
         for expected in ['pos_order PoS_Shop_Test/0001', 'pos_order PoS_Shop_Test/0002', 'pos_order PoS_Shop_Test/0003']:
             order = self._create_pos_order()
-            self.assertEqual(order._get_l10n_pt_document_number(), expected)
+            self.assertEqual(order._get_l10n_pt_pos_document_number(), expected)
 
     def test_l10n_pt_pos_hash_integrity_report(self):
         """Test the hash integrity report"""
@@ -63,7 +63,7 @@ class TestL10nPtPos(TestPoSCommon):
         order3 = self._create_pos_order("2023-01-03")
         order4 = self._create_pos_order("2023-01-04")
         self.assertEqual(order1.l10n_pt_pos_inalterable_hash, False)
-        self.env['pos.order'].l10n_pt_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt
+        self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt
 
         integrity_check = list(filter(lambda r: r['name'] == order1.config_id.name, self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))[0]
         self.assertEqual(integrity_check['status'], 'verified')
@@ -88,7 +88,7 @@ class TestL10nPtPos(TestPoSCommon):
     def test_l10n_pt_pos_dont_hash_linked_stock_pickings(self):
         """Test that creating a POS order (which creates a stock picking) doesn't hash this created stock picking"""
         order1 = self._create_pos_order()
-        order1.l10n_pt_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt
+        order1.l10n_pt_pos_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt
         self.assertNotEqual(order1.picking_ids, False)
         # self.assertEqual(order1.picking_ids.blockchain_must_hash, False)  #TODORIGR
         # self.assertEqual(order1.picking_ids.blockchain_secure_sequence_number, False)

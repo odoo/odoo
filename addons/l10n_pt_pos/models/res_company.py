@@ -13,7 +13,7 @@ class ResCompany(models.Model):
 
         results = []
 
-        self.env['pos.order'].l10n_pt_compute_missing_hashes(self.env.company.id)
+        self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(self.env.company.id)
         pos_configs = self.env['pos.config'].search([
             ('company_id', '=', self.env.company.id),
         ])
@@ -34,7 +34,7 @@ class ResCompany(models.Model):
             hash_corrupted = False
             previous_hash = ""
             for order in pos_orders:
-                if not order._l10n_pt_verify_integrity(previous_hash):
+                if not order._l10n_pt_pos_verify_integrity(previous_hash):
                     results.append({
                         'name': pos_config.name,
                         'status': 'corrupted',

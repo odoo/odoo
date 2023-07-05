@@ -17,9 +17,9 @@ patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
         return this.company.country.code === 'PT';
     },
     // Returns the last hash computed
-    async l10n_pt_compute_missing_hashes() {
+    async l10n_pt_pos_compute_missing_hashes() {
         try {
-            return await this.orm.call("pos.order", "l10n_pt_compute_missing_hashes", [false, this.company.id]);
+            return await this.orm.call("pos.order", "l10n_pt_pos_compute_missing_hashes", [false, this.company.id]);
         } catch {
             this.env.services.popup.add(ErrorPopup, {
                 title: this.env._t("Receipt creation failed"),

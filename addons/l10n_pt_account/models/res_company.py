@@ -20,7 +20,7 @@ class ResCompany(models.Model):
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
         results = []
 
-        self.env['account.move'].l10n_pt_compute_missing_hashes(self.env.company.id)
+        self.env['account.move'].l10n_pt_account_compute_missing_hashes(self.env.company.id)
 
         for journal in journals:
             if not journal.restrict_mode_hash_table:
@@ -52,9 +52,8 @@ class ResCompany(models.Model):
             for prefix, moves in grouped:
                 moves = sorted(moves, key=lambda m: m.sequence_number)
                 previous_hash = ''
-                from odoo.models import Model
                 for move in moves:
-                    if not move._l10n_pt_verify_integrity(previous_hash):
+                    if not move._l10n_pt_account_verify_integrity(previous_hash):
                         results.append({
                             'name': f"{journal.name} [{prefix}]",
                             'status': 'corrupted',
