@@ -32,6 +32,7 @@ export const PRESENT_THRESHOLD = 2500;
 export class Thread extends Component {
     static components = { Message, Transition, DateSection };
     static props = [
+        "showDates?",
         "isInChatWindow?",
         "jumpPresent?",
         "thread",
@@ -39,11 +40,18 @@ export class Thread extends Component {
         "messageToReplyTo?",
         "order?",
         "scrollRef?",
+        "showEmptyMessage?",
+        "showJumpPresent?",
+        "messageActions?",
     ];
     static defaultProps = {
         isInChatWindow: false,
         jumpPresent: 0,
         order: "asc",
+        showDates: true,
+        showEmptyMessage: true,
+        showJumpPresent: true,
+        messageActions: true
     };
     static template = "mail.Thread";
 

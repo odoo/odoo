@@ -58,6 +58,8 @@ export class Composer extends Component {
         mode: "normal",
         className: "",
         sidebar: true,
+        showFullComposer: true,
+        allowUpload: true
     };
     static props = [
         "composer",
@@ -73,6 +75,8 @@ export class Composer extends Component {
         "className?",
         "sidebar?",
         "type?",
+        "showFullComposer?",
+        "allowUpload?"
     ];
     static template = "mail.Composer";
 
@@ -233,7 +237,7 @@ export class Composer extends Component {
     }
 
     get allowUpload() {
-        return true;
+        return this.props.allowUpload;
     }
 
     get message() {

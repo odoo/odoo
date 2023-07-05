@@ -78,7 +78,7 @@
                                 </t>
                             </FileUploader>
                         </div>
-                        <button t-if="thread and thread.type === 'chatter'" class="o-mail-Composer-fullComposer btn fa fa-expand m-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
+                        <button t-if="props.showFullComposer and thread and thread.type === 'chatter'" class="o-mail-Composer-fullComposer btn fa fa-expand m-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                     <t t-if="!extended" t-call="mail.Composer.sendButton"/>
                 </div>

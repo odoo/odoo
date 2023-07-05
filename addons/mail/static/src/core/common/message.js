@@ -70,6 +70,7 @@ export class Message extends Component {
     static defaultProps = {
         hasActions: true,
         isInChatWindow: false,
+        showDates: true,
     };
     static props = [
         "hasActions?",
@@ -83,6 +84,8 @@ export class Message extends Component {
         "thread?",
         "messageSearch?",
         "className?",
+        "showDates?",
+        "isFirstMessage?"
     ];
     static template = "mail.Message";
 
