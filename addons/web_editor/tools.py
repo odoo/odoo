@@ -52,7 +52,7 @@ def get_video_source_data(video_url):
 
 
 def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_yt_logo=False, hide_dm_logo=False, hide_dm_share=False):
-    """ Computes the platform name and embed_url from given URL
+    """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
     source = get_video_source_data(video_url)
@@ -115,7 +115,12 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
 
-    return {'platform': platform, 'embed_url': embed_url}
+    return {
+        'platform': platform,
+        'embed_url': embed_url,
+        'video_id': video_id,
+        'params': params
+    }
 
 
 def get_video_embed_code(video_url):

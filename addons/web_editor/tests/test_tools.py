@@ -68,7 +68,7 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('B6dXGTxggTG', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[1])
 
     def test_get_video_url_data(self):
-        self.assertEqual(2, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
+        self.assertEqual(4, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
         #youtube
         self.assertEqual('youtube', tools.get_video_url_data(TestVideoUtils.urls['youtube'])['platform'])
         #vimeo
