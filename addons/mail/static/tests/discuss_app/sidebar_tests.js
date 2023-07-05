@@ -14,7 +14,6 @@ import { Command } from "@mail/../tests/helpers/command";
 import { getOrigin } from "@web/core/utils/urls";
 import { editInput, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("discuss sidebar");
 
@@ -642,8 +641,7 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
         name: "test",
     });
     const def = makeDeferred();
-    const { advanceTime, openDiscuss } = await start({
-        hasTimeControl: true,
+    const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === "search_read") {
                 def.resolve();
@@ -653,7 +651,6 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
     await openDiscuss();
     await click(".o-mail-DiscussCategory-add");
     await insertText(".o-mail-ChannelSelector input", "test");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
     await def;
     await nextAnimationFrame(); // ensures search_read rpc is rendered.
     // When searching for a single existing channel, the results list will have at least 2 lines:
@@ -674,8 +671,7 @@ QUnit.test(
             name: "test",
         });
         const def = makeDeferred();
-        const { advanceTime, openDiscuss } = await start({
-            hasTimeControl: true,
+        const { openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (args.method === "search_read") {
                     def.resolve();
@@ -685,7 +681,6 @@ QUnit.test(
         await openDiscuss();
         await click(".o-mail-DiscussCategory-add");
         await insertText(".o-mail-ChannelSelector input", "test");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
         await def;
         await nextAnimationFrame(); // ensures search_read rpc is rendered.
         // When searching for a single existing channel, the results list will have at least 2 lines:

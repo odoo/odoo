@@ -10,7 +10,6 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/discuss_app/channel_selector";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -42,14 +41,11 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
             Command.create({ partner_id: partnerId_2 }),
         ],
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
 
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsN($, ".o-mail-Composer-suggestion", 3);
 });
 
@@ -74,7 +70,7 @@ QUnit.test(
                 Command.create({ partner_id: partnerId_2 }),
             ],
         });
-        const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+        const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-mail-Composer-suggestion");
         await insertText(".o-mail-Composer-input", "first message");
@@ -82,23 +78,17 @@ QUnit.test(
         await nextTick();
 
         await insertText(".o-mail-Composer-input", "@");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        await nextTick();
-        await nextTick();
         assert.containsN($, ".o-mail-Composer-suggestion", 3);
     }
 );
 
 QUnit.test('display partner mention suggestions on typing "@" in chatter', async (assert) => {
     const pyEnv = await startServer();
-    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
+    const { openFormView } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     assert.containsNone($, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
@@ -115,12 +105,9 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(TestPartner)");
 });
 
@@ -137,12 +124,9 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
     assert.strictEqual($(".o-mail-Composer-input").val().trim(), "@TestPartner");
 });
@@ -153,13 +137,10 @@ QUnit.test('display channel mention suggestions on typing "#"', async (assert) =
         name: "General",
         channel_type: "channel",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     await insertText(".o-mail-Composer-input", "#");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
 });
 
@@ -169,14 +150,11 @@ QUnit.test("mention a channel", async (assert) => {
         name: "General",
         channel_type: "channel",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
