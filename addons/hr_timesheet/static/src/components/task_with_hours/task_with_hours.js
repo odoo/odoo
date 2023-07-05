@@ -6,8 +6,8 @@ import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2on
 
 class TaskWithHours extends Many2OneField {
 
-    canCreate(props = this.props) {
-        return Boolean(props.context.default_project_id);
+    canCreate() {
+        return Boolean(this.context.default_project_id);
     }
 
     /**
