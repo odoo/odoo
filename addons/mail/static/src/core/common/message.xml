@@ -18,8 +18,8 @@
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
-                        <t t-elif="!message.is_transient">
-                            <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
+                        <t t-elif="!message.isTransient">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-50 ms-2">
                                 <t t-esc="messageService.dateSimple(message)"/>
                             </small>
                             <div t-else="" class="ms-2">
@@ -121,7 +121,7 @@
     </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions" class="o-mail-Message-actions"
+    <div t-if="props.hasActions and message.hasActions and !state.isEditing" class="o-mail-Message-actions"
         t-att-class="{
             'start-0 ms-3': isAlignedRight,
             'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
