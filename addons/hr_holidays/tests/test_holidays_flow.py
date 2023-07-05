@@ -174,6 +174,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.assertEqual(hol2.state, 'validate',
                             'hr_holidays: second validation should lead to validate state')
             # Check left days: - 1 day taken
+            hol_status_2_employee_group.invalidate_model(['max_leaves', 'leaves_taken'])
             _check_holidays_status(hol_status_2_employee_group, 2.0, 1.0, 1.0, 1.0)
 
             # HrManager finds an error: he refuses the leave request

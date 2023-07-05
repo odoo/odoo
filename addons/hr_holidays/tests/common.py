@@ -12,6 +12,9 @@ class TestHrHolidaysCommon(common.TransactionCase):
         super(TestHrHolidaysCommon, cls).setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
 
+        cls.company = cls.env['res.company'].create({'name': 'Test company'})
+        cls.env.user.company_id = cls.company
+
         # Test users to use through the various tests
         cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
         cls.user_hruser_id = cls.user_hruser.id
