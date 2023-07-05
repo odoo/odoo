@@ -309,8 +309,7 @@ class Users(models.Model):
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(
-        compute='_compute_password', inverse='_set_password',
-        invisible=True, copy=False,
+        compute='_compute_password', inverse='_set_password', copy=False,
         help="Keep empty if you don't want the user to be able to connect on the system.")
     new_password = fields.Char(string='Set Password',
         compute='_compute_password', inverse='_set_new_password',
@@ -328,7 +327,7 @@ class Users(models.Model):
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
     # Provide a target for relateds that is not a x2Many field.
     res_users_settings_id = fields.Many2one('res.users.settings', string="Settings", compute='_compute_res_users_settings_id', search='_search_res_users_settings_id')

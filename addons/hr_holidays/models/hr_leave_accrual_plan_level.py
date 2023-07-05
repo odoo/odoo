@@ -120,7 +120,7 @@ class AccrualPlanLevel(models.Model):
         [('postponed', 'Transferred to the next year'),
          ('lost', 'Lost')],
         string="At the end of the calendar year, unused accruals will be",
-        default='postponed', required='True')
+        default='postponed', required=True)
     postpone_max_days = fields.Integer("Maximum amount of accruals to transfer",
         help="Set a maximum of days an allocation keeps at the end of the year. 0 for no limit.")
 

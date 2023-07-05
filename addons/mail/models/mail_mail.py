@@ -46,7 +46,7 @@ class MailMail(models.Model):
     mail_message_id_int = fields.Integer(compute='_compute_mail_message_id_int', compute_sudo=True)
     body_html = fields.Text('Text Contents', help="Rich-text/HTML message")
     body_content = fields.Html('Rich-text Contents', sanitize=True, compute='_compute_body_content', search="_search_body_content")
-    references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
+    references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=True)
     headers = fields.Text('Headers', copy=False)
     restricted_attachment_count = fields.Integer('Restricted attachments', compute='_compute_restricted_attachments')
     unrestricted_attachment_ids = fields.Many2many('ir.attachment', string='Unrestricted Attachments',
@@ -81,7 +81,7 @@ class MailMail(models.Model):
         ("mail_dup", "Duplicated Email"),
         ], string='Failure type')
     failure_reason = fields.Text(
-        'Failure Reason', readonly=1, copy=False,
+        'Failure Reason', readonly=True, copy=False,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
     auto_delete = fields.Boolean(
         'Auto Delete',

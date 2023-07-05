@@ -15,7 +15,7 @@ class TestModel(models.Model):
     ]
     _description = 'Website Model Test'
 
-    name = fields.Char(required=1)
+    name = fields.Char(required=True)
 
     @api.model
     def _search_get_detail(self, website, order, options):

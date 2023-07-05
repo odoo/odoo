@@ -31,7 +31,7 @@ class IapAccount(models.Model):
         'iap.account.info', compute='_compute_info', inverse='_inverse_info', search='_search_info')
     account_info_ids = fields.One2many(
         'iap.account.info', 'account_id',
-        invisible=True, string="Accounts from IAP")
+        string="Accounts from IAP")
     balance = fields.Char(compute='_compute_balance')
     description = fields.Char(related='account_info_id.description')
     warn_me = fields.Boolean(
@@ -247,7 +247,7 @@ class IAPAccountInfo(models.TransientModel):
     account_id = fields.Many2one('iap.account', string='IAP Account')
     account_token = fields.Char()
     balance = fields.Float(string='Balance', digits=(16, 4), default=0)
-    account_uuid_hashed = fields.Char(string='Account UUID', invisible=True)
+    account_uuid_hashed = fields.Char(string='Account UUID')
     service_name = fields.Char(string='Related Service')
     description = fields.Char()
     warn_me = fields.Boolean('Warn me', default=False)

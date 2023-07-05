@@ -206,7 +206,7 @@ class Partner(models.Model):
                                "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     user_id = fields.Many2one(
         'res.users', string='Salesperson',
         compute='_compute_user_id',

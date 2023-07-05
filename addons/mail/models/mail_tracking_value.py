@@ -12,31 +12,31 @@ class MailTracking(models.Model):
     _rec_name = 'field'
     _order = 'tracking_sequence asc'
 
-    field = fields.Many2one('ir.model.fields', required=True, readonly=1, index=True, ondelete='cascade')
-    field_desc = fields.Char('Field Description', required=True, readonly=1)
+    field = fields.Many2one('ir.model.fields', required=True, readonly=True, index=True, ondelete='cascade')
+    field_desc = fields.Char('Field Description', required=True, readonly=True)
     field_type = fields.Char('Field Type')
     field_groups = fields.Char(compute='_compute_field_groups')
 
-    old_value_integer = fields.Integer('Old Value Integer', readonly=1)
-    old_value_float = fields.Float('Old Value Float', readonly=1)
-    old_value_monetary = fields.Float('Old Value Monetary', readonly=1)
-    old_value_char = fields.Char('Old Value Char', readonly=1)
-    old_value_text = fields.Text('Old Value Text', readonly=1)
-    old_value_datetime = fields.Datetime('Old Value DateTime', readonly=1)
+    old_value_integer = fields.Integer('Old Value Integer', readonly=True)
+    old_value_float = fields.Float('Old Value Float', readonly=True)
+    old_value_monetary = fields.Float('Old Value Monetary', readonly=True)
+    old_value_char = fields.Char('Old Value Char', readonly=True)
+    old_value_text = fields.Text('Old Value Text', readonly=True)
+    old_value_datetime = fields.Datetime('Old Value DateTime', readonly=True)
 
-    new_value_integer = fields.Integer('New Value Integer', readonly=1)
-    new_value_float = fields.Float('New Value Float', readonly=1)
-    new_value_monetary = fields.Float('New Value Monetary', readonly=1)
-    new_value_char = fields.Char('New Value Char', readonly=1)
-    new_value_text = fields.Text('New Value Text', readonly=1)
-    new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
+    new_value_integer = fields.Integer('New Value Integer', readonly=True)
+    new_value_float = fields.Float('New Value Float', readonly=True)
+    new_value_monetary = fields.Float('New Value Monetary', readonly=True)
+    new_value_char = fields.Char('New Value Char', readonly=True)
+    new_value_text = fields.Text('New Value Text', readonly=True)
+    new_value_datetime = fields.Datetime('New Value Datetime', readonly=True)
 
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
         help="Used to display the currency when tracking monetary values")
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
+    tracking_sequence = fields.Integer('Tracking field sequence', readonly=True, default=100)
 
     @api.depends('mail_message_id', 'field')
     def _compute_field_groups(self):
