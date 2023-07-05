@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -51,6 +52,19 @@ class AccountPaymentMethodLine(models.Model):
                 domain = expression.AND([domain, [('company_id', 'in', company_ids.ids)]])
 
         return domain
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_active_provider(self):
+        """ Ensure we don't remove an account.payment.method.line that is linked to a provider
+        in the test or enabled state.
+        """
+        active_provider = self.payment_provider_id.filtered(lambda provider: provider.state in ['enabled', 'test'])
+        if active_provider:
+            raise UserError(_(
+                "You can't delete a payment method that is linked to a provider in the enabled "
+                "or test state.\n""Linked providers(s): %s",
+                ', '.join(a.display_name for a in active_provider),
+            ))
 
     def action_open_provider_form(self):
         self.ensure_one()

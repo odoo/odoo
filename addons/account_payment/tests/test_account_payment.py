@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
@@ -176,3 +177,11 @@ class TestAccountPayment(AccountPaymentCommon):
             source_tx.payment_id,
             msg="source transactions with done or cancel children should not create payments.",
         )
+
+    def test_prevent_unlink_apml_with_active_provider(self):
+        """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
+        should raise an error.
+        """
+        self.assertEqual(self.dummy_provider.state, 'test')
+        with self.assertRaises(UserError):
+            self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
