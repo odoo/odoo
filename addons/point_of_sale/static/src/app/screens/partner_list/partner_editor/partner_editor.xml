@@ -54,7 +54,7 @@
                         <span class="label">Language</span>
                         <select class="detail" name="lang" t-att-class="{'border-red': missingFields.includes('lang')}" t-model="changes.lang">
                             <t t-foreach="pos.langs" t-as="lang" t-key="lang.id">
-                                <option t-att-value="lang.code" t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
+                                <option t-att-value="lang.code" t-att-selected="changes.lang ? ((lang.code === changes.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
                                     <t t-esc="lang.name" />
                                 </option>
                             </t>
@@ -84,7 +84,7 @@
                         <span class="label">Pricelist</span>
                         <select class="detail" name="property_product_pricelist" t-att-class="{'border-red': missingFields.includes('property_product_pricelist')}" t-model="changes.property_product_pricelist">
                             <t t-foreach="pos.pricelists" t-as="pricelist" t-key="pricelist.id">
-                                <option t-att-value="pricelist.id" t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
+                                <option t-att-value="pricelist.id" t-att-selected="changes.property_product_pricelist ? (pricelist.id === changes.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
                                 </option>
                             </t>
