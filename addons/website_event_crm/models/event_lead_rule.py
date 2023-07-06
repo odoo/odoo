@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models
 
 
@@ -15,7 +18,8 @@ class EventLeadRule(models.Model):
             visitors = lead.registration_ids.visitor_id
             if visitors:
                 lead.visitor_ids = visitors
-                if not lead.lang_id and visitors.lang_id and visitors[0].website_id.language_count > 1:
-                    lead.lang_id = visitors.lang_id[0]
+                visitor = next((visitor for visitor in visitors if visitor.current_lang_id), False)
+                if not lead.lang_id and visitor.current_lang_id and visitor.website_id.language_count > 1:
+                    lead.lang_id = visitor.current_lang_id
 
         return leads

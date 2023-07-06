@@ -64,6 +64,7 @@ class WebsiteVisitor(models.Model):
     timezone = fields.Selection(_tz_get, string='Timezone')
     email = fields.Char(string='Email', compute='_compute_email_phone')
     mobile = fields.Char(string='Mobile', compute='_compute_email_phone')
+    current_lang_id = fields.Many2one('res.lang', string="Current language", help="The last language the visitor has used on the website")
 
     # Visit fields
     visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
@@ -218,10 +219,10 @@ class WebsiteVisitor(models.Model):
         }
         query = """
             INSERT INTO website_visitor (
-                partner_id, access_token, last_connection_datetime, visit_count, lang_id,
+                partner_id, access_token, last_connection_datetime, visit_count, lang_id, current_lang_id,
                 website_id, timezone, write_uid, create_uid, write_date, create_date, country_id)
             VALUES (
-                %(partner_id)s, %(access_token)s, now() at time zone 'UTC', 1, %(lang_id)s,
+                %(partner_id)s, %(access_token)s, now() at time zone 'UTC', 1, %(lang_id)s, %(lang_id)s,
                 %(website_id)s, %(timezone)s, %(create_uid)s, %(write_uid)s,
                 now() at time zone 'UTC', now() at time zone 'UTC', (
                     SELECT id FROM res_country WHERE code = %(country_code)s
@@ -233,7 +234,8 @@ class WebsiteVisitor(models.Model):
                 visit_count = CASE WHEN website_visitor.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
                                     THEN website_visitor.visit_count + 1
                                     ELSE website_visitor.visit_count
-                                END
+                                END,
+                current_lang_id=%(lang_id)s
             RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
         """
 
