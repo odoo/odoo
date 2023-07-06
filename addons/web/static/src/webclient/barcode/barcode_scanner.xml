@@ -3,7 +3,7 @@
     <t t-name="web.BarcodeDialog" owl="1">
         <Dialog title="'Barcode Scanner'" onClosed="props.onClose" fullscreen="true" renderFooter="false" contentClass="'o-barcode-modal'">
             <CropOverlay onResize.bind="this.onResize" isReady="state.isReady">
-                <video t-ref="videoPreview" muted="true" autoplay="true" playsinline="true" class="mw-100 mh-100"/>
+                <video t-ref="videoPreview" muted="true" autoplay="true" playsinline="true" class="w-100 h-100"/>
             </CropOverlay>
         </Dialog>
     </t>
