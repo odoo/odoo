@@ -831,4 +831,35 @@ QUnit.module("Components", (hooks) => {
         );
         assert.containsNone(target, ".o_model_field_selector_warning");
     });
+
+    QUnit.test("search on field string and name in debug mode", async (assert) => {
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // for debouncedSearchFields
+        serverData.models.partner.fields.ucit = {
+            type: "char",
+            string: "Some string",
+            searchable: true,
+        };
+        class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="'foo'"
+                    isDebugMode="true"
+                />
+            `;
+        }
+        await mountComponent(Parent);
+        await openModelFieldSelectorPopover(target);
+        await editInput(
+            target,
+            ".o_model_field_selector_popover .o_model_field_selector_popover_search input",
+            "uct"
+        );
+        assert.deepEqual(getDisplayedFieldNames(target), [
+            "Productproduct_id (many2one)",
+            "Some stringucit (char)",
+        ]);
+    });
 });
