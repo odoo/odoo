@@ -322,18 +322,14 @@ class Task(models.Model):
             else:
                 params = (value,)
 
-        self.env.cr.execute(
-            f"""
-                SELECT ARRAY_AGG(id)
+        query1 = f"""
+                SELECT id
                   FROM project_task
                  WHERE {where_query_1}
                    AND project_id IS NOT NULL
-            """, params
-        )
-        task_ids = self._cr.fetchone()[0] or []
+            """
 
-        self.env.cr.execute(
-            f"""
+        query2 = f"""
                 WITH RECURSIVE project_hierarchy AS (
                        SELECT pt.id,
                               pt.parent_id,
@@ -352,17 +348,11 @@ class Task(models.Model):
                          FROM project_hierarchy ph
                          JOIN project_task pt ON ph.parent_id = pt.id
                 )
-                SELECT ARRAY_AGG(id)
+                SELECT id
                   FROM project_hierarchy
                  WHERE {where_query_2}
-            """, params
-        )
-        if not self._cr.rowcount and not task_ids:
-            return expression.FALSE_DOMAIN
-        task_ids += self.env.cr.fetchone()[0] or []
-        if not task_ids:
-            return expression.FALSE_DOMAIN
-        return [('id', 'in', task_ids)]
+            """
+        return ['|', ('id', 'inselect', (query1, params)), ('id', 'inselect', (query2, params))]
 
     def _search_is_private(self, operator, value):
         if not isinstance(value, bool):
