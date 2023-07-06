@@ -73,8 +73,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             _avoid_name_conflict(company, template)
             templates_to_create += template
         new_template2tax_company = templates_to_create._generate_tax(company, accounts_exist=True)['tax_template_to_tax']
-        return [(env['account.tax.template'].browse(template_id), env['account.tax'].browse(tax_id))
-                for template_id, tax_id in new_template2tax_company.items()]
+        return new_template2tax_company.items()
 
     def _update_taxes_from_template(template2tax_mapping):
         """ Update the taxes' tags (and only tags!) based on their corresponding template values.
