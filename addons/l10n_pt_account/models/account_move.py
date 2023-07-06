@@ -96,13 +96,11 @@ class AccountMove(models.Model):
             if not move.inalterable_hash:
                 continue
             company_vat_ok = move.company_id.vat and stdnum.pt.nif.is_valid(move.company_id.vat)
-            partner_country_ok = move.partner_id.country_id
             atcud_ok = move.l10n_pt_account_atcud
 
-            if not company_vat_ok or not partner_country_ok or not atcud_ok:
+            if not company_vat_ok or not atcud_ok:
                 error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _('- The `country of the customer should be defined\n') if not partner_country_ok else ""
                 error_msg += _("- The `ATCUD` is not defined. Please verify the journal's tax authority series") if not atcud_ok else ""
                 raise UserError(error_msg)
 
@@ -118,7 +116,7 @@ class AccountMove(models.Model):
             qr_code_str = ""
             qr_code_str += f"A:{company_vat}*"
             qr_code_str += f"B:{partner_vat}*"
-            qr_code_str += f"C:{move.partner_id.country_id.code}*"
+            qr_code_str += f"C:{move.partner_id.country_id.code if move.partner_id else 'Desconhecido'}*"
             qr_code_str += f"D:{INVOICE_TYPE_MAP[move.move_type]}*"
             qr_code_str += "E:N*"
             qr_code_str += f"F:{format_date(self.env, move.date, date_format='yyyyMMdd')}*"
