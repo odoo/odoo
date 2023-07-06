@@ -18,7 +18,8 @@ class StockPickingBatch(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True,
         readonly=True, states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]},
-        help='Person responsible for this batch transfer')
+        help='Person responsible for this batch transfer',
+        domain=lambda self: "[('groups_id', '=', {})]".format(self.env.ref("stock.group_stock_user").id))
     company_id = fields.Many2one(
         'res.company', string="Company", required=True, readonly=True,
         index=True, default=lambda self: self.env.company)
