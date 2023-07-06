@@ -106,10 +106,36 @@ export class BarcodeDialog extends Component {
      */
     async isVideoReady() {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
+<<<<<<< HEAD
         while (!isVideoElementReady(this.videoPreviewRef.el)) {
             await delay(10);
         }
         this.state.isReady = true;
+    }
+
+    onResize(overlayInfo) {
+        this.overlayInfo = overlayInfo;
+        if (this.isZXingBarcodeDetector()) {
+            // TODO need refactoring when ZXing will support multiple result in one scan
+            // https://github.com/zxing-js/library/issues/346
+            this.detector.setCropArea(this.adaptValuesWithRatio(this.overlayInfo, true));
+        }
+||||||| parent of 7535256d9c0 (temp)
+        return new Promise(async (resolve) => {
+            while (!isVideoElementReady(this.videoPreviewRef.el)) {
+                await delay(10);
+            }
+            resolve();
+        });
+=======
+        return new Promise(async (resolve) => {
+            while (!isVideoElementReady(this.videoPreviewRef.el)) {
+                await delay(10);
+            }
+            this.state.isReady = true;
+            resolve();
+        });
+>>>>>>> 7535256d9c0 (temp)
     }
 
     onResize(overlayInfo) {
