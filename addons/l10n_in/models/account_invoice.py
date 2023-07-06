@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.image import image_data_uri
 
 
@@ -79,6 +79,8 @@ class AccountMove(models.Model):
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
+            if move.l10n_in_state_id and not move.l10n_in_state_id.l10n_in_tin:
+                raise UserError(_("Please set a valid TIN Number on the Place of Supply %s", move.l10n_in_state_id.name))
             if not move.company_id.state_id:
                 msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
                 "Set the address of your company (Don't forget the State field)", move.company_id.name)
