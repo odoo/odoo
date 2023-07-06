@@ -73,7 +73,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
 
         # even if the invoice is not issued from Switzerland we want to generate the code
         self.ch_qr_invoice.company_id.partner_id.country_id = self.env.ref('base.fr')
-        self.ch_qr_invoice._generate_qr_code()
+        self.ch_qr_invoice.generate_qr_code()
 
     def test_ch_qr_code_detection(self):
         """ Checks Swiss QR-code auto-detection when no specific QR-method
