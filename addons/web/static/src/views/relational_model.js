@@ -3047,7 +3047,7 @@ export class StaticList extends DataPoint {
      * @returns {Array[] | null}
      */
     getCommands(allFields = false) {
-        if (this._commands.length) {
+        if (this._commands && this._commands.length) {
             const commands = [];
 
             const getRecordValues = (id) => {
