@@ -396,6 +396,34 @@ class AccountTax(models.Model):
         if self.price_include:
             self.include_base_amount = True
 
+    @api.onchange('invoice_repartition_line_ids')
+    def _onchange_invoice_repartition_line_ids(self):
+        lines = self.invoice_repartition_line_ids
+        try:
+            lines[0].repartition_type = 'base'
+            for line in lines[1:]:
+                line.repartition_type = 'tax'
+        except:
+            pass
+                
+    # @api.onchange('invoice_repartition_line_ids')
+    # def _onchange_invoice_repartition_line_ids(self):
+    #     base = False
+    #     for line in self.invoice_repartition_line_ids:
+    #         if base:
+    #             line.repartition_type = 'tax'
+    #         if line.repartition_type == 'base':
+    #             base = True
+
+    # @api.onchange('refund_repartition_line_ids')
+    # def _onchange_refund_repartition_line_ids(self):
+    #     base = False
+    #     for line in self.refund_repartition_line_ids:
+    #         if base:
+    #             line.repartition_type = 'tax'
+    #         if line.repartition_type == 'base':
+    #             base = True
+
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, fixed_multiplicator=1):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
@@ -1328,7 +1356,18 @@ class AccountTaxRepartitionLine(models.Model):
         help="Factor to apply on the account move lines generated from this distribution line, in percents",
     )
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this distribution line")
-    repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
+    repartition_type = fields.Selection(
+        string="Based On",
+        selection=[('base', 'Base'), ('tax', 'of tax')],
+        required=True,
+        store=True,
+        default='tax',
+        # readonly=True,
+        # precompute=True,
+        # compute="_compute_repartition_type",
+        # inverse="_inverse_repartition_type",
+        help="Base on which the factor will be applied."
+    )
     document_type = fields.Selection(string="Related to", selection=[('invoice', 'Invoice'), ('refund', 'Refund')], required=True)
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
@@ -1382,3 +1421,40 @@ class AccountTaxRepartitionLine(models.Model):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         atax = self.env['account.tax'].browse(vals.get('tax_id'))
+    #         if len(atax.invoice_repartition_line_ids.ids) == 0:
+    #             vals['repartition_type'] = 'base'
+    #             self.env.flush_all()
+    #         else:
+    #             vals['repartition_type'] = 'tax'
+    #     return super().create(vals_list)
+        
+    # @api.model
+    # def default_get(self, fields_list):
+    #     rslt = super(AccountTaxRepartitionLine, self).default_get(fields_list)
+    #     tax_id = self.env.context.get('params').get('id')
+    #     return rslt
+        
+    # @api.depends('tax_id')
+    # def _compute_repartition_type(self):
+    #     for line in self:
+    #         if line.document_type == 'invoice':
+    #             line.repartition_type = (
+    #                 line.repartition_type or (
+    #                 'base' if len(line.tax_id.invoice_repartition_line_ids.ids) == 0
+    #                 else 'tax')
+    #             )
+    #         else:
+    #             line.repartition_type = (
+    #                 line.repartition_type or (
+    #                 'base' if len(line.tax_id.refund_repartition_line_ids.ids) == 0
+    #                 else 'tax')
+    #             )
+
+    # def _inverse_repartition_type(self):
+    #     for line in self:
+    #         line.repartition_type = 'tax'
