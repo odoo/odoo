@@ -26,7 +26,9 @@ def nl2br(string):
     :param str string:
     :rtype: unicode
     """
-    return pycompat.to_text(string).replace('\n', Markup('<br>\n'))
+    string = pycompat.to_text(string)
+    string_split = string.split('\n')
+    return Markup('<br>\n').join(string_split)
 
 
 def nl2br_enclose(string, enclosure_tag='div'):
