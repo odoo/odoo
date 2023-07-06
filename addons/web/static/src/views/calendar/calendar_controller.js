@@ -49,7 +49,6 @@ export class CalendarController extends Component {
             domain: this.props.domain,
             fields: this.props.fields,
         });
-        this.displayName = this.env.config.getDisplayName();
 
         useSetupView({
             getLocalState: () => this.model.exportedState,
@@ -69,7 +68,6 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
-            displayName: this.displayName,
         };
     }
     get containerProps() {
