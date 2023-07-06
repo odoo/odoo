@@ -10,4 +10,10 @@ patch(Message.prototype, "im_livechat/web", {
         }
         return this._super();
     },
+    get hasOpenChatFeature() {
+        if (this.message.originThread?.channel?.channel_type === "livechat") {
+            return false;
+        }
+        return this._super();
+    },
 });
