@@ -159,7 +159,7 @@ export class Thread extends Component {
     }
 
     get PRESENT_THRESHOLD() {
-        return PRESENT_THRESHOLD;
+        return this.state.showJumpPresent ? PRESENT_THRESHOLD - 200 : PRESENT_THRESHOLD;
     }
 
     updateShowJumpPresent() {
