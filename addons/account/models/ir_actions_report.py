@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, api, _
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError
 
 from odoo.tools import float_compare
@@ -57,3 +58,15 @@ class IrActionsReport(models.Model):
         data = data and dict(data) or {}
         data.update({'float_compare': float_compare})
         return super()._get_rendering_context(docids=docids, data=data)
+
+    def unlink(self):
+        invoice_reports = [
+            'account.account_invoices',
+            'account.account_invoices_without_payment'
+        ]
+        if self.filtered(lambda v: v.xml_id in invoice_reports) \
+           and not self._context.get(MODULE_UNINSTALL_FLAG):
+            raise UserError(
+                _("You can't delete the account invoice report; remove it from the print menu instead.")
+            )
+        return super().unlink()
