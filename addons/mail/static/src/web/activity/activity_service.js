@@ -7,9 +7,14 @@ import { registry } from "@web/core/registry";
 
 export class ActivityService {
     constructor(env, services) {
-        // useful for synchronizing activity data between multiple tabs
-        this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
-        this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
+        try {
+            // useful for synchronizing activity data between multiple tabs
+            this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
+            this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
+        } catch {
+            // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
+            this.broadcastChannel = null;
+        }
         this.env = env;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
@@ -25,7 +30,7 @@ export class ActivityService {
             attachment_ids: attachmentIds,
             feedback: activity.feedback,
         });
-        this.broadcastChannel.postMessage({
+        this.broadcastChannel?.postMessage({
             type: "reload chatter",
             payload: { resId: activity.res_id, resModel: activity.res_model },
         });
@@ -38,7 +43,7 @@ export class ActivityService {
             [[activity.id]],
             { feedback: activity.feedback }
         );
-        this.broadcastChannel.postMessage({
+        this.broadcastChannel?.postMessage({
             type: "reload chatter",
             payload: { resId: activity.res_id, resModel: activity.res_model },
         });
@@ -83,7 +88,7 @@ export class ActivityService {
         }
         assignDefined(activity, data);
         if (broadcast) {
-            this.broadcastChannel.postMessage({
+            this.broadcastChannel?.postMessage({
                 type: "insert",
                 payload: this._serialize(activity),
             });
@@ -94,7 +99,7 @@ export class ActivityService {
     delete(activity, { broadcast = true } = {}) {
         delete this.store.activities[activity.id];
         if (broadcast) {
-            this.broadcastChannel.postMessage({ type: "delete", payload: { id: activity.id } });
+            this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
         }
     }
 
