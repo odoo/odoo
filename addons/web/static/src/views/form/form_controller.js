@@ -136,6 +136,11 @@ export class FormController extends Component {
         );
         this.model = useState(new this.props.Model(this.env, this.modelParams, modelServices));
 
+        this.display = { ...this.props.display };
+        if (this.env.inDialog) {
+            this.display.controlPanel = false;
+        }
+
         onWillStart(async () => {
             await loadSubViews(
                 this.archInfo.fieldNodes,
@@ -150,7 +155,7 @@ export class FormController extends Component {
                 this.archInfo,
                 this.props.fields
             );
-            if (this.props.display.controlPanel) {
+            if (this.display.controlPanel) {
                 addFieldDependencies(activeFields, fields, [
                     { name: "display_name", type: "char", readonly: true },
                 ]);
@@ -166,11 +171,6 @@ export class FormController extends Component {
         });
 
         this.cpButtonsRef = useRef("cpButtons");
-
-        this.display = { ...this.props.display };
-        if (this.env.inDialog) {
-            this.display.controlPanel = false;
-        }
 
         useEffect(() => {
             if (!this.env.inDialog) {
