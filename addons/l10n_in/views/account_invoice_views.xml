@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="country_code" invisible="1"/>
                 <field name="l10n_in_journal_type" invisible="1"/>
-                <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]"
+                <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]" options="{'no_create': True, 'no_open': True}"
                     attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry'), ('l10n_in_journal_type', 'in', ('sale', 'purchase'))], 'readonly': [('state', '!=', 'draft')]}"/>
                 <field name="l10n_in_gst_treatment"
                     attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry')], 'readonly': [('state', '!=', 'draft')]}"/>
