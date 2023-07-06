@@ -3480,7 +3480,9 @@ const SnippetOptionWidget = Widget.extend({
                     obj = createPropertyProxy(this, '$target', $firstSubTarget);
                 }
 
+                this.options.wysiwyg.odooEditor.observerUnactive("computeWidgetState");
                 const value = await this._computeWidgetState.call(obj, methodName, params);
+                this.options.wysiwyg.odooEditor.observerActive("computeWidgetState");
                 if (value === undefined) {
                     continue;
                 }
