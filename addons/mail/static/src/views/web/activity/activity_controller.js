@@ -63,7 +63,7 @@ export class ActivityController extends Component {
             multiSelect: false,
             context: this.props.context,
             onSelected: async (resIds) => {
-                await this.activity.schedule(this.props.resModel, resIds[0]);
+                await this.activity.schedule(this.props.resModel, resIds);
                 this.model.load();
             },
         });

@@ -438,18 +438,19 @@ QUnit.module("test_mail", {}, function () {
                         action.context
                     );
                     assert.step("do_action_compose");
-                } else if (action.res_model === "mail.activity") {
+                } else if (action.res_model === "mail.activity.schedule") {
                     assert.deepEqual(
                         {
                             default_activity_type_id: mailActivityTypeIds[1],
-                            default_res_id: mailTestActivityId2,
-                            default_res_model: "mail.test.activity",
+                            active_id: mailTestActivityId2,
+                            active_ids: [mailTestActivityId2],
+                            active_model: "mail.test.activity",
                         },
                         action.context
                     );
                     assert.step("do_action_activity");
                 } else {
-                    assert.step("Unexpected action");
+                    assert.step("Unexpected action" + action.res_model);
                 }
                 return Promise.resolve();
             },
@@ -621,12 +622,12 @@ QUnit.module("test_mail", {}, function () {
                     assert.step("doAction");
                     const expectedAction = {
                         context: {
-                            default_res_id: mailTestActivityId1,
-                            default_res_model: "mail.test.activity",
+                            active_ids: [mailTestActivityId1],
+                            active_id: mailTestActivityId1,
+                            active_model: "mail.test.activity",
                         },
                         name: "Schedule Activity",
-                        res_id: false,
-                        res_model: "mail.activity",
+                        res_model: "mail.activity.schedule",
                         target: "new",
                         type: "ir.actions.act_window",
                         view_mode: "form",

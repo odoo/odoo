@@ -51,6 +51,28 @@
         </field>
     </record>
 
+    <record id="mail_activity_type_form_inherit" model="ir.ui.view">
+        <field name="name">mail.activity.type.form.inherit</field>
+        <field name="model">mail.activity.type</field>
+        <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='delay_count']" position="attributes">
+                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
+            </xpath>
+            <field name="delay_count" position="attributes">
+                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
+            </field>
+            <field name="delay_from" position="attributes">
+                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
+            </field>
+            <field name="delay_unit" position="attributes">
+                <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="mail_activity_type_view_search" model="ir.ui.view">
         <field name="name">mail.activity.type.search</field>
         <field name="model">mail.activity.type</field>

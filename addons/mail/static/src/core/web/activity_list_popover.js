@@ -24,6 +24,8 @@ export class ActivityListPopover extends Component {
         "defaultActivityTypeId?",
         "onActivityChanged",
         "resId",
+        /** Ids of record selection used to schedule activities in batch; it must include resId. */
+        "resIds?",
         "resModel",
     ];
     static template = "mail.ActivityListPopover";
@@ -53,8 +55,7 @@ export class ActivityListPopover extends Component {
         this.env.services["mail.activity"]
             .schedule(
                 this.props.resModel,
-                this.props.resId,
-                undefined,
+                this.props.resIds ? this.props.resIds : [this.props.resId],
                 this.props.defaultActivityTypeId
             )
             .then(() => this.props.onActivityChanged());
