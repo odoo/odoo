@@ -4,21 +4,12 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeTestEnv } from "../helpers/mock_env";
+import { makeDialogTestEnv } from "../helpers/mock_env";
 import { click, getFixture, makeDeferred, mount, nextTick, triggerHotkey } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 let target;
-
-async function makeDialogTestEnv() {
-    const env = await makeTestEnv();
-    env.dialogData = {
-        isActive: true,
-        close: () => {},
-    };
-    return env;
-}
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async (assert) => {

@@ -132,3 +132,18 @@ export async function makeTestEnv(config = {}) {
     }
     return env;
 }
+
+/**
+ * Create a test environment for dialog tests
+ *
+ * @param {*} config
+ * @returns {Promise<OdooEnv>}
+ */
+export async function makeDialogTestEnv(config = {}) {
+    const env = await makeTestEnv(config);
+    env.dialogData = {
+        isActive: true,
+        close() {},
+    };
+    return env;
+}
