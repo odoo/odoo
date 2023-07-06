@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/legacy/js/services/core";
-import { FORMATS } from "../helpers/constants";
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 
 export const pivotFormulaRegex = /^=.*PIVOT/;
@@ -9,19 +8,6 @@ export const pivotFormulaRegex = /^=.*PIVOT/;
 //--------------------------------------------------------------------------
 // Public
 //--------------------------------------------------------------------------
-
-/**
- * Format a data
- *
- * @param {string} interval aggregate interval i.e. month, week, quarter, ...
- * @param {string} value
- */
-export function formatDate(interval, value) {
-    const output = FORMATS[interval].display;
-    const input = FORMATS[interval].out;
-    const date = moment(value, input);
-    return date.isValid() ? date.format(output) : _t("None");
-}
 
 /**
  * Parse a spreadsheet formula and detect the number of PIVOT functions that are
