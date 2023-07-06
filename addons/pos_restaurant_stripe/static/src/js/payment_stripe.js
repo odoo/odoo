@@ -17,7 +17,8 @@ patch(PaymentStripe.prototype, "pos_restaurant_stripe.PaymentStripe", {
         var line = order.get_paymentline(cid);
         return (
             this.pos.config.set_tip_after_payment &&
-            line.payment_method.use_payment_terminal === "stripe"
+            line.payment_method.use_payment_terminal === "stripe" &&
+            line.card_type !== "interac"
         );
     },
 });
