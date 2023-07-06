@@ -1,7 +1,7 @@
 import re
 import stdnum.pt.nif
 
-from addons.l10n_pt.utils.hashing import L10nPtHashingUtils
+from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, groupby, format_date
@@ -10,14 +10,14 @@ from odoo.tools import float_repr, groupby, format_date
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_pt_account_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_qr_code_str', store=True)
-    l10n_pt_account_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_inalterable_hash')
-    l10n_pt_account_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_inalterable_hash')
-    l10n_pt_account_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_atcud', store=True)
+    l10n_pt_account_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_account_qr_code_str', store=True)
+    l10n_pt_account_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_account_inalterable_hash')
+    l10n_pt_account_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_account_inalterable_hash')
+    l10n_pt_account_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_account_atcud', store=True)
     l10n_pt_account_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
 
     @api.depends('inalterable_hash')
-    def _compute_l10n_pt_inalterable_hash(self):
+    def _compute_l10n_pt_account_inalterable_hash(self):
         for move in self:
             if move.inalterable_hash:
                 hash_version, hash_str = move.inalterable_hash.split("$")[1:]
@@ -27,7 +27,7 @@ class AccountMove(models.Model):
                 move.l10n_pt_account_inalterable_hash_short = False
 
     @api.depends('sequence_number', 'journal_id.l10n_pt_account_tax_authority_series_id.code', 'inalterable_hash')
-    def _compute_l10n_pt_atcud(self):
+    def _compute_l10n_pt_account_atcud(self):
         for move in self:
             if (
                 move.company_id.account_fiscal_country_id.code == 'PT'
@@ -38,7 +38,6 @@ class AccountMove(models.Model):
                 move.l10n_pt_account_atcud = f"{move.journal_id.l10n_pt_account_tax_authority_series_id.code}-{move.sequence_number}"
             else:
                 move.l10n_pt_account_atcud = False
-
 
     @api.depends('state', 'invoice_date', 'company_id.account_fiscal_country_id.code')
     def _compute_l10n_pt_show_future_date_warning(self):
@@ -51,7 +50,7 @@ class AccountMove(models.Model):
             )
 
     @api.depends('inalterable_hash')
-    def _compute_l10n_pt_qr_code_str(self):
+    def _compute_l10n_pt_account_qr_code_str(self):
         """ Generate the informational QR code for Portugal invoicing.
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
         """

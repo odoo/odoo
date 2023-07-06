@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_l10n_pt_account_tax_authority_series_form" model="ir.ui.view">
+    <record id="view_l10n_pt_tax_authority_series_form" model="ir.ui.view">
         <field name="name">tax.authority.series.form</field>
-        <field name="model">l10n_pt_account.tax.authority.series</field>
+        <field name="model">l10n_pt.tax.authority.series</field>
         <field name="arch" type="xml">
             <form string="Tax Authority Series">
                 <group>
@@ -15,9 +15,9 @@
         </field>
     </record>
 
-    <record id="view_l10n_pt_account_tax_authority_series_tree" model="ir.ui.view">
+    <record id="view_l10n_pt_tax_authority_series_tree" model="ir.ui.view">
         <field name="name">tax.authority.series.tree</field>
-        <field name="model">l10n_pt_account.tax.authority.series</field>
+        <field name="model">l10n_pt.tax.authority.series</field>
         <field name="arch" type="xml">
             <tree string="Tax Authority Series">
                 <field name='code'/>
@@ -26,12 +26,5 @@
             </tree>
         </field>
     </record>
-
-    <record model="ir.actions.act_window" id="action_l10n_pt_account_tax_authority_series">
-        <field name="name">Tax Authority Series</field>
-        <field name="res_model">l10n_pt_account.tax.authority.series</field>
-    </record>
-
-    <menuitem name="Tax Authority Series" action="action_l10n_pt_account_tax_authority_series" id="menu_action_l10n_pt_account_tax_authority_series" sequence="10" parent="menu_portugal_config"/>
 
 </odoo>

@@ -11,8 +11,13 @@
     'depends': [
         'base',
     ],
+    'data': [
+        'views/l10n_pt_tax_authority_series_views.xml',
+        'security/ir.model.access.csv',
+    ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/demo_data.xml',
         'demo/ir_config_parameter_data.xml',
     ],
     'license': 'LGPL-3',
