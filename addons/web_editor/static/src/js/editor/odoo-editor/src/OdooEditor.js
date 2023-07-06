@@ -4617,48 +4617,42 @@ export class OdooEditor extends EventTarget {
 
         const callInsertCommand = (fragment) => {
             const getUnwrappedInsertData = (content) => {
-                const container = document.createElement('fake-element');
-                const containerFirstChild = document.createElement('fake-element-fc');
-                const containerLastChild = document.createElement('fake-element-lc');
+                if (!(content instanceof Node)) return;
 
-                if (content instanceof Node) {
-                    container.replaceChildren(content);
-                } else {
-                    container.textContent = content;
-                }
+                let firstChildNodes = [];
+                let lastChildNodes = [];
 
                 // In case the html inserted is all contained in a single root <p> or <li>
                 // tag, we take the all content of the <p> or <li> and avoid inserting the
                 // <p> or <li>. The same is true for a <pre> inside a <pre>.
-                if (container.childElementCount === 1 && (
-                    container.firstChild.nodeName === 'P' ||
-                    container.firstChild.nodeName === 'LI' ||
-                    container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+                if (content.childElementCount === 1 && (
+                    content.firstChild.nodeName === 'P' ||
+                    content.firstChild.nodeName === 'LI' ||
+                    content.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
                 )) {
-                    const p = container.firstElementChild;
-                    container.replaceChildren(...p.childNodes);
-                } else if (container.childElementCount > 1) {
+                    const p = content.firstElementChild;
+                    content.replaceChildren(...p.childNodes);
+                } else if (content.childElementCount > 1) {
                     // Grab the content of the first child block and isolate it.
-                    if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
-                        containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                        container.firstElementChild.remove();
+                    if (isBlock(content.firstChild) && !['TABLE', 'UL', 'OL'].includes(content.firstChild.nodeName)) {
+                        firstChildNodes = [...content.firstElementChild.childNodes];
+                        content.firstElementChild.remove();
                     }
                     // Grab the content of the last child block and isolate it.
-                    if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                        containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                        container.lastElementChild.remove();
+                    if (isBlock(content.lastChild) && !['TABLE', 'UL', 'OL'].includes(content.lastChild.nodeName)) {
+                        lastChildNodes = [...content.lastElementChild.childNodes];
+                        content.lastElementChild.remove();
                     }
                 }
 
-                return { container, containerFirstChild, containerLastChild };
+                return {
+                    firstChildNodes,
+                    lastChildNodes,
+                };
             }
 
-            const { container, containerFirstChild, containerLastChild } = getUnwrappedInsertData(fragment)
-            return this._applyCommand('insert', fragment, {
-                container,
-                containerFirstChild,
-                containerLastChild,
-            });
+            const options = getUnwrappedInsertData(fragment)
+            return this._applyCommand('insert', fragment, options);
         }
 
         if (odooEditorHtml && targetSupportsHtmlContent) {

@@ -144,12 +144,13 @@ function hasColor(element, mode) {
 // editor and on the nodes. This is too risky to change in the
 // absence of a strong test suite, so the whitelist stays for now.
 export const editorCommands = {
-    insert: (editor, content, {
-        container,
-        containerFirstChild,
-        containerLastChild,
-    }) => {
-        if (!content && (!container || !containerFirstChild || !containerLastChild)) return;
+    insert: (editor, content, options = {}) => {
+        let {
+            firstChildNodes,
+            lastChildNodes,
+        } = options
+
+        if (!content && (!container || !firstChildNodes || !lastChildNodes)) return;
         const selection = editor.document.getSelection();
         const range = selection.getRangeAt(0);
         let startNode;
@@ -199,30 +200,28 @@ export const editorCommands = {
             }
         }
 
-        if (containerFirstChild && containerLastChild) {
+        let currentNode = startNode;
+        let lastChildNode = false;
+
+        if (firstChildNodes && lastChildNodes) {
             // If we have isolated block content, first we split the current focus
             // element if it's a block then we insert the content in the right places.
-            let currentNode = startNode;
-            let lastChildNode = false;
             const _insertAt = (reference, nodes, insertBefore) => {
                 for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                     reference[insertBefore ? 'before' : 'after'](child);
                     reference = child;
                 }
             }
-            if (containerLastChild.hasChildNodes()) {
-                const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
-                _insertAt(currentNode, [...toInsert], insertBefore);
-                currentNode = insertBefore ? toInsert[0] : currentNode;
-                lastChildNode = toInsert[toInsert.length - 1];
+            if (lastChildNodes.length > 0) {
+                _insertAt(currentNode, [...lastChildNodes], insertBefore);
+                currentNode = insertBefore ? lastChildNodes[0] : currentNode;
+                lastChildNode = lastChildNodes[toInsert.length - 1];
             }
-            if (containerFirstChild.hasChildNodes()) {
-                const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
-                _insertAt(currentNode, [...toInsert], insertBefore);
-                currentNode = toInsert[toInsert.length - 1];
+            if (firstChildNodes.length > 0) {
+                _insertAt(currentNode, [...firstChildNodes], insertBefore);
+                currentNode = lastChildNodes[toInsert.length - 1];
                 insertBefore = false;
             }
-
         }
 
         // If all the Html have been isolated, We force a split of the parent element
