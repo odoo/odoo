@@ -1964,8 +1964,8 @@ class AccountMove(models.Model):
 
         # No update needed
         if existing_cash_rounding_line \
-            and existing_cash_rounding_line.balance == diff_balance \
-            and existing_cash_rounding_line.amount_currency == diff_amount_currency:
+            and float_compare(existing_cash_rounding_line.balance, diff_balance, precision_rounding=self.currency_id.rounding) == 0 \
+            and float_compare(existing_cash_rounding_line.amount_currency, diff_amount_currency, precision_rounding=self.currency_id.rounding) == 0:
             return
 
         _apply_cash_rounding(self, diff_balance, diff_amount_currency, existing_cash_rounding_line)
