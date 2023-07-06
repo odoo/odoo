@@ -54,8 +54,10 @@ export class AttachmentService {
                 id: threadData.id,
             });
             attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
-            if (!attachment.originThread.attachments.includes(attachment)) {
-                attachment.originThread.attachments.push(attachment);
+            const thread = attachment.originThread;
+            if (!thread.attachments.includes(attachment)) {
+                thread.attachments.push(attachment);
+                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
             }
         }
     }

@@ -176,3 +176,25 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
     await nextAnimationFrame();
     assert.isVisible($(".o-mail-AttachmentBox"));
 });
+
+QUnit.test("attachment box should order attachments from newest to oldest", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const resData = { res_id: partnerId, res_model: "res.partner" };
+    pyEnv["ir.attachment"].create([
+        { name: "A.txt", mimetype: "text/plain", ...resData },
+        { name: "B.txt", mimetype: "text/plain", ...resData },
+        { name: "C.txt", mimetype: "text/plain", ...resData },
+    ]);
+    const { openView } = await start();
+    await openView({
+        res_id: partnerId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    assert.containsOnce($, ".o-mail-Chatter [aria-label='Attach files']:contains(3)");
+    await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(0):contains(C.txt)");
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(1):contains(B.txt)");
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(2):contains(A.txt)");
+});

@@ -1517,3 +1517,28 @@ QUnit.test("Show email_from of message without author", async (assert) => {
     await openFormView("res.partner", pyEnv.currentPartnerId);
     assert.containsOnce($, ".o-mail-Message-header:contains(md@oilcompany.fr)");
 });
+
+QUnit.test("Message should display attachments in order", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+        attachment_ids: [
+            pyEnv["ir.attachment"].create({ name: "A.txt", mimetype: "text/plain" }),
+            pyEnv["ir.attachment"].create({ name: "B.txt", mimetype: "text/plain" }),
+            pyEnv["ir.attachment"].create({ name: "C.txt", mimetype: "text/plain" }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(0):contains(A.txt)");
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(1):contains(B.txt)");
+    assert.containsOnce($, ".o-mail-AttachmentCard:eq(2):contains(C.txt)");
+});
