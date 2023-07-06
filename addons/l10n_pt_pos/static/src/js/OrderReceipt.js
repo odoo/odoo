@@ -7,7 +7,7 @@ patch(OrderReceipt.prototype, "l10n_pt_pos.OrderReceipt", {
     _l10n_pt_pos_get_qr_code_data(l10n_pt_pos_qr_code_str) {
         const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
         const qr_code_svg = new XMLSerializer().serializeToString(
-            codeWriter.write(l10n_pt_pos_qr_code_str, 150, 150)
+            codeWriter.write(l10n_pt_pos_qr_code_str, 200, 200)
         );
         return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
     },

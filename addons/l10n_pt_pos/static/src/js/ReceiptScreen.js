@@ -9,7 +9,6 @@ patch(ReceiptScreen.prototype, "l10n_pt_pos.ReceiptScreen", {
         const _super = this._super;
         if (this.pos.is_portuguese_country() && !this.currentOrder.get_l10n_pt_pos_qr_code_str()) {
             const values = await this.pos.l10n_pt_pos_compute_missing_hashes();
-            debugger;
             this.currentOrder.set_l10n_pt_pos_inalterable_hash(values.hash);
             this.currentOrder.set_l10n_pt_pos_atcud(values.atcud);
             this.currentOrder.set_l10n_pt_pos_qr_code_str(values.qr_code_str);

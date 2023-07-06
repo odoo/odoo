@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, _, api
-from odoo.exceptions import UserError
+from odoo import models, fields, _
+from odoo.exceptions import UserError, RedirectWarning
 
 
 class PosConfig(models.Model):
@@ -15,7 +15,17 @@ class PosConfig(models.Model):
         if not self.company_id.country_id:
             raise UserError(_("You have to set a country in your company setting."))
         if self.company_id.country_id.code == 'PT' and not self.l10n_pt_pos_tax_authority_series_id:
-            raise UserError(_("You have to set a official Tax Authority Series in the POS configuration settings"))
+            raise RedirectWarning(
+                _('You have to set a official Tax Authority Series in the POS configuration settings'),
+                {
+                    "view_mode": "form",
+                    "res_model": "pos.config",
+                    "type": "ir.actions.act_window",
+                    "res_id": self.id,
+                    "views": [[self.env.ref("l10n_pt_pos.pos_pt_config_view_form").id, "form"]],
+                },
+                _("Go to the POS configuration settings"),
+            )
         return super().open_ui()
 
     def write(self, vals):
