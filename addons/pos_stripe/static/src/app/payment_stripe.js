@@ -114,6 +114,17 @@ export class PaymentStripe extends PaymentInterface {
         );
     }
 
+    _getInteracTransactionId(processPayment) {
+        const intentCharge = processPayment.paymentIntent.charges.data[0];
+        const processPaymentDetails = intentCharge.payment_method_details;
+
+        if (processPaymentDetails.type === 'interac_present') {
+            return intentCharge.id;
+        }
+
+        return false;
+    }
+
     async collectPayment(amount) {
         const line = this.pos.get_order().selected_paymentline;
         const clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
@@ -139,7 +150,17 @@ export class PaymentStripe extends PaymentInterface {
                 return false;
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status("waitingCapture");
-                await this.captureAfterPayment(processPayment, line);
+
+                const interacTransactionId = this._getInteracTransactionId(processPayment);
+                if (interacTransactionId) {
+                    // Canadian interac payments should not be captured:
+                    // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
+                    line.card_type = "interac";
+                    line.transaction_id = interacTransactionId;
+                } else {
+                    await this.captureAfterPayment(processPayment, line);
+                }
+
                 line.set_payment_status("done");
                 return true;
             }
