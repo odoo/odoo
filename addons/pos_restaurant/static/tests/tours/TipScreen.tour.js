@@ -141,6 +141,8 @@ PaymentScreen.do.clickPaymentMethod("Bank");
 PaymentScreen.do.clickValidate();
 TipScreen.check.isShown();
 TipScreen.do.clickSettle();
+ReceiptScreen.check.isShown();
+ReceiptScreen.do.clickNextOrder();
 FloorScreen.check.isShown();
 
 registry
