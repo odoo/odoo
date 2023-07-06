@@ -306,6 +306,13 @@ class MaintenanceRequest(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id, check_company=True)
     duration = fields.Float(help="Duration in hours.")
     done = fields.Boolean(related='stage_id.done')
+    instruction_type = fields.Selection([
+        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
+        string="Instruction", default="text"
+    )
+    instruction_pdf = fields.Binary('PDF')
+    instruction_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
+    instruction_text = fields.Html('Text')
 
     def archive_equipment_request(self):
         self.write({'archive': True})
