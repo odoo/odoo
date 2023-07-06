@@ -43,7 +43,7 @@ export class SuggestionService {
         if (thread.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
-        const suggestedPartners = await this.orm.call(
+        const suggestedPartners = await this.orm.silent.call(
             "res.partner",
             thread.model === "discuss.channel"
                 ? "get_mention_suggestions_from_channel"
@@ -60,7 +60,7 @@ export class SuggestionService {
     }
 
     async fetchThreads(term) {
-        const suggestedThreads = await this.orm.call(
+        const suggestedThreads = await this.orm.silent.call(
             "discuss.channel",
             "get_mention_suggestions",
             [],
