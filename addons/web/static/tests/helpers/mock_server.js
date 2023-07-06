@@ -2167,7 +2167,11 @@ export class MockServer {
                     }
                     this.writeRecord(
                         comodelName,
-                        { [inverseFieldName]: inverseFieldNewValue },
+                        {
+                            [inverseFieldName]: inverseFieldNewValue.length
+                                ? inverseFieldNewValue
+                                : false,
+                        },
                         removedRecordId
                     );
                 }
@@ -2382,7 +2386,9 @@ export class MockServer {
             }
             if (["one2many", "many2many"].includes(field.type)) {
                 let ids = record[fieldName] ? record[fieldName].slice() : [];
-                if (Array.isArray(value)) {
+                // if a field has been modified, its value must always be sent to the server for onchange and write.
+                // take into account that the value can be a empty list of commands.
+                if (Array.isArray(value) && value.length) {
                     if (
                         value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
                     ) {

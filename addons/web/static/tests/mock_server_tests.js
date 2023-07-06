@@ -69,7 +69,7 @@ QUnit.module("MockServer", (hooks) => {
                             partner_id: 2,
                             partner_ids: [1],
                             select: "new",
-                            partner_ref: "partner,2"
+                            partner_ref: "partner,2",
                         },
                         {
                             foo: 17,
@@ -1343,8 +1343,8 @@ QUnit.module("MockServer", (hooks) => {
             },
         ];
         const mockServer = new MockServer(data);
-        mockServer.mockWrite("foo", [[2], { many2many_field: [] }]);
-        assert.deepEqual(mockServer.models.bar.records[0].many2many_field, []);
+        mockServer.mockWrite("foo", [[2], { many2many_field: [] }]); // save nothing
+        assert.deepEqual(mockServer.models.bar.records[0].many2many_field, [2]);
     });
 
     QUnit.test("many2one update should update inverse field", async function (assert) {
