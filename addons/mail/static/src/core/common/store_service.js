@@ -6,11 +6,13 @@ import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
 
 export class Store {
     constructor(env) {
         this.setup(env);
         this.lastChannelSubscription = "";
+        this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
 
     setup(env) {
@@ -18,8 +20,7 @@ export class Store {
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
     }
 
-    async updateBusSubscription() {
-        await new Promise(setTimeout); // Wait for thread fully inserted.
+    updateBusSubscription() {
         const channelIds = [];
         const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
