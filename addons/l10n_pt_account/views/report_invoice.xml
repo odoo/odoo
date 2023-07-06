@@ -39,6 +39,9 @@
 <!--    QR Code-->
         <xpath expr="//div[@id='qrcode']" position="replace">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_account_qr_code_str">
+                <div>
+                    ATCUD: <t t-esc="o.l10n_pt_account_atcud"/>
+                </div>
                 <img t-if="o.l10n_pt_account_qr_code_str"
                      style="margin: 0.25cm;"
                      t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_account_qr_code_str, 150, 150)"/>
