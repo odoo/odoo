@@ -3,6 +3,22 @@
 import { unaccent } from "./strings";
 
 /**
+ * @param {string} pattern
+ * @param {string|string[]} strs
+ * @returns {number}
+ */
+function match(pattern, strs) {
+    if (!Array.isArray(strs)) {
+        strs = [strs];
+    }
+    let globalScore = 0;
+    for (const str of strs) {
+        globalScore = Math.max(globalScore, _match(pattern, str));
+    }
+    return globalScore;
+}
+
+/**
  * This private function computes a score that represent the fact that the
  * string contains the pattern, or not
  *
@@ -17,7 +33,7 @@ import { unaccent } from "./strings";
  * @param {string} str
  * @returns {number}
  */
-function match(pattern, str) {
+function _match(pattern, str) {
     let totalScore = 0;
     let currentScore = 0;
     const len = str.length;
@@ -47,7 +63,7 @@ function match(pattern, str) {
  * @template T
  * @param {string} pattern
  * @param {T[]} list
- * @param {(element: T) => string} fn
+ * @param {(element: T) => (string|string[])} fn
  * @returns {T[]}
  */
 export function fuzzyLookup(pattern, list, fn) {
@@ -72,5 +88,5 @@ export function fuzzyLookup(pattern, list, fn) {
  * @returns {boolean}
  */
 export function fuzzyTest(pattern, string) {
-    return match(pattern, string) !== 0;
+    return _match(pattern, string) !== 0;
 }
