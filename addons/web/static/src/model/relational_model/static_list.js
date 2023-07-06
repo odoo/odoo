@@ -388,6 +388,8 @@ export class StaticList extends DataPoint {
             if (!this._currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
                 // new record created, not yet in the list
                 await this._addRecord(record);
+            } else if (!record.dirty) {
+                return;
             }
             await this._onUpdate();
             if (this.orderBy.length) {

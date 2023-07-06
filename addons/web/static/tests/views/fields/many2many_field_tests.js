@@ -1538,7 +1538,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".modal-body input[type=checkbox]"));
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
-        assert.verifySteps(["write", "web_read", "onchange2"]);
+        assert.verifySteps(["write", "web_read"]);
 
         // there is nothing left to save -> should not do a 'write' RPC
         await clickSave(target);

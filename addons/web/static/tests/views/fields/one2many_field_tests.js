@@ -563,7 +563,7 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.deepEqual(
                         args.args[1].p[0][2],
-                        { foo: "ff", qux: 99 },
+                        { foo: "ff", qux: 99, turtles: [] },
                         "The right values should be written"
                     );
                 }
@@ -3809,7 +3809,14 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsNone(target, "tr.o_data_row");
 
-        assert.verifySteps(["get_views", "web_read", "onchange2", "onchange2"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read",
+            "onchange2",
+            "onchange2",
+            "write",
+            "web_read",
+        ]);
     });
 
     QUnit.test("editable one2many list, adding line when only one page", async function (assert) {
@@ -6046,7 +6053,7 @@ QUnit.module("Fields", (hooks) => {
                     rec.turtles[0][1],
                     {
                         product_id: [1, "xenomorphe"],
-                        partner_ids: rec.turtles[0][2].partner_ids
+                        partner_ids: rec.turtles[0][2].partner_ids.length
                             ? [
                                   [3, 1],
                                   [4, 2],
@@ -9619,8 +9626,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             numUserOnchange,
-            2,
-            "there should 2 and only 2 onchange from closing the partner modal"
+            1,
+            "there should 1 and only 1 onchange from closing the partner modal"
         );
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
@@ -10902,6 +10909,7 @@ QUnit.module("Fields", (hooks) => {
             async mockRPC(route, args) {
                 if (step === 3 && args.method === "onchange2" && args.model === "partner") {
                     assert.deepEqual(args.args[1].turtles[0][2], {
+                        o2m: [],
                         turtle_bar: false,
                     });
                 }
@@ -12470,7 +12478,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
 
         await clickSave(target);
-        assert.verifySteps([]);
+        assert.verifySteps(["write"]);
     });
 
     QUnit.test("toggle boolean in o2m with the formView in edition", async function (assert) {
