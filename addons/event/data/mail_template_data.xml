@@ -23,7 +23,7 @@
     </t>
 </div></field>
             <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_foldable_badge'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -257,7 +257,7 @@
 </table>
             </field>
             <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_full_page_ticket'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
         </record>
 
         <record id="event_reminder" model="mail.template">
@@ -477,7 +477,7 @@
 </td></tr>
 </table>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
         </record>
 
     </data>
