@@ -102,12 +102,7 @@ export class TipScreen extends Component {
         this.pos.showScreen(name, props);
     }
     get nextScreen() {
-        if (this.pos.config.module_pos_restaurant) {
-            const table = this.pos.table;
-            return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
-        } else {
-            return { name: "ProductScreen" };
-        }
+        return { name: "ReceiptScreen" };
     }
     async printTipReceipt() {
         const receipts = [
@@ -143,7 +138,8 @@ export class TipScreen extends Component {
 
     async _printWeb(receipt) {
         try {
-            this.posReceiptContainer.el.innerHTML = receipt;
+            this.posReceiptContainer.el.textContent = "";
+            this.posReceiptContainer.el.appendChild(receipt);
             window.print();
         } catch {
             await this.popup.add(ErrorPopup, {
