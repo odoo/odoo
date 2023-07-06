@@ -3,14 +3,15 @@
 import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
 import utils from '@web/legacy/js/core/utils';
-
+import { checkFileSize } from "@web/core/utils/files";
+import { humanNumber } from "@web/core/utils/numbers";
 import { reactive } from "@odoo/owl";
 
 export const AUTOCLOSE_DELAY = 3000;
 
 export const uploadService = {
-    dependencies: ['rpc'],
-    start(env, { rpc }) {
+    dependencies: ['rpc', 'notification'],
+    start(env, { rpc, notification }) {
         let fileId = 0;
         const progressToast = reactive({
             files: {},
@@ -69,14 +70,13 @@ export const uploadService = {
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
                 for (const file of sortedFiles) {
                     let fileSize = file.size;
+                    if (!checkFileSize(fileSize, notification)) {
+                        return null;
+                    }
                     if (!fileSize) {
                         fileSize = null;
-                    } else if (fileSize < 1024) {
-                        fileSize = fileSize.toFixed(2) + " bytes";
-                    } else if (fileSize < 1048576) {
-                        fileSize = (fileSize / 1024).toFixed(2) + " KB";
                     } else {
-                        fileSize = (fileSize / 1048576).toFixed(2) + " MB";
+                        fileSize = humanNumber(fileSize) + "B";
                     }
 
                     const id = ++fileId;
