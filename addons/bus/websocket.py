@@ -6,6 +6,7 @@ import logging
 import os
 import psycopg2
 import random
+import signal
 import socket
 import struct
 import selectors
@@ -605,6 +606,21 @@ class Websocket:
             if websocket.state is ConnectionState.OPEN:
                 websocket.disconnect(CloseCode.GOING_AWAY)
 
+    @classmethod
+    def _dump_stats(cls):
+        """ Print the number of connected websockets and their
+        respective state """
+        count_by_state = defaultdict(int)
+        for websocket in cls._instances:
+            count_by_state[websocket.state] += 1
+        _logger.info(
+            'Number of websockets: %d, Opened: %d, Closing: %d, Closed: %d',
+            len(cls._instances),
+            count_by_state[ConnectionState.OPEN],
+            count_by_state[ConnectionState.CLOSING],
+            count_by_state[ConnectionState.CLOSED]
+        )
+
     def _trigger_lifecycle_event(self, event_type):
         """
         Trigger a lifecycle event that is, call every function
@@ -914,3 +930,14 @@ class WebsocketConnectionHandler:
 
 
 CommonServer.on_stop(Websocket._kick_all)
+if os.name == 'posix':
+    original_sigquit_handler = signal.getsignal(signal.SIGQUIT)
+
+
+    def handle_sigquit(sig, frame):
+        Websocket._dump_stats()
+        if callable(original_sigquit_handler):
+            original_sigquit_handler(sig, frame)
+
+
+    signal.signal(signal.SIGQUIT, handle_sigquit)
