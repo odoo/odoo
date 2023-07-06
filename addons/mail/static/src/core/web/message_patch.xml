@@ -21,7 +21,7 @@
                             </t>
                         </ul>
                     </t>
-                    <div t-if="message.body" class="o-mail-Message-body text-break mb-0 w-100" t-ref="body">
+                    <div t-if="message.body" class="o-mail-Message-body text-break mb-0 w-100 d-inline-flex" t-ref="body">
                         <t t-out="messageSearch?.highlight(message.body) ?? message.body"/>
                     </div>
                 </div>
