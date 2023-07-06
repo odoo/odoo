@@ -15,6 +15,10 @@
         'point_of_sale',
         'l10n_pt',
     ],
+    'data': [
+        'views/pos_config_views.xml',
+        'views/pos_order_views.xml',
+    ],
     'assets': {
         'point_of_sale._assets_pos': [
             'l10n_pt_pos/static/src/js/**/*',

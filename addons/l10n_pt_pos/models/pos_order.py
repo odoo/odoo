@@ -1,7 +1,7 @@
 import re
 
-from addons.l10n_pt.utils.hashing import L10nPtHashingUtils
-from odoo import models, fields, _
+from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
+from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
 
@@ -9,21 +9,67 @@ from odoo.tools import float_repr
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
+    country_id = fields.Many2one('res.country', string="Country", related='company_id.country_id')
+    country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     l10n_pt_pos_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
+    l10n_pt_pos_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_pos_qr_code_str', store=True)
+    l10n_pt_pos_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_pos_inalterable_hash_info')
+    l10n_pt_pos_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_pos_inalterable_hash_info')
+    l10n_pt_pos_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_pos_atcud', store=True)
 
     # -------------------------------------------------------------------------
     # HASH
     # -------------------------------------------------------------------------
+    @api.depends('l10n_pt_pos_inalterable_hash')
+    def _compute_l10n_pt_pos_inalterable_hash_info(self):
+        for order in self:
+            if order.inalterable_hash:
+                hash_version, hash_str = order.l10n_pt_pos_inalterable_hash.split("$")[1:]
+                order.l10n_pt_pos_inalterable_hash_version = int(hash_version)
+                order.l10n_pt_pos_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
+            else:
+                order.l10n_pt_pos_inalterable_hash_short = False
+
+    @api.depends('name', 'config_id.l10n_pt_pos_tax_authority_series_id.code', 'l10n_pt_pos_inalterable_hash')
+    def _compute_l10n_pt_pos_atcud(self):
+        for order in self:
+            if (
+                order.company_id.country_id.code == 'PT'
+                and order.config_id.l10n_pt_pos_tax_authority_series_id
+                and order.l10n_pt_pos_inalterable_hash
+                and not order.l10n_pt_pos_atcud
+            ):
+                order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_tax_authority_series_id.code}-{order._get_l10n_pt_pos_sequence_info()[1]}"
+            else:
+                order.l10n_pt_pos_atcud = False
+
+    @api.depends('l10n_pt_pos_atcud')
+    def _compute_l10n_pt_pos_qr_code_str(self):
+        """ Generate the informational QR code for Portugal invoicing.
+        E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
+        """
+
+        for order in self.filtered(lambda o: (
+                o.company_id.country_id.code == "PT"
+                and not o.l10n_pt_pos_qr_code_str  # Skip if already computed
+        )):
+            order.l10n_pt_pos_qr_code_str = "todo"
+
     def _get_integrity_hash_fields(self):
         if self.company_id.country_id.code != 'PT':
             return []
         return ['date_order', 'create_date', 'amount_total', 'name']
 
-    def _get_l10n_pt_pos_document_number(self):
+    def _get_l10n_pt_pos_sequence_info(self):
         self.ensure_one()
         sequence_prefix = re.sub(r'[^A-Za-z0-9]+', '_', '_'.join(self.name.split('/')[:-1])).rstrip('_')
-        sequence_postfix = self.name.split('/')[-1]
-        return f"pos_order {sequence_prefix}/{sequence_postfix}"
+        sequence_number = self.name.split('/')[-1]
+        return sequence_prefix, sequence_number
+
+    def _get_l10n_pt_pos_document_number(self):
+        self.ensure_one()
+        sequence_prefix, sequence_number = self._get_l10n_pt_pos_sequence_info()
+        return f"pos_order {sequence_prefix}/{sequence_number}"
 
     def _hash_compute(self, previous_hash=None):
         if self.company_id.country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
@@ -97,7 +143,12 @@ class PosOrder(models.Model):
         orders_hashes = self.env['pos.order'].browse([o.id for o in orders]).with_context(l10n_pt_force_compute_signature=True)._hash_compute()
         for order_id, l10n_pt_pos_inalterable_hash in orders_hashes.items():
             super(PosOrder, self.env['pos.order'].browse(order_id)).write({'l10n_pt_pos_inalterable_hash': l10n_pt_pos_inalterable_hash})
-        return orders[-1].l10n_pt_pos_inalterable_hash
+        return {
+            "hash": orders[-1].l10n_pt_pos_inalterable_hash,
+            "qr_code_str": orders[-1].l10n_pt_pos_qr_code_str,
+            "atcud": orders[-1].l10n_pt_pos_atcud,
+        }
+
 
     def write(self, vals):
         if not vals:

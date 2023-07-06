@@ -49,7 +49,7 @@ class AccountMove(models.Model):
                     and move.invoice_date > fields.Date.today()
             )
 
-    @api.depends('inalterable_hash')
+    @api.depends('l10n_pt_account_atcud')
     def _compute_l10n_pt_account_qr_code_str(self):
         """ Generate the informational QR code for Portugal invoicing.
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
