@@ -89,6 +89,8 @@ class HrEmployeeBase(models.AbstractModel):
             ('holiday_status_id.requires_allocation', '=', 'yes'),
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
+            '|',
+            ('date_to', '=', False),
             ('date_to', '>=', current_date),
         ], ['employee_id'], ['__count', 'number_of_days:sum'])
         rg_results = {employee.id: (count, days) for employee, count, days in data}
