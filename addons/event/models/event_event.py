@@ -113,6 +113,10 @@ class EventEvent(models.Model):
     def _default_event_mail_ids(self):
         return self.env['event.type']._default_event_mail_type_ids()
 
+    @api.model
+    def _lang_get(self):
+        return self.env['res.lang'].get_installed()
+
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
@@ -217,6 +221,8 @@ class EventEvent(models.Model):
         compute_sudo=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+    lang = fields.Selection(_lang_get, string='Language',
+        help="All the communication emails sent to attendees will be translated in this language.")
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         compute='_compute_ticket_instructions', store=True, readonly=False,
