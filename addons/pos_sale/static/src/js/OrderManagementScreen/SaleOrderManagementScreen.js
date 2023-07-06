@@ -175,17 +175,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     .filter((line) => !this.pos.db.get_product_by_id(line.product_id[0]))
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
-                    const { confirmed } = await this.popup.add(ConfirmPopup, {
-                        title: this.env._t("Products not available in POS"),
-                        body: this.env._t(
-                            "Some of the products in your Sale Order are not available in POS, do you want to import them?"
-                        ),
-                        confirmText: this.env._t("Yes"),
-                        cancelText: this.env._t("No"),
-                    });
-                    if (confirmed) {
-                        await this.pos._addProducts(product_to_add_in_pos);
-                    }
+                    await this.pos._addProducts(product_to_add_in_pos);
                 }
 
                 /**
