@@ -290,7 +290,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             test_record._notify_get_reply_to()[test_record.id],
             formataddr((
                 f"{self.user_employee_c2.company_id.name} {test_record.name}",
-                f"{self.alias_catchall}@{self.alias_domain}"))
+                f"{self.alias_catchall_c2}@{self.alias_domain_c2_name}"))
         )
         test_record_c1 = test_record.with_user(self.user_employee)
         self.assertEqual(
@@ -310,11 +310,17 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         ])
         res = test_records._notify_get_reply_to()
         for test_record in test_records:
+            company = test_record.company_id
+            if company == self.company_2:
+                alias_domain = self.alias_domain_c2_name
+                alias_catchall = self.alias_catchall_c2
+            else:
+                alias_domain = self.alias_domain
+                alias_catchall = self.alias_catchall
+
             self.assertEqual(
                 res[test_record.id],
-                formataddr((
-                    f"{self.user_employee_c2.company_id.name} {test_record.name}",
-                    f"{self.alias_catchall}@{self.alias_domain}"))
+                formataddr((f"{company.name} {test_record.name}", f"{alias_catchall}@{alias_domain}"))
             )
 
         # Test3: get company from record (company_id field)
@@ -331,7 +337,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 res[test_record.id],
                 formataddr((
                     f"{self.company_3.name} {test_record.name}",
-                    f"{self.alias_catchall}@{self.alias_domain}"))
+                    f"{self.alias_catchall_c3}@{self.alias_domain_c3_name}"))
             )
 
 
@@ -956,7 +962,10 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             },
         ])
         expected_companies = [self.company_2, self.company_admin, self.company_2]
-        for record, expected_company in zip(records, expected_companies):
+        expected_alias_domains = [self.mail_alias_domain_c2, self.mail_alias_domain, self.mail_alias_domain_c2]
+        for record, expected_company, expected_alias_domain in zip(
+            records, expected_companies, expected_alias_domains
+        ):
             with self.subTest(record=record):
                 with self.assertSinglePostNotifications(
                         [{'partner': self.partner_employee_2, 'type': 'email'}],
@@ -978,7 +987,10 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                                 'is_internal': False,
                                 'notified_partner_ids': self.partner_employee_2,
                                 'reply_to': formataddr(
-                                    (f'{expected_company.name} {record.name}', f'{self.alias_catchall}@{self.alias_domain}')
+                                    (
+                                        f'{expected_company.name} {record.name}',
+                                        f'{expected_alias_domain.catchall_alias}@{expected_alias_domain.name}'
+                                    )
                                 ),
                             },
                         }

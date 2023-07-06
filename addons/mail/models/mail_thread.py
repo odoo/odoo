@@ -2105,6 +2105,9 @@ class MailThread(models.AbstractModel):
             # recipients
             'partner_ids': partner_ids,
         })
+        # add default-like values afterwards, to avoid useless queries
+        if 'reply_to' not in msg_values:
+            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id]
 
         msg_values.update(
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
