@@ -98,7 +98,7 @@ functionRegistry
             const args = domain.map(toString);
             assertPivotsExists(pivotId, this.getters);
             assertDomainLength(args);
-            return this.getters.getDisplayedPivotHeaderValue(pivotId, args);
+            return this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale);
         },
         computeFormat: function (pivotId, ...domain) {
             pivotId = toString(pivotId.value);
@@ -121,10 +121,18 @@ functionRegistry
                     return "#,##0.00";
                 case "date":
                 case "datetime":
-                    if (aggregateOperator === "day") {
-                        return this.locale.dateFormat;
+                    switch (aggregateOperator) {
+                        case "day":
+                            return this.locale.dateFormat;
+                        case "month":
+                            return "mmmm yyyy";
+                        case "year":
+                            return "0";
+                        case "week":
+                        case "quarter":
+                            return undefined;
                     }
-                    return undefined;
+                    break;
                 default:
                     return undefined;
             }
