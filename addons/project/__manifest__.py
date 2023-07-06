@@ -41,6 +41,7 @@
         'views/project_milestone_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
+        'views/mail_activity_plan_views.xml',
         'views/mail_activity_type_views.xml',
         'views/project_sharing_project_task_views.xml',
         'views/project_portal_project_project_templates.xml',

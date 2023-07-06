@@ -6,7 +6,7 @@ import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { triggerHotkey } from "@web/../tests/helpers/utils";
+import {makeDeferred, patchWithCleanup, triggerHotkey} from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
@@ -739,7 +739,7 @@ QUnit.test("post message on draft record", async () => {
 
 QUnit.test(
     "schedule activities on draft record should prompt with scheduling an activity (proceed with action)",
-    async () => {
+    async (assert) => {
         const views = {
             "res.partner,false,form": `
                 <form string="Partners">
@@ -751,10 +751,29 @@ QUnit.test(
                     </div>
                 </form>`,
         };
-        const { openFormView } = await start({ serverData: { views } });
-        openFormView("res.partner");
+        const { env, openFormView } = await start({ serverData: { views } });
+        const wizardOpened = makeDeferred();
+        patchWithCleanup(env.services.action, {
+            doAction(action, options) {
+                if (action.res_model === 'res.partner') {
+                    return super.doAction(action, options);
+                } else if (action.res_model === 'mail.activity.schedule') {
+                    assert.step("mail.activity.schedule");
+                    assert.equal(action.context.active_model, 'res.partner');
+                    assert.ok(Number(action.context.active_id));
+                    options.onClose();
+                    wizardOpened.resolve();
+                } else {
+                    assert.step("Unexpected action" + action.res_model);
+                }
+            },
+        });
+        await openFormView("res.partner");
         await click("button", { text: "Activities" });
-        await contains(".o_dialog h4", { text: "Schedule Activity" });
+        await wizardOpened;
+        assert.verifySteps([
+            "mail.activity.schedule",
+        ]);
     }
 );
 

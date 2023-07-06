@@ -413,8 +413,6 @@ QUnit.test("activity click on edit", async (assert) => {
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step("do_action");
-            assert.strictEqual(action.context.default_res_id, partnerId);
-            assert.strictEqual(action.context.default_res_model, "res.partner");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.res_model, "mail.activity");
             assert.strictEqual(action.res_id, activityId);
@@ -521,4 +519,38 @@ QUnit.test("Activity are sorted by deadline", async () => {
     await contains(":nth-child(1 of .o-mail-Activity)", { text: "5 days overdue:" });
     await contains(":nth-child(2 of .o-mail-Activity)", { text: "Today:" });
     await contains(":nth-child(3 of .o-mail-Activity)", { text: "Due in 4 days:" });
+});
+
+QUnit.test("chatter 'activities' button open the activity schedule wizard", async (assert) => {
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.partner"].create({});
+    const { env, openFormView } = await start({ serverData: { views } });
+    await openFormView("res.partner", fakeId);
+    patchWithCleanup(env.services.action, {
+        doAction(action, options) {
+            assert.step("doAction");
+            var expectedAction = {
+                context: {
+                    active_ids: [fakeId],
+                    active_id: fakeId,
+                    active_model: "res.partner",
+                },
+                name: "Schedule Activity",
+                res_model: "mail.activity.schedule",
+                target: "new",
+                type: "ir.actions.act_window",
+                view_mode: "form",
+                views: [[false, "form"]],
+            };
+            assert.deepEqual(
+                action,
+                expectedAction,
+                "should execute an action with correct params"
+            );
+            options.onClose();
+            return Promise.resolve();
+        },
+    });
+    await click("button", { text: "Activities" });
+    assert.verifySteps(["doAction"]);
 });

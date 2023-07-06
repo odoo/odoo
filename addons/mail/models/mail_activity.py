@@ -168,6 +168,7 @@ class MailActivity(models.Model):
             if self.activity_type_id.default_note:
                 self.note = self.activity_type_id.default_note
 
+    @api.model
     def _calculate_date_deadline(self, activity_type):
         # Date.context_today is correct because date_deadline is a Date and is meant to be
         # expressed in user TZ
