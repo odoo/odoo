@@ -531,6 +531,8 @@ class MailMail(models.Model):
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': exc})
                     batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
+                    for mail in self:
+                        mail.body_html = re.sub(_UNFOLLOW_REGEX, '', str(mail.body_html))
             else:
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
