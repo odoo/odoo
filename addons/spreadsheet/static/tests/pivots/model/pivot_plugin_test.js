@@ -586,6 +586,20 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getCellValue(model, "C5"), "");
     });
 
+    QUnit.test("PIVOT.HEADER grouped by date field without value", async function (assert) {
+        for (const interval of ["day", "week", "month", "quarter", "year"]) {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /* xml */ `
+                    <pivot>
+                        <field name="date" interval="${interval}" type="col"/>
+                        <field name="foo" type="measure"/>
+                    </pivot>`,
+            });
+            setCellContent(model, "A1", `=ODOO.PIVOT.HEADER(1, "date:${interval}", "false")`);
+            assert.equal(getCellValue(model, "A1"), "None");
+        }
+    });
+
     QUnit.test("PIVOT formulas are correctly formatted at evaluation", async function (assert) {
         const { model } = await createSpreadsheetWithPivot({
             arch: /* xml */ `
@@ -614,6 +628,19 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.strictEqual(getEvaluatedCell(model, "B3").format, "#,##0.00[$€]");
         }
     );
+
+    QUnit.test("PIVOT.HEADER day are correctly formatted at evaluation", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getEvaluatedCell(model, "B1").format, "m/d/yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "B1").value, 42474);
+        assert.strictEqual(getEvaluatedCell(model, "B1").formattedValue, "4/14/2016");
+    });
 
     QUnit.test(
         "PIVOT.HEADER formulas are correctly formatted at evaluation",

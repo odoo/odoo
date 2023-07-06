@@ -5,14 +5,11 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { computeReportMeasures } from "@web/views/utils";
-import { session } from "@web/session";
-
-import { FORMATS } from "../helpers/constants";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { formatDate } from "./pivot_helpers";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
+import { pivotTimeAdapter } from "./pivot_time_adapters";
 
 const { toString, toNumber, toBoolean } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -81,9 +78,10 @@ function throwUnsupportedFieldError(field) {
  * the two group values are "42" and "won".
  * @param {object} field
  * @param {number | boolean | string} groupValue
+ * @param {"day" | "week" | "month" | "quarter" | "year" | undefined} aggregateOperator
  * @returns {number | boolean | string}
  */
-export function parsePivotFormulaFieldValue(field, groupValue) {
+export function toNormalizedPivotValue(field, groupValue, aggregateOperator) {
     const groupValueString =
         typeof groupValue === "boolean"
             ? toString(groupValue).toLocaleLowerCase()
@@ -98,7 +96,10 @@ export function parsePivotFormulaFieldValue(field, groupValue) {
     switch (field.type) {
         case "datetime":
         case "date":
-            return toString(groupValueString);
+            return pivotTimeAdapter(aggregateOperator).normalizeFunctionValue(
+                groupValueString,
+                field
+            );
         case "selection":
         case "char":
         case "text":
@@ -299,7 +300,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * @param {string} groupValueString Value of the group by
      * @returns {string}
      */
-    getGroupByDisplayLabel(groupFieldString, groupValueString) {
+    getGroupByDisplayLabel(groupFieldString, groupValueString, locale = DEFAULT_LOCALE) {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
             return "";
         }
@@ -311,13 +312,15 @@ export class SpreadsheetPivotModel extends PivotModel {
             return this.parseGroupField(groupValueString).field.string;
         }
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
-        const value = parsePivotFormulaFieldValue(field, groupValueString);
+        const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
         const undef = _t("None");
         if (this._isDateField(field)) {
+            // TODO include this parsing to the pivot time adapters and extend it to other time periods
             if (value && aggregateOperator === "day") {
                 return toNumber(value, DEFAULT_LOCALE);
             }
-            return formatDate(aggregateOperator, value);
+            const adapter = pivotTimeAdapter(aggregateOperator);
+            return adapter.format(value, locale);
         }
         if (field.relation) {
             const label = this.metadataRepository.getRecordDisplayName(field.relation, value);
@@ -455,37 +458,14 @@ export class SpreadsheetPivotModel extends PivotModel {
         return groupBys.map((groupBy) => {
             const { field, aggregateOperator } = this.parseGroupField(groupBy);
             if (this._isDateField(field)) {
-                const value = this._getGroupStartingDay(groupBy, group);
-                if (!value) {
-                    return false;
-                }
-                const fOut = FORMATS[aggregateOperator]["out"];
-                // eslint-disable-next-line no-undef
-                const date = moment(value);
-                return date.isValid() ? date.format(fOut) : false;
+                return pivotTimeAdapter(aggregateOperator).normalizeServerValue(
+                    groupBy,
+                    field,
+                    group
+                );
             }
             return this._sanitizeValue(group[groupBy]);
         });
-    }
-
-    /**
-     * When grouping by a time field, return
-     * the group starting day (local to the timezone)
-     * @param {string} groupBy
-     * @param {object} readGroup
-     * @returns {string | undefined}
-     */
-    _getGroupStartingDay(groupBy, readGroup) {
-        if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
-            return undefined;
-        }
-        const { field } = this.parseGroupField(groupBy);
-        const sqlValue = readGroup["__range"][groupBy].from;
-        if (this.metaData.fields[field.name].type === "date") {
-            return sqlValue;
-        }
-        const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
-        return luxon.DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
     }
 
     /**
@@ -555,12 +535,13 @@ export class SpreadsheetPivotModel extends PivotModel {
         while (i < domain.length) {
             const groupFieldString = domain[i];
             const groupValue = domain[i + 1];
-            const { field, isPositional } = this.parseGroupField(groupFieldString);
+            const { field, isPositional, aggregateOperator } =
+                this.parseGroupField(groupFieldString);
             let value;
             if (isPositional) {
                 value = this._parsePivotFormulaWithPosition(field, groupValue, cols, rows);
             } else {
-                value = parsePivotFormulaFieldValue(field, groupValue);
+                value = toNormalizedPivotValue(field, groupValue, aggregateOperator);
             }
             if (this._isCol(field)) {
                 cols.push(value);
