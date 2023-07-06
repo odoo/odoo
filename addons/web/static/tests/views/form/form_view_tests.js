@@ -2951,6 +2951,33 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
     });
 
+    QUnit.test("form views in dialogs do not add display_name field", async function (assert) {
+        assert.expect(3);
+
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const mockRPC = function (route, args) {
+            if (args.method === "onchange2") {
+                assert.deepEqual(args.args[3], { foo: {} });
+            }
+        }
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
+    });
+
     QUnit.test("form views in dialogs closes on save", async function (assert) {
         serverData.models.partner.records[0].foo = undefined;
         delete serverData.models.partner.fields.foo.default;
