@@ -29,10 +29,14 @@ export const notificationService = {
         let notifId = 0;
         const notifications = reactive({});
 
-        registry.category("main_components").add("NotificationContainer", {
-            Component: NotificationContainer,
-            props: { notifications },
-        });
+        registry.category("main_components").add(
+            "NotificationContainer",
+            {
+                Component: NotificationContainer,
+                props: { notifications },
+            },
+            { sequence: 100 }
+        );
 
         /**
          * @param {string} message
