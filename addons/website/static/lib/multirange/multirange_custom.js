@@ -264,11 +264,11 @@ export class Multirange {
     }
 
     formatNumber(number) {
-        number = String(number).split('.');
-        if (number[1] && number[1].length === 1) {
-            number[1] += '0';
-        }
-        let formatedNumber = number[0].replace(/(?=(?:\d{3})+$)(?!\b)/g, ',') + (number[1] ? '.' + number[1] : '.00');
+        const locale = document.querySelector("html").getAttribute("lang");
+        let formatedNumber = number.toLocaleString(locale, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
         if (this.currency.length) {
             if (this.currencyPosition === 'after') {
                 formatedNumber = formatedNumber + ' ' + this.currency;
