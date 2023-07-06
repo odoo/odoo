@@ -28,8 +28,8 @@ automatic lead generation, full Online support, ...
     ],
     'data': [
         # 'data/event_type_data.xml',  # uncomment to reproduce test tour
-        'data/ir_actions_report_data.xml',
         'views/event_registration_templates_reports.xml',
+        'data/ir_actions_report_data.xml',
     ],
     'assets': {
         'web.assets_tests': [

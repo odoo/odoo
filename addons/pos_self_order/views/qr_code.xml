@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="report_self_order_qr_codes_page" model="ir.actions.report">
-            <field name="name">qr.codes</field>
-            <field name="model">pos.config</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">pos_self_order.qr_codes_page</field>
-            <field name="report_file">pos_self_order.qr_codes_page</field>
-            <field name="print_report_name">"QR codes"</field>
-            <field name="binding_model_id" ref="model_pos_config"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="paperformat_qrcodes" model="report.paperformat">
-            <field name="name">QR Codes Page</field>
-            <field name="default" eval="True"/>
-            <field name="header_line" eval="False"/>
-        </record>
-    </data>
-
     <template id="qr_codes_page">
         <t t-call="web.basic_layout">
             <div class="page">
@@ -92,4 +74,22 @@
             </g>
         </svg>
     </template>
+
+    <data>
+        <record id="report_self_order_qr_codes_page" model="ir.actions.report">
+            <field name="name">qr.codes</field>
+            <field name="model">pos.config</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_self_order.qr_codes_page</field>
+            <field name="report_file">pos_self_order.qr_codes_page</field>
+            <field name="print_report_name">"QR codes"</field>
+            <field name="binding_model_id" ref="model_pos_config"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="paperformat_qrcodes" model="report.paperformat">
+            <field name="name">QR Codes Page</field>
+            <field name="default" eval="True"/>
+            <field name="header_line" eval="False"/>
+        </record>
+    </data>
 </odoo>

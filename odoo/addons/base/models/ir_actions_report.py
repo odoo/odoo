@@ -3,7 +3,7 @@
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
@@ -946,3 +946,16 @@ class IrActionsReport(models.Model):
         py_ctx['report_action'] = report_action
         action['context'] = py_ctx
         return action
+
+    # -------------------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # -------------------------------------------------------------------------
+    @api.constrains('report_name')
+    def _check_report_name_found_or_not(self):
+        for record in self.filtered(lambda r: not r.report_name.startswith('web_studio')):
+            if '.' not in record.report_name:
+                raise ValidationError(_('Invalid Input Error'))
+            view = self.env['ir.ui.view'].sudo().search([('key', '=', record.report_name),
+                                                         ('type', '=', 'qweb')], limit=1)
+            if not view:
+                raise ValidationError(_('Invalid template id: %s')% record.report_name)

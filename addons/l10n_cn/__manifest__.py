@@ -36,8 +36,8 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     ],
     'data': [
         'views/account_move_view.xml',
-        'views/account_report.xml',
         'views/report_voucher.xml',
+        'views/account_report.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

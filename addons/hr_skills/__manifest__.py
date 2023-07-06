@@ -25,9 +25,9 @@ This module introduces skills and resume management for employees.
         'data/ir_actions_server_data.xml',
         'data/report_paperformat.xml',
         'report/hr_employee_skill_report_views.xml',
+        'views/hr_employee_cv_templates.xml',
         'report/hr_employee_cv_report.xml',
         'views/hr_department_views.xml',
-        'views/hr_employee_cv_templates.xml',
         'wizard/hr_employee_cv_wizard_views.xml',
     ],
     'demo': [

@@ -28,8 +28,8 @@ The module adds following features:
     'data': [
         'views/pos_views.xml',
         'views/account_sale_closure.xml',
-        'views/pos_inalterability_menuitem.xml',
         'report/pos_hash_integrity.xml',
+        'views/pos_inalterability_menuitem.xml',
         'data/account_sale_closure_cron.xml',
         'security/ir.model.access.csv',
         'security/account_closing_intercompany.xml',
