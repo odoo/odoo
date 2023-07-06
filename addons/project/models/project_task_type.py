@@ -27,7 +27,15 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
+<<<<<<< HEAD
     fold = fields.Boolean(string='Folded in Kanban')
+||||||| parent of d17dd97c6b1 (temp)
+    fold = fields.Boolean(string='Folded in Kanban',
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
+=======
+    fold = fields.Boolean(string='Folded in Kanban',
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed (not applicable to personal stages).')
+>>>>>>> d17dd97c6b1 (temp)
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
