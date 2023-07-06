@@ -3,6 +3,7 @@
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
 import { onChange } from "@mail/utils/misc";
 
 export class Store {
@@ -10,6 +11,7 @@ export class Store {
         this.setup(env);
         this.lastChannelSubscription = "";
         this.inPublicPage = Boolean(context.inPublicPage);
+        this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
 
     setup(env) {
@@ -17,8 +19,7 @@ export class Store {
         this.isSmall = env.isSmall;
     }
 
-    async updateBusSubscription() {
-        await new Promise(setTimeout); // Wait for thread fully inserted.
+    updateBusSubscription() {
         const channelIds = [];
         const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
