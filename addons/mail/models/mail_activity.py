@@ -160,14 +160,20 @@ class MailActivity(models.Model):
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
-        if self.activity_type_id:
-            if self.activity_type_id.summary:
-                self.summary = self.activity_type_id.summary
-            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
-            self.user_id = self.activity_type_id.default_user_id or self.env.user
-            if self.activity_type_id.default_note:
-                self.note = self.activity_type_id.default_note
+        self._apply_activity_type_defaults(self.activity_type_id, self)
 
+    @api.model
+    def _apply_activity_type_defaults(self, activity_type_id, target_record):
+        """ Write default value based on the activity type on target_record. """
+        if activity_type_id:
+            if activity_type_id.summary:
+                target_record.summary = activity_type_id.summary
+            target_record.date_deadline = self._calculate_date_deadline(activity_type_id)
+            target_record.user_id = activity_type_id.default_user_id or self.env.user
+            if activity_type_id.default_note:
+                target_record.note = activity_type_id.default_note
+
+    @api.model
     def _calculate_date_deadline(self, activity_type):
         # Date.context_today is correct because date_deadline is a Date and is meant to be
         # expressed in user TZ

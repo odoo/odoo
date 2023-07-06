@@ -62,6 +62,7 @@ For more specific needs, you may also assign custom-defined actions
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
         'data/mail_groups.xml',
+        'wizard/mail_activity_schedule_views.xml',
         'wizard/mail_blacklist_remove_views.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mail_resend_message_views.xml',
@@ -85,6 +86,8 @@ For more specific needs, you may also assign custom-defined actions
         'views/discuss_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
+        'views/mail_activity_plan_views.xml',
+        'views/mail_activity_plan_template_view.xml',
         'views/res_config_settings_views.xml',
         'data/ir_config_parameter_data.xml',
         'data/res_partner_data.xml',

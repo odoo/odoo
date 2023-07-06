@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class IrModel(models.Model):
@@ -22,6 +23,9 @@ class IrModel(models.Model):
     def unlink(self):
         """ Delete mail data (followers, messages, activities) associated with
         the models being deleted.
+        Delete mail activity plans that were referencing models being deleted and
+        that will no more be linked to any model after (keeping such plan will make
+        them available to all models instead to only the ones they were target for).
         """
         if not self:
             return True
@@ -67,7 +71,11 @@ class IrModel(models.Model):
         for (fname,) in fnames:
             self.env['ir.attachment']._file_delete(fname)
 
-        return super(IrModel, self).unlink()
+        ActivityPlan = self.env['mail.activity.plan']
+        plans_ids = ActivityPlan.search(expression.OR([[('res_model_ids', '=', model.id)] for model in self])).ids
+        res = super(IrModel, self).unlink()
+        ActivityPlan.search([('id', 'in', plans_ids), ('res_model_ids', '=', False)]).unlink()
+        return res
 
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):

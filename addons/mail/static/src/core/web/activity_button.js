@@ -6,14 +6,18 @@ import { Component, useRef } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+const { useEnv } = owl;
 
 export class ActivityButton extends Component {
-    static props = ["record"];
+    static props = {
+        record: { type: Object },
+    };
     static template = "mail.ActivityButton";
 
     setup() {
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.buttonRef = useRef("button");
+        this.env = useEnv();
     }
 
     get buttonClass() {
@@ -65,17 +69,24 @@ export class ActivityButton extends Component {
         return _t("Show activities");
     }
 
-    onClick() {
+    async onClick() {
         if (this.popover.isOpen) {
             this.popover.close();
         } else {
+            const resId = this.props.record.resId;
+            const selectedRecords = this.env?.model?.root?.selection ?? [];
+            const selectedIds = selectedRecords.map((r) => r.resId);
+            // If the current record is not selected, ignore the selection
+            const resIds = (selectedIds.includes(resId) && (selectedIds.length > 1)) ? selectedIds : undefined;
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: () => {
-                    this.props.record.load();
+                    const recordToLoad = resIds ? selectedRecords : [this.props.record];
+                    recordToLoad.forEach((r) => r.load());
                     this.popover.close();
                 },
-                resId: this.props.record.resId,
+                resId,
+                resIds,
                 resModel: this.props.record.resModel,
             });
         }
