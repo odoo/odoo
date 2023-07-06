@@ -825,6 +825,15 @@ class Meeting(models.Model):
         elif recurrence_update_setting == 'future_events':
             detached_events = self.recurrence_id._stop_at(self)
             detached_events.write({'active': False})
+        elif recurrence_update_setting == 'self_only':
+            self.write({
+                'active': False,
+                'recurrence_update': 'self_only'
+            })
+            if len(self.recurrence_id.calendar_event_ids) == 0:
+                self.recurrence_id.unlink()
+            elif self == self.recurrence_id.base_event_id:
+                self.recurrence_id._select_new_base_event()
 
     # ------------------------------------------------------------
     # MAILING
