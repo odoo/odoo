@@ -2044,7 +2044,7 @@ class PosSession(models.Model):
         for order in self.order_ids.filtered(lambda o: o.is_invoiced):
             invoice = {
                 'total': order.account_move.amount_total,
-                'name': order.account_move.highest_name,
+                'name': order.account_move.name,
                 'order_ref': order.pos_reference,
             }
             invoice_list.append(invoice)
