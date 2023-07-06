@@ -34,12 +34,4 @@ export class OrderReceipt extends Component {
     get shippingDate() {
         return this.receiptEnv.shippingDate;
     }
-    isSimple(line) {
-        return (
-            line.discount === 0 &&
-            line.is_in_unit &&
-            line.quantity === 1 &&
-            !(line.display_discount_policy == "without_discount" && line.price < line.price_lst)
-        );
-    }
 }
