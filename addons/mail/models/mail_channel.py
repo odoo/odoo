@@ -638,8 +638,9 @@ class Channel(models.Model):
 
     def _message_add_reaction_after_hook(self, message, content):
         self.ensure_one()
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert', {'id': self.env.context.get('guest').id})]
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
+            guests = [('insert', {'id': guest.id})]
             partners = []
         else:
             guests = []
@@ -661,8 +662,9 @@ class Channel(models.Model):
 
     def _message_remove_reaction_after_hook(self, message, content):
         self.ensure_one()
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert-and-unlink', {'id': self.env.context.get('guest').id})]
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
+            guests = [('insert-and-unlink', {'id': guest.id})]
             partners = []
         else:
             guests = []
