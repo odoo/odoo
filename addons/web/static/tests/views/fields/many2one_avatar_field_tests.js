@@ -53,6 +53,10 @@ QUnit.module("Fields", (hooks) => {
                             id: 19,
                             name: "Christine",
                         },
+                        {
+                            id: 20,
+                            name: "harry",
+                        },
                     ],
                 },
             },
@@ -96,6 +100,20 @@ QUnit.module("Fields", (hooks) => {
             target,
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
+
+        await selectDropdownItem(target, "user_id", "harry");
+        assert.containsOnce(
+            target,
+            '.o_m2o_avatar > img[data-src="/web/image/user/20/avatar_128"]'
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=user_id] input").value,
+            "harry"
+        );
+        await editInput(target, '.o_field_widget[name="user_id"] input', "");
+        assert.containsNone(target, ".o_m2o_avatar > img");
+        assert.containsOnce(target, ".o_m2o_avatar > .o_m2o_avatar_empty");
+        await clickSave(target);
 
         await selectDropdownItem(target, "user_id", "Christine");
 

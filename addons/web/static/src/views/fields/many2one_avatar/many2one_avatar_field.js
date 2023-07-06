@@ -9,6 +9,12 @@ export class Many2OneAvatarField extends Component {
     get relation() {
         return this.props.relation;
     }
+
+    onFocusOut(event) {
+        if (event.target.value === "") {
+            this.props.update(false)
+        }
+    }
 }
 
 Many2OneAvatarField.template = "web.Many2OneAvatarField";
