@@ -11,6 +11,7 @@ export class DomainSelectorDialog extends Component {
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.user = useService("user");
         this.state = useState({ domain: this.props.domain });
     }
 
@@ -51,7 +52,8 @@ export class DomainSelectorDialog extends Component {
     async onConfirm() {
         try {
             let domain = new Domain(this.state.domain);
-            domain = domain.toList(this.props.context);
+            const evalContext = { ...this.user.context, ...this.props.context };
+            domain = domain.toList(evalContext);
             await this.orm.silent.searchCount(this.props.resModel, domain, { limit: 1 });
         } catch {
             this.notification.add(this.env._t("Domain is invalid. Please correct it"), {
