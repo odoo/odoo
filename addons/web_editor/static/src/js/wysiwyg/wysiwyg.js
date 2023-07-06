@@ -2258,7 +2258,7 @@ const Wysiwyg = Widget.extend({
                     },
                 },
                 {
-                    category: _t('Widget'),
+                    category: _t('Widgets'),
                     name: _t('Emoji'),
                     priority: 70,
                     description: _t('Add an emoji'),
