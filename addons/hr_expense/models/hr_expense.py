@@ -46,7 +46,7 @@ class HrExpense(models.Model):
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
 
-    name = fields.Char('Description', compute='_compute_from_product_id_company_id', readonly=False, store=True, precompute=True, required=True, copy=True,
+    name = fields.Char('Description', compute='_compute_name', readonly=False, store=True, precompute=True, required=True, copy=True,
         states={'done': [('readonly', True)]})
     date = fields.Date(states={'done': [('readonly', True)]}, default=fields.Date.context_today, string="Expense Date")
     accounting_date = fields.Date(string="Accounting Date", related='sheet_id.accounting_date', store=True, groups='account.group_account_invoice,account.group_account_readonly')
@@ -57,16 +57,16 @@ class HrExpense(models.Model):
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Category', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_description = fields.Html(compute='_compute_product_description')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_product_uom_id',
         store=True, precompute=True, copy=True, readonly=True,
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
-    unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', readonly=False, store=True, precompute=True, required=True, copy=True,
+    unit_amount = fields.Float("Unit Price", compute='_compute_unit_amount', readonly=False, store=True, precompute=True, required=True, copy=True,
         states={'done': [('readonly', True)]}, digits='Product Price')
     unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display')
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
-        compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True,
+        compute='_compute_tax_ids', store=True, readonly=False, precompute=True,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes',
         help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.")
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
@@ -79,7 +79,7 @@ class HrExpense(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     currency_rate = fields.Float(compute='_compute_currency_rate')
-    account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True, string='Account',
+    account_id = fields.Many2one('account.account', compute='_compute_account_id', store=True, readonly=False, precompute=True, string='Account',
         domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Internal Notes', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
@@ -279,19 +279,37 @@ class HrExpense(models.Model):
         for expense in self:
             expense.unit_amount_display = expense.unit_amount if expense.product_has_cost else expense.total_amount_company
 
+    @api.depends('product_id')
+    def _compute_name(self):
+        for expense in self:
+            expense.name = expense.name or expense.product_id.display_name
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for expense in self:
+            expense.product_uom_id = expense.product_id.uom_id
+
+    @api.depends('product_id', 'attachment_number')
+    def _compute_unit_amount(self):
+        for expense in self:
+            # Only change unit_amount if the product has no cost defined on it
+            if expense.product_id and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+
     @api.depends('product_id', 'company_id')
-    def _compute_from_product_id_company_id(self):
+    def _compute_tax_ids(self):
+        for expense in self:
+            expense = expense.with_company(expense.company_id)
+            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
+
+
+    @api.depends('product_id', 'company_id')
+    def _compute_account_id(self):
         for expense in self:
             if not expense.product_id:
-                expense.account_id = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+                expense.account_id = self.env['ir.property'].with_company(expense.company_id)._get('property_account_expense_categ_id', 'product.category')
                 continue
-            # Only change unit_amount if the product has no cost defined on it
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
-                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
             expense = expense.with_company(expense.company_id)
-            expense.name = expense.name or expense.product_id.display_name
-            expense.product_uom_id = expense.product_id.uom_id
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
                 expense.account_id = account
