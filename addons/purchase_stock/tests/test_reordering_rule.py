@@ -276,6 +276,64 @@ class TestReorderingRule(SavepointCase):
             move = move.move_dest_ids
         self.assertFalse(move)
 
+    def test_reordering_rule_5(self):
+        """
+        A product P wth RR 0-0-1.
+        Confirm a delivery with 1 x P -> PO created for it.
+        Confirm a second delivery, with 1 x P again:
+        - The PO should be updated
+        - The qty to order of the RR should be zero
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        out_type = warehouse.out_type_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': stock_location.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'qty_multiple': 1,
+        })
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_01.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
+        self.assertEqual(pol.product_qty, 1.0)
+        self.assertEqual(rr.qty_to_order, 0.0)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_01.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })]
+        })
+        delivery.action_confirm()
+
+        self.assertEqual(pol.product_qty, 2.0)
+        self.assertEqual(rr.qty_to_order, 0.0)
+
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
 
