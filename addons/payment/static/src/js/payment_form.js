@@ -1,13 +1,30 @@
-/** @odoo-module alias=payment.form **/
+/** @odoo-module **/
 
+// TODO sort
 import publicWidget from 'web.public.widget';
-import core from "../../../../web/static/src/legacy/js/services/core";
+import core from "@web/legacy/js/services/core";
+import { debounce } from "@web/core/utils/timing";
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '#o_payment_form',
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
-        'click button[name="o_payment_submit_button"]': '_onClickSubmitButton',
+        'click input[name="o_payment_radio"]': '_selectPaymentOption',
+        // 'click button[name="o_payment_submit_button"]': '_onClickSubmitButton',
     }),
+
+    /**
+     * @constructor
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+
+        // Prevent double-clicks and browser glitches on all inputs.
+        const preventDoubleClick = handlerMethod => debounce(handlerMethod, 500, true);
+        this._selectPaymentOption = preventDoubleClick(this._selectPaymentOption);
+        // this._onClickSubmitButton = preventDoubleClick(this._onClickSubmitButton);
+        this._onSubmit = preventDoubleClick(this._onSubmit);
+    },
 
     /**
      * @override
@@ -15,9 +32,64 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     async start() {
         this.txContext = {}; // Synchronously initialize txContext before any await.
         Object.assign(this.txContext, this.el.dataset);
+
         await this._super(...arguments);
+
+        // const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
+        // if ($checkedRadios.length === 1) {
+        //     const checkedRadio = $checkedRadios[0];
+        //     this._displayInlineForm(checkedRadio);
+        //     this._enableButton();
+        // } else {
+        //     this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it
+        // }
+
         this.$('[data-bs-toggle="tooltip"]').tooltip();
     },
+
+    /**
+     * Open the inline form of the selected payment option, if any.
+     *
+     * @private
+     * @param {Event} ev
+     * @return {void}
+     */
+    _selectPaymentOption(ev) {
+        // Find the radio button linked to the selected payment option.
+        const checkedRadio = ev.target;
+
+        // Show the inputs in case they had been hidden.
+        // this._showInputs(); TODO
+
+        // Disable the submit button while building the content.
+        // this._disableButton(false); TODO
+
+        // Unfold and prepare the inline form of the selected payment option.
+        // this._displayInlineForm(checkedRadio); TODO
+
+        // Re-enable the submit button.
+        // this._enableButton(); TODO
+        console.log("click option of radio", checkedRadio)
+    },
+
+    /**
+     * Delegate the handling of the payment request to `_onClickPay`.
+     *
+     * Called when submitting the form (e.g. through the Return key).
+     *
+     * @private
+     * @param {Event} ev
+     * @return {void}
+     */
+    _onSubmit(ev) { // TODO rename
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        // this._onClickPay(ev); TODO
+        console.log("submit")
+    },
+
+
     //
     // /**
     //  * TODO.
