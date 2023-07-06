@@ -1397,4 +1397,12 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(getSelectedOperator(target), `not =?`);
     });
+
+    QUnit.test("display of a contextual value (readonly)", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("foo", "=", uid)]`,
+            readonly: true,
+        });
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo = uid`);
+    });
 });
