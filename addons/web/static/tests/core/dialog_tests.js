@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Dialog } from "@web/core/dialog/dialog";
-import { makeTestEnv } from "../helpers/mock_env";
+import { makeDialogTestEnv } from "../helpers/mock_env";
 import {
     click,
     destroy,
@@ -21,15 +21,6 @@ import { Component, useState, onMounted, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 let parent;
 let target;
-
-async function makeDialogTestEnv() {
-    const env = await makeTestEnv();
-    env.dialogData = {
-        isActive: true,
-        close: () => {},
-    };
-    return env;
-}
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {

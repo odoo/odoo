@@ -12,22 +12,13 @@ import {
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { makeTestEnv } from "../../helpers/mock_env";
+import { makeDialogTestEnv } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
 
 let target;
 let env;
 const serviceRegistry = registry.category("services");
-
-async function makeDialogTestEnv() {
-    const env = await makeTestEnv();
-    env.dialogData = {
-        isActive: true,
-        close() {},
-    };
-    return env;
-}
 
 QUnit.module("Error dialogs", {
     async beforeEach() {
