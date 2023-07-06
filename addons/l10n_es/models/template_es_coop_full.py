@@ -10,7 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_es_coop_full_template_data(self):
         return {
             'name': 'PGCE Cooperativas Completo 2008',
-            'parent': 'es_coop_common',
+            'parent': 'es_coop_pymes',
         }
 
     @template('es_coop_full', 'res.company')
