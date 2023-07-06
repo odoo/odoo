@@ -5,6 +5,6 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 export class ProjectCalendarController extends CalendarController {
     setup() {
         super.setup(...arguments);
-        this.displayName += this.env._t(" - Tasks by Deadline");
+        this.env.config.setDisplayName(this.env.config.getDisplayName() + this.env._t(" - Tasks by Deadline"));
     }
 }
