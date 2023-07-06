@@ -9,6 +9,8 @@ from odoo import tools
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+    l10n_in_hsn_code = fields.Char(related='product_id.l10n_in_hsn_code', depends=["product_id"], store=True, readonly=False)
+
     def init(self):
         tools.create_index(self._cr, 'account_move_line_move_product_index', self._table, ['move_id', 'product_id'])
 

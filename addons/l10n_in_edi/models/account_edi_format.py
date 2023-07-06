@@ -98,7 +98,7 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_(
                     """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
             if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
+                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
                     error_message.append(_("HSN code is not set in product %s", line.product_id.name))
                 elif not re.match("^[0-9]+$", hsn_code):
@@ -352,7 +352,7 @@ class AccountEdiFormat(models.Model):
             "SlNo": str(index),
             "PrdDesc": line.name.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
-            "HsnCd": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
+            "HsnCd": self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code),
             "Qty": self._l10n_in_round_value(quantity or 0.0, 3),
             "Unit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             # Unit price in company currency and tax excluded so its different then price_unit
