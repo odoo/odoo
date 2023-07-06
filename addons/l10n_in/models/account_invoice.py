@@ -4,7 +4,15 @@ import base64
 import re
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+||||||| parent of ab39521938f1 (temp)
+from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.tools import frozendict
+=======
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.tools import frozendict
+>>>>>>> ab39521938f1 (temp)
 from odoo.tools.image import image_data_uri
 
 
