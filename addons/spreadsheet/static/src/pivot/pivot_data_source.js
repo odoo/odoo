@@ -141,11 +141,12 @@ export default class PivotDataSource extends OdooViewsDataSource {
     /**
      * @param {string} fieldName
      * @param {string} value raw string value
+     * @param {object} locale
      * @returns {string}
      */
-    getGroupByDisplayLabel(fieldName, value) {
+    getGroupByDisplayLabel(fieldName, value, locale) {
         this._assertDataIsLoaded();
-        return this._model.getGroupByDisplayLabel(fieldName, value);
+        return this._model.getGroupByDisplayLabel(fieldName, value, locale);
     }
 
     /**
