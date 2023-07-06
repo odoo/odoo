@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     position: "bottom",
     width: 200,
 }, {
-    trigger: '.modal-footer button[name="action_close_dialog"]',
+    trigger: '.modal-footer button[name="action_schedule_activities"]',
     content: markup(_t("All set. Let’s <b>Schedule</b> it.")),
     position: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
     run: function (actions) {

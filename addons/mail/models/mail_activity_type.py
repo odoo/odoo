@@ -77,6 +77,11 @@ class MailActivityType(models.Model):
             help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", default=False, store=False)
 
+    @api.constrains('res_model')
+    def _check_activity_type_res_model(self):
+        self.env['mail.activity.plan.template'].search(
+            [('activity_type_id', 'in', self.ids)])._check_activity_type_res_model()
+
     @api.onchange('res_model')
     def _onchange_res_model(self):
         self.mail_template_ids = self.sudo().mail_template_ids.filtered(lambda template: template.model_id.model == self.res_model)

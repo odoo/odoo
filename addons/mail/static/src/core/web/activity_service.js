@@ -52,15 +52,8 @@ export class ActivityService {
         return action;
     }
 
-    async schedule(resModel, resId, activityId = false, defaultActivityTypeId = undefined) {
-        const context = {
-            default_res_model: resModel,
-            default_res_id: resId,
-        };
-        if (defaultActivityTypeId !== undefined) {
-            context.default_activity_type_id = defaultActivityTypeId;
-        }
-        return new Promise((resolve) => {
+    async edit(activityId){
+        return new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
                     type: "ir.actions.act_window",
@@ -69,12 +62,37 @@ export class ActivityService {
                     view_mode: "form",
                     views: [[false, "form"]],
                     target: "new",
-                    context,
                     res_id: activityId,
                 },
                 { onClose: resolve }
-            );
-        });
+            )
+        );
+    }
+
+    async schedule(resModel, resIds, defaultActivityTypeId = undefined) {
+        const context = {
+            active_model: resModel,
+            active_ids: resIds,
+            active_id: resIds[0],
+            ...((defaultActivityTypeId !== undefined) ? {
+                default_activity_type_id: defaultActivityTypeId,
+            } : {}),
+        };
+        return new Promise((resolve) =>
+            this.env.services.action.doAction(
+                {
+                    type: "ir.actions.act_window",
+                    name: (resIds && resIds.length > 1) ? _t("Schedule Activity On Selected Records") :
+                        _t("Schedule Activity"),
+                    res_model: "mail.activity.schedule",
+                    view_mode: "form",
+                    views: [[false, "form"]],
+                    target: "new",
+                    context,
+                },
+                { onClose: resolve }
+            )
+        );
     }
 
     delete(activity, { broadcast = true } = {}) {

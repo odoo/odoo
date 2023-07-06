@@ -30,7 +30,8 @@
                 </t>
             </div>
             <button class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
-                <i class="fa fa-plus fa-fw"/><strong>Schedule an activity</strong>
+                <t t-if="props.resIds"><i class="fa fa-plus fa-fw"/><strong>Schedule an activity on selected records</strong></t>
+                <t t-else=""><i class="fa fa-plus fa-fw"/><strong>Schedule an activity</strong></t>
             </button>
         </div>
     </t>

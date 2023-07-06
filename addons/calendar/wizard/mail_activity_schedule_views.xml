@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="mail_activity_schedule_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.schedule.inherit.calendar</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_schedule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='activity_user_id']" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_activities']" position="attributes">
+                  <attribute name="invisible">activity_category in ('meeting', 'phonecall') or id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_activities']" position="before">
+                  <button string="Open Calendar"
+                          invisible="activity_category not in ('meeting', 'phonecall')"
+                          name="action_create_calendar_event"
+                          type="object"
+                          class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>
