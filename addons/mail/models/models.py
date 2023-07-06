@@ -163,43 +163,67 @@ class BaseModel(models.AbstractModel):
         res_ids = _records.ids if _records and model else []
         _res_ids = res_ids or [False]  # always have a default value located in False
 
-        result = dict.fromkeys(_res_ids, False)
-        result_email = dict()
-        doc_names = dict()
+        # group ids per company
+        _records_sudo = _records.sudo()
+        company_to_res_ids = {}
+        if res_ids:
+            record_ids_to_company = _records_sudo._mail_get_companies(default=self.env.company)
+            for record_id, company in record_ids_to_company.items():
+                company_to_res_ids.setdefault(company, [])
+                company_to_res_ids[company].append(record_id)
+        else:
+            company_to_res_ids[self.env.company] = _res_ids
 
+        doc_names = {}
         if model and res_ids:
-            if not doc_names:
-                doc_names = dict((rec.id, rec.display_name) for rec in _records)
-
-            mail_aliases = self.env['mail.alias'].sudo().search([
-                ('alias_parent_model_id.model', '=', model),
-                ('alias_parent_thread_id', 'in', res_ids),
-                ('alias_name', '!=', False)])
-            # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-            for alias in mail_aliases.filtered(lambda alias: alias.alias_domain):
-                result_email.setdefault(alias.alias_parent_thread_id, f'{alias.alias_name}@{alias.alias_domain}')
-
-        # left ids: use catchall if defined
-        left_ids = set(_res_ids) - set(result_email)
-        if left_ids:
-            catchall_email = self._alias_get_catchall_email()
-            if catchall_email:
-                result_email.update(
-                    dict((rid, catchall_email) for rid in left_ids)
-                )
-
-        # format result
-        for res_id, res_email in result_email.items():
-            result[res_id] = self._notify_get_reply_to_formatted_email(
-                res_email,
-                doc_names.get(res_id) or '',
+            doc_names = dict(
+                (record.id, record.display_name)
+                for record in _records_sudo
             )
 
-        left_ids = set(_res_ids) - set(result_email)
-        if left_ids:
-            result.update(dict((res_id, default) for res_id in left_ids))
+        reply_to_formatted = dict.fromkeys(_res_ids, False)
+        for company, record_ids in company_to_res_ids.items():
+            reply_to_email = {}
+            alias_domain = company.alias_domain_id
+            if not alias_domain:
+                continue
 
-        return result
+            if model and record_ids:
+                mail_aliases = self.env['mail.alias'].sudo().search([
+                    ('alias_parent_model_id.model', '=', model),
+                    ('alias_parent_thread_id', 'in', record_ids),
+                    ('alias_name', '!=', False)])
+                # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    reply_to_email.setdefault(
+                        alias.alias_parent_thread_id,
+                        f'{alias.alias_name}@{alias_domain.name}'
+                    )
+
+            # left ids: use catchall defined on alias domain
+            left_ids = set(record_ids) - set(reply_to_email)
+            if left_ids:
+                reply_to_email.update(
+                    dict((rid, company.catchall_email) for rid in left_ids)
+                )
+
+            # compute name of reply-to ("Company Document" <alias@domain>)
+            for res_id in reply_to_email:
+                reply_to_formatted[res_id] = self._notify_get_reply_to_formatted_email(
+                    reply_to_email[res_id],
+                    doc_names.get(res_id) or '',
+                )
+                if doc_names.get(res_id):
+                    name = '%s %s' % (company.name, doc_names[res_id])
+                else:
+                    name = company.name
+                reply_to_formatted[res_id] = tools.formataddr((name, reply_to_email[res_id]))
+
+        left_ids = set(_res_ids) - set(res_id for res_id, value in reply_to_formatted.items() if value)
+        if left_ids:
+            reply_to_formatted.update(dict((res_id, default) for res_id in left_ids))
+
+        return reply_to_formatted
 
     def _notify_get_reply_to_formatted_email(self, record_email, record_name):
         """ Compute formatted email for reply_to and try to avoid refold issue

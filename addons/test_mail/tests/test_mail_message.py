@@ -222,16 +222,8 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias domain -> author
+        self.mail_alias_domain.unlink()
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
-
-        msg = self.Message.create({})
-        self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
-
-        # no alias catchall, no alias -> author
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
@@ -251,6 +243,7 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
         # no alias domain -> author
+        self.mail_alias_domain.unlink()
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.Message.create({
@@ -259,20 +252,6 @@ class TestMessageValues(MailCommon):
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
         self.assertEqual(msg.reply_to, formataddr((self.user_employee.name, self.user_employee.email)))
-        self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
-
-        # no catchall -> don't care, alias
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
-
-        msg = self.Message.create({
-            'model': 'mail.test.container',
-            'res_id': self.alias_record.id
-        })
-        self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        reply_to_name = '%s %s' % (self.env.company.name, self.alias_record.name)
-        reply_to_email = '%s@%s' % (self.alias_record.alias_name, self.alias_domain)
-        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
     @mute_logger('odoo.models.unlink')
