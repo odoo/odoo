@@ -713,7 +713,12 @@ def route(route=None, **routing):
             if params_ko:
                 _logger.warning("%s called ignoring args %s", fname, params_ko)
 
-            result = endpoint(self, *args, **params_ok)
+            try:
+                result = endpoint(self, *args, **params_ok)
+            except Exception as exc:
+                if routing.get('sentry_ignored'):
+                    exc.sentry_ignored = True
+                raise
             if routing['type'] == 'http':  # _generate_routing_rules() ensures type is set
                 return Response.load(result)
             return result
