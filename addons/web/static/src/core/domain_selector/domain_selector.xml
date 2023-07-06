@@ -154,7 +154,6 @@
             <t t-foreach="values" t-as="value" t-key="value_index">
                 <span class="o_domain_leaf_value text-primary">
                     <t t-if="typeof value === 'string'"> "<t t-esc="value"/>"</t>
-                    <t t-elif="isExprValue(value)"> <t t-esc="node.value.expr"/></t>
                     <t t-else=""> <t t-esc="value"/></t>
                 </span>
                 <t t-if="!value_last"> <t t-esc="connector" /> </t>
