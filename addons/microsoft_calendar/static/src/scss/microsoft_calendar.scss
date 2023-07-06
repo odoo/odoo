@@ -1,20 +1,10 @@
-.o_calendar_sidebar {
-    .bg-primary {
-        background-color: $o-enterprise-action-color;
-    }
-    .o_microsoft_sync_button_configured {
-        color: white;
-        height: 2em;
+.o_calendar_sidebar .o_microsoft_sync_button_configured {
 
-        &:hover {
-            #microsoft_check {
-                display: none;
-            }
-        }
-        &:not(:hover) {
-            #microsoft_stop {
-                display: none;
-            }
-        }
+    &:hover #microsoft_check {
+        display: none;
+    }
+
+    &:not(:hover) #microsoft_stop {
+        display: none;
     }
 }
