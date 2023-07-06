@@ -37,17 +37,3 @@ def migrate(cr, version):
                 tuple(tags_68.filtered(lambda tag: not tag.tax_negate).ids)
             ]
         )
-
-    cr.execute(
-        r"""
-        UPDATE account_move_line
-           SET tax_audit = REGEXP_REPLACE(tax_audit, '(?<=(^|\s))68:', '60:')
-          FROM (
-              SELECT aml.id as aml_id
-                FROM account_move_line aml
-                JOIN account_account_tag_account_move_line_rel aml_tag_rel ON aml_tag_rel.account_move_line_id = aml.id
-               WHERE aml_tag_rel.account_account_tag_id IN %s
-               ) aml
-         WHERE id = aml.aml_id
-        """, [tuple(tags_60.ids)]
-    )
