@@ -3061,9 +3061,12 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+
+        # remove alias so that _notify_get_reply_to will return the default value instead of alias
+        self.company_admin.write({
+            'alias_domain_id': False,
+        })
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            # remove alias so that _notify_get_reply_to will return the default value instead of alias
-            self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
             composer.action_send_mail()
 
         for record in self.test_records:
