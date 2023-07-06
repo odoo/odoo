@@ -4,13 +4,12 @@
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http, _
+from odoo import http
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers import mail
-from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.exceptions import AccessError
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -107,13 +106,7 @@ class PortalChatter(http.Controller):
         return ['token', 'pid']
 
     def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
-        if len(attachment_tokens) != len(attachment_ids):
-            raise UserError(_("An access token must be provided for each attachment."))
-        for (attachment_id, access_token) in zip(attachment_ids, attachment_tokens):
-            try:
-                CustomerPortal._document_check_access(self, 'ir.attachment', attachment_id, access_token)
-            except (AccessError, MissingError):
-                raise UserError(_("The attachment %s does not exist or you do not have the rights to access it.", attachment_id))
+        request.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(attachment_tokens)
 
     def _portal_post_has_content(self, res_model, res_id, message, attachment_ids=None, **kw):
         """ Tells if we can effectively post on the model based on content. """
