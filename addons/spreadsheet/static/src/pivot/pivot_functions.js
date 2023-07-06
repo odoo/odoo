@@ -41,6 +41,7 @@ functionRegistry
     .add("ODOO.FILTER.VALUE", {
         description: _t("Return the current value of a spreadsheet filter."),
         args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
+        category: "Odoo",
         compute: function (filterName) {
             return this.getters.getFilterDisplayValue(filterName);
         },
@@ -63,6 +64,7 @@ functionRegistry
             assertDomainLength(args);
             return this.getters.getPivotCellValue(pivotId, measure, args);
         },
+        category: "Odoo",
         computeFormat: function (pivotId, measureName, ...domain) {
             pivotId = toString(pivotId.value);
             const measure = toString(measureName.value);
@@ -90,6 +92,7 @@ functionRegistry
             arg("domain_field_name (string,optional,repeating)", _t("Field name.")),
             arg("domain_value (string,optional,repeating)", _t("Value.")),
         ],
+        category: "Odoo",
         compute: function (pivotId, ...domain) {
             pivotId = toString(pivotId);
             const args = domain.map(toString);
@@ -139,4 +142,5 @@ functionRegistry
             throw new Error(_t(`[[FUNCTION_NAME]] cannot be called from the spreadsheet.`));
         },
         returns: ["STRING"],
+        hidden: true,
     });

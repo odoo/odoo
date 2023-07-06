@@ -44,7 +44,7 @@
                     <field name="can_edit_body" invisible="1"/>
                     <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
                         <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
-                        <group col="4">
+                        <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                             <field name="template_id" string="Load template" options="{'no_create': True}"
                                 context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
@@ -54,7 +54,7 @@
                         <page string="Content">
                             <div>
                                 <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
-                                <group col="4">
+                                <group>
                                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                                     <field name="template_id" string="Load template" options="{'no_create': True}"
                                         context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>

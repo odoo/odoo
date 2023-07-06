@@ -41,7 +41,12 @@ class IrAttachment(models.Model):
                 continue
 
             if attachment.type == 'url':
-                attachment.image_src = attachment.url
+                if attachment.url.startswith('/'):
+                    # Local URL
+                    attachment.image_src = attachment.url
+                else:
+                    name = url_quote(attachment.name)
+                    attachment.image_src = '/web/image/%s-redirect/%s' % (attachment.id, name)
             else:
                 # Adding unique in URLs for cache-control
                 unique = attachment.checksum[:8]

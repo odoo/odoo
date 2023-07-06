@@ -1,5 +1,4 @@
-odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test_utils_control_panel", "web.test_utils_dom", "web.test_utils_fields", "web.test_utils_file", "web.test_utils_form", "web.test_utils_graph", "web.test_utils_kanban", "web.test_utils_mock", "web.test_utils_modal", "web.test_utils_pivot", "web.tools"], async function (require) {
-    "use strict";
+/** @odoo-module alias=web.test_utils **/
 
     /**
      * Test Utils
@@ -10,19 +9,18 @@ odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test
      * instance of a view, appended in the dom, ready to be tested.
      */
 
-    const session = require('web.session');
-    const testUtilsCreate = require('web.test_utils_create');
-    const testUtilsControlPanel = require('web.test_utils_control_panel');
-    const testUtilsDom = require('web.test_utils_dom');
-    const testUtilsFields = require('web.test_utils_fields');
-    const testUtilsFile = require('web.test_utils_file');
-    const testUtilsForm = require('web.test_utils_form');
-    const testUtilsGraph = require('web.test_utils_graph');
-    const testUtilsKanban = require('web.test_utils_kanban');
-    const testUtilsMock = require('web.test_utils_mock');
-    const testUtilsModal = require('web.test_utils_modal');
-    const testUtilsPivot = require('web.test_utils_pivot');
-    const tools = require('web.tools');
+    import testUtilsCreate from "web.test_utils_create";
+    import testUtilsControlPanel from "web.test_utils_control_panel";
+    import testUtilsDom from "web.test_utils_dom";
+    import testUtilsFields from "web.test_utils_fields";
+    import testUtilsFile from "web.test_utils_file";
+    import testUtilsForm from "web.test_utils_form";
+    import testUtilsGraph from "web.test_utils_graph";
+    import testUtilsKanban from "web.test_utils_kanban";
+    import testUtilsMock from "web.test_utils_mock";
+    import testUtilsModal from "web.test_utils_modal";
+    import testUtilsPivot from "web.test_utils_pivot";
+    import tools from "web.tools";
 
 
     function deprecated(fn, type) {
@@ -113,15 +111,7 @@ odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test
         return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
-    // Loading static files cannot be properly simulated when their real content is
-    // really needed. This is the case for static XML files so we load them here,
-    // before starting the qunit test suite.
-    // (session.js is in charge of loading the static xml bundle and we also have
-    // to load xml files that are normally lazy loaded by specific widgets).
-    // Assets can also contain static xml files. They are loaded when the session
-    // is launched.
-    await session.is_bound;
-    return {
+    export default {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
             addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
@@ -266,4 +256,3 @@ odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test
         triggerPositionalMouseEvent: deprecated(testUtilsDom.triggerPositionalMouseEvent, 'dom'),
         unpatch: deprecated(testUtilsMock.unpatch, 'mock'),
     };
-});

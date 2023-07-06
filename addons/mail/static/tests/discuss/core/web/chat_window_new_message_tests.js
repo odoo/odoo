@@ -15,8 +15,7 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { makeDeferred, nextTick } from "@web/../tests/helpers/utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
+import { makeDeferred } from "@web/../tests/helpers/utils";
 
 QUnit.module("chat window: new message");
 
@@ -104,8 +103,7 @@ QUnit.test(
                 1920,
             "should have enough space to open 3 chat windows simultaneously"
         );
-        const { advanceTime } = await start({
-            hasTimeControl: true,
+        await start({
             mockRPC(route, args) {
                 if (args.method === "im_search") {
                     imSearchDef.resolve();
@@ -139,8 +137,6 @@ QUnit.test(
         // search for a user in "new message" autocomplete
         await afterNextRender(async () => {
             await insertText(".o-discuss-ChannelSelector input", "131");
-            await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-            await nextTick();
             await imSearchDef;
         });
         assert.containsOnce($, ".o-discuss-ChannelSelector-suggestion a");
@@ -175,12 +171,10 @@ QUnit.test(
             channel_type: "chat",
             name: "Partner 131",
         });
-        const { advanceTime } = await start({ hasTimeControl: true });
+        await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button:contains(New Message)");
         await insertText(".o-discuss-ChannelSelector", "131");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        await nextTick();
         await click(".o-discuss-ChannelSelector-suggestion a");
         assert.containsNone($, ".o-mail-ChatWindow-header:contains(New message)");
         assert.containsOnce($, ".o-mail-ChatWindow");
@@ -192,8 +186,7 @@ QUnit.test("new message autocomplete should automatically select first result", 
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const imSearchDef = makeDeferred();
-    const { advanceTime } = await start({
-        hasTimeControl: true,
+    await start({
         mockRPC(route, args) {
             if (args.method === "im_search") {
                 imSearchDef.resolve();
@@ -206,8 +199,6 @@ QUnit.test("new message autocomplete should automatically select first result", 
     // search for a user in "new message" autocomplete
     await afterNextRender(async () => {
         await insertText(".o-discuss-ChannelSelector", "131");
-        await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-        await nextTick();
         await imSearchDef;
     });
     assert.hasClass($(".o-discuss-ChannelSelector-suggestion a"), "o-mail-NavigableList-active");

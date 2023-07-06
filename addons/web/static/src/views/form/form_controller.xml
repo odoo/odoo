@@ -14,7 +14,7 @@
                     <t t-set-slot="layout-buttons">
                         <t t-if="env.inDialog">
                             <t t-if="footerArchInfo">
-                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo" />
+                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
                             </t>
                             <t t-else="">
                                 <t t-call="{{ props.buttonTemplate }}"/>

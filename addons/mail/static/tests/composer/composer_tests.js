@@ -28,7 +28,6 @@ import {
 import { file } from "web.test_utils";
 
 const { inputFiles } = file;
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 
 QUnit.module("composer", {
     async beforeEach() {
@@ -97,7 +96,7 @@ QUnit.test("add an emoji", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😤)");
+    await click(".o-Emoji:contains(😤)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "😤");
 });
 
@@ -123,7 +122,7 @@ QUnit.test("add an emoji after some text", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla");
 
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤑)");
+    await click(".o-Emoji:contains(🤑)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤑");
 });
 
@@ -139,7 +138,7 @@ QUnit.test("add emoji replaces (keyboard) text selection", async (assert) => {
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "🤠");
 });
 
@@ -152,7 +151,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     await insertText(".o-mail-Composer-input", "Blabla");
     textarea.setSelectionRange(2, 2);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     const expectedPos = 2 + "🤠".length;
     assert.strictEqual(textarea.selectionStart, expectedPos);
     assert.strictEqual(textarea.selectionEnd, expectedPos);
@@ -172,7 +171,7 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     $(".o-mail-Discuss-content")[0].click();
     await nextTick();
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤠");
 });
 
@@ -205,9 +204,9 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
-        await click(".o-mail-Emoji:contains(👺)");
+        await click(".o-Emoji:contains(👺)");
         await click("button[aria-label='Emojis']");
-        assert.containsOnce($, ".o-mail-EmojiPicker");
+        assert.containsOnce($, ".o-EmojiPicker");
     }
 );
 
@@ -217,10 +216,10 @@ QUnit.test("keep emoji picker scroll value when re-opening it", async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+    $(".o-EmojiPicker-content")[0].scrollTop = 150;
     await click("button[aria-label='Emojis']");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 150);
 });
 
 QUnit.test("reset emoji picker scroll value after an emoji is picked", async (assert) => {
@@ -229,10 +228,10 @@ QUnit.test("reset emoji picker scroll value after an emoji is picked", async (as
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
-    await click(".o-mail-Emoji:contains(😎)");
+    $(".o-EmojiPicker-content")[0].scrollTop = 150;
+    await click(".o-Emoji:contains(😎)");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 0);
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 0);
 });
 
 QUnit.test(
@@ -253,19 +252,19 @@ QUnit.test(
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+        $(".o-EmojiPicker-content")[0].scrollTop = 150;
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        $(".o-mail-EmojiPicker-content")[0].scrollTop = 200;
+        $(".o-EmojiPicker-content")[0].scrollTop = 200;
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
+        assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 150);
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 200);
+        assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 200);
     }
 );
 
@@ -360,21 +359,18 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
 
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner 😊");
 });
 
@@ -384,7 +380,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
         name: "General",
         channel_type: "channel",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
@@ -395,9 +391,6 @@ QUnit.test("mention a channel after some text", async (assert) => {
         "text content of composer should have content"
     );
     await insertText(".o-mail-Composer-input", "#");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -413,14 +406,11 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
         name: "General",
         channel_type: "channel",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -431,19 +421,16 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
 
     // select emoji
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "#General 😊");
 });
 
 QUnit.test("pending mentions are kept when toggling composer", async (assert) => {
     const pyEnv = await startServer();
-    const { advanceTime, openFormView } = await start({ hasTimeControl: true });
+    const { openFormView } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await click(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
     await click("button:contains(Send message)");
     await click("button:contains(Send message)");
@@ -624,8 +611,7 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const { advanceTime, openDiscuss } = await start({
-        hasTimeControl: true,
+    const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
                 assert.step("message_post");
@@ -635,9 +621,6 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Shrek");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.equal($(".o-mail-Composer-input").val().trim(), "@Shrek");
     assert.verifySteps([]);

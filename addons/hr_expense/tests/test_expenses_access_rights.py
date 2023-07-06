@@ -14,7 +14,7 @@ class TestExpensesAccessRights(TestExpenseCommon):
         expense_employee_2 = self.env['hr.employee'].create({
             'name': 'expense_employee_2',
             'user_id': self.env.user.id,
-            'address_home_id': self.env.user.partner_id.id,
+            'work_contact_id': self.env.user.partner_id.id,
             'address_id': self.env.user.partner_id.id,
         })
 

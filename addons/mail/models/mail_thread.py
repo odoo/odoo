@@ -457,7 +457,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _get_from_request_or_raise(self, request, thread_id):
-        return self.search([("id", "=", thread_id)])
+        return self.browse(thread_id).exists()
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
@@ -3795,7 +3795,7 @@ class MailThread(models.AbstractModel):
 
         # filter inactive and private addresses
         if partner_ids and not adding_current:
-            partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True), ('type', '!=', 'private')]).ids
+            partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True)]).ids
 
         return self._message_subscribe(partner_ids, subtype_ids, customer_ids=customer_ids)
 

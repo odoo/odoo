@@ -3,18 +3,15 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
-import { EmojiPicker, useEmojiPicker } from "@mail/core/common/emoji_picker";
+import { EmojiPicker, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { escapeAndCompactTextContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
-import {
-    isDragSourceExternalFile,
-    isEventHandled,
-    markEventHandled,
-} from "@mail/utils/common/misc";
+import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
     Component,

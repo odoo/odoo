@@ -8,7 +8,7 @@
     <record id="group_hr_user" model="res.groups">
         <field name="name">Officer: Manage all employees</field>
         <field name="category_id" ref="base.module_category_human_resources_employees"/>
-        <field name="implied_ids" eval="[(6, 0, [ref('base.group_private_addresses'), ref('base.group_user')])]"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
         <field name="comment">The user will be able to approve document created by employees.</field>
     </record>
 
@@ -71,6 +71,20 @@
         <field name="name">Plan Employee Activity: own employee or subordinates</field>
         <field name="model_id" ref="model_hr_plan_employee_activity"/>
         <field name="domain_force">['|', ('user_id', '=', user.id), ('activity_ids.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_res_partner_bank_internal_users" model="ir.rule">
+        <field name="name">HR: Prevent non HR officers from accessing employee bank accounts</field>
+        <field name="model_id" ref="base.model_res_partner_bank"/>
+        <field name="domain_force">[('partner_id.employee_ids', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="ir_rule_res_partner_bank_employees" model="ir.rule">
+        <field name="name">HR: Allow HR officers from accessing employee bank accounts</field>
+        <field name="model_id" ref="base.model_res_partner_bank"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
     </record>
 </data>
 </odoo>

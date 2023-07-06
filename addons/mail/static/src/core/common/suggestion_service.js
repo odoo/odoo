@@ -4,8 +4,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 
 import { registry } from "@web/core/registry";
 
-export const DEBOUNCE_FETCH_SUGGESTION_TIME = 500;
-
 export class SuggestionService {
     constructor(env, services) {
         this.orm = services.orm;

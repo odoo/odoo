@@ -12593,6 +12593,18 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // FALSE
+    // -----------------------------------------------------------------------------
+    const FALSE = {
+        description: _lt("Logical value `false`."),
+        args: [],
+        returns: ["BOOLEAN"],
+        compute: function () {
+            return false;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // IF
     // -----------------------------------------------------------------------------
     const IF = {
@@ -12728,6 +12740,18 @@
         isExported: true,
     };
     // -----------------------------------------------------------------------------
+    // TRUE
+    // -----------------------------------------------------------------------------
+    const TRUE = {
+        description: _lt("Logical value `true`."),
+        args: [],
+        returns: ["BOOLEAN"],
+        compute: function () {
+            return true;
+        },
+        isExported: true,
+    };
+    // -----------------------------------------------------------------------------
     // XOR
     // -----------------------------------------------------------------------------
     const XOR = {
@@ -12754,12 +12778,14 @@
     var logical = /*#__PURE__*/Object.freeze({
         __proto__: null,
         AND: AND,
+        FALSE: FALSE,
         IF: IF,
         IFERROR: IFERROR,
         IFNA: IFNA,
         IFS: IFS,
         NOT: NOT,
         OR: OR,
+        TRUE: TRUE,
         XOR: XOR
     });
 
@@ -13946,7 +13972,6 @@
      * is useful for the composer, which needs to be able to work with incomplete
      * formulas.
      */
-    const functions$3 = functionRegistry.content;
     const POSTFIX_UNARY_OPERATORS = ["%"];
     const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
     function tokenize(str, locale = DEFAULT_LOCALE) {
@@ -14077,17 +14102,11 @@
         }
         if (result.length) {
             const value = result;
-            const isFunction = value.toUpperCase() in functions$3;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
             const isReference = rangeReference.test(value);
             if (isReference) {
                 return { type: "REFERENCE", value };
             }
-            else {
-                return { type: "SYMBOL", value };
-            }
+            return { type: "SYMBOL", value };
         }
         return null;
     }
@@ -14187,9 +14206,6 @@
                 return { type: "NUMBER", value: parseNumber(current.value, DEFAULT_LOCALE) };
             case "STRING":
                 return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                const args = parseFunctionArgs(tokens);
-                return { type: "FUNCALL", value: current.value, args };
             case "INVALID_REFERENCE":
                 throw new InvalidReferenceError();
             case "REFERENCE":
@@ -14206,13 +14222,15 @@
                     value: current.value,
                 };
             case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                const value = current.value;
+                const nextToken = tokens[0];
+                if (nextToken?.type === "LEFT_PAREN" && functionRegex.test(current.value)) {
+                    const args = parseFunctionArgs(tokens);
+                    return { type: "FUNCALL", value: value, args };
                 }
-                if (current.value) {
-                    if (functionRegex.test(current.value) && tokens[0]?.type === "LEFT_PAREN") {
-                        throw new UnknownFunctionError(current.value);
-                    }
+                const upperCaseValue = value.toUpperCase();
+                if (upperCaseValue === "TRUE" || upperCaseValue === "FALSE") {
+                    return { type: "BOOLEAN", value: upperCaseValue === "TRUE" };
                 }
                 throw new BadExpressionError(_lt("Invalid formula"));
             case "LEFT_PAREN":
@@ -14314,36 +14332,60 @@
      * to nodes of a specific type.
      * Useful if you want to convert some part of a formula.
      *
-     * e.g.
-     * ```ts
+     * @example
      * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
      *
      * function convertFormulaToExcel(ast: ASTFuncall) {
      *   // ...
      *   return modifiedAst
      * }
-     * ```
      */
     function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
+        return mapAst(ast, (ast) => {
+            if (ast.type === type) {
+                return fn(ast);
+            }
+            return ast;
+        });
+    }
+    function iterateAstNodes(ast) {
+        return Array.from(astIterator(ast));
+    }
+    function* astIterator(ast) {
+        yield ast;
+        switch (ast.type) {
+            case "FUNCALL":
+                for (const arg of ast.args) {
+                    yield* astIterator(arg);
+                }
+                break;
+            case "UNARY_OPERATION":
+                yield* astIterator(ast.operand);
+                break;
+            case "BIN_OPERATION":
+                yield* astIterator(ast.left);
+                yield* astIterator(ast.right);
+                break;
         }
+    }
+    function mapAst(ast, fn) {
+        ast = fn(ast);
         switch (ast.type) {
             case "FUNCALL":
                 return {
                     ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                    args: ast.args.map((child) => mapAst(child, fn)),
                 };
             case "UNARY_OPERATION":
                 return {
                     ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
+                    operand: mapAst(ast.operand, fn),
                 };
             case "BIN_OPERATION":
                 return {
                     ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
+                    right: mapAst(ast.right, fn),
+                    left: mapAst(ast.left, fn),
                 };
             default:
                 return ast;
@@ -14613,6 +14655,9 @@
                 const { args } = ast;
                 const functionName = ast.value.toUpperCase();
                 const functionDefinition = functions$2[functionName];
+                if (!functionDefinition) {
+                    throw new UnknownFunctionError(ast.value);
+                }
                 assertEnoughArgs(ast);
                 const compiledArgs = [];
                 for (let i = 0; i < args.length; i++) {
@@ -14871,7 +14916,7 @@
                 functionStarted = "";
             }
             switch (token.type) {
-                case "FUNCTION":
+                case "SYMBOL":
                     functionStarted = token.value;
                     break;
                 case "LEFT_PAREN":
@@ -14906,6 +14951,17 @@
     function composerTokenize(formula, locale) {
         const tokens = rangeTokenize(formula, locale);
         return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
+    const functions$1 = functionRegistry.content;
+    function isExportableToExcel(tokens) {
+        try {
+            const nonExportableFunctions = iterateAstNodes(parseTokens(tokens)).filter((ast) => ast.type === "FUNCALL" && !functions$1[ast.value.toUpperCase()]?.isExported);
+            return nonExportableFunctions.length === 0;
+        }
+        catch (error) {
+            return false;
+        }
     }
 
     function isValidLocale(locale) {
@@ -17480,8 +17536,14 @@
                 id: "reset_size",
                 name: _lt("Reset size"),
                 sequence: 4,
-                execute: () => {
-                    const size = env.model.getters.getImageSize(figureId);
+                execute: async () => {
+                    const imagePath = env.model.getters.getImagePath(figureId);
+                    const size = env.model.getters.getImageSize(figureId) ??
+                        (await env.imageProvider?.getImageOriginalSize(imagePath));
+                    if (!env.model.getters.getImageSize(figureId)) {
+                        const image = env.model.getters.getImage(figureId);
+                        image.size = size;
+                    }
                     const { height, width } = getMaxFigureSize(env.model.getters, size);
                     env.model.dispatch("UPDATE_FIGURE", {
                         sheetId: env.model.getters.getActiveSheetId(),
@@ -23534,7 +23596,7 @@
         argToFocus: Number,
     };
 
-    const functions$1 = functionRegistry.content;
+    const functions = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
     const selectionIndicatorClass = "selector-flag";
     const selectionIndicatorColor = "#a9a9a9";
@@ -23567,10 +23629,6 @@
       padding-left: 3px;
       padding-right: 3px;
       outline: none;
-
-      &.unfocusable {
-        pointer-events: none;
-      }
 
       p {
         margin-bottom: 0px;
@@ -23819,7 +23877,10 @@
             }
         }
         showAutocomplete(searchTerm) {
-            if (!this.env.model.getters.getCurrentContent().startsWith("=")) {
+            const searchTermUpperCase = searchTerm.toUpperCase();
+            if (!this.env.model.getters.getCurrentContent().startsWith("=") ||
+                searchTermUpperCase === "TRUE" ||
+                searchTermUpperCase === "FALSE") {
                 return;
             }
             this.autoCompleteState.showProvider = true;
@@ -23937,7 +23998,6 @@
                 switch (token.type) {
                     case "OPERATOR":
                     case "NUMBER":
-                    case "FUNCTION":
                     case "ARG_SEPARATOR":
                     case "STRING":
                         result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
@@ -23947,9 +24007,13 @@
                         result.push({ value: token.value, color: this.rangeColor(xc, sheetName) || "#000" });
                         break;
                     case "SYMBOL":
-                        let value = token.value;
-                        if (["TRUE", "FALSE"].includes(value.toUpperCase())) {
+                        const value = token.value;
+                        const upperCaseValue = value.toUpperCase();
+                        if (upperCaseValue === "TRUE" || upperCaseValue === "FALSE") {
                             result.push({ value: token.value, color: tokenColors.NUMBER });
+                        }
+                        else if (upperCaseValue in functionRegistry.content) {
+                            result.push({ value: token.value, color: tokenColors.FUNCTION });
                         }
                         else {
                             result.push({ value: token.value, color: "#000" });
@@ -24046,25 +24110,28 @@
             this.autoCompleteState.showProvider = false;
             this.functionDescriptionState.showDescription = false;
             if (content.startsWith("=")) {
-                const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
-                if (tokenAtCursor) {
-                    const { xc } = splitReference(tokenAtCursor.value);
-                    if (tokenAtCursor.type === "FUNCTION" ||
-                        (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
-                        // initialize Autocomplete Dropdown
-                        this.showAutocomplete(tokenAtCursor.value);
-                    }
-                    else if (tokenAtCursor.functionContext && tokenAtCursor.type !== "UNKNOWN") {
-                        // initialize Formula Assistant
-                        const tokenContext = tokenAtCursor.functionContext;
-                        const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions$1[parentFunction];
-                        const argPosition = tokenContext.argPosition;
-                        this.functionDescriptionState.functionName = parentFunction;
-                        this.functionDescriptionState.functionDescription = description;
-                        this.functionDescriptionState.argToFocus = description.getArgToFocus(argPosition + 1) - 1;
-                        this.functionDescriptionState.showDescription = true;
-                    }
+                const token = this.env.model.getters.getTokenAtCursor();
+                if (!token) {
+                    return;
+                }
+                if (token.type === "SYMBOL") {
+                    // initialize Autocomplete Dropdown
+                    this.showAutocomplete(token.value);
+                    return;
+                }
+                const tokenContext = token.functionContext;
+                const parentFunction = tokenContext?.parent.toUpperCase();
+                if (tokenContext &&
+                    parentFunction &&
+                    parentFunction in functions &&
+                    token.type !== "UNKNOWN") {
+                    // initialize Formula Assistant
+                    const description = functions[parentFunction];
+                    const argPosition = tokenContext.argPosition;
+                    this.functionDescriptionState.functionName = parentFunction;
+                    this.functionDescriptionState.functionDescription = description;
+                    this.functionDescriptionState.argToFocus = description.getArgToFocus(argPosition + 1) - 1;
+                    this.functionDescriptionState.showDescription = true;
                 }
             }
         }
@@ -26764,7 +26831,12 @@
     };
     const RELATIONSHIP_NSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const HEIGHT_FACTOR = 0.75; // 100px => 75 u
-    const WIDTH_FACTOR = 0.1317; // 100px => 13.17 u
+    /**
+     * Excel says its default column width is 8.43 characters (64px)
+     * which makes WIDTH_FACTOR = 0.1317, but it doesn't work well
+     * 0.143 is a value from dev's experiments.
+     */
+    const WIDTH_FACTOR = 0.143;
     /** unit : maximum number of characters a column can hold at the standard font size. What. */
     const EXCEL_DEFAULT_COL_WIDTH = 8.43;
     /** unit : points */
@@ -27281,7 +27353,7 @@
         64: "000000",
         65: "FFFFFF", // system background
     };
-    const IMAGE_MIMETYPE_EXTENSION_MAPPING = {
+    const IMAGE_MIMETYPE_TO_EXTENSION_MAPPING = {
         "image/avif": "avif",
         "image/bmp": "bmp",
         "image/gif": "gif",
@@ -27290,6 +27362,17 @@
         "image/png": "png",
         "image/tiff": "tiff",
         "image/webp": "webp",
+    };
+    const IMAGE_EXTENSION_TO_MIMETYPE_MAPPING = {
+        avif: "image/avif",
+        bmp: "image/bmp",
+        gif: "image/gif",
+        ico: "image/vnd.microsoft.icon",
+        jpeg: "image/jpeg",
+        png: "image/png",
+        tiff: "image/tiff",
+        webp: "image/webp",
+        jpg: "image/jpeg",
     };
 
     /**
@@ -28093,20 +28176,35 @@
             convertEMUToDotValue(figure.anchors[0].rowOffset);
         const y2 = getRowPosition(figure.anchors[1].row, sheetData) +
             convertEMUToDotValue(figure.anchors[1].rowOffset);
-        const width = x2 - x1;
-        const height = y2 - y1;
-        const chartData = convertChartData(figure.data);
-        if (!chartData)
-            return undefined;
-        return {
-            id: id,
-            x: x1,
-            y: y1,
-            width: width,
-            height: height,
-            tag: "chart",
-            data: convertChartData(figure.data),
-        };
+        const figureData = { id, x: x1, y: y1 };
+        if (isChartData(figure.data)) {
+            return {
+                ...figureData,
+                width: x2 - x1,
+                height: y2 - y1,
+                tag: "chart",
+                data: convertChartData(figure.data),
+            };
+        }
+        else if (isImageData(figure.data)) {
+            return {
+                ...figureData,
+                width: convertEMUToDotValue(figure.data.size.cx),
+                height: convertEMUToDotValue(figure.data.size.cy),
+                tag: "image",
+                data: {
+                    path: figure.data.imageSrc,
+                    mimetype: figure.data.mimetype,
+                },
+            };
+        }
+        return undefined;
+    }
+    function isChartData(data) {
+        return "dataSets" in data;
+    }
+    function isImageData(data) {
+        return "imageSrc" in data;
     }
     function convertChartData(chartData) {
         const dataSetsHaveTitle = chartData.dataSets[0].label !== undefined;
@@ -28813,9 +28911,13 @@
         /**
          * Get the list of all the XLSX files in the XLSX file structure
          */
-        getListOfFiles() {
-            const files = Object.values(this.xlsxFileStructure).flat().filter(isDefined$1);
-            return files;
+        getListOfXMLFiles() {
+            const XMLFiles = Object.entries(this.xlsxFileStructure)
+                .filter(([key]) => key !== "images")
+                .map(([_, value]) => value)
+                .flat()
+                .filter(isDefined$1);
+            return XMLFiles;
         }
         /**
          * Return an array containing the return value of the given function applied to all the XML elements
@@ -28987,17 +29089,28 @@
             return color;
         }
         /**
-         * Returns the xlsx file targeted by a relationship.
+         * Returns the xml file targeted by a relationship.
          */
         getTargetXmlFile(relationship) {
             if (!relationship)
                 throw new Error("Undefined target file");
-            let target = relationship.target;
-            target = target.replace("../", "");
-            target = target.replace("./", "");
+            const target = this.processRelationshipTargetName(relationship.target);
             // Use "endsWith" because targets are relative paths, and we know the files by their absolute path.
-            const f = this.getListOfFiles().find((f) => f.file.fileName.endsWith(target));
+            const f = this.getListOfXMLFiles().find((f) => f.file.fileName.endsWith(target));
             if (!f || !f.file)
+                throw new Error("Cannot find target file");
+            return f;
+        }
+        /**
+         * Returns the image parameters targeted by a relationship.
+         */
+        getTargetImageFile(relationship) {
+            if (!relationship)
+                throw new Error("Undefined target file");
+            const target = this.processRelationshipTargetName(relationship.target);
+            // Use "endsWith" because targets are relative paths, and we know the files by their absolute path.
+            const f = this.xlsxFileStructure.images.find((f) => f.fileName.endsWith(target));
+            if (!f)
                 throw new Error("Cannot find target file");
             return f;
         }
@@ -29046,6 +29159,10 @@
                 default:
                     return clrScheme[colorId].value;
             }
+        }
+        /** Remove signs of relative path. */
+        processRelationshipTargetName(targetName) {
+            return targetName.replace(/\.+\//, "");
         }
     }
 
@@ -29276,15 +29393,16 @@
                     throw new Error("Only twoCellAnchor are supported for xlsx drawings.");
                 }
                 const chartElement = this.querySelector(figureElement, "c:chart");
-                if (!chartElement) {
-                    throw new Error("Only chart figures are currently supported.");
+                const imageElement = this.querySelector(figureElement, "a:blip");
+                if (!chartElement && !imageElement) {
+                    throw new Error("Only chart and image figures are currently supported.");
                 }
                 return {
                     anchors: [
                         this.extractFigureAnchor("xdr:from", figureElement),
                         this.extractFigureAnchor("xdr:to", figureElement),
                     ],
-                    data: this.extractChart(chartElement),
+                    data: chartElement ? this.extractChart(chartElement) : this.extractImage(figureElement),
                 };
             });
         }
@@ -29308,6 +29426,24 @@
                 throw new Error("Unable to extract chart definition");
             }
             return chartDefinition;
+        }
+        extractImage(figureElement) {
+            const imageElement = this.querySelector(figureElement, "a:blip");
+            const imageId = this.extractAttr(imageElement, "r:embed", { required: true }).asString();
+            const image = this.getTargetImageFile(this.relationships[imageId]);
+            if (!image) {
+                throw new Error("Unable to extract image");
+            }
+            const shapePropertyElement = this.querySelector(figureElement, "a:xfrm");
+            const extension = image.fileName.split(".").at(-1);
+            return {
+                imageSrc: image.imageSrc,
+                mimetype: extension ? IMAGE_EXTENSION_TO_MIMETYPE_MAPPING[extension] : undefined,
+                size: {
+                    cx: this.extractChildAttr(shapePropertyElement, "a:ext", "cx", { required: true }).asNum(),
+                    cy: this.extractChildAttr(shapePropertyElement, "a:ext", "cy", { required: true }).asNum(),
+                },
+            };
         }
     }
 
@@ -29878,13 +30014,21 @@
     class XlsxReader {
         warningManager;
         xmls;
+        images;
         constructor(files) {
             this.warningManager = new XLSXImportWarningManager();
             this.xmls = {};
+            this.images = [];
             for (let key of Object.keys(files)) {
                 // Random files can be in xlsx (like a bin file for printer settings)
                 if (key.endsWith(".xml") || key.endsWith(".rels")) {
                     this.xmls[key] = parseXML(new XMLString(files[key]));
+                }
+                else if (key.includes("media/image")) {
+                    this.images.push({
+                        fileName: key,
+                        imageSrc: files[key]["imageSrc"],
+                    });
                 }
             }
         }
@@ -29938,6 +30082,7 @@
                 tables: getXLSXFilesOfType(CONTENT_TYPES.table, this.xmls),
                 pivots: getXLSXFilesOfType(CONTENT_TYPES.pivot, this.xmls),
                 externalLinks: getXLSXFilesOfType(CONTENT_TYPES.externalLink, this.xmls),
+                images: this.images,
             };
             if (!xlsxFileStructure.workbook.rels) {
                 throw Error(_lt("Cannot find workbook relations file"));
@@ -33088,7 +33233,7 @@
         handle(cmd) {
             switch (cmd.type) {
                 case "CREATE_IMAGE":
-                    this.addFigure(cmd.figureId, cmd.sheetId, cmd.position, cmd.size);
+                    this.addImage(cmd.figureId, cmd.sheetId, cmd.position, cmd.size);
                     this.history.update("images", cmd.sheetId, cmd.figureId, cmd.definition);
                     this.syncedImages.add(cmd.definition.path);
                     break;
@@ -33152,7 +33297,7 @@
         // ---------------------------------------------------------------------------
         // Private
         // ---------------------------------------------------------------------------
-        addFigure(id, sheetId, position, size) {
+        addImage(id, sheetId, position, size) {
             const figure = {
                 id,
                 x: position.x,
@@ -35659,7 +35804,6 @@
         }
     }
 
-    const functions = functionRegistry.content;
     //#region
     // ---------------------------------------------------------------------------
     // INTRODUCTION
@@ -35881,9 +36025,7 @@
                 let isExported = true;
                 const formulaCell = this.getCorrespondingFormulaCell(position);
                 if (formulaCell) {
-                    isExported = formulaCell.compiledFormula.tokens
-                        .filter((tk) => tk.type === "FUNCTION")
-                        .every((tk) => functions[tk.value.toUpperCase()].isExported);
+                    isExported = isExportableToExcel(formulaCell.compiledFormula.tokens);
                     isFormula = isExported;
                     if (!isExported) {
                         newContent = value.toString();
@@ -44289,7 +44431,7 @@
         async requestImage() {
             const file = await this.getImageFromUser();
             const path = await this.fileStore.upload(file);
-            const size = await this.getImageSize(path);
+            const size = await this.getImageOriginalSize(path);
             return { path, size, mimetype: file.type };
         }
         getImageFromUser() {
@@ -44308,7 +44450,7 @@
                 input.click();
             });
         }
-        getImageSize(path) {
+        getImageOriginalSize(path) {
             return new Promise((resolve, reject) => {
                 const image = new Image();
                 image.src = path;
@@ -45792,6 +45934,10 @@
       position: relative;
       top: 20%;
     }
+  }
+
+  .user-select-text {
+    user-select: text;
   }
 `;
     class TopBarComposer extends owl.Component {
@@ -48831,6 +48977,8 @@
             ["name", `Image ${imageId}`],
             ["title", "Image"],
         ];
+        const cx = convertDotValueToEMU(figure.width);
+        const cy = convertDotValueToEMU(figure.height);
         return escapeXml /*xml*/ `
     <xdr:twoCellAnchor editAs="oneCell">
       <xdr:from>
@@ -48857,6 +49005,9 @@
           </a:stretch>
         </xdr:blipFill>
         <xdr:spPr>
+          <a:xfrm>
+            <a:ext cx="${cx}" cy="${cy}" />
+          </a:xfrm>
           <a:prstGeom prst="rect">
             <a:avLst/>
           </a:prstGeom>
@@ -49376,7 +49527,7 @@
                 const mimeType = image.data.mimetype;
                 if (mimeType === undefined)
                     continue;
-                const extension = IMAGE_MIMETYPE_EXTENSION_MAPPING[mimeType];
+                const extension = IMAGE_MIMETYPE_TO_EXTENSION_MAPPING[mimeType];
                 // only support exporting images with mimetypes specified in the mapping
                 if (extension === undefined)
                     continue;
@@ -49512,7 +49663,7 @@
     function createContentTypes(files) {
         const overrideNodes = [];
         // hard-code supported image mimetypes
-        const imageDefaultNodes = Object.entries(IMAGE_MIMETYPE_EXTENSION_MAPPING).map(([mimetype, extension]) => createDefaultXMLElement(extension, mimetype));
+        const imageDefaultNodes = Object.entries(IMAGE_MIMETYPE_TO_EXTENSION_MAPPING).map(([mimetype, extension]) => createDefaultXMLElement(extension, mimetype));
         for (const file of files) {
             if ("contentType" in file && file.contentType) {
                 overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
@@ -50142,6 +50293,7 @@
     exports.invalidateCFEvaluationCommands = invalidateCFEvaluationCommands;
     exports.invalidateDependenciesCommands = invalidateDependenciesCommands;
     exports.invalidateEvaluationCommands = invalidateEvaluationCommands;
+    exports.iterateAstNodes = iterateAstNodes;
     exports.links = links;
     exports.load = load;
     exports.parse = parse;
@@ -50154,9 +50306,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.0-alpha.6';
-    __info__.date = '2023-06-28T11:44:17.298Z';
-    __info__.hash = '7d15d3c';
+    __info__.version = '16.4.0-alpha.7';
+    __info__.date = '2023-07-04T14:12:23.240Z';
+    __info__.hash = 'b04cf78';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

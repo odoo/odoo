@@ -18,7 +18,7 @@ class HrDepartureWizard(models.TransientModel):
         """Find all fleet.vehichle.assignation.log records that link to the employee, if there is no 
         end date or end date > departure date, update the date. Also check fleet.vehicle to see if 
         there is any record with its dirver_id to be the employee, set them to False."""
-        drivers = self.employee_id.user_id.partner_id | self.employee_id.sudo().address_home_id
+        drivers = self.employee_id.user_id.partner_id | self.employee_id.sudo().work_contact_id
         assignations = self.env['fleet.vehicle.assignation.log'].search([('driver_id', 'in', drivers.ids)])
         for assignation in assignations:
             if self.departure_date and (not assignation.date_end or assignation.date_end > self.departure_date):

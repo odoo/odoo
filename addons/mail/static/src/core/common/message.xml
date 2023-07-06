@@ -46,10 +46,10 @@
                                 thread="props.thread"/>
                             <small t-if="!isOriginThread and !message.isTransient" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.resModel !== 'discuss.channel'">
-                                    on <a t-att-href="message.url"><t t-esc="message.originThread?.displayName"/></a>
+                                    on <a t-att-href="message.resUrl"><t t-esc="message.originThread?.displayName"/></a>
                                 </t>
                                 <t t-if="message.resModel === 'discuss.channel'">
-                                    (from <a t-att-href="message.url"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
+                                    (from <a t-att-href="message.resUrl"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div
-                            class="position-relative d-flex align-items-start"
+                            class="position-relative d-flex align-items-center"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
@@ -73,7 +73,7 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content position-relative" t-att-class="{ 'd-flex': !state.isEditing, 'w-100': state.isEditing }">
+                            <div class="o-mail-Message-content position-relative" t-att-class="{ 'w-100': state.isEditing }">
                                 <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
                                     <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                     <t t-else="">
@@ -84,9 +84,9 @@
                                                 'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
                                                 'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
                                                 }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                            <div class="position-relative text-break" t-att-class="{
+                                            <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                         'p-1': message.isNote,
-                                                        'o-mail-Message-body mb-0 py-2 px-3': !message.isNote,
+                                                        'mb-0 py-2 px-3': !message.isNote,
                                                         'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
                                                         'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                         }" t-ref="body">
@@ -104,20 +104,15 @@
                             </div>
                             <div t-if="props.hasActions and message.hasActions" class="o-mail-Message-actions"
                                 t-att-class="{
-                                    'position-absolute top-0': !env.inDiscussApp,
                                     'start-0 ms-3': isAlignedRight,
-                                    'end-0 me-3': env.inChatWindow and !isAlignedRight or env.inChatter,
-                                    'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification),
-                                    'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification),
-                                    'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification),
-                                    'mt-n3': env.inChatWindow,
-                                    'ms-2': env.inDiscussApp,
+                                    'end-0 me-3': env.inChatWindow and !isAlignedRight,
+                                    'position-absolute top-0 mt-n3': env.inChatWindow,
+                                    'ms-2': !env.inChatWindow,
                                     'invisible': !isActive,
                                     'o-expanded': state.expandOptions
                                 }"
                             >
                                 <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
-                                        'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification),
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"
                                 >

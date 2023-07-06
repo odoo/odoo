@@ -7,14 +7,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 
-import {
-    patchWithCleanup,
-    triggerHotkey,
-    mockTimeout,
-    nextTick,
-} from "@web/../tests/helpers/utils";
+import { patchWithCleanup, triggerHotkey, mockTimeout } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss inbox");
 
@@ -63,7 +57,7 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
         notification_type: "inbox",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
 
@@ -72,16 +66,13 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
 
     // Escape on emoji picker does not stop replying
     await click(".o-mail-Composer button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker");
+    assert.containsOnce($, ".o-EmojiPicker");
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-EmojiPicker");
+    assert.containsNone($, ".o-EmojiPicker");
     assert.containsOnce($, ".o-mail-Composer");
 
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    await advanceTime(DEBOUNCE_FETCH_SUGGESTION_TIME);
-    await nextTick();
-    await nextTick();
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
@@ -561,6 +552,10 @@ QUnit.test("error notifications should not be shown in Inbox", async (assert) =>
     await openDiscuss();
     assert.containsOnce($, ".o-mail-Message");
     assert.containsOnce($, ".o-mail-Message-header:contains(on Demo User)");
+    assert.containsOnce(
+        $,
+        `.o-mail-Message-header a:contains(Demo User)[href*='/web#model=res.partner&id=${partnerId}']`
+    );
     assert.containsNone($, ".o-mail-Message-notification");
 });
 

@@ -14,6 +14,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     def setUp(self):
         super().setUp()
+        self.other_company = self.env['res.company'].create({'name': 'Other Company'})
         self.public_partner = self.env['res.partner'].create({
             'name': 'Public Contact',
             'email': 'public_email@example.com',
@@ -22,7 +23,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.private_partner = self.env['res.partner'].create({
             'name': 'Private Contact',
             'email': 'private_email@example.com',
-            'type': 'private',
+            'company_id': self.other_company.id,
         })
 
     @property
@@ -1270,8 +1271,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
         private_attendee = event.attendee_ids.filtered(lambda e: e.email == self.private_partner.email)
-        self.assertNotEqual(self.private_partner.id, private_attendee.partner_id.id)
-        self.assertNotEqual(private_attendee.partner_id.type, 'private')
+        self.assertEqual(self.private_partner.id, private_attendee.partner_id.id)
         self.assertGoogleAPINotCalled()
 
     @patch_api
@@ -1297,7 +1297,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
         events = recurrence.calendar_event_ids
         private_attendees = events.mapped('attendee_ids').filtered(lambda e: e.email == self.private_partner.email)
-        self.assertTrue(all([a.partner_id.id != self.private_partner.id for a in private_attendees]))
+        self.assertTrue(all([a.partner_id == self.private_partner for a in private_attendees]))
         self.assertTrue(all([a.partner_id.type != 'private' for a in private_attendees]))
         self.assertGoogleAPINotCalled()
 

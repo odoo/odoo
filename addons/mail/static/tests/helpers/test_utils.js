@@ -2,7 +2,7 @@
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { loadEmoji } from "@mail/core/common/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
@@ -16,12 +16,11 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     clearRegistryWithCleanup,
     registryNamesToCloneWithCleanup,
-    utils,
+    prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
 
 // load emoji data once, when the test suite starts.

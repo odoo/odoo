@@ -281,7 +281,6 @@ class Partner(models.Model):
                 [('email', 'ilike', search)],
             ]),
             [('active', '=', True)],
-            [('type', '!=', 'private')],
         ])
 
     @api.model

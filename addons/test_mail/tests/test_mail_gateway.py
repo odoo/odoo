@@ -336,22 +336,14 @@ class TestMailgateway(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_followers(self):
         """ Incoming email: recognized author not archived and not odoobot:
-        added as follower. Also test corner cases: archived, private. """
-        partner_archived, partner_private = self.env['res.partner'].create([
-            {
-                'active': False,
-                'email': 'archived.customer@text.example.com',
-                'phone': '0032455112233',
-                'name': 'Archived Customer',
-                'type': 'contact',
-            },
-            {
-                'email': 'private.customer@text.example.com',
-                'phone': '0032455112233',
-                'name': 'Private Customer',
-                'type': 'private',
-            },
-        ])
+        added as follower. Also test corner cases: archived. """
+        partner_archived = self.env['res.partner'].create({
+            'active': False,
+            'email': 'archived.customer@text.example.com',
+            'phone': '0032455112233',
+            'name': 'Archived Customer',
+            'type': 'contact',
+        })
 
         with self.mock_mail_gateway():
             record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com')
@@ -405,19 +397,6 @@ class TestMailgateway(MailCommon):
                          'message_process: odoobot -> no follower')
         self.assertEqual(record4.message_partner_ids, self.env['res.partner'],
                          'message_process: odoobot -> no follower')
-
-        # private partner
-        with self.mock_mail_gateway():
-            record5 = self.format_and_process(
-                MAIL_TEMPLATE, partner_private.email_formatted, 'groups@test.com',
-                subject='Private Partner')
-
-        self.assertEqual(record5.message_ids[0].author_id, partner_private)
-        self.assertEqual(record5.message_ids[0].email_from, partner_private.email_formatted)
-        self.assertEqual(record5.message_follower_ids.partner_id, partner_private,
-                         'message_process: private partner is recognized')
-        self.assertEqual(record5.message_partner_ids, partner_private,
-                         'message_process: private partner is recognized')
 
     # --------------------------------------------------
     # Author recognition

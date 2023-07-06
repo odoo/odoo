@@ -12,7 +12,7 @@ import {
     useMessageHighlight,
     useMessageToReplyTo,
 } from "@mail/utils/common/hooks";
-import { isEventHandled } from "@mail/utils/common/misc";
+import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 
@@ -78,6 +78,9 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        if (ev.target.closest(".o-dropdown")) {
+            return;
+        }
         switch (ev.key) {
             case "Escape":
                 if (
