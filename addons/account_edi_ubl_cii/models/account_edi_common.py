@@ -594,8 +594,10 @@ class AccountEdiCommon(models.AbstractModel):
             price_unit = gross_price_unit / basis_qty
         elif net_price_unit is not None:
             price_unit = (net_price_unit + rebate) / basis_qty
+        elif price_subtotal is not None:
+            price_unit = (price_subtotal + allow_charge_amount) / billed_qty
         else:
-            raise UserError(_("No gross price nor net price found for line in xml"))
+            raise UserError(_("No gross price, net price nor line subtotal amount found for line in xml"))
 
         # discount
         discount = 0
