@@ -246,7 +246,7 @@ class SaleOrder(models.Model):
         compute='_compute_authorized_transaction_ids',
         copy=False,
         compute_sudo=True)
-    amount_paid = fields.Float(compute='_compute_amount_paid')
+    amount_paid = fields.Float(compute='_compute_amount_paid', compute_sudo=True)
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
