@@ -2971,7 +2971,7 @@ QUnit.module("Views", (hooks) => {
             if (args.method === "onchange2") {
                 assert.deepEqual(args.args[3], { foo: {} });
             }
-        }
+        };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_dialog .o_form_view");
@@ -5135,6 +5135,31 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
+    });
+
+    QUnit.test("do not reload after save when using pager", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"></field></form>',
+            resIds: [1, 2],
+            resId: 1,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+
+        // edit the foo field
+        await editInput(target, ".o_field_widget[name=foo] input", "new value");
+        // click on the pager to switch to the next record (will save record)
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
+        assert.verifySteps(["get_views", "web_read", "write", "web_read"]);
     });
 
     QUnit.test("switching to another record from an invalid one", async function (assert) {
