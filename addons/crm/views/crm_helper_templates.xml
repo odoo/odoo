@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="crm_action_helper" name="crm action helper">
-        <t t-if="team.alias_name and team.alias_domain">
+        <t t-if="team.alias_email">
             <p class="o_view_nocontent_smiling_face">
                 Create an opportunity to start playing with your pipeline.
             </p><p>Use the <i>New</i> button, or send an email to
-            <a t-attf-href="mailto:#{team.alias_id.display_name}"><t t-esc="team.alias_id.display_name"/></a>
+            <a t-attf-href="mailto:#{team.alias_email}"><t t-esc="team.alias_email"/></a>
             to test the email gateway.</p>
         </t>
         <t t-else="">

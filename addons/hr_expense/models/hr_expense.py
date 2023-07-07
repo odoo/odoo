@@ -488,13 +488,12 @@ class HrExpense(models.Model):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
         expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
-            alias_email = f'{expense_alias.alias_name}@{expense_alias.alias_domain}'
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
             params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
             return Markup(
                 """<p>%(send_string)s <a href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></p>"""
             ) % {
-                'alias_email': alias_email,
+                'alias_email': expense_alias.display_name,
                 'params': params,
                 'send_string': _("Or send your receipts at"),
             }

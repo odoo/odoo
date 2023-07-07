@@ -331,9 +331,6 @@ class MailTestContainer(models.Model):
     name = fields.Char()
     description = fields.Text()
     customer_id = fields.Many2one('res.partner', 'Customer')
-    alias_id = fields.Many2one(
-        'mail.alias', 'Alias',
-        delegate=True)
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']

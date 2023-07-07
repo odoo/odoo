@@ -22,10 +22,20 @@ class AliasMixinOptional(models.AbstractModel):
     alias_name = fields.Char(related='alias_id.alias_name', readonly=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
     alias_defaults = fields.Text(related='alias_id.alias_defaults')
+    alias_email = fields.Char('Email Alias', compute='_compute_alias_email')
 
     @api.depends('alias_name')
     def _compute_alias_domain(self):
         self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
+    @api.depends('alias_domain', 'alias_name')
+    def _compute_alias_email(self):
+        """ Alias email can be used in views, as it is Falsy when having no domain
+        or no name. Alias display name itself contains more info and cannot be
+        used as it is in views. """
+        self.alias_email = False
+        for record in self.filtered(lambda rec: rec.alias_name and rec.alias_domain):
+            record.alias_email = f"{record.alias_name}@{record.alias_domain}"
 
     # --------------------------------------------------
     # CRUD
