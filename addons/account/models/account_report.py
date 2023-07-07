@@ -127,7 +127,7 @@ class AccountReport(models.Model):
             else:
                 report[field_name] = default_value
 
-    @api.depends('root_report_id', 'country_id')
+    @api.depends('root_report_id')
     def _compute_default_availability_condition(self):
         for report in self:
             if report.root_report_id:
@@ -140,6 +140,11 @@ class AccountReport(models.Model):
         for report in self:
             if report.root_report_id.root_report_id:
                 raise ValidationError(_("Only a report without a root report of its own can be selected as root report."))
+
+    @api.onchange('availability_condition')
+    def _onchange_availability_condition(self):
+        if self.availability_condition != 'country':
+            self.country_id = None
 
     def write(self, vals):
         # Overridden so that changing the country of a report also creates new tax tags if necessary, or updates the country
