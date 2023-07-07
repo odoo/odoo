@@ -126,7 +126,7 @@ class AccountReport(models.Model):
             else:
                 report[field_name] = default_value
 
-    @api.depends('root_report_id', 'country_id')
+    @api.depends('root_report_id')
     def _compute_default_availability_condition(self):
         for report in self:
             if report.root_report_id:
@@ -149,6 +149,11 @@ class AccountReport(models.Model):
                     _('Line "%s" defines line "%s" as its parent, but appears before it in the report. '
                       'The parent must always come first.', line.name, line.parent_id.name))
             previous_lines |= line
+
+    @api.onchange('availability_condition')
+    def _onchange_availability_condition(self):
+        if self.availability_condition != 'country':
+            self.country_id = None
 
     def write(self, vals):
         # Overridden so that changing the country of a report also creates new tax tags if necessary, or updates the country
