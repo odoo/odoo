@@ -186,3 +186,22 @@ registry
             return getSteps(); 
         } 
     });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyPromotion", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.confirmOpeningPopup();
+
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer('AAA Partner');
+            ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+            ProductScreen.check.totalAmountIs('80.00');
+            return getSteps();
+        }
+    });
