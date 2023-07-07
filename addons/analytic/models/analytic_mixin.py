@@ -64,10 +64,13 @@ class AnalyticMixin(models.AbstractModel):
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        for arg in args:
-            if isinstance(arg, (list, tuple)) and arg[0] == 'analytic_distribution' and isinstance(arg[2], str):
-                arg[0] = 'analytic_distribution_search'
+        args = self._apply_analytic_distribution_domain(args)
         return super()._search(args, offset, limit, order, count, access_rights_uid)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain = self._apply_analytic_distribution_domain(domain)
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
@@ -103,3 +106,9 @@ class AnalyticMixin(models.AbstractModel):
             vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
+
+    def _apply_analytic_distribution_domain(self, domain):
+        return [
+            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' else leaf
+            for leaf in domain
+        ]
