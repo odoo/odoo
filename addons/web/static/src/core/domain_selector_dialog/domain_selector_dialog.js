@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "../l10n/translation";
-import { Component, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { Dialog } from "../dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "../domain_selector/domain_selector";
@@ -12,6 +12,7 @@ export class DomainSelectorDialog extends Component {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.state = useState({ domain: this.props.domain });
+        this.confirmButtonRef = useRef("confirm");
     }
 
     get confirmButtonText() {
@@ -49,11 +50,15 @@ export class DomainSelectorDialog extends Component {
     }
 
     async onConfirm() {
+        this.confirmButtonRef.el.disabled = true;
         try {
             let domain = new Domain(this.state.domain);
             domain = domain.toList(this.props.context);
             await this.orm.silent.searchCount(this.props.resModel, domain, { limit: 1 });
         } catch {
+            if (this.confirmButtonRef.el) {
+                this.confirmButtonRef.el.disabled = false;
+            }
             this.notification.add(this.env._t("Domain is invalid. Please correct it"), {
                 type: "danger",
             });

@@ -10,7 +10,7 @@
                     <button class="btn btn-secondary" t-on-click="() => props.close()">Close</button>
                 </t>
                 <t t-else="">
-                    <button class="btn btn-primary" t-att-disabled="disabled" t-on-click="onConfirm"><t t-esc="confirmButtonText"/></button>
+                    <button class="btn btn-primary" t-att-disabled="disabled" t-on-click="onConfirm" t-ref="confirm"><t t-esc="confirmButtonText"/></button>
                     <button class="btn btn-secondary" t-on-click="onDiscard"><t t-esc="discardButtonText"/></button>
                 </t>
             </t>
