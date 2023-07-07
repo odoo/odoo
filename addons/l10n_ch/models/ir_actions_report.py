@@ -39,11 +39,9 @@ class IrActionsReport(models.Model):
             qr_inv_ids = []
             isr_inv_ids = []
             for invoice in invoices:
-                if invoice.company_id.country_code != 'CH':
-                    continue
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
-                elif invoice.l10n_ch_isr_valid:
+                elif invoice.company_id.country_code == 'CH' and invoice.l10n_ch_isr_valid:
                     isr_inv_ids.append(invoice.id)
             # Render the additional reports.
             streams_to_append = {}

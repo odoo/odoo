@@ -358,9 +358,10 @@ export class OdooEditor extends EventTarget {
         const parser = new DOMParser();
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
+            const iconClass = (direction === 'row') ? 'fa-ellipsis-v' : 'fa-ellipsis-h';
             const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui" style="visibility: hidden;">
                 <div>
-                    <span class="o_table_ui_menu_toggler fa fa-bars"></span>
+                    <span class="o_table_ui_menu_toggler fa ${iconClass}"></span>
                     <div class="o_table_ui_menu"></div>
                 </div>
             </div>`, 'text/html').body.firstElementChild;
@@ -2625,13 +2626,13 @@ export class OdooEditor extends EventTarget {
 
         const side1 = isRow ? 'left' : 'top';
         ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
-        wrappedUi.style[side1] = (togglerRect[props.size[side1]] / 2) + 'px';
-        ui.style[props.size[side1]] = togglerRect[props.size[side1]] + 'px';
+        ui.style[props.size[side1]] = !isRow && togglerRect[props.size[side1]] + 'px';
 
         const side2 = isRow ? 'top' : 'left';
-        ui.style[side2] = elementRect[props.xy[side2]] + 'px';
-        wrappedUi.style[side2] = (elementRect[props.size[side2]] / 2) - (togglerRect[props.size[side2]] / 2) + 'px';
-        ui.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
+        wrappedUi.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
+        ui.style[side2] = tableRect[props.xy[side2]] + 'px';
+        wrappedUi.style[side2] = elementRect[side2] - tableRect[side2] - 1 + 'px';
+        ui.style[props.size[side2]] = tableRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -3302,8 +3303,7 @@ export class OdooEditor extends EventTarget {
                     selection &&
                     selection.anchorNode &&
                     !closestElement(selection.anchorNode).closest('a') &&
-                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                    !this.powerbox.isOpen
+                    selection.anchorNode.nodeType === Node.TEXT_NODE
                 ) {
                     const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
                     const textNodeSplitted = textSliced.split(/\s/);
