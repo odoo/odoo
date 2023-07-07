@@ -65,7 +65,16 @@ odoo.define('website_form.s_website_form', function (require) {
             // Because, using t-att- inside form make it non-editable
             var $values = $('[data-for=' + this.$target.attr('id') + ']');
             if ($values.length) {
-                var values = JSON.parse($values.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"'));
+                const values = JSON.parse($values.data('values')
+                    // replaces `True` by `true` if they are after `,` or `:` or `[`
+                    .replace(/([,:\[]\s*)True/g, '$1true')
+                    // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+                    .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+                    // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+                    .replace(/'(\s*[,:\]}])/g, '"$1')
+                    // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+                    .replace(/([{\[:,]\s*)'/g, '$1"')
+                );
                 var fields = _.pluck(this.$target.serializeArray(), 'name');
                 _.each(fields, function (field) {
                     if (_.has(values, field)) {
