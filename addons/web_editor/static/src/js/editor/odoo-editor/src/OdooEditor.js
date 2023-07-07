@@ -772,6 +772,8 @@ export class OdooEditor extends EventTarget {
     }
 
     sanitize(target) {
+        this.initElementForEdition(target)
+
         this.observerFlush();
 
         let record;
