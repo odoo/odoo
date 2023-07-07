@@ -15,6 +15,7 @@ class ResPartner(models.Model):
             ('ubl_bis3', "Peppol BIS Billing 3.0"),
             ('xrechnung', "XRechnung CIUS"),
             ('nlcius', "NLCIUS"),
+            ('ciusro', "CIUSRO"),
             ('ubl_a_nz', "Peppol BIS Billing 3.0 A-NZ"),
             ('ubl_sg', "Peppol BIS Billing 3.0 SG"),
         ],
@@ -130,6 +131,8 @@ class ResPartner(models.Model):
                 partner.ubl_cii_format = 'ubl_a_nz'
             elif partner.country_code == 'NL':
                 partner.ubl_cii_format = 'nlcius'
+            elif partner.country_code == 'RO':
+                partner.ubl_cii_format = 'ciusro'
             elif partner.country_code == 'FR':
                 partner.ubl_cii_format = 'facturx'
             elif partner.country_code == 'SG':
@@ -179,6 +182,8 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_a_nz']
         if self.ubl_cii_format == 'nlcius':
             return self.env['account.edi.xml.ubl_nl']
+        if self.ubl_cii_format == 'ciusro':
+            return self.env['account.edi.xml.ubl_ro']
         if self.ubl_cii_format == 'ubl_bis3':
             return self.env['account.edi.xml.ubl_bis3']
         if self.ubl_cii_format == 'ubl_sg':
