@@ -32,13 +32,14 @@
                             <setting id="expense_extract_settings" string="Expense Digitalization (OCR)" company_dependent="1" help="Digitalize your receipts with OCR and Artificial Intelligence" title="use OCR to fill data from a picture of the bill">
                                 <field name="module_hr_expense_extract" widget="upgrade_boolean"/>
                             </setting>
+                            <setting company_dependent="1" string="Default Category" help="Default expense categories for uploaded expenses" title="Enable users to choose default category for automatically generated expenses.">
+                                <field name="expense_product_id"/>
+                            </setting>
                         </block>
-                        <block title="Default Journals">
+                        <block title="Accounting">
                             <setting company_dependent="1" help="Default accounting journal for expenses paid by employees." string="Employee Expense Journal">
                                 <field name="expense_journal_id"/>
                             </setting>
-                        </block>
-                        <block title="Payment">
                             <setting company_dependent="1" string="Company payment methods available" help="Payment method allowed for expenses paid by company.">
                                 <field name="company_expense_allowed_payment_method_line_ids" widget="many2many_tags" placeholder="All payment methods allowed" options="{'no_create': True}" context="{'show_payment_journal_id': 1}"/>
                             </setting>
