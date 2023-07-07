@@ -918,7 +918,9 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("invalid value in domain field with 'inDialog' options", async function (assert) {
         serverData.models.partner.fields.display_name.default = "[]";
-
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
         await makeView({
             type: "form",
             resModel: "partner",
@@ -927,14 +929,6 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
                 </form>`,
-            mockRPC: (route, args) => {
-                if (args.method === "search_count") {
-                    const domain = args.args[0];
-                    if (domain.length && domain[0][0] === "id" && domain[0][2] === "01/01/2002") {
-                        throw new Error("Invalid Domain");
-                    }
-                }
-            },
         });
         assert.containsNone(target, ".o_domain_leaf");
         assert.containsNone(target, ".modal");
@@ -944,7 +938,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal .o_domain_add_first_node_button");
-        await editInput(target, ".o_domain_leaf_value_input", "01/01/2002");
+        await editInput(target, ".o_domain_debug_input", "[(0, '=', expr)]");
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".modal", "the domain is invalid: the dialog is not closed");
     });
