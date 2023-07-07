@@ -93,6 +93,6 @@ ProductScreen.check.totalAmountIs(40);
 ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod('Bank');
 PaymentScreen.do.clickValidate();
-Chrome.do.clickTicketButton();
+ReceiptScreen.check.isShown();
 
 Tour.register('PosSettleOrderRealTime', { test: true, url: '/pos/ui' }, getSteps());
