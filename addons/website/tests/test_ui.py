@@ -412,3 +412,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_28_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')
+
+    def test_29_website_text_animations(self):
+        self.start_tour("/", 'text_animations', login='admin')
