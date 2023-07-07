@@ -98,7 +98,7 @@ QUnit.module("Components", (hooks) => {
         fixture = getFixture();
     });
 
-    QUnit.module("DomainSelector");
+    QUnit.module("DomainSelectorDialog");
 
     QUnit.test("a domain with a user context dynamic part is valid", async (assert) => {
         await makeDomainSelectorDialog({
@@ -107,33 +107,51 @@ QUnit.module("Components", (hooks) => {
                 assert.strictEqual(domain, "[('foo', '=', uid)]");
                 assert.step("confirmed");
             },
-            mockRPC(route, args) {
+            mockRPC(_, args) {
                 if (args.method === "search_count") {
-                    const domain = args.args[0];
-                    assert.deepEqual(domain, [["foo", "=", 7]]);
                     assert.step("rpc validation");
                 }
             },
         });
         const confirmButton = fixture.querySelector(".o_dialog footer button");
         await click(confirmButton);
-        assert.verifySteps(["rpc validation", "confirmed"]);
+        assert.verifySteps(["confirmed"]);
     });
 
-    QUnit.test("can override user context", async (assert) => {
+    QUnit.test("can extend eval context", async (assert) => {
         await makeDomainSelectorDialog({
-            domain: "[('foo', '=', uid)]",
-            context: { uid: 99 },
-            mockRPC(route, args) {
+            domain: "['&', ('foo', '=', uid), ('bar', '=', var)]",
+            context: { uid: 99, var: "true" },
+            onConfirm(domain) {
+                assert.strictEqual(domain, "['&', ('foo', '=', uid), ('bar', '=', var)]");
+                assert.step("confirmed");
+            },
+
+            mockRPC(_, args) {
                 if (args.method === "search_count") {
-                    const domain = args.args[0];
-                    assert.deepEqual(domain, [["foo", "=", 99]]);
                     assert.step("rpc validation");
                 }
             },
         });
         const confirmButton = fixture.querySelector(".o_dialog footer button");
         await click(confirmButton);
-        assert.verifySteps(["rpc validation"]);
+        assert.verifySteps(["confirmed"]);
+    });
+
+    QUnit.test("a domain with an unknown expression is not valid", async (assert) => {
+        await makeDomainSelectorDialog({
+            domain: "[('foo', '=', unknown)]",
+            onConfirm() {
+                assert.step("confirmed");
+            },
+            mockRPC(_, args) {
+                if (args.method === "search_count") {
+                    assert.step("rpc validation");
+                }
+            },
+        });
+        const confirmButton = fixture.querySelector(".o_dialog footer button");
+        await click(confirmButton);
+        assert.verifySteps([]);
     });
 });
