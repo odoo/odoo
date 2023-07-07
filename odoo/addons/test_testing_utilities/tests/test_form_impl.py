@@ -411,6 +411,12 @@ class TestO2M(TransactionCase):
                 self.assertEqual(s.value, 2)
                 self.assertEqual(s.v, 2, "should have onchanged value to v")
 
+    def test_o2m_default_discarded(self):
+        """ Tests what happens when the default value is discarded. """
+        model = self.env['test_testing_utilities.default']
+        with Form(model.with_context(default_value=42)) as f:
+            self.assertFalse(len(f.subs))
+
     def test_o2m_onchange_parent(self):
         """ Tests that changing o2m content triggers onchange in the parent
         """
