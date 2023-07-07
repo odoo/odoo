@@ -127,6 +127,7 @@ export class Field extends Component {
         const evalContext = record.evalContext;
         const field = record.fields[this.props.name];
         const fieldInfo = this.props.fieldInfo;
+        const readonly = this.props.readonly === true;
 
         const modifiers = fieldInfo.modifiers || {};
         const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
@@ -157,6 +158,7 @@ export class Field extends Component {
         delete props.showTooltip;
         delete props.fieldInfo;
         delete props.attrs;
+        delete props.readonly;
 
         return {
             ...fieldInfo.props,
@@ -176,7 +178,7 @@ export class Field extends Component {
             },
             value: this.props.record.data[this.props.name],
             decorations: decorationMap,
-            readonly: !record.isInEdition || readonlyFromModifiers || false,
+            readonly: readonly || !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
             type: field.type,
