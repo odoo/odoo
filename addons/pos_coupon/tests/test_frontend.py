@@ -405,3 +405,82 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosCouponTour5",
             login="accountman",
         )
+
+    def test_promotion_program_with_loyalty_program(self):
+        """
+        - Create a promotion with a discount of 10%
+        - Create a loyalty program with a fixed discount of 10€
+        - Apply both programs to the order
+        - Check that no "infinity" discount is applied
+        """
+        if not self.env["ir.module.module"].search([("name", "=", "pos_loyalty"), ("state", "=", "installed")]):
+            self.skipTest("pos_loyalty module is required for this test")
+
+        self.promo_program = self.env["coupon.program"].create(
+            {
+                "name": "Promo Program",
+                "program_type": "promotion_program",
+                "reward_type": "discount",
+                "discount_type": "percentage",
+                "discount_percentage": 10,
+                "discount_apply_on": "on_order",
+                "promo_code_usage": "no_code_needed",
+            }
+        )
+
+        self.discount_product = self.env["product.product"].create(
+            {
+                "name": "Discount Product",
+                "type": "service",
+                "list_price": 0,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+
+        self.test_product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+            }
+        )
+
+        self.loyalty_program = self.env["loyalty.program"].create(
+            {
+                "name": "Loyalty Program",
+                "reward_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "point_cost": 500,
+                            "name": "Test Rule",
+                            "reward_type": "discount",
+                            "minimum_amount": 0,
+                            "discount_type": "fixed_amount",
+                            "discount_fixed_amount": 10,
+                            "discount_product_id": self.discount_product.id,
+                        },
+                    )
+                ],
+            }
+        )
+
+        with Form(self.main_pos_config) as pos_config:
+            pos_config.use_coupon_programs = True
+            pos_config.promo_program_ids.add(self.promo_program)
+            pos_config.module_pos_loyalty = True
+            pos_config.loyalty_id = self.loyalty_program
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner.loyalty_points = 500
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour5.1",
+            login="accountman",
+        )

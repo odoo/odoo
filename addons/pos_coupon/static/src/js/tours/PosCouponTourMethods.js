@@ -51,6 +51,14 @@ odoo.define('pos_coupon.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
+        clickRewardButton() {
+            return [
+                {
+                    content: 'open code input dialog',
+                    trigger: '.control-button:contains("Reward")',
+                },
+            ];
+        }
         clickDiscountButton() {
             return [
                 {
