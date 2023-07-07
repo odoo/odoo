@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="pos_event.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//CategorySelector" position="attributes">
+            <attribute name="getEventSelected.bind">getEventSelected</attribute>
+        </xpath>
+        <xpath expr="//ProductCard" position="attributes">
+            <attribute name="isEventSelected.bind">isEventSelected</attribute>
+            <attribute name="seats_available">getAvalibleSeats(product)</attribute>
+        </xpath>
+    </t>
+</templates>

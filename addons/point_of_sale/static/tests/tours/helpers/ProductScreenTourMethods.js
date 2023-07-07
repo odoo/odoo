@@ -9,7 +9,6 @@ import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods
 export function clickLine(productName, quantity = "1.0") {
     return inLeftSide([
         ...Order.hasLine({
-            withoutClass: ".selected",
             run: "click",
             productName,
             quantity,

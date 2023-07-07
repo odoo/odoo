@@ -234,26 +234,34 @@ export class PaymentScreen extends Component {
         this.numberBuffer.reset();
     }
     async validateOrder(isForceValidate) {
-        this.numberBuffer.capture();
-        if (this.pos.config.cash_rounding) {
-            if (!this.pos.get_order().check_paymentlines_rounding()) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Rounding error in payment lines"),
-                    body: _t(
-                        "The amount of your payment lines must be rounded to validate the transaction."
-                    ),
-                });
-                return;
-            }
+        if (this.validating) {
+            return;
         }
-        if (await this._isOrderValid(isForceValidate)) {
-            // remove pending payments before finalizing the validation
-            for (const line of this.paymentLines) {
-                if (!line.is_done()) {
-                    this.currentOrder.remove_paymentline(line);
+        try {
+            this.numberBuffer.capture();
+            if (this.pos.config.cash_rounding) {
+                if (!this.pos.get_order().check_paymentlines_rounding()) {
+                    this.popup.add(AlertDialog, {
+                        title: _t("Rounding error in payment lines"),
+                        body: _t(
+                            "The amount of your payment lines must be rounded to validate the transaction."
+                        ),
+                    });
+                    return;
                 }
             }
-            await this._finalizeValidation();
+            if (await this._isOrderValid(isForceValidate)) {
+                this.validating = true;
+                // remove pending payments before finalizing the validation
+                for (const line of this.paymentLines) {
+                    if (!line.is_done()) {
+                        this.currentOrder.remove_paymentline(line);
+                    }
+                }
+                await this._finalizeValidation();
+            }
+        } finally {
+            this.validating = false;
         }
     }
     async _finalizeValidation() {

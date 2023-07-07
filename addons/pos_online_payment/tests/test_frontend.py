@@ -104,6 +104,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('event.group_event_manager').id),
             ],
         })
         cls.pos_user.partner_id.email = 'pos_op_user@test.com'

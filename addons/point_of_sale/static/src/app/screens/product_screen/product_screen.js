@@ -487,6 +487,41 @@ export class ProductScreen extends Component {
             return a.display_name.localeCompare(b.display_name);
         });
     }
+    getDisplayName(product) {
+        return product.display_name;
+    }
+    getImageUrl(product) {
+        return product.getImageUrl();
+    }
+    get pricelist() {
+        const current_order = this.pos.get_order();
+        if (current_order) {
+            return current_order.pricelist;
+        }
+        return this.pos.default_pricelist;
+    }
+    getPrice(product) {
+        const formattedUnitPrice = this.env.utils.formatCurrency(
+            product.get_display_price(this.pricelist, 1)
+        );
+        if (product.to_weight) {
+            return `${formattedUnitPrice}/${this.pos.units_by_id[product.uom_id[0]].name}`;
+        } else {
+            return formattedUnitPrice;
+        }
+    }
+    onClickProduct(product) {
+        this.pos.addProductToCurrentOrder(product);
+    }
+    switchCategory(categoryId) {
+        this.pos.setSelectedCategoryId(categoryId);
+    }
+    updateSearch(searchWord) {
+        this.pos.searchProductWord = searchWord;
+    }
+    clearSearch() {
+        this.pos.searchProductWord = "";
+    }
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {

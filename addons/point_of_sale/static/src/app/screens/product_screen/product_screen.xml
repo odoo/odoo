@@ -40,7 +40,11 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div t-att-class="{'d-none': scrollDirection.down and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
-                    <CategorySelector categories="getCategories()" onClick="(id) => this.pos.setSelectedCategoryId(id)" />
+                    <CategorySelector
+                        categories="getCategories()"
+                        onClick="(id) => this.switchCategory(id)"
+                        class="'category-selector'"
+                    />
                     <Input tModel="[pos, 'searchProductWord']"
                         class="'p-2'"
                         isSmall="ui.isSmall"
@@ -52,11 +56,12 @@
                     <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                         <ProductCard t-foreach="productsToDisplay" t-as="product" t-key="product.id"
                             class="pos.productViewMode"
-                            name="product.display_name"
-                            productId="product.id"
-                            price="product.getFormattedUnitPrice()"
-                            imageUrl="product.getImageUrl()"
-                            onClick="() =>this.pos.addProductToCurrentOrder(product)"
+                            name="getDisplayName(product)"                            productId="product.id"
+                            price="getPrice(product)"
+                            imageUrl="getImageUrl(product)"
+                            onClick="() => this.onClickProduct(product)"
+                            seats_available="product.seats_available"
+                            image_128="product.image_128"
                             productInfo="true"
                             onProductInfoClick="() => this.onProductInfoClick(product)"
                         />

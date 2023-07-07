@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-img')]" position="inside">
+            <span t-if="props.seats_available &amp;&amp; props.image_128" class="position-absolute top-0 end-0 badge rounded-pill bg-light mt-1 me-1" >
+                <t t-esc="props.seats_available"/> left
+            </span>
+            <span t-if="props.seats_available === 0 &amp;&amp; props.image_128" class="position-absolute top-0 end-0 badge rounded-pill bg-light mt-1 me-1 text-danger" >
+                SOLD OUT
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('product-content')]" position="before">
+            <span t-if="props.seats_available &amp;&amp; !props.image_128" class="position-sticky badge rounded-pill bg-light" >
+                <t t-esc="props.seats_available"/> left
+            </span>
+            <span t-if="props.seats_available === 0 &amp;&amp; !props.image_128" class="position-sticky badge rounded-pill bg-light text-danger" >
+                SOLD OUT
+            </span>
+        </xpath>
+    </t>
+</templates>
