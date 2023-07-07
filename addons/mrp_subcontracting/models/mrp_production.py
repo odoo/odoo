@@ -104,6 +104,9 @@ class MrpProduction(models.Model):
             return True
         return super()._pre_button_mark_done()
 
+    def _should_postpone_date_finished(self, date_planned_finished):
+        return super()._should_postpone_date_finished(date_planned_finished) and not self._get_subcontract_move()
+
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         self.ensure_one()

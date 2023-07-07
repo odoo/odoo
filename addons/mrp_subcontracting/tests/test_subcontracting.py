@@ -742,6 +742,19 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         custom_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', custom_subcontracting_location.id), ('location_dest_id', '=', custom_subcontracting_location.id)])
         self.assertEqual(custom_location_rules_count, 0)
 
+    def test_subcontracting_date_warning(self):
+        with Form(self.env['stock.picking'].with_context(default_immediate_transfer=True)) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.quantity_done = 3
+            picking_receipt = picking_form.save()
+        self.assertEqual(picking_form.json_popover, False)
+
+        subcontract = picking_receipt._get_subcontract_production()
+        self.assertEqual(subcontract.date_planned_start, picking_receipt.scheduled_date)
+        self.assertEqual(subcontract.date_planned_finished, picking_receipt.scheduled_date)
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
