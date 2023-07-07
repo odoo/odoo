@@ -24,9 +24,7 @@ class Team(models.Model):
 
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
-    alias_id = fields.Many2one(
-        'mail.alias', string='Alias', ondelete="restrict", required=True,
-        help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    alias_id = fields.Many2one(help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
     # assignment
     assignment_enabled = fields.Boolean('Lead Assign', compute='_compute_assignment_enabled')
     assignment_auto_enabled = fields.Boolean('Auto Assignment', compute='_compute_assignment_enabled')

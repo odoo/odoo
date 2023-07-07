@@ -46,7 +46,8 @@
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                     <field name="medium_id" optional="hidden"/>
                     <field name="job_id" attrs="{'readonly': [('id', '!=', False)]}"/>
-                    <field name="email" attrs="{'invisible': [('email', '=', False)]}" widget="email"/>
+                    <field name="email" widget="email"
+                           attrs="{'invisible': ['|', ('email', '=', False), ('has_domain', '=', False)]}"/>
                     <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" attrs="{'invisible': ['|', ('has_domain', '=', False), ('email', '!=', False)]}"/>
                 </tree>
             </field>

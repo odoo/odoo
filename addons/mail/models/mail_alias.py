@@ -185,16 +185,7 @@ class Alias(models.Model):
         """When an alias name appears to already be an email, we keep the local
         part only. A sanitizing / cleaning is also performed on the name. If
         name already exists an UserError is raised. """
-
-        def _sanitize_alias_name(name):
-            """ Cleans and sanitizes the alias name """
-            sanitized_name = remove_accents(name).lower().split('@')[0]
-            sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
-            sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
-            sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
-            return sanitized_name
-
-        sanitized_names = [_sanitize_alias_name(name) for name in names]
+        sanitized_names = [self._sanitize_alias_name(name) for name in names]
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
@@ -218,8 +209,8 @@ class Alias(models.Model):
         if not matching_alias:
             return sanitized_names
 
-        sanitized_alias_name = _sanitize_alias_name(matching_alias.alias_name)
-        matching_alias_name = '%s@%s' % (sanitized_alias_name, alias_domain) if alias_domain else sanitized_alias_name
+        sanitized_alias_name = self._sanitize_alias_name(matching_alias.alias_name)
+        matching_alias_name = f'{sanitized_alias_name}@{alias_domain}' if alias_domain else sanitized_alias_name
         if matching_alias.alias_parent_model_id and matching_alias.alias_parent_thread_id:
             # If parent model and parent thread ID both are set, display document name also in the warning
             document_name = self.env[matching_alias.alias_parent_model_id.model].sudo().browse(matching_alias.alias_parent_thread_id).display_name
@@ -234,6 +225,15 @@ class Alias(models.Model):
               matching_alias_name=matching_alias_name,
               alias_model_name=matching_alias.alias_model_id.name)
         )
+
+    @api.model
+    def _sanitize_alias_name(self, name):
+        """ Cleans and sanitizes the alias name """
+        sanitized_name = remove_accents(name).lower().split('@')[0]
+        sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+        sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
+        sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+        return sanitized_name
 
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
