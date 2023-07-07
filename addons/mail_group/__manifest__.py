@@ -7,7 +7,7 @@
     'description': """
         Manage your mailing lists from Odoo.
     """,
-    'version': '1.0',
+    'version': '1.1',
     'depends': [
         'mail',
         'portal',
