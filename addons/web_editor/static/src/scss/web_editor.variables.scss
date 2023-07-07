@@ -33,7 +33,9 @@ $o-we-border-color: $o-we-bg-light !default;
 
 $o-we-ace-color: #2F3129 !default;
 
-$o-we-handles-offset-to-hide: 10000px !default;
+// Needed to be changed to be high enough to not overflow when a user
+// has a page with a lot of content (10000px was proven to be too small)
+$o-we-handles-offset-to-hide: 100000px !default;
 $o-we-handles-btn-size: 20px !default;
 $o-we-handles-accent-color: $o-we-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
