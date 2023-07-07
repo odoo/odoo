@@ -18,4 +18,18 @@ odoo.define('pos_coupon.tour.pos_coupon5', function (require) {
     ProductScreen.check.totalAmountIs('93.15');
 
     Tour.register('PosCouponTour5', { test: true, url: '/pos/web' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.do.confirmOpeningPopup();
+
+    ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+    ProductScreen.do.clickCustomerButton();
+    ProductScreen.do.clickCustomer('Test Partner');
+    ProductScreen.do.clickSetCustomer();
+    PosCoupon.do.clickRewardButton();
+    ProductScreen.check.totalAmountIs('93.50');
+
+    Tour.register('PosCouponTour5.1', { test: true, url: '/pos/web' }, getSteps());
 });
