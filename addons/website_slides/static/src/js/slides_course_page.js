@@ -26,7 +26,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     collapseNextCategory: function (nextCategoryId) {
         const $categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
         const $categorySlides = document.querySelector(`ul[id=collapse-${nextCategoryId}]`);
-        if ($categorySection.getAttribute('aria-expanded') === 'false' && !$categorySlides.classList.contains('show')) {
+        if ($categorySection?.getAttribute('aria-expanded') === 'false' && !$categorySlides?.classList.contains('show')) {
             $categorySection.setAttribute('aria-expanded', true);
             $categorySlides.classList.add('show')
         }
@@ -64,7 +64,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         const newButton = QWeb.render('website.slides.sidebar.done.button', {
             slideId: slide.id,
-            slideIcon: $button.data('slideIcon') ?? 'fa-file-o',
+            uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
             slideCompleted: completed,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
