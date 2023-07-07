@@ -353,7 +353,7 @@ Andrew</p>]]></field>
             <field name="street">Kensington Road 189</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
-            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=4)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
