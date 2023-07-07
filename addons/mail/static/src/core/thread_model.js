@@ -51,8 +51,8 @@ export class Thread {
     customName;
     /** @type {string} */
     description;
-    /** @type {import("@mail/core/follower_model").Follower[]} */
-    followers = [];
+    /** @type {Set<import("@mail/core/follower_model").Follower>} */
+    followers = new Set();
     isAdmin = false;
     loadOlder = false;
     loadNewer = false;
@@ -255,7 +255,12 @@ export class Thread {
      * @returns {import("@mail/core/follower_model").Follower}
      */
     get followerOfSelf() {
-        return this.followers.find((f) => f.partner === this._store.self);
+        for (const follower of this.followers) {
+            if (follower.partner === this._store.self) {
+                return follower;
+            }
+        }
+        return undefined;
     }
 
     get imgUrl() {
