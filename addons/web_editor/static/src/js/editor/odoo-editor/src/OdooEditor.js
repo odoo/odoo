@@ -3251,6 +3251,7 @@ export class OdooEditor extends EventTarget {
 
     _positionToolbar() {
         const OFFSET = 10;
+        const BASELINE_MARGIN = 5;
         let isBottom = false;
         // Toolbar display must not be none in order to calculate width and height.
         this.toolbar.classList.toggle('d-none', false);
@@ -3282,6 +3283,12 @@ export class OdooEditor extends EventTarget {
         const editorTopPos = Math.max(0, editorRect.top);
         const scrollX = document.defaultView.scrollX;
         const scrollY = document.defaultView.scrollY;
+        const rangeRects = [...range.getClientRects()];
+        // DOMRects on the same line might differ by a few pixels in their
+        // bottom value. We use BASELINE_MARGIN as threshold to differentiate
+        // between DOMRects on the same or different line.
+        const rangeSpansMultipleLines =
+            rangeRects.length > 1 && rangeRects.at(-1).bottom - rangeRects[0].bottom > BASELINE_MARGIN;
 
         // Get left position.
         let left = correctedSelectionRect.left + OFFSET;
@@ -3305,20 +3312,26 @@ export class OdooEditor extends EventTarget {
         top += parentContextRect.top;
         this.toolbar.style.top = scrollY + top + 'px';
 
-        // Position the arrow.
-        let arrowLeftPos = (isSelForward && !isSelectionPotentiallyBugged ? correctedSelectionRect.right : correctedSelectionRect.left) - left - OFFSET;
-        // Ensure the arrow doesn't overflow the toolbar on the left.
-        arrowLeftPos = Math.max(OFFSET, arrowLeftPos);
-        // Ensure the arrow doesn't overflow the toolbar on the right.
-        arrowLeftPos = Math.min(toolbarWidth - OFFSET - 20, arrowLeftPos);
-        this.toolbar.style.setProperty('--arrow-left-pos', arrowLeftPos + 'px');
-        const arrowTopPos = isBottom ? -17 : toolbarHeight - 3;
-        this.toolbar.classList.toggle('toolbar-bottom', isBottom);
-        this.toolbar.style.setProperty('--arrow-top-pos', arrowTopPos + 'px');
+        const hasArrow = !(rangeSpansMultipleLines || this.toolbar.classList.contains('oe-media'));
+        this.toolbar.classList.toggle('noarrow', !hasArrow);
 
-        // Calculate toolbar dimensions including the arrow.
-        const toolbarTop = Math.min(top , top + arrowTopPos);
-        const toolbarBottom = Math.max(top + toolbarHeight, top + arrowTopPos + 20);
+        let toolbarTop = top;
+        let toolbarBottom = top + toolbarHeight;
+        if (hasArrow) {
+            // Position the arrow.
+            let arrowLeftPos = (isSelForward && !isSelectionPotentiallyBugged ? correctedSelectionRect.right : correctedSelectionRect.left) - left - OFFSET;
+            // Ensure the arrow doesn't overflow the toolbar on the left.
+            arrowLeftPos = Math.max(OFFSET, arrowLeftPos);
+            // Ensure the arrow doesn't overflow the toolbar on the right.
+            arrowLeftPos = Math.min(toolbarWidth - OFFSET - 20, arrowLeftPos);
+            this.toolbar.style.setProperty('--arrow-left-pos', arrowLeftPos + 'px');
+            const arrowTopPos = isBottom ? -17 : toolbarHeight - 3;
+            this.toolbar.classList.toggle('toolbar-bottom', isBottom);
+            this.toolbar.style.setProperty('--arrow-top-pos', arrowTopPos + 'px');
+            // Calculate toolbar dimensions including the arrow.
+            toolbarTop = Math.min(top, top + arrowTopPos);
+            toolbarBottom = Math.max(toolbarBottom, top + arrowTopPos + 20);
+        }
 
         // Hide toolbar if it overflows the scroll container.
         const distToScrollContainer = Math.min(toolbarTop - scrollContainerRect.top,
