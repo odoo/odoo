@@ -72,7 +72,9 @@
                         <div class="accordion-body p-0">
                             <ul class="list-group list-group-flush">
                                 <t t-foreach="tokens_sudo" t-as="token_sudo">
-                                    <li class="list-group-item d-flex flex-column gap-2 py-3">
+                                    <li name="o_payment_option"
+                                        class="list-group-item d-flex flex-column gap-2 py-3"
+                                    >
                                         <t t-call="payment.token_form">
                                             <t t-set="is_selected"
                                                t-value="token_sudo.id == selected_token_id"
@@ -112,7 +114,9 @@
                                     <t t-set="extra_classes"
                                        t-value="' rounded-bottom o_last_payment_method' if pm_sudo_last else ''"
                                     />
-                                    <li t-attf-class="list-group-item d-flex flex-column gap-2 py-3 {{extra_classes}}">
+                                    <li name="o_payment_option"
+                                        t-attf-class="list-group-item d-flex flex-column gap-2 py-3 {{extra_classes}}"
+                                    >
                                         <t t-call="payment.method_form">
                                             <t t-set="is_selected"
                                                t-value="pm_sudo.id == selected_method_id"
@@ -155,6 +159,9 @@
                                type="radio"
                                t-att-checked="is_selected"
                                t-att-class="'form-check-input' + (' d-none' if not allow_token_selection else '')"
+                               t-att-data-payment-option-id="token_sudo.id"
+                               t-att-data-provider-code="token_sudo.provider_code"
+                               data-payment-option-type="token"
                         />
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <!-- === Token label === -->
@@ -213,7 +220,6 @@
         </div>
         <!-- === Inline form === -->
         <div t-if="inline_form_xml_id"
-             t-attf-id="o_payment_token_inline_form_{{token_sudo.id}}"
              name="o_payment_inline_form"
              class="position-relative d-none"
         >
@@ -242,9 +248,10 @@
                            type="radio"
                            t-att-checked="is_selected"
                            class="form-check-input position-absolute"
-                           t-att-data-payment-option-id="provider_sudo.id"
-                           t-att-data-provider="provider_sudo.code"
+                           t-att-data-payment-option-id="pm_sudo.id"
+                           t-att-data-provider-code="provider_sudo.code"
                            t-att-data-payment-method-id="pm_sudo.id"
+                           data-payment-option-type="payment_method"
                     />
                     <div class="d-flex flex-column flex-md-row align-items-md-center gap-2 flex-grow-1">
                         <!-- === Method label === -->
@@ -286,17 +293,14 @@
             </div>
         </div>
         <!-- === Inline form === -->
-        <div t-attf-id="o_payment_method_inline_form_{{pm_sudo.id}}"
-             name="o_payment_inline_form"
-             class="position-relative d-none"
-        >
+        <div name="o_payment_inline_form" class="position-relative d-none">
             <t t-if="inline_form_xml_id and provider_sudo._should_build_inline_form(is_validation=mode == 'validation')"
                t-call="{{inline_form_xml_id}}"
             >
                 <t t-set="provider_id" t-value="provider_sudo.id"/>
             </t>
             <!-- === Tokenization checkbox === -->
-            <div class="o-checkbox form-check mt-2">
+            <div name="o_payment_tokenize_container" class="o-checkbox form-check mt-2">
                 <label t-if="show_tokenize_input_mapping[provider_sudo.id]">
                     <input name="o_payment_tokenize_checkbox"
                            class="form-check-input"
@@ -345,6 +349,7 @@
                 type="submit"
                 t-out="label"
                 class="btn btn-primary w-100 w-md-auto px-5"
+                disabled="true"
         />
     </template>
 

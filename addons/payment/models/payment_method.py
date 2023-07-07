@@ -44,7 +44,7 @@ class PaymentMethod(models.Model):
         max_height=30,
     )  # TODO see if still necessary; if ratio is still correct
 
-    # === BUSINESS METHODS ===#
+    # === BUSINESS METHODS === #
 
     def _get_compatible_payment_methods(self, provider_ids):
         """ TODO.
