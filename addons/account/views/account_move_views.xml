@@ -874,12 +874,15 @@
                                           attrs="{'invisible': [('move_type', '=', 'entry')]}"> in </span>
                                     <field name="currency_id"
                                            groups="base.group_multi_currency"
-                                           attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('move_type', '=', 'entry')]}"/>
+                                           attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('move_type', '=', 'entry')]}"
+                                           options="{'no_create': True}"
+                                           context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
                                 </div>
 
                                 <field name="currency_id"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"
-                                       groups="!account.group_account_readonly,base.group_multi_currency"/>
+                                       groups="!account.group_account_readonly,base.group_multi_currency"
+                                       options="{'no_create': True}"/>
 
                             </group>
                         </group>
