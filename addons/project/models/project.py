@@ -1130,7 +1130,7 @@ class Task(models.Model):
         ('03_approved', 'Approved'),
         *CLOSED_STATES.items(),
         ('04_waiting_normal', 'Waiting'),
-    ], string='Status', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, recursive=True, task_dependency_tracking=True, tracking=True)
+    ], string='Status', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, task_dependency_tracking=True, tracking=True)
 
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
