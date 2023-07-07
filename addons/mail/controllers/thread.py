@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import suppress
 from datetime import datetime
 from markupsafe import Markup
-from psycopg2 import OperationalError
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -67,11 +65,20 @@ class ThreadController(http.Controller):
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
         if context:
             request.update_context(**context)
-        if "canned_response_ids" in post_data:
-            canned_response_ids = request.env['mail.shortcode'].browse(post_data.pop('canned_response_ids'))
-            # Ignore concurrency errors when saving last used date
-            with suppress(OperationalError):
-                canned_response_ids.write({'last_used': datetime.now()})
+        canned_response_ids = tuple(cid for cid in post_data.pop('canned_response_ids', []) if isinstance(cid, int))
+        if canned_response_ids:
+            # Avoid serialization errors since last used update is not
+            # essential and should not block message post.
+            request.env.cr.execute("""
+                UPDATE mail_shortcode SET last_used=%(last_used)s
+                WHERE id IN (
+                    SELECT id from mail_shortcode WHERE id IN %(ids)s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """, {
+                'last_used': datetime.now(),
+                'ids': canned_response_ids,
+            })
         thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
