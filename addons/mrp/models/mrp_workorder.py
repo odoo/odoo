@@ -766,32 +766,37 @@ class MrpWorkorder(models.Model):
     def _get_conflicted_workorder_ids(self):
         """Get conlicted workorder(s) with self.
 
-        Conflict means having two workorders in the same time in the same workcenter.
+        Conflict means having two workorders in the same time in the same workcenter resource.resource.
 
         :return: defaultdict with key as workorder id of self and value as related conflicted workorder
         """
         self.flush_model(['state', 'date_start', 'date_finished', 'workcenter_id'])
         sql = """
-            SELECT wo1.id, wo2.id
-            FROM mrp_workorder wo1, mrp_workorder wo2
-            WHERE
-                wo1.id IN %s
-                AND wo1.state IN ('pending', 'waiting', 'ready')
-                AND wo2.state IN ('pending', 'waiting', 'ready')
-                AND wo1.id != wo2.id
-                AND wo1.workcenter_id = wo2.workcenter_id
-                AND (DATE_TRUNC('second', wo2.date_start), DATE_TRUNC('second', wo2.date_finished))
-                    OVERLAPS (DATE_TRUNC('second', wo1.date_start), DATE_TRUNC('second', wo1.date_finished))
-        """
+                SELECT wo1.id, wo2.id
+                FROM mrp_workorder wo1
+                JOIN mrp_workorder wo2 ON wo1.workcenter_id = wo2.workcenter_id
+                JOIN mrp_workcenter workcenter ON wo1.workcenter_id = workcenter.id
+                WHERE
+                    wo1.id IN %s
+                    AND wo1.state IN ('pending', 'waiting', 'ready')
+                    AND wo2.state IN ('pending', 'waiting', 'ready')
+                    AND wo1.id != wo2.id
+                    AND (
+                        SELECT COUNT(*)
+                        FROM mrp_workorder wo3
+                        WHERE wo3.workcenter_id = wo1.workcenter_id
+                            AND wo3.id = wo2.id
+                            AND (DATE_TRUNC('second', wo3.date_start), DATE_TRUNC('second', wo3.date_finished))
+                                OVERLAPS (DATE_TRUNC('second', wo1.date_start), DATE_TRUNC('second', wo1.date_finished))
+                    ) > (SELECT simultaneous_workorders - 1 FROM mrp_workcenter WHERE id = wo1.workcenter_id)
+
+            """
         self.env.cr.execute(sql, [tuple(self.ids)])
         res = defaultdict(list)
+
         for wo1, wo2 in self.env.cr.fetchall():
             res[wo1].append(wo2)
-        res_simultaneous_wo = defaultdict(list)
-        for r in res:
-            if len(res[r]) > self.env['mrp.workorder'].browse(r).workcenter_id.simultaneous_workorder - 1:
-                res_simultaneous_wo[r] = res[r]
-        return res_simultaneous_wo
+        return res
 
     def _get_operation_values(self):
         self.ensure_one()

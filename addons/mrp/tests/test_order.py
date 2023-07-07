@@ -3309,7 +3309,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids[0].quantity_done, 30)
 
     @freeze_time('2023-01-05 12:00')
-    def test_simultaneous_workorder_plan(self):
+    def test_simultaneous_workorders_plan(self):
         # we need here to create a workcenter with multiple capacity, then plan multiple MO/WO on it
         # to see if it allows to have multiple WO at the same time
         """Test when plan start time for workorders, cancelled workorders won't be taken into account.
@@ -3318,7 +3318,7 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'wc1',
             'default_capacity': 1,
             'time_efficiency': 100,
-            'simultaneous_workorder': 1
+            'simultaneous_workorders': 1
         })
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
@@ -3353,7 +3353,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo2.workorder_ids[0].date_start, datetime(2023, 1, 5, 13, 0))
 
         # change the number of simultaneous to 2
-        workcenter_1.simultaneous_workorder = 2
+        workcenter_1.simultaneous_workorders = 2
 
         # planning a new MO should make it start at the same time as the first mo
         mo_form3 = Form(self.env['mrp.production'])
