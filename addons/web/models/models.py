@@ -1196,7 +1196,7 @@ class RecordSnapshot(dict):
             commands = []
 
             self_value = self[field_name]
-            other_value = other.get(field_name) or {}
+            other_value = {} if force else other.get(field_name) or {}
             if any(other_value):
                 # other may be a snapshot for a real record, adapt its x2many ids
                 other_value = {NewId(id_): snap for id_, snap in other_value.items()}
