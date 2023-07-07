@@ -366,6 +366,7 @@ export class ViewCompiler {
         field.setAttribute("name", `'${fieldName}'`);
         field.setAttribute("record", `props.record`);
         field.setAttribute("fieldInfo", `props.archInfo.fieldNodes['${fieldId}']`);
+        field.setAttribute("readonly", `props.archInfo.activeActions?.edit === false and !props.record.isNew`);
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);
