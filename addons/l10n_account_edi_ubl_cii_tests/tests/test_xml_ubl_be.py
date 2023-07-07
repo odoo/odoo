@@ -443,8 +443,18 @@ class TestUBLBE(TestUBLCommon):
         self.assertTrue(created_bill)
 
     def test_import_invoice_xml(self):
-        self._assert_imported_invoice_from_file(subfolder='tests/test_files/from_odoo', filename='bis3_out_invoice.xml',
-            amount_total=3164.22, amount_tax=482.22, list_line_subtotals=[1782, 1000, -100], currency_id=self.currency_data['currency'].id)
+        kwargs = {
+            'subfolder': 'tests/test_files/from_odoo',
+            'amount_total': 3164.22,
+            'amount_tax': 482.22,
+            'list_line_subtotals': [1782, 1000, -100],
+            'list_line_price_unit': [990, 100, 100],
+            'list_line_discount': [10, 0, 0],
+            'currency_id': self.currency_data['currency'].id,
+        }
+        self._assert_imported_invoice_from_file(filename='bis3_out_invoice.xml', **kwargs)
+        # same as the file above, but the <cac:Price> are missing in the invoice lines
+        self._assert_imported_invoice_from_file(filename='bis3_out_invoice_no_prices.xml', **kwargs)
 
     def test_import_invoice_xml_open_peppol_examples(self):
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
