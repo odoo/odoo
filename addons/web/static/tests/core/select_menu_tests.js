@@ -912,6 +912,7 @@ QUnit.module("Web Components", (hooks) => {
         );
 
         await editInput(target, "input.o_select_menu_sticky", "cou");
+        await nextTick();
         assert.strictEqual(
             target.querySelector(".o_select_menu_menu").textContent,
             "Coucou",
@@ -927,6 +928,66 @@ QUnit.module("Web Components", (hooks) => {
             target.querySelector(".o_select_menu_menu").textContent,
             "CoucouHello",
             "SelectMenu has two choices available"
+        );
+    });
+
+    QUnit.test("Choices are updated and filtered when props change", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({
+                    choices: [
+                        { label: "Hello", value: "hello" },
+                        { label: "Coucou", value: "hello2" },
+                    ],
+                    value: "hello",
+                });
+            }
+
+            onInput() {
+                this.state.choices = [
+                    { label: "Coucou", value: "hello2" },
+                    { label: "Good afternoon", value: "hello3" },
+                ];
+            }
+
+            onSelect(value) {
+                assert.step(value);
+                this.state.value = value;
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+            <SelectMenu
+                choices="state.choices"
+                value="state.value"
+                onInput.bind="onInput"
+                onSelect.bind="onSelect"
+            />
+        `;
+
+        await mount(Parent, target, { env });
+        assert.strictEqual(getValue(), "Hello");
+
+        await open();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "CoucouHello",
+            "SelectMenu has two choices available"
+        );
+
+        // edit the input, to trigger onInput and update the props
+        await editInput(target, "input.o_select_menu_sticky", "aft");
+        await nextTick();
+
+        await click(target.querySelectorAll(".o_select_menu_item_label")[0]);
+        assert.verifySteps(["hello3"], "added item can be selected");
+        assert.strictEqual(getValue(), "Good afternoon");
+
+        await open();
+        assert.strictEqual(
+            target.querySelector(".o_select_menu_menu").textContent,
+            "CoucouGood afternoon",
+            "SelectMenu has two updated choices available"
         );
     });
 });
