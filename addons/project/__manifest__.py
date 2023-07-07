@@ -3,7 +3,7 @@
 
 {
     'name': 'Project',
-    'version': '1.2',
+    'version': '1.3',
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
     'sequence': 45,

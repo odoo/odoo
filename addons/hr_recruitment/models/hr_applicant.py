@@ -336,11 +336,11 @@ class Applicant(models.Model):
 
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
-            alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
+            hr_job = self.env['hr.job'].browse(self.env.context['active_id'])
         elif self.env.context.get('default_job_id'):
-            alias_id = self.env['hr.job'].browse(self.env.context['default_job_id']).alias_id
+            hr_job = self.env['hr.job'].browse(self.env.context['default_job_id'])
         else:
-            alias_id = False
+            hr_job = self.env['hr.job']
 
         nocontent_body = Markup("""
 <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
@@ -350,11 +350,10 @@ class Applicant(models.Model):
             'para_2': _("You can search into attachment's content, like resumes, with the searchbar."),
         }
 
-        if alias_id and alias_id.alias_domain and alias_id.alias_name:
-            email = alias_id.display_name
+        if hr_job.alias_email:
             nocontent_body += Markup('<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>') % {
                 'helper_email': _("Create new applications by sending an email to"),
-                'email': email
+                'email': hr_job.alias_email,
             }
 
         return super().get_empty_list_help(nocontent_body)

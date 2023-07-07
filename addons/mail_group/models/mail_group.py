@@ -45,8 +45,6 @@ class MailGroup(models.Model):
 
     active = fields.Boolean('Active', default=True)
     name = fields.Char('Name', required=True, translate=True)
-    alias_name = fields.Char('Alias Name', copy=False, related='alias_id.alias_name', readonly=False)
-    alias_fullname = fields.Char('Alias Full Name', compute='_compute_alias_fullname')
     description = fields.Text('Description')
     image_128 = fields.Image('Image', max_width=128, max_height=128)
     # Messages
@@ -84,14 +82,6 @@ class MailGroup(models.Model):
                                       default=lambda self: self.env.ref('base.group_user'))
     # UI
     can_manage_group = fields.Boolean('Can Manage', help='Can manage the members', compute='_compute_can_manage_group')
-
-    @api.depends('alias_name', 'alias_domain')
-    def _compute_alias_fullname(self):
-        for group in self:
-            if group.alias_name and group.alias_domain:
-                group.alias_fullname = f'{group.alias_name}@{group.alias_domain}'
-            else:
-                group.alias_fullname = group.alias_name
 
     @api.depends('mail_group_message_ids.create_date', 'mail_group_message_ids.moderation_status')
     def _compute_mail_group_message_last_month_count(self):
@@ -436,11 +426,11 @@ class MailGroup(models.Model):
                     'Precedence': 'list',
                     'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
                 }
-                if self.alias_name and self.alias_domain:
+                if self.alias_email:
                     headers.update({
-                        'List-Id': f'<{self.alias_name}.{self.alias_domain}>',
-                        'List-Post': f'<mailto:{self.alias_name}@{self.alias_domain}>',
-                        'X-Forge-To': f'"{self.name}" <{self.alias_name}@{self.alias_domain}>',
+                        'List-Id': f'<{self.alias_email}>',
+                        'List-Post': f'<mailto:{self.alias_email}>',
+                        'X-Forge-To': f'"{self.name}" <{self.alias_email}>',
                     })
 
                 if message.mail_message_id.parent_id:
@@ -448,7 +438,7 @@ class MailGroup(models.Model):
 
                 # Add the footer (member specific) in the body
                 template_values = {
-                    'mailto': f'{self.alias_name}@{self.alias_domain}',
+                    'mailto': f'{self.alias_email}',
                     'group_url': f'{base_url}/groups/{slug(self)}',
                     'unsub_label': f'{base_url}/groups?unsubscribe',
                     'unsub_url':  f'{base_url}/groups?unsubscribe&group_id={self.id}&token={access_token}&email={email_url_encoded}',

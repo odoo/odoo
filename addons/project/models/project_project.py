@@ -130,10 +130,8 @@ class Project(models.Model):
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_enabled = fields.Boolean(string='Use Email Alias', compute='_compute_alias_enabled', readonly=False)
-    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
-        help="Internal email associated with this project. Incoming emails are automatically synchronized "
-             "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
-    alias_value = fields.Char(string='Alias email', compute='_compute_alias_value')
+    alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
+                                    "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
             ('followers', 'Invited internal users (private)'),
             ('employees', 'All internal users'),
@@ -217,7 +215,7 @@ class Project(models.Model):
 
     def _compute_alias_enabled(self):
         for project in self:
-            project.alias_enabled = project.alias_domain and project.alias_id.alias_name
+            project.alias_enabled = bool(project.alias_email)
 
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
@@ -336,14 +334,6 @@ class Project(models.Model):
         else:
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
-
-    @api.depends('alias_name', 'alias_domain')
-    def _compute_alias_value(self):
-        for project in self:
-            if not project.alias_name or not project.alias_domain:
-                project.alias_value = ''
-            else:
-                project.alias_value = "%s@%s" % (project.alias_name, project.alias_domain)
 
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):
