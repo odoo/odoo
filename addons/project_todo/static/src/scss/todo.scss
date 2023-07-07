@@ -1,16 +1,27 @@
 .o_todo_form_view {
     .o_form_sheet_bg {
-        display: flex;
-        flex-direction: column;
         .o_form_statusbar {
             margin: 0;
-            .o_field_widget {
-                align-self: center !important;
+
+            .o_field_many2many_tags,
+            .o_field_many2many_avatar_user {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+            }
+
+            .o_input {
+                border: none;
+            }
+
+            .o_dropdown_button {
+                display: none;
             }
         }
+
         .o_form_sheet {
             flex: 1;
-            max-width: 100%;
+
             .oe_pad {
                 flex: 1;
                 margin-bottom: 0;
@@ -27,7 +38,6 @@
         }
         .o_field_html .note-editable {
             border: none !important;
-            padding: $o-sheet-vpadding $o-horizontal-padding 10px !important;
             min-height: 300px;
         }
     }
