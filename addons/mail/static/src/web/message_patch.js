@@ -15,6 +15,7 @@ patch(Message.prototype, "mail/web", {
     setup() {
         this._super(...arguments);
         this.action = useService("action");
+        this.userService = useService("user");
     },
 
     onClickAuthor(ev) {
@@ -73,9 +74,9 @@ patch(Message.prototype, "mail/web", {
                 return format.char(trackingValue.value);
             case "date":
                 if (trackingValue.value) {
-                    return luxon.DateTime.fromISO(trackingValue.value, { setZone: "utc" }).toFormat(
-                        "LL/dd/yyyy"
-                    );
+                    return luxon.DateTime.fromISO(trackingValue.value, { zone: "utc" })
+                        .setZone("system")
+                        .toLocaleString({ locale: this.userService.lang.replace("_", "-") });
                 }
                 return format.date(trackingValue.value);
             case "datetime": {
