@@ -701,7 +701,7 @@ class MrpProduction(models.Model):
                 continue
             days_delay = production.bom_id.produce_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
-            if date_finished == production.date_start:
+            if production._should_postpone_date_finished(date_finished):
                 date_finished = date_finished + relativedelta(hours=1)
             production.date_finished = date_finished
 
@@ -1097,6 +1097,10 @@ class MrpProduction(models.Model):
 
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             move._set_quantity_done(new_qty)
+
+    def _should_postpone_date_finished(self, date_finished):
+        self.ensure_one()
+        return date_finished == self.date_start
 
     def _update_raw_moves(self, factor):
         self.ensure_one()
