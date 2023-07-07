@@ -27,6 +27,7 @@ Model({
         onClickDelete() {
             this.message.updateContent({
                 attachment_ids: [],
+                attachment_tokens: [],
                 body: "",
             });
         },
