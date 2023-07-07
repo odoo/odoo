@@ -78,8 +78,10 @@
                     </t>
                 </t>
             </div>
-
-            <div t-attf-class="o_datetime_buttons position-md-absolute end-0">
+            <div
+                class="o_datetime_buttons end-0"
+                t-att-class="{ 'position-md-absolute': props.type === 'datetime'  }"
+            >
                 <t t-slot="buttons" />
             </div>
         </div>
