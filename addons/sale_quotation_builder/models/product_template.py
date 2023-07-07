@@ -12,14 +12,16 @@ class ProductTemplate(models.Model):
         string="Quotation Only Description",
         translate=html_translate,
         sanitize_attributes=False,
+        sanitize_overridable=True,
         help="The quotation description (not used on eCommerce)")
 
     quotation_description = fields.Html(
         string="Quotation Description",
         compute='_compute_quotation_description',
         sanitize_attributes=False,
+        sanitize_overridable=True,
         help="This field uses the Quotation Only Description if it is defined, "
-            "otherwise it will try to read the eCommerce Description.")
+             "otherwise it will try to read the eCommerce Description.")
 
     def _compute_quotation_description(self):
         for template in self:
