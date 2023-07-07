@@ -27,6 +27,7 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="transaction_ids" invisible="1" />
                 <button name="action_view_payment_transactions" type="object"
+                        groups="account.group_account_invoice"
                         class="oe_stat_button" icon="fa-money"
                         attrs="{'invisible': [('transaction_ids', '=', [])]}">
                         <div class="o_stat_info">
