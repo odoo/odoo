@@ -980,10 +980,12 @@ function formatTables($editable) {
             row.style.verticalAlign = 'bottom';
         } else if (alignItems === 'stretch') {
             const columns = [...row.querySelectorAll('td.o_converted_col')];
-            const commonAncestor = commonParentGet(columns[0], columns[1]);
-            const biggestHeight = commonAncestor.clientHeight;
-            for (const column of columns) {
-                column.style.height = biggestHeight + 'px';
+            if (columns.length > 1) {
+                const commonAncestor = commonParentGet(columns[0], columns[1]);
+                const biggestHeight = commonAncestor.clientHeight;
+                for (const column of columns) {
+                    column.style.height = biggestHeight + 'px';
+                }
             }
         }
     }
