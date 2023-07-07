@@ -690,7 +690,20 @@ class Message(models.Model):
         self = self.sudo()
         return super().fetch(field_names)
 
+    def _write_date(self, write_date_by_id):
+        self.flush_model()
+        for message in self:
+            super(Message, message)._write({ "write_date": write_date_by_id[message.id] })
+
+    def _write(self, vals):
+        prev_write_date_by_id = {message.id: message.write_date for message in self}
+        res = super(Message, self)._write(vals)
+        if not any(key in vals for key in ['body', 'attachment_ids', 'partner_ids']):
+            self._write_date(prev_write_date_by_id)
+        return res
+
     def write(self, vals):
+        prev_write_date_by_id = {message.id: message.write_date for message in self}
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
@@ -700,6 +713,8 @@ class Message(models.Model):
                 mail.attachment_ids.check(mode='read')
         if 'notification_ids' in vals or record_changed:
             self._invalidate_documents()
+        if not any(key in vals for key in ['body', 'attachment_ids', 'partner_ids']):
+            self._write_date(prev_write_date_by_id)
         return res
 
     def unlink(self):
