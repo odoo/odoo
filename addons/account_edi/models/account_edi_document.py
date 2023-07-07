@@ -159,7 +159,11 @@ class AccountEdiDocument(models.Model):
                         'blocking_level': False,
                     })
 
-                    if move.state == 'posted':
+                    if move.state == 'posted' and all(
+                        doc.state == 'cancelled'
+                        or not doc.edi_format_id._needs_web_services()
+                        for doc in move.edi_document_ids
+                    ):
                         # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
                         # can be safely cancelled.
                         moves_to_cancel |= move
@@ -172,7 +176,7 @@ class AccountEdiDocument(models.Model):
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
                     })
-            if moves_to_cancel and all((doc.state == 'cancelled' and doc.blocking_level != 'error') or not doc.edi_format_id._needs_web_services() for doc in moves_to_cancel.edi_document_ids):
+            if moves_to_cancel:
                 moves_to_cancel.button_draft()
                 moves_to_cancel.button_cancel()
 
