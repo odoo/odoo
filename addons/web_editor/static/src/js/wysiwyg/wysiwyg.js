@@ -2132,8 +2132,6 @@ export class Wysiwyg extends Component {
                 el.classList.toggle('d-none', true);
             }
         }
-        // Toggle the toolbar arrow.
-        this.toolbarEl.classList.toggle('noarrow', isInMedia);
         // Unselect all media.
         this.$editable.find('.o_we_selected_image').removeClass('o_we_selected_image');
         if (isInMedia) {
