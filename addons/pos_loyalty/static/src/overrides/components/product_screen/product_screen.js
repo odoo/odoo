@@ -107,4 +107,8 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             selectedLine.order._updateRewards();
         }
     },
+    async _barcodeProductAction(code) {
+        await this._super(code);
+        this.currentOrder._updateRewards();
+    },
 });
