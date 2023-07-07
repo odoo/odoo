@@ -138,9 +138,7 @@ patch(ThreadService.prototype, "mail/core/web", {
             partner: this.personaService.insert({ ...data.partner, type: "partner" }),
             _store: this.store,
         });
-        if (!follower.followedThread.followers.includes(follower)) {
-            follower.followedThread.followers.push(follower);
-        }
+        follower.followedThread.followers.add(follower);
         return follower;
     },
     /**
@@ -190,10 +188,7 @@ patch(ThreadService.prototype, "mail/core/web", {
             [follower.followedThread.id],
             [follower.partner.id],
         ]);
-        const index = follower.followedThread.followers.indexOf(follower);
-        if (index !== -1) {
-            follower.followedThread.followers.splice(index, 1);
-        }
+        follower.followedThread.followers.delete(follower);
         delete this.store.followers[follower.id];
     },
     unpin(thread) {
