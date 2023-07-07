@@ -724,18 +724,6 @@ export class Orderline extends PosModel {
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with(orderline) {
-        var price = parseFloat(
-            round_di(this.price || 0, this.pos.dp["Product Price"]).toFixed(
-                this.pos.dp["Product Price"]
-            )
-        );
-        var order_line_price = orderline
-            .get_product()
-            .get_price(orderline.order.pricelist, this.get_quantity());
-        order_line_price = round_di(
-            orderline.compute_fixed_price(order_line_price),
-            this.pos.currency.decimal_places
-        );
         // only orderlines of the same product can be merged
         return (
             !this.skipChange &&
@@ -745,10 +733,7 @@ export class Orderline extends PosModel {
             this.is_pos_groupable() &&
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
-            floatIsZero(
-                price - order_line_price - orderline.get_price_extra(),
-                this.pos.currency.decimal_places
-            ) &&
+            floatIsZero(this.price - orderline.price, this.pos.currency.decimal_places) &&
             !(
                 this.product.tracking === "lot" &&
                 (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
