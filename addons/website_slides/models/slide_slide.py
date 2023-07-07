@@ -118,7 +118,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True)
+    description = fields.Html('Description', translate=True, sanitize_attributes=False)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -646,6 +646,7 @@ class Slide(models.Model):
 
             if slide.is_published and not slide.is_category:
                 slide._post_publication()
+                slide.channel_id.channel_partner_ids._recompute_completion()
         return slides
 
     def write(self, values):
@@ -673,8 +674,8 @@ class Slide(models.Model):
                 })
 
         if 'is_published' in values or 'active' in values:
-            # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._recompute_completion()
+            # recompute the completion for all partners of the channel
+            self.channel_id.channel_partner_ids._recompute_completion()
 
         return res
 
@@ -689,7 +690,9 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
+        channel_partner_ids = self.channel_id.channel_partner_ids
         super(Slide, self).unlink()
+        channel_partner_ids._recompute_completion()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
@@ -797,7 +800,10 @@ class Slide(models.Model):
         return self._sign_token(partner_id)
 
     def _send_share_email(self, email, fullscreen):
-        # TDE FIXME: template to check
+        courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.channel_id.share_slide_template_id.with_context(
@@ -924,7 +930,7 @@ class Slide(models.Model):
         # Remove the Karma point gained
         completed_slides._action_set_quiz_done(completed=False)
 
-        self.env['slide.slide.partner'].sudo().search([
+        self.env['slide.slide.partner'].with_context(slides_marked_uncompleted=True).sudo().search([
             ('slide_id', 'in', completed_slides.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
         ]).completed = False

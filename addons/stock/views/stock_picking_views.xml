@@ -373,7 +373,7 @@
                         string="Package"
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
-                    <filter name="to_do_transfers" string="To Do" domain="[('user_id', 'in', [uid, False])]"/>
+                    <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>

@@ -5,6 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields, Command
+from odoo.osv import expression
 from odoo.exceptions import ValidationError, RedirectWarning
 from datetime import date
 
@@ -2059,6 +2060,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')
 
     def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state):
+        def assert_partial(line1, line2):
+            partial = self.env['account.partial.reconcile'].search(expression.OR([
+                [('debit_move_id', '=', line1.id), ('credit_move_id', '=', line2.id)],
+                [('debit_move_id', '=', line2.id), ('credit_move_id', '=', line1.id)],
+            ]), limit=1)
+            self.assertTrue(partial)
+
         def create_move(move_type, amount, account=None):
             move_vals = {
                 'move_type': move_type,
@@ -2132,6 +2140,22 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 .filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))\
                 .reconcile()
 
+        def create_statement_line(move, amount):
+            statement_line = self.env['account.bank.statement.line'].create({
+                'payment_ref': 'ref',
+                'journal_id': self.company_data['default_journal_bank'].id,
+                'amount': amount,
+                'date': '2020-01-10',
+            })
+            _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+                .with_context(skip_account_move_synchronization=True)\
+                ._seek_for_lines()
+            line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+
+            st_suspense_lines.account_id = line.account_id
+            (st_suspense_lines + line).reconcile()
+            assert_partial(st_suspense_lines, line)
+
         move = create_move(move_type, amount)
         line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
         for counterpart_move_type, counterpart_amount in counterpart_values_list:
@@ -2139,10 +2163,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 create_payment(move, counterpart_amount)
             elif counterpart_move_type == 'reverse':
                 create_reverse(move, counterpart_amount)
+            elif counterpart_move_type == 'statement_line':
+                create_statement_line(move, counterpart_amount)
             else:
                 counterpart_move = create_move(counterpart_move_type, counterpart_amount, account=line.account_id)
                 counterpart_line = counterpart_move.line_ids.filtered(lambda x: x.account_id == line.account_id)
                 (line + counterpart_line).reconcile()
+                assert_partial(line, counterpart_line)
 
         if payment_state == 'in_payment' and move._get_invoice_in_payment_state() == 'paid':
             payment_state = 'paid'
@@ -2170,24 +2197,42 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
             ('out_invoice', 1000.0, [('payment', 500.0)], 'partial'),
             ('out_invoice', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_invoice', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_invoice', 1000.0, [('statement_line', 1000.0)], 'paid'),
             ('out_receipt', 1000.0, [('payment', 500.0)], 'partial'),
             ('out_receipt', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_receipt', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_receipt', 1000.0, [('statement_line', 1000.0)], 'paid'),
             ('out_refund', 1000.0, [('payment', 500.0)], 'partial'),
             ('out_refund', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('out_refund', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('out_refund', 1000.0, [('statement_line', -1000.0)], 'paid'),
             ('in_invoice', 1000.0, [('payment', 500.0)], 'partial'),
             ('in_invoice', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_invoice', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_invoice', 1000.0, [('statement_line', -1000.0)], 'paid'),
             ('in_receipt', 1000.0, [('payment', 500.0)], 'partial'),
             ('in_receipt', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_receipt', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_receipt', 1000.0, [('statement_line', -1000.0)], 'paid'),
             ('in_refund', 1000.0, [('payment', 500.0)], 'partial'),
             ('in_refund', 1000.0, [('payment', 1000.0)], 'in_payment'),
+            ('in_refund', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('in_refund', 1000.0, [('statement_line', 1000.0)], 'paid'),
             ('entry', 1000.0, [('payment', 500.0)], 'not_paid'),
             ('entry', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 500.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 1000.0)], 'not_paid'),
 
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 500.0)], 'in_payment'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 500.0)], 'paid'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 400.0)], 'partial'),
             ('out_invoice', 1000.0, [('entry', -1000.0)], 'paid'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 500.0)], 'in_payment'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -500.0)], 'paid'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -400.0)], 'partial'),
             ('in_invoice', 1000.0, [('entry', 1000.0)], 'paid'),
         ):
             with self.subTest(

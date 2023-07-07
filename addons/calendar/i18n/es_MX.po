@@ -35,7 +35,7 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s a %(time_start)s Para\n"
+"%(date_start)s a %(time_start)s A\n"
 " %(date_end)s a %(time_end)s (%(timezone)s)"
 
 #. module: calendar
@@ -43,7 +43,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s a (%(start)s Para %(end)s) (%(timezone)s)"
+msgstr "%(day)s a (%(start)s a %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
@@ -196,16 +196,16 @@ msgstr ""
 "                Se actualizó su cita.\n"
 "            </t>\n"
 "            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demo</strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Se actualizó la fecha de su cita con <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>.\n"
 "            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Se actualizó la fecha de la reunión.\n"
-"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
@@ -910,8 +910,8 @@ msgid ""
 "<strong>The following attendees have invalid email addresses and won't "
 "receive any email notifications:</strong>"
 msgstr ""
-"<strong>Los siguientes asistentes tienen direcciones de correo electrónico "
-"inválidas y no recibirán ninguna notificación por correo "
+"<strong>Los siguientes asistentes no tienen direcciones de correo "
+"electrónico válidas y no recibirán ninguna notificación por correo "
 "electrónico:</strong>"
 
 #. module: calendar
@@ -949,9 +949,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Las acciones pueden desencadenar comportamientos específicos como abrir la "
-"vista de calendario o marcar automáticamente como hecho cuando se sube un "
-"documento"
+"Las acciones pueden desencadenar acciones específicas como abrir la vista de"
+" calendario o marcar automáticamente un documento como finalizado al momento"
+" de subirlo."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -1183,7 +1183,7 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Elige qué hacer con otros eventos recurrentes. No se permite actualizar "
+"Elija qué hacer con otros eventos recurrentes. No se permite actualizar "
 "todos los eventos cuando se modifican las fechas o la hora"
 
 #. module: calendar
@@ -1524,7 +1524,7 @@ msgstr "Seguidores"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1642,7 +1642,7 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
-"Si el tiempo se define como \"ocupado\", puede que otras personas puedan ver la información         completa del evento o solo se mostrará el texto \"ocupado\", esto dependerá de su privacidad. Utilice esta opción para indicarle a otros         que no está disponible durante ese periodo de tiempo. \n"
+"Si el horario aparece como \"ocupado\", puede que otras personas puedan ver la información         completa del evento o solo se mostrará el texto \"ocupado\", esto dependerá de su privacidad. Utilice esta opción para indicarle a otros         que no está disponible durante ese periodo de tiempo. \n"
 " Si el evento se muestra como \"disponible\", los demás usuarios pueden saber         que está disponible durante ese periodo de tiempo."
 
 #. module: calendar
@@ -1653,7 +1653,7 @@ msgstr "Intervalo"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr "Correo electrónico de partner inválido"
+msgstr "Correo electrónico de contacto no válido"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1931,7 +1931,7 @@ msgstr "Todavía no hay retroalimentación"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr "No se encontraron juntas. ¡Creemos una!"
+msgstr "No se encontraron reuniones. ¡Agendemos una!"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1968,7 +1968,7 @@ msgstr "Notificación - 30 minutos"
 msgid "Notifications sent to all attendees to remind of the meeting."
 msgstr ""
 "Notificaciones enviadas a todos los asistentes como recordatorio de la "
-"junta."
+"reunión."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2384,7 +2384,7 @@ msgid ""
 "            opportunities."
 msgstr ""
 "El calendario se comparte entre los empleados y se integra por completo con\n"
-"                otras aplicaciones como las asistencias del empleado o las oportunidades\n"
+"                otras aplicaciones como los permisos del empleado o las oportunidades\n"
 "                empresariales."
 
 #. module: calendar
@@ -2596,7 +2596,7 @@ msgstr "No puede duplicar un asistente de calendario"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr "Tiene que elegir al menos un día de la semana."
+msgstr "Debe elegir al menos un día de la semana"
 
 #. module: calendar
 #. odoo-python

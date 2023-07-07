@@ -740,16 +740,18 @@ QUnit.module("Fields", (hooks) => {
                 ["Save & Close", "Save & New", "Discard"]
             );
 
+            await editInput(modal, "[name='display_name'] input", "Hello (edited)");
+
             await click(modal.querySelector(".modal-footer button"));
             assert.containsNone(target, ".modal");
             assert.deepEqual(
                 [...target.querySelectorAll("[name='timmy'] .o_data_row")].map(
                     (row) => row.textContent
                 ),
-                ["Hello"]
+                ["Hello (edited)"]
             );
 
-            assert.verifySteps(["create", "read", "action: myaction", "read"]);
+            assert.verifySteps(["create", "read", "action: myaction", "write", "read", "read"]);
         }
     );
 

@@ -264,10 +264,13 @@ export class PropertiesField extends Component {
                     this.popoverCloseFn = null;
                 }
                 const propertiesDefinitions = this.propertiesList;
-                propertiesDefinitions.find(
+                const foundPropertyDefinition = propertiesDefinitions.find(
                     (property) => property.name === propertyName
-                ).definition_deleted = true;
-                this.props.update(propertiesDefinitions);
+                );
+                if (foundPropertyDefinition) {
+                    foundPropertyDefinition.definition_deleted = true;
+                    this.props.update(propertiesDefinitions);
+                }
             },
             cancel: () => {},
         };

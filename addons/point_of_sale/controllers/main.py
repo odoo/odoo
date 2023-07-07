@@ -153,14 +153,17 @@ class PosController(PortalAccount):
             else:
                 form_values.update({'error': error, 'error_message': error_message})
 
+        elif user_is_connected:
+            return self._get_invoice({}, {}, pos_order, additional_invoice_fields, kwargs)
+
         # Most of the time, the country of the customer will be the same as the order. We can prefill it by default with the country of the company.
         if 'country_id' not in form_values:
             form_values['country_id'] = pos_order_country.id
 
         partner = request.env['res.partner']
         # Prefill the customer extra values if there is any and an user is connected
-        if user_is_connected:
-            partner = request.env.user.partner_id
+        partner = (user_is_connected and request.env.user.partner_id) or pos_order.partner_id
+        if partner:
             if additional_partner_fields:
                 form_values['extra_field_values'] = {'partner_' + field.name: partner[field.name] for field in additional_partner_fields if field.name not in form_values['extra_field_values']}
 
@@ -190,7 +193,7 @@ class PosController(PortalAccount):
     def _get_invoice(self, partner_values, invoice_values, pos_order, additional_invoice_fields, kwargs):
         # If the user is not connected, then we will simply create a new partner with the form values.
         # Matching with existing partner was tried, but we then can't update the values, and it would force the user to use the ones from the first invoicing.
-        if request.env.user._is_public():
+        if request.env.user._is_public() and not pos_order.partner_id.id:
             partner_values.update({key: kwargs[key] for key in self.MANDATORY_BILLING_FIELDS})
             partner_values.update({key: kwargs[key] for key in self.OPTIONAL_BILLING_FIELDS if key in kwargs})
             for field in {'country_id', 'state_id'} & set(partner_values.keys()):
@@ -202,7 +205,7 @@ class PosController(PortalAccount):
             partner = request.env['res.partner'].sudo().create(partner_values)  # In this case, partner_values contains the whole partner info form.
         # If the user is connected, then we can update if needed its fields with the additional localized fields if any, then proceed.
         else:
-            partner = request.env.user.partner_id
+            partner = (not request.env.user._is_public() and request.env.user.partner_id) or pos_order.partner_id
             partner.write(partner_values)  # In this case, partner_values only contains the additional fields that can be updated.
 
         pos_order.partner_id = partner

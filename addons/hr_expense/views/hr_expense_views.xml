@@ -774,7 +774,7 @@
                                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
                                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                                     <field name="product_has_cost" invisible="True"/>
-                                    <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'company_currency_id'}"/>
                                     <field name="currency_id" optional="hide" readonly="True"/>
                                     <field name="quantity" optional="hide" attrs="{'readonly': [('product_has_cost', '=', False)]}"/>
                                     <field name="company_id" invisible="1"/>

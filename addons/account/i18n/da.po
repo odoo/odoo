@@ -11,10 +11,10 @@
 # lhmflexerp <lhm@flexerp.dk>, 2022
 # Mads Søndergaard, 2022
 # Mads Søndergaard, 2023
-# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Stefan Mølgaard, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Martin Trigaux, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,17 +76,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Afstemte Regninger"
+msgstr "# Afstemte regninger"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Afstemte Faktura"
+msgstr "# Afstemte fakturaer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "# Afstemte Kontoudtog"
+msgstr "# Afstemte kontoudtog"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -177,14 +177,14 @@ msgstr "%s - %s; %s Faktureret, %s Leveret til %s hver"
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s eksklusiv Moms"
+msgstr "%s eksklusiv moms"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s inklusiv Moms"
+msgstr "%s inklusiv moms"
 
 #. module: account
 #. odoo-python
@@ -303,7 +303,7 @@ msgstr "... (%s anden)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Payment"
-msgstr "1 Betaling"
+msgstr "1 betaling"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -13564,6 +13564,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+#, python-format
+msgid ""
+"%s reached an invalid state regarding its related statement line.\n"
+"To be consistent, the journal entry must always have exactly one suspense line."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -15493,6 +15502,11 @@ msgstr "Opdatér valutakurser automatisk"
 #, python-format
 msgid "Upload"
 msgstr "Upload"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr ""
 
 #. module: account
 #. odoo-python

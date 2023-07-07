@@ -720,12 +720,20 @@
             2 * PADDING_AUTORESIZE_VERTICAL);
     }
     function computeTextWidth(context, text, style) {
-        context.save();
-        context.font = computeTextFont(style);
-        const textWidth = context.measureText(text).width;
-        context.restore();
-        return textWidth;
+        const font = computeTextFont(style);
+        if (!textWidthCache[font]) {
+            textWidthCache[font] = {};
+        }
+        if (textWidthCache[font][text] === undefined) {
+            context.save();
+            context.font = font;
+            const textWidth = context.measureText(text).width;
+            context.restore();
+            textWidthCache[font][text] = textWidth;
+        }
+        return textWidthCache[font][text];
     }
+    const textWidthCache = {};
     function computeTextFont(style) {
         const italic = style.italic ? "italic " : "";
         const weight = style.bold ? "bold" : DEFAULT_FONT_WEIGHT;
@@ -28644,7 +28652,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.history.update("tables", filterTables);
                     break;
                 case "DUPLICATE_SHEET":
-                    this.history.update("tables", cmd.sheetIdTo, deepCopy(this.tables[cmd.sheetId]));
+                    const tables = {};
+                    for (const filterTable of Object.values(this.tables[cmd.sheetId] || {})) {
+                        if (filterTable) {
+                            const newFilterTable = deepCopy(filterTable);
+                            tables[newFilterTable.id] = newFilterTable;
+                        }
+                    }
+                    this.history.update("tables", cmd.sheetIdTo, tables);
                     break;
                 case "ADD_COLUMNS_ROWS":
                     this.onAddColumnsRows(cmd);
@@ -35148,15 +35163,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * This plugin handles this internal state.
      */
     class SelectionInputsManagerPlugin extends UIPlugin {
+        get currentInput() {
+            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
+        }
         constructor(getters, state, dispatch, config, selection) {
             super(getters, state, dispatch, config, selection);
             this.state = state;
             this.config = config;
             this.inputs = {};
             this.focusedInputId = null;
-        }
-        get currentInput() {
-            return this.focusedInputId ? this.inputs[this.focusedInputId] : null;
         }
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -42816,9 +42831,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.13';
-    __info__.date = '2023-06-12T14:08:55.739Z';
-    __info__.hash = '3c9ec1e';
+    __info__.version = '16.0.14';
+    __info__.date = '2023-06-26T14:45:27.638Z';
+    __info__.hash = '1e37a94';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

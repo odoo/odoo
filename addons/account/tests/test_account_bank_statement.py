@@ -524,6 +524,20 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             with self.subTest(params=params):
                 assertAppliedRate(*params)
 
+    def test_for_presence_single_suspense_line(self):
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_3.id,
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'amount': 0.0,
+        })
+
+        with self.assertRaises(UserError):
+            statement_line.line_ids = [Command.create({
+                'account_id': statement_line.journal_id.suspense_account_id.id,
+                'balance': 0.0,
+            })]
+
     def test_zero_amount_statement_line(self):
         ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
         self.company_data['company'].account_journal_suspense_account_id.reconcile = False
@@ -1410,3 +1424,27 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
         ])
+
+    def test_statement_reverse_keeps_partner(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+        })
+
+        statement_line = self.env['account.bank.statement.line'].create({
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'partner_id': partner.id,
+            'journal_id': self.bank_journal_1.id,
+            'amount': 1250.0,
+        })
+        move = statement_line.move_id
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({
+            'date': fields.Date.from_string('2021-02-01'),
+            'refund_method': 'cancel',
+            'journal_id': self.bank_journal_1.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reversed_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertEqual(reversed_move.partner_id, partner)

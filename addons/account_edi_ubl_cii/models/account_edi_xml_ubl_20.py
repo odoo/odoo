@@ -647,7 +647,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
             'line_total_amount': './{*}LineExtensionAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
 
         # Taxes
         inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
