@@ -161,3 +161,15 @@ PosLoyalty.check.orderTotalIs('10.2');
 PosLoyalty.exec.finalizeOrder('Cash', '10.2');
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", { test: true, url: "/pos/web", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+ProductScreen.check.totalAmountIs('80.00');
+
+registry.category("web_tour.tours").add("PosLoyaltyPromotion", { test: true, url: "/pos/web", steps: getSteps() });
