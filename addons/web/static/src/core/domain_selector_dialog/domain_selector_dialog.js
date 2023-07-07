@@ -49,12 +49,11 @@ export class DomainSelectorDialog extends Component {
         };
     }
 
-    async onConfirm() {
+    onConfirm() {
         this.confirmButtonRef.el.disabled = true;
         try {
-            let domain = new Domain(this.state.domain);
-            domain = domain.toList(this.props.context);
-            await this.orm.silent.searchCount(this.props.resModel, domain, { limit: 1 });
+            const domain = new Domain(this.state.domain);
+            domain.toList(this.props.context);
         } catch {
             if (this.confirmButtonRef.el) {
                 this.confirmButtonRef.el.disabled = false;
