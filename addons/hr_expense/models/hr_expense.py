@@ -396,7 +396,7 @@ class HrExpense(models.Model):
             vals = {
                 'name': attachment_name,
                 'unit_amount': 0,
-                'product_id': product.id,
+                'product_id': self.env.company.expense_product_id.id or product.id,
             }
             if product.property_account_expense_id:
                 vals['account_id'] = product.property_account_expense_id.id
