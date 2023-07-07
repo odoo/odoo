@@ -4,7 +4,7 @@
     <t t-name="mail.RecipientList" owl="1">
         <div class="o-mail-RecipientList p-2 overflow-auto">
             <ul class="list-unstyled mb-0">
-                <li t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
+                <li t-foreach="[...props.thread.followers]" t-as="follower" t-key="follower.id">
                     <t t-out="follower.partner.email"/>
                 </li>
             </ul>

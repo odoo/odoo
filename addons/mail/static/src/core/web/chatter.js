@@ -201,7 +201,7 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
-        const followers = this.state.thread.followers.slice(0, 5).map(({ partner }) => {
+        const followers = [...this.state.thread.followers].slice(0, 5).map(({ partner }) => {
             if (partner === this.store.self) {
                 return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
             }
@@ -213,7 +213,7 @@ export class Chatter extends Component {
             this.store.env.services["user"].lang?.replace("_", "-"),
             { type: "unit" }
         );
-        if (this.state.thread.followers.length > 5) {
+        if (this.state.thread.followers.size > 5) {
             followers.push("…");
         }
         return markup(formatter.format(followers));
