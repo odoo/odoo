@@ -208,8 +208,9 @@ export class SuggestionService {
                 }
             }
             if (thread) {
-                const isFollower1 = thread.followers.some((follower) => follower.partner === p1);
-                const isFollower2 = thread.followers.some((follower) => follower.partner === p2);
+                const followerList = [...thread.followers];
+                const isFollower1 = followerList.some((follower) => follower.partner === p1);
+                const isFollower2 = followerList.some((follower) => follower.partner === p2);
                 if (isFollower1 && !isFollower2) {
                     return -1;
                 }
