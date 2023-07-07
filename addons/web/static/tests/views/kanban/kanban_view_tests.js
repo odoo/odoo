@@ -4370,19 +4370,18 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click">' +
-                '<field name="foo"/>' +
-                "<div>" +
-                '<a class="o_test_link" href="#">test link</a>' +
-                "</div>" +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>",
+            arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="foo"/>
+                            <div>
+                                <a class="o_test_link" href="#">test link</a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
         });
 
         patchWithCleanup(kanban.env.services.action, {
@@ -10112,14 +10111,15 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("keyboard navigation on kanban when the kanban has a oe_kanban_global_click class", async (assert) => {
-        assert.expect(1);
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                `<kanban>
+    QUnit.test(
+        "keyboard navigation on kanban when the kanban has a oe_kanban_global_click class",
+        async (assert) => {
+            assert.expect(1);
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -10129,18 +10129,19 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            selectRecord(recordId) {
-                assert.strictEqual(
-                    recordId,
-                    1,
-                    "should call its selectRecord prop with the selected record"
-                );
-            },
-        });
-        const firstCard = getCard(0);
-        firstCard.focus();
-        await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
-    });
+                selectRecord(recordId) {
+                    assert.strictEqual(
+                        recordId,
+                        1,
+                        "should call its selectRecord prop with the selected record"
+                    );
+                },
+            });
+            const firstCard = getCard(0);
+            firstCard.focus();
+            await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
+        }
+    );
 
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);
