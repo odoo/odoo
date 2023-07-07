@@ -72,17 +72,26 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailLoadMessageFailures();
         }
         if (route === "/mail/message/post") {
+            const finalData = {};
+            for (const allowedField of [
+                "attachment_ids",
+                "body",
+                "message_type",
+                "partner_ids",
+                "subtype_xmlid",
+                "parent_id",
+            ]) {
+                if (args.post_data[allowedField] !== undefined) {
+                    finalData[allowedField] = args.post_data[allowedField];
+                }
+            }
             if (args.thread_model === "mail.channel") {
-                return this._mockMailChannelMessagePost(
-                    args.thread_id,
-                    args.post_data,
-                    args.context
-                );
+                return this._mockMailChannelMessagePost(args.thread_id, finalData, args.context);
             }
             return this._mockMailThreadMessagePost(
                 args.thread_model,
                 [args.thread_id],
-                args.post_data,
+                finalData,
                 args.context
             );
         }
@@ -382,7 +391,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             res["hasReadAccess"] = false;
             return res;
         }
-        res['canPostOnReadonly'] = thread_model === 'mail.channel'; // model that have attr _mail_post_access='read'
+        res["canPostOnReadonly"] = thread_model === "mail.channel"; // model that have attr _mail_post_access='read'
         if (request_list.includes("activities")) {
             const activities = this.pyEnv["mail.activity"].searchRead([
                 ["id", "in", thread.activity_ids || []],
@@ -416,11 +425,10 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             res["followers"] = followers;
         }
         if (request_list.includes("suggestedRecipients")) {
-            res[
-                "suggestedRecipients"
-            ] = this._mockMailThread_MessageGetSuggestedRecipients(thread_model, [thread.id])[
-                thread_id
-            ];
+            res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(
+                thread_model,
+                [thread.id]
+            )[thread_id];
         }
         return res;
     },
