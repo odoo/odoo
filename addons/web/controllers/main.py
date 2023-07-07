@@ -36,7 +36,7 @@ from odoo.modules import get_resource_path, module
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
+from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path, mute_logger
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
@@ -1352,6 +1352,29 @@ class DataSet(http.Controller):
         for i, record in enumerate(m.browse(ids)):
             record.write({field: i + offset})
         return True
+
+    @http.route('/web/dataset/validate_domain', type='json', auth="user")
+    def validate_domain(self, model, domain):
+        """ Parse `domain` and verify that it can be used to search on `model`
+
+        :return: True when the domain is valid, otherwise False
+        """
+        try:
+            # go through the motions of preparing the final SQL for the domain,
+            # so that anything invalid will raise an exception.
+            Model = request.env[model]
+            query = Model._search(domain)
+            sql, params = query.select()
+
+            # Execute the search in EXPLAIN mode, to have the query parser
+            # verify it. EXPLAIN will make sure the query is never actually executed
+            # An alternative to EXPLAIN would be a LIMIT 0 clause, but the semantics
+            # of a falsy `limit` parameter when calling _search() do not permit it.
+            with mute_logger('odoo.sql_db'):
+                request.env.cr.execute(f"EXPLAIN {sql}", params)
+            return True
+        except Exception: # noqa
+            return False
 
 class View(http.Controller):
 
