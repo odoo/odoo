@@ -102,25 +102,6 @@ def load_demo(env, package, idref, mode):
         return False
 
 
-def force_demo(env):
-    """
-    Forces the `demo` flag on all modules, and installs demo data for all installed modules.
-    """
-    graph = odoo.modules.graph.Graph()
-    env.cr.execute('UPDATE ir_module_module SET demo=True')
-    env.cr.execute(
-        "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
-    )
-    module_list = [name for (name,) in env.cr.fetchall()]
-    graph.add_modules(env.cr, module_list, ['demo'])
-
-    for package in graph:
-        load_demo(env, package, {}, 'init')
-
-    env['ir.module.module'].invalidate_model(['demo'])
-    env['res.groups']._update_user_groups_view()
-
-
 def load_module_graph(env, graph, status=None, perform_checks=True,
                       skip_modules=None, report=None, models_to_check=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
