@@ -32,7 +32,7 @@ msgstr "Вартість товару оновлена з %(previous)s до %(ne
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Обліковано %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -61,6 +61,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Використовуйте від’ємну додану вартість, щоб записати зменшення вартості товару</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -124,17 +126,17 @@ msgstr "Додати значення вручну"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Додайте додаткові витрати (транспорт, митниця, ...) у значенні товару."
+"Додайте додаткові витрати (транспорт, митниця, ...) у вартість товару."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr "Додане значення"
+msgstr "Додана вартість"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr "Додане значення"
+msgstr "Додана вартість"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -208,7 +210,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "Виберіть дату, щоб отримати оцінку на цю дату"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -369,7 +371,7 @@ msgstr "Групувати за..."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr ""
+msgstr "Є залишені кількості"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -410,7 +412,7 @@ msgstr "Рядок рахунку"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "Коригування вартості рахунку з валютою рахунку"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -511,7 +513,7 @@ msgstr "Нове значення за кількістю"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Open Valuation Layer"
-msgstr ""
+msgstr "Відкрити оцінку запасів"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -651,13 +653,13 @@ msgid ""
 msgstr ""
 "Стандартна ціна: товари оцінюються за їх стандартною вартістю, визначеною на товарі.\n"
 "         Середня вартість (AVCO): товари оцінюються за середньою вартістю.\n"
-"         First In First Out (FIFO): товари оцінюються, вважаючи, що ті, хто входить до компанії вперше, також залишать його спочатку.\n"
+"         First In First Out (FIFO): товари оцінюються таким чином: перший прийшов, перший пішов.\n"
 "        "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "Обліковий запис надходження продукції"
+msgstr "Рахунок надходження продукції"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
@@ -736,6 +738,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Технічне поле для правильного відображення поточної вибраної валюти "
+"компанії, яка відповідає загальній вартості шарів оцінки товару"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -783,7 +787,7 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
-"Рядки переміщення не є стабільними: деякі входять, а інші залишають "
+"Рядки переміщення не є стабільними: деякі надходять, а інші залишають "
 "компанію."
 
 #. module: stock_account
@@ -796,7 +800,7 @@ msgid ""
 "transit location."
 msgstr ""
 "Рядки переміщення не є узгодженими станами: вони роблять взаємодію в один "
-"крок, поки вони повинні пройти через міжвідомче місце транзиту."
+"крок, поки вони повинні пройти через транзитне розташування між компаніями."
 
 #. module: stock_account
 #. odoo-python
@@ -816,16 +820,18 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"Немає цінки запасів. Оцінка запасів створюються, коли відбувається "
+"переміщення товару, що впливає на оцінку запасу."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Quantity"
-msgstr ""
+msgstr "Сума решти кількості"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "Сума вартості решти товарів"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -882,11 +888,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Використовується для оцінки інвентаризації в реальному часі. Якщо встановити"
-" на віртуальному розташуванні (не внутрішній тип), цей облік буде "
+"Використовується для оцінки запасів в реальному часі. Якщо встановити на "
+"віртуальному розташуванні (не внутрішній тип), цей рахунок буде "
 "використовуватися для того, щоб зберегти вартість товарів, які переміщуються"
-" з внутрішнього місця розташування в це місце, замість загального обліку "
-"випуску, встановленого на товарі. Це не впливає на внутрішні розташування."
+" з внутрішнього розташування в це розташування, замість загального рахунку "
+"списання запасів, встановленого на товарі. Це не впливає на внутрішні "
+"розташування."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -897,11 +904,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Використовується для оцінки інвентаризації в реальному часі. Якщо встановити"
-" на віртуальному розташуванні (не внутрішній тип), цей облік буде "
+"Використовується для оцінки запасів в реальному часі. Якщо встановити на "
+"віртуальному розташуванні (не внутрішній тип), цей рахунок буде "
 "використовуватися для того, щоб тримати вартість товарів, які переміщуються "
-"з цього місця розташування та у внутрішнє місце, замість загальних обліків "
-"випуску, встановлених на товарі. Це не впливає на внутрішні розташування."
+"з цього розташування у внутрішнє розташування, замість загального рахунку "
+"списання запасів, встановлених на товарі. Це не впливає на внутрішні "
+"розташування."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -915,7 +923,7 @@ msgstr "Оцінка"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Валюта оцінки"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -928,7 +936,7 @@ msgstr "Звіт оцінки"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
 msgid "Valuation at Date"
-msgstr ""
+msgstr "Оцінка на дату"
 
 #. module: stock_account
 #. odoo-python
@@ -947,12 +955,12 @@ msgstr "Значення"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Вартість в наявності:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr "Рівень оцінки запасів"
+msgstr "Оцінка запасів"
 
 #. module: stock_account
 #. odoo-python
@@ -1041,7 +1049,7 @@ msgid ""
 " must define one before processing this operation."
 msgstr ""
 "У вас немає жодного рахунку для отримання запасів, визначеного для вашої "
-"категорії товарів. Ви повинні визначити один перед обробкою цієї операції."
+"категорії товарів. Ви повинні визначити його перед обробкою цієї операції."
 
 #. module: stock_account
 #. odoo-python
@@ -1065,8 +1073,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
-"У вас немає облікового запису про оцінку складу у вашій категорії товарів. "
-"Ви повинні визначити його перед обробкою цієї операції."
+"У вас немає рахунку оцінки запасів у вашій категорії товарів. Ви повинні "
+"визначити його перед обробкою цієї операції."
 
 #. module: stock_account
 #. odoo-python

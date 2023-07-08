@@ -20,7 +20,6 @@
 # Erdal Mutlu, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
@@ -29,6 +28,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Halil, 2023
+# Murat Durmuş <muratd@projetgrup.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
@@ -1426,6 +1426,13 @@ msgid ""
 msgstr ""
 "Bir SSL özel durumu oluştu. Sunucu bağlantı noktasındaki SSL/TLS yapılandırmasını kontrol edin.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Her ek için bir erişim belirteci sağlanmalıdır."
 
 #. module: mail
 #. odoo-python
@@ -9153,6 +9160,21 @@ msgid ""
 msgstr ""
 "Vergi Kimlik Numarası. Buradaki değerler ülke biçimine göre doğrulanır. "
 "Ortağın vergiye tabi olmadığını belirtmek için '/' kullanabilirsiniz."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "%s eki mevcut değil veya buna erişim hakkınız yok."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

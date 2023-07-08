@@ -9,8 +9,8 @@
 # Mr Tob, 2022
 # Thomas, 2023
 # Chris Egal <sodaswed@web.de>, 2023
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1409,6 +1409,13 @@ msgid ""
 msgstr ""
 "Eine SSL-Ausnahme ist aufgetreten. Prüfen Sie die SSL/TLS-Konfiguration am Server-Port.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Für jeden Anhang muss ein Zugriffstoken angegeben werden."
 
 #. module: mail
 #. odoo-python
@@ -9195,6 +9202,21 @@ msgstr ""
 "Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage des"
 " Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, dass der "
 "Partner nicht steuerpflichtig ist."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "Der Dateianhang %s existiert nicht."
 
 #. module: mail
 #. odoo-javascript

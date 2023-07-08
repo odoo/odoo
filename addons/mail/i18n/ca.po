@@ -31,8 +31,8 @@
 # Ivan Espinola, 2023
 # Jonatan Gk, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
-# jabelchi, 2023
 # martioodo hola, 2023
+# jabelchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: martioodo hola, 2023\n"
+"Last-Translator: jabelchi, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1422,6 +1422,13 @@ msgid ""
 msgstr ""
 "Hi ha hagut una excepció SSL. Comprova la configuració SSL/TLS al port del servidor.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Cal facilitar un token d'accés per a cada adjunt"
 
 #. module: mail
 #. odoo-python
@@ -9190,6 +9197,21 @@ msgstr ""
 "El Número d'Identificació Fiscal. Els valors aquí seran validats en funció "
 "del format del país. També pots utilitzar '/' per indicar que el soci no "
 "està subjecte a impostos."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "L'adjunt %s no existeix o no hi teniu drets d'accès."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

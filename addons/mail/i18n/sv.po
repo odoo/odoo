@@ -24,12 +24,12 @@
 # Simon S, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Bengt Evertsson <zyberfart@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Robin Calvin, 2023
 # Simon Nilsson, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # 
 msgid ""
@@ -1394,6 +1394,13 @@ msgid ""
 msgstr ""
 "Ett SSL-undantag inträffade. Kontrollera SSL/TLS-konfigurationen på serverporten.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "En åtkomsttoken måste anges för respektive dokument."
 
 #. module: mail
 #. odoo-python
@@ -5463,7 +5470,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
 msgid "Log as Internal Note"
-msgstr ""
+msgstr "Logga som intern anteckning"
 
 #. module: mail
 #. odoo-javascript
@@ -5524,7 +5531,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Typ av e-postaktivitet"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -5688,6 +5695,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Hantera svar som nya inkommande e-postmeddelanden istället för svar som går "
+"till samma tråd."
 
 #. module: mail
 #. odoo-javascript
@@ -6530,7 +6539,7 @@ msgstr "Meddela följare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Meddela följare om dokumentet (endast massutskick)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -9001,6 +9010,21 @@ msgstr ""
 "skattepliktig."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Bilagan %s finns inte eller så har du inte åtkomst till den."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
@@ -10126,7 +10150,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Skriv ditt meddelande här..."
 
 #. module: mail
 #. odoo-python

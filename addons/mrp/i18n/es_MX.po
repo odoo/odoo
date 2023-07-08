@@ -2156,10 +2156,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Cantidad pronosticada (se calcula como cantidad a la mano- saliente + entrante)\n"
-"En un contexto de una sola ubicación de existencias, esto incluye los artículos almacenados en esta ubicación, o cualquier ubicación secundaria.\n"
-"En un contexto de un solo almacén, esto incluye los artículos almacenados en la ubicación de existencias de ese almacén, o cualquier almacén secundario.\n"
-"En cualquier otro caso, esto incluye los artículos almacenados en cualquier ubicación de existencias de tipo 'Interna'."
+"Cantidad pronosticada (calculada como cantidad a la mano - saliente + entrante)\n"
+"En un contexto de una sola ubicación de existencias, esto incluye los artículos que se almacenan en esta ubicación, o cualquier ubicación secundaria.\n"
+"En un contexto de un solo almacén, esto incluye los artículos que se almacenan en la ubicación de existencias de ese almacén, o cualquier almacén secundario.\n"
+"En cualquier otro caso, esto incluye los artículos que se almacenan en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2242,7 +2242,7 @@ msgstr "Indica el orden de secuencia cuando se visualiza."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__worksheet_type__google_slide
 msgid "Google Slide"
-msgstr "Presentación de Google"
+msgstr "Presentaciones de Google"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2254,7 +2254,7 @@ msgstr "Enlace de Presentación de Google"
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
 #, python-format
 msgid "Google Slides Viewer"
-msgstr "Visor de Google Slides"
+msgstr "Visor de presentaciones de Google"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2358,8 +2358,8 @@ msgstr "Icono para indicar una actividad de excepción."
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Si se define una variante de producto, la lista de materiales (LdM) solo "
-"estará disponible para ese producto."
+"Si se define una variante de producto, la LdM sólo estará disponible para "
+"ese producto."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2396,23 +2396,23 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Si el campo activo se establece como False, permite ocultar el registro del "
-"recurso sin eliminarlo."
+"Si se desmarca el campo activo, permite ocultar el registro del recurso sin "
+"eliminarlo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
 msgid "Image Height"
-msgstr "Altura de imagen"
+msgstr "Altura de la imagen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr "Fuente de imagen"
+msgstr "Fuente de la imagen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
-msgstr "Ancho de imagen"
+msgstr "Ancho de la imagen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2467,8 +2467,8 @@ msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
 msgstr ""
-"Imposible planear la orden de trabajo. Por favor, verifique las "
-"disponibilidades del centro de trabajo."
+"No fue posible planear la orden de trabajo, verifique la disponibilidad del "
+"centro de trabajo."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2530,12 +2530,12 @@ msgstr "Está bloqueado"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
 msgid "Is a Blocking Reason"
-msgstr "Es una razón de bloqueo"
+msgstr "Es un motivo de bloqueo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr "¿Es una razón de bloqueo?"
+msgstr "¿Es un motivo de bloqueo?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__public
@@ -2789,30 +2789,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr "Razón de pérdida"
+msgstr "Motivo de pérdida"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_lot
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Lot/Serial"
-msgstr "Lote o serie"
+msgstr "Número de lote/serie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__lot_producing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__lot_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__finished_lot_id
 msgid "Lot/Serial Number"
-msgstr "Número de lote o de serie"
+msgstr "Número de lote/serie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Lot/Serial Numbers"
-msgstr "Números de lote/de serie"
+msgstr "Números de lote/serie"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
 msgid "Lots/Serial Numbers"
-msgstr "Números de lote o de serie"
+msgstr "Números de lote/serie"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__1
@@ -2926,7 +2926,7 @@ msgstr "Fabricación (1 paso)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "Regla de fabricación MTO"
+msgstr "Regla de fabricación sobre pedido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -3120,7 +3120,7 @@ msgstr "Fusionar"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de envío de mensaje"
+msgstr "Error al enviar el mensaje"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -3190,7 +3190,7 @@ msgstr "Número de producción de fabricación"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
 msgid "Multiple Lot Components Names"
-msgstr "Múltiples nombres de lotes de componentes"
+msgstr "Nombres de componentes de varios lotes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
@@ -3225,7 +3225,7 @@ msgstr "Siguiente actividad"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades."
+msgstr "Siguiente evento en el calendario de actividades"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
@@ -3269,7 +3269,7 @@ msgstr "Datos no disponibles."
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workcenter_load_report_graph
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -3279,7 +3279,7 @@ msgstr "No se encontró ninguna orden de fabricación. Vamos a crear una."
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid "No product found. Let's create one!"
-msgstr "No se encontró ningún producto. ¡Creemos uno!"
+msgstr "No se ha encontrado ningún producto. Creemos uno."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
@@ -3298,7 +3298,7 @@ msgstr "No se encontró ninguna orden de desmantelamiento"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "No work orders to do!"
-msgstr "¡No hay órdenes de trabajo por realizar!"
+msgstr "No hay órdenes de trabajo por realizar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3350,9 +3350,9 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
-"Tome en cuenta que el producto o productos: \"%s\" sigue(n) vinculado(s) a "
-"una lista de materiales activa, lo que significa que el producto aún se "
-"puede utilizar en ello. "
+"Tome en cuenta que los productos: \"%s\" siguen vinculados a una lista de "
+"materiales activa, lo que significa que el producto aún se puede utilizar en"
+" ello. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3627,7 +3627,7 @@ msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
 msgstr ""
-"Pegue la URL en su Presentación de Google. Asegúrese de que el acceso al "
+"Pegue la URL de su Presentación de Google. Asegúrese de que el acceso al "
 "documento sea público."
 
 #. module: mrp
@@ -3688,7 +3688,7 @@ msgstr "Elija componentes, fabrique y luego almacene los productos (3 pasos)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "Recolección antes de la regla de fabricación MTO "
+msgstr "Recolección antes de la regla de fabricación sobre pedido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -3845,8 +3845,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
-"Producir: mueva los componentes a la ubicación de producción directamente y comience el proceso de fabricación.\n"
-"Recolectar/producir: primero descargue        los componentes de las existencias a la ubicación de entrada y luego        trasládelos a la ubicación de producción."
+"Producir: mover los componentes a la ubicación de producción directamente para comenzar el proceso de fabricación.\n"
+"Recolectar/producir: primero se deben descargar los componentes de las existencias a la ubicación de entrada para luego trasladarlos a la ubicación de producción."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3928,7 +3928,8 @@ msgstr "Cantidad pronosticada de producto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr "Gestión del ciclo de vida del producto (PLM)"
+msgstr ""
+"Gestión del ciclo de vida del producto (PLM, por sus siglas en inglés)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4190,7 +4191,7 @@ msgstr "Cantidad:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
 msgid "Raw Moves"
-msgstr "Movimientos nuevos"
+msgstr "Movimientos en bruto"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__assigned
@@ -4545,7 +4546,7 @@ msgid ""
 "within each BoM's Miscellaneous tab"
 msgstr ""
 "Establezca el orden en el que se deben procesar las órdenes de trabajo. "
-"Active la función en la pestaña de Varios de cada LdM"
+"Active la función en la pestaña Varios de cada LdM."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
