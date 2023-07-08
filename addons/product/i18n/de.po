@@ -82,7 +82,7 @@ msgstr "'Produktetikett - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Produktverpackungen - %s' % (object.name)"
+msgstr "'Produktverpackung - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -102,7 +102,7 @@ msgstr ""
 "- Sofort: Alle möglichen Varianten werden erstellt, sobald die Attribute und deren Werte zum Produkt hinzugefügt werden.\n"
 "        - Dynamisch: Eine Variante wird nur dann erstellt, wenn deren Attribute und Werte zu einem Verkaufsauftrag hinzugefügt werden.\n"
 "        - Niemals: Es werden keine Varianten für dieses Attribut erstellt.\n"
-"        Bitte beachten: Der Variantenerstellungsmodus kann nicht mehr geändert werden, sobald das Attribut bei zumindest einem Produkt verwendet wird."
+"        Bitte beachten: Der Variantenerstellmodus kann nicht mehr geändert werden, sobald das Attribut bei zumindest einem Produkt verwendet wird."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -189,8 +189,8 @@ msgstr "<span>%</span>"
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
-"<span>Alle allgemeinen Einstellungen zu diesem Produkt werden verwaltet "
-"unter</span>"
+"<span>Um allgemeine Einstellungen zu diesem Produkt zu verwalten, verwenden "
+"Sie </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -556,7 +556,7 @@ msgstr "Schrank mit Türen"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "Kann Bild 1024 herangezoomt werden"
+msgstr "Kann Bild 1024 gezoomt werden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -1230,7 +1230,7 @@ msgstr "Gruppieren nach"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr "HTML Farb-Index"
+msgstr "HTML-Farbkennzeichnung"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
@@ -1836,7 +1836,7 @@ msgstr "Übergeordneter Pfad"
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr "Pedalbehälter"
+msgstr "Treteimer"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -1963,7 +1963,7 @@ msgstr "Preisliste"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr "Preislisteposition ist für ausgewählte Option anwendbar"
+msgstr "Preislistenposition ist für ausgewählte Option anwendbar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
@@ -2191,12 +2191,12 @@ msgstr "Attributzeile der Produktvorlage"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Attributwert für Produktvorlage"
+msgstr "Attributwert der Produktvorlage"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr "Stichwörter für Produktvorlagen"
+msgstr "Stichwörter der Produktvorlagen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2292,7 +2292,7 @@ msgstr "Suche nach Produktpreisregeln"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr "Produktepreissuche"
+msgstr "Produktpreissuche"
 
 #. module: product
 #. odoo-python
@@ -2422,7 +2422,7 @@ msgstr "Regeltipp"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2459,7 +2459,7 @@ msgstr "Verkaufspreis"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr "Auswählen"
+msgstr "Auswahl"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
@@ -2510,8 +2510,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Hinterlegen Sie eine Produktkategorie, um die Preisregel nur für die "
-"zugeordneten Produkte sowie den Produkte sämtlicher Untergruppen anzuwenden."
+"Hinterlegen Sie eine Produktkategorie, um die Preisregel nur auf die "
+"zugeordneten Produkte sowie die Produkte sämtlicher Untergruppen anzuwenden."
 " Anderenfalls leer lassen."
 
 #. module: product
@@ -3048,7 +3048,7 @@ msgstr "Varianten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr "Variantenerstellungsmodus"
+msgstr "Variantenerstellmodus"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -3204,8 +3204,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
-"Sie können Ihren Kunden Preislisten zuordnen oder beim Anlegen eines neuen "
-"Verkaufsangebots eine auswählen."
+"Sie können Ihren Kunden Preislisten zuordnen oder eine beim Anlegen eines "
+"neuen Verkaufsangebots auswählen."
 
 #. module: product
 #. odoo-python
@@ -3225,7 +3225,7 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
-"Sie können den Variantenerstellungsmodus des Attributs %s nicht ändern, da es für die folgenden Produkte verwendet wird:\n"
+"Sie können den Variantenerstellmodus des Attributs %s nicht ändern, da es für die folgenden Produkte verwendet wird:\n"
 "%s"
 
 #. module: product

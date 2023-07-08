@@ -8,13 +8,13 @@
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2022
 # Silmar <pinheirosilmar@gmail.com>, 2022
 # Peter Leaf <pablleaf@gmail.com>, 2022
-# Martin Trigaux, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Diego Sayron, 2023
 # Kevilyn Rosa, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
 # Layna Nascimento, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1387,6 +1387,13 @@ msgid ""
 msgstr ""
 "Ocorreu uma exceção SSL. Verifique a configuração SSL / TLS na porta do servidor.\n"
 " %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Um token de acesso deve ser fornecido para cada anexo."
 
 #. module: mail
 #. odoo-python
@@ -9047,6 +9054,21 @@ msgstr ""
 "Número de identificação fiscal (CPF para pessoa física ou CNPJ para pessoa "
 "jurídica). Os valores neste campo serão validados com base no formato do "
 "país. Use '/' para indicar que o parceiro é isento de impostos."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "O anexo %s não existe ou você não tem direitos para acessá-lo."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
