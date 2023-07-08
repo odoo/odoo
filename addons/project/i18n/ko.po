@@ -64,7 +64,7 @@ msgstr "\"오늘\""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# 협력자"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -112,17 +112,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(다음의 기한"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(최근 프로젝트 업데이트),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- 다음에 도달 완료"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -272,6 +272,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"내부 커뮤니케이션을 위하여 <b>메모를 기록</b>합니다 <i>(이 작업을 팔로우하는 경우에는 특별히 태그를\n"
+"    지정하지 않는 한 메모에 대한 알림을 받지 않습니다)</i>. @로 <b>멘션</b>하여 동료에게 연락하거나\n"
+"    #로 <b>멘션</b>하여 전체 팀에게 전달할 수 있습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -443,6 +446,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    공동 작업자\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -474,7 +480,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Blocking</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">차단</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -525,7 +531,7 @@ msgstr "<strong class=\"d-block mb-2\">첨부파일</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>담당자</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -560,12 +566,12 @@ msgstr "<strong>프로젝트 :</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>마일스톤</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -579,7 +585,7 @@ msgstr "이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하�
 msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
-msgstr ""
+msgstr "프로젝트 공유 액세스에서 공동 작업자를 두 번 이상 선택할 수 없습니다. 중복된 선택 항목 삭제 후 다시 시도하십시오."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -587,12 +593,12 @@ msgstr ""
 msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
-msgstr ""
+msgstr "개인 단계는 해당 사용자에게만 표시되기 때문에 프로젝트 단계에 연결시킬 수 없습니다."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr ""
+msgstr "개인 단계는 사용자 당 하나만 작업에 위치시킬 수 있습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -667,7 +673,7 @@ msgstr "활동 유형"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "마일스톤 추가"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -693,7 +699,7 @@ msgstr "열을 추가하여 작업을 관리할<b>단계</b>구성합니다 <i>�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr ""
+msgstr "프로젝트를 공유할 연락처 추가"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -866,19 +872,19 @@ msgstr "이 단계를 삭제 하시겠습니까?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "화살표"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "화살표 아이콘"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "조립"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -945,7 +951,7 @@ msgstr "배정 일자"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__at_risk
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 msgid "At Risk"
-msgstr ""
+msgstr "리스크"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -965,7 +971,7 @@ msgstr "첨부 파일 수"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message."
-msgstr ""
+msgstr "메시지에서 가져오지 않은 첨부 파일입니다."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
@@ -1077,7 +1083,7 @@ msgstr "브레인스톰"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
-msgstr ""
+msgstr "번다운 차트"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -1137,6 +1143,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"프로젝트의 <b>이름</b>을 선택하세요. <i>고객 이름이나, 품목명, 팀명, 건설 현장명 등\n"
+"      무엇이든 선택하실 수 있습니다.</i>"
 
 #. module: project
 #. openerp-web
@@ -1231,7 +1239,7 @@ msgstr "구성"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "단계 설정"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1305,7 +1313,7 @@ msgstr "파이프라인 활동 안에 새로운 단계 만들기"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "다음으로 메일을 발송하여 작업을 생성합니다."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1518,7 +1526,7 @@ msgstr "일"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "Days to Deadline"
-msgstr ""
+msgstr "마감까지 남은 날짜"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1594,7 +1602,7 @@ msgstr "삭제"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "마일스톤 삭제"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1622,7 +1630,7 @@ msgstr "배송완료"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "종속 작업"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description

@@ -24,13 +24,13 @@
 # Martin Trigaux, 2021
 # Victor Ekström, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Simon S, 2022
 # Daniel Löfgren, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Robin Calvin, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # 
 msgid ""
@@ -955,6 +955,12 @@ msgstr "Alias"
 #, python-format
 msgid "All"
 msgstr "Alla"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "En åtkomsttoken måste anges för respektive dokument."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -4021,7 +4027,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Typ av e-postaktivitet"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -4138,6 +4144,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Hantera svar som nya inkommande e-postmeddelanden istället för svar som går "
+"till samma tråd."
 
 #. module: mail
 #. openerp-web
@@ -4826,7 +4834,7 @@ msgstr "Meddela följare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Meddela följare om dokumentet (endast massutskick)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -6764,6 +6772,19 @@ msgid ""
 msgstr ""
 "Skatte -ID. Fyll i den om kontakten är föremål för statlig skatt. Används i "
 "vissa juridiska rapporter."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Bilagan %s finns inte eller så har du inte åtkomst till den."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique

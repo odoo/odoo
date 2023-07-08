@@ -8,13 +8,13 @@
 # Pascual Lorente, 2021
 # Jeffrey Sorsby, 2022
 # Jonatan Gk, 2022
-# Martin Trigaux, 2022
 # VivianMontana23 <vivianpvm@gmail.com>, 2022
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2022
 # marcescu, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -942,6 +942,12 @@ msgstr "Seudónimos"
 #, python-format
 msgid "All"
 msgstr "Todos"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Se debe proporcionar un código de acceso para cada archivo adjunto."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -6915,6 +6921,21 @@ msgstr ""
 "El número de identificación de impuesto. Complételo si el contacto está "
 "sujeto a los impuestos del gobierno. Utilizado en algunas declaraciones "
 "legales."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"El archivo adjunto %s no existe o usted no tiene los derechos para acceder a"
+" él."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique

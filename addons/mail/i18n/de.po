@@ -9,10 +9,10 @@
 # Christian Kubicki, 2021
 # Raymond Vetter, 2021
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2022
-# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Thomas, 2023
 # Chris Egal <sodaswed@web.de>, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -953,6 +953,12 @@ msgstr "Aliase"
 #, python-format
 msgid "All"
 msgstr "Alle"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Für jeden Anhang muss ein Zugriffstoken angegeben werden."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -6925,6 +6931,19 @@ msgid ""
 msgstr ""
 "Die Steuernummer. Füllen Sie es aus, wenn der Kontakt staatlichen Steuern "
 "unterliegt. In einigen rechtlichen Berichten verwendet."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "Der Dateianhang %s existiert nicht."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique

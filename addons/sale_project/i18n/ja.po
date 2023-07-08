@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,22 +37,22 @@ msgstr "オーダ作成"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "プロジェクトを表示"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "生成されたプロジェクト"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "生成されたタスク"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "請求する販売オーダがあります"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -108,7 +109,7 @@ msgstr "なし"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "プロジェクトの数"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -122,6 +123,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"販売オーダの確定時に、このプロダクトはプロジェクトやタスクを生成することができます。 これらから、販売しているサービスを追跡することができます。\n"
+"「販売オーダのプロジェクト」： プロジェクトが定義されている場合、販売オーダの設定されたプロジェクトを使用するか、選択されたテンプレートに基づいて新しいプロジェクトを作成するようにフォールバックします。"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -161,7 +164,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "プロジェクト販売オーダ"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -174,7 +177,7 @@ msgstr "プロジェクト"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "この販売オーダで使用されているプロジェクト"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -244,30 +247,30 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "プロジェクトがリンクされている販売オーダ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "タスクがリンクされている販売オーダ。"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "請求書内検索"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "販売オーダ内検索"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "販売オーダ項目内を検索"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -288,7 +291,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "タスクを作成できる請求不可プロジェクトを選択します。"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -306,7 +309,7 @@ msgstr "タスク作成 (%s): <a href=# data-oe-model=project.task data-oe-id=%d
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "タスクの繰り返し"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -335,7 +338,7 @@ msgstr "この販売に関連するタスク"
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr ""
+msgstr "プロジェクトが生成されるので、プロダクト%sはグローバル・プロジェクトを持ってはならない。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -343,7 +346,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr ""
+msgstr "プロジェクトは生成されないので、プロダクト%sにプロジェクトもプロジェクト・テンプレートもあってはいけません。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -351,7 +354,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr ""
+msgstr "グローバル・プロジェクトでタスクを生成するので、プロダクト%sにプロジェクト・テンプレートがあってはいけません。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -380,7 +383,7 @@ msgstr "請求書発行"
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
-msgstr ""
+msgstr "オーダ項目%(order_id)s-%(product_id)sは再請求された費用であるため、このタスクにリンクすることはできません。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

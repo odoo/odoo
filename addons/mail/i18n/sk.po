@@ -11,13 +11,13 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Filip Brenčič <brencicf5@gmail.com>, 2022
 # gebri <gebri@inmail.sk>, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Martin Trigaux, 2022
 # Matus Krnac <matus.krnac@gmail.com>, 2022
 # Filip Hanes <filip.hanes@protonmail.com>, 2022
 # Jan Prokop, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # 
 msgid ""
@@ -926,6 +926,12 @@ msgstr "Alias"
 #, python-format
 msgid "All"
 msgstr "Všetko"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Pre každú prílohu musí byť poskytnutý prístupový token."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -2192,6 +2198,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -6775,6 +6782,19 @@ msgid ""
 msgstr ""
 "Daňové identifikačné číslo. Vyplňte ho v prípade že spoločnosť je podlieha "
 "daniam. Používa sa pre niektoré z právnych vyhlásení."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Príloha %s neexistuje alebo nemáte k nej prístupové práva."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique

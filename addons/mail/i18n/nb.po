@@ -5,10 +5,10 @@
 # Translators:
 # Mads Søndergaard, 2022
 # Jorunn D. Newth, 2022
-# Marius Stedjan <marius@stedjan.com>, 2022
 # Martin Trigaux, 2022
 # Lars Aam <lars.aam@vikenfiber.no>, 2022
 # Henning Fyllingsnes, 2023
+# Marius Stedjan <marius@stedjan.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Henning Fyllingsnes, 2023\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2023\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -878,6 +878,12 @@ msgstr "Kallenavn"
 #, python-format
 msgid "All"
 msgstr "Alle"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "En tilgangstoken på gis til hvert vedlegg."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -6652,6 +6658,21 @@ msgstr ""
 msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"Vedlegget %s finnes ikke, eller du mangler tilgangsrettigheter til å vise "
+"det."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
 msgstr ""
 
 #. module: mail

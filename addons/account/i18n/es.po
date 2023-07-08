@@ -14,12 +14,11 @@
 # oscaryuu, 2022
 # Luis D Lafaurie, 2022
 # Daniel Blanco <daniel@blancomartin.cl>, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2022
 # Jairo Llopis <yajo.sk8@gmail.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
-# jabiri7, 2023
 # Martin Trigaux, 2023
+# jabiri7, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
@@ -957,13 +956,13 @@ msgstr "<span>5,00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount In Currency</span>"
-msgstr "<span>Amount In Currency</span>"
+msgstr "<span>Importe en moneda</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
-msgstr "<span>Cantidad</span>"
+msgstr "<span>Importe</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2120,7 +2119,7 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
-"Se han creado Entradas de Ajuste para esta factura:<ul><li>%(link1)s "
+"Se han creado asientos de ajuste para esta factura:<ul><li>%(link1)s "
 "cancelando {percent:.2f}%% de {amount}</li><li>%(link0)s posponiéndolo a "
 "{new_date}</li></ul>"
 
@@ -2139,14 +2138,14 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
-"Ajustando Entrada para {link}: {percent:.2f}% de {amount} reconocido el "
+"Asiento de ajuste para {link}: {percent:.2f}% de {amount} reconocido el "
 "{new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})"
-msgstr ""
+msgstr "Asiento de ajuste de {date} ({percent:.2f}% reconocido el {new_date})"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2154,7 +2153,7 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
-"Ajustando Entrada {link}: {percent:.2f}% de {amount} reconocido desde {date}"
+"Asiento de ajuste {link}: {percent:.2f}% de {amount} reconocido desde {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -2450,7 +2449,7 @@ msgstr "Importe cobrado"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_signed
 msgid "Amount Signed"
-msgstr "Cantidad Firmada"
+msgstr "Importe con signo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -4700,8 +4699,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
-"'draft' and '_draft' or '' }}"
+"Rectificativa_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_borrador' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6870,6 +6869,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and/or a negative one."
 msgstr ""
+"Si se definen etiquetas para una línea de informe fiscal, solo se permiten "
+"dos: uno positivo y/o otro negativo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -7098,7 +7099,7 @@ msgstr "Métodos de pago entrante"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "Incluir en análisis de costos"
+msgstr "Incluir en la analítica de costes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -7553,8 +7554,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+"Factura_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_borrador' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14922,7 +14923,7 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"Esta entrada contiene impuestos que no son compatibles con su posición "
+"Este asiento contiene impuestos que no son compatibles con su posición "
 "fiscal. Compruebe el país establecido en la posición fiscal y en su "
 "configuración de impuestos."
 
@@ -16480,8 +16481,8 @@ msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
 msgstr ""
-"No puedes editar los siguientes campos debido a que el modo restringido está"
-" activado en el diario: %s."
+"No puede editar los siguientes campos debido a que el modo restringido está "
+"activado en el diario: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

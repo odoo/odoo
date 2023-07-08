@@ -7,10 +7,10 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Dan Stoica <danila@terrabit.ro>, 2021
 # Martin Trigaux, 2021
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Claudia Baisan, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Foldi Robert <foldirobert@nexterp.ro>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -943,6 +943,12 @@ msgstr "Alias-uri"
 #, python-format
 msgid "All"
 msgstr "Tot"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Trebuie introdus un jeton de acces pentru fiecare atașament."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -2229,6 +2235,7 @@ msgstr "Deconectat de la apelul RTC de către server"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -6890,6 +6897,20 @@ msgid ""
 msgstr ""
 "Numărul de identificare fiscală. Completați-l dacă contactul este supus "
 "taxelor guvernamentale. Folosit în unele declarații juridice."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"Fișierul atașat %s  nu există sau nu aveți drepturile de acces la acesta."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique

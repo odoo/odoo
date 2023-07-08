@@ -4,9 +4,9 @@
 # 
 # Translators:
 # 04a2cd0fd6ee22172c36ea91f27a38c5_60041bf, 2021
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -941,6 +941,12 @@ msgstr "Aliassen"
 #, python-format
 msgid "All"
 msgstr "Alle"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Een toegangstoken moet opgegeven zijn voor elke bijlage."
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:0
@@ -6892,6 +6898,19 @@ msgid ""
 msgstr ""
 "Het BTW nummer. Vul het in als het contact BTW moet betalen. Wordt gebruikt "
 "in sommige rapportages"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "De bijlage %s bestaat niet of je hebt geen rechten om ze te bekijken."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "De bijlage %s bestaat niet."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
