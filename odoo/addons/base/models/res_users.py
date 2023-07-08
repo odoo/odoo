@@ -215,6 +215,11 @@ class Groups(models.Model):
         return super(Groups, self).copy(default)
 
     def write(self, vals):
+        # demo_user = self.env.ref('base.user_demo', raise_if_not_found=False)
+        # if 'users' in vals and demo_user and any(leaf[0] == 4 and leaf[1] == demo_user.id for leaf in vals['users']):
+        #     print(demo_user, vals)
+        #     import traceback; traceback.print_stack()
+            # import pdb; pdb.set_trace()
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise UserError(_('The name of the group can not start with "-"'))
@@ -615,6 +620,12 @@ class Users(models.Model):
                         del values['company_id']
                 # safe fields only, so we write as super-user to bypass access rights
                 self = self.sudo().with_context(binary_field_real_user=self.env.user)
+
+        # demo_user = self.env.ref('base.user_demo', raise_if_not_found=False)
+        # if 'groups_id' in values and demo_user and demo_user in self:
+        #     print(values)
+        #     import traceback; traceback.print_stack()
+            # import pdb; pdb.set_trace()
 
         if 'groups_id' in values:
             default_user = self.env.ref('base.default_user', raise_if_not_found=False)

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="website_slides.group_website_slides_officer" model="res.groups">
-            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('website_slides.group_website_slides_manager')),
+                (3, ref('website_slides.group_website_slides_officer')),
+                (3, ref('website.group_website_restricted_editor'))]"/>
         </record>
 
         <record id="website_slides.group_website_slides_manager" model="res.groups">

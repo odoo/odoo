@@ -5,41 +5,50 @@ import odoo.tests
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
-    def setUp(self):
-        super().setUp()
-        self.env = self.env(user=self.env.ref('base.user_admin'))
-        account_obj = self.env['account.account']
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env = cls.env(user=cls.env.ref('base.user_admin'))
+        cls.env['res.users'].search([('login', '=', 'demo')]).write({
+            'groups_id': [
+                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+        })
+
+        account_obj = cls.env['account.account']
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
                                                  'account_type': 'asset_receivable',
                                                  'reconcile': True})
 
-        drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
+        drinks_category = cls.env['pos.category'].create({'name': 'Drinks'})
 
-        printer = self.env['pos.printer'].create({
+        printer = cls.env['pos.printer'].create({
             'name': 'Preparation Printer',
             'epson_printer_ip': '127.0.0.1',
             'printer_type': 'epson_epos',
             'product_categories_ids': [drinks_category.id]
         })
 
-        main_company = self.env.ref('base.main_company')
+        main_company = cls.env.ref('base.main_company')
 
-        second_cash_journal = self.env['account.journal'].create({
+        second_cash_journal = cls.env['account.journal'].create({
             'name': 'Cash 2',
             'type': 'cash',
             'company_id': main_company.id
             })
 
-        self.env['pos.payment.method'].create({
+        cls.env['pos.payment.method'].create({
             'name': 'Cash 2',
             'split_transactions': False,
             'receivable_account_id': account_receivable.id,
             'journal_id': second_cash_journal.id,
         })
 
-        pos_config = self.env['pos.config'].create({
+        pos_config = cls.env['pos.config'].create({
             'name': 'Bar',
             'module_pos_restaurant': True,
             'iface_splitbill': True,
@@ -52,19 +61,19 @@ class TestFrontend(odoo.tests.HttpCase):
             'iface_tipproduct': False,
         })
 
-        main_floor = self.env['restaurant.floor'].create({
+        main_floor = cls.env['restaurant.floor'].create({
             'name': 'Main Floor',
             'pos_config_ids': [(4, pos_config.id)],
         })
 
-        table_05 = self.env['restaurant.table'].create({
+        cls.env['restaurant.table'].create({
             'name': '5',
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         })
-        table_04 = self.env['restaurant.table'].create({
+        cls.env['restaurant.table'].create({
             'name': '4',
             'floor_id': main_floor.id,
             'seats': 4,
@@ -72,7 +81,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_h': 150,
             'position_v': 100,
         })
-        table_02 = self.env['restaurant.table'].create({
+        cls.env['restaurant.table'].create({
             'name': '2',
             'floor_id': main_floor.id,
             'seats': 4,
@@ -80,12 +89,12 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_v': 100,
         })
 
-        second_floor = self.env['restaurant.floor'].create({
+        second_floor = cls.env['restaurant.floor'].create({
             'name': 'Second Floor',
             'pos_config_ids': [(4, pos_config.id)],
         })
 
-        table_01 = self.env['restaurant.table'].create({
+        cls.env['restaurant.table'].create({
             'name': '1',
             'floor_id': second_floor.id,
             'seats': 4,
@@ -93,7 +102,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_h': 100,
             'position_v': 150,
         })
-        table_03 = self.env['restaurant.table'].create({
+        cls.env['restaurant.table'].create({
             'name': '3',
             'floor_id': second_floor.id,
             'seats': 4,
@@ -101,21 +110,21 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_v': 250,
         })
 
-        self.env['ir.property']._set_default(
+        cls.env['ir.property']._set_default(
             'property_account_receivable_id',
             'res.partner',
             account_receivable,
             main_company,
         )
 
-        test_sale_journal = self.env['account.journal'].create({
+        test_sale_journal = cls.env['account.journal'].create({
             'name': 'Sales Journal - Test',
             'code': 'TSJ',
             'type': 'sale',
             'company_id': main_company.id
             })
 
-        cash_journal = self.env['account.journal'].create({
+        cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Test',
             'code': 'TCJ',
             'type': 'cash',
@@ -133,40 +142,40 @@ class TestFrontend(odoo.tests.HttpCase):
             })],
         })
 
-        coke = self.env['product.product'].create({
+        cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Coca-Cola',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
-        water = self.env['product.product'].create({
+        cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Water',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
-        minute_maid = self.env['product.product'].create({
+        cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Minute Maid',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
 
-        pricelist = self.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
+        pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         pos_config.write({'pricelist_id': pricelist.id})
 
-        self.pos_config = pos_config
+        cls.pos_config = pos_config
 
     def test_01_pos_restaurant(self):
 
