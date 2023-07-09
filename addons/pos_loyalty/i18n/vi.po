@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Vo Thanh Thuy, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -39,11 +40,28 @@ msgid "%s Points"
 msgstr "%s Điểm"
 
 #. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "15% cho đơn hàng tiếp theo"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr "15% cho đơn hàng của bạn"
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "A better global discount is already applied."
 msgstr "Chiết khấu hấp dẫn hơn đã được áp dụng."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr "Không thể tải phần thưởng"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -53,27 +71,6 @@ msgid ""
 msgstr ""
 "Trường kỹ thuật được dùng để thay thế cho mã khuyến mại. Được tạo tự động "
 "khi mã khuyến mại thay đổi. "
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Coupons"
-msgstr "Phiếu giảm giá khả dụng"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Programs"
-msgstr "Chương trình đang hoạt động"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/xml/OrderWidget.xml:0
-#, python-format
-msgid "Active Rewards"
-msgstr "Phần thưởng khả dụng"
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -133,6 +130,11 @@ msgstr "Phiếu giảm giá"
 #, python-format
 msgid "Coupon Codes"
 msgstr "Mã phiếu giảm giá"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "Điểm phiếu giảm giá"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -195,6 +197,11 @@ msgstr "Lỗi"
 #, python-format
 msgid "Error validating rewards"
 msgstr "Lỗi khi xác nhận phần thưởng"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr "Sản phẩm miễn phí - Bút thường"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
@@ -280,7 +287,13 @@ msgid "Loyalty Coupon"
 msgstr "Phiếu giảm giá khách hàng thân thiết"
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "Điểm khách hàng thân thiết"
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "Chương trình khách hàng thân thiết"
 
@@ -456,6 +469,11 @@ msgid "Select program"
 msgstr "Chọn chương trình"
 
 #. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr "Bút viết thường"
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
@@ -516,6 +534,17 @@ msgid ""
 msgstr ""
 "Hành động báo cáo sẽ được thực thi khi tạo phiếu giảm giá/thẻ quà tặng/thẻ "
 "khách hàng thân thiết trong POS."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"Phần thưởng \"%s\" chứa lỗi trong miền, miền phải tương thích với máy khách "
+"POS."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id

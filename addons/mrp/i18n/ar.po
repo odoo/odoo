@@ -266,6 +266,8 @@ msgid ""
 "modify the quantities of components to consume for this manufacturing "
 "order.</span>"
 msgstr ""
+"<span class=\"text-muted\">سيؤدي تعديل الكمية التي سيتم إنتاجها إلى تعديل "
+"كميات المكونات التي سيتم استهلاكها لأمر التصنيع هذا.</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -444,6 +446,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when :"
 msgstr ""
+"لا يتم إنشاء قائمة المواد من نوع حزمة مع أمر التصنيع.<br/>\n"
+"                                عوضاً عن ذلك، تُستخدم لتحليل قائمة المواد إلى مكوناتها الأساسية عندما: "
 
 #. module: mrp
 #. odoo-python
@@ -897,6 +901,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components"
 " and work order instructions."
 msgstr ""
+"قوائم المواد، وتسمى أيضاً بالوصفات، تُستخدَم لإكمال المكونات تلقائياً "
+"وإرشادات أمر العمل. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -2204,7 +2210,7 @@ msgstr "يحتوي على رسالة "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
-msgstr ""
+msgstr "يحتوي على خطوط توجيه "
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2676,7 +2682,7 @@ msgstr "جاهزية أمر التصنيع "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "MO Reference"
-msgstr ""
+msgstr "مرجع أمر التصنيع "
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
@@ -2731,7 +2737,7 @@ msgstr "الاستهلاك اليدوي "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
 msgid "Manual Consumption Readonly"
-msgstr ""
+msgstr "ملف الاستهلاك اليدوي للقراءة فقط "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -3679,7 +3685,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
-msgstr ""
+msgstr "إنتاج الكل "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3689,7 +3695,7 @@ msgstr "إنتاج المنتجات المتبقية "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -> C + D)"
-msgstr ""
+msgstr "إنتاج المنتجات المتبقية (أ + ب -> ج + د) "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3822,7 +3828,7 @@ msgstr "يجب أن تكون سعة المنتج فريدة لكل مركز عم
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr ""
+msgstr "المنتج لبنائه... "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__production_id
@@ -4363,12 +4369,12 @@ msgstr "الإنتاج الجماعي التسلسلي "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "تحديد الكميات والتصديق "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Set Quantity"
-msgstr ""
+msgstr "تحديد الكمية "
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -4444,12 +4450,12 @@ msgstr "إظهار الانبثاق؟ "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce
 msgid "Show Produce"
-msgstr ""
+msgstr "إظهار إنتاج "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr ""
+msgstr "إظهار إنتاج الكل "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -4512,8 +4518,8 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
-"لقد تم تأكيد بعض حركات المنتجات بالفعل، ولذلك لا ينمكن إلغاء أمر التصنيع هذا"
-" تماماً. هل أنت متأكد من رغبتك في المتابعة؟ "
+"لقد تم تأكيد بعض حركات المنتجات بالفعل، ولذلك لا يمكن إلغاء أمر التصنيع هذا "
+"تماماً. هل أنت متأكد من رغبتك في المتابعة؟ "
 
 #. module: mrp
 #. odoo-python
@@ -4787,17 +4793,17 @@ msgstr "حقل تقني يٌستخدم لتحديد ما إذا كان زر \"ا
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Technical field for workcenter views"
-msgstr ""
+msgstr "حقل تقني لنوافذ عرض مركز العمل. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
-msgstr ""
+msgstr "حقل تقني للتحقق مما إذا كان زر إنتاج الكل يمكن إظهاره "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
+msgstr "حقل تقني للتحقق مما إذا كان زر إنتاج يمكن إظهاره "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5480,6 +5486,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
+"استخدم أوامر التصنيع (MO) لبناء منتجات كاملة أثناء استهلاك المكونات. مثال:  "
+"1 طاولة = 4 أرجل طاولة + 1 سطح طاولة "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6227,7 +6235,7 @@ msgstr "عليك تعيين رقم دفعة للمنتج النهائي. "
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number"
-msgstr ""
+msgstr "عليك التزويد بالأرقام التسلسلية/أرقام المجموعات "
 
 #. module: mrp
 #. odoo-python
@@ -6287,7 +6295,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "it is added as a component in a manufacturing order"
-msgstr ""
+msgstr "تتم إضافته كمكون في أمر التصنيع "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -6295,6 +6303,7 @@ msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
 msgstr ""
+"يتم تحريكه عن طريق النقل، كأوامر الاستلام أو التوصيل على سبيل المثال. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

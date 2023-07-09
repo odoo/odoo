@@ -1812,11 +1812,11 @@ msgstr ""
 " Cet accord doit être codé sous forme de 'mandat du client' dans Odoo.\n"
 "\n"
 " Vous devez également répondre aux exigences suivantes pour générer\n"
-" correctement un fichier de prélèvement automatique SEPA : \n"
+" correctement un fichier de prélèvement SEPA : \n"
 " – Le compte de votre entreprise doit avoir un numéro IBAN valide\n"
 "  – Le compte de votre entreprise doit être associé à une banque disposant d'un BIC valide\n"
-" – Votre entreprise doit avoir un identifiant de créancier (pour cela, accédez aux 'paramètres' du module de comptabilité)\n"
-" – Votre entreprise doit avoir défini un journal pour recevoir les paiements par prélèvement automatique SEPA (encore une fois, dans les 'paramètres' du module de comptabilité)\n"
+" – Votre entreprise doit avoir un identifiant créancier (pour cela, accédez aux 'paramètres' du module de comptabilité)\n"
+" – Votre entreprise doit avoir défini un journal pour recevoir les paiements par prélèvement SEPA (encore une fois, dans les 'paramètres' du module de comptabilité)\n"
 " – Tous les clients pour lesquels vous générez un paiement doivent posséder un numéro de compte IBAN valide dans une banque associée à un code BIC correct.\n"
 "\n"
 " Odoo vous informe si l'une de ces exigences n'est pas remplie.\n"
@@ -1824,12 +1824,12 @@ msgstr ""
 "Toutes les factures validées pour un client disposant d'un mandat seront\n"
 "automatiquement à l'état 'Payé' et un paiement sera généré. Une\n"
 "option se trouvant dans le tableau de bord vous permettra ensuite d'afficher tous les paiements générés\n"
-"au moyen d'un prélèvement automatique SEPA et de générer un fichier XML de collecte, les regroupant tels\n"
+"au moyen d'un prélèvement SEPA et de générer un fichier XML de collecte, les regroupant tels\n"
 "qu'ils apparaissent.\n"
 "\n"
-"Un mode de paiement par 'prélèvement automatique SEPA' dédié est également disponible pour les\n"
+"Un mode de paiement par 'prélèvement SEPA' dédié est également disponible pour les\n"
 "factures ouvertes, lorsque vous sélectionnez un compte bancaire dans l'assistant 'Enregistrer un paiement'.\n"
-"Utilisez-le afin de générer un paiement par prélèvement automatique SEPA pour les factures si vous avez ajouté un mandat\n"
+"Utilisez-le afin de générer un paiement par prélèvement SEPA pour les factures si vous avez ajouté un mandat\n"
 "pour le propriétaire après sa validation. Un message d'erreur s'affiche si vous\n"
 "essayez d'utiliser ce mode sur une facture dont le paiement ne peut pas être traité par mandat."
 
@@ -14117,7 +14117,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_accountant_batch_payment
 msgid "Allows using Reconciliation with the Batch Payment feature."
 msgstr ""
-"Permet d'utiliser le lettrage avec la fonctionnalité de paiement par lots."
+"Permet d'utiliser le lettrage avec la fonctionnalité de paiement par lot."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_fedex
@@ -29412,7 +29412,7 @@ msgstr "Paiement – Compte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr "Paiement - Patch de paiement en ligne de compte / facture"
+msgstr "Paiement - Compte / Patch de paiement des factures en ligne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -36147,7 +36147,7 @@ msgstr "Mettre à jour"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr "Mise à jour de la liste des Applications"
+msgstr "Mettre à jour la liste des Apps"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update

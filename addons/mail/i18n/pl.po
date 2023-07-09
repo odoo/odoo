@@ -36,8 +36,8 @@
 # Karol Rybak <karolrybak85@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +68,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"Dodawanie adresów do listy dozwolonych\n"
+"</p><p>\n"
+"Aby chronić Cię przed spamem i pętlami odpowiedzi, Odoo automatycznie blokuje wiadomości e-mail\n"
+"przychodzące do bramki po przekroczeniu progu <b>%(threshold)i</b>wiadomości e-mail co <b>%(minutes)i</b>\n"
+"minut. Jeśli istnieją adresy, z których musisz otrzymywać bardzo częste\n"
+"aktualizacje, możesz dodać je poniżej, a Odoo pozwoli im przejść.\n"
+"</p>"
 
 #. module: mail
 #. odoo-python
@@ -95,7 +104,7 @@ msgstr "\"%s\" wymaga dostępu do mikrofonu"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s od %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1344,7 +1353,7 @@ msgstr "Nazwa aliasu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Status aliasu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1354,7 +1363,7 @@ msgstr "Domena aliasu"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Status aliasu oceniony na podstawie ostatniej otrzymanej wiadomości."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1723,22 +1732,22 @@ msgstr "Awatar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Awatar 1024"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Awatar 256"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Awatar 512"
 
 #. module: mail
 #. odoo-javascript
@@ -2537,7 +2546,7 @@ msgstr "Kontakty"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Container Model"
-msgstr ""
+msgstr "Model kontenera"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_member__last_interest_dt
@@ -2764,7 +2773,7 @@ msgstr "Niestandardowa wiadomość o odbiorze"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr ""
+msgstr "Niestandardowa lista serwerów ICE"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2881,7 +2890,7 @@ msgstr "Szanowny"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr ""
+msgstr "Drogi Nadawco"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -4406,7 +4415,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "ILY"
-msgstr ""
+msgstr "ILY"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -5180,7 +5189,7 @@ msgstr "Dołącz do grupy"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Jolly Roger"
-msgstr ""
+msgstr "Jolly Roger"
 
 #. module: mail
 #. odoo-javascript
@@ -6518,7 +6527,7 @@ msgstr "Nie potwierdzone"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "Nie testowano"
 
 #. module: mail
 #. odoo-javascript
@@ -6881,7 +6890,7 @@ msgstr "Otwórz dokument"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
-msgstr ""
+msgstr "Otwórz właściciela"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7590,7 +7599,7 @@ msgstr "Przyczyna"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
 msgid "Receive notifications in Odoo"
-msgstr ""
+msgstr "Otrzymywanie powiadomień w Odoo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -7813,6 +7822,8 @@ msgstr "Model renderowania"
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
 msgstr ""
+"Renderowanie %(field_name)s nie jest możliwe, ponieważ nie zostało "
+"zdefiniowane w szablonie."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9181,7 +9192,7 @@ msgstr "Użytkownik wewnętrzny odpowiedzialny za ten kontakt."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
+msgstr "Ostatnia wiadomość odebrana na tym aliasie spowodowała błąd."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9197,6 +9208,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"Poniższa wiadomość nie mogła zostać zaakceptowana przez adres %(alias_display_name)s.\n"
+"Tylko %(contact_description)s może się z nim skontaktować.<br /><br />\n"
+"Upewnij się, że używasz poprawnego adresu lub skontaktuj się z nami pod adresem %(default_email)s."
 
 #. module: mail
 #. odoo-python
@@ -9206,6 +9220,8 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
+"Poniższa wiadomość nie mogła zostać zaakceptowana przez adres %(alias_display_name)s.\n"
+"Spróbuj ponownie później lub skontaktuj się z %(company_name)s."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -9761,7 +9777,7 @@ msgstr "Usuń z czarnej listy"
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 #, python-format
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "Powód odblokowania: %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9904,7 +9920,7 @@ msgstr "Użyj serwerów Twilio ICE"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use a Gmail Server"
-msgstr ""
+msgstr "Korzystanie z serwera Gmail"
 
 #. module: mail
 #. odoo-python
@@ -9922,7 +9938,7 @@ msgstr "Stosuj aktywną domenę"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use an Outlook Server"
-msgstr ""
+msgstr "Korzystanie z serwera Outlook"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -10575,7 +10591,7 @@ msgstr "Oddal (-)"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "abacus"
-msgstr ""
+msgstr "liczydło"
 
 #. module: mail
 #. odoo-javascript
@@ -11720,7 +11736,7 @@ msgstr "bandaż"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "bangbang"
-msgstr ""
+msgstr "bangbang"
 
 #. module: mail
 #. odoo-javascript
@@ -11934,7 +11950,7 @@ msgstr "plaża z parasolem"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "beacon"
-msgstr ""
+msgstr "latarnia"
 
 #. module: mail
 #. odoo-javascript
@@ -12333,7 +12349,7 @@ msgstr "herbatnik"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "bisque"
-msgstr ""
+msgstr "herbatnik"
 
 #. module: mail
 #. odoo-javascript

@@ -5,9 +5,9 @@
 # Translators:
 # Jonathan Quique <jqu@odoo.com>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 12:24+0000\n"
 "PO-Revision-Date: 2023-01-17 14:39+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2896,7 +2896,7 @@ msgstr "Data ordine"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Data ordine:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3126,7 +3126,7 @@ msgstr "Fattura pro forma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Fattura proforma"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3317,7 +3317,7 @@ msgstr "Data preventivo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Data preventivo:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -4963,9 +4963,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') e "
-"(ctx.get('proforma') e 'Proforma' o 'Preventivo') o 'Ordine' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Preventivo') or 'Ordine' }} (rif. {{"
+" object.name or 'n/d' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

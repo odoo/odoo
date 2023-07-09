@@ -175,7 +175,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hallo<br>,<br>\n"
-"        Sie wurden zur Teilnahme an einem neuen Kurs eingeladen: <t t-out=\"object.channel_id.name or ''\">Grundlagen des Gärtnerns</t>.\n"
+"        Sie wurden zur Teilnahme an einem neuen Kurs eingeladen: <t t-out=\"object.channel_id.name or ''\">Grundlagen der Gartenarbeit</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -208,7 +208,7 @@ msgstr ""
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px;\">Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
 "                        <p><b>Herzlichen Glückwunsch!</b></p>\n"
-"                        <p>Sie haben den Kurs <b t-out=\"object.channel_id.name or ''\">Grundlagen des Gärtnerns</b> erfolgreich absolviert</p>\n"
+"                        <p>Sie haben den Kurs <b t-out=\"object.channel_id.name or ''\">Grundlagen der Gartenarbeit</b> erfolgreich absolviert</p>\n"
 "                        <p>Finden Sie andere interessante Kurse.</p><br>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
@@ -381,7 +381,7 @@ msgid ""
 "ms-1\">Lessons</span>"
 msgstr ""
 "<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
-"ms-1\">Unterrichtsstunden</span>"
+"ms-1\">Lektionen</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -899,9 +899,7 @@ msgstr "<span name=\"done_members_count_label\" class=\"text-muted\">Beendet</sp
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "<span name=\"members_done_count_label\" class=\"o_stat_text\">Finished</span>"
-msgstr ""
-"<span name=\"members_done_count_label\" "
-"class=\"o_stat_text\">Abgeschlossen</span>"
+msgstr "<span name=\"members_done_count_label\" class=\"o_stat_text\">Beendet</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1114,7 +1112,7 @@ msgstr "Zugriffsgruppen"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Refused"
-msgstr "Zugang verweigert"
+msgstr "Zugriff verweigert"
 
 #. module: website_slides
 #: model:mail.activity.type,name:website_slides.mail_activity_data_access_request
@@ -1587,7 +1585,7 @@ msgstr "Darf als abgeschlossen markieren"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_uncompleted
 msgid "Can Mark Uncompleted"
-msgstr "Darf als nicht abgeschlossen markieren"
+msgstr "Darf als unabgeschlossen markieren"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
@@ -2159,7 +2157,7 @@ msgstr "Inhalte"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Continue"
-msgstr "Weitermachen"
+msgstr "Fortfahren"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2285,7 +2283,7 @@ msgstr "Kursart"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
 msgid "Course finished"
-msgstr "Kurs abgeschlossen"
+msgstr "Kurs beendet"
 
 #. module: website_slides
 #. odoo-python
@@ -2915,7 +2913,7 @@ msgstr "Hier klicken, um Ihre Inhalte im Vollbildmodus zu genießen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Finish Course"
-msgstr "Kurs abschließen"
+msgstr "Kurs beenden"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -3160,7 +3158,7 @@ msgstr "HTML-Inhalt"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
 msgid "Hand on !"
-msgstr "Hand drauf!"
+msgstr "Praktisch!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
@@ -5190,7 +5188,7 @@ msgstr "Link teilen"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_slide_template_id
 msgid "Share Template"
-msgstr "Vorlage teilen"
+msgstr "Vorlage zum teilen"
 
 #. module: website_slides
 #. odoo-javascript

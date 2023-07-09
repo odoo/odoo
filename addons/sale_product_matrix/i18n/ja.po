@@ -5,6 +5,7 @@
 # Translators:
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Andy Yiu, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
 msgid "Add product mode"
-msgstr ""
+msgstr "プロダクトモードを追加"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
@@ -35,21 +36,23 @@ msgid ""
 "Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
+"コンフィギュレーター: オーダにマッチするプロダクトバリアントを追加するために属性値を選択します。\n"
+"グリッド：属性値のグリッドから一度に複数のバリアントを追加します。"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "グリッドプロダクトテンプレート"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "グリッドアップデート"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "マトリックスローカルストレージ"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
@@ -93,6 +96,9 @@ msgid ""
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
 msgstr ""
+"グリッドの技術的なローカルストレージ。\n"
+"grid_update の場合、販売オーダにロードされます。\n"
+"そうでない場合は開くマトリックスを示します。"
 
 #. module: sale_product_matrix
 #. odoo-python
@@ -100,4 +106,4 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot change the quantity of a product present in multiple sale lines."
-msgstr ""
+msgstr "複数の販売明細にあるプロダクトの数量を変更することはできません。"
