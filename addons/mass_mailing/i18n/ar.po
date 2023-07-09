@@ -7,8 +7,8 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Niyas Raphy, 2023
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,6 +313,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
 "                        The sum of all percentages for this A/B campaign totals"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-danger\" aria-hidden=\"true\"/>\n"
+"                        مجموع كافة النسب المئوية لإجمالي حملة A/B هذه "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
@@ -379,6 +381,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
 "False)]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', False)]}\">جهة"
+" الاتصال البريدية</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -659,7 +663,7 @@ msgstr "قيمة فريدة"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
 msgid "A/B Campaign Winner Mailing"
-msgstr ""
+msgstr "البريد للفائز في حملة A/B "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -919,6 +923,10 @@ msgid ""
 "is hidden on the unsubscription page. The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"السماح للمستلمين بإدارة وضعهم في القائمة السوداء بأنفسهم، عن طريق صفحة إلغاء"
+" الاشتراك. إذا كان هذا الخيار مفعلاً، سيكون زر 'إضافتي للقائمة السوداء' "
+"مخفيًا في صفحة إلغاء الاشتراك. سيظل زر 'العودة' ظاهراً في جميع الأحوال "
+"للسماح للعملاء المهتمين والشركاء بإعادة الاشتراك. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1079,7 +1087,7 @@ msgstr "لون الخلفية"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_on_mailing_list
 msgid "Based on Mailing Lists"
-msgstr ""
+msgstr "بناءً على القائمة البريدية "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -1143,7 +1151,7 @@ msgstr "عناوين البريد الإلكتروني المدرجة في ال�
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist removal request from portal"
-msgstr ""
+msgstr "طلب الإزالة من قائمة الحظر عن طريق البوابة "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1153,13 +1161,15 @@ msgid ""
 "Blocklist removal request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"طلب الإزالة من قائمة الحظر للبريد %(mailing_link)s (المستند %(record_link)s)"
+" "
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist request from portal"
-msgstr ""
+msgstr "طلب الإضافة إلى قائمة الحظر عن طريق البوابة "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1169,6 +1179,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"طلب الإضافة إلى قائمة الحظر للبريد %(mailing_link)s (المستند "
+"%(record_link)s) "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1178,6 +1190,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
+"طلب الإضافة إلى قائمة الحظر عن طريق رابط إلغاء الاشتراك للبريد "
+"%(mailing_link)s (المستند %(record_link)s) "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2484,7 +2498,7 @@ msgstr "تم تفعيل حملة البريد الإلكتروني "
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_is_winner_mailing
 msgid "Is the Winner of its Campaign"
-msgstr ""
+msgstr "الفائز في حملته "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -4014,7 +4028,7 @@ msgstr "إرسال في "
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send test"
-msgstr ""
+msgstr "إرسال الاختبار "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -4453,6 +4467,8 @@ msgid ""
 "This email has been automatically added in blocklist because of too much "
 "bounced."
 msgstr ""
+"لقد تمت إضافة هذا البريد الإلكتروني تلقائياً إلى قائمة الحظر لارتداد العديد "
+"من رسائل البريد الإلكتروني. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -4496,6 +4512,8 @@ msgid ""
 "This will send the email to all recipients. Are you sure you want to "
 "proceed?"
 msgstr ""
+"سيقوم ذلك بإرسال الرسالة إلى كافة المستلمين. هل أنت متأكد من أنك ترغب "
+"بالاستمرار؟ "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -4698,7 +4716,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "Use alternative versions to be able to select the winner."
-msgstr ""
+msgstr "استخدام النسخ البديلة حتى تتمكن من تحديد الفائز. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -4853,6 +4871,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"عند تصميم الرسالة البريدية، يمكنك تحديد القواعد لتصفية المستلمين.\n"
+"                لحفظ بعض الفئات لاستخدامها في المستقبل، يمكنك إضافتها إلى قائمة المفضلة\n"
+"                عن طريق الضغط على أيقونة <i class=\"fa fa-floppy-o text-warning\"></i> بجانب \"المستلمين\". "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -5103,6 +5124,8 @@ msgid ""
 "of all potential recipients.<br/>\n"
 "                        <b class=\"text-danger\">Some of the mailings will not be sent</b>, as only 1 email will be sent for each unique recipient in this campaign."
 msgstr ""
+"لكافة المستلمين المحتملين.<br/>\n"
+"                        <b class=\"text-danger\">بعض الرسائل لن يتم إرسالها</b>، حيث إنه سيتم إرسال بريد إلكتروني 1 فقط لكل مستلم فريد في هذه الحملة. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -5129,7 +5152,7 @@ msgstr " "
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "to the remaining recipients."
-msgstr ""
+msgstr "إلى بقية المستلمين. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -5139,12 +5162,12 @@ msgstr "سوف يتم إرسالها "
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version."
-msgstr ""
+msgstr "سيتسلم هذه النسخة. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "will receive this version.<br/>"
-msgstr ""
+msgstr "سيتسلم هذه النسخة.<br/> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating_options

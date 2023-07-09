@@ -207,6 +207,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"SMS送信方法を選ぶ：\n"
+"SMS：一括SMS\n"
+"メッセージとして投稿する：ドキュメントへのログオン\n"
+"メモとして投稿する：アーカイブ付一括SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1041,14 +1045,14 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "以下として送信："
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "以下として送信（SMS）"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1216,6 +1220,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"サーバーアクションのタイプ。以下の値が利用可能です：\n"
+"- 「Pythonコードの実行」：Pythonコードブロックが実行されます\n"
+"- 「新規記録の作成」： 新しい値で新しいレコードを作成します\n"
+"- 「記録のアップデート」： 記録の値を更新します\n"
+"- 「複数のアクションを実行」： 他の複数のサーバーアクションをトリガーするアクションを定義します。\n"
+"- 「メール送信」： メッセージやメモの投稿やメールを送信します。\n"
+"- 「フォロワーを追加」：記録にフォロワーを追加します (ディスカッション)\n"
+"- 「次のアクティビティを作成」：アクティビティを作成します（ディスカッション）\n"
+"- 「SMSテキストメッセージを送信」：SMSを送信し、ドキュメントに記録します（SMS）"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc

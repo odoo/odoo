@@ -10,14 +10,15 @@
 # Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
 # Aimée Mendoza Sánchez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +114,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad  de excepción"
+msgstr "Decoración de actividad de excepción"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
@@ -208,7 +209,7 @@ msgstr "Todos"
 #. module: maintenance
 #: model:ir.model.constraint,message:maintenance.constraint_maintenance_equipment_serial_no
 msgid "Another asset already exists with this serial number!"
-msgstr "¡Existe otro activo con este número de serie!"
+msgstr "Existe otro activo con este número de serie"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
@@ -250,7 +251,7 @@ msgstr "Asignada a"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Número de archivos adjuntos"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__kanban_state__blocked
@@ -281,7 +282,7 @@ msgstr "Nombre de categoría"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__close_date
 msgid "Close Date"
-msgstr "Fecha cierre"
+msgstr "Fecha de cierre"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__color
@@ -385,7 +386,7 @@ msgstr "Fecha del siguiente mantenimiento preventivo"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__request_date
 msgid "Date requested for the maintenance to happen"
-msgstr "Fecha solicitada para que el mantenimiento ocurra"
+msgstr "Fecha solicitada para que ocurra el mantenimiento"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_date
@@ -409,13 +410,13 @@ msgstr "Días entre cada mantenimiento preventivo"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_defaults
 msgid "Default Values"
-msgstr "Valores por defecto"
+msgstr "Valores predeterminados"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Delete"
-msgstr "Borrar"
+msgstr "Eliminar"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__description
@@ -504,7 +505,7 @@ msgstr "Equipo asignado"
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr "Categorías de equipamiento"
+msgstr "Categoría del equipo"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
@@ -555,13 +556,13 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome ej. fa-tasks"
+msgstr "Icono de Font Awesome, por ejemplo, fa-tasks"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -712,7 +713,7 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades atrasadas"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
@@ -722,7 +723,7 @@ msgstr "Ubicación"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
 msgid "Losses Analysis"
-msgstr "Análisis de les pérdidas"
+msgstr "Análisis de las pérdidas"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
@@ -1060,7 +1061,7 @@ msgid ""
 msgstr ""
 "Política sobre cómo publicar un mensaje en el documento utilizando el servidor de correo.\n"
 "- todos: todos pueden publicar\n"
-"- partners: solo los partners verificados\n"
+"- contactos: solo los contactos verificados\n"
 "- seguidores: solo los seguidores del documento relacionado o los miembros de los canales\n"
 
 #. module: maintenance
@@ -1232,14 +1233,14 @@ msgstr "Secuencia"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
 msgid "Serial Number"
-msgstr "Nº de serie"
+msgstr "Número de serie"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__archive
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-"Establezca el \"archivo\" a \"verdadero\" para esconder la petición de "
+"Establezca el archivo como Verdadero para esconder la petición de "
 "mantenimiento sin borrarla."
 
 #. module: maintenance
@@ -1280,10 +1281,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Estado basado en actividades\n"
+"Estado según las actividades\n"
 "Vencida: ya pasó la fecha límite\n"
 "Hoy: hoy es la fecha de la actividad\n"
-"Planeada: futuras actividades."
+"Planeada: actividades en un plazo a futuro."
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status

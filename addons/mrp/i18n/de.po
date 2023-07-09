@@ -8,8 +8,8 @@
 # Wolfgang Taferner, 2023
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Niyas Raphy, 2023
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1290,6 +1290,12 @@ msgid ""
 "                                                       Also note that "
 "purchase security lead times will be added when appropriate."
 msgstr ""
+"Berechnen Sie die Tage, die benötigt werden, um alle Komponenten von der "
+"Stückliste zu beschaffen, indem Sie die Komponenten und/oder Unterbaugruppen"
+" entweder kaufen oder herstellen."
+"                                                       Beachten Sie auch, "
+"dass die Sicherheitsvorlaufzeiten für Einkäufe gegebenenfalls hinzugefügt "
+"werden."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1627,13 +1633,15 @@ msgstr "Datum"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date by Month"
-msgstr ""
+msgstr "Datum nach Monat"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"Datum, an dem Sie die Produktion voraussichtlich beenden werden, oder "
+"tatsächliches Datum, an dem Sie die Produktion beendet haben."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1641,11 +1649,13 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Datum, an dem Sie planen, mit der Produktion zu beginnen, oder Datum, an dem"
+" Sie tatsächlich mit der Produktion begonnen haben."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date: Last 365 Days"
-msgstr ""
+msgstr "Datum: letzte 365 Tage"
 
 #. module: mrp
 #. odoo-javascript
@@ -1959,7 +1969,7 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Ausrüstungsfehler"
 
 #. module: mrp
 #. odoo-python
@@ -2196,7 +2206,7 @@ msgstr "Vollständig produktiv"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
 msgid "Fully Productive Time"
-msgstr ""
+msgstr "Vollständig produktive Zeit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2465,7 +2475,7 @@ msgstr "In Bearbeitung"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "In Transit"
-msgstr ""
+msgstr "In Transit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
@@ -2785,14 +2795,14 @@ msgstr "Lieferrückstand bei Fertigungsauftrag"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "MO Cost"
-msgstr ""
+msgstr "Kosten des Fertigungsauftrags"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "MO Costs"
-msgstr ""
+msgstr "Kosten des Fertigungsauftrags"
 
 #. module: mrp
 #. odoo-python
@@ -2805,12 +2815,12 @@ msgstr "Fertigungsauftrag von %s generiert"
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr ""
+msgstr "Übersicht der Fertigungsaufträge"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Übersichtsbericht der Fertigungsaufträge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3799,7 +3809,7 @@ msgstr "Priorität"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
 msgid "Process Defect"
-msgstr ""
+msgstr "Verfahrensdefekt"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4262,12 +4272,12 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason4
 msgid "Reduced Speed"
-msgstr ""
+msgstr "Reduzierte Geschwindigkeit"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason6
 msgid "Reduced Yield"
-msgstr ""
+msgstr "Reduziertes Ergebnis"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__code
@@ -4719,6 +4729,9 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process?"
 msgstr ""
+"Einige Produktbewegungen wurden schon bestätigt. Daher kann dieser "
+"Fertigungsauftrag nicht mehr abgebrochen werden. Sind Sie sich sicher, dass "
+"Sie fortfahren möchten?"
 
 #. module: mrp
 #. odoo-python

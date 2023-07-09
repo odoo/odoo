@@ -38,13 +38,22 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                허용 목록에 주소 추가\n"
+"            </p><p>\n"
+"               Odoo에서는 사용자가 스팸이나 회신 연락을 받지 않도록 보호하기 위해\n"
+"                 임계값 <b>%(threshold)i</b>을 초과하여  <b>%(minutes)i</b>분마다 게이트웨이로 수신되는 이메일을\n"
+"                자동으로 차단합니다. 매우 자주 받아야 하는 이메일이 있는 경우에는\n"
+"                아래에 주소를 추가하시면 Odoo에서 해당 이메일 수신이 가능합니다.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr ""
+msgstr "\"%(activity_name)s: %(summary)s\" 항목이 나에게 배정"
 
 #. module: mail
 #. odoo-javascript
@@ -65,7 +74,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(channel name)s 에서 %(author name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -81,7 +90,7 @@ msgstr ""
 msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
-msgstr ""
+msgstr "%(email)s 항목은 유효한 이메일이 아닙니다. 새로운 고객을 생성하는데 필요한 항목입니다."
 
 #. module: mail
 #. odoo-javascript
@@ -109,7 +118,7 @@ msgstr "%(user_name)s님이 새 문서를 팔로우하도록 초대했습니다.
 #: code:addons/mail/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Email Template)"
-msgstr ""
+msgstr "%s (이메일 서식)"
 
 #. module: mail
 #. odoo-python
@@ -123,14 +132,14 @@ msgstr "%s (사본)"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Message"
-msgstr ""
+msgstr "%s 메시지"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Messages"
-msgstr ""
+msgstr "%s Messages"
 
 #. module: mail
 #. odoo-javascript
@@ -2221,6 +2230,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
+"채팅은 두 사람 사이에 비공개로 고유하게 진행됩니다. 그룹은 초대받은 사람들간에 비공개로 진행됩니다. 채널은 자유롭게 가입할 수 있습니다"
+" (설정에 따라 다름)."
 
 #. module: mail
 #. odoo-javascript
@@ -24905,7 +24916,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "multiply"
-msgstr ""
+msgstr "곱하기"
 
 #. module: mail
 #. odoo-javascript
@@ -30233,7 +30244,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "sign"
-msgstr ""
+msgstr "서명"
 
 #. module: mail
 #. odoo-javascript

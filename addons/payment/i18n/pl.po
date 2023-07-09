@@ -87,6 +87,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
+"[('support_partial_capture', '!=', 'full_only')]}\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -97,7 +101,7 @@ msgstr "<i class=\"fa fa-trash\"/> Usuń"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<span class=\"fs-4\">Saved payment methods</span>"
-msgstr ""
+msgstr "<span class=\"fs-4\">Zapisane metody płatności</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -145,6 +149,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>Ostrzeżenie!</strong> Trwa częściowe przechwytywanie. Poczekaj chwilę\n"
+"chwilę na jego przetworzenie. Sprawdź konfigurację dostawcy płatności, jeśli\n"
+"przechwytywanie jest nadal w toku po kilku minutach."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -152,6 +159,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>Ostrzeżenie!</strong> Nie można przechwycić kwoty ujemnej ani więcej"
+" niż"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -265,7 +274,7 @@ msgstr "Dodaj dodatkowe opłaty"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Add new payment method"
-msgstr ""
+msgstr "Dodaj nową metodę płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -296,12 +305,12 @@ msgstr "Zezwól na zapisywanie metod płatności"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Już przechwycony"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Już unieważnione"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
@@ -324,7 +333,7 @@ msgstr "Kwota Maks."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "Kwota do przechwycenia"
 
 #. module: payment
 #. odoo-javascript
@@ -388,7 +397,7 @@ msgstr "Autoryzowane"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "Zatwierdzona kwota"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -468,7 +477,7 @@ msgstr "Anulowane operacje"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "Przechwyć"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -494,12 +503,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr ""
+msgstr "Transakcje z potomkami"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "Transakcje z potomkami"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -606,7 +615,7 @@ msgstr "Utwórz nowego dostawcę płatności"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "Create a payment method"
-msgstr ""
+msgstr "Utwórz metodę płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -868,7 +877,7 @@ msgstr "Wygeneruj link do płatności."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr ""
+msgstr "Wygeneruj i skopiuj link do płatności"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -885,7 +894,7 @@ msgstr "Routing HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "Ma projekt potomków"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
@@ -895,7 +904,7 @@ msgstr "Ma wielu dostawców"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Ma pozostałą kwotę"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -1001,7 +1010,7 @@ msgstr "Wewnętrzny błąd serwera"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Czy kwota do przechwycenia jest prawidłowa?"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1023,7 +1032,7 @@ msgstr "Wykonano"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Trasa lądowania"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1077,7 +1086,7 @@ msgstr "Zarządzanie metodami płatności"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Managed by"
-msgstr ""
+msgstr "Zarządzane przez"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1097,7 +1106,7 @@ msgstr "Maksymalna kwota"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Maksymalny dozwolony przechwyt"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1175,7 +1184,7 @@ msgstr "Nie wybrano opcji płatności"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "Partnerowi publicznemu nie można przypisać żadnego tokena."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
@@ -1261,7 +1270,7 @@ msgstr "Inne"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Other payment methods"
-msgstr ""
+msgstr "Inne metody płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1302,7 +1311,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Kreator przechwytywania płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1463,7 +1472,7 @@ msgstr "Ustaw kwotę mniejszą niż %s."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr ""
+msgstr "Przejdź do firmy"
 
 #. module: payment
 #. odoo-javascript
@@ -1601,7 +1610,7 @@ msgstr "Wybierz kraje. Pozostaw puste, aby udostępnić wszędzie."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
+msgstr "Wybierz waluty. Pozostaw puste, aby nie ograniczać."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1664,7 +1673,7 @@ msgstr "Pokaż wiadomość Gotowe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
 msgid "Show Payment Method"
-msgstr ""
+msgstr "Pokaż metodę płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
@@ -1689,6 +1698,9 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Niektóre transakcje, które zamierzasz przechwycić, mogą być przechwycone "
+"tylko w całości. Obsługuj transakcje indywidualnie, aby przechwycić "
+"częściową kwotę."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1723,12 +1735,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "Obsługa przechwytywania częściowego"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr ""
+msgstr "Obsługiwane metody płatności"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1741,7 +1753,7 @@ msgstr "Tryb testowy"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.test_token_badge
 msgid "Test Token"
-msgstr ""
+msgstr "Token testowy"
 
 #. module: payment
 #. odoo-python
@@ -1756,11 +1768,12 @@ msgstr "Token dostępu jest nieprawidłowy."
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
 msgstr ""
+"Kwota do przechwycenia musi być dodatnia i nie może być wyższa niż %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "Transakcje podrzędne transakcji."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1792,6 +1805,8 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
+"Waluty dostępne u tego dostawcy płatności. Pozostaw puste, aby nie "
+"ograniczać."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1813,7 +1828,7 @@ msgstr "Wewnętrzne odniesienie do transakcji"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method"
-msgstr ""
+msgstr "Lista dostawców obsługujących tę metodę płatności"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1893,7 +1908,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "Transakcja źródłowa powiązanych transakcji podrzędnych"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1981,7 +1996,7 @@ msgstr "Nie ma żadnych transakcji do pokazania"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr ""
+msgstr "Nie utworzono jeszcze żadnego tokena."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2027,6 +2042,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment method, limited to 64x64 px"
 msgstr ""
+"To pole zawiera obraz używany dla tej metody płatności, ograniczony do 64x64"
+" px"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2062,6 +2079,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"Ta transakcja została potwierdzona po przetworzeniu jej częściowych "
+"transakcji przechwycenia i częściowego unieważnienia (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2122,7 +2141,7 @@ msgstr "Walidacja metody płatności"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
 msgid "Variable domestic fees"
-msgstr ""
+msgstr "Zmienne opłaty krajowe"
 
 #. module: payment
 #. odoo-python
@@ -2134,7 +2153,7 @@ msgstr "Opłaty zmienne muszą być zawsze dodatnie i niższe niż 100%."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
 msgid "Variable international fees"
-msgstr ""
+msgstr "Zmienne opłaty międzynarodowe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -2144,7 +2163,7 @@ msgstr "Zweryfikowano"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Unieważnienie pozostałej kwoty"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2227,7 +2246,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "Czy każdy dostawca transakcji obsługuje częściowe przechwytywanie."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2475,6 +2494,8 @@ msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
+"aby dokonać tej\n"
+"płatności."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
@@ -2484,9 +2505,9 @@ msgstr "ostrzeżenie"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "– created on"
-msgstr ""
+msgstr "- utworzony w dniu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "— created on"
-msgstr ""
+msgstr "- utworzony w dniu"

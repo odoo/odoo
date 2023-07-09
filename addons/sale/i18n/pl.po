@@ -36,8 +36,8 @@
 # Martin Trigaux, 2023
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2023
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -468,6 +468,10 @@ msgid ""
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', 'percentage')]}\" class=\"oe_inline\">%</span>\n"
+"<span attrs=\"{'invisible': [('display_invoice_amount_warning', '=', False)]}\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
+"<i class=\"fa fa-warning\"/>\n"
+"</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -553,13 +557,13 @@ msgstr "<span>Podpis</span>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Tax excl.</span>"
-msgstr ""
+msgstr "<span>Bez podatku.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Tax incl.</span>"
-msgstr ""
+msgstr "<span>Z podatkiem</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -651,12 +655,12 @@ msgstr "<strong>Podpis</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr ""
+msgstr "<strong>Bez podatku:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax incl.: </strong>"
-msgstr ""
+msgstr "<strong>Z podatkiem:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -844,7 +848,7 @@ msgstr "Umożliwia wysłanie faktury pro-forma."
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "Już zafakturowane"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -929,12 +933,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr ""
+msgstr "Czy na pewno chcesz anulować"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr ""
+msgstr "Czy na pewno chcesz anulować wybraną ofertę?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1014,7 +1018,7 @@ msgstr "Informacja blokująca"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as tmeplate"
-msgstr ""
+msgstr "Zawartość ciała jest taka sama jak tmeplate"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1066,13 +1070,13 @@ msgstr "Anuluj %s"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Anulowanie wielu ofert"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Anuluj oferty"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1099,6 +1103,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Zmiana firmy istniejącej oferty może wymagać ręcznego dostosowania "
+"szczegółów linii. Można rozważyć aktualizację cen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__use_quotations
@@ -1269,7 +1275,7 @@ msgstr "Data utworzenia"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "Utwórz projekt faktury"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1468,6 +1474,8 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Dni między propozycją oferty a jej wygaśnięciem. 0 dni oznacza, że "
+"automatyczne wygasanie jest wyłączone"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -1484,12 +1492,12 @@ msgstr "Domyślne zatwierdzenie Oferty"
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr ""
+msgstr "Domyślny produkt używany do przedpłat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "Domyślne wartości"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1497,6 +1505,8 @@ msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
 msgstr ""
+"Wartości domyślne używane podczas tworzenia nowych ofert. Można je zmienić w"
+" każdej ofercie."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1609,12 +1619,12 @@ msgstr "Upusty, Programy lojalnościowe i Karty podarunkowe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Wyświetl ostrzeżenie o wersji roboczej faktury"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "Wyświetl ostrzeżenie o kwocie faktury"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1637,7 +1647,7 @@ msgstr "Typ wyświetlania"
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines?"
-msgstr ""
+msgstr "Czy chcesz zastosować tę wartość do wszystkich linii?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1941,12 +1951,12 @@ msgstr "Grupuj wg."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Posiada aktywny cennik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Zamówienie zostało potwierdzone"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2383,6 +2393,8 @@ msgstr "Szablon wiadomości"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Zarządzanie promocjami, kuponami, programami lojalnościowymi, kartami "
+"podarunkowymi i portfelem elektronicznym"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2679,7 +2691,7 @@ msgstr "Potwierdzenie Online"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Pod uwagę brane są tylko potwierdzone zaliczki."
 
 #. module: sale
 #. odoo-python
@@ -3065,7 +3077,7 @@ msgstr "Ceny produktów zostały obliczone ponownie zgodnie z Cennikiem%s."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "Ceny produktów zostały przeliczone."
 
 #. module: sale
 #. odoo-python
@@ -3200,7 +3212,7 @@ msgstr "Oferta wysłana"
 #: code:addons/sale/wizard/res_config_settings.py:0
 #, python-format
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
+msgstr "Ważność oferty jest wymagana i musi być większa lub równa 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3242,7 +3254,7 @@ msgstr "Oferty"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Oferty i zamówienia"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3407,7 +3419,7 @@ msgstr "Zamówienia sprzedaży"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Liczba zamówień sprzedaży"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -3427,7 +3439,7 @@ msgstr "Metoda płatności onboardingu Sprzedaży."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Zamówienia sprzedaży do anulowania"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3747,6 +3759,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Wysyłanie wiadomości e-mail jest przydatne, jeśli chcesz udostępnić "
+"określone informacje lub treści dotyczące produktu (instrukcje, zasady, "
+"linki, multimedia itp.). Utwórz i ustaw szablon wiadomości e-mail w "
+"formularzu szczegółów produktu (w zakładce Księgowość)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -3864,6 +3880,8 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Wybrane zostaną niektóre potwierdzone zamówienia sprzedaży. Powiązane z nimi dokumenty mogą\n"
+"wpłynąć na ich anulowanie."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -3993,12 +4011,12 @@ msgstr "Metoda zaokrąglenia podatku"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Bez podatku"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr ""
+msgstr "Z podatkiem"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4119,6 +4137,8 @@ msgstr "Token dostępu jest nieprawidłowy."
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
 msgstr ""
+"Kwota do zafakturowania = Suma zamówienia sprzedaży - Potwierdzone "
+"przedpłaty."
 
 #. module: sale
 #. odoo-python
@@ -4134,7 +4154,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Stała kwota do zafakturowania z góry."
 
 #. module: sale
 #. odoo-python
@@ -4172,6 +4192,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Nowa faktura pomniejszy wersje robocze faktur powiązane z tym zamówieniem "
+"sprzedaży."
 
 #. module: sale
 #. odoo-python
@@ -4195,7 +4217,7 @@ msgstr "Komunikacja w sprawie płatności tego zamówienia sprzedaży."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Procent kwoty do zafakturowania z góry."
 
 #. module: sale
 #. odoo-python
@@ -4250,7 +4272,7 @@ msgstr "Obecnie nie ma ofert dla Twojego konta."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "Istnieją już"
 
 #. module: sale
 #. odoo-python
@@ -4668,7 +4690,7 @@ msgstr "Ostrzeżenie do %s"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Ostrzeżenie o zmianie firmy w ofercie"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -4774,6 +4796,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Nie można ustawić liczby ujemnej dla domyślnej ważności oferty. Pozostaw "
+"puste (lub 0), aby wyłączyć automatyczne wygasanie ofert."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4846,7 +4870,7 @@ msgstr "dni"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "dla tego Zamówienia sprzedaży."
 
 #. module: sale
 #. odoo-python
@@ -4861,6 +4885,8 @@ msgid ""
 "selected\n"
 "                    quotations?"
 msgstr ""
+"wybrane\n"
+"oferty?"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

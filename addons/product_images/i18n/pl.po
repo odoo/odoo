@@ -9,6 +9,7 @@
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
 # Martin Trigaux, 2023
 # Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"Znaleziono %(matching_images_count)s pasujących obrazów dla "
+"%(product_count)s produktów."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -41,6 +44,9 @@ msgid ""
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"Ponieważ dziennie można przetworzyć tylko 10 000 produktów, pozostałe zostaną przetworzone jutro.\n"
+"</span>"
 
 #. module: product_images
 #. odoo-python
@@ -50,6 +56,8 @@ msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
 msgstr ""
+"Zadanie przetwarzania produktów w tle jest już uruchomione. Spróbuj ponownie"
+" później."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -87,22 +95,24 @@ msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
 msgstr ""
+"Pobieranie obrazów produktów z Google Images na podstawie numeru kodu "
+"kreskowego produktu."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Get Pictures"
-msgstr ""
+msgstr "Pobierz zdjęcia"
 
 #. module: product_images
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
 #: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
 msgid "Get Pictures from Google Images"
-msgstr ""
+msgstr "Pobieranie zdjęć z usługi Obrazy Google"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
 msgid "Google Custom Search API Key"
-msgstr ""
+msgstr "Klucz API wyszukiwania niestandardowego Google"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
@@ -112,7 +122,7 @@ msgstr "ID"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
 msgid "Image Fetch Pending"
-msgstr ""
+msgstr "Oczekiwanie na pobranie obrazu"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
@@ -127,17 +137,17 @@ msgstr "Data ostatniej aktualizacji"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
 msgid "Number of product unprocessable"
-msgstr ""
+msgstr "Liczba nieprzetworzonych produktów"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
 msgid "Number of products to process"
-msgstr ""
+msgstr "Liczba produktów do przetworzenia"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
 msgid "Number of selected products"
-msgstr ""
+msgstr "Liczba wybranych produktów"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -145,11 +155,13 @@ msgid ""
 "Please note that some images might not be royalty-free. You should not\n"
 "                        publish these on your website."
 msgstr ""
+"Należy pamiętać, że niektóre obrazy mogą nie być wolne od tantiem. Nie należy\n"
+"publikować ich na swojej stronie WWW."
 
 #. module: product_images
 #: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
 msgid "Product Images: Get product images from Google"
-msgstr ""
+msgstr "Obrazy produktów: Pobierz obrazy produktów z Google"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_product
@@ -161,12 +173,12 @@ msgstr "Wariant produktu"
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Product images"
-msgstr ""
+msgstr "Zdjęcia produktów"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
 msgid "Products To Process"
-msgstr ""
+msgstr "Produkty do przetworzenia"
 
 #. module: product_images
 #. odoo-python
@@ -175,12 +187,12 @@ msgstr ""
 msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
-msgstr ""
+msgstr "Produkty są przetwarzane w tle. Obrazy będą aktualizowane stopniowo."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
 msgid "Search Engine ID"
-msgstr ""
+msgstr "Identyfikator wyszukiwarki"
 
 #. module: product_images
 #. odoo-python
@@ -188,6 +200,8 @@ msgstr ""
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
 msgstr ""
+"Klucz API i identyfikator wyszukiwarki muszą być ustawione w Ustawieniach "
+"ogólnych."
 
 #. module: product_images
 #. odoo-python
@@ -198,11 +212,15 @@ msgid ""
 "your Google Cloud Platform project page and enable it, then retry. If you "
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
+"Interfejs API wyszukiwania niestandardowego nie jest włączony w projekcie "
+"Google. Odwiedź stronę projektu Google Cloud Platform i włącz go, a "
+"następnie spróbuj ponownie. Jeśli API zostało włączone niedawno, odczekaj "
+"kilka minut i spróbuj ponownie."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
 msgid "The identifier of the Google Programmable Search Engine"
-msgstr ""
+msgstr "Identyfikator programowalnej wyszukiwarki Google"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
@@ -210,6 +228,8 @@ msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
 msgstr ""
+"Lista wybranych produktów, które spełniają kryteria (mają kod kreskowy i nie"
+" mają obrazu)."
 
 #. module: product_images
 #. odoo-python
@@ -221,40 +241,44 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
+"Zaplanowana akcja \"Zdjęcia produktów: Pobierz obrazy produktów z Google\" "
+"została usunięta. Skontaktuj się z administratorem, aby przywrócić akcję lub"
+" ponownie zainstalować moduł \"product_images\"."
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 #, python-format
 msgid "This action is already scheduled. Please try again later."
-msgstr ""
+msgstr "Ta akcja jest już zaplanowana. Spróbuj ponownie później."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr ""
+msgstr "Wyzwalane akcje"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
 msgstr ""
+"Czy obraz musi zostać pobrany dla tego produktu. Obsługiwane przez cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr ""
+msgstr "Zaznaczyłeś"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Your API Key or your Search Engine ID is incorrect."
-msgstr ""
+msgstr "Klucz API lub identyfikator wyszukiwarki są nieprawidłowe."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr ""
+msgstr "z których zostaną przetworzone."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -263,6 +287,8 @@ msgid ""
 "                            processed because they either already have an image or their barcode\n"
 "                            number is not set."
 msgstr ""
+"produkty nie będą\n"
+"przetworzone, ponieważ albo mają już obraz, albo ich numer kodu kreskowego nie jest ustawiony.."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

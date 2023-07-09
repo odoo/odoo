@@ -35,9 +35,9 @@
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2023
 # Tomasz Leppich <t.leppich@gmail.com>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Tadeusz Karpiński, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,7 +313,7 @@ msgstr ", maks:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -693,7 +693,7 @@ msgstr "<strong>Śledzone produkty:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products?</strong>"
-msgstr ""
+msgstr "<strong>Gdzie chcesz wysłać produkty?</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -703,7 +703,7 @@ msgstr "? To może prowadzić do niespójnośći w Twoim inwentarzu."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr ""
+msgstr "Kod kreskowy może być przypisany tylko do jednego typu paczki!"
 
 #. module: stock
 #. odoo-python
@@ -1154,7 +1154,7 @@ msgstr "Automatycznie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
-msgstr ""
+msgstr "Automatyzuj"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2406,6 +2406,7 @@ msgstr "Dostawy"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
 msgstr ""
+"Dostawy umożliwiają wysyłanie produktów z własnego zapasu do partnera."
 
 #. module: stock
 #. odoo-javascript
@@ -3174,7 +3175,7 @@ msgstr "Ilość dostępna"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Bezpłatny zapas w tranzycie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3828,6 +3829,8 @@ msgstr ""
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
+"Transfery wewnętrzne umożliwiają przenoszenie produktów z jednej lokacji do "
+"drugiej."
 
 #. module: stock
 #. odoo-python
@@ -4536,7 +4539,7 @@ msgstr "Numery partii i numery seryjne"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Partie i numery seryjne pojawią się na dowodzie dostawy."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5026,12 +5029,12 @@ msgstr "Nie znaleziono potrzeby alokacji."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "No delivery found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono dostawy. Stwórzmy jedną!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono transferu wewnętrznego. Stwórzmy jeden!"
 
 #. module: stock
 #. odoo-python
@@ -5050,7 +5053,7 @@ msgstr "Nie wykonano żadnej operacji na tej partii"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr ""
+msgstr "Nie znaleziono żadnych operacji. Utwórzmy transfer!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5076,7 +5079,7 @@ msgstr "Nie znaleziono reguły odkładania. Stwórzmy ją!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr ""
+msgstr "Nie znaleziono paragonu. Stwórzmy jeden!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -5483,12 +5486,12 @@ msgstr "Wychodząca"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Outgoing Draft Transfer"
-msgstr ""
+msgstr "Przelew wychodzący"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
 msgid "Outgoing Move Line"
-msgstr ""
+msgstr "Linia ruchu wychodzącego"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -5775,7 +5778,7 @@ msgstr "Adres partnera"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
-msgstr ""
+msgstr "Inwentaryzacja fizyczna"
 
 #. module: stock
 #. odoo-python
@@ -6607,6 +6610,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Kwanty są automatycznie usuwane, gdy jest to właściwe. Jeśli musisz usunąć "
+"je ręcznie, poproś o to menedżera ds. zapasów."
 
 #. module: stock
 #. odoo-python
@@ -6668,7 +6673,7 @@ msgstr "Paragony"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr ""
+msgstr "Paragony umożliwiają otrzymywanie produktów od partnera."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7559,7 +7564,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Ustawianie dat ważności partii i numerów seryjnych"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7700,7 +7705,7 @@ msgstr "Pokaż operacje"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr ""
+msgstr "Pokaż typ kompletacji"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -7785,12 +7790,12 @@ msgstr "Data drzemki"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
 msgid "Snooze Orderpoint"
-msgstr ""
+msgstr "Punkt zlecenia drzemki"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
 msgid "Snooze for"
-msgstr ""
+msgstr "Drzemka dla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
@@ -7918,7 +7923,7 @@ msgstr "Przypisywanie numerów seryjnych do zapasów"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Zapas w transporcie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8268,6 +8273,7 @@ msgstr "Zamówienie zaległe %s zostało utworzone."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr ""
+"Kod kreskowy dla danej lokalizacji musi być unikalny dla każdej firmy!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -10078,6 +10084,8 @@ msgid ""
 "You cannot set a location as a scrap location when it assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Nie można ustawić lokacji jako lokalizacji złomu, gdy jest ona przypisana "
+"jako lokalizacja docelowa dla operacji typu produkcja."
 
 #. module: stock
 #. odoo-python
@@ -10087,6 +10095,8 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
+"Nie można ustawić lokalizacji złomu jako lokalizacji docelowej dla operacji "
+"typu produkcja."
 
 #. module: stock
 #. odoo-python
@@ -10457,14 +10467,14 @@ msgstr "przetworzony zamiast"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
-msgstr ""
+msgstr "report_stock_quantity_graph"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "reserved"
-msgstr ""
+msgstr "zarezerwowane"
 
 #. module: stock
 #. odoo-javascript
@@ -10495,9 +10505,13 @@ msgstr "aby osiągnąć maksymalną wartość"
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
 msgstr ""
+"{0} może dostarczyć tylko {1} {2}, podczas gdy ilość do zamówienia wynosi "
+"{3} {2}."
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Zamówienie dostawy (Ref {{ object.name lub "
+"'n/a' }})"

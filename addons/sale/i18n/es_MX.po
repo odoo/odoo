@@ -622,7 +622,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Pagado</b>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Esperando pago </b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>En espera de pago </b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -986,7 +986,7 @@ msgstr "Entrada de ingresos acumulados"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -1032,7 +1032,7 @@ msgstr "Agregar una sección"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Agregue múltiples variantes a una orden desde una tabla"
+msgstr "Agregue varias variantes a una orden desde una tabla"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1572,7 +1572,7 @@ msgstr "Divisa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tasa de divisa"
+msgstr "Tasa de cambio"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
@@ -1820,7 +1820,7 @@ msgstr "Importe del descuento"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Descuentos y tarjetas de lealtad y regalo"
+msgstr "Descuentos, programas de lealtad y tarjetas de regalo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
@@ -2226,8 +2226,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2241,7 +2240,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "Si es verdad, el paquete se puede utilizar para las órdenes de venta"
+msgstr ""
+"Si está activo, el paquete se puede utilizar para las órdenes de venta"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2736,7 +2736,7 @@ msgstr "Nuevo"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Nuevo presupuesto"
+msgstr "Nueva cotización"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
@@ -2987,7 +2987,7 @@ msgstr "Fecha de la orden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr "Fecha de la orden"
+msgstr "Fecha de la orden:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3134,7 +3134,7 @@ msgstr "Método de pago"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr "Método de pago"
+msgstr "Proveedor de pago"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3169,7 +3169,7 @@ msgstr "URL de acceso al portal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Precio reducido sin impuestos incluidos"
+msgstr "Precio reducido con impuestos excluidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3608,7 +3608,7 @@ msgstr "Ingresos generados por la campaña."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4567,8 +4567,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
-" nombre en listado de correos electrónicos"
+"Esta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
+" nombre de lista de correos electrónicos"
 
 #. module: sale
 #. odoo-python
@@ -4592,10 +4592,10 @@ msgid ""
 msgstr ""
 "Este reporte realiza un análisis de sus cotizaciones y órdenes de venta, es "
 "decir, analiza sus ingresos por ventas y los clasifica mediante diferentes "
-"criterios de agrupación (vendedor, partner, producto, etc.). Utilice este "
+"criterios de agrupación (vendedor, contacto, producto, etc.). Utilice este "
 "reporte para realizar el análisis de las ventas que aún no se han facturado."
-" Si desea analizar su volumen de negocios, debe utilizar el reporte de "
-"análisis de facturas en la aplicación de Contabilidad."
+" Si desea analizar su volumen de ventas, debe utilizar el reporte de "
+"análisis de facturas en la aplicación Contabilidad."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4624,10 +4624,10 @@ msgid ""
 msgstr ""
 "Este reporte realiza un análisis de sus órdenes de venta, es decir, analiza "
 "sus ingresos por ventas y los clasifica mediante diferentes criterios de "
-"agrupación (vendedor, partner, producto, etc). Utilice este reporte para "
+"agrupación (vendedor, contacto, producto, etc). Utilice este reporte para "
 "realizar el análisis de las ventas que aún no se han facturado. Si desea "
-"analizar su volumen de negocios, debe utilizar el reporte de análisis de "
-"facturas en la aplicación de Contabilidad."
+"analizar su volumen de ventas, debe utilizar el reporte de análisis de "
+"facturas en la aplicación Contabilidad."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4705,7 +4705,7 @@ msgstr "Total de impuestos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr "Impuesto total excluido"
+msgstr "Total con impuestos excluidos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -4979,8 +4979,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
-"No se puede eliminar una línea de la orden de venta una vez que se confirme.\n"
-"Debería fijar la cantidad en 0."
+"No puede eliminar una línea de la orden de venta una vez que se confirma.\n"
+"Debería establecer la cantidad en 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice

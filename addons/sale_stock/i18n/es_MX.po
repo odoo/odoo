@@ -6,10 +6,9 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Lucia Pacheco, 2023
 # Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:15+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +31,7 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Puede que se necesiten acciones manuales."
+"            Puede que se necesiten realizar acciones manuales."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -95,9 +94,9 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece de forma manual en la línea.\n"
-"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
+"Según la configuración del producto, se puede calcular de forma automática la cantidad enviada:\n"
+"  - Manual: la cantidad se establece de forma manual en la línea\n"
+"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
@@ -225,7 +224,8 @@ msgstr "Mostrar los términos de comercio internacional en órdenes y facturas"
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr "No olvide cambiar al partner en las siguientes órdenes de entrega: %s"
+msgstr ""
+"No olvide cambiar el contacto en las siguientes órdenes de entrega: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -246,7 +246,7 @@ msgstr "Excepciones producidas en las órdenes de venta:"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr "Excepción(es):"
+msgstr "Excepciones:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -346,7 +346,7 @@ msgstr "Rutas de inventario"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr "Es MTO"
+msgstr "Es una fabricación sobre pedido"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -371,7 +371,7 @@ msgstr "Plazo de entrega"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Número de lote/de serie "
+msgstr "Número de lote/serie"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -430,7 +430,7 @@ msgstr "Sin entregar"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr "Sin disponibilidad suficiente en el futuro"
+msgstr "Sin disponibilidad suficiente para el futuro"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -484,7 +484,7 @@ msgstr "Cantidad por entregar"
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Quotations"
-msgstr "Presupuestos"
+msgstr "Cotizaciones"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -623,7 +623,7 @@ msgstr "Movimientos de inventario"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "Informe de reabastecimiento de inventario"
+msgstr "Reporte de reabastecimiento de existencias"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule

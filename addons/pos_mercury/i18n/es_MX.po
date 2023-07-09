@@ -38,7 +38,7 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "Las <i>configuraciones de Vantiv</i> definen qué cuenta de Vantiv se utilizará cuando\n"
-"                                se procesen transacciones eon tarjeta de crédito en el punto de venta. Configurar Vantiv\n"
+"                                se procesen transacciones con tarjeta de crédito en el punto de venta. Configurar Vantiv\n"
 "                                le permitirá realizar pagos con varias tarjetas de crédito\n"
 "                                (por ejemplo, Visa, MasterCard, Discovery, American Express, ...). Después de realizar la\n"
 "                                configuración, debe asociarla con uno de los métodos de pago del punto de venta."
@@ -168,7 +168,7 @@ msgstr "Ir a la pantalla de pago para usar tarjetas"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Handling transaction..."
-msgstr "Gestionar transacción..."
+msgstr "Gestionando transacción..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__id
@@ -262,7 +262,8 @@ msgstr "El servidor no responde (¿está conectado a la red?)"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr "Ocurrió un error dentro de Odoo al momento de procesar a transacción."
+msgstr ""
+"Ocurrió un error dentro de Odoo al momento de procesar la transacción."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -315,12 +316,12 @@ msgstr "Número de referencia de pago de Vantiv Pay"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr "Configure su cuenta de vendedor de Vantiv."
+msgstr "Configure su cuenta de comerciante de Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Comandas del punto de venta"
+msgstr "Órdenes del punto de venta"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
@@ -385,7 +386,7 @@ msgstr "AL ACUERDO DEL TITULAR DE LA TARJETA"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr "El tipo de tarjeta de pago (Por ejemplo: Visa, AMEX, ...)"
+msgstr "El tipo de tarjeta de pago (Por ejemplo: Visa, AMEX, etc.)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_prefixed_card_number
@@ -434,7 +435,7 @@ msgid ""
 "                                can be swiped through the card reader device."
 msgstr ""
 "Usar la integración de Vantiv en el punto de venta es fácil: solo debe presionar el\n"
-"              método de pago asociado. Puede ajustar la cantidad después de eso (por ejemplo, para regresar dinero)\n"
+"              método de pago asociado. Puede ajustar la cantidad después de eso (por ejemplo, para devolver dinero)\n"
 "             al igual que en cualquier otra línea de pago. Cada vez que se configura la línea de pago, puede\n"
 "              pasar una tarjeta por el lector de tarjetas."
 
@@ -447,12 +448,12 @@ msgstr "Cuentas de Vantiv"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr "Configuraciones Vantiv"
+msgstr "Configuraciones de Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr "Credenciales Vantiv"
+msgstr "Credenciales de Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no

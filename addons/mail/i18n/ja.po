@@ -2247,6 +2247,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Eメール送信方法を選ぶ：\n"
+"Eメール：直接メールを送信する\n"
+"メッセージとして投稿：ドキュメントへ投稿しフォロワーに通知する\n"
+"メモとして投稿：ドキュメントにメモをログ"
 
 #. module: mail
 #. odoo-javascript
@@ -8352,7 +8356,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "以下として送信："
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -8803,7 +8807,7 @@ msgstr "件名:"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "受信者を登録する"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -9633,6 +9637,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"サーバーアクションのタイプ。以下の値が利用可能です：\n"
+"- 「Pythonコードの実行」：Pythonコードブロックが実行されます\n"
+"- 「新規記録の作成」： 新しい値で新しいレコードを作成します\n"
+"- 「記録のアップデート」： 記録の値を更新します\n"
+"- 「複数のアクションを実行」： 他の複数のサーバーアクションをトリガーするアクションを定義します。\n"
+"- 「メール送信」： メッセージやメモの投稿やメールを送信します。\n"
+"- 「フォロワーを追加」：記録にフォロワーを追加します (ディスカッション)\n"
+"- 「次のアクティビティを作成」：アクティビティを作成します（ディスカッション）\n"
+"- 「SMSテキストメッセージを送信」：SMSを送信し、ドキュメントに記録します（SMS）"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
