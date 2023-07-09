@@ -2923,7 +2923,7 @@ msgstr "グループ支払可能"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
 msgid "Can be Visible?"
-msgstr "可視可能？"
+msgstr "見えますか？"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2977,7 +2977,7 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
-"アンバランスな仕訳を作成することはできません。 IDs:%sの\n"
+"不均衡な仕訳を作成することはできません。 IDs:%sの\n"
 "借方-貸方の差額:%s"
 
 #. module: account
@@ -5241,7 +5241,7 @@ msgstr "構成比"
 msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
-msgstr "この分配ラインから生成されたアカウント移動ラインに適用する要素"
+msgstr "この分配ラインから生成された会計仕訳明細に適用する要素"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -5249,7 +5249,7 @@ msgstr "この分配ラインから生成されたアカウント移動ライン
 msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
-msgstr "この分配線から生成されたアカウント移動線に適用する係数（パーセント）"
+msgstr "この分配明細から生成された会計仕訳明細に適用する係数（パーセント）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -6873,7 +6873,7 @@ msgstr "仕訳帳名"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "ジャーナルサスペンスアカウント"
+msgstr "仕訳帳仮勘定"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -7364,7 +7364,7 @@ msgstr "これの子としてレンダリングする必要がある行"
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Liquidity"
-msgstr "流動性"
+msgstr "流動資金"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13513,7 +13513,7 @@ msgstr "検証"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "アカウント移動の検証"
+msgstr "会計仕訳の検証"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__auto_reconcile
@@ -13838,7 +13838,7 @@ msgstr "ジャーナルはハッシュでロックされているときは、日
 msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
-msgstr "まだ消込していない項目のみ期間/アカウントを変更することができます。"
+msgstr "まだ消込していない項目のみ期間/勘定科目を変更することができます。"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14112,7 +14112,7 @@ msgstr "すでにシーケンス番号が割り当てられている場合、勘
 #, python-format
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
-msgstr "一度投稿されている場合は、アカウントの移動のジャーナルを編集することはできません。"
+msgstr "一度計上された場合は、会計仕訳の仕訳帳を編集することはできません。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

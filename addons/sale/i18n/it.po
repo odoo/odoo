@@ -56,8 +56,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
-"'pending') and 'Ordine in sospeso' or 'Ordine'} (Rif. ${object.name or 'n/d'"
+"${(object.get_portal_last_transaction().state == 'pending') and 'Ordine in "
+"sospeso' or 'Ordine'} ${object.company_id.name} (rif. ${object.name or 'n/d'"
 " })"
 
 #. module: sale
@@ -67,9 +67,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
-"${object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Pro forma'"
-" or 'Preventivo') or 'Ordine'} ${object.company_id.name} (Rif. ${object.name"
-" or 'n/d' })"
+"${object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' "
+"or 'Preventivo') or 'Ordine'} ${object.company_id.name} (rif. ${object.name "
+"or 'n/d' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -85,7 +85,7 @@ msgstr "&amp;nbsp;<span>su</span>&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "\"PRO FORMA - %s\" % (object.name)"
+msgstr "\"PROFORMA - %s\" % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -493,12 +493,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'il preventivo' if object.state in ('draft', 'sent') else 'l\\'ordine'\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
 "        Buongiorno,\n"
 "        <br/><br/>\n"
 "        \n"
 "        % if ctx.get('proforma'):\n"
-"            il documento fattura pro forma per ${doc_name} <strong>${object.name}</strong>\n"
+"            il documento fattura proforma per ${doc_name} <strong>${object.name}</strong>\n"
 "            % if object.origin:\n"
 "                (con riferimento: ${object.origin} )\n"
 "            % endif\n"
@@ -698,7 +698,7 @@ msgstr "<span>Per un importo pari a:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Fattura pro forma n° </span>"
+msgstr "<span>Fattura proforma n° </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -974,12 +974,12 @@ msgstr "Indirizzi negli ordini di vendita"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Consente di inviare una fattura pro-forma ai clienti."
+msgstr "Consente di inviare una fattura proforma ai clienti."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Consente di inviare una fattura pro forma."
+msgstr "Consente di inviare una fattura proforma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -2906,7 +2906,7 @@ msgstr "Token di identità PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Fattura PRO FORMA"
+msgstr "Fattura PROFORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3062,12 +3062,12 @@ msgstr "Stampa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Fattura pro forma"
+msgstr "Fattura proforma"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Fatture pro forma"
+msgstr "Fatture proforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3151,7 +3151,7 @@ msgstr "Prodotti"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr "Resoconto pro forma"
+msgstr "Resoconto proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3707,7 +3707,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Invia fattura PRO FORMA"
+msgstr "Invia fattura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
