@@ -77,7 +77,7 @@ msgstr ""
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "Bad Email."
-msgstr "Correo malo."
+msgstr "Correo erróneo."
 
 #. module: mail_plugin
 #. openerp-web
@@ -228,8 +228,7 @@ msgstr "Su base de datos no se pudo conectar. Inténtelo de nuevo."
 #, python-format
 msgid "Could not display image %(attachmentName)s, size is over limit."
 msgstr ""
-"No se pudo mostrar la imagen %(attachmentName)s, el tamaño sobre pasa el "
-"límite"
+"No se pudo mostrar la imagen %(attachmentName)s, el tamaño supera el límite."
 
 #. module: mail_plugin
 #. openerp-web
@@ -392,7 +391,9 @@ msgstr "Contactos de compras dentro de la aplicación"
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__iap_enrich_info
 #: model:ir.model.fields,help:mail_plugin.field_res_users__iap_enrich_info
 msgid "IAP response stored as a JSON string"
-msgstr "La respuesta IAP se guardó como una string JSON"
+msgstr ""
+"La respuesta de compras dentro de la aplicación se guardó como una cadena "
+"JSON"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__id
@@ -576,7 +577,7 @@ msgstr "URL de servidor Odoo"
 #. module: mail_plugin
 #: model:ir.model.constraint,message:mail_plugin.constraint_res_partner_iap_unique_partner_id
 msgid "Only one partner IAP is allowed for one partner"
-msgstr "Solo se permite un IAP de partner para un partner"
+msgstr "Solo se permite una compra dentro de la aplicación por contacto"
 
 #. module: mail_plugin
 #. openerp-web
@@ -586,8 +587,8 @@ msgid ""
 "Oops, looks like you have exhausted your free enrichment requests. Please "
 "log in to try again."
 msgstr ""
-"Uy, parece que ya se gastó sus solicitudes gratis de enriquecimiento. Inicie"
-" sesión para intentar de nuevo."
+"Uy, parece que ya se gastó sus solicitudes de enriquecimiento gratuitas. "
+"Inicie sesión para intentarlo de nuevo."
 
 #. module: mail_plugin
 #. openerp-web
@@ -683,7 +684,7 @@ msgstr "Búsqueda"
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__iap_search_domain
 #: model:ir.model.fields,field_description:mail_plugin.field_res_users__iap_search_domain
 msgid "Search Domain / Email"
-msgstr "Buscar dominio / dirección de correo"
+msgstr "Buscar dominio/correo electrónico"
 
 #. module: mail_plugin
 #. openerp-web
@@ -792,7 +793,7 @@ msgstr "Sitio web"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Year founded"
-msgstr "Año fundado"
+msgstr "Año de fundación"
 
 #. module: mail_plugin
 #. openerp-web
@@ -805,12 +806,12 @@ msgstr "No tiene los créditos suficientes para enriquecer."
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "You need to specify at least the partner_id or the name and the email"
-msgstr "Tiene que especificar al menos el partner_id o el nombre y el correo"
+msgstr "Debe especificar al menos el partner_id o el nombre y el correo"
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
 msgid "access your Odoo database?"
-msgstr "¿Acceder a su base de datos de Odoo?"
+msgstr "acceso a su base de datos de Odoo?"
 
 #. module: mail_plugin
 #. openerp-web

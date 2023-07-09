@@ -3,9 +3,10 @@
 # 	* mail
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Tony Ng, 2023
+# Martin Trigaux, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
 "PO-Revision-Date: 2022-06-17 09:51+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -852,6 +853,12 @@ msgid "All"
 msgstr "所有"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "必須為每個附件提供存取代碼(token)。"
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -895,6 +902,7 @@ msgstr "和另外1名成員。"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1262,6 +1270,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr "可以寫"
 
@@ -3394,6 +3403,7 @@ msgstr "表示這個活動是自動生成的，不是任何使用者建立。"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr "資訊"
@@ -4943,6 +4953,14 @@ msgid ""
 "Only messages type comment can have their content updated on model "
 "'mail.channel'"
 msgstr "只有消息類型評論才能在模型“mail.channel”上更新其內容"
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6573,6 +6591,12 @@ msgid "Targeted model"
 msgstr "目標模型"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "稅(統一編號)"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr "用於UX目的技術欄位"
@@ -6678,9 +6702,27 @@ msgid ""
 msgstr "稅號。 如果聯絡人需繳納稅款，請填寫。 用於某些法律聲明。"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "附件 %s 不存在，或者您沒有存取它的許可權。"
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "頻道 UUID 必須是唯一的"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7014,6 +7056,11 @@ msgstr "追蹤欄位次序"
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
 msgstr "追蹤值"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
+msgstr "翻譯"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -7419,12 +7466,6 @@ msgid ""
 msgstr ""
 "在社區和企業版本中，發送/接收電子信件需要使用自己的電子信件伺服器。線上使用者已受益於隨時可用的電子信件伺服器 "
 "(@mycompany.odoo.com)。"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "統一編號"
 
 #. module: mail
 #. openerp-web
@@ -7893,6 +7934,11 @@ msgid "assigned you an activity"
 msgstr "指派給您一個活動"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "董事會－會議"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -7968,6 +8014,11 @@ msgstr "單據"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "完成"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8168,6 +8219,11 @@ msgid "other members."
 msgstr "其他成員。"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "記錄："
@@ -8212,6 +8268,11 @@ msgstr "僅限於已知的作者"
 #, python-format
 msgid "results out of"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "銷售"
 
 #. module: mail
 #. openerp-web

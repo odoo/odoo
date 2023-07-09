@@ -3,7 +3,7 @@
 # 	* mail
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
@@ -876,6 +876,12 @@ msgid "All"
 msgstr "Всі"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Токен доступу повинен надаватися кожному прикріпленню."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -919,6 +925,7 @@ msgstr "Та 1 інший член."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1296,6 +1303,7 @@ msgstr "Може переслати"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr "Може писати"
 
@@ -2174,6 +2182,7 @@ msgstr "Відключено від виклику RTC сервером"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3498,6 +3507,7 @@ msgstr "Вказує, що ця дія створена автоматично, 
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
@@ -5086,6 +5096,14 @@ msgid ""
 msgstr ""
 "Лише для коментарів типу повідомлення можна оновлювати вміст на моделі "
 "'mail.channel'"
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6751,6 +6769,12 @@ msgid "Targeted model"
 msgstr "Цільова модель"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "ID податку"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr "Технічне поле для призначення UX"
@@ -6868,9 +6892,27 @@ msgstr ""
 "оподаткуванню. Використовується в деяких офіційних звітах."
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Прикріплення %s не існує або не має прав доступу."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "Прикріплення %s не існує."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "UUID каналу має бути унікальним"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr "Поточний користувач може редагувати шаблон."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7229,6 +7271,11 @@ msgstr "Послідовність відстеження поля"
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
 msgstr "Значення відстеження"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
+msgstr "Переклад"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -7647,12 +7694,6 @@ msgstr ""
 "отримання електронних листів у версії спільноти та версії Enterprise. "
 "Інтернет-користувачі вже користуються готовим до використання електронним "
 "сервером (@ mycompany.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "ID ПДВ/податку"
 
 #. module: mail
 #. openerp-web
@@ -8142,6 +8183,11 @@ msgid "assigned you an activity"
 msgstr "вам призначена дія"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "панель зустрічей"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8217,6 +8263,11 @@ msgstr "документ"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "завершено"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
+msgstr "напр. \"Пройдіться по пропозиції та обговоріть деталі\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8421,6 +8472,11 @@ msgid "other members."
 msgstr "інші члени."
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "запис:"
@@ -8469,6 +8525,11 @@ msgstr "обмежено відомими авторами"
 #, python-format
 msgid "results out of"
 msgstr "результати з"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "продаж"
 
 #. module: mail
 #. openerp-web

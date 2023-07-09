@@ -3,12 +3,13 @@
 # 	* mail
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # jabiri7, 2022
 # Antoine Demany, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Jolien De Paepe, 2023
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
 "PO-Revision-Date: 2022-06-17 09:51+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -877,6 +878,12 @@ msgid "All"
 msgstr "Todos"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Se debe proporcionar un código de acceso para cada archivo adjunto."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -920,6 +927,7 @@ msgstr "Y 1 miembro más."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1299,6 +1307,7 @@ msgstr "Puede reenviar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr "Puede escribir"
 
@@ -3518,6 +3527,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr "Información"
@@ -5115,6 +5125,14 @@ msgid ""
 msgstr ""
 "Solo los mensajes de tipo comentario pueden tener su contenido actualizado "
 "en el modelo 'mail.channel'"
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6789,6 +6807,12 @@ msgid "Targeted model"
 msgstr "Modelo dirigido"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "Identificación fiscal"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr "Campo técnico para fines UX"
@@ -6905,9 +6929,29 @@ msgstr ""
 "legales."
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"El archivo adjunto %s no existe o usted no tiene los derechos para acceder a"
+" él."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "El UUID del canal debe ser único"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr "El usuario actual puede editar la plantilla."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7271,6 +7315,11 @@ msgstr "Seguimiento de secuencia de campo"
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
 msgstr "Valores de seguimiento"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
+msgstr "Traducción"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -7690,12 +7739,6 @@ msgstr ""
 "enviar/recibir correos en las versiones Community y Enterprise. Los usuarios"
 " de la versión Online si tienen disponible un servidor de correo listo para "
 "usar (@mycompany.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "NIF/Identificación fiscal"
 
 #. module: mail
 #. openerp-web
@@ -8183,6 +8226,11 @@ msgid "assigned you an activity"
 msgstr "le asignó una actividad"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "tablero de citas"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8258,6 +8306,11 @@ msgstr "documento"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "hecho"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8463,6 +8516,11 @@ msgid "other members."
 msgstr "otros miembros"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "registro:"
@@ -8511,6 +8569,11 @@ msgstr "restringido a autores conocidos"
 #, python-format
 msgid "results out of"
 msgstr "resultados de"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "ventas"
 
 #. module: mail
 #. openerp-web

@@ -68,6 +68,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno il numero di righe se il trasferimento viene aggiunto.\n"
+"Lascia il valore pari a \"0\" se non vi è alcun limite."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -75,6 +77,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno il numero di trasferimenti.\n"
+"Il valore può essere pari a \"0\" se non vi è alcun limte."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -165,7 +169,7 @@ msgstr "Lotti automatici"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "Raggruppa automaticamente i lotti in base ai contatti."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
@@ -188,6 +192,8 @@ msgstr "Raggruppa automaticamente i lotti in base all'ubicazione di origine."
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"Se possibile, raggruppa in lotti i prelievi in maniera automatica quando "
+"vengono confermati."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation

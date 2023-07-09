@@ -3585,6 +3585,8 @@ msgstr "Невірний правий операнд домену %s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Недійсна конфігурація правила, наступне правило викликає нескінченний цикл: "
+"%s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -3773,6 +3775,8 @@ msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"Заборонено імпортувати зарезервовану кількість, її потрібно безпосередньо "
+"використовувати."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3857,7 +3861,7 @@ msgstr "ПН/СН:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
-msgstr ""
+msgstr "Мітки для друку"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3877,7 +3881,7 @@ msgstr "Останні 30 днів"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr ""
+msgstr "Остання дата підрахунку"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
@@ -4040,7 +4044,7 @@ msgstr "Останнє оновлення"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
 msgid "Last time the Quantity was Updated"
-msgstr ""
+msgstr "Востаннє, коли була оновлена кількість"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4222,7 +4226,7 @@ msgstr "Партія"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 msgid "Lot/SN Labels"
-msgstr ""
+msgstr "Етикетки партій/серійних номерів"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -4713,7 +4717,7 @@ msgstr "Наступні переміщення вплинули:"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr ""
+msgstr "Жодного %s не вибрано або вибрано замовлення на доставку"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4733,7 +4737,7 @@ msgstr "Немає відстежень"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "No allocation need found."
-msgstr ""
+msgstr "Не знайдено жодного необхідного розташування призначення."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4946,12 +4950,12 @@ msgstr " В наявності:"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "Один на партію/серійний номер"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
-msgstr ""
+msgstr "Один на одиницю"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5220,7 +5224,7 @@ msgstr "Дата пакування"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date:"
-msgstr ""
+msgstr "Дата пакування:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pack_type_id
@@ -5330,7 +5334,7 @@ msgstr "Використання упаковки"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
 msgid "Package name is valid SSCC"
-msgstr ""
+msgstr "Назва упаковки дійсна SSCC"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -5568,12 +5572,12 @@ msgstr "Друк"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "Друк штрих-кодів GS1 для партій і серійних номерів"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "Друк штрих-кодів GS1 для партій і серійних номерів"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -5726,7 +5730,7 @@ msgstr "Звіт мітки товару"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
 msgid "Product Labels"
-msgstr ""
+msgstr "Етикетки товару"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -6040,6 +6044,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Кількості видаляються автоматично, коли це необхідно. Якщо вам потрібно "
+"видалити їх вручну, зверніться до менеджера зі складу."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6765,7 +6771,7 @@ msgstr "Помилка доставки SMS"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
-msgstr ""
+msgstr "SSCC:"
 
 #. module: stock
 #. openerp-web
@@ -7148,7 +7154,7 @@ msgstr "Показати перевірку наявності"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "Показати кнопку чистої к-сті"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -7197,7 +7203,7 @@ msgstr "Покащати звіт отримання при Підтвердже
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "Показати кнопку Встановити к-сті"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -7346,7 +7352,7 @@ msgstr "Позначено зірочкою"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Starred Products"
-msgstr ""
+msgstr "Товари позначені зірочкою"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -7949,6 +7955,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `reserved_qty` field instead of the `reserved_uom_qty`."
 msgstr ""
+"Запитану операцію неможливо обробити через програмну помилку, яка встановила"
+" поле `reserved_qty` замість `reserved_uom_qty`."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8126,7 +8134,7 @@ msgstr "Ця партія %(lot_name)s не сумісна з цим товар�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "This lot/serial number is already in another location"
-msgstr ""
+msgstr "Цей партійний/серійний номер вже в іншому місцезнаходженні"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -8205,6 +8213,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"Компанію цього товару не можна змінити, доки певна кількість товару належить"
+" іншій компанії."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8213,6 +8223,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Компанію цього товару не можна змінити, доки є складські переміщення, що "
+"належать іншій компанії."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8233,6 +8245,7 @@ msgstr "Цей запис вже існує."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
+"Цей звіт не може застосовуватися до виконаних і не виконаних %s одночасно"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -8277,6 +8290,8 @@ msgid ""
 "Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
+"Ці товари, які ви додали, відстежуються, але партії/серійні номери не визначено. Після застосування їх не можна змінити.<br/>\n"
+"                    Все одно застосувати?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8520,7 +8535,7 @@ msgstr "Запускати інше правило, якщо немає скла
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger Manual"
-msgstr ""
+msgstr "Запустити вручну"
 
 #. module: stock
 #. openerp-web
@@ -8631,7 +8646,7 @@ msgstr "Одиниці вимірювання"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Одиниця вимірювання"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8718,6 +8733,8 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
 msgstr ""
+"Використовуйте матрицю даних номенклатури GS1 щоразу, коли друкуються штрих-"
+"коди для партій і серійних номерів."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -8958,7 +8975,7 @@ msgstr "Попередження"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
-msgstr ""
+msgstr "Попередження задубльованого серійного номеру"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -9418,6 +9435,8 @@ msgstr "Неможливо зарезервувати складське пер�
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Ви не можете змінити скасоване складське переміщення, замість цього створіть"
+" новий рядок."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

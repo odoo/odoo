@@ -103,8 +103,8 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Sub-tasks Hours Spent</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Sub-tasks Days Spent</span>"
 msgstr ""
-"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Horas dedicadas a subtareas</span>\n"
-"                                  <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Días dedicados en subtareas</span>"
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Horas utilizadas en subtareas</span>\n"
+"                                  <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Días utilizados en subtareas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -639,7 +639,7 @@ msgstr "No se encontraron actividades"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr "Sin actividades disponibles ¡creemos una nueva!"
+msgstr "No cuenta con actividades disponibles, ¡creemos una!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -730,8 +730,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Registre sus hojas de horas en un instante haciendo clic en Shift + la tecla"
-" rápida correspondiente para agregar 15 minutos a sus proyectos."
+"Registre sus hojas de horas al instante, presione Shift + la tecla rápida "
+"correspondiente para agregar 15 minutos a sus proyectos."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -889,7 +889,7 @@ msgstr "Análisis de tareas"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_user_view_search
 msgid "Tasks in Overtime"
-msgstr "Tiempo extra de las tareas"
+msgstr "Tareas en horas adicionales"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -1011,17 +1011,17 @@ msgstr "Tiempo personal"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr "Tiempo dedicado en subtareas (y sus subtareas) de esta tarea."
+msgstr "Tiempo utilizado en subtareas (y sus subtareas) de esta tarea."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Time spent on this task, excluding its sub-tasks."
-msgstr "Tiempo dedicado en esta tarea, excluyendo las subtareas."
+msgstr "Tiempo utilizado en esta tarea, excluyendo las subtareas."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr "Tiempo dedicado en esta tarea, incluyendo las subtareas."
+msgstr "Tiempo utilizado en esta tarea, incluyendo las subtareas."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form

@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2022
 # Thomas, 2023
 # Chris Egal <sodaswed@web.de>, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -890,6 +890,12 @@ msgid "All"
 msgstr "Alle"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Für jeden Anhang muss ein Zugriffstoken angegeben werden."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -934,6 +940,7 @@ msgstr "Und 1 anderes Mitglied."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1313,6 +1320,7 @@ msgstr "Kann erneut gesendet werden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr "Kann schreiben"
 
@@ -3523,6 +3531,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr "Information"
@@ -5122,6 +5131,14 @@ msgid ""
 msgstr ""
 "Nur bei Nachrichten vom Typ Kommentar kann der Inhalt im Modell "
 "'mail.channel' aktualisiert werden."
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6798,6 +6815,12 @@ msgid "Targeted model"
 msgstr "Ziel-Modell"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "USt-IdNr."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr "Datenfeld für die Benutzerfreundlichkeit"
@@ -6917,9 +6940,27 @@ msgstr ""
 "unterliegt. In einigen rechtlichen Berichten verwendet."
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "Der Dateianhang %s existiert nicht."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "Die Channel-UUID muss eindeutig sein"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr "Der aktuelle Benutzer kann die Vorlage bearbeiten."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7278,6 +7319,11 @@ msgstr "Verfolgungsfeldsequenz"
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
 msgstr "Nachverfolgungswerte"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
+msgstr "Übersetzung"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -7695,12 +7741,6 @@ msgstr ""
 "und Empfangen von E-Mails Ihren eigenen E-Mail-Server zu verwenden. Online-"
 "Benutzer können bereits von einem einsatzbereiten E-Mail-Server "
 "(@mycompany.odoo.com) profitieren."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "MwSt./Steuer-ID"
 
 #. module: mail
 #. openerp-web
@@ -8194,6 +8234,11 @@ msgid "assigned you an activity"
 msgstr "hat Ihnen eine Aktivität zugewiesen"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "Vorstandssitzungen"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8269,6 +8314,11 @@ msgstr "Dokument"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "abgeschlossen"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
+msgstr "z. B. „Das Angebot durchgehen und Einzelheiten besprechen“"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8476,6 +8526,11 @@ msgid "other members."
 msgstr "andere Mitglieder."
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "Datensatz:"
@@ -8524,6 +8579,11 @@ msgstr "beschränkt auf unbekannte Autoren"
 #, python-format
 msgid "results out of"
 msgstr "Ergebnisse von"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "Verkauf"
 
 #. module: mail
 #. openerp-web

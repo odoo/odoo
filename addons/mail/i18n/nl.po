@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -882,6 +882,12 @@ msgid "All"
 msgstr "Alle"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Een toegangstoken moet opgegeven zijn voor elke bijlage."
+
+#. module: mail
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
@@ -925,6 +931,7 @@ msgstr "En 1 ander lid."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
@@ -1302,6 +1309,7 @@ msgstr "Kan opnieuw verzenden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr "Kan schrijven"
 
@@ -3514,6 +3522,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr "Info"
@@ -5104,6 +5113,16 @@ msgid ""
 msgstr ""
 "Alleen berichten van het type commentaar kunnen hun inhoud laten bijwerken "
 "op model 'mail.channel'"
+
+#. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
+"Enkel gebruikers die tot de groep \"%(group)s\" behoren kunnen de vertaling "
+"van dynamische sjablonen wijzigen.%(xtra)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6773,6 +6792,12 @@ msgid "Targeted model"
 msgstr "Doelmodel"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner__vat
+#: model:ir.model.fields,field_description:mail.field_res_users__vat
+msgid "Tax ID"
+msgstr "Btw nr."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
 msgid "Technical field for UX purpose"
 msgstr "Technisch veld voor UI doeleinden"
@@ -6888,9 +6913,27 @@ msgstr ""
 "in sommige rapportages"
 
 #. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "De bijlage %s bestaat niet of je hebt geen rechten om ze te bekijken."
+
+#. module: mail
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "De bijlage %s bestaat niet."
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "De kanaal-UUID moet uniek zijn"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr "De huidige gebruiker kan de sjabloon bewerken."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7249,6 +7292,11 @@ msgstr "Tracking veld reeks"
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
 msgstr "Traceringswaardes"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
+msgstr "Vertaling"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
@@ -7662,12 +7710,6 @@ msgstr ""
 "Het gebruik van je eigen e-mailserver is vereist voor het verzenden / "
 "ontvangen van e-mails in Community- en Enterprise-versies. Online gebruikers"
 " profiteren van een kant-en-klare e-mailserver (@ mijnbedrijf.odoo.com)."
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_partner__vat
-#: model:ir.model.fields,field_description:mail.field_res_users__vat
-msgid "VAT/Tax ID"
-msgstr "BTW/Btw-nummer"
 
 #. module: mail
 #. openerp-web
@@ -8158,6 +8200,11 @@ msgid "assigned you an activity"
 msgstr "heb je een activiteit toegewezen"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "Bestuursvergaderingen"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
@@ -8233,6 +8280,11 @@ msgstr "document"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
 msgstr "gereed"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "e.g. \"Go over the offer and discuss details\""
+msgstr "bijv. \"Bespreek het aanbod en bespreek details\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8440,6 +8492,11 @@ msgid "other members."
 msgstr "andere leden."
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "record:"
 msgstr "regel:"
@@ -8488,6 +8545,11 @@ msgstr "Beperkt tot bekende auteurs"
 #, python-format
 msgid "results out of"
 msgstr "resultaten uit"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "verkoop"
 
 #. module: mail
 #. openerp-web

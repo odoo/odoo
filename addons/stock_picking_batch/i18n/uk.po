@@ -68,6 +68,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Перенесення не буде автоматично додано до групових переміщень, які перевищуватимуть цю кількість рядків, якщо до них буде додано переміщення.\n"
+"Залиште це значення як '0' якщо немає обмежень по рядкам."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -75,6 +77,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Переміщення не буде автоматично додане до групового, яке перевищуватиме цю кількість переміщень.\n"
+"Залиште значення на '0' якщо немає обмежень по переміщенням."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -155,7 +159,7 @@ msgstr "Підрахунок прикріплення"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
 msgid "Auto-confirm"
-msgstr ""
+msgstr "Автопідтвердження"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
@@ -187,6 +191,8 @@ msgstr "Автоматично групуйте партії за їх місц�
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"Автоматично розміщуйте комплектування в групове переміщення, коли це "
+"можливо, оскільки вони підтверджені."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation
@@ -437,6 +443,8 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"Якщо увімкена функція Автоматичні групові переміщення, хоча би одна опція "
+"'Групувати за' повинна бути вибрана."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -710,12 +718,12 @@ msgstr "Показати перевірку наявності"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "Показати кнопку чистої к-сті"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "Показати кнопку Встановити к-сті"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
