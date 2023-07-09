@@ -3,17 +3,19 @@
 # 	* pos_adyen
 # 
 # Translators:
-# Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-09-09 12:33+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,80 +23,106 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: pos_adyen
-#: model:ir.model.fields.selection,name:pos_adyen.selection__pos_payment_method__use_payment_terminal__adyen
-#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
-msgid "Adyen"
-msgstr "Adyen"
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Add tip through payment terminal (Adyen)"
+msgstr "Přidat tip přes platební terminál (Adyen)"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "Adyen API klíč"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "Adyen chyba"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "Nejnovější diagnóza Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "Nejnovější odpověď Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "Terminální identifikátor Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Testovací režim Adyen"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
-msgid "An unexpected error occured. Message from Adyen: %s"
+msgid "An unexpected error occurred. Message from Adyen: %s"
 msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "Požádat zákazníky o spropitné"
 
 #. module: pos_adyen
-#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
-msgid "Ask customers to tip before paying."
-msgstr ""
-
-#. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
+msgstr "Autentizace služby selhala. Zkontrolujte přihlašovací údaje Adyen."
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
 msgstr ""
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Cannot process transactions with negative amount."
+msgstr ""
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+
+#. module: pos_adyen
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "Zpráva od Adyen: %s"
 
 #. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Nakonfigurujte produkt špičky pro POS %s, který podporuje vyklápění s Adyen."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -104,54 +132,36 @@ msgstr "Nastavení prodejního místa"
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Platební podmíky v místě prodeje"
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
-msgid "Prompt the customer to tip."
-msgstr ""
+#: model:ir.model,name:pos_adyen.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sezení Prodejního místa"
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__use_payment_terminal
-msgid "Record payments with a terminal on this journal."
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
+msgid "Pos Adyen Ask Customer For Tip"
 msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Spustit transakce v testovacím prostředí."
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
-msgid ""
-"Technical field used to buffer the latest asynchronous notification from "
-"Adyen."
-msgstr ""
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr "Terminál %s se již používá ve společnosti %s při platbě %s."
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
-msgid "Technical field used to determine if the terminal is still connected."
-msgstr ""
-
-#. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
-
-#. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
-#, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr ""
-
-#. module: pos_adyen
-#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__use_payment_terminal
-msgid "Use a Payment Terminal"
-msgstr ""
+msgstr "Terminál %s se již používá při platbě %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -159,8 +169,10 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"Použito při připojení k Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "[Terminal model]-[Serial number], například: P400Plus-123456789"

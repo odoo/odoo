@@ -161,7 +161,7 @@ msgstr "%s (copia)"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr "(debido"
+msgstr "(hasta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -575,7 +575,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Se evaluará un diccionario de Python con el fin de proporcionar valores "
+"Un diccionario de Python que se evaluará con el fin de proporcionar valores "
 "predefinidos cuando se creen nuevos registros para este seudónimo."
 
 #. module: project
@@ -641,7 +641,7 @@ msgstr "Advertencia de acceso"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -1604,8 +1604,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly. Your managers decide which feedback is accepted"
 msgstr ""
-"Los clientes brindan sus comentarios por correo electrónico y Odoo crea tareas de forma automática para que\n"
-"       usted pueda comunicarse directamente desde la tarea. Sus administradores deciden qué comentarios se aceptan."
+"Los clientes brindan su retroalimentación por correo electrónico y Odoo crea tareas de forma automática para que\n"
+"       usted pueda comunicarse directamente desde la tarea. Sus administradores deciden qué retroalimentación se acepta."
 
 #. module: project
 #. odoo-python
@@ -2323,7 +2323,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2651,14 +2651,14 @@ msgstr "Escriba un comentario"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "Vamos a crear su primer <b>proyecto</b>."
+msgstr "Creemos su primer <b>proyecto</b>."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "Vamos a crear su primer <b>tarea</b>."
+msgstr "Creemos su primer <b>tarea</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3063,18 +3063,18 @@ msgstr "Todavía no hay información"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
-msgstr "No se encontraron proyectos. ¡Vamos a crear uno!"
+msgstr "No se encontraron proyectos. ¡Creemos uno!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "No hay etapas ¡hay que crear una!"
+msgstr "No hay etapas. ¡Creemos una!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr "No se encontraron etiquetas. ¡Vamos a crear una!"
+msgstr "No se encontraron etiquetas. ¡Creemos una!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3086,7 +3086,7 @@ msgstr "No se encontraron etiquetas. ¡Vamos a crear una!"
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr "No se encontraron tareas. ¡Vamos a crear una!"
+msgstr "No se encontraron tareas. ¡Creemos una!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -3776,7 +3776,7 @@ msgstr "Valoración (/5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Texto de valoración promedio"
+msgstr "Texto de calificación promedio"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -3791,12 +3791,12 @@ msgstr "Frecuencia de calificación"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Calificación del último comentario"
+msgstr "Calificación de la última retroalimentación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr "Imagen de la última calificación"
+msgstr "Calificación de la última imagen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
@@ -4002,7 +4002,7 @@ msgstr "Ingresos"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error al enviar SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -4284,7 +4284,7 @@ msgstr "Especificaciones"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Backlog del sprint"
+msgstr "Lista de tareas pendientes del sprint"
 
 #. module: project
 #. odoo-javascript

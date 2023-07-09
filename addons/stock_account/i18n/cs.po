@@ -3,21 +3,22 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Ladislav Tomm <tomm@helemik.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# milda dvorak <milda.dvorak@optimal4.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# milda dvorak <milda.dvorak@optimal4.cz>, 2023
+# SlavekB <slavek.banko@axis.cz>, 2023
+# Ladislav Tomm <tomm@helemik.cz>, 2023
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Michal Veselý <michal@veselyberanek.net>, 2023
+# Martin Trigaux, 2023
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,11 +26,68 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid " Product cost updated from %(previous)s to %(new_cost)s."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_quant.py:0
+#, python-format
+msgid " [Accounted on %s]"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "%s changed cost from %s to %s - %s"
-msgstr "%s změněná cena z %s na %s - %s"
+msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
+msgstr "%(user)s změnil cenu z %(previous)s na %(new_price)s - %(product)s"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
+"%(product)s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "<b>Set other input/output accounts on specific </b>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
+msgid "<span class=\"o_stat_text\">Valuation</span>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Product</span>"
+msgstr "<span>Produkt</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>Množství</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>SN/LN</span>"
+msgstr "<span>SN/LN</span>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -42,22 +100,18 @@ msgid "Account Move"
 msgstr "Pohyby na účtu"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "Widget pro spárování účtu"
-
-#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__date
 msgid "Accounting Date"
 msgstr "Datum účtování"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_form_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
 msgstr "Účetní položky"
@@ -68,10 +122,25 @@ msgid "Accounting Information"
 msgstr "Účetní informace"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Add Manual Valuation"
+msgstr "Přidejte ruční ocenění"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr "Přidat k hodnotě produktu dodatečné náklady (doprava, clo, ...)."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Added Value"
+msgstr "Přidaná hodnota"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
+msgid "Added value"
+msgstr "Přidaná hodnota"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -82,9 +151,9 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Archived"
-msgstr "Archivováno"
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -92,24 +161,38 @@ msgid "Automated"
 msgstr " Automatizovaný "
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
+msgid "Automatic Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
+msgid "Average Cost"
+msgstr "Průměrné náklady"
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr "Průměrné náklady (AVCO)"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Nelze najít vstupní skladový účet zásob pro produkt %s. Před zpracováním "
+"této operace je nutné jej definovat na kategorii výrobku nebo na umístění."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -117,25 +200,11 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Nelze najít výstupní skladový účet zásob pro produkt %s. Před zpracováním "
+"této operace je nutné jej definovat na kategorii výrobku nebo na umístění."
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
-msgid "Category"
-msgstr "Kategorie"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Price"
-msgstr "Změnit cenu"
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
-#: model:ir.model,name:stock_account.model_stock_change_standard_price
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Change Standard Price"
-msgstr "Změnit běžnou cenu"
-
-#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -146,7 +215,13 @@ msgstr ""
 "Opravdu chcete tuto změnu provést?"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
+msgid "Choose a date to get the valuation at that date"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
 msgid "Company"
 msgstr "Firma"
 
@@ -156,6 +231,7 @@ msgid "Config Settings"
 msgstr "Nastavení konfigurace"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -166,50 +242,66 @@ msgstr ""
 "rozdílu cen na produktu nebo jeho kategorii."
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "Cost"
-msgstr "Náklady"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Costing Method"
 msgstr "Metoda nacenění"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
-msgid "Counter-Part Account"
-msgstr "Účet protistrany"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
+msgid "Counterpart Account"
+msgstr "Odpovídající účet"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id_required
-msgid "Counter-Part Account Required"
-msgstr "Vyžaduje se účet protistrany"
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
+msgid ""
+"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "Kód země"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
 msgid "Created by"
 msgstr "Vytvořeno od"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
 msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
 msgid "Currency"
 msgstr "Měna"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
+msgid "Current Quantity"
+msgstr "Aktuální množství"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Current Value"
+msgstr "Aktuální hodnota"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -218,7 +310,7 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_inventory__accounting_date
+#: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
@@ -237,12 +329,23 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr "Zobrazení produktových a sériových čísel na fakturách"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: stock_account
+#: model:res.groups,name:stock_account.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr "Zobrazit sériové číslo a produktové číslo na fakturách"
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -257,29 +360,25 @@ msgid "First In First Out (FIFO)"
 msgstr "První dovnitř První ven (FIFO)"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
-msgid "Has Account Moves"
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Seskupit podle..."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Has Remaining Qty"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price__new_price
-msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr ""
-"Pokud se zvýší pořizovací cena, na účet variací zásob bude odepsán poplatek a na účet výstupu zásob bude připsána hodnota = (rozdíl množství * dostupné množství).\n"
-"Pokud je cena snížena, bude vytvořen účet variace zásob a účet vstupu akcií bude odepsán."
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_inventory
-msgid "Inventory"
-msgstr "Inventář"
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Incoming"
+msgstr "Příchozí"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -287,31 +386,35 @@ msgid "Inventory Locations"
 msgstr "Umístění (množ.) inventáře"
 
 #. module: stock_account
-#: code:addons/stock_account/__init__.py:0
-#: code:addons/stock_account/__init__.py:0
+#. odoo-python
 #: code:addons/stock_account/models/account_chart_template.py:0
-#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
-#: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
 msgstr "Ocenění zásob"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
-msgid "Is Anglo Saxon Line"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
+msgid "Invoice Line"
+msgstr "Řádek faktury"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
+msgid "Invoice value correction with invoice currency"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move
-msgid "Journal Entries"
-msgstr "Položky deníku"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
+msgid "Journal"
+msgstr "Deník"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
 msgstr "Položka deníku"
@@ -327,20 +430,14 @@ msgid "Landed Costs"
 msgstr "Náklady na pořízení"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upraveno od"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
@@ -350,14 +447,34 @@ msgid "Linked To"
 msgstr ""
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Lots & Serial numbers will appear on the invoice"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
 msgid "Manual"
 msgstr "Ruční"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Manual Stock Valuation: %s."
+msgstr "Ruční ocenění zásob: %s."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Manual Stock Valuation: No Reason Given."
+msgstr "Ruční ocenění zásob: Není uveden žádný důvod."
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,help:stock_account.field_product_product__valuation
 #: model:ir.model.fields,help:stock_account.field_product_template__valuation
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
@@ -367,55 +484,81 @@ msgstr ""
 "Automatizované: Účetní položka je automaticky vytvořena pro ocenění zásob, když produkt vstoupí do společnosti nebo opustí společnost"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Moved Quantity"
+msgstr "Přesunuté množství"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
+msgid "New value"
+msgstr "Nová hodnota"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
+msgid "New value by quantity"
+msgstr "Nová hodnota podle množství"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Open Valuation Layer"
+msgstr ""
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
 msgstr "Další informace"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:0
-#, python-format
-msgid ""
-"Please define an expense account for this product: \"%s\" (id:%d) - or for "
-"its category: \"%s\"."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Outgoing"
+msgstr "Odchozí"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
-msgid "Price"
-msgstr "Cena"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_product_product
+#: model:ir.model,name:stock_account.model_product_template
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Produkt"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product Category"
 msgstr "Kategorie výrobku"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Pohyby produktu (trasa pohybu zboží)"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_product_template
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+#, python-format
+msgid "Product Revaluation"
+msgstr "Přecenění produktu"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
 msgstr "Šablona produktu"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_product_product
+msgid "Product Variant"
+msgstr "Varianta výrobku"
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Ručně upravená hodnota produktu (od %s do %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
-#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__quantity
 msgid "Quantity"
 msgstr "Množství"
 
@@ -430,9 +573,34 @@ msgid "Quants"
 msgstr "Množství"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason"
+msgstr "Důvod"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason of the revaluation"
+msgstr "Důvod přecenění"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
+msgid "Reference"
+msgstr "Reference"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
+msgid "Related product"
+msgstr "Související produkt"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
 msgid "Remaining Qty"
 msgstr "Zbylá kvóta"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
+msgid "Remaining Value"
+msgstr "Zbývající hodnota"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -445,6 +613,18 @@ msgid "Return Picking Line"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Revaluation of %s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Revalue"
+msgstr "Přecenění"
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
 msgid "Standard Price"
 msgstr "Standardní cena"
@@ -453,11 +633,17 @@ msgstr "Standardní cena"
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_product__cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template__cost_method
+#: model:ir.model.fields,help:stock_account.field_stock_quant__cost_method
 msgid ""
 "Standard Price: The products are valued at their standard cost defined on the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average cost.\n"
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
+msgstr ""
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_stock_accounting_automatic
+msgid "Stock Accounting Automatic"
 msgstr ""
 
 #. module: stock_account
@@ -472,7 +658,9 @@ msgstr "Skladový deník"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
 msgstr "Pohyb zásob"
@@ -488,7 +676,22 @@ msgid "Stock Quantity History"
 msgstr "Historie skladových zásob"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Zpráva o doplnění zásob"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr ""
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
+#: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
+#, python-format
 msgid "Stock Valuation"
 msgstr "Oceňování zásob"
 
@@ -509,7 +712,10 @@ msgstr "Účet oceňování zásob (výstupní)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_product_product__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
@@ -517,19 +723,50 @@ msgid "Stock Valuation Layer"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
-msgid "Technical field used to retrieve the anglo-saxon lines."
+#: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
+msgid ""
+"Technical field to correctly show the currently selected company's currency "
+"that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kód země ISO ve dvou znacích. Toto pole můžete použít pro rychlé "
+"vyhledávání."
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"The Stock Input and/or Output accounts cannot be the same than the Stock "
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"The action leads to the creation of a journal entry, for which you don't "
+"have the access rights."
+msgstr ""
+"Akce vede k vytvoření záznamu deníku, ke kterému nemáte přístupová práva."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "The added value doesn't have any impact on the stock valuation"
+msgstr "Přidaná hodnota nemá žádný vliv na ceny skladu"
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -538,6 +775,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -547,6 +785,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -558,13 +797,28 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
+#: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
 msgid ""
-"There is no valuation layers. Valuation layers are created when some product"
-" moves should impact the valuation of the stock."
+"There are no valuation layers. Valuation layers are created when there are "
+"product moves that impact the valuation of the stock."
 msgstr ""
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+msgid "Total Remaining Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+msgid "Total Remaining Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
 msgstr "Celková hodnota"
 
@@ -584,27 +838,26 @@ msgstr ""
 "objednávce"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+msgid "Unit Cost"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
 msgstr "Hodnota jednotky"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
 msgid "Unit of Measure"
 msgstr "Měrná jednotka"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Update Cost"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Aktualizujte množství na SO / PO"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -637,18 +890,31 @@ msgstr ""
 "na interní umístění."
 
 #. module: stock_account
+#: model:ir.ui.menu,name:stock_account.menu_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Valuation"
 msgstr "Ocenění"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
-msgid "Valuation Layer?"
+#: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
+msgid "Valuation Currency"
 msgstr ""
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+msgid "Valuation Report"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
+msgid "Valuation at Date"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
@@ -660,11 +926,19 @@ msgid "Value"
 msgstr "Hodnota"
 
 #. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+#, python-format
+msgid "Value On Hand:"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
@@ -678,17 +952,6 @@ msgid ""
 msgstr ""
 "Pokud je u produktu povoleno automatické ohodnocení zásob, bude tento účet "
 "držet aktuální hodnotu produktů."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
-msgid ""
-"When doing automated inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
-"                It can also directly be set on each product."
-msgstr ""
-"Při automatickém oceňování zásob budou na tento účet zaúčtovány položky protějšku deníku pro všechny příchozí pohyby zásob,\n"
-"pokud na zdrojovém místě není nastaven specifický oceňovací účet. Toto je výchozí hodnota pro všechny produkty v této kategorii.\n"
-"Může být také nastaven přímo na každý produkt."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -708,6 +971,38 @@ msgstr ""
 " položky při zpracování pohybů zásob automaticky zaúčtovány."
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
+msgid "Wizard model to reavaluate a stock inventory for a product"
+msgstr "model průvodce k vyhodnocení zásob na skladě produktu"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "You cannot revalue a product with a standard cost method."
+msgstr "Produkt nelze přecenit standardní metodou nákladů."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "You cannot revalue a product with an empty or negative stock."
+msgstr "Produkt nelze přecenit s prázdnou nebo zápornou zásobou."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You cannot update the cost of a product in automated valuation as it leads "
+"to the creation of a journal entry, for which you don't have the access "
+"rights."
+msgstr ""
+"Nelze aktualizovat cenu produktu v automatickém oceňování, protože vede k "
+"vytvoření položky deníku, ke které nemáte přístupová práva."
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -718,6 +1013,16 @@ msgstr ""
 "Před zpracováním této operace musíte definovat jeden."
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -728,6 +1033,7 @@ msgstr ""
 "zkontrolujte, zda jste nainstalovali účtovou osnovu."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
@@ -741,17 +1047,23 @@ msgstr ""
 "Před zpracováním této operace musíte definovat jeden."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You must set a counterpart account."
+msgid "You must set a counterpart account on your product category."
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
-msgid "_Apply"
-msgstr "_Použít"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "by"
+msgstr "od"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
-msgid "remaining_value Value"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "for"
+msgstr "pro"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "locations"
+msgstr "lokace"

@@ -95,7 +95,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-python
@@ -596,7 +596,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "لا يمكن أن تكون المهام الفرعية متكررة . "
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -692,7 +692,7 @@ msgstr "إضافة مؤشر تقدم "
 #. module: project
 #: model:ir.actions.client,name:project.project_task_action_configure_properties_field
 msgid "Add Properties"
-msgstr ""
+msgstr "إضافة الخصائص "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -949,7 +949,7 @@ msgstr "تعيين مسؤول لمهمتك "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Assign each new project to this plan"
-msgstr ""
+msgstr "إسناد كل مشروع جديد لهذه الخطة "
 
 #. module: project
 #. odoo-javascript
@@ -994,7 +994,7 @@ msgstr "المسند إليهم "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "تاريخ التعيين "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1050,6 +1050,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"قم بتعديل حالة تلقائياً عندما يجيب العميل على ملاحظات هذه المرحلة.\n"
+" * سوف تقوم الملاحظات الإيجابية بتحديث حالة كانبان إلى 'جاهز للمرحلة الجديدة' (العلامة الخضراء).\n"
+" * سوف تقوم الملاحظات الإيجابية بتحديث حالة كانبان إلى 'جاهز للمرحلة الجديدة' (العلامة الخضراء).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1184,7 +1187,7 @@ msgstr "تم الإلغاء "
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 #, python-format
 msgid "Changes Requested"
-msgstr ""
+msgstr "طلبات التغييرات "
 
 #. module: project
 #. odoo-javascript
@@ -1222,7 +1225,7 @@ msgstr "أغلق يوم"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 msgid "Closed State"
-msgstr ""
+msgstr "حالة الإغلاق "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
@@ -1750,7 +1753,7 @@ msgstr "حذف مؤشر التقدم "
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "حذف مرحلة المشروع "
 
 #. module: project
 #. odoo-python
@@ -2044,7 +2047,7 @@ msgstr "المفضلة "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "المشاريع النفضلة "
 
 #. module: project
 #. odoo-javascript
@@ -2206,7 +2209,7 @@ msgstr "السجل"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "تجديد المنزل "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2984,7 +2987,7 @@ msgstr "مؤشر تقدم جديد "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "لا يوجد منتج "
 
 #. module: project
 #. odoo-python
@@ -3573,7 +3576,7 @@ msgstr "علامات تصنيف المشاريع "
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "معالج حذف مرحلة مهمة المشروع "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3583,7 +3586,7 @@ msgstr "مهام المشروع"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "عنوان المشروع "
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -4131,14 +4134,14 @@ msgstr ""
 #: code:addons/project/static/src/views/fields/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "تعيين الأولوية كـ %s"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "تعيين الحالة كـ..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4187,7 +4190,7 @@ msgstr "مشاركة المشروع "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Read-only"
-msgstr ""
+msgstr "المشاركة للقراءة فقط "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4432,7 +4435,7 @@ msgstr "أنشطة المهمة"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "تمت الموافقة على المهمة "
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
@@ -4470,7 +4473,7 @@ msgstr "انتهت المهمة "
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "المهمة قيد التنفيذ "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4530,22 +4533,22 @@ msgstr "عنوان المهمة..."
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "المهمة قيد الانتظار "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "تمت الموافقة على المهمة "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task canceled"
-msgstr ""
+msgstr "تم إلغاء المهمة "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "انتهت المهمة "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4804,7 +4807,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "هذه المهمة محجوبة من قِبَل مهمة أخرى غير منتهية "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4928,6 +4931,8 @@ msgid ""
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
 msgstr ""
+"تتبع مدى ربحية مشاريعك. أي مشروع تكون مهامه وجداوله الزمنية مرتبطة بحساب "
+"تحليلي، وأي حساب تحليلي ينتمي إلى خطة. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4971,7 +4976,7 @@ msgstr "نوع النشاط المستثنى في السجل. "
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "إلغاء أرشفة المشاريع "
 
 #. module: project
 #. odoo-python
@@ -5264,7 +5269,7 @@ msgstr "وقت العمل المتبقي حتى الإغلاق"
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
-msgstr ""
+msgstr "هل ترغب في إلغاء أرشفة كافة المشاريع الموجودة في تلك المراحل أيضاً؟ "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5321,13 +5326,15 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"لا يمكنك حذف مراحل تحتوي على مشاريع. بإمكانك إما أرشفتها أولاً أو حذف كافة "
+"مشاريعها. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
-msgstr ""
+msgstr "لا يمكنك حذف مراحل تحتوي على مشاريع. عليك أولاً حذف كافة مشاريعها. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5533,7 +5540,7 @@ msgstr "تم تسجيل الدخول"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "عرض مهامي من القائمة "
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

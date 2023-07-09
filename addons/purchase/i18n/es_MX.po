@@ -35,7 +35,7 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Solicitud de cotización - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Solicitud de cotización - %s' % (object.name) u\n"
 "                'Orden de compra - %s' % (object.name))"
 
 #. module: purchase
@@ -99,12 +99,12 @@ msgstr "-&gt;"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr "Triple verificación"
+msgstr "Verificación de 3 pasos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr "Triple verificación: compras, recepciones y facturas"
+msgstr "Verificación de 3 pasos: compras, recepciones y facturas"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder

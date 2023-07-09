@@ -84,7 +84,7 @@ msgstr "<span class=\"o_stat_text\">記録済</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -132,6 +132,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"プロダクト構成に応じて、配送数量はメカニズムによって自動的に計算されます：\n"
+"  - 手動：数量を明細上で手動で設定します\n"
+"  - 費用からの分析： 数量は計上された費用からの合計数量です\n"
+"  - タイムシート：数量は、この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - 在庫移動： 数量は確定したピッキングに由来します\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -176,6 +181,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"一流のプロフェッショナル・サービス企業として\n"
+"　　　　　　　　私たちは、精力的なサービスにコミットする\n"
+"　　　　　　　　ことが成功の鍵だと理解しています。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -504,6 +512,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"見積書の「プレビュー」から見積書を編集すると、その見積書のみが\n"
+"　　　　　更新されます。見積書テンプレートを（設定メニューから）\n"
+"　　　　　編集した場合、今後作成される全ての見積書はこの編集された\n"
+"テンプレートを使用します。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -696,12 +708,12 @@ msgstr "請求外"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "販売オーダなし"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order Item"
-msgstr ""
+msgstr "販売オーダ項目なし"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
@@ -858,6 +870,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"当社の土台は、プロダクトの品質です。\n"
+"　　　　　　　　生地と性能、そして職人技に徹底的にこだわることで\n"
+"　　　　　　　　土台を築き上げてきました。"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_project
@@ -1026,43 +1041,43 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr ""
+msgstr "顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエントリーを請求不可にするには、販売オーダ項目を削除して下さい。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "プロジェクトがリンクされている販売オーダ"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "タスクがリンクされている販売オーダ。"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "請求書内検索"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "販売オーダ内検索"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "販売オーダ項目内を検索"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "タスクを作成できる請求不可プロジェクトを選択します。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1129,7 +1144,7 @@ msgstr "タスク"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "タスクの繰り返し"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
@@ -1232,6 +1247,10 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"これは <strong>サンプル見積書テンプレート</strong>です。 ご自分で\n"
+"                                必要に応じて<i>販売</i>\n"
+"                               アプリから設定メニュー/見積書テンプレート\n"
+"　　　　　　　　を使ってカスタマイズして下さい。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1485,6 +1504,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"お客様に喜んで購入頂けるよう\n"
+"                                当社は常にプロダクトの価格を\n"
+"                                適正に設定しています。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id

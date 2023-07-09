@@ -711,7 +711,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Pagado</b>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Esperando pago </b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>En espera de pago </b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -1095,7 +1095,7 @@ msgstr "Entrada de ingresos acumulados"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -1148,7 +1148,7 @@ msgstr "Agregar una sección"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Agregue múltiples variantes a una orden desde una tabla"
+msgstr "Agregue varias variantes a una orden desde una tabla"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1330,12 +1330,12 @@ msgstr "Nombre del banco"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr "Basado en el ID del cliente"
+msgstr "Según el ID del cliente"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr "Basado en el documento de referencia"
+msgstr "Según el documento de referencia"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1947,7 +1947,7 @@ msgstr "Importe del descuento"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Descuentos y tarjetas de lealtad y regalo"
+msgstr "Descuentos, programas de lealtad y tarjetas de regalo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
@@ -2363,7 +2363,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2377,7 +2377,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "Si es verdad, el paquete se puede utilizar para las órdenes de venta"
+msgstr ""
+"Si está activo, el paquete se puede utilizar para las órdenes de venta"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2877,7 +2878,7 @@ msgstr "Nuevo"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Nuevo presupuesto"
+msgstr "Nueva cotización"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
@@ -3128,7 +3129,7 @@ msgstr "Fecha de la orden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr "Fecha de la orden"
+msgstr "Fecha de la orden:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3315,7 +3316,7 @@ msgstr "Vista previa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Precio reducido sin impuestos incluidos"
+msgstr "Precio reducido con impuestos excluidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3670,8 +3671,7 @@ msgstr "Destinatarios"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
-"Volver a calcular todos los precios basándose en esta lista de precios"
+msgstr "Volver a calcular todos los precios según esta lista de precios"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3775,7 +3775,7 @@ msgstr "Ingresos generados por la campaña."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error al enviar SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4763,8 +4763,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
-" nombre en listado de correos electrónicos"
+"Esta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
+" nombre de lista de correos electrónicos"
 
 #. module: sale
 #. odoo-python
@@ -4788,10 +4788,10 @@ msgid ""
 msgstr ""
 "Este reporte realiza un análisis de sus cotizaciones y órdenes de venta, es "
 "decir, analiza sus ingresos por ventas y los clasifica mediante diferentes "
-"criterios de agrupación (vendedor, partner, producto, etc.). Utilice este "
+"criterios de agrupación (vendedor, contacto, producto, etc.). Utilice este "
 "reporte para realizar el análisis de las ventas que aún no se han facturado."
-" Si desea analizar su volumen de negocios, debe utilizar el reporte de "
-"análisis de facturas en la aplicación de Contabilidad."
+" Si desea analizar su volumen de ventas, debe utilizar el reporte de "
+"análisis de facturas en la aplicación Contabilidad."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4820,10 +4820,10 @@ msgid ""
 msgstr ""
 "Este reporte realiza un análisis de sus órdenes de venta, es decir, analiza "
 "sus ingresos por ventas y los clasifica mediante diferentes criterios de "
-"agrupación (vendedor, partner, producto, etc). Utilice este reporte para "
+"agrupación (vendedor, contacto, producto, etc). Utilice este reporte para "
 "realizar el análisis de las ventas que aún no se han facturado. Si desea "
-"analizar su volumen de negocios, debe utilizar el reporte de análisis de "
-"facturas en la aplicación de Contabilidad."
+"analizar su volumen de ventas, debe utilizar el reporte de análisis de "
+"facturas en la aplicación Contabilidad."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4901,7 +4901,7 @@ msgstr "Total de impuestos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr "Impuesto total excluido"
+msgstr "Total con impuestos excluidos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5242,8 +5242,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No se puede cambiar el tipo de una línea de orden de venta. En su lugar, "
-"debe eliminar la línea actual y crear una nueva con el tipo adecuado."
+"No puede cambiar el tipo de una línea de orden de venta. En su lugar, debe "
+"eliminar la línea actual y crear una nueva con el tipo adecuado."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

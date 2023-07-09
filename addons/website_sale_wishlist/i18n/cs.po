@@ -3,18 +3,19 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2023
+# Martin Trigaux, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,13 +23,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-fw fa-heart\"/>\n"
+"            Wishlist"
 msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"Seznam přání"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>Add to wishlist"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -38,14 +44,7 @@ msgstr "<small><i class=\"fa fa-trash-o\"/>Odstranit</small>"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr ""
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid ""
-"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
-"Add to wishlist"
-msgstr ""
+msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -68,14 +67,19 @@ msgid "Add to Wishlist"
 msgstr "Přidat do seznamu přání"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatické vysávání"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr "Přidat na seznam přání"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Contact Us"
+msgstr "Kontaktujte nás"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
@@ -89,8 +93,8 @@ msgstr "Vytvořeno"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
-msgid "Currency"
-msgstr "Měna"
+msgid "Default Currency"
+msgstr "Výchozí měna"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
@@ -100,17 +104,12 @@ msgstr "Zobrazované jméno"
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Duplikovaný produkt v seznamu přání pro tohoto partnera."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -153,20 +152,20 @@ msgid "Pricelist when added"
 msgstr "Ceník při přidání"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_product_product
+#: model:ir.model,name:website_sale_wishlist.model_product_template
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "Produkt"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_product_template
-msgid "Product Template"
-msgstr "Šablona produktu"
+#: model:ir.model,name:website_sale_wishlist.model_product_product
+msgid "Product Variant"
+msgstr "Varianta výrobku"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "Seznam přání produktu"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -179,17 +178,24 @@ msgid "Shop Wishlist"
 msgstr "Seznam přání"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "Zobrazit prázdný seznam přání"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
-msgid "Users"
-msgstr "Uživatelé"
+msgid "User"
+msgstr "Uživatel"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
-msgstr "Webová strana"
+msgstr "Webstránka"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Wishlist"
 msgstr "Seznam přání"

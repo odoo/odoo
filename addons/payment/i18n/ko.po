@@ -124,9 +124,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>경고!</strong> 일부 캡쳐 항목이 보류 중입니다. 처리될 때까지\n"
-"                    잠시만 기다려주시기 바랍니다. 캡쳐 상태가 몇 분 후까지도\n"
-"                    대기 중으로 표시될 경우에는 결제대행업체 구성 내용을 확인하시기 바랍니다."
+"<strong>경고!</strong> 일부 보류 중인 매입 항목이 있습니다. 처리될 때까지\n"
+"                    잠시만 기다려주시기 바랍니다. 매입 상태가 몇 분 후까지도\n"
+"                    대기 중으로 표시될 경우에는 결제대행업체 환경 설정을 확인하시기 바랍니다."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -134,7 +134,7 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
-"<strong>경고!</strong> 캡쳐 금액은 마이너스가 될 수 없으며 다음 금액보다\n"
+"<strong>경고!</strong> 매입 금액은 마이너스가 될 수 없으며 다음 금액보다\n"
 "                    클 수 없습니다."
 
 #. module: payment
@@ -269,7 +269,7 @@ msgstr "결제 방법 저장 허용"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr "이미 캡쳐가 완료됨"
+msgstr "이미 매입이 완료됨"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
@@ -297,7 +297,7 @@ msgstr "최대 금액"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr "캡쳐할 금액"
+msgstr "매입할 금액"
 
 #. module: payment
 #. odoo-javascript
@@ -439,7 +439,7 @@ msgstr "취소된 작업"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr "캡쳐"
+msgstr "매입"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -458,7 +458,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"배송이 완료되면 Odoo에서 금액을 캡쳐합니다.\n"
+"배송이 완료되면 Odoo에서 금액을 매입 처리합니다.\n"
 "이 기능은 고객 신용카드로 결제를 청구할 때 사용하며,\n"
 "배송 여부가 확실한 경우에만 진행하시기 바랍니다."
 
@@ -968,7 +968,7 @@ msgstr "내부 서버 오류"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr "유효한 캡쳐 금액입니다"
+msgstr "유효한 매입 금액입니다"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1052,7 +1052,7 @@ msgstr "수동"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "수동 캡쳐 지원"
+msgstr "수기 매입 지원"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1062,7 +1062,7 @@ msgstr "최대 금액"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr "최대 캡쳐 허용 금액"
+msgstr "최대 매입 허용 금액"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1265,7 +1265,7 @@ msgstr "페이팔"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr "결제 캡쳐 마법사"
+msgstr "결제 매입 마법사"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1663,7 +1663,7 @@ msgstr "Sips"
 msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
-msgstr "캡쳐하려는 거래 중 일부 항목은 전체 캡쳐만 가능합니다. 일부 금액만 캡쳐하려면 개별 거래별로 처리하십시오."
+msgstr "매입하려는 거래 중 일부 항목은 전체 매입만 가능합니다. 일부 금액만 매입하려면 개별 거래별로 처리하십시오."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1698,7 +1698,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr "부분 캡쳐 지원"
+msgstr "부분 매입 지원"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1730,7 +1730,7 @@ msgstr "유효하지 않은 액세스 토큰입니다."
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr "캡쳐할 금액은 양수여야 하며 %s보다 클 수 없습니다."
+msgstr "매입할 금액은 양수여야 하며 %s보다 클 수 없습니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -2007,7 +2007,7 @@ msgstr "이 결제 방법은 시스템에서 승인되지 않았습니다."
 msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
-msgstr "이 거래는 다음과 같이 부분 캡쳐 및 부분 거래 무효 처리 후 확인이 완료되었습니다 (%(provider)s)."
+msgstr "이 거래는 다음과 같이 부분 매입 및 부분 거래 무효 처리 후 확인이 완료되었습니다 (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2175,7 +2175,7 @@ msgstr "거래 후속 처리 시 결제 토큰을 생성할지 여부입니다"
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr "각 거래와 관련하여 업체에서 부분 캡쳐를 지원하는지 여부입니다."
+msgstr "각 거래와 관련하여 업체에서 부분 매입을 지원하는지 여부입니다."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done

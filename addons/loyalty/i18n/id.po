@@ -367,7 +367,7 @@ msgstr ""
 "            Selamat <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
 "        </t>\n"
 "\n"
-"        Berikut adalah hadiah untuk Anda dari</t>.<br>\n"
+"        Berikut adalah hadiah untuk Anda dari <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
@@ -389,12 +389,12 @@ msgstr ""
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    Pembelian minimum <t t-out=\"rule.minimum_qty or ''\">10</t> produk\n"
+"                    Pembelian minimal <t t-out=\"rule.minimum_qty or ''\">10</t> produk\n"
 "                </span><br>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    Sah untuk pembelian diatas <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                    Valid untuk pembelian di atas <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
 "                </span><br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -1266,7 +1266,7 @@ msgstr "Program Loyalitas"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "Hadiah Loyalitas"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
@@ -1323,7 +1323,7 @@ msgstr "Jumlah Minimum"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__multi_product
 msgid "Multi Product"
-msgstr ""
+msgstr "Produk Multi"
 
 #. module: loyalty
 #. odoo-python
@@ -1568,7 +1568,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
 msgid "Reward Products"
-msgstr ""
+msgstr "Produk Hadiah"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_type
@@ -1705,7 +1705,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__reward_product_ids
 msgid "These are the products that can be claimed with this rule."
-msgstr ""
+msgstr "Berikut adalah produk-produk yang dapat diklaim dengan peraturan ini."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount

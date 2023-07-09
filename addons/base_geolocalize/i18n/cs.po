@@ -3,18 +3,22 @@
 # 	* base_geolocalize
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Michal Veselý <michal@veselyberanek.net>, 2023
+# Jiří Podhorecký, 2023
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,36 +26,34 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr "<span class=\"oe_inline\"> ( Na  </span>"
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> : Lat : </span>"
-msgstr "<span> : Zeměpisná šířka : </span>"
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> ;  Long:  </span>"
-msgstr "<span> ;  Zeměpisná délka:  </span>"
-
-#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
 msgid "API"
 msgstr "API"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:104
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"Je vyžadován klíč API pro GeoCoding (místa).\n"
+"Další informace naleznete na adrese https://developers.google.com/maps/documentation/geocoding/get-api-key."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
+msgstr "API:"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute Localization"
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute based on address"
 msgstr ""
 
 #. module: base_geolocalize
@@ -76,30 +78,30 @@ msgstr "Vytvořeno"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:156
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr ""
+msgstr "Chyba s geolokačním serverem:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Geografický kodér"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr "Geologické umístění"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geolocate"
-msgstr "Geolokalizovat"
+msgstr "Poskytovatel zeměpisných údajů"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -115,24 +117,17 @@ msgstr "Datum geolokace"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr ""
+msgstr "Klíč rozhraní Google map API"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
-
-#. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
+msgstr "Klíč:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -145,29 +140,58 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
-msgid "Name"
-msgstr "Název"
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Lat :"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Partner Assignation"
-msgstr "Přiřazení partnerů"
+msgid "Long:"
+msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:69
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "Jméno"
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "No match found for %(partner_names)s address(es)."
+msgstr ""
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignment"
+msgstr "Přiřazení partnera"
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
+msgstr "Poskytovatel %s není implementován pro geolokační službu."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh"
+msgstr "Obnovit"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh Localization"
 msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
-msgid "Tech Name"
-msgstr ""
+msgid "Technical Name"
+msgstr "Technický název"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/base_geocoder.py:123
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
 "Unable to geolocate, received the error:\n"
@@ -178,6 +202,18 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Nelze geolokovat, došlo k chybě:\n"
+"%s\n"
+"\n"
+"Google z toho udělal placenou funkci.\n"
+"Nejprve byste měli povolit fakturaci ve svém účtu Google.\n"
+"Pak přejděte do Developer Console a povolte API:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Updated on:"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -185,3 +221,12 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+"Další informace naleznete na adrese "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key."
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "Warning"
+msgstr "Varování"

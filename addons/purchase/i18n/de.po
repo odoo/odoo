@@ -589,6 +589,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Je nach Produktkonfiguration kann die erhaltene Menge automatisch durch einen Mechanismus berechnet werden:\n"
+"  - Manuell: Die Menge wird manuell eingestellt\n"
+"  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -1290,14 +1293,14 @@ msgstr "Verbotenen Werte in nicht buchungspflichtigen Einkaufsauftragszeilen"
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "From %s"
-msgstr ""
+msgstr "Aus %s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "From Electronic Document"
-msgstr ""
+msgstr "Aus elektronischem Dokument"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -2760,7 +2763,7 @@ msgstr "Gesamtsumme"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr "Unversteuerte Summe"
+msgstr "Gesamte Nettosumme"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
@@ -2943,14 +2946,14 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr "Diese Lieferantenrechnung wurde erstellt von: %s"
+msgstr "Diese Lieferantenrechnung wurde erstellt aus: %s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr "Diese Lieferantenrechnung wurde geändert von: %s"
+msgstr "Diese Lieferantenrechnung wurde geändert aus: %s"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3018,7 +3021,7 @@ msgstr "Gesamtmenge"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total Untaxed amount"
-msgstr "Unbesteuerter Gesamtbetrag"
+msgstr "Gesamter Nettobetrag"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3112,12 +3115,12 @@ msgstr "Unversteuert"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Unversteuerter Betrag"
+msgstr "Nettobetrag"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
-msgstr "Unversteuerter Gesamtbetrag"
+msgstr "Gesamter Nettobetrag"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form

@@ -1348,7 +1348,7 @@ msgstr "Beendet & Gebucht"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Closing Control"
-msgstr "Abschlussprüfungen"
+msgstr "Abschlusskontrolle"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__stop_at
@@ -1366,7 +1366,7 @@ msgstr "Abschlussnotizen"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Closing Session"
-msgstr "Abschlusssitzung"
+msgstr "Sitzung schließen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1380,7 +1380,7 @@ msgstr "Schlussdifferenz in %s (%s)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Closing note"
-msgstr ""
+msgstr "Abschlussnotiz"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1630,7 +1630,7 @@ msgstr "Eine neue Produktvariante erstellen"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Create new products"
-msgstr ""
+msgstr "Neue Produkt erstellen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -2179,7 +2179,7 @@ msgstr "Anzeigename"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Display orders on the preparation display"
-msgstr ""
+msgstr "Aufträge auf dem Zubereitungsdisplay anzeigen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2577,7 +2577,7 @@ msgstr "Code auf Kassenbon generieren"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Generate demo data"
-msgstr ""
+msgstr "Demodaten generieren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3251,7 +3251,7 @@ msgstr "Zeile Nr."
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Produktmenü laden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3924,7 +3924,7 @@ msgstr "Eröffnungssaldo"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Opening note"
-msgstr ""
+msgstr "Eröffnungsnotiz"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -4562,7 +4562,7 @@ msgstr "Bitte definieren Sie einen Partner für diesen Verkauf"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "Please reload this page once products have been created"
-msgstr ""
+msgstr "Bitte laden Sie diese Seite neu, sobald Sie Produkte erstellt haben"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4742,7 +4742,7 @@ msgstr "Kassenzahlungen"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
 msgid "Point of Sale Printer"
-msgstr ""
+msgstr "Kassendrucker"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -4889,7 +4889,7 @@ msgstr "Gebucht"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
-msgstr ""
+msgstr "Zubereitungsdisplay"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
@@ -5221,7 +5221,7 @@ msgstr "Proxy-IP-Adresse"
 #: code:addons/point_of_sale/models/pos_printer.py:0
 #, python-format
 msgid "Proxy IP cannot be empty."
-msgstr ""
+msgstr "Proxy-IP darf nicht leer sein."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6087,7 +6087,7 @@ msgstr "Zeigen Sie Margen & Kosten auf der Produktinformation an"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
 msgid "Show orders on the preparation display screen."
-msgstr ""
+msgstr "Aufträge auf dem Zubereitungsbildschirm anzeigen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6977,6 +6977,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
+"Diese Barzahlungsmethode wird bereits in einem anderen Kassensystem verwendet.\n"
+"Für dieses Kassensystem sollte eine neue Barzahlungsmethode erstellt werden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -7140,12 +7142,12 @@ msgstr "Diese Einstellungen gelten für alle Kassensysteme."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
 msgid "Ticket Code"
-msgstr ""
+msgstr "Ticketcode"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Ticket Nr"
-msgstr ""
+msgstr "Ticketnr."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7230,7 +7232,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total"
-msgstr "Gesamt"
+msgstr "Insgesamt"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7342,13 +7344,13 @@ msgstr "Transfer"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Trusted POS"
-msgstr ""
+msgstr "Vertrauenswürdiges Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__trusted_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_trusted_config_ids
 msgid "Trusted Point of Sale Configurations"
-msgstr ""
+msgstr "Konfigurationen eines vertrauenswürdigen Kassensystems"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -7423,12 +7425,12 @@ msgstr "Auftrag kann nicht synchronisiert werden"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Unique Code:"
-msgstr ""
+msgstr "Eindeutiger Code:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Unique code"
-msgstr ""
+msgstr "Eindeutiger Code"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -7699,7 +7701,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "You can go to"
-msgstr ""
+msgstr "Gehen Sie zu"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7817,6 +7819,8 @@ msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
 msgstr ""
+"Sie können offene Aufträge nicht mit einer Konfiguration teilen, die nicht "
+"dieselbe Währung verwendet."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7824,6 +7828,8 @@ msgstr ""
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
+"Sie können das gleiche Journal nicht für mehrere Barzahlungsmethoden "
+"verwenden."
 
 #. module: point_of_sale
 #. odoo-python

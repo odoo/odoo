@@ -46,7 +46,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sales Order</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -57,6 +57,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Menurut konfigurasi produk, kuantitas yang dikirim dapat secara otomatis dihitung dengan mekanisme:\n"
+"  - Manual: kuantitas ditetapkan secara manual pada baris\n"
+"  - Analytic From expenses: kuantitas adalah jumlah kuantitas dari pengeluaran yang dipost\n"
+"  - Timesheet: kuantitas adalah jumlah jam yang dicatat pada task terkait baris sale ini\n"
+"  - Stock Moves: kuantitas datang dari picking yang dikonfirmasi\n"
 
 #. module: sale_project
 #. odoo-javascript
@@ -84,7 +89,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "Billable"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_res_config_settings
@@ -329,7 +334,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metode utnuk mengupdate kuantitas yang dikirim"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
@@ -480,7 +485,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Jumlah Sale Order"
 
 #. module: sale_project
 #. odoo-javascript
@@ -518,7 +523,7 @@ msgstr "Order Penjualan"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Item Sales Order"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id

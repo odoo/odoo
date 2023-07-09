@@ -5,8 +5,8 @@
 # Translators:
 # Kimlong Mai, 2023
 # Felix Schubert <felix.schubert@go-erp.com>, 2023
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,12 +85,12 @@ msgstr "<span class=\"fs-4\">Gespeicherte Zahlungsmethoden</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Unveröffentlicht</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Veröffentlicht</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -126,6 +126,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>Warnung!</strong> Es gibt eine ausstehende Teilerfassung. Bitte warten Sie einen\n"
+"                    Moment, bis sie verarbeitet ist. Überprüfen Sie die Konfiguration Ihres Zahlungsanbieters, wenn\n"
+"                    die Erfassung nach einigen Minuten immer noch nicht abgeschlossen ist."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -133,6 +136,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>Warnung!</strong> Sie können weder einen negativen Betrag noch\n"
+"                    mehr als"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -277,12 +282,12 @@ msgstr "Speicherung der Zahlungsmethoden zulassen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Bereits erfasst"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Bereits verworfen"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
@@ -305,7 +310,7 @@ msgstr "Max. Betrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "Zu erfassender Betrag"
 
 #. module: payment
 #. odoo-javascript
@@ -449,7 +454,7 @@ msgstr "Abgebrochene Vorgänge"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "Erfassen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -479,7 +484,7 @@ msgstr "Untergeordnete Transaktionen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "Untergeordnete Transaktionen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -865,7 +870,7 @@ msgstr "HTTP-Routing"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "Hat untergeordnete Entwürfe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
@@ -875,7 +880,7 @@ msgstr "Hat mehrere Anbieter"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Hat Restbetrag"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -982,7 +987,7 @@ msgstr "Interner Serverfehler"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Ist zu erfassender Betrag gültig"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1058,7 +1063,7 @@ msgstr "Zahlungsmethoden verwalten"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Managed by"
-msgstr ""
+msgstr "Verwaltet durch"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1078,7 +1083,7 @@ msgstr "Höchstbetrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Maximal erlaubte Erfassung"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1156,12 +1161,12 @@ msgstr "Keine Zahlungsmöglichkeit ausgewählt"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "Dem öffentlichen Partner kann kein Token zugewiesen werden."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
 msgid "Not done"
-msgstr "Nicht fertig"
+msgstr "Nicht erledigt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -1242,7 +1247,7 @@ msgstr "Andere"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Other payment methods"
-msgstr ""
+msgstr "Andere Zahlungsmethoden"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1682,6 +1687,9 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Einige der Transaktionen, die Sie erfassen möchten, können nur vollständig "
+"erfasst werden. Verarbeiten Sie die Transaktionen einzeln, um einen "
+"Teilbetrag zu erfassen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1716,7 +1724,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "Teilerfassung unterstützen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1749,11 +1757,12 @@ msgstr "Das Zugriffstoken ist ungültig."
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
 msgstr ""
+"Der zu erfassende Betrag muss positiv sein und darf nicht höher sein als %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "Die untergeordneten Transaktionen der Transaktion."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1810,7 +1819,7 @@ msgstr "Die interne Referenz der Transaktion"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method"
-msgstr ""
+msgstr "Die Liste der Anbieter, die diese Zahlungsmethode unterstützen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1893,7 +1902,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "Die Quelltransaktion der entsprechenden untergeordneten Transaktionen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -2026,6 +2035,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment method, limited to 64x64 px"
 msgstr ""
+"Dieses Feld enthält das Bild, das für diese Zahlungsmethode verwendet wird, "
+"beschränkt auf 64x64 px"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2061,6 +2072,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"Diese Transaktion wurde nach der Verarbeitung ihrer Teilerfassung und "
+"Teilstornierung bestätigt. (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2144,7 +2157,7 @@ msgstr "Verifiziert"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Restbetrag stornieren"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2233,7 +2246,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "Ob einer der Transaktionsanbieter die Zeilzahlung unterstützt."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done

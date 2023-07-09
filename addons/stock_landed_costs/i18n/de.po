@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
-msgstr " bereits ausverkauft"
+msgstr " bereits raus"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -38,7 +38,7 @@ msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Einschätzung</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -287,6 +287,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Gleichmäßig: Die Kosten werden gleichmäßig geteilt\n"
+"Nach Menge: Die Kosten werden nach der Produktmenge geteilt\n"
+"Nach laufenden Kosten: Die Kosten werden nach den laufenden Kosten des Produkts geteilt\n"
+"Nach Gewicht: Die Kosten werden je nach Gewicht geteilt\n"
+"Nach Volumen: Die Kosten werden je nach Volumen geteilt."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -434,6 +439,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Einstandskosten ermöglichen es Ihnen, zusätzliche Kosten (Versand, "
+"Versicherung, Zollgebühren usw.) in die Kosten des Produkts einzubeziehen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid

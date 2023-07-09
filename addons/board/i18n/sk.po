@@ -1,20 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * board
+# 	* board
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# gebri <gebri@inmail.sk>, 2018
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
-"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
+"POT-Creation-Date: 2023-05-30 05:11+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,96 +21,63 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:53
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "\"%s\" added to dashboard"
+msgstr "\"%s\" pridané na riadiaci panel"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "\"Add to\n"
-"                Dashboard\""
+"                  Dashboard\""
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:25
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:103
-#, python-format
-msgid "'%s' added to dashboard"
-msgstr "'%s' pridané na nástenku"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:83
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Pridať"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:78
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
-msgstr "Pridať na moju nástenku"
+msgid "Add to my dashboard"
+msgstr "Pridať na môj riadiaci panel"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:362
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.js:0
 #, python-format
-msgid "Are you sure you want to remove this item?"
+msgid "Are you sure that you want to remove this item?"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:439
+#. odoo-javascript
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
 msgid "Board"
 msgstr "Nástenka"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:7
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Zmeniť rozmiestnenie"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:5
-#, python-format
-msgid "Change Layout.."
-msgstr "Zmeniť rozmiestnenie.."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Vybrať rozmiestnenie nástenky"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:107
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr "Nepodarilo sa pridať filter na nástenku"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board__display_name
-msgid "Display Name"
-msgstr "Zobrazovaný Názov"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:80
-#, python-format
-msgid "Edit Layout"
-msgstr "Upraviť rozmiestnenie"
+msgstr "Nepodarilo sa pridať filter na riadiaci panel"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -119,62 +85,62 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board____last_update
-msgid "Last Modified on"
-msgstr "Posledná modifikácia"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:41
+#. odoo-javascript
+#: code:addons/board/static/src/board_action.xml:0
 #, python-format
-msgid "Layout"
+msgid "Invalid action"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:43
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
+#, python-format
+msgid "Layout"
+msgstr "Usporiadanie"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
-msgstr "Moja nástenka"
+msgstr "Môj riadiaci panel"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:104
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
-msgstr ""
+msgstr "Pre prejavenie zmien, prosím obnovte svoj prehliadač."
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:51
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                menu, switch to list or graph view, and click"
+"                  menu, switch to list or graph view, and click"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:55
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                dashboard using the search options."
+"                  dashboard using the search options."
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:49
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
-msgstr ""
+msgstr "Váš osobný riadiaci panel je prázdny"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:53
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
-msgstr ""
+msgstr "V rozšírených vyhľadávacích možnostiach."

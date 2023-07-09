@@ -3,17 +3,16 @@
 # 	* website_mail
 # 
 # Translators:
-# Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,30 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
-msgid "Description"
-msgstr "Popis"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Follow</small><i class=\"fa fa-fw ms-1\"/>"
+msgstr ""
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_message
-msgid "Message"
-msgstr "Zpráva"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__description
-#: model:ir.model.fields,help:website_mail.field_mail_message__description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Popis zprávy: buď předmět, nebo začátek těla zprávy"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
-#, python-format
-msgid "Published"
-msgstr "Publikováno"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Unfollow</small><i class=\"fa fa-fw ms-1\"/>"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
@@ -52,51 +35,14 @@ msgid "Publisher Warranty Contract"
 msgstr "Smlouva o záruce vydavatele"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "Records:"
-msgstr "Záznamy:"
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "Odebírat"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
-"\n"
-"(Document type: %s, Operation: %s)"
-msgstr ""
-"Požadovanou operaci nelze dokončit z důvodu bezpečnostního omezení. Obraťte se prosím na správce systému.\n"
-"\n"
-"(Typ dokumentu: %s, Operace: %s)"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Unpublished"
-msgstr "Nepublikovaný"
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
 msgstr "Odhlásit odběr"
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "User:"
-msgstr "Uživatel:"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
-msgid "Visible on the website as a comment"
-msgstr "Viditelné na webu jako komentář"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

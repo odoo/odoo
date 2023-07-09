@@ -70,7 +70,7 @@ msgstr "# Aufgaben"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__done_task_count
 msgid "# of Done Tasks"
-msgstr ""
+msgstr "# Erledigter Aufgaben"
 
 #. module: project
 #. odoo-javascript
@@ -431,7 +431,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Zurück zum Bearbeitungsmodus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -486,7 +486,7 @@ msgstr "<span class=\"o_stat_text\">Letzte Bewertung</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Recurring Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Wiederkehrende Aufgaben</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -497,12 +497,12 @@ msgstr "<span class=\"o_stat_text\">Teilaufgaben</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Erledigt</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"text-secondary fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"text-secondary fw-normal\"> Aufgaben</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -721,7 +721,7 @@ msgstr "Fügen Sie Kontakte hinzu, um das Projekt zu teilen ..."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "Details zu dieser Aufgabe hinzufügen ..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
@@ -820,7 +820,7 @@ msgstr "Zugewiesene Zeit"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Allocated Time:"
-msgstr ""
+msgstr "Zugewiesene Zeit:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
@@ -1510,7 +1510,7 @@ msgstr "Währung"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Current Stage: %s"
-msgstr ""
+msgstr "Aktuelle Phase: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2172,6 +2172,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Gewähren Sie Mitarbeitern Zugriff auf Ihr Projekt oder ihre Aufgaben, indem "
+"Sie sie als Follower hinzufügen. Mitarbeiter erhalten automatisch Zugriff "
+"auf die Aufgaben, die ihnen zugewiesen werden."
 
 #. module: project
 #. odoo-python
@@ -2182,6 +2185,9 @@ msgid ""
 "followers. Customers automatically get access to their tasks in their "
 "portal."
 msgstr ""
+"Gewähren Sie Portalbenutzern Zugriff auf Ihr Projekt oder ihre Aufgaben, "
+"indem Sie sie als Follower hinzufügen. Kunden erhalten automatisch Zugriff "
+"auf ihre Aufgaben in ihrem Portal."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2473,12 +2479,12 @@ msgstr "Leute einladen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Eingeladene interne Benutzer (privat)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "Eingeladene Portalbenutzer und alle internen Benutzer (öffentlich)"
 
 #. module: project
 #. odoo-javascript
@@ -5574,7 +5580,7 @@ msgstr "z. B. Einladungen versenden"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "z. B. Aufgaben"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5634,7 +5640,7 @@ msgstr "bereit als erreicht markiert zu werden"
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "Teilaufgaben)"
 
 #. module: project
 #. odoo-python
@@ -5702,3 +5708,5 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ "
 "record.subtask_count.value }}"
 msgstr ""
+"{{ record.closed_subtask_count.value }} Teilaufgaben von {{ "
+"record.subtask_count.value }} geschlossen"

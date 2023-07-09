@@ -3,17 +3,18 @@
 # 	* pos_hr
 # 
 # Translators:
-# Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jiří Podhorecký, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +23,8 @@ msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Allowed Employees"
 msgstr ""
 
 #. module: pos_hr
@@ -33,19 +35,16 @@ msgid "Cashier"
 msgstr "Pokladní"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
-#: code:addons/pos_hr/static/src/js/screens.js:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Change Cashier"
 msgstr "Změnit pokladníka"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
-#, python-format
-msgid "Close session"
-msgstr ""
+#: model:ir.model,name:pos_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -56,6 +55,7 @@ msgid "Employee"
 msgstr "Zaměstnanec"
 
 #. module: pos_hr
+#. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
@@ -63,50 +63,43 @@ msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "Employees with access"
 msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Nesprávné heslo"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/chrome.js:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/HeaderLockButton.xml:0
 #, python-format
 msgid "Lock"
 msgstr "Zamknout"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr ""
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid ""
-"Only users with Manager access rights for PoS app can modify the product "
-"prices on orders."
-msgstr ""
-"Pouze uživatelé s přístupovými právy Správce pro aplikaci PoS mohou měnit "
-"ceny produktů na objednávkách."
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
-msgid "Password ?"
-msgstr "Heslo ?"
+msgid "Password?"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
@@ -133,37 +126,26 @@ msgid "Point of Sale Orders Report"
 msgstr "Zpráva o objednávkách z místa prodeje"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Price Control"
-msgstr ""
+#: model:ir.model,name:pos_hr.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sezení Prodejního místa"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "Restrict price modification to managers"
-msgstr ""
-
-#. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "Naskenujte svůj visačku"
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr ""
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/js/gui.js:0
-#, python-format
-msgid "Select User"
-msgstr ""
-
-#. module: pos_hr
+#. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -172,8 +154,8 @@ msgid ""
 msgstr ""
 
 #. module: pos_hr
-#. openerp-web
-#: code:addons/pos_hr/static/src/xml/pos.xml:0
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
 msgstr "nebo"

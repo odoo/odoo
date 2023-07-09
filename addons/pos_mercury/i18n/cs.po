@@ -3,18 +3,18 @@
 # 	* pos_mercury
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,9 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
-msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Koupit čtečku karet"
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Buy a card reader"
+msgstr ""
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -37,23 +37,18 @@ msgid ""
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
 msgstr "NAD MNOŽSTVÍ NÁKUPU"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
 msgstr "SCHVALOVACÍ KÓD:"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatické vysávání"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -61,13 +56,8 @@ msgid "Barcode Rule"
 msgstr "Pravidlo čárového kódu"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury_2
-msgid "Barcode Scanner/Card Reader"
-msgstr "Čtečka čárových kódů / čtečka platebních karet"
-
-#. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
 msgstr "DRŽITEL KARTY PLATÍ KARTOU"
@@ -105,8 +95,8 @@ msgid "Configure your card reader"
 msgstr "Konfigurovat čtečku karet"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Could not read card"
 msgstr "Kartu nelze přečíst"
@@ -129,8 +119,8 @@ msgid "Credit Card"
 msgstr "Kreditní karta"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
 "Credit card refunds are not supported. Instead select your credit card "
@@ -148,13 +138,6 @@ msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
-#, python-format
-msgid "Error"
-msgstr "Chyba"
-
-#. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "For quickly handling orders: just swiping a credit card when on the payment screen\n"
@@ -165,15 +148,15 @@ msgstr ""
 "(bez stisknutí čehokoliv jiného) a bude kartou zaplacena celá částka objednávky."
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "Chcete-li použít platební kartu, přejděte na obrazovku platby"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Handling transaction..."
 msgstr "Manipulace s transakcí ..."
@@ -187,7 +170,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "ID obchodníka k jeho ověření na serveru poskytovatele plateb"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -200,12 +183,6 @@ msgstr ""
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
 msgstr ""
-
-#. module: pos_mercury
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
-#: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__write_uid
@@ -227,12 +204,12 @@ msgstr "Merchant ID"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "Heslo obchodníka"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name"
-msgstr "Název"
+msgstr "Jméno"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
@@ -240,56 +217,58 @@ msgid "Name of this Vantiv configuration"
 msgstr ""
 
 #. module: pos_mercury
+#. odoo-python
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
 msgstr ""
 
 #. module: pos_mercury
+#. odoo-python
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "Žádná odpověď ze serveru (jste připojeni k síti?)"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Odoo chyba při zpracování transakce."
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
-msgid "One credit card swipe already pending."
-msgstr "Jedno projetí kreditní kartou již čeká."
+msgid "Ok"
+msgstr "Ok"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
 msgid "Online Payment"
 msgstr "Platba přes internet"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Partially approved"
 msgstr "Částečně schváleno"
@@ -299,10 +278,12 @@ msgstr "Částečně schváleno"
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
+"Heslo obchodníka pro ověření jeho totožnosti na serveru poskytovatele "
+"plateb."
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Pay with: "
 msgstr "Platit přes:"
@@ -318,8 +299,8 @@ msgid "Payment reference number from Vantiv Pay"
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
 msgstr ""
@@ -332,12 +313,17 @@ msgstr "Objednávky Prodejního místa"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Platební podmíky v místě prodeje"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Platby v místě prodeje"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sezení Prodejního místa"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
@@ -350,36 +336,36 @@ msgid "Point of Sale Vantiv Transaction"
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Refunds not supported"
-msgstr "Náhrady nejsou podporovány"
+msgstr "Přijímání dobropisů není podporováno"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Zrušení bylo úspěšné"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Sending reversal..."
 msgstr "Posílání zpět ..."
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
 msgstr "DOHODĚ DRŽITELE KARTY"
@@ -405,13 +391,8 @@ msgid "The last 4 numbers of the card used to pay"
 msgstr "Poslední 4 čísla karty použité k platbě"
 
 #. module: pos_mercury
-#: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_owner_name
-msgid "The name of the card owner"
-msgstr "Jméno vlastníka karty"
-
-#. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
@@ -421,8 +402,8 @@ msgstr ""
 "klávesnice na US QWERTY (nikoli US International)."
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Transaction approved"
 msgstr "Transakce byla schválena"
@@ -442,7 +423,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr ""
 
@@ -473,15 +454,15 @@ msgid "Vantiv reference number"
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "VoidSale succeeded"
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
 msgstr "ČEKÁNÍ NA PROJETÍ KARTY"
@@ -494,8 +475,8 @@ msgid ""
 msgstr ""
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#. odoo-javascript
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"

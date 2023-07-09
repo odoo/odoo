@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Apreciable <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
-"                        Agregó a el (los) siguiente(s) usuario(s) a su base de datos, pero no se ha(n) registrado aún:\n"
+"                        Agregó a los siguientes usuarios a su base de datos, pero no se han registrado aún:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "                                <li t-out=\"invited_user or ''\">demo@ejemplo.com</li>\n"
@@ -247,12 +247,12 @@ msgstr ""
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
 "                        Su dominio de Odoo es: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://suempresa.odoo.com</a></b><br>\n"
 "                        Su correo electrónico de inicio de sesión es: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@ejemplo.com</a></b><br><br>\n"
-"                        ¿Nunca ha escuchado de Odoo? Es un software empresarial todo-en-uno que le encanta a más de 7 millones de usuarios. Mejorará considerablemente su experiencia en el trabajo e incrementará su productividad.\n"
+"                        ¿Nunca ha escuchado de Odoo? Es un software empresarial todo en uno con una comunidad de más de 7 millones de usuarios. Mejorará considerablemente su experiencia en el trabajo e incrementará su productividad.\n"
 "                        <br><br>\n"
-"                       Eche un vistazo al <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Recorrido de Odoo</a> para descubrir nuestra herramienta..\n"
+"                       Haga el <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Recorrido de Odoo</a> para descubrir nuestra herramienta...\n"
 "                        <br><br>\n"
 "                         ¡Disfrute de Odoo!<br>\n"
-"                        --<br>El elquipo de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>\n"
+"                        --<br>El equipo de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -408,7 +408,7 @@ msgstr ""
 "                    <div>\n"
 "                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
 "                        Se solicitó restablecer la contraseña de la cuenta de Odoo vinculada a este correo electrónico.\n"
-"                        Puede cambiar su contraseña al hacer clic en este enlace, el cual será válido durante 24 horas:<br>\n"
+"                        Puede cambiar su contraseña en este enlace, el cual será válido durante 24 horas:<br>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Cambiar contraseña\n"
@@ -742,7 +742,7 @@ msgstr "Enrutamiento HTTP"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
-msgstr "Token de acceso inválido"
+msgstr "Token de acceso no válido"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -759,7 +759,7 @@ msgstr "Nunca se conectó"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr "No se encontró una cuenta para información de inicio de sesión"
+msgstr "No se encontró una cuenta para este inicio de sesión"
 
 #. module: auth_signup
 #. odoo-python
@@ -949,7 +949,7 @@ msgstr "Registro: no se proporcionó acceso para el nuevo usuario"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Registro: no se proporcionó nombre ni partner para el nuevo usuario"
+msgstr "Registro: no se proporcionó nombre ni contacto para el nuevo usuario"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state

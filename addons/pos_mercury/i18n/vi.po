@@ -3,8 +3,8 @@
 # 	* pos_mercury
 # 
 # Translators:
-# Thi Huong Nguyen, 2023
 # Martin Trigaux, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/> Mua một máy đọc thẻ"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -35,10 +35,10 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "<i>Cấu hình Vantiv</i> xác định tài khoản Vantiv nào sẽ được sử dụng khi\n"
-"                                xử lý giao dịch thẻ trong Điểm bán hàng. Việc cài đặt cấu hình\n"
-"                                Vantiv, bạn sẽ có thể cho phép thanh toán bằng nhiều loại thẻ khác nhau\n"
-"                                (VD. Visa, MasterCard, Discovery, American Express, ...). Sau khi cài đặt\n"
-"                                cấu hình này, bạn nên liên kết nó với một phương thức thanh toán trong điểm bán hàng."
+"                                xử lý giao dịch thẻ trong Điểm bán lẻ. Với cài đặt cấu hình Vantiv,\n"
+"                                bạn có thể cho phép thanh toán bằng nhiều loại thẻ khác nhau\n"
+"                                (VD. Visa, MasterCard, Discovery, American Express,...). Sau khi cài đặt\n"
+"                                cấu hình này, bạn nên liên kết với một phương thức thanh toán trong điểm bán lẻ."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -148,9 +148,9 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Để xử lý nhanh đơn hàng: chỉ cần quẹt thẻ, trên màn hình thanh toán\n"
-"                             (không cần nhấn thêm gì cả) sẽ tính toàn bộ số tiền của đơn đặt hàng\n"
-"                              qua thẻ."
+"Để xử lý nhanh đơn hàng: chỉ cần quẹt thẻ khi ở màn hình thanh toán\n"
+"                             (không cần nhấn thêm gì cả) thì toàn bộ số tiền của đơn đặt hàng\n"
+"                              sẽ được thanh toán qua thẻ."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -397,7 +397,7 @@ msgstr "Cấu hình của Vantiv được dùng cho sổ nhật ký này"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr "04 số cuối của thẻ được dùng để thanh toán"
+msgstr "4 số cuối của thẻ được dùng để thanh toán"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -430,9 +430,9 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"Sử dụng tích hợp Vantiv trong điểm bán hàng rất dễ dàng: chỉ cần bấm \n"
+"Sử dụng tích hợp Vantiv trong điểm bán lẻ rất dễ dàng: chỉ cần bấm \n"
 "                                phương thức thanh toán được liên kết. Sau đó số tiền có thể được điều chỉnh (VD: cho hoàn tiền)\n"
-"                                giống như mọi dòng thanh toán khác. Mỗi khi một dòng thanh toán được thiết lập, có thể\n"
+"                                giống như mọi phương thức thanh toán khác. Mỗi khi một phương thức thanh toán được thiết lập, có thể\n"
 "                                quẹt thẻ trên máy đọc thẻ."
 
 #. module: pos_mercury
@@ -459,7 +459,7 @@ msgstr "Số hóa đơn Vantiv"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr "Số hồ sơ Vantiv"
+msgstr "Số tập dữ liệu Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no

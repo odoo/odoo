@@ -8,9 +8,9 @@
 # Odoo - Paolo Gatti (pgi), 2023
 # Luca Carlo, 2023
 # Simone Bernini <simone@aperturelabs.it>, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Sebastiano Picchi, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
 # 
 msgid ""
@@ -481,7 +481,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear\n"
+"        Gentile\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -1032,12 +1032,12 @@ msgstr "<span>Imposte 0%</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Tax excl.</span>"
-msgstr ""
+msgstr "<span>Tasse escl.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Tax incl.</span>"
-msgstr ""
+msgstr "<span>Tasse incl.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -7688,7 +7688,7 @@ msgstr "Fatturazione"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
-msgstr ""
+msgstr "App. di fatturazione precedente"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -10006,7 +10006,7 @@ msgstr "Importo Pagamento:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Comunicazione del pagamento:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

@@ -45,6 +45,9 @@ msgid ""
 "                        The invoice will be sent automatically to PEPPOL\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted mx-3\" attrs=\"{'invisible': [('peppol_move_state', '!=', 'to_send')]}\">\n"
+"                        Diese Rechnung wird automatisch an PEPPOL gesendet\n"
+"                    </span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -72,7 +75,7 @@ msgstr "Aktiv"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Application status:"
-msgstr ""
+msgstr "Anwendungsstatus"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__manually_approved
@@ -123,6 +126,8 @@ msgid ""
 "Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
+"Code zur Identifizierung des Endpoint für Peppol BIS Billing 3.0 und seine Ableitungne.\n"
+"              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -166,7 +171,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document."
-msgstr ""
+msgstr "Import eines Peppol-Dokuments fehlgeschlagen."
 
 #. module: account_peppol
 #. odoo-python
@@ -199,12 +204,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Not valid"
-msgstr ""
+msgstr "Nicht gültig"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
-msgstr ""
+msgstr "Noch nicht verifiziert"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -217,7 +222,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
-msgstr ""
+msgstr "PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -298,7 +303,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Endpoint"
-msgstr ""
+msgstr "Peppol Endpoint"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
@@ -324,7 +329,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr ""
+msgstr "Peppol E-Adresse (EAS)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
@@ -337,14 +342,14 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
-msgstr ""
+msgstr "Peppol-Fehler: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol update: %s"
-msgstr ""
+msgstr "Peppol-Update: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -384,12 +389,12 @@ msgstr "Verarbeitung"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy type"
-msgstr ""
+msgstr "Proxy-Typ"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Register as a PEPPOL user"
-msgstr ""
+msgstr "Als PEPPOL-Benutzer registrieren"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
@@ -399,12 +404,12 @@ msgstr "Abgelehnt"
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
-msgstr ""
+msgstr "Die Rechnung via PEPPOL senden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send via PEPPOL"
-msgstr ""
+msgstr "Via PEPPOL senden"
 
 #. module: account_peppol
 #. odoo-python
@@ -418,7 +423,7 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The following invoice does not have an XML attachment: %s"
-msgstr ""
+msgstr "Die folgende Rechnung hat keinen XML-Anhang: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -455,16 +460,18 @@ msgid ""
 "Unique identifier used by the Peppol BIS Billing 3.0 and its derivatives, "
 "also known as 'Endpoint ID'."
 msgstr ""
+"Eindeutige Kennung, die von Peppol BIS Billing 3.0 und Ableitungen verwendet"
+" wird, auch bekannt als „Endpoint ID“."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Upload documents"
-msgstr ""
+msgstr "Dokumente hochladen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Use PEPPOL"
-msgstr ""
+msgstr "PEPPOL verwenden"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

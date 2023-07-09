@@ -83,6 +83,44 @@ msgid ""
 " </table>\n"
 "</div>"
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"    <tbody>\n"
+"        <tr>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>\n"
+"                   Herzlichen Glückwunsch\n"
+"                    <span t-out=\"object.name or ''\">Joel Willis</span>!\n"
+"                </p>\n"
+"                <p>\n"
+"                    Sie haben einen neuen Rang erreicht: <strong t-out=\"object.rank_id.name or ''\">Neuling</strong>\n"
+"                </p>\n"
+"                <t t-if=\"object.next_rank_id.name\">\n"
+"                    <p>Machen Sie genauso weiter, um bald ein<strong t-out=\"object.next_rank_id.name or ''\">Lehrling</strong> zu werden!</p>\n"
+"                </t>\n"
+"                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                    <t t-set=\"gamification_redirection_data\" t-value=\"object.get_gamification_redirection_data()\"></t>\n"
+"                    <t t-foreach=\"gamification_redirection_data\" t-as=\"data\">\n"
+"                        <t t-set=\"url\" t-value=\"data['url']\"></t>\n"
+"                        <t t-set=\"label\" t-value=\"data['label']\"></t>\n"
+"                        <a t-att-href=\"url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\" t-out=\"label or ''\">BEZEICHNUNG</a>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p style=\"text-align: center;\">\n"
+"                    <img t-attf-src=\"/web/image/gamification.karma.rank/{{ object.rank_id.id }}/image_128\">\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr>\n"
+"        <tr t-if=\"user.signature\">\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+" </table>\n"
+"</div>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -139,7 +177,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "<span class=\"o_stat_text\">Related Goals</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verknüfte Ziele</span>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
@@ -970,7 +1008,7 @@ msgstr "Konsolidiert"
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 #, python-format
 msgid "Consolidation from %s to %s"
-msgstr ""
+msgstr "Konsolidierung von %s zu %s"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -1195,7 +1233,7 @@ msgstr "Entwurf"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure!"
-msgstr ""
+msgstr "Erste Punkte gewinnen und das Abenteuer beginnen!"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1470,7 +1508,7 @@ msgstr "Dieses Abzeichen vergeben"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Granted By"
-msgstr ""
+msgstr "Vergeben von"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -1668,20 +1706,20 @@ msgstr "Karma-Änderungen"
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Karma Owner"
-msgstr ""
+msgstr "Karma-Eigentümer"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "Karma-Verfolgung"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "Karma Updates"
-msgstr ""
+msgstr "Karma-Aktualisierungen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -1885,7 +1923,7 @@ msgstr "Datum des nächsten Berichts"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "No Karma Tracking"
-msgstr ""
+msgstr "Keine Karma-Verfolgung"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -1915,6 +1953,8 @@ msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
 msgstr ""
+"Bisher hat niemand alle Ziele erreicht. Für diese Herausforderung wurde noch"
+" kein Abzeichen vergeben."
 
 #. module: gamification
 #. odoo-python
@@ -2039,7 +2079,7 @@ msgstr "Periodizität"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Previous Total"
-msgstr ""
+msgstr "Vorherige Gesamtsumme"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -2097,21 +2137,23 @@ msgstr "Liste der Ränge"
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
 msgstr ""
+"Beim Erreichen des nächsten Rangs wartet ein magischer Zauberstab auf Sie!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat!"
-msgstr ""
+msgstr "Beim Erreichen des nächsten Rangs wartet ein schicker Hut auf Sie!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug!"
 msgstr ""
+"Beim Erreichen des nächsten Rangs wartet ein cooler Kaffeebecher auf Sie!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
-msgstr ""
+msgstr "Beim Erreichen des nächsten Rangs wartet ein tolles Einhorn auf Sie!"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2216,6 +2258,8 @@ msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
 msgstr ""
+"Die Belohnung (Abzeichen %(badge_name)s) für jeden nachfolgenden Nutzer "
+"wurde an %(users)s gesendet."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
@@ -2397,6 +2441,8 @@ msgid ""
 "Special rewards were sent to the top competing users. The ranking for this "
 "challenge is:"
 msgstr ""
+"Für die erfolgreichsten Teilnehmer wurden spezielle Belohnungen vergeben. "
+"Die Rangliste der Herausforderung ist wie folgt:"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2471,7 +2517,7 @@ msgstr "Zielvorgabe: weniger als"
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 #, python-format
 msgid "Test Reason"
-msgstr ""
+msgstr "Testgrund"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
@@ -2787,7 +2833,7 @@ msgstr "Benutzer"
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "User Creation"
-msgstr ""
+msgstr "Benutzererstellung"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain

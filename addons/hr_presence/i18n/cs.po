@@ -3,16 +3,19 @@
 # 	* hr_presence
 # 
 # Translators:
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2023
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Jiří Podhorecký, 2023
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,23 +25,27 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Dear ${object.name},<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
+"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
-"                    <br/>Best Regards,<br/><br/>\n"
+"                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Absence/Presence"
+msgstr "Absence / přítomnost"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__absent
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
 msgid "Absent"
-msgstr ""
+msgstr "Nepřítomný"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
@@ -51,6 +58,7 @@ msgid "Companies"
 msgstr "Společnosti"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Compose Email"
@@ -59,51 +67,72 @@ msgstr "Napsat e-mail"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
 msgid "Compute presence and open presence view"
-msgstr ""
+msgstr "Výpočet přítomnosti a otevřeného zobrazení přítomnosti"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Vytvořit Uid"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr ""
+msgstr "Email odeslán"
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
-msgid "Employee Presence"
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, python-format
+msgid "Employee's Presence to Define"
 msgstr ""
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr ""
+msgstr "Zaměstnanec: připomenutí přítomnosti"
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Employees"
+msgstr "Zaměstnanci"
+
+#. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
+msgstr ""
+"Pokud došlo k naší chybě, zdá se, že nejste ve své kanceláři a není od vás požadováno volno.\n"
+"Přijměte prosím příslušná opatření k provedení této pracovní nepřítomnosti.\n"
+"Neváhejte kontaktovat svého manažera nebo oddělení lidských zdrojů."
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+msgid "HR Presence: cron"
+msgstr ""
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
 msgstr ""
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr ""
+msgstr "Poslední datum výpočtu přítomnosti HR"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr ""
+msgstr "Zobrazení stavu přítomnosti HR"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -115,31 +144,33 @@ msgstr "IP adresa"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr ""
+msgstr "IP připojeno"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Mail"
-msgstr "Pošta"
+msgid "Log"
+msgstr "Záznam"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_present
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
 msgid "Manually Set Present"
-msgstr ""
+msgstr "Ručně nastavit"
 
 #. module: hr_presence
+#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "Přítomnost"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr ""
+msgstr "Přítomný"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -147,38 +178,53 @@ msgid "SMS"
 msgstr "SMS"
 
 #. module: hr_presence
-#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Set as present"
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not"
+" being off"
 msgstr ""
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as absent"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as present"
+msgstr "Nastavit jako přítomný"
+
+#. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
 msgstr ""
+"Pro tohoto zaměstnance neexistuje žádná profesionální e-mailová adresa."
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr ""
+msgstr "Pro tohoto zaměstnance neexistuje profesionální mobilní telefon."
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr ""
+msgstr "Volné dny"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__to_define
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__to_define
 msgid "To Define"
-msgstr ""
+msgstr "Definovat"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "Neočekávaná absence"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -186,9 +232,15 @@ msgid "Users Log"
 msgstr "Uživatelský protokol"
 
 #. module: hr_presence
+#. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr "Nemáte na to právo. Obraťte se na správce."
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""

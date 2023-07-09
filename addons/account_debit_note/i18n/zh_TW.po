@@ -23,7 +23,7 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr "<span class=\"o_stat_text\">折讓單</span>"
+msgstr "<span class=\"o_stat_text\">借記單</span>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -49,7 +49,7 @@ msgstr "國家/地區代碼"
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr "創建Debit Note"
+msgstr "建立借記單"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
@@ -64,13 +64,13 @@ msgstr "建立於"
 #. module: account_debit_note
 #: model:ir.actions.server,name:account_debit_note.action_move_debit_note
 msgid "Debit Note"
-msgstr ""
+msgstr "借記單"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr "Debit Note日期"
+msgstr "借記單日期"
 
 #. module: account_debit_note
 #. odoo-python
@@ -81,7 +81,7 @@ msgstr "Debit Note日期"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_ids
 #, python-format
 msgid "Debit Notes"
-msgstr "折讓單"
+msgstr "借記單"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -140,7 +140,7 @@ msgstr "分錄類型"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr "Debit Note數量"
+msgstr "借記單數目"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
@@ -168,14 +168,14 @@ msgstr ""
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "為此發票創建的Debit Note"
+msgstr "為此發票建立的借記單"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
-msgstr ""
+msgstr "借記單建立自： %s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -189,7 +189,7 @@ msgstr "使用特定的日記帳"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr ""
+msgstr "只可為客戶發票、客戶貸記單、供應商賬單或供應商貸記單，建立借記單。"
 
 #. module: account_debit_note
 #. odoo-python
@@ -205,4 +205,4 @@ msgstr "您只能借記已發布的傳票。"
 msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
-msgstr ""
+msgstr "不可為已經連結至借記單的發票，再建立借記單。"

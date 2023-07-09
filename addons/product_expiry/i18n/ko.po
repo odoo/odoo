@@ -26,16 +26,18 @@ msgid ""
 "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">만료 경고</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days after receipt</span>"
-msgstr ""
+msgstr "<span> 일이 입고 후 경과함</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days before expiration date</span>"
-msgstr ""
+msgstr "<span> 일이 만료일까지 남음</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -52,23 +54,23 @@ msgstr "도래한 경고 날짜"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "B.b."
-msgstr ""
+msgstr "B.b."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Date"
-msgstr ""
+msgstr "유효 기간"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
-msgstr "유통기한"
+msgstr "유효 기간"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경설정 항목 설정"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
@@ -134,7 +136,7 @@ msgstr "표시명"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Exp."
-msgstr ""
+msgstr "예상"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
@@ -216,7 +218,7 @@ msgid ""
 "Number of days before the Expiration Date after which an alert should be "
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
-msgstr ""
+msgstr "로트 및 일련번호 기준으로 경고를 안내해야 하는 만료일까지 남은 날짜입니다. 로트 및 일련번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -224,7 +226,7 @@ msgstr ""
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
-msgstr ""
+msgstr "재고 항목에서 품목이 제외되어야 하는 만료일까지 남은 날짜입니다. 로트 및 일련번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -234,6 +236,7 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"아직 위험 상태까지는 아니지만, 품목 상태가 악화되기 시작하는 만료일까지 남은 날짜입니다. 로트 및 일력번호를 기준으로 계산합니다."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -243,7 +246,7 @@ msgstr "선별"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except for expired one"
-msgstr ""
+msgstr "만료된 항목은 제외하고 진행"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -335,13 +338,13 @@ msgstr "이 일련번호를 가진 상품이 아직 위험하진 않지만 상�
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
 msgid "This lot is expired"
-msgstr ""
+msgstr "만료된 로트입니다."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
 msgid "This lot is expired."
-msgstr ""
+msgstr "만료된 로트입니다."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -379,6 +382,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"로트 유효 기간이 만료된 상품을 배송하려고 합니다.\n"
+"계속 진행하시겠습니까?"
 
 #. module: product_expiry
 #. odoo-python
@@ -388,11 +393,13 @@ msgid ""
 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"사용하시려는 %(product_name)s의 %(lot_name)s는 유효기간이 만료된 품목입니다.\n"
+"계속 진행하시겠습니까?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^A0N,44,33^FDUse by:"
-msgstr ""
+msgstr "^A0N,44,33^FDUse by:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -400,11 +407,13 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,150"
-msgstr ""
+msgstr "^FO100,150"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -412,6 +421,8 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDBest before:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD유효 기간:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -419,11 +430,13 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD사용 기간:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200"
-msgstr ""
+msgstr "^FO100,200"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -431,11 +444,13 @@ msgid ""
 "^FO100,200\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,200\n"
+"^A0N,44,33^FD사용 기간:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200^BY3"
-msgstr ""
+msgstr "^FO100,200^BY3"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -443,6 +458,8 @@ msgid ""
 "^FO100,50\n"
 "^A0N,44,33^FD"
 msgstr ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -456,6 +473,9 @@ msgid ""
 "^FO100,100\n"
 "^A0N,44,33^FDLN/SN:"
 msgstr ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -465,6 +485,10 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -472,3 +496,5 @@ msgid ""
 "^FS\n"
 "^FO100,250^BY3"
 msgstr ""
+"^FS\n"
+"^FO100,250^BY3"

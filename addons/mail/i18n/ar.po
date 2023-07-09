@@ -843,7 +843,7 @@ msgstr "<span>إذا لم تقم أنت بذلك:</span> "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr ""
+msgstr "<span>فتح السجل</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -1865,7 +1865,7 @@ msgstr "الإنشاء الجماعي "
 msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
-msgstr ""
+msgstr "لا يمكن للتسجيل الجماعي دعم المرفقات أو قيم التتبع لأكثر من مستند 1 "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -9484,6 +9484,8 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
+"تعذر قبول الرسالة أدناه من قِبَل العنوان %(alias_display_name)s. \n"
+"يرجى المحاولة مجدداً لاحقاً أو التواصل مع %(company_name)s عوضاً عن ذلك. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -9663,7 +9665,7 @@ msgstr "لا يمكن إضافة هذا المستخدم إلى هذه القن�
 #, python-format
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
-msgstr ""
+msgstr "تلك القيم غير مدعومة كخيارات عند التكوين: %(param_names)s "
 
 #. module: mail
 #. odoo-python
@@ -9671,7 +9673,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
-msgstr ""
+msgstr "تلك القيم غير مدعومة عند الترحيل أو الإخطار: %(param_names)s "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -9690,7 +9692,7 @@ msgstr "صورة المناقشة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
 msgid "Thread-Enabled"
-msgstr ""
+msgstr "تم تمكين المحادثة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
@@ -10037,7 +10039,7 @@ msgstr "إزالة من القائمة السوداء "
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 #, python-format
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "سبب إلغاء الحظر: %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -10194,7 +10196,7 @@ msgstr "استخدام خوادم Twilio ICE "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use a Gmail Server"
-msgstr ""
+msgstr "استخدم خادم Gmail "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10213,14 +10215,14 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use an Outlook Server"
-msgstr ""
+msgstr "استخدم خادم Outlook "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Use message_notify to send a notification to an user."
-msgstr ""
+msgstr "استخدم message_notify لإرسال إشعار إلى مستخدم. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -10235,7 +10237,7 @@ msgstr "استخدام خاصية الضغط للتحدث "
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
 msgid "Used as context used to evaluate composer domain"
-msgstr ""
+msgstr "يُستخدم كسياق يتم استخدامه لتقييم نطاق المُنشئ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
@@ -10710,7 +10712,7 @@ msgstr "يمكنك فقط الدردشة مع الشركاء الذين لديه
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "You can safely ignore this message"
-msgstr ""
+msgstr "يمكنك تجاهل هذه الرسالة بأمان "
 
 #. module: mail
 #. odoo-python
@@ -10837,20 +10839,21 @@ msgstr " "
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
+"لقد تغير البريد الإلكتروني لحسابك من %(old_email)s إلى %(new_email)s. "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Your account login has been updated"
-msgstr ""
+msgstr "لقد تم تحديث بيانات تسجيل الدخول إلى حسابك "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Your account password has been updated"
-msgstr ""
+msgstr "لقد تم تحديث كلمة مرور حسابك "
 
 #. module: mail
 #. odoo-javascript
@@ -34416,7 +34419,7 @@ msgstr "كاسيت فيديو "
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "view"
-msgstr ""
+msgstr "عرض "
 
 #. module: mail
 #. odoo-javascript

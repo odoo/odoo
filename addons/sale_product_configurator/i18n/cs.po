@@ -3,19 +3,18 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Jiří Podhorecký, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2023-05-30 05:10+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,121 +22,71 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
-msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Přidat do košíku"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "<strong>Total:</strong>"
-msgstr "<strong>Celkem:</strong>"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Add"
-msgstr "Přidat"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
 msgid "Add one"
 msgstr "Přidat jeden"
 
 #. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "Add to cart"
+msgstr "Přidat do košíku"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_attribute_value_ids
 msgid "Attribute Values"
 msgstr "Hodnoty atributů"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#, python-format
 msgid "Available Options:"
 msgstr "Dostupné možnosti:"
 
 #. module: sale_product_configurator
-#. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #, python-format
 msgid "Back"
 msgstr "Zpět"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Cancel"
-msgstr "Zrušit"
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Ochrana podlahy židle"
 
 #. module: sale_product_configurator
-#. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 #, python-format
 msgid "Configure"
 msgstr "Konfigurovat"
 
 #. module: sale_product_configurator
-#: model:ir.actions.act_window,name:sale_product_configurator.sale_product_configurator_action
-msgid "Configure a product"
-msgstr "Nakonfigurujte produkt"
-
-#. module: sale_product_configurator
-#. openerp-web
-#: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "Potvrdit"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_uid
-msgid "Created by"
-msgstr "Vytvořeno od"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__create_date
-msgid "Created on"
-msgstr "Vytvořeno"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
-msgid "Custom Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
-msgid "Display Name"
-msgstr "Zobrazované jméno"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
-msgid "Extra Values"
-msgstr ""
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Je produkt konfigurovatelný?"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Kancelářské židle mohou poškodit podlahu: chraňte ji."
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_uid
-msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
-msgid "Last Updated on"
-msgstr "Naposled upraveno"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
 msgid "Option not available"
 msgstr "Možnost není k dispozici"
 
@@ -154,57 +103,56 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Volitelné produkty jsou navrhovány vždy, když zákazník stiskne *Přidat do "
+"košíku* (strategie křížového prodeje, např. Pro počítače: záruka, software "
+"atd.)."
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "Možnosti"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#, python-format
 msgid "Price"
 msgstr "Cena"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
-msgid "Pricelist"
-msgstr "Ceník"
-
-#. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#: model:ir.model,name:sale_product_configurator.model_product_template
+#, python-format
 msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
 msgid "Product Image"
 msgstr "Obrázek produktu"
 
 #. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_product_template
-msgid "Product Template"
-msgstr "Šablona produktu"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Varianta výrobku"
 
 #. module: sale_product_configurator
-#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#, python-format
 msgid "Quantity"
 msgstr "Množství"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
-msgid "Remove one"
-msgstr "Odebrat jeden"
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
 
 #. module: sale_product_configurator
-#: model:ir.model,name:sale_product_configurator.model_sale_product_configurator
-msgid "Sale Product Configurator"
-msgstr ""
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+#, python-format
+msgid "Remove one"
+msgstr "Odebrat jeden"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
@@ -212,16 +160,15 @@ msgid "Sales Order Line"
 msgstr "Řádek zakázky"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
-msgid "Save"
-msgstr "Uložit"
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+#, python-format
+msgid "Total:"
+msgstr "Celkem:"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-msgid "This combination does not exist."
-msgstr "Tato kombinace neexistuje."
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-msgid "This product has no valid combination."
-msgstr "Tento produkt nemá platnou kombinaci."
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#, python-format
+msgid "custom"
+msgstr ""

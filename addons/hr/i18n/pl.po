@@ -75,7 +75,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Odznaka - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -146,7 +146,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -155,6 +155,9 @@ msgid ""
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
 "'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
 msgstr ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -164,6 +167,10 @@ msgid ""
 "'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" "
 "name=\"presence_to_define\"/>"
 msgstr ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" "
+"name=\"presence_to_define\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -173,6 +180,10 @@ msgid ""
 "'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
 "name=\"presence_absent\"/>"
 msgstr ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"name=\"presence_absent\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -182,6 +193,10 @@ msgid ""
 "'presence_absent_active')]}\" aria-label=\"Present but not active\" "
 "title=\"Present but not active\" name=\"presence_absent_active\"/>"
 msgstr ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent_active')]}\" aria-label=\"Present but not active\" "
+"title=\"Present but not active\" name=\"presence_absent_active\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -201,6 +216,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -209,6 +226,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -217,6 +236,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -225,6 +246,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -296,7 +319,7 @@ msgstr "<span class=\"o_stat_text\">Kontakty</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pracownik</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -334,7 +357,7 @@ msgstr "<span class=\"text-muted small\">Czas na odpowiedź</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>Km</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -668,25 +691,25 @@ msgstr "Awatar"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Awatar 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Awatar 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Awatar 512"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1073,6 +1096,15 @@ msgid ""
 "Building strong relationships with clients / customers for business growth profitability.\n"
 "Keep regular interaction with key clients for better extraction and expansion."
 msgstr ""
+"Demonstracja różnych usług Odoo dla każdego klienta i przekonanie klienta o funkcjonalności aplikacji.\n"
+"Kandydat powinien posiadać doskonałe umiejętności komunikacyjne.\n"
+"Umiejętności budowania relacji i wywierania wpływu\n"
+"Doświadczenie w pozyskiwaniu nowych klientów (NCA) i zarządzaniu relacjami.\n"
+"Zbieranie informacji o rynku i klientach.\n"
+"Koordynacja z zespołem sprzedaży i wsparcia w celu przyjęcia różnych strategii\n"
+"Przegląd postępów i identyfikacja szans i nowych obszarów rozwoju.\n"
+"Budowanie silnych relacji z klientami w celu zwiększenia rentowności biznesu.\n"
+"Utrzymywanie regularnych kontaktów z kluczowymi klientami w celu lepszej ekstrakcji i ekspansji."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -1101,7 +1133,7 @@ msgstr "Nazwa działu"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Department Organization"
-msgstr ""
+msgstr "Organizacja działu"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1558,7 +1590,7 @@ msgstr "Generuj"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Podaj więcej szczegółów na temat powodu archiwizacji pracownika."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1745,6 +1777,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
 msgstr ""
+"Jeśli masz więcej niż jeden samochód, po prostu oddziel tablice spacją."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1978,6 +2011,15 @@ msgid ""
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum to po prostu fikcyjny tekst w branży drukarskiej i składu. Lorem"
+" Ipsum jest standardowym tekstem fikcyjnym w branży od 1500 roku, kiedy to "
+"nieznany drukarz wziął galerię czcionek i zakodował ją, aby stworzyć książkę"
+" z próbkami czcionek. Przetrwał on nie tylko pięć wieków, ale także skok w "
+"kierunku składu elektronicznego, pozostając zasadniczo niezmienionym. Został"
+" spopularyzowany w latach sześćdziesiątych XX wieku wraz z wydaniem arkuszy "
+"Letraset zawierających fragmenty Lorem Ipsum, a ostatnio dzięki "
+"oprogramowaniu do publikowania na komputerze, takim jak Aldus PageMaker, "
+"zawierającym wersje Lorem Ipsum."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -2166,7 +2208,7 @@ msgstr "Typ następnej czynności"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_employee_activity_kanban
 msgid "Next Activity:"
-msgstr ""
+msgstr "Następna aktywność:"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2316,7 +2358,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Urzędnik: Zarządza wszystkimi pracownikami"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
@@ -2457,7 +2499,7 @@ msgstr "Ewolucja osobista:"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Aktualizacja danych osobowych."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2544,7 +2586,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Control"
-msgstr ""
+msgstr "Kontrola obecności"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2587,7 +2629,7 @@ msgstr "Prywatny adres"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Tablica rejestracyjna samochodu prywatnego"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
@@ -2868,7 +2910,7 @@ msgstr "Wyświetlanie ikony godziny"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Show employees"
-msgstr ""
+msgstr "Pokaż pracowników"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -3110,7 +3152,7 @@ msgstr ""
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Następujące pola zostały zmodyfikowane przez %s"
 
 #. module: hr
 #. odoo-python
@@ -3291,7 +3333,7 @@ msgstr "Partner użytkownika"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Wakaty:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3376,6 +3418,9 @@ msgid ""
 "                    can easily find all the information you need for each person;\n"
 "                    contact data, job position, availability, etc."
 msgstr ""
+"Wystarczy szybki rzut oka na ekran pracownika Odoo, aby\n"
+"można łatwo znaleźć wszystkie potrzebne informacje o każdej osobie;\n"
+"dane kontaktowe, stanowisko, dostępność itp."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3535,6 +3580,18 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
+"Uczestniczysz w aktualizacji naszych narzędzi samouczków i narzędzi przedsprzedażowych po uruchomieniu nowej wersji Odoo. Rzeczywiście, każda nowa wersja oprogramowania przynosi znaczące ulepszenia pod względem funkcjonalności, ergonomii i konfiguracji.\n"
+"Będziesz musiał zapoznać się z istniejącymi narzędziami (książki, materiały pomocnicze, slajdy prezentacji Odoo, narzędzia komercyjne),\n"
+"uczestniczyć w aktualizacji tych narzędzi w celu dostosowania ich do nowej wersji oprogramowania i, z pewnością,\n"
+"sugerowanie ulepszeń w celu uwzględnienia nowych domen oprogramowania.\n"
+"Dołączysz do działu wsparcia implementacji. Ten 3-osobowy zespół pomaga klientom Odoo w konfiguracji oprogramowania. Twoją rolą będzie\n"
+"Animowanie webinarów w celu pokazania różnych funkcjonalności oprogramowania.\n"
+"być zaangażowanym we wsparcie klientów i\n"
+"odpowiadać na ich pytania.\n"
+"Pomaganie kierownikowi wsparcia w tworzeniu nowych usług wsparcia poprzez\n"
+"udział w rozpatrywaniu nowych spraw\n"
+"udział w tworzeniu nowej polityki,\n"
+"angażowanie się w badania satysfakcji w celu uzyskania lepszej wiedzy na temat tego, jak udzielane wsparcie jest postrzegane przez klientów."
 
 #. module: hr
 #. odoo-python
@@ -3551,6 +3608,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"Będziesz uczestniczyć w usługach konsultingowych, które świadczymy naszym partnerom i klientom: projektowanie, analiza, rozwój, testowanie, zarządzanie projektami, wsparcie / coaching. Będziesz pracować samodzielnie, a także koordynować i nadzorować małe rozproszone zespoły programistów w niektórych projektach. Opcjonalnie będziesz prowadzić sesje szkoleniowe Odoo dla partnerów i klientów (8-10 osób/sesja). Będziesz podlegać kierownikowi działu usług profesjonalnych i ściśle współpracować ze wszystkimi programistami i konsultantami.\n"
+"\n"
+"Praca znajduje się w Grand-Rosière (1367), Belgia (pomiędzy Louvain-La-Neuve i Namur)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
