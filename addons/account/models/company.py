@@ -479,8 +479,8 @@ class ResCompany(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
-        if not self.env.user.has_group('account.group_account_user'):
-            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+        # if not self.env.user.has_group('account.group_account_user'):
+        #     raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
 
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
         results = []

@@ -57,7 +57,7 @@ class AccountTax(models.Model):
     def write(self, vals):
         if not vals:
             return True
-        for tax in self:
+        for tax in self.filtered(lambda t: t.company_id.account_fiscal_country_id.code == 'PT'):
             if float_is_zero(tax.amount, precision_digits=2) and not tax.l10n_pt_account_tax_exemption_reason:
                 raise UserError(_("According to Portuguese law, you must provide a tax exemption reason for the tax '%s'", tax.name))
 

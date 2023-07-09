@@ -26,8 +26,8 @@ class ResCompany(models.Model):
         if self.account_fiscal_country_id.code != 'PT':
             return super()._check_accounting_hash_integrity()
 
-        if not self.env.user.has_group('account.group_account_user'):
-            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+        # if not self.env.user.has_group('account.group_account_user'):
+        #     raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
 
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
         results = []

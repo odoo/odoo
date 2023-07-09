@@ -37,7 +37,7 @@
         </xpath>
 
 <!--    QR Code-->
-        <xpath expr="//div[@id='qrcode']" position="replace">
+        <xpath expr="//div[@id='qrcode']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_account_qr_code_str">
                 <div>
                     ATCUD: <t t-esc="o.l10n_pt_account_atcud"/>
