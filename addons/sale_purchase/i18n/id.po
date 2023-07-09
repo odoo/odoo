@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Ryanto The <ry.the77@gmail.com>, 2020
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2020\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,16 +28,18 @@ msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"            Tindakan manual mungkin dibutuhkan."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Purchase</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sale</span>"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
@@ -50,25 +53,25 @@ msgstr "Nama Tampilan"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Pengecualian terjadi pada purchase order:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Pengecualian terjadi pada sale order:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr ""
+msgstr "Pengecualian:"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "Baris Purchase yang Dibuat"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
@@ -87,6 +90,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Bila dicentang, setiap kali Anda menjual produk ini melalui SO, RFQ dibuat "
+"secara otomatis untuk membeli produk. Tip: jangan lupa untuk menetapkan "
+"vendor pada produk."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template____last_update
@@ -100,22 +106,22 @@ msgstr "Terakhir diubah pada"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Tindakan manual mungkin dibutuhkan."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr ""
+msgstr "Jumlah Purchase Order yang Dibuat"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
 msgid "Number of Source Sale"
-msgstr ""
+msgstr "Jumlah Source Sale"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Jumlah item purchase yang dibuat"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -126,7 +132,7 @@ msgstr "Jumlah yang dipesan dikurangi!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr ""
+msgstr "Origin Sale Item"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -136,7 +142,7 @@ msgstr "Templete Produk"
 #. module: sale_purchase
 #: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
+msgstr "Produk yang bukan merupakan layanan tidak dapat membuat RFQ."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
@@ -158,7 +164,7 @@ msgstr "Baris Order Pembelian"
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr ""
+msgstr "Purchase Order dibuat dari %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -166,11 +172,13 @@ msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
 msgstr ""
+"Baris purchase dibuat oleh item Sales ini pada konfirmasi order, atau saat "
+"kuantitas ditingkatkan."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr ""
+msgstr "Pengurutan Ulang"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -191,7 +199,7 @@ msgstr "Detail Order Penjualan"
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
-msgstr ""
+msgstr "Source Sale Orders %s"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -210,12 +218,14 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Anda mengurangi kuantitas yang dipesan! Jangan lupa untuk memperbarui order "
+"pengiriman secara manual jika diperlukan."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr ""
+msgstr "dibatalkan"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -227,4 +237,4 @@ msgstr "dari"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "dipesan alih-alih"

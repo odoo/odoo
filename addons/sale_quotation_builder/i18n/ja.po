@@ -9,6 +9,7 @@
 # Manami Hashi <manami@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,10 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is put on the quote."
 msgstr ""
+":\n"
+"                                        この内容が見積書に表示されるのは\n"
+"この\n"
+"　　　　　　　　　　  プロダクトが見積書に記載されている場合のみです。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -44,6 +49,9 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
 msgstr ""
+":\n"
+"                                        この内容が見積書に表示されるのは、この\n"
+"　　　　　　　　　　  プロダクトが見積書に使用された場合のみです。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -60,6 +68,9 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>テンプレートヘッダー：</strong> この内容は\n"
+"                                    このテンプレートを使用した全ての見積書\n"
+"                                    に表示されます。"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -69,7 +80,7 @@ msgstr "会社概要"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "An awesome"
-msgstr ""
+msgstr "素晴らしい"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -78,6 +89,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"一流のプロフェッショナル・サービス企業として\n"
+"　　　　　　　　私たちは、精力的なサービスにコミットする\n"
+"　　　　　　　　ことが成功の鍵だと理解しています。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -140,6 +154,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"見積書の「プレビュー」から見積書を編集すると、その見積書のみが\n"
+"　　　　　更新されます。見積書テンプレートを（設定メニューから）\n"
+"　　　　　編集した場合、今後作成される全ての見積書はこの編集された\n"
+"テンプレートを使用します。"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template____last_update
@@ -195,6 +213,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"当社の土台は、プロダクトの品質です。\n"
+"　　　　　　　　生地と性能、そして職人技に徹底的にこだわることで\n"
+"　　　　　　　　土台を築き上げてきました。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -206,13 +227,13 @@ msgstr "プロダクト:"
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
-msgstr ""
+msgstr "見積書説明"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr ""
+msgstr "見積書説明のみ"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
@@ -222,12 +243,12 @@ msgstr "見積テンプレート"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "見積書テンプレート明細"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "見積書テンプレートオプション"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
@@ -254,7 +275,7 @@ msgstr "諸条件"
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr ""
+msgstr "見積書説明（eコマースでは使用しない）"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
@@ -262,7 +283,7 @@ msgstr ""
 msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "
 "it will try to read the eCommerce Description."
-msgstr ""
+msgstr "このフィールドは、見積書のみの説明が定義されている場合はそれを使用し、そうでない場合はeコマースの説明を読み取ろうとします。"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -272,11 +293,15 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"これは <strong>サンプル見積書テンプレート</strong>です。 ご自分で\n"
+"                                必要に応じて<i>販売</i>\n"
+"                               アプリから設定メニュー/見積書テンプレート\n"
+"　　　　　　　　を使ってカスタマイズして下さい。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr ""
+msgstr "これは販売オーダテンプレートのプレビューです。"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -285,6 +310,9 @@ msgid ""
 "                                    <i>Heading 3</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"スタイリッシュなタイトル <i>見出し2</i> と\n"
+"                                    <i>見出し 3</i>が目次の自動生成に\n"
+"                                    使用されます。"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -293,6 +321,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"お客様に喜んで購入頂けるよう\n"
+"                                当社は常にプロダクトの価格を\n"
+"                                適正に設定しています。"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description

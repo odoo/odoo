@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr "Este canal es privado. Hay que contar con una invitación para unirse."
+msgstr "Este canal es privado, debe recibir una invitación para unirse."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -422,7 +422,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Se evaluará un diccionario de Python con el fin de proporcionar valores "
+"Un diccionario de Python que se evaluará con el fin de proporcionar valores "
 "predefinidos cuando se creen nuevos registros para este seudónimo."
 
 #. module: mail
@@ -4539,7 +4539,7 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
-"Una vez que se haya destacado un mensaje, puede volver a revisarlo aquí en "
+"Una vez que haya destacado un mensaje, puede volver a verlo aquí en "
 "cualquier momento."
 
 #. module: mail
@@ -4606,7 +4606,7 @@ msgstr "Abrir documento"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr "Abrir el documento padre"
+msgstr "Abrir el documento principal"
 
 #. module: mail
 #. openerp-web
@@ -4655,13 +4655,13 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"Servidor preferido para los correos salientes (opcional). Si no se "
-"establece, se utilizará el de mayor prioridad."
+"Servidor preferido opcional para los correos salientes. Si no se establece, "
+"se utilizará el de mayor prioridad."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template
 msgid "Optional report to print and attach"
-msgstr "Informe opcional para imprimir y adjuntar"
+msgstr "Reporte opcional para imprimir y adjuntar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__lang
@@ -4747,21 +4747,21 @@ msgstr "Padre"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr "Mensaje padre"
+msgstr "Mensaje principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo padre"
+msgstr "Modelo principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID del hilo del registro padre"
+msgstr "ID del hilo del registro principal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -4772,9 +4772,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo padre que contiene el seudónimo. El modelo que contiene la referencia"
-" del seudónimo no es necesariamente el modelo designado por alias_model_id "
-"(por ejemplo: proyecto (parent_model) y tarea (model))"
+"Modelo principal que posee el seudónimo. El modelo que contiene la "
+"referencia del seudónimo no es necesariamente el modelo dado por "
+"alias_model_id (por ejemplo: proyecto (parent_model) y tarea (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -4783,8 +4783,8 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"Subtipo padre, se utiliza para la suscripción automática. El nombre de este "
-"campo no es correcto. Por ejemplo, en un proyecto, el parent_id de los "
+"Subtipo principal, se utiliza para la suscripción automática. El nombre de "
+"este campo no es correcto. Por ejemplo, en un proyecto, el parent_id de los "
 "subtipos de proyecto se refiere a los subtipos relacionados con la tarea."
 
 #. module: mail
@@ -4812,7 +4812,7 @@ msgstr "Partner con información adicional para el reenvío del correo"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Partners con acción requerida"
+msgstr "Contactos con acción requerida"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__pending_moderation
@@ -4970,7 +4970,7 @@ msgstr "Publique su mensaje en el hilo"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Powered by"
-msgstr "Con tecnología de"
+msgstr "Con la tecnología de"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
@@ -5358,7 +5358,7 @@ msgstr "Nombre del reporte"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
 msgid "Requesting Partner"
-msgstr "Partner solicitante"
+msgstr "Contacto solicitante"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -6279,7 +6279,7 @@ msgstr "Para (correos electrónicos)"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
-msgstr "Para (Partners)"
+msgstr "Para (contactos)"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
@@ -6476,8 +6476,8 @@ msgstr "Dejar de seguir"
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
-"Desafortunadamente, este seudónimo de correo ya está en uso. Por favor, "
-"elija otro."
+"Desafortunadamente, este seudónimo de correo ya está en uso. Seleccione "
+"otro."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
@@ -6544,7 +6544,7 @@ msgstr "Desmarcar todos los mensajes"
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Unstar all"
-msgstr "Quitar todos de destacados"
+msgstr "Quitar todos de favoritos"
 
 #. module: mail
 #. openerp-web
