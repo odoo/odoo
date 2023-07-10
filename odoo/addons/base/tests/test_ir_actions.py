@@ -380,13 +380,13 @@ class TestCustomFields(common.TransactionCase):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
-            self.create_field('foo')
+            self.create_field('xyz')
 
     def test_rename_custom(self):
         """ custom field names must be start with 'x_' """
-        field = self.create_field('x_foo')
+        field = self.create_field('x_xyz')
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
-            field.name = 'foo'
+            field.name = 'xyz'
 
     def test_create_valid(self):
         """ field names must be valid pg identifiers """
