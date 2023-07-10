@@ -8,6 +8,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { TagsList } from "@web/core/tags_list/tags_list";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
@@ -102,6 +103,7 @@ export class SelectMenu extends Component {
             },
             () => [this.props.choices, this.props.groups]
         );
+        useAutofocus({ refName: "inputRef" });
     }
 
     get displayValue() {
@@ -136,12 +138,6 @@ export class SelectMenu extends Component {
 
     onOpened() {
         this.state.searchValue = "";
-
-        // Using useAutofocus inside the dropdown does not
-        // work properly so we set the focus manually.
-        if (this.inputRef.el) {
-            this.inputRef.el.focus();
-        }
 
         const selectedElement = document.querySelector(".o_select_active");
         if (selectedElement) {
