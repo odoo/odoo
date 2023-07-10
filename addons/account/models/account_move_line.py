@@ -652,7 +652,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.amount_currency is False:
                 line.amount_currency = line.currency_id.round(line.balance * line.currency_rate)
-            if line.currency_id == line.company_id.currency_id:
+            if line.currency_id == line.company_id.currency_id and (not line._origin or line._origin.currency_id == line.currency_id):
                 line.amount_currency = line.balance
 
     @api.depends('full_reconcile_id.name', 'matched_debit_ids', 'matched_credit_ids')

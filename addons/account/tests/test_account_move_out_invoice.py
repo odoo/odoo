@@ -3717,3 +3717,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term'), [
             {'account_id': receivable_account.id, 'tax_ids': []},
         ])
+
+    def test_multiple_currency_change(self):
+        """
+        Test amount currency and balance are correctly recomputed when updating currency multiple times
+        """
+        currency_a = self.env.company.currency_id
+        currency_b = self.currency_data['currency']
+
+        invoice = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', products=self.product_a, currency=currency_b)
+        amount_tax = invoice.amount_tax
+        with Form(invoice) as move_form:
+            for currency in (currency_a, currency_b):
+                move_form.currency_id = currency
+        self.assertEqual(invoice.amount_tax, amount_tax, "Tax amount should be equal to the initial amount.")
