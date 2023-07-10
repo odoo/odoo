@@ -187,8 +187,11 @@ export class ImportAction extends Component {
     // Fields
     //--------------------------------------------------------------------------
 
-    onFieldChanged(column, fieldId) {
-        const selection = this.model.fields.find((f) => f.id === fieldId);
+    onFieldChanged(column, fieldPath) {
+        let selection;
+        for (const group of Object.values(column.fields)) {
+            selection = selection || group.find(f => f.fieldPath === fieldPath);
+        }
         this.model.setColumnField(column, selection);
     }
 
