@@ -610,7 +610,7 @@ class IrModelFields(models.Model):
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
         (
             "name_manual_field",
-            "CHECK (state != 'manual' OR name LIKE 'x_%')",
+            "CHECK (state != 'manual' OR name LIKE 'x\\_%')",
             "Custom fields must have a name that starts with 'x_'!"
         ),
     ]
