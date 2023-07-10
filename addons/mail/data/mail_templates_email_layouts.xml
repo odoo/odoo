@@ -37,7 +37,7 @@
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; background: ' + (company.secondary_color if company.secondary_color else '#875A7B')">
+                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; background: ' + (company.email_secondary_color or '#875A7B') + ';'">
                                     <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; display: block; padding: 8px 12px 11px; text-decoration: none !important; font-weight: 400;">
                                         <t t-out="button_access['title']"/>
                                     </a>
@@ -46,7 +46,7 @@
 
                                 <td t-if="actions">
                                     <t t-foreach="actions" t-as="action">
-                                        <a t-att-href="action['url']" t-att-style="'font-size: 12px; color: ' + (company.secondary_color or '#875A7B')+ '; text-decoration:none !important;'">
+                                        <a t-att-href="action['url']" t-att-style="'font-size: 12px; color: ' + (company.email_secondary_color or '#875A7B')+ '; text-decoration:none !important;'">
                                             <t t-out="action['title']"/>
                                         </a>
                                         &amp;nbsp;&amp;nbsp;
@@ -101,7 +101,8 @@
     </p>
 </div>
 <div style="color: #555555; font-size:11px;">
-    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
+                  t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
     <span id="mail_unfollow">
         | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
     </span>
@@ -174,7 +175,8 @@
 </td></tr>
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
+                      t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
     <span id="mail_unfollow">
         | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
     </span>

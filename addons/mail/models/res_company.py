@@ -12,8 +12,15 @@ class Company(models.Model):
     catchall_formatted = fields.Char(string="Catchall", compute="_compute_catchall")
     # the compute method is sudo'ed because it needs to access res.partner records
     # portal users cannot access those (but they should be able to read the company email address)
-    email_formatted = fields.Char(string="Formatted Email",
+    email_formatted = fields.Char(
+        string="Formatted Email",
         compute="_compute_email_formatted", compute_sudo=True)
+    email_primary_color = fields.Char(
+        "Email Header Color", compute="_compute_email_primary_color",
+        readonly=False, store=True)
+    email_secondary_color = fields.Char(
+        "Email Button Color", compute="_compute_email_secondary_color",
+        readonly=False, store=True)
 
     @api.depends('name')
     def _compute_catchall(self):
@@ -38,3 +45,21 @@ class Company(models.Model):
                 company.email_formatted = company.catchall_formatted
             else:
                 company.email_formatted = ''
+
+    @api.depends('primary_color')
+    def _compute_email_primary_color(self):
+        """ When updating documents layout colors, force usage of same colors
+        for emails as it is considered as base colors for all communication.
+        Inverse is not true, people may change email colors without changing
+        their overall layout. """
+        for company in self:
+            company.email_primary_color = company.primary_color or '#000000'
+
+    @api.depends('secondary_color')
+    def _compute_email_secondary_color(self):
+        """ When updating documents layout colors, force usage of same colors
+        for emails as it is considered as base colors for all communication.
+        Inverse is not true, people may change email colors without changing
+        their overall layout. """
+        for company in self:
+            company.email_secondary_color = company.secondary_color or '#875A7B'
