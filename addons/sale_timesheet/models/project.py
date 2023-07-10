@@ -313,11 +313,11 @@ class Project(models.Model):
 
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
-            domain_per_model = {'project.task': [('allow_billable', '=', True)]}
+            domain_per_model = {'project.task': [('sale_line_id', '!=', False)]}  # TODO: to replace by: [('allow_billable', '=', True)] when project_root_id will be stored
         else:
             domain_per_model['project.task'] = expression.AND([
                 domain_per_model.get('project.task', []),
-                [('allow_billable', '=', True)],
+                [('sale_line_id', '!=', False)] # TODO: to replace by [('allow_billable', '=', True)] when project_root_id will be stored
             ])
         query = super()._get_sale_order_items_query(domain_per_model)
 
