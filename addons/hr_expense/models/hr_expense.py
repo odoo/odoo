@@ -927,7 +927,11 @@ class HrExpenseSheet(models.Model):
         readonly=False,
         help="The payment method used when the expense is paid by the company.",
     )
-    accounting_date = fields.Date("Accounting Date")
+    accounting_date = fields.Date(
+        string='Accounting Date',
+        compute='_compute_accounting_date',
+        store=True
+    )
     account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='set null', copy=False, readonly=True)
     journal_id = fields.Many2one('account.journal', compute='_compute_journal_id', string="Expense Journal", store=True)
     journal_displayed_id = fields.Many2one('account.journal', compute='_compute_journal_displayed_id') # fix in stable TODO: remove
@@ -1045,6 +1049,11 @@ class HrExpenseSheet(models.Model):
         result = dict((data['sheet_id'][0], data['sheet_id_count']) for data in read_group_result)
         for sheet in self:
             sheet.expense_number = result.get(sheet.id, 0)
+
+    @api.depends('account_move_id', 'account_move_id.date')
+    def _compute_accounting_date(self):
+        for sheet in self:
+            sheet.accounting_date = sheet.account_move_id.date
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
@@ -1326,9 +1335,6 @@ class HrExpenseSheet(models.Model):
         moves.with_context(**skip_context).action_post()
         self.activity_update()
 
-        for sheet in self.filtered(lambda s: not s.accounting_date):
-            sheet.accounting_date = sheet.account_move_id.date
-
         return {move.expense_sheet_id.id: move for move in moves}
 
     def _do_reverse_moves(self):
@@ -1435,7 +1441,7 @@ class HrExpenseSheet(models.Model):
         return {
             'name': '/',
             'journal_id': self.journal_id.id,
-            'date': self.accounting_date or fields.Date.context_today(self),
+            'date': self.accounting_date or max(self.expense_line_ids.mapped('date')) or fields.Date.context_today(self),
             'invoice_date': self.accounting_date or fields.Date.context_today(self),  # expense payment behave as bills
             'ref': self.name,
             'expense_sheet_id': [Command.set(self.ids)],
