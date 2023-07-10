@@ -1,5 +1,5 @@
 /** @odoo-module **/
-    
+
     import { debounce } from "@web/core/utils/timing";
 import checkoutForm from "payment.checkout_form";
     import publicWidget from "web.public.widget";
@@ -116,7 +116,9 @@ import checkoutForm from "payment.checkout_form";
              */
             _onClickTCCheckbox: function () {
                 this._adaptConfirmButton();
-                const disabledReasonFound = this.$submitButton.data("disabled_reasons");
+                const disabledReasonFound = Object.values(
+                    this.$submitButton.data("disabled_reasons") || {}
+                ).includes(true);
                 this.$submitButton.prop('disabled', disabledReasonFound);
             },
         }));
