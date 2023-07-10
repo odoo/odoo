@@ -35,13 +35,14 @@
                     <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column px-0 py-1'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
                         <t t-set-slot="toggler">
                             <i class="fa fa-user-o" role="img"/>
-                            <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.size"/>
+                            <i t-if="state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <span t-else="" class="o-mail-Followers-counter ps-1" t-esc="state.thread.followersCount"/>
                         </t>
                         <t t-set-slot="default">
                             <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread"/>
                         </t>
                     </Dropdown>
-                    <button t-if="props.hasFollowers and state.thread.followerOfSelf" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
+                    <button t-if="props.hasFollowers and state.thread.selfFollower" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
                         <div class="position-relative">
                             <!-- Hidden element used to set the button maximum size -->
                             <span class="d-flex invisible text-nowrap">
@@ -52,7 +53,7 @@
                             </span>
                         </div>
                     </button>
-                    <button t-if="!state.thread.followerOfSelf" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
+                    <button t-if="!state.thread.selfFollower" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
                         <div class="position-relative">
                             <span class="d-flex invisible text-nowrap">
                                 <i class="me-1 fa fa-fw fa-eye-slash"/><t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>

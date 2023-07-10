@@ -18,6 +18,12 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
             return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids);
         }
+        if (args.method === "message_get_followers") {
+            const ids = args.args[0];
+            const after = args.args[1] || args.kwargs.after;
+            const limit = args.args[2] || args.kwargs.limit;
+            return this._mockMailThreadMessageGetFollowers(args.model, ids, after, limit);
+        }
         if (args.method === "message_post") {
             const id = args.args[0];
             const kwargs = args.kwargs;
@@ -112,6 +118,30 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
         // for simplicity
         result[record.id].push([partner, email, reason]);
         return result;
+    },
+    /**
+     * Simulates `message_get_followers` on `mail.thread`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @param {integer} [after]
+     * @param {integer} [limit=100]
+     * @returns {Object[]}
+     */
+    _mockMailThreadMessageGetFollowers(model, ids, after, limit = 100) {
+        const domain = [
+            ["res_id", "=", ids[0]],
+            ["res_model", "=", model],
+        ];
+        if (after) {
+            domain.push(["id", ">", after]);
+        }
+        const followers = this.getRecords("mail.followers", domain).sort(
+            (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
+        );
+        followers.length = Math.min(followers.length, limit);
+        return this._mockMailFollowers_FormatForChatter(followers.map((follower) => follower.id));
     },
     /**
      * Simulates `_message_get_suggested_recipients` on `mail.thread`.

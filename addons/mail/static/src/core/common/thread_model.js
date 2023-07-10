@@ -53,6 +53,10 @@ export class Thread {
     description;
     /** @type {Set<import("@mail/core/common/follower_model").Follower>} */
     followers = new Set();
+    /** @type {import("@mail/core/common/follower_model").Follower} */
+    selfFollower;
+    /** @type {integer|undefined} */
+    followersCount;
     isAdmin = false;
     loadOlder = false;
     loadNewer = false;
@@ -160,6 +164,13 @@ export class Thread {
         return this.memberCount === this.channelMembers.length;
     }
 
+    get followersFullyLoaded() {
+        return (
+            this.followersCount ===
+            (this.selfFollower ? this.followers.size + 1 : this.followers.size)
+        );
+    }
+
     get attachmentsInWebClientView() {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
@@ -248,18 +259,6 @@ export class Thread {
         if (correspondents.length === 0 && this.channelMembers.length === 1) {
             // Self-chat.
             return this._store.user;
-        }
-        return undefined;
-    }
-
-    /**
-     * @returns {import("@mail/core/common/follower_model").Follower}
-     */
-    get followerOfSelf() {
-        for (const follower of this.followers) {
-            if (follower.partner === this._store.self) {
-                return follower;
-            }
         }
         return undefined;
     }

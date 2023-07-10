@@ -17,14 +17,11 @@ QUnit.test("base rendering not editable", async (assert) => {
 QUnit.test("hover following button", async (assert) => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
-    const followerId = pyEnv["mail.followers"].create({
+    pyEnv["mail.followers"].create({
         is_active: true,
         partner_id: pyEnv.currentPartnerId,
         res_id: threadId,
         res_model: "res.partner",
-    });
-    pyEnv["res.partner"].write([pyEnv.currentPartnerId], {
-        message_follower_ids: [followerId],
     });
     const { openView } = await start();
     await openView({
