@@ -252,10 +252,13 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
     });
     onMounted(() => {
         document.addEventListener("selectionchange", onSelectionChange);
+        document.addEventListener("input", onSelectionChange);
     });
     onWillUnmount(() => {
         document.removeEventListener("selectionchange", onSelectionChange);
+        document.removeEventListener("input", onSelectionChange);
     });
+
     return {
         restore() {
             ref.el?.setSelectionRange(model.start, model.end, model.direction);
