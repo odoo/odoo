@@ -36,6 +36,7 @@
                     border-left: $o-statusbar-arrow-width solid map-get($-btn-secondary-design, background);
                     -moz-transform: scale(0.9999); // Smooth the triangle on firefox
                     content: " ";
+                    @include transition($btn-transition);
                 }
 
                 &:before {
