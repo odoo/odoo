@@ -382,10 +382,10 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
-            let toInlinePromise;
+            let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.savePendingImages();
+                savePendingImagesPromise = this.wysiwyg.savePendingImages();
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
@@ -395,6 +395,7 @@ export class HtmlField extends Component {
                 await this.updateValue();
             }
             if (this.wysiwyg) {
+                await savePendingImagesPromise;
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
                 }
