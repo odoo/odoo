@@ -19,6 +19,7 @@ import warnings
 from collections import defaultdict, namedtuple
 from datetime import datetime
 from os.path import join
+from typing import Callable
 
 from pathlib import Path
 from babel.messages import extract
@@ -482,7 +483,7 @@ class GettextAlias(object):
                 cr, _ = self._get_cr(frame, allow_create=False)
                 if cr:
                     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                    return env['ir.code.translation'].get_python_translation(module, lang, source)
+                    return env['ir.customized.code.translation'].get_python_translation(module, lang, source)
                 return code_translations.get_python_translations(module, lang).get(source, source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
@@ -1408,7 +1409,7 @@ class TranslationImporter:
 
         self.model_translations.clear()
 
-        IrCodeTranslation = env['ir.code.translation']
+        IrCodeTranslation = env['ir.customized.code.translation']
         if overwrite or force_overwrite:
             def needs_upsert(module_name, lang, src, value, type_):
                 if src in (customized_translations := IrCodeTranslation._get_translations(module_name, lang, type_)):
@@ -1433,7 +1434,7 @@ class TranslationImporter:
         ))
         for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 5 * 5):
             cr.execute(f'''
-                INSERT INTO "ir_code_translation" ("source", "value", "lang", "module", "type")
+                INSERT INTO "ir_customized_code_translation" ("source", "value", "lang", "module", "type")
                 VALUES {', '.join(["(%s, %s, %s, %s, %s)"] * (len(params) // 5))}
                 ON CONFLICT ("source", "lang", "module", "type")
                 DO UPDATE SET "value" = EXCLUDED."value"
@@ -1550,22 +1551,28 @@ class CodeTranslations:
         return translations
 
     @staticmethod
-    def _get_code_translations(module_name, lang, filter_func):
+    def _get_code_translations(module_name: str, lang: str, filter_func: Callable[[dict], bool]) -> dict:
+        """ get code translation mappings from po/pot files
+
+        :param module_name: the module name
+        :param lang:        when lang is not None, get translation mappings from lang.po file
+                    .       when lang is None, get translation mappings from module_name.pot file
+        :param filter_func: a filter function to drop unnecessary code translation mappings
+        :return:            a dict of translation mappings
+        """
         if lang:
-            po_paths = CodeTranslations._get_po_paths(module_name, lang)
+            file_paths = CodeTranslations._get_po_paths(module_name, lang)
         else:
             pot_path = get_resource_path(module_name, 'i18n', module_name + '.pot')
-            po_paths = [pot_path] if pot_path else []
+            file_paths = [pot_path] if pot_path else []
         translations = {}
-        for po_path in po_paths:
+        for file_path in file_paths:
             try:
-                with file_open(po_path, mode='rb') as fileobj:
+                with file_open(file_path, mode='rb') as fileobj:
                     p = CodeTranslations._read_code_translations_file(fileobj, filter_func)
                 translations.update(p)
             except IOError:
-                iso_lang = get_iso_codes(lang)
-                filename = '[lang: %s][format: %s]' % (iso_lang or 'new', 'po')
-                _logger.exception("couldn't read translation file %s", filename)
+                _logger.exception("couldn't read translation file %s", file_path)
         return translations
 
     def _load_python_translations(self, module_name, lang):

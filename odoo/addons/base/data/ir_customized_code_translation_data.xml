@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="ir_code_translation_cleanup" model="ir.cron">
+    <record id="ir_customized_code_translation_cleanup" model="ir.cron">
         <field name="name">Base: Cleanup customized code translations</field>
-        <field name="model_id" ref="model_ir_code_translation"/>
+        <field name="model_id" ref="model_ir_customized_code_translation"/>
         <field name="state">code</field>
         <field name="code">model._cleanup()</field>
         <field name='interval_number'>7</field>

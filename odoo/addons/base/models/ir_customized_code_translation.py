@@ -8,8 +8,8 @@ from odoo import api, fields, models, tools
 from odoo.tools.translate import code_translations
 
 
-class IrCodeTranslation(models.Model):
-    _name = 'ir.code.translation'
+class IrCustomizedCodeTranslation(models.Model):
+    _name = 'ir.customized.code.translation'
     _description = 'Customized Code Translations'
     _log_access = False
 
@@ -78,9 +78,16 @@ class IrCodeTranslation(models.Model):
         return {t.source: t.value for t in translations}
 
     def _cleanup(self):
+        """
+        Remove all customized code translations that are
+        1. source is not used in the code
+        2. module is not installed
+        3. lang is not activated
+        4. value is the same as the native translation
+        """
         self.check_access_rights('unlink')
         self.check_access_rule('unlink')
-        module_names = self.env['ir.module.module']._installed()
+        module_names = tuple(self.env['ir.module.module']._installed())
         langs = tuple(lang for lang, _ in self.env['res.lang'].get_installed())
 
         @cache
@@ -89,24 +96,23 @@ class IrCodeTranslation(models.Model):
 
         self.flush_model()
         cr = self.env.cr
-        cr.execute('DELETE FROM ir_code_translation WHERE module NOT IN %s OR lang NOT IN %s', (tuple(module_names), langs))
-        cr.execute('SELECT id, source, value, module, lang, type FROM ir_code_translation')
+        cr.execute('DELETE FROM ir_customized_code_translation WHERE module NOT IN %s OR lang NOT IN %s', (module_names, langs))
+        cr.execute('SELECT id, source, value, module, lang, type FROM ir_customized_code_translation')
         ids_to_remove = [
             id_
             for id_, source, value, module_name, lang, type_ in cr.fetchall()
             if source not in get_code_translations(module_name) or
                (type_ == 'python' and code_translations.get_python_translations(module_name, lang).get(source) == value) or
                (type_ == 'web' and code_translations.get_web_translations(module_name, lang).get(source) == value)
-
         ]
 
         if ids_to_remove:
             self.browse(ids_to_remove).unlink()
 
-    def _open_ir_code_translations(self):
+    def _open_ir_customized_code_translations(self):
         return {
             'name': 'Customized Code Translations',
             'type': 'ir.actions.act_window',
-            'res_model': 'ir.code.translation',
+            'res_model': 'ir.customized.code.translation',
             'view_mode': 'list',
         }
