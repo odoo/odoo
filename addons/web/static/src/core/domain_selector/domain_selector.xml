@@ -19,7 +19,7 @@
                     <span> of the following rules:</span>
                     <t t-call="web._DomainSelector.connector.children" />
                     <t t-if="!props.readonly">
-                        <a href="#" class="pt-1 ms-1 d-block" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
+                        <a href="#" class="pt-1 ms-1" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
                     </t>
                 </t>
             </t>
