@@ -182,7 +182,7 @@ class TestCIIFR(TestUBLCommon):
                         <PaymentReference>___ignore___</PaymentReference>
                 </xpath>
             ''',
-            expected_file='from_odoo/facturx_out_invoice.xml',
+            expected_file_path='from_odoo/facturx_out_invoice.xml',
         )
         self.assertEqual(attachment.name, "factur-x.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
@@ -227,7 +227,7 @@ class TestCIIFR(TestUBLCommon):
                         <IssuerAssignedID>___ignore___</IssuerAssignedID>
                 </xpath>
             ''',
-            expected_file='from_odoo/facturx_out_refund.xml'
+            expected_file_path='from_odoo/facturx_out_refund.xml'
         )
         self.assertEqual(attachment.name, "factur-x.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
@@ -280,7 +280,7 @@ class TestCIIFR(TestUBLCommon):
                         <IssuerAssignedID>___ignore___</IssuerAssignedID>
                 </xpath>
             ''',
-            expected_file='from_odoo/facturx_out_invoice_tax_incl.xml'
+            expected_file_path='from_odoo/facturx_out_invoice_tax_incl.xml'
         )
 
     def test_encoding_in_attachment_facturx(self):
