@@ -47,8 +47,8 @@ export class MassMailingHtmlField extends HtmlField {
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
             toolbarTemplate: 'mass_mailing.web_editor_toolbar',
-            onWysiwygBlur: () => {
-                this.commitChanges();
+            onWysiwygBlur: async (action) => {
+                this.commitChanges(action);
                 this.wysiwyg.odooEditor.toolbarHide();
             },
             ...this.props.wysiwygOptions,
@@ -78,7 +78,13 @@ export class MassMailingHtmlField extends HtmlField {
         popover.style.left = leftPosition + 'px';
     }
 
-    async commitChanges() {
+    async commitChanges(action) {
+
+        if (action === "Discard changes") {
+            const value = this.getEditingValue();
+            await this.props.update(value);
+        }
+
         if (this.props.readonly || !this.isRendered) {
             return super.commitChanges();
         }
@@ -105,7 +111,7 @@ export class MassMailingHtmlField extends HtmlField {
             await this.wysiwyg.cleanForSave();
             await this.wysiwyg.saveModifiedImages(this.$content);
 
-            await super.commitChanges();
+            if(!(action === "Discard changes")) await super.commitChanges();
 
             const $editorEnable = $editable.closest('.editor_enable');
             $editorEnable.removeClass('editor_enable');
@@ -122,14 +128,21 @@ export class MassMailingHtmlField extends HtmlField {
             const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
             clonedBody.replaceChildren(clonedIframeTarget);
             clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
-            iframe.srcdoc = clonedHtmlNode.outerHTML;
+            if (!(action === "Discard changes")){
+                iframe.srcdoc = clonedHtmlNode.outerHTML;
+            }
             const iframePromise = new Promise((resolve) => {
                 iframe.addEventListener("load", resolve);
             });
             document.body.append(iframe);
+            if (action === "Discard changes"){
+                iframe.contentDocument.firstChild.replaceWith(clonedHtmlNode);
+            }
             // Wait for the css and images to be loaded.
             await iframePromise;
-            const editableClone = iframe.contentDocument.querySelector('.note-editable');
+            const editableClone = action === "Discard changes"
+            ? clonedHtmlNode.querySelector('.note-editable')
+            : iframe.contentDocument.querySelector('.note-editable');
             this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
             await toInline($(editableClone), this.cssRules, $(iframe));
             iframe.remove();

@@ -195,7 +195,19 @@ Wysiwyg.include({
         if (!this.options.inIframe) {
             this._super.apply(this, arguments);
         } else {
-            this.$iframe[0].contentWindow.addEventListener('blur', this._onBlur);
+            let action = undefined; 
+            // Extract both the status button and addEvent Listner on both of them 
+            // so the action ['Save' OR 'Discard'] can be passed on to _onBlur of wysiwyg
+
+            const actionButtons = Array.from(document.querySelectorAll('.o_form_button_save, .o_form_button_cancel'));
+            actionButtons.forEach(btn => {
+                btn.addEventListener('mousedown', (ev) => {
+                    action = ev.currentTarget.dataset.tooltip;
+                });
+            });
+            this.$iframe[0].contentWindow.addEventListener('blur', () => {
+                this._onBlur(action);
+            });
         }
     },
 

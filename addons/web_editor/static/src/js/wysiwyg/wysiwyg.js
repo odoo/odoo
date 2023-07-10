@@ -2384,13 +2384,13 @@ const Wysiwyg = Widget.extend({
             this._shouldDelayBlur = false;
         }
     },
-    _onBlur: function () {
+    _onBlur: function (action) {
         if (this._shouldDelayBlur) {
             this._pendingBlur = true;
         } else {
             // todo: to remove when removing the legacy field_html
             this.trigger_up('wysiwyg_blur');
-            this.options.onWysiwygBlur && this.options.onWysiwygBlur();
+            this.options.onWysiwygBlur && this.options.onWysiwygBlur(action);
         }
     },
     _onScroll: function(ev) {
