@@ -91,6 +91,14 @@ odoo.define('point_of_sale.ClassRegistry', function (require) {
             this.cache = new Map();
         }
         /**
+         * Remove an existing class from the Registry.
+         * @param {Function} baseClass `class`
+         */
+        remove(baseClass) {
+            this.includedMap.delete(baseClass);
+            delete this.baseNameMap[baseClass.name];
+        }
+        /**
          * Add a new class in the Registry.
          * @param {Function} baseClass `class`
          */

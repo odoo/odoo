@@ -1347,7 +1347,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         for moves_ids in to_assign.values():
             self.browse(moves_ids).with_context(clean_context(self.env.context))._assign_picking()
         new_push_moves = self.filtered(lambda m: not m.picking_id.immediate_transfer)._push_apply()
-        self._check_company()
+
         moves = self
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
