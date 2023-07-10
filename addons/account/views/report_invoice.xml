@@ -297,13 +297,13 @@
             -->
             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                 <tr class="border-black o_subtotal">
-                    <td><strong t-out="subtotal['name']"/></td>
+                    <td><strong t-out="subtotal['name']">Untaxed Amount</strong></td>
 
                     <td class="text-end">
                         <span
                             t-att-class="oe_subtotal_footer_separator"
                             t-out="subtotal['formatted_amount']"
-                        />
+                        >9</span>
                     </td>
                 </tr>
 
@@ -314,7 +314,7 @@
             <tr t-if="'formatted_rounding_amount' in tax_totals and tax_totals['rounding_amount'] != 0">
                 <td>Rounding</td>
                 <td class="text-end">
-                    <span t-out="tax_totals['formatted_rounding_amount']"/>
+                    <span t-out="tax_totals['formatted_rounding_amount']">9 Eur</span>
                 </td>
             </tr>
             
@@ -322,7 +322,7 @@
             <tr class="border-black o_total">
                 <td><strong>Total</strong></td>
                 <td  class="text-end">
-                    <span t-out="tax_totals['formatted_amount_total']"/>
+                    <span t-out="tax_totals['formatted_amount_total']">10.4 Eur</span>
                 </td>
             </tr>
         </template>
@@ -342,19 +342,19 @@
                 <tr>
                     <t t-if="tax_totals['display_tax_base']">
                         <td>
-                            <span t-out="amount_by_group['tax_group_name']"/>
+                            <span t-out="amount_by_group['tax_group_name']">VAT 21%</span>
                             <span class="text-nowrap"> on
-                                <t t-out="amount_by_group['formatted_tax_group_base_amount']"/>
+                                <t t-out="amount_by_group['formatted_tax_group_base_amount']">9 Eur</t>
                             </span>
                         </td>
                         <td class="text-end o_price_total">
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']"/>
+                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']">1.4 Eur</span>
                         </td>
                     </t>
                     <t t-else="">
-                        <td><span class="text-nowrap" t-out="amount_by_group['tax_group_name']"/></td>
+                        <td><span class="text-nowrap" t-out="amount_by_group['tax_group_name']">VAT 21%</span></td>
                         <td class="text-end o_price_total">
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']" />
+                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']">1.4 Eur</span>
                         </td>
                     </t>
                 </tr>

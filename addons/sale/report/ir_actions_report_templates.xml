@@ -40,28 +40,28 @@
                 <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
-                <span t-field="doc.name"/>
+                <span t-field="doc.name">SO0000</span>
             </h2>
 
             <div class="row mt-4 mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
                     <strong>Your Reference:</strong>
-                    <p class="m-0" t-field="doc.client_order_ref"/>
+                    <p class="m-0" t-field="doc.client_order_ref">S:0000</p>
                 </div>
                 <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
                     <strong t-if="doc.state in ['draft', 'sent']">Quotation Date:</strong>
                     <strong t-else="">Order Date:</strong>
-                    <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                    <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'>2023-07-10</p>
                 </div>
                 <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
                     class="col-auto col-3 mw-100 mb-2"
                     name="expiration_date">
                     <strong>Expiration:</strong>
-                    <p class="m-0" t-field="doc.validity_date"/>
+                    <p class="m-0" t-field="doc.validity_date">2023-07-10</p>
                 </div>
                 <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
                     <strong>Salesperson:</strong>
-                    <p class="m-0" t-field="doc.user_id"/>
+                    <p class="m-0" t-field="doc.user_id">Mitchell Admin</p>
                 </div>
             </div>
 
@@ -99,37 +99,39 @@
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
-                                <td name="td_name"><span t-field="line.name"/></td>
+                                <td name="td_name"><span t-field="line.name">Awesome Product</span></td>
                                 <td name="td_quantity" class="text-end">
-                                    <span t-field="line.product_uom_qty"/>
-                                    <span t-field="line.product_uom"/>
+                                    <span t-field="line.product_uom_qty">3</span>
+                                    <span t-field="line.product_uom">mm</span>
                                 </td>
                                 <td name="td_priceunit" class="text-end">
-                                    <span t-field="line.price_unit"/>
+                                    <span t-field="line.price_unit">3</span>
                                 </td>
                                 <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
-                                    <span t-field="line.discount"/>
+                                    <span t-field="line.discount">4%</span>
                                 </td>
                                 <td name="td_taxes" class="text-end">
-                                    <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
+                                    <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))">
+                                        VAT 21%
+                                    </span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                    <span t-field="line.price_subtotal"/>
+                                    <span t-field="line.price_subtotal">9</span>
                                 </td>
                                 <td name="td_total" class="text-end o_price_total" t-if="doc.company_id.tax_calculation_rounding_method == 'round_per_line'" >
-                                    <span t-field="line.price_total"/>
+                                    <span t-field="line.price_total">9</span>
                                 </td>
                             </t>
                             <t t-elif="line.display_type == 'line_section'">
                                 <td name="td_section_line" colspan="99">
-                                    <span t-field="line.name"/>
+                                    <span t-field="line.name">Awesome Services</span>
                                 </td>
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
                             </t>
                             <t t-elif="line.display_type == 'line_note'">
                                 <td name="td_note_line" colspan="99">
-                                    <span t-field="line.name"/>
+                                    <span t-field="line.name">The previous product should be shipped with additional love</span>
                                 </td>
                             </t>
                         </tr>
@@ -141,7 +143,7 @@
                                     <span
                                         t-out="current_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
-                                    />
+                                    >9</span>
                                 </td>
                             </tr>
                         </t>
@@ -169,19 +171,19 @@
                     <img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                 </div>
                 <div class="offset-8 text-center">
-                    <p t-field="doc.signed_by"/>
+                    <p t-field="doc.signed_by">Oscar Morgan</p>
                 </div>
             </div>
 
             <div>
                 <p t-field="doc.note" name="order_note"/>
                 <p t-if="not is_html_empty(doc.payment_term_id.note)">
-                    <span t-field="doc.payment_term_id.note"/>
+                    <span t-field="doc.payment_term_id.note">The payment should also be transmitted with love</span>
                 </p>
                 <p t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)"
                     id="fiscal_position_remark">
                     <strong>Fiscal Position Remark:</strong>
-                    <span t-field="doc.fiscal_position_id.sudo().note"/>
+                    <span t-field="doc.fiscal_position_id.sudo().note">No further requirements for this payment</span>
                 </p>
             </div>
         </div>
