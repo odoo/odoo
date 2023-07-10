@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_pt_stock_report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='signature']" position="after">
+            <t t-if="o.company_id.country_id.code == 'PT' and o.l10n_pt_stock_qr_code_str">
+                <div>
+                    ATCUD: <t t-esc="o.l10n_pt_stock_atcud"/>
+                </div>
+                <img style="margin: 0.25cm;"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_stock_qr_code_str, 150, 150)"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

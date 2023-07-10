@@ -1,6 +1,7 @@
 import re
+import urllib.parse
+import stdnum.pt.nif
 
-import stdnum
 from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
@@ -10,8 +11,7 @@ from odoo.tools import float_repr, format_date
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    country_id = fields.Many2one('res.country', string="Country", related='company_id.country_id')
-    country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
+    country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
     l10n_pt_pos_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     l10n_pt_pos_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_pos_qr_code_str', store=True)
     l10n_pt_pos_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_pos_inalterable_hash_info')
@@ -29,6 +29,7 @@ class PosOrder(models.Model):
                 order.l10n_pt_pos_inalterable_hash_version = int(hash_version)
                 order.l10n_pt_pos_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
             else:
+                order.l10n_pt_stock_inalterable_hash_version = False
                 order.l10n_pt_pos_inalterable_hash_short = False
 
     @api.depends('name', 'config_id.l10n_pt_pos_tax_authority_series_id.code', 'l10n_pt_pos_inalterable_hash')
@@ -76,8 +77,8 @@ class PosOrder(models.Model):
             return res
 
         for order in self.filtered(lambda o: (
-                o.company_id.country_id.code == "PT"
-                and not o.l10n_pt_pos_qr_code_str  # Skip if already computed
+            o.company_id.country_id.code == "PT"
+            and not o.l10n_pt_pos_qr_code_str  # Skip if already computed
         )):
             if not order.l10n_pt_pos_inalterable_hash:
                 continue
@@ -104,7 +105,7 @@ class PosOrder(models.Model):
             qr_code_str = ""
             qr_code_str += f"A:{company_vat}*"
             qr_code_str += f"B:{partner_vat}*"
-            qr_code_str += f"C:{order.partner_id.country_id.code if order.partner_id else 'Desconhecido'}*"  # TODO
+            qr_code_str += f"C:{order.partner_id.country_id.code if order.partner_id and order.partner_id.country_id else 'Desconhecido'}*"
             qr_code_str += "D:FR*"
             qr_code_str += "E:N*"
             qr_code_str += f"F:{format_date(self.env, order.date_order, date_format='yyyyMMdd')}*"
@@ -121,7 +122,7 @@ class PosOrder(models.Model):
             qr_code_str += f"O:{format_amount(order, order.amount_total)}*"
             qr_code_str += f"Q:{order.l10n_pt_pos_inalterable_hash_short}*"
             qr_code_str += "R:0000"  # TODO: Fill with Certificate number provided by the Tax Authority
-            order.l10n_pt_pos_qr_code_str = qr_code_str
+            order.l10n_pt_pos_qr_code_str = urllib.parse.quote_plus(qr_code_str)
 
     def _get_integrity_hash_fields(self):
         if self.company_id.country_id.code != 'PT':
