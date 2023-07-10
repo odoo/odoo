@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="ir_code_translation_tree_view" model="ir.ui.view">
-        <field name="name">ir.code.translation.tree</field>
-        <field name="model">ir.code.translation</field>
+    <record id="ir_customized_code_translation_tree_view" model="ir.ui.view">
+        <field name="name">ir.customized.code.translation.tree</field>
+        <field name="model">ir.customized.code.translation</field>
         <field name="arch" type="xml">
             <tree string="Customized Code Translation" editable="bottom">
                 <field name="source"/>
@@ -14,9 +14,9 @@
         </field>
     </record>
 
-    <record id="ir_code_translation_view_search" model="ir.ui.view">
-        <field name="name">ir.code.translation.view.search</field>
-        <field name="model">ir.code.translation</field>
+    <record id="ir_customized_code_translation_view_search" model="ir.ui.view">
+        <field name="name">ir.customized.code.translation.view.search</field>
+        <field name="model">ir.customized.code.translation</field>
         <field name="arch" type="xml">
             <search string="Search Code Translations">
                 <field name="module"/>
@@ -35,13 +35,13 @@
         </field>
     </record>
 
-    <record id="action_ir_code_translations" model="ir.actions.server">
+    <record id="action_ir_customized_code_translations" model="ir.actions.server">
         <field name="name">Customized Code Translations</field>
-        <field name="model_id" ref="base.model_ir_code_translation"/>
+        <field name="model_id" ref="base.model_ir_customized_code_translation"/>
         <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
         <field name="state">code</field>
-        <field name="code">action = model._open_ir_code_translations()</field>
+        <field name="code">action = model._open_ir_customized_code_translations()</field>
     </record>
-    <menuitem action="action_ir_code_translations" id="menu_ir_code_translations" parent="base.menu_translation_app"/>
+    <menuitem action="action_ir_customized_code_translations" id="menu_ir_customized_code_translations" parent="base.menu_translation_app"/>
 
 </odoo>

@@ -22,7 +22,7 @@ class TestImport(common.TransactionCase):
             'Code, Français'
         )
 
-        customized_translation = self.env['ir.code.translation'].create({
+        customized_translation = self.env['ir.customized.code.translation'].create({
             'source': 'Code, English',
             'value': 'Code, Français, Customized',
             'module': 'test_translation_import',
@@ -182,7 +182,7 @@ class TestImport(common.TransactionCase):
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
 
         # test customized lazy translations
-        customized_translation = self.env['ir.code.translation'].create({
+        customized_translation = self.env['ir.customized.code.translation'].create({
             'source': 'Code Lazy, English',
             'value': 'Code Lazy, Klingon, Customized',
             'module': 'test_translation_import',
@@ -255,14 +255,14 @@ class TestImport(common.TransactionCase):
         self.env['res.lang']._activate_lang('nl_BE')
         self.env.ref('base.module_test_translation_import').state = 'installed'
 
-        customized_translation = self.env['ir.code.translation'].create({
+        customized_translation = self.env['ir.customized.code.translation'].create({
             'source': 'Code, English',
             'value': 'Code, Français, Belgium, Customized',
             'module': 'test_translation_import',
             'lang': 'fr_BE',
             'type': 'python',
         })
-        customized_translations_to_remove = self.env['ir.code.translation'].create([{
+        customized_translations_to_remove = self.env['ir.customized.code.translation'].create([{
             'source': 'Code, %(num)s, %(symbol)s, English',
             'value': 'Code, %(num)s, %(symbol)s, Français, Belgium',  # value is the same as the po
             'module': 'test_translation_import',
@@ -373,7 +373,7 @@ class TestTranslationFlow(common.TransactionCase):
             '<form string="Fork"><div>Knife</div><div>Spoon</div></form>'
         )
 
-        num_customized_code_translations = self.env['ir.code.translation'].search_count([])
+        num_customized_code_translations = self.env['ir.customized.code.translation'].search_count([])
 
         import_fr = self.env["base.language.import"].create({
             'name': 'French',
@@ -395,7 +395,7 @@ class TestTranslationFlow(common.TransactionCase):
         )
 
         self.assertEqual(
-            self.env['ir.code.translation'].search_count([]),
+            self.env['ir.customized.code.translation'].search_count([]),
             num_customized_code_translations,
             'no new customized code translations should have been created'
         )
@@ -413,7 +413,7 @@ class TestTranslationFlow(common.TransactionCase):
             translation_importer.load(f, 'po', 'fr_FR')
             translation_importer.save(overwrite=True)
         self.assertEqual(
-            self.env['ir.code.translation'].search_count([]),
+            self.env['ir.customized.code.translation'].search_count([]),
             num_customized_code_translations + 1,
             'no new customized code translations should have been created'
         )
