@@ -77,7 +77,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         if (route === "/mail/link_preview") {
             return this._mockRouteMailLinkPreview(args.message_id, args.clear);
         }
-        if (route == "/mail/link_preview/delete") {
+        if (route === "/mail/link_preview/delete") {
             const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
                 ["id", "=", args.link_preview_id],
             ]);
@@ -516,18 +516,18 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             }
         }
         if (request_list.includes("followers")) {
-            const followers = this.pyEnv["mail.followers"].searchRead([
-                ["id", "in", thread.message_follower_ids || []],
-            ]);
-            // search read returns many2one relations as an array [id, display_name].
-            // But the original route does not. Thus, we need to change it now.
-            followers.forEach((follower) => {
-                follower.partner_id = follower.partner_id[0];
-                follower.partner = this._mockResPartnerMailPartnerFormat([follower.partner_id]).get(
-                    follower.partner_id
-                );
-            });
-            res["followers"] = followers;
+            const domain = [
+                ["res_id", "=", thread.id],
+                ["res_model", "=", thread_model],
+            ];
+            res["followersCount"] = (thread.message_follower_ids || []).length;
+            const selfFollower = this.pyEnv["mail.followers"].searchRead(
+                domain.concat([["partner_id", "=", this.pyEnv.currentPartnerId]])
+            )[0];
+            res["selfFollower"] = selfFollower
+                ? this._mockMailFollowers_FormatForChatter(selfFollower.id)[0]
+                : false;
+            res["followers"] = this._mockMailThreadMessageGetFollowers(thread_model, [thread_id]);
         }
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = this._mockMailThread_MessageGetSuggestedRecipients(

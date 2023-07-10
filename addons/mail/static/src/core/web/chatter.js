@@ -10,6 +10,7 @@ import { Activity } from "@mail/core/web/activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { useHover, useScrollPosition } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 
 import {
@@ -32,7 +33,6 @@ import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { RecipientList } from "./recipient_list";
 
 /**
  * @typedef {Object} Props
@@ -203,19 +203,25 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
-        const followers = [...this.state.thread.followers].slice(0, 5).map(({ partner }) => {
+        const allFollowers = [];
+        if (this.state.thread.selfFollower) {
+            allFollowers.push(this.state.thread.selfFollower);
+        }
+        allFollowers.push(...this.state.thread.followers);
+        const followers = allFollowers.slice(0, 5).map(({ partner }) => {
             if (partner === this.store.self) {
                 return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
             }
+            const text = partner.email ? partner.emailWithoutDomain : partner.name;
             return `<span class="text-muted" title="${escape(partner.email)}">${escape(
-                partner.emailWithoutDomain
+                text
             )}</span>`;
         });
         const formatter = new Intl.ListFormat(
             this.store.env.services["user"].lang?.replace("_", "-"),
             { type: "unit" }
         );
-        if (this.state.thread.followers.size > 5) {
+        if (allFollowers.length > 5) {
             followers.push("…");
         }
         return markup(formatter.format(followers));
@@ -264,7 +270,7 @@ export class Chatter extends Component {
     }
 
     async onClickUnfollow() {
-        await this.threadService.removeFollower(this.state.thread.followerOfSelf);
+        await this.threadService.removeFollower(this.state.thread.selfFollower);
         this.onFollowerChanged();
     }
 

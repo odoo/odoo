@@ -864,7 +864,7 @@ QUnit.test("Show a thread name in the recipient status text.", async (assert) =>
     assert.containsOnce($, 'span[title="test@odoo.com"]');
 });
 
-QUnit.test("Show follower list when there is more than 5 followers.", async (assert) => {
+QUnit.test("Show recipient list when there is more than 5 followers.", async (assert) => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create([
         { name: "test name 1", email: "test1@odoo.com" },

@@ -3988,6 +3988,16 @@ class MailThread(models.AbstractModel):
 
         return True
 
+    def message_get_followers(self, after=None, limit=100):
+        self.ensure_one()
+        domain = [
+            ("res_id", "=", self.id),
+            ("res_model", "=", self._name),
+        ]
+        if after:
+            domain = expression.AND([domain, [('id', '>', after)]])
+        return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
+
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
     # ------------------------------------------------------
@@ -4146,15 +4156,17 @@ class MailThread(models.AbstractModel):
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
         if 'followers' in request_list:
-            res['followers'] = [{
-                'id': follower.id,
-                'partner_id': follower.partner_id.id,
-                'name': follower.name,
-                'display_name': follower.display_name,
-                'email': follower.email,
-                'is_active': follower.is_active,
-                'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
-            } for follower in self.message_follower_ids]
+            res['followersCount'] = self.env['mail.followers'].search_count([
+                ("res_id", "=", self.id),
+                ("res_model", "=", self._name)
+            ])
+            self_follower = self.env['mail.followers'].search([
+                ("res_id", "=", self.id),
+                ("res_model", "=", self._name),
+                ['partner_id', '=', self.env.user.partner_id.id]
+            ])._format_for_chatter()
+            res['selfFollower'] = self_follower[0] if len(self_follower) > 0 else None
+            res['followers'] = self.message_get_followers()
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
         return res

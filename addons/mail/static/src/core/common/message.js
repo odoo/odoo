@@ -242,7 +242,7 @@ export class Message extends Component {
 
     get showUnfollow() {
         return Boolean(
-            this.message.originThread?.followerOfSelf && this.props.thread?.model === "mail.box"
+            this.message.originThread?.selfFollower && this.props.thread?.model === "mail.box"
         );
     }
 

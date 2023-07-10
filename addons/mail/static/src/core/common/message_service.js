@@ -158,7 +158,7 @@ export class MessageService {
             await this.setDone(message);
         }
         const thread = message.originThread;
-        await this.env.services["mail.thread"].removeFollower(thread.followerOfSelf);
+        await this.env.services["mail.thread"].removeFollower(thread.selfFollower);
         this.env.services.notification.add(
             sprintf(_t('You are no longer following "%(thread_name)s".'), {
                 thread_name: thread.name,
@@ -327,7 +327,7 @@ export class MessageService {
             )
         );
         if ("user_follower_id" in data && data.user_follower_id && this.store.self) {
-            this.env.services["mail.thread"].insertFollower({
+            message.originThread.selfFollower = this.env.services["mail.thread"].insertFollower({
                 followedThread: message.originThread,
                 id: data.user_follower_id,
                 isActive: true,
