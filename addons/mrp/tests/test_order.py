@@ -1172,8 +1172,8 @@ class TestMrpOrder(TestMrpCommon):
             mo2.button_mark_done()
 
     def test_product_produce_duplicate_2(self):
-        """ produce a finished product with component tracked by serial number 2
-        times with the same SN. Check that an error is raised the second time"""
+        """Produce a finished product with a component tracked by serial number 2
+        times with the same SN. Check that product's quantity in the lot was updated"""
         mo1, bom, p_final, p1, p2 = self.generate_mo(tracking_base_2='serial', qty_final=1, qty_base_1=1,)
         sn = self.env['stock.lot'].create({
             'name': 'sn used twice',
@@ -1187,7 +1187,9 @@ class TestMrpOrder(TestMrpCommon):
         with details_operation_form.move_line_ids.new() as ml:
             ml.lot_id = sn
         details_operation_form.save()
-        mo1.button_mark_done()
+        mo1.mark_done()
+
+        self.assertEqual(sn.product_qty, -1)
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = p_final
@@ -1203,8 +1205,9 @@ class TestMrpOrder(TestMrpCommon):
         with details_operation_form.move_line_ids.new() as ml:
             ml.lot_id = sn
         details_operation_form.save()
-        with self.assertRaises(UserError):
-            mo2.button_mark_done()
+        mo2.mark_done()
+
+        self.assertEqual(sn.product_qty, -2)
 
     def test_product_produce_duplicate_3(self):
         """ produce a finished product with by-product tracked by serial number 2

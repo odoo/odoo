@@ -82,6 +82,17 @@ class StockMove(models.Model):
         repair_moves._create_repair_sale_order_line()
         return moves
 
+    @api.onchange('move_line_ids')
+    def _onchange_move_line_ids_repair(self):
+        res = {}
+
+        for move in self:
+            if not move.repair_id:
+                continue
+            res.update(self._check_for_duplicated_serial_numbers(move))
+
+        return res
+
     def write(self, vals):
         res = super().write(vals)
         repair_moves = self.env['stock.move']
