@@ -93,8 +93,7 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
-    fold = fields.Boolean(string='Folded in Kanban',
-        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks.')
+    fold = fields.Boolean(string='Folded in Kanban')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
