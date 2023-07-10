@@ -32,20 +32,6 @@
             </field>
         </record>
 
-        <record id="hr_timesheet_attendance_report_view_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.attendance.report.view.tree</field>
-            <field name="model">hr.timesheet.attendance.report</field>
-            <field name="arch" type="xml">
-                <tree string="Timesheet Attendance">
-                    <field name="date"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
-                    <field name="total_timesheet" optional="show" sum="Sum of Total Timesheet"/>
-                    <field name="total_attendance" optional="show" sum="Sum of Total Attendance"/>
-                    <field name="total_difference" optional="show" sum="Sum of Total Difference"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="hr_timesheet_attendance_report_view_graph" model="ir.ui.view">
             <field name="name">hr.timesheet.attendance.report.view.graph</field>
             <field name="model">hr.timesheet.attendance.report</field>
