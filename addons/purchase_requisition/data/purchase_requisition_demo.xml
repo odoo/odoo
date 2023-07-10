@@ -5,7 +5,7 @@
         <record id="bo_requisition" model="purchase.requisition">
             <field name="user_id" ref="base.user_admin"/>
             <field name="vendor_id" ref="base.res_partner_1"/>
-            <field name="type_id" ref="type_single"/>
+            <field name="requisition_type">blanket_order</field>
         </record>
 
         <record id="bo_requisition_line" model="purchase.requisition.line">
@@ -15,7 +15,7 @@
             <field name="product_qty">100</field>
             <field name="price_unit">60</field>
         </record>
-        <function model="purchase.requisition" name="action_in_progress" eval="[[ref('bo_requisition')]]"/>
+        <function model="purchase.requisition" name="action_confirm" eval="[[ref('bo_requisition')]]"/>
 
         <!--Resource: purchase.order-->
         <record id="rfq1" model="purchase.order">
