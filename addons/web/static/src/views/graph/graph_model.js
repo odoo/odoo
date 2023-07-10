@@ -301,6 +301,10 @@ export class GraphModel extends Model {
         return { datasets, labels };
     }
 
+    _getEmptyGroupLabel(field) {
+        return this.env._t("Undefined");
+    }
+
     _getLabel(description) {
         if (!description) {
             return this.env._t("Sum");
@@ -383,7 +387,7 @@ export class GraphModel extends Model {
         let processedDataPoints = [];
         if (mode === "line") {
             processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this.env._t("Undefined")
+                (dataPoint) => dataPoint.labels[0] !== this._getEmptyGroupLabel(groupBy.fieldName)
             );
         } else if (mode === "pie") {
             processedDataPoints = this.dataPoints.filter(
@@ -505,7 +509,7 @@ export class GraphModel extends Model {
                     if (type === "boolean") {
                         label = `${val}`; // toUpperCase?
                     } else if (val === false) {
-                        label = this.env._t("Undefined");
+                        label = this._getEmptyGroupLabel(fieldName);
                     } else if (["many2many", "many2one"].includes(type)) {
                         const [id, name] = val;
                         const key = JSON.stringify([fieldName, name]);
