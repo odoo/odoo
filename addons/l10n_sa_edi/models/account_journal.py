@@ -119,7 +119,7 @@ class AccountJournal(models.Model):
                 Some of the information included in the CSR could be in arabic, and thus needs to be encoded in a
                 specific format in order to be compliant with the ZATCA CCSID/PCSID APIs
             """
-            return s.encode().decode('CP1252')
+            return s.encode().decode('utf-8')
 
         company_id = self.company_id
         version_info = service.common.exp_version()
