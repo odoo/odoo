@@ -296,11 +296,28 @@
                 <t t-if="information_block">
                     <t t-set="colclass" t-value="'col-5 offset-1'"/>
                     <div name="information_block" class="col-6">
-                        <t t-out="information_block"/>
+                        <t t-out="information_block or None">
+                            <strong>Invoicing address</strong>
+                            <div>
+                                <div>Gemini Furniture, Oscar Morgan</div>
+                                <div>317 Fairchild Dr</div>
+                                <div>Fairfield CA 94535</div>
+                                <div>United States</div>
+                                <div>(561)-239-1744</div>
+                            </div>
+                        </t>
                     </div>
                 </t>
                 <div name="address" t-att-class="colclass">
-                    <t t-esc="address"/>
+                    <t t-esc="address or None">
+                        <div>
+                            <div>Gemini Furniture, Oscar Morgan</div>
+                            <div>317 Fairchild Dr</div>
+                            <div>Fairfield CA 94535</div>
+                            <div>United States</div>
+                            <div>Tax ID: 0000000000-9999999999</div>
+                        </div>
+                    </t>
                 </div>
             </div>
         </t>
