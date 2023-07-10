@@ -8,15 +8,6 @@ from odoo.addons.sale.controllers import portal
 
 class CustomerPortal(portal.CustomerPortal):
 
-    def _get_order_portal_content(self, order_sudo):
-        """ Return the order portal details.
-
-        :return: rendered html of the order portal details
-        :rtype: dict
-        """
-        # TODO remove me in master
-        return
-
     @route(['/my/orders/<int:order_id>/update_line_dict'], type='json', auth="public", website=True)
     def portal_quote_option_update(self, order_id, line_id, access_token=None, remove=False, unlink=False, input_quantity=False, **kwargs):
         """ Update the quantity or Remove an optional SOline from a SO.
@@ -28,8 +19,6 @@ class CustomerPortal(portal.CustomerPortal):
         :param bool unlink: if true, the option will be removed from the SO
         :param float input_quantity: if specified, will be set as new line qty
         :param dict kwargs: unused parameters
-        :return: New order details (as html content)
-        :rtype: dict
         """
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
@@ -58,8 +47,6 @@ class CustomerPortal(portal.CustomerPortal):
         else:
             order_line.product_uom_qty = quantity
 
-        return self._get_order_portal_content(order_sudo)
-
     @route(["/my/orders/<int:order_id>/add_option/<int:option_id>"], type='json', auth="public", website=True)
     def portal_quote_add_option(self, order_id, option_id, access_token=None, **kwargs):
         """ Add the specified option to the specified order.
@@ -68,8 +55,6 @@ class CustomerPortal(portal.CustomerPortal):
         :param int option_id: `sale.order.option` id
         :param str access_token: portal access_token of the specified order
         :param dict kwargs: unused parameters
-        :return: New order details (as html content)
-        :rtype: dict
         """
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
@@ -82,4 +67,3 @@ class CustomerPortal(portal.CustomerPortal):
             return request.redirect(order_sudo.get_portal_url())
 
         option_sudo.add_option_to_order()
-        return self._get_order_portal_content(order_sudo)
