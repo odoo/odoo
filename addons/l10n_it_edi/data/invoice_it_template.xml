@@ -23,7 +23,7 @@
                         <Percentuale t-out="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
                     <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
-                    <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
+                    <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax_amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_has_exoneration" t-out="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">

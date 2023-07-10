@@ -30,9 +30,8 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_filter_tax_details(self, line, tax_values):
         """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
-        repartition_line = tax_values['tax_repartition_line']
         repartition_line_vat = repartition_line.tax_id._l10n_it_filter_kind('vat')
-        return repartition_line.factor_percent >= 0 and repartition_line_vat and repartition_line_vat.amount >= 0
+        return super()._l10n_it_edi_filter_tax_details(line, tax_values) and repartition_line_vat
 
     def _l10n_it_edi_get_values(self):
         """Add withholding and pension_fund features."""

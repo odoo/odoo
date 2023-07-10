@@ -108,13 +108,15 @@ class AccountMove(models.Model):
                     sep = ', ' if description else ''
                     description = f"{description}{sep}{downpayment_moves_description}"
 
+            vat_tax = line.tax_ids._l10n_it_filter_kind('vat')
             invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-                'vat_tax': line.tax_ids._l10n_it_filter_kind('vat'),
+                'vat_tax': vat_tax,
+                'vat_tax_amount': vat_tax.amount,
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (
                     'SC' if line.discount > 0
