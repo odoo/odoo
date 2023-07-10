@@ -37,18 +37,22 @@
             </ProjectRightSidePanelSection>
             <ProjectRightSidePanelSection
                 name="'profitability'"
-                show="showProjectProfitability"
-                dataClassName="'pb-3 border-bottom o_rightpanel_full_width'"
+                show="!!this.state.data.profitability_items"
+                dataClassName="'py-3'"
             >
                 <t t-set-slot="title" owl="1">
                     Profitability
                 </t>
                 <ProjectProfitability
+                    t-if="showProjectProfitability"
                     data="state.data.profitability_items"
                     labels="state.data.profitability_labels"
                     formatMonetary="formatMonetary.bind(this)"
                     onClick="(params) => this.onProjectActionClick(params)"
                 />
+                <span t-else="" class="text-muted fst-italic">
+                    Track project costs, revenues, and margin by setting the analytic account associated with the project on relevant documents.
+                </span>
             </ProjectRightSidePanelSection>
             <ProjectRightSidePanelSection
                 name="'milestones'"
