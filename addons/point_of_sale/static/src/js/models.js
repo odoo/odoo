@@ -2003,7 +2003,7 @@ class Orderline extends PosModel {
         const taxDetails = this.get_tax_details();
         return productTaxes
             .filter(tax => tax.price_include)
-            .reduce((sum, tax) => sum + taxDetails[tax.id],
+            .reduce((sum, tax) => sum + taxDetails[tax.id].amount,
             0
         );
     }
@@ -3020,7 +3020,7 @@ class Order extends PosModel {
                     if (!(taxId in groupTaxes)) {
                         groupTaxes[taxId] = 0;
                     }
-                    groupTaxes[taxId] += taxDetails[taxId];
+                    groupTaxes[taxId] += taxDetails[taxId].amount;
                 }
             });
 
