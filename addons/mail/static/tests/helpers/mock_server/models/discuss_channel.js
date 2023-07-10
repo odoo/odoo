@@ -10,6 +10,9 @@ import { Command } from "@mail/../tests/helpers/command";
 
 patch(MockServer.prototype, "mail/models/discuss_channel", {
     async _performRPC(route, args) {
+        if (args.model === "discuss.channel" && args.method === "execute_command_help") {
+            return this._mockDiscussChannelExecuteCommandHelp(args.args[0], args.model);
+        }
         if (args.model === "discuss.channel" && args.method === "action_unfollow") {
             const ids = args.args[0];
             return this._mockDiscussChannelActionUnfollow(ids, args.kwargs.context);
@@ -110,6 +113,49 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
             return this._mockDiscussChannelGetMentionSuggestions(args);
         }
         return this._super(route, args);
+    },
+
+    /**
+     * Simulates `execute_command_help` on `discuss.channel`.
+     *
+     * @param {number} id
+     * @param {Object} [model]
+     * @returns
+     */
+    _mockDiscussChannelExecuteCommandHelp(ids, model) {
+        const id = ids[0];
+        if (model !== "discuss.channel") {
+            return;
+        }
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]]);
+        const notifBody = `
+            <span class="o_mail_notification">You are in ${
+                channel.channel_type === "channel" ? "channel" : "a private conversation with"
+            }
+            <b>${
+                channel.channel_type === "channel"
+                    ? `#${channel.name}`
+                    : channel.channel_member_ids.map(
+                          (id) =>
+                              this.pyEnv["discuss.channel.member"].searchRead([["id", "=", id]])[0]
+                                  .name
+                      )
+            }</b>.<br><br>
+
+            Type <b>@username</b> to mention someone, and grab their attention.<br>
+            Type <b>#channel</b> to mention a channel.<br>
+            Type <b>/command</b> to execute a command.<br></span>
+        `;
+        this.pyEnv["bus.bus"]._sendone(
+            this.pyEnv.currentPartner,
+            "discuss.channel/transient_message",
+            {
+                body: notifBody,
+                model: "discuss.channel",
+                res_id: channel.id,
+            }
+        );
+        return true;
     },
     /**
      * Simulates `message_post` on `discuss.channel`.
