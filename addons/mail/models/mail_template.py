@@ -18,7 +18,7 @@ class MailTemplate(models.Model):
     _name = "mail.template"
     _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Templates'
-    _order = 'name'
+    _order = 'user_id,name,id'
 
     _unrestricted_rendering = True
 
@@ -46,6 +46,7 @@ class MailTemplate(models.Model):
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
+    user_id = fields.Many2one('res.users', string='User', domain="[('share', '=', False)]", help='The template belongs to this user')
     # recipients
     use_default_to = fields.Boolean(
         'Default recipients',
@@ -88,6 +89,7 @@ class MailTemplate(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
+    is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
 
     # Overrides of mail.render.mixin
     @api.depends('model')
@@ -100,6 +102,10 @@ class MailTemplate(models.Model):
         writable_templates = self._filter_access_rules('write')
         for template in self:
             template.can_write = template in writable_templates
+
+    @api.depends_context('uid')
+    def _compute_is_template_editor(self):
+        self.is_template_editor = self.user_has_groups('mail.group_mail_template_editor')
 
     @api.depends('active', 'description')
     def _compute_template_category(self):
@@ -166,9 +172,31 @@ class MailTemplate(models.Model):
         self._fix_attachment_ownership()
         return True
 
+    def open_delete_confirmation_modal(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'res_model': self._name,
+            'target': 'new',
+            'view_id': self.env.ref('mail.mail_template_view_form_confirm_delete').id,
+            'context': {'dialog_size': 'medium'},
+            'name': _('Confirmation'),
+        }
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
+
+    def cancel_unlink(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'res_model': self._name,
+            'target': 'new',
+            'context': {'dialog_size': 'large'},
+        }
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
