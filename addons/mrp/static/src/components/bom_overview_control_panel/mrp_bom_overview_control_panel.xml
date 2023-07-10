@@ -3,50 +3,57 @@
 
     <t t-name="mrp.BomOverviewControlPanel">
         <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-create-button">
+                <button t-on-click="() => this.props.print()" type="button" class="btn btn-primary">Print</button>
+            </t>
             <t t-set-slot="control-panel-always-buttons">
                 <div class="o_cp_buttons">
-                    <div class="o_list_buttons o_mrp_bom_report_buttons">
-                        <button t-on-click="() => this.props.print()" type="button" class="btn btn-primary">Print</button>
+                    <div class="o_list_buttons o_mrp_bom_report_buttons d-xl-flex gap-xl-1">
                         <t t-if="props.showVariants">
-                            <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-primary ms-1">Print All Variants</button>
+                            <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
                         </t>
-                        <button t-on-click="clickUnfold" type="button" class="btn btn-primary ms-1">Unfold</button>
+                        <button t-on-click="clickUnfold" type="button" class="btn btn-secondary">Unfold</button>
                     </div>
                 </div>
             </t>
 
             <t t-set-slot="layout-actions">
-            <div class="d-flex flex-column gap-1">
-                <form class="d-flex w-100 gap-2">
-                        <label class="visually-hidden" for="bom_quantity">Quantity</label>
-                        <div class="input-group col-xl-4">
-                            <div class="input-group-text">Quantity</div>
-                            <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" class="o_input form-control text-end"/>
-                            <div t-if="props.showOptions.uom" t-esc="props.uomName" class="input-group-text">Quantity</div>
-                        </div>
-                    <t t-if="props.showVariants" >
-                        <div class="input-group-text">Variant:</div>
-                        <div class="col-xl-10 col-lg-9 col-sm-8">
-                            <Many2XAutocomplete
-                                value="props.data.name"
-                                getDomain.bind="getDomain"
-                                resModel="'product.product'"
-                                fieldString="props.data.name"
-                                activeActions="{}"
-                                update.bind="(ev) => this.props.changeVariant(ev[0]?.id)"
-                            />
+            <div class="d-flex gap-1 w-100">
+                <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row">
+                    <label class="visually-hidden" for="bom_quantity">Quantity</label>
+                    <div t-attf-class="input-group align-items-center">
+                        <div class="col-4 col-md-auto pe-2 fw-bold">Quantity</div>
+                        <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" class="o_input form-control rounded-0"/>
+                        <div t-if="props.showOptions.uom" t-out="props.uomName" class="d-flex align-items-center text-muted small lh-sm">Quantity</div>
+                    </div>
+                    <t t-if="props.showVariants">
+                        <div class="input-group align-items-center">
+                            <div class="col-4 col-md-auto pe-2 fw-bold">Variant</div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    value="props.data.name"
+                                    getDomain.bind="getDomain"
+                                    resModel="'product.product'"
+                                    fieldString="props.data.name"
+                                    activeActions="{}"
+                                    update.bind="(ev) => this.props.changeVariant(ev[0]?.id)"
+                                />
+                            </div>
                         </div>
                     </t>
                 </form>
-                <div class="d-flex w-100 gap-1">
+                </div>
+            </t>
+            <t t-set-slot="control-panel-navigation-additional">
+                <div class="d-flex gap-1 w-100 w-sm-auto">
                     <div class="col d-flex gap-1">
                         <t t-if="props.warehouses.length > 1">
-                            <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
+                            <Dropdown class="'btn-group flex-grow-1 flex-md-grow-0'" togglerClass="'btn btn-secondary'" showCaret="true">
                                 <t t-set-slot="toggler">
-                                    <span class="fa fa-home"/> Warehouse: <span t-esc="props.currentWarehouse.name"/>
+                                    <span class="fa fa-home"/> Warehouse
                                 </t>
                                 <t t-foreach="props.warehouses" t-as="wh" t-key="wh.id">
-                                    <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name"/>
+                                    <DropdownItem onSelected="() => this.props.changeWarehouse(wh.id)" t-esc="wh.name" class="{selected : wh.name === props.currentWarehouse.name }"/>
                                 </t>
                             </Dropdown>
                         </t>
@@ -54,7 +61,6 @@
                             showOptions="props.showOptions"
                             changeDisplay.bind="props.changeDisplay"/>
                     </div>
-                </div>
                 </div>
             </t>
         </ControlPanel>
