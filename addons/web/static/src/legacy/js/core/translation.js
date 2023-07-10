@@ -34,9 +34,9 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     },
     add_module_translation: function(mod) {
         var self = this;
-        mod.messages.forEach((message) => {
-            self.db[message.id] = message.string;
-        });
+        for (const [source, value] of Object.entries(mod)) {
+            self.db[source] = value;
+        }
     },
     build_translation_function: function() {
         var self = this;
