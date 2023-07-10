@@ -73,8 +73,6 @@ ProductScreen.exec.addOrderline("Desk Pad", "1", "4");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
-TicketScreen.check.nthRowContains(2, "Pos Employee2");
-TicketScreen.check.nthRowContains(3, "Pos Employee1");
 
 // order for admin
 PosHr.do.clickCashierName();

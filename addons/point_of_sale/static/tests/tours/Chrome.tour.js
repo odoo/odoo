@@ -49,6 +49,7 @@ ProductScreen.check.selectedOrderlineHas("Desk Pad", "1.0", "2.0");
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0002");
+ProductScreen.do.clickPayButton();
 PaymentScreen.check.emptyPaymentlines("12.0");
 PaymentScreen.check.validateButtonIsHighlighted(false);
 
@@ -91,8 +92,8 @@ TicketScreen.do.deleteOrder("-0004");
 TicketScreen.do.deleteOrder("-0001");
 
 // After deleting order 1 above, order 2 became
-// the 2nd-row order and it has payment status
-TicketScreen.check.nthRowContains(2, "Payment");
+// the 2nd-row order and it has On going status
+TicketScreen.check.nthRowContains(2, "Ongoing");
 TicketScreen.do.deleteOrder("-0002");
 Chrome.do.confirmPopup();
 TicketScreen.do.clickNewTicket();

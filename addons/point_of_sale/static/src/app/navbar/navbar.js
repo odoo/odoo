@@ -58,25 +58,17 @@ export class Navbar extends Component {
         if (this.isTicketScreenShown) {
             this.pos.closeScreen();
         } else {
-            if (this._shouldLoadOrders()) {
-                try {
-                    this.pos.setLoadingOrderState(true);
-                    const message = await this.pos._syncAllOrdersFromServer();
-                    if (message) {
-                        this.notification.add(message, 5000);
-                    }
-                } finally {
-                    this.pos.setLoadingOrderState(false);
-                    this.pos.showScreen("TicketScreen");
+            try {
+                this.pos.setLoadingOrderState(true);
+                const message = await this.pos._syncAllOrdersFromServer();
+                if (message) {
+                    this.notification.add(message, 5000);
                 }
-            } else {
+            } finally {
+                this.pos.setLoadingOrderState(false);
                 this.pos.showScreen("TicketScreen");
             }
         }
-    }
-
-    _shouldLoadOrders() {
-        return this.pos.config.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {

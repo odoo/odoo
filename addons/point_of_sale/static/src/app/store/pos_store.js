@@ -459,7 +459,7 @@ export class PosStore extends Reactive {
                 delete this.toRefundLines[line.refunded_orderline_id];
             }
         }
-        if (this.isOpenOrderShareable() && removeFromServer) {
+        if (removeFromServer) {
             if (this.ordersToUpdateSet.has(order)) {
                 this.ordersToUpdateSet.delete(order);
             }
@@ -493,7 +493,7 @@ export class PosStore extends Reactive {
     }
     _onReactiveOrderUpdated(order) {
         order.save_to_db();
-        if (this.isOpenOrderShareable() && !this.loadingOrderState) {
+        if (!this.loadingOrderState) {
             this.ordersToUpdateSet.add(order);
         }
     }
@@ -514,9 +514,7 @@ export class PosStore extends Reactive {
     }
     // creates a new empty order and sets it as the current order
     add_new_order() {
-        if (this.isOpenOrderShareable()) {
-            this.sendDraftToServer();
-        }
+        this.sendDraftToServer();
         if (this.selectedOrder) {
             this.selectedOrder.firstDraft = false;
             this.selectedOrder.updateSavedQuantity();
@@ -926,9 +924,7 @@ export class PosStore extends Reactive {
     set_start_order() {
         if (this.orders.length && !this.selectedOrder) {
             this.selectedOrder = this.orders[0];
-            if (this.isOpenOrderShareable()) {
-                this.ordersToUpdateSet.add(this.orders[0]);
-            }
+            this.ordersToUpdateSet.add(this.orders[0]);
         } else {
             this.add_new_order();
         }
@@ -1568,9 +1564,6 @@ export class PosStore extends Reactive {
         );
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
-    }
-    isOpenOrderShareable() {
-        return this.config.trusted_config_ids.length > 0;
     }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";

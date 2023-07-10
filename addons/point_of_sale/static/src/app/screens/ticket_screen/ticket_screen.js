@@ -149,9 +149,7 @@ export class TicketScreen extends Component {
             }
             this.pos.removeOrder(order);
         }
-        if (this.pos.isOpenOrderShareable()) {
-            this.pos._removeOrdersFromServer();
-        }
+        this.pos._removeOrdersFromServer();
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
@@ -555,9 +553,7 @@ export class TicketScreen extends Component {
         };
     }
     _setOrder(order) {
-        if (this.pos.isOpenOrderShareable()) {
-            this.pos.sendDraftToServer();
-        }
+        this.pos.sendDraftToServer();
         this.pos.set_order(order);
         this.pos.closeScreen();
     }
