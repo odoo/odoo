@@ -339,7 +339,7 @@ class Project(models.Model):
         panel_data = super().get_panel_data()
         return {
             **panel_data,
-            'sale_items': self._get_sale_items(),
+            'sale_items': self._get_sale_items() if self.allow_billable else {},
         }
 
     def get_sale_items_data(self, domain=None, offset=0, limit=None, with_action=True):

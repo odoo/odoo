@@ -5,13 +5,16 @@
         <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="before">
             <ProjectRightSidePanelSection
                 name="'sales'"
-                show="state.data.sale_items and state.data.sale_items.total &gt; 0"
-                dataClassName="'o_rightpanel_full_width'"
+                show="!!state.data.sale_items?.data"
+                dataClassName="'py-3'"
             >
                 <t t-set-slot="title" owl="1">
                     Sales
                 </t>
-                <table class="table table-sm table-striped table-hover mb-0">
+                <span t-if="!state.data.sale_items.data.length" class="text-muted fst-italic">
+                    Track what you sold, delivered, and invoiced.
+                </span>
+                <table t-else="" class="table table-sm table-striped table-hover mb-0">
                     <thead class="bg-100">
                         <tr>
                             <th>Sales Order Items</th>
