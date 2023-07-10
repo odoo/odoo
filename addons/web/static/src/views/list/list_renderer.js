@@ -938,7 +938,7 @@ export class ListRenderer extends Component {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name='${column.name}']`
                 );
-                if (containsActiveElement(cell)) {
+                if (cell && containsActiveElement(cell)) {
                     this.lastEditedCell = { column, record };
                     // Cell is already focused.
                     return;

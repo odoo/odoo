@@ -1,6 +1,8 @@
 odoo.define("website.tour.edit_link_popover", function (require) {
 "use strict";
 
+const { browser } = require('@web/core/browser/browser');
+const { patch } = require("@web/core/utils/patch");
 const wTourUtils = require('website.tour_utils');
 
 const FIRST_PARAGRAPH = 'iframe #wrap .s_text_image p:nth-child(2)';
@@ -185,21 +187,25 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         run: function () {}, // it's a check
     },
     {
-        content: "Ensure that a click on the link popover link opens a new window",
+        content: "Ensure that a click on the link popover link opens a new window in edit mode",
         trigger: 'iframe .o_edit_menu_popover a.o_we_url_link[target="_blank"]',
         extra_trigger: 'iframe .o_edit_menu_popover a.o_we_full_url[target="_blank"]',
-        run: function (actions) {
-            this.$anchor[0].addEventListener('click', (ev) => {
-                const originalPreventDefault = ev.preventDefault.bind(ev);
-                ev.preventDefault = () => {
-                    throw new Error(
-                        "The link popover should not be default prevented as to open a new tab"
-                    );
-                };
-                originalPreventDefault(); // We do not want to open a new tab in a tour
-            }, {once: true, capture: true});
+        run: (actions) => {
+            // We do not want to open a link in a tour
+            patch(browser, 'window_open_action', {
+                open: (url) => {
+                    if (window.location.hostname === url.hostname && url.pathname.startsWith('/@/')) {
+                        document.querySelector('body').classList.add('new_backend_window_opened');
+                    }
+                }
+            }, { pure: true });
             actions.click();
         },
+    },
+    {
+        content: "Ensure that link is opened correctly in edit mode",
+        trigger: '.new_backend_window_opened',
+        run: () => {}, // it's a check
     },
 ]);
 });
