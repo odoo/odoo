@@ -121,7 +121,7 @@ class TestUBLDE(TestUBLCommon):
                     <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/xrechnung_ubl_out_invoice.xml',
+            expected_file_path='from_odoo/xrechnung_ubl_out_invoice.xml',
         )
         self.assertEqual(attachment.name[-10:], "ubl_de.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
@@ -179,7 +179,7 @@ class TestUBLDE(TestUBLCommon):
                     <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/xrechnung_ubl_out_refund.xml',
+            expected_file_path='from_odoo/xrechnung_ubl_out_refund.xml',
         )
         self.assertEqual(attachment.name[-10:], "ubl_de.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
