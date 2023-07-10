@@ -16,10 +16,12 @@ import {
 
 import { config as transitionConfig } from "@web/core/transition";
 import {
+    editInput,
     makeDeferred,
     nextTick,
     patchWithCleanup,
     triggerEvents,
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 
 QUnit.module("thread");
@@ -1009,3 +1011,17 @@ QUnit.test(
         assert.containsNone($, ".o-mail-Thread-newMessage");
     }
 );
+
+QUnit.test("Transient messages are added at the end of the thread", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await click(".o-mail-Composer-send");
+    assert.containsOnce($, ".o-mail-Message");
+    await editInput(document.body, ".o-mail-Composer-input", "/help");
+    await afterNextRender(() => triggerHotkey("Enter"));
+    const lastMessage = document.querySelectorAll(".o-mail-Message")[1];
+    assert.ok(lastMessage.innerText.includes("You are in channel #General"));
+});
