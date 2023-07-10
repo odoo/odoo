@@ -3858,7 +3858,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldDateRange');
 
     QUnit.test('Datetime field without quickedit [REQUIRE FOCUS]', async function (assert) {
-        assert.expect(21);
+        assert.expect(23);
 
         this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
         this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
@@ -3919,6 +3919,16 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
         assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
             "date range picker should be closed");
+
+        // Discard form, fields shouldn't be altered
+        await testUtils.form.clickDiscard(form);
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 15:30:00',
+            "the start date should be the same as before editing");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/13/2017 05:30:00',
+            "the end date should be the same as before editing");
+
+        // Edit
+        await testUtils.form.clickEdit(form);
 
         // Try to check with end date
         await testUtils.dom.click(form.$('.o_field_date_range:last'));

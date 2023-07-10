@@ -859,12 +859,12 @@ var FieldDateRange = InputField.extend({
     _getDateRangeFromInputField() {
         let startDate, endDate;
         if (this.relatedEndDate) {
-            startDate = this.value;
-            endDate = this.recordData[this.relatedEndDate];
+            startDate = this._getValue();
+            endDate = field_utils.parse[this.formatType](this.recordData[this.relatedEndDate]);
         }
         if (this.relatedStartDate) {
-            startDate = this.recordData[this.relatedStartDate];
-            endDate = this.value;
+            startDate = field_utils.parse[this.formatType](this.recordData[this.relatedStartDate]);
+            endDate = this._getValue();
         }
         return [startDate, endDate];
     },
