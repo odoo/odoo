@@ -258,3 +258,70 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.partner_vendor_service.id)], order='id desc', limit=1)
         self.assertEqual(po.order_line.name, "[C01] Name01")
+
+
+    def test_update_ordered_so_products(self):
+        """ check that the quantity of the product with a reordering rule in the purchase order
+        is not updated when we add another line in the sales order:
+            - Create a product with a vendor and a reordering rule with a min 2 and max 5
+            - Run the scheduler to generate the PO with a qty of 5
+            - Create a SO with a quantity of 10 and confirm it.
+            - check that the quantity in the PO is 15
+            - Create a SO with a quantity of 5 and confirm it.
+            - add another product to the SO, the qty in the PO should not be updated.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'purchase_method': 'purchase',
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_a.id,
+                'price': 10,
+                'sequence': 1,
+            })],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_min_qty': 2,
+            'product_max_qty': 5,
+            'qty_multiple': 1,
+            'warehouse_id': warehouse.id,
+        })
+        # Run the scheduler to generate a PO based on the reordering rule.
+        self.env['procurement.group'].run_scheduler()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_a.id)], order='id desc', limit=1)
+        self.assertEqual(po.order_line.product_qty, 5.0)
+        self.assertEqual(po.order_line.product_id, product)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 10,
+                })
+            ],
+        })
+        so.action_confirm()
+
+        self.assertEqual(po.order_line.product_qty, 15.0)
+        self.assertEqual(po.order_line.product_id, product)
+
+        product2 = self.env['product.product'].create({
+            'name': 'Super Product 2',
+            'type': 'product',
+        })
+        so.write({
+            'order_line': [
+                (0, 0, {
+                    'name': product2.name,
+                    'product_id': product2.id,
+                    'product_uom_qty': 10,
+                })
+            ],
+        })
+        self.assertEqual(po.order_line.product_qty, 15.0)
