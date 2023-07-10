@@ -969,7 +969,6 @@ const Wysiwyg = Widget.extend({
             });
             const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
-                el.classList.remove('o_modified_image_to_save');
                 // Modifying an image always creates a copy of the original, even if
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -983,6 +982,7 @@ const Wysiwyg = Widget.extend({
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
                 });
+                el.classList.remove('o_modified_image_to_save');
                 if (isBackground) {
                     const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
                     parts.url = `url('${newAttachmentSrc}')`;
