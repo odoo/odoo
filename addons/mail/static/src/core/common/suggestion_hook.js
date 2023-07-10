@@ -136,7 +136,7 @@ export function useSuggestion() {
             );
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             if (!mainSuggestions.length && !extraSuggestions.length) {
-                self.clearSearch();
+                self.state.items = undefined;
                 return;
             }
             // arbitrary limit to avoid displaying too many elements at once
