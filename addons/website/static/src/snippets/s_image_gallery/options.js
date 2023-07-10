@@ -180,7 +180,7 @@ options.registry.gallery = options.Class.extend({
 
         _.each(imgs, function (img, index) {
             var $img = $(img);
-            var $col = $('<div/>', {class: colClass});
+            var $col = $('<div/>', {class: 'o_snippet_not_selectable ' + colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
                 $row = $('<div/>', {class: 'row s_nb_column_fixed'});
@@ -281,7 +281,9 @@ options.registry.gallery = options.Class.extend({
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
             }
-            var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
+            var $wrap = $("<div/>", { class: "o_snippet_not_selectable " + wrapClass }).append(
+                imgHolderEls[index]
+            );
             $row.append($wrap);
         });
     },
