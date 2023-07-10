@@ -2650,6 +2650,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for (key, definition, message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
+            if len(conname) > 63:
+                _logger.info("Constraint name %r has more than 63 characters", conname)
+
             current_definition = tools.constraint_definition(cr, self._table, conname)
             if current_definition == definition:
                 continue
