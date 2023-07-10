@@ -58,11 +58,8 @@ export class ProjectRightSidePanel extends Component {
     }
 
     get showProjectProfitability() {
-        return !!this.state.data.profitability_items
-            && (
-                this.state.data.profitability_items.revenues.data.length > 0
-                || this.state.data.profitability_items.costs.data.length > 0
-            );
+        const { costs, revenues } = this.state.data.profitability_items;
+        return costs.data.length || revenues.data.length;
     }
 
     formatFloat(value) {
