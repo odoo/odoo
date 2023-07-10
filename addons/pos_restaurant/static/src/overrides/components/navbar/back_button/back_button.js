@@ -17,7 +17,7 @@ patch(BackButton.prototype, {
      * If we have a floor screen,
      * the logic of the back button changes a bit.
      */
-    async backToFloorScreen() {
+    async onClick() {
         if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
@@ -26,12 +26,10 @@ patch(BackButton.prototype, {
             ) {
                 this.pos.showScreen("FloorScreen", { floor: this.floor });
             } else {
-                this.pos.mobile_pane = "right";
-                this.pos.showScreen("ProductScreen");
+                super.onClick(...arguments);
             }
-        } else {
-            this.pos.mobile_pane = "right";
-            this.pos.showScreen("ProductScreen");
+            return;
         }
+        super.onClick(...arguments);
     },
 });

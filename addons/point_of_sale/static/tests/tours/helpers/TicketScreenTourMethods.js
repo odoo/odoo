@@ -7,7 +7,27 @@ class Do {
         return [{ trigger: ".ticket-screen .highlight" }];
     }
     clickDiscard() {
-        return [{ trigger: ".ticket-screen button.discard" }];
+        return [
+            {
+                content: "go back",
+                trigger: ".ticket-screen button.discard",
+                mobile: false,
+            },
+            {
+                content: "go back",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
+            },
+        ];
+    }
+    clickReview() {
+        return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+        ];
     }
     selectOrder(orderName) {
         return [
@@ -16,20 +36,36 @@ class Do {
             },
         ];
     }
+    loadSelectedOrder() {
+        return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                trigger: ".ticket-screen .pads .button.validation.load-order-button",
+            },
+        ];
+    }
     deleteOrder(orderName) {
         return [
             {
+                trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
+                mobile: true,
+            },
+            {
+                trigger: `.ticket-screen .order-row:has(.col:nth-child(2):contains("${orderName}")) .delete-button`,
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .orders > .order-row > .col:contains("${orderName}") ~ .col[name="delete"]`,
+                mobile: false,
             },
         ];
     }
     selectFilter(name) {
         return [
-            {
-                content: "open search bar",
-                trigger: "button.search",
-                mobile: true,
-            },
             {
                 trigger: `.pos-search-bar .filter`,
             },
@@ -40,20 +76,10 @@ class Do {
             {
                 trigger: `.pos-search-bar .filter ul li:contains("${name}")`,
             },
-            {
-                content: "close search bar",
-                trigger: "button.arrow-left",
-                mobile: true,
-            },
         ];
     }
     search(field, searchWord) {
         return [
-            {
-                content: "open search bar",
-                trigger: "button.search",
-                mobile: true,
-            },
             {
                 trigger: ".pos-search-bar input",
                 run: `text ${searchWord}`,
@@ -73,11 +99,6 @@ class Do {
             {
                 trigger: `.pos-search-bar .search ul li:contains("${field}")`,
             },
-            {
-                content: "close search bar",
-                trigger: "button.arrow-left",
-                mobile: true,
-            },
         ];
     }
     settleTips() {
@@ -90,18 +111,42 @@ class Do {
     clickControlButton(name) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .control-button:contains("${name}")`,
+            },
+        ];
+    }
+    clickBackToMainTicketScreen() {
+        return [
+            {
+                content: "Go back to main TicketScreen when in mobile",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
     clickOrderline(name) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .orderline:not(:has(.selected)) .product-name:contains("${name}")`,
             },
             {
                 trigger: `.ticket-screen .orderline.selected .product-name:contains("${name}")`,
                 run: () => {},
+            },
+            {
+                content: "go back",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
@@ -116,12 +161,27 @@ class Do {
         }
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger,
+            },
+            {
+                content: "go back",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
     confirmRefund() {
         return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
             {
                 trigger: ".ticket-screen .button.pay-order-button",
             },
@@ -175,50 +235,88 @@ class Check {
     orderWidgetIsNotEmpty() {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: ".ticket-screen:not(:has(.order-empty))",
                 run: () => {},
+            },
+            {
+                content: "go back",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
     filterIs(name) {
         return [
             {
-                content: "open search bar",
-                trigger: "button.search",
-                mobile: true,
-            },
-            {
                 trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
                 run: () => {},
             },
+        ];
+    }
+    invoicePrinted() {
+        return [
             {
-                content: "close search bar",
-                trigger: "button.arrow-left",
-                mobile: true,
+                trigger: '.ticket-screen .control-button:contains("Reprint Invoice")',
+                run: () => {},
             },
         ];
     }
     partnerIs(name) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .set-partner:contains("${name}")`,
                 run: () => {},
+            },
+            {
+                content: "Go back to main TicketScreen when in mobile",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
     toRefundTextContains(text) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
                 run: () => {},
+            },
+            {
+                content: "Go back to main TicketScreen when in mobile",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }
     refundedNoteContains(text) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .refund-note:contains("${text}")`,
                 run: () => {},
+            },
+            {
+                content: "Go back to main TicketScreen when in mobile",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
             },
         ];
     }

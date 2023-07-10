@@ -52,6 +52,17 @@ button {
     }
 }
 
+
+.pos .button.validation.load-order-button {
+    height: calc(var(--btn-height-size) * 2);
+}
+
+@media screen and (max-width: 768px) {
+    .pos .button.validation.load-order-button {
+        height: 70px;
+    }
+}
+
 .z-1000 {
     z-index: 1000;
 }
@@ -80,9 +91,6 @@ button {
 
 .o-fade {
     transition: opacity .2s;
-}
-.pos .button.validation.with-more-button {
-    height: calc(var(--btn-height-size) * 2);
 }
 
 .o-fade-enter, .o-fade-leave {

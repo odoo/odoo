@@ -54,13 +54,10 @@ export class TicketScreen extends Component {
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
         this._state = this.pos.TICKET_SCREEN_STATE;
-        this.state = useState({
-            showSearchBar: !this.ui.isSmall,
-        });
         const defaultUIState = this.props.reuseSavedUIState
             ? this._state.ui
             : {
-                  selectedSyncedOrderId: null,
+                  selectedOrder: this.pos.get_order(),
                   searchDetails: this.pos.getDefaultSearchDetails(),
                   filter: null,
                   selectedOrderlineIds: {},
@@ -80,6 +77,10 @@ export class TicketScreen extends Component {
     //#region EVENT HANDLERS
     async onFilterSelected(selectedFilter) {
         this._state.ui.filter = selectedFilter;
+        this._state.ui.selectedOrder = null;
+        if (this._state.ui.filter == "ACTIVE_ORDERS" || this._state.ui.filter === null) {
+            this._state.ui.selectedOrder = this.pos.get_order();
+        }
         if (this._state.ui.filter == "SYNCED") {
             await this._fetchSyncedOrders();
         }
@@ -93,21 +94,31 @@ export class TicketScreen extends Component {
     }
     onClickOrder(clickedOrder) {
         if (!clickedOrder || clickedOrder.locked) {
-            if (this._state.ui.selectedSyncedOrderId == clickedOrder.backendId) {
-                this._state.ui.selectedSyncedOrderId = null;
-            } else {
-                this._state.ui.selectedSyncedOrderId = clickedOrder.backendId;
-            }
+            this._state.ui.selectedOrder = clickedOrder;
             if (!this.getSelectedOrderlineId()) {
                 // Automatically select the first orderline of the selected order.
-                const firstLine = clickedOrder.get_orderlines()[0];
+                const firstLine = this._state.ui.selectedOrder.get_orderlines()[0];
                 if (firstLine) {
                     this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
                 }
             }
             this.numberBuffer.reset();
         } else {
-            this._setOrder(clickedOrder);
+            if (
+                !this._state.ui.selectedOrder ||
+                clickedOrder.uid !== this._state.ui.selectedOrder.uid
+            ) {
+                this.dbclk_time = new Date().getTime();
+            } else if (!this.dbclk_time) {
+                this.dbclk_time = new Date().getTime();
+            } else if (this.dbclk_time + 500 > new Date().getTime()) {
+                this._setOrder(clickedOrder);
+                this.dbclk_time = 0;
+            } else {
+                this.dbclk_time = new Date().getTime();
+            }
+            this._state.ui.selectedOrder = clickedOrder;
+            this.numberBuffer.reset();
         }
     }
     onCreateNewOrder() {
@@ -145,10 +156,20 @@ export class TicketScreen extends Component {
                 this._selectNextOrder(order);
             }
             this.pos.removeOrder(order);
+            if (this._state.ui.selectedOrder === order) {
+                if (this.pos.get_order_list().length > 0) {
+                    this._state.ui.selectedOrder = this.pos.get_order_list()[0];
+                } else {
+                    this._state.ui.selectedOrder = null;
+                }
+            }
         }
         if (this.pos.isOpenOrderShareable()) {
             this.pos._removeOrdersFromServer();
         }
+        // When deleting an order, the double click time should be reset, so that it's not taken into account
+        // when clicking on another order.
+        this.dbclk_time = 0;
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
@@ -167,9 +188,11 @@ export class TicketScreen extends Component {
         await this._fetchSyncedOrders();
     }
     onClickOrderline(orderline) {
-        const order = this.getSelectedSyncedOrder();
-        this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
-        this.numberBuffer.reset();
+        if (this._state.ui.selectedOrder.locked) {
+            const order = this.getSelectedOrder();
+            this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
+            this.numberBuffer.reset();
+        }
     }
     onClickRefundOrderUid(orderUid) {
         // Open the refund order.
@@ -179,7 +202,7 @@ export class TicketScreen extends Component {
         }
     }
     _onUpdateSelectedOrderline({ key, buffer }) {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
         if (!order) {
             return this.numberBuffer.reset();
         }
@@ -221,7 +244,7 @@ export class TicketScreen extends Component {
         }
     }
     async onDoRefund() {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
 
         if (order && this._doesOrderHaveSoleItem(order)) {
             if (!this._prepareAutoRefundOnOrder(order)) {
@@ -277,7 +300,7 @@ export class TicketScreen extends Component {
             this.pos.set_order(destinationOrder);
         }
 
-        this.pos.closeScreen();
+        this.closeTicketScreen();
     }
     setPartnerToRefundOrder(partner, destinationOrder) {
         if (partner && !destinationOrder.get_partner()) {
@@ -286,15 +309,17 @@ export class TicketScreen extends Component {
     }
     //#endregion
     //#region PUBLIC METHODS
-    getSelectedSyncedOrder() {
-        if (this._state.ui.filter == "SYNCED") {
-            return this._state.syncedOrders.cache[this._state.ui.selectedSyncedOrderId];
+    getSelectedOrder() {
+        if (this._state.ui.filter == "SYNCED" && this._state.ui.selectedOrder) {
+            return this._state.syncedOrders.cache[this._state.ui.selectedOrder.backendId];
         } else {
-            return null;
+            return this._state.ui.selectedOrder;
         }
     }
     getSelectedOrderlineId() {
-        return this._state.ui.selectedOrderlineIds[this._state.ui.selectedSyncedOrderId];
+        if (this._state.ui.selectedOrder?.backendId) {
+            return this._state.ui.selectedOrderlineIds[this._state.ui.selectedOrder.backendId];
+        }
     }
     /**
      * Override to conditionally show the new order button, or prevent order
@@ -304,6 +329,9 @@ export class TicketScreen extends Component {
      */
     get allowNewOrders() {
         return true;
+    }
+    get isOrderSynced() {
+        return this._state.ui.selectedOrder?.locked;
     }
     getFilteredOrderList() {
         if (this._state.ui.filter == "SYNCED") {
@@ -377,6 +405,7 @@ export class TicketScreen extends Component {
      */
     shouldHideDeleteButton(order) {
         return (
+            (this.ui.isSmall && order != this._state.ui.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
             order.locked ||
             order
@@ -387,13 +416,12 @@ export class TicketScreen extends Component {
         );
     }
     isHighlighted(order) {
-        if (this._state.ui.filter == "SYNCED") {
-            const selectedOrder = this.getSelectedSyncedOrder();
-            return selectedOrder ? order.backendId == selectedOrder.backendId : false;
-        } else {
-            const activeOrder = this.pos.get_order();
-            return activeOrder ? activeOrder.uid == order.uid : false;
-        }
+        const selectedOrder = this.getSelectedOrder();
+
+        return selectedOrder
+            ? (order.backendId && order.backendId == selectedOrder.backendId) ||
+                  order.uid === selectedOrder.uid
+            : false;
     }
     showCardholderName() {
         return this.pos.payment_methods.some((method) => method.use_payment_terminal);
@@ -419,11 +447,11 @@ export class TicketScreen extends Component {
         }
     }
     getSelectedPartner() {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
         return order ? order.get_partner() : null;
     }
     getHasItemsToRefund() {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
         if (!order) {
             return false;
         }
@@ -439,6 +467,13 @@ export class TicketScreen extends Component {
             .map((toRefundDetail) => toRefundDetail.qty)
             .reduce((acc, val) => acc + val, 0);
         return !this.pos.isProductQtyZero(total);
+    }
+    switchPane() {
+        this.pos.switchPaneTicketScreen();
+    }
+    closeTicketScreen() {
+        this.pos.ticket_screen_mobile_pane = "left";
+        this.pos.closeScreen();
     }
     //#endregion
     //#region PRIVATE METHODS
@@ -563,7 +598,7 @@ export class TicketScreen extends Component {
             this.pos.sendDraftToServer();
         }
         this.pos.set_order(order);
-        this.pos.closeScreen();
+        this.closeTicketScreen();
     }
     _getOrderList() {
         return this.pos.get_order_list();
