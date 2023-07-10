@@ -111,6 +111,35 @@ class TestReportStockQuantity(tests.TransactionCase):
         forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
         self.assertEqual(forecast_report, [-20, -20])
 
+    def test_report_stock_quantity_with_timezone(self):
+        """ Ensure the date displayed by the report uses is with the correct timezone
+            Steps:
+            - We create a stock move at a '2023-07-17 23:00:00' of 150 in 'UTC' timezone
+            - We query the report with a time zone of GMT+2 ('Europe/Brussels')
+            - We verify we have only one 'OUT' stock move of 150 of that product on '2023-07-18'
+        """
+        planned_date = datetime(2023, 7, 17, 23, 0, 0)
+        self.move_with_tz = self.env['stock.move'].with_context({'tz': 'UTC'}).create({
+            'name': 'test_transit_out_1',
+            'location_id': self.wh.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 150.0,
+            'state': 'assigned',
+            'date': planned_date,
+            'date_deadline': planned_date,
+        })
+        self.env.flush_all()
+        report = self.env['report.stock.quantity'].with_context({'tz': 'Europe/Brussels'})._read_group(
+            [('product_qty', '<', 0),
+             ('date', '=', datetime(2023, 7, 18).date()),
+             ('state', '=', 'out'),
+             ('product_id', '=', self.product1.id)],
+            ['date:day', 'product_id', 'state'],
+            ['product_qty:sum'])
+        self.assertEqual(len(report), 1, "We must have only one 'out' move on this date for this product")
+
     def test_replenishment_report_1(self):
         self.product_replenished = self.env['product.product'].create({
             'name': 'Security razor',
