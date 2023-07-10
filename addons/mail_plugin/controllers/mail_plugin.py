@@ -460,10 +460,8 @@ class MailPluginController(http.Controller):
         lang = request.env['res.users'].browse(request.uid).lang
         translations_per_module = request.env["ir.http"].get_translations_for_webclient(
             self._translation_modules_whitelist(), lang)[0]
-        translations_dict = {}
-        for module in self._translation_modules_whitelist():
-            translations = translations_per_module.get(module, {})
-            messages = translations.get('messages', {})
-            for message in messages:
-                translations_dict.update({message['id']: message['string']})
-        return translations_dict
+        return {
+            source: translation
+            for module_translations in translations_per_module.values()
+            for source, translation in module_translations.items()
+        }

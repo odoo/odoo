@@ -46,21 +46,7 @@ class IrCustomizedCodeTranslation(models.Model):
     def get_web_translations(self, module_name, lang):
         customized_web_translations = self._get_translations(module_name, lang, 'web')
         native_web_translations = code_translations.get_web_translations(module_name, lang)
-        return {
-            "messages": [
-                *itertools.chain(
-                    (
-                        {"id": src, "string": value}
-                        for src, value in native_web_translations.items()
-                        if src not in customized_web_translations
-                    ),
-                    (
-                        {"id": src, "string": value}
-                        for src, value in customized_web_translations.items()
-                    )
-                )
-            ]
-        }
+        return native_web_translations | customized_web_translations
 
     def get_python_translation(self, module_name, lang, source):
         customized_translations = self._get_translations(module_name, lang, 'python')
