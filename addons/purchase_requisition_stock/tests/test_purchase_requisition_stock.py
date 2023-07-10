@@ -51,17 +51,13 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
         # Blanket order creation
         line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 50})
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none',
-        })
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': vendor2.id,
             'currency_id': self.env.user.company_id.currency_id.id,
         })
-        requisition_blanket.action_in_progress()
+        requisition_blanket.action_confirm()
 
         # Second stock move
         move2 = self.env['stock.move'].create({
@@ -135,26 +131,22 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
         # Blanket orders creation
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none',
-        })
         line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
         line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
         requisition_1 = self.env['purchase.requisition'].create({
             'line_ids': [line1],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': vendor1.id,
             'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_2 = self.env['purchase.requisition'].create({
             'line_ids': [line2],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': vendor1.id,
             'currency_id': self.env.user.company_id.currency_id.id,
         })
-        requisition_1.action_in_progress()
-        requisition_2.action_in_progress()
+        requisition_1.action_confirm()
+        requisition_2.action_confirm()
         # Stock moves
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
