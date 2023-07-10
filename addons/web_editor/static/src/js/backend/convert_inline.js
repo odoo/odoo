@@ -1136,9 +1136,9 @@ function listGroupToTable(editable) {
 function normalizeColors($editable) {
     const editable = $editable.get(0);
     for (const node of editable.querySelectorAll('[style*="rgb"]')) {
-        const rgbMatch = node.getAttribute('style').match(/rgb?\(([\d\.]*,?\s?){3,4}\)/g);
-        for (const rgb of rgbMatch || []) {
-            node.setAttribute('style', node.getAttribute('style').replace(rgb, rgbToHex(rgb)));
+        const rgbaMatch = node.getAttribute('style').match(/rgba?\(([\d\.]+\s*,?\s*){3,4}\)/g);
+        for (const rgb of rgbaMatch || []) {
+            node.setAttribute('style', node.getAttribute('style').replace(rgb, rgbToHex(rgb, node)));
         }
     }
 }
