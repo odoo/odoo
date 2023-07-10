@@ -46,6 +46,17 @@ class TestUninstall(BaseCase):
             self.assertTrue(env['ir.model.data'].search([('module', '=', MODULE)]))
             self.assertTrue(env['ir.model.fields'].search([('model', '=', MODEL)]))
 
+            env.cr.execute(
+                r"""
+                SELECT conname
+                  FROM pg_constraint
+                 WHERE conrelid = 'res_users'::regclass
+                   AND conname LIKE 'res\_users\_test\_uninstall\_res\_user\_%'
+                """
+            )
+            existing_constraints = [r[0] for r in env.cr.fetchall()]
+            self.assertTrue(len(existing_constraints) == 4, existing_constraints)
+
     def test_02_uninstall(self):
         """ Check a few things showing the module is uninstalled. """
         with environment() as env:
@@ -58,6 +69,17 @@ class TestUninstall(BaseCase):
             self.assertNotIn('test_uninstall.model', env.registry)
             self.assertFalse(env['ir.model.data'].search([('module', '=', MODULE)]))
             self.assertFalse(env['ir.model.fields'].search([('model', '=', MODEL)]))
+
+            env.cr.execute(
+                r"""
+                SELECT conname
+                  FROM pg_constraint
+                 WHERE conrelid = 'res_users'::regclass
+                   AND conname LIKE 'res\_users\_test\_uninstall\_res\_user\_%'
+                """
+            )
+            remaining_constraints = [r[0] for r in env.cr.fetchall()]
+            self.assertFalse(remaining_constraints)
 
 
 if __name__ == '__main__':
