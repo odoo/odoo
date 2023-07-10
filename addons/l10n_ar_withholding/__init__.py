@@ -16,6 +16,7 @@ def _l10n_ar_withholding_post_init(env):
             for model in [
                 'account.tax.group',
                 'account.tax',
+                'ir.sequence',
             ]
         }
         env['account.chart.template']._deref_account_tags(template_code, data['account.tax'])
