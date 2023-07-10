@@ -13,7 +13,7 @@ const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag
 const {getCSSVariableValue} = require('web_editor.utils');
 const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const QWeb = core.qweb;
-const {closestElement} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
+const {closestElement, isUnremovable} = require('@web_editor/js/editor/odoo-editor/src/utils/utils');
 
 var _t = core._t;
 
@@ -197,7 +197,7 @@ var SnippetEditor = Widget.extend({
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
-        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !this.$target.hasClass('oe_unremovable');
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !isUnremovable(this.$target[0]);
         this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
 
         // Initialize move/clone/remove buttons
@@ -548,9 +548,10 @@ var SnippetEditor = Widget.extend({
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
                     });
-                return isEmpty && !$el.hasClass('oe_structure') && !$el.hasClass('oe_unremovable')
+                return isEmpty && !$el.hasClass('oe_structure')
                     && !$el.parent().hasClass('carousel-item')
-                    && (!editor || editor.isTargetParentEditable);
+                    && (!editor || editor.isTargetParentEditable)
+                    && !isUnremovable($el[0]);
             };
 
             var editor = $parent.data('snippet-editor');
