@@ -225,7 +225,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             account_move._generate_pdf_and_send_invoice(self.move_template)
         return account_move
 
-    def _assert_invoice_attachment(self, attachment, xpaths, expected_file):
+    def _assert_invoice_attachment(self, attachment, xpaths, expected_file_path):
         """
         Get attachment from a posted account.move, and asserts it's the same as the expected xml file.
         """
@@ -234,8 +234,9 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
-        expected_file_path = get_resource_path('l10n_account_edi_ubl_cii_tests', 'tests/test_files', expected_file)
-        expected_etree = etree.parse(expected_file_path).getroot()
+        expected_file = get_resource_path(self.test_module, 'tests/test_files', expected_file_path)
+        self.assertTrue(expected_file, "expected file not found")
+        expected_etree = etree.parse(expected_file).getroot()
 
         modified_etree = self.with_applied_xpath(
             expected_etree,
