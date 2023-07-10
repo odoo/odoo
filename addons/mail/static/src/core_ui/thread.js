@@ -126,7 +126,10 @@ export class Thread extends Component {
         );
         useEffect(
             () => {
-                if (this.props.jumpPresent !== this.lastJumpPresent) {
+                if (
+                    this.props.jumpPresent !== this.lastJumpPresent &&
+                    this.props.thread.loadNewer
+                ) {
                     this.jumpToPresent("instant");
                     this.lastJumpPresent = this.props.jumpPresent;
                 }

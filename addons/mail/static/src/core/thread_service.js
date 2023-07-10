@@ -1118,9 +1118,10 @@ export class ThreadService {
             } else if (message.id > thread.newestPersistentMessage && !thread.loadNewer) {
                 thread.messages.push(message);
             } else {
-                const afterIndex = thread.messages.findIndex(
-                    (msg) => msg.id > message.id && !msg.isTransient
-                );
+                let afterIndex = thread.messages.findIndex((msg) => msg.id > message.id);
+                if (afterIndex === -1) {
+                    afterIndex = thread.messages.length + 1;
+                }
                 thread.messages.splice(afterIndex - 1, 0, message);
             }
         }
