@@ -139,7 +139,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                     <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/bis3_out_invoice.xml',
+            expected_file_path='from_odoo/bis3_out_invoice.xml',
         )
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
@@ -197,7 +197,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                     <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/bis3_out_refund.xml',
+            expected_file_path='from_odoo/bis3_out_refund.xml',
         )
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
@@ -252,7 +252,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                     <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/bis3_out_invoice_public_admin.xml',
+            expected_file_path='from_odoo/bis3_out_invoice_public_admin.xml',
         )
 
     def test_rounding_price_unit(self):

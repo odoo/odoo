@@ -138,7 +138,7 @@ class TestUBLNL(TestUBLCommon):
                     <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/nlcius_out_invoice.xml',
+            expected_file_path='from_odoo/nlcius_out_invoice.xml',
         )
         self.assertEqual(attachment.name[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
@@ -196,7 +196,7 @@ class TestUBLNL(TestUBLCommon):
                     <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
                 </xpath>
             ''',
-            expected_file='from_odoo/nlcius_out_refund.xml',
+            expected_file_path='from_odoo/nlcius_out_refund.xml',
         )
         self.assertEqual(attachment.name[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
