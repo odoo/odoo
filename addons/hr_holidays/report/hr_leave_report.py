@@ -93,6 +93,7 @@ class LeaveReport(models.Model):
                     request.employee_company_id as company_id
                 from hr_leave as request
                 inner join hr_employee as employee on (request.employee_id = employee.id)
+                where request.active = True
                 ) leaves
             );
         """)
