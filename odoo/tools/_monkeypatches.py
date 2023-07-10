@@ -3,6 +3,9 @@ import os
 from shutil import copyfileobj
 
 from werkzeug.datastructures import FileStorage
+from werkzeug.wrappers import Request, Response
+
+from .json import scriptsafe
 
 try:
     from xlrd import xlsx
@@ -24,6 +27,8 @@ else:
     xlsx.Element_has_iter = True
 
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
+
+Request.json_module = Response.json_module = scriptsafe
 
 orig_literal_eval = ast.literal_eval
 
