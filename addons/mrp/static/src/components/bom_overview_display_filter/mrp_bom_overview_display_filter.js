@@ -19,10 +19,6 @@ export class BomOverviewDisplayFilter extends Component {
     get displayableOptions() {
         return Object.keys(this.displayOptions);
     }
-
-    get currentDisplayedNames() {
-        return this.displayableOptions.filter(key => this.props.showOptions[key]).map(key => this.displayOptions[key]).join(", ");
-    }
 }
 
 BomOverviewDisplayFilter.template = "mrp.BomOverviewDisplayFilter";
