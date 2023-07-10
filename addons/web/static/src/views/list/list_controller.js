@@ -9,7 +9,7 @@ import { omit } from "@web/core/utils/objects";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { useModel } from "@web/model/model";
+import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -49,7 +49,7 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         this.editable =
             this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
-        this.model = useState(useModel(this.props.Model, this.modelParams));
+        this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -80,7 +80,7 @@ export class ListController extends Component {
                 : "x_active" in this.props.fields
                 ? !this.props.fields.x_active.readonly
                 : false;
-        useSubEnv({ model: this.model }); // do this in useModel?
+        useSubEnv({ model: this.model }); // do this in useModelWithSampleData?
         useViewButtons(this.model, this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),

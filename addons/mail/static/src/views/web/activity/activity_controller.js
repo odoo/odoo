@@ -2,7 +2,7 @@
 
 import { useMessaging } from "@mail/core/common/messaging_hook";
 
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -34,14 +34,7 @@ export class ActivityController extends Component {
                 fields,
             },
         };
-        const modelServices = Object.fromEntries(
-            this.props.Model.services.map((servName) => {
-                return [servName, useService(servName)];
-            })
-        );
-        this.model = useState(new this.props.Model(this.env, modelParams, modelServices));
-        onWillStart(() => this.model.load(this.props));
-        onWillUpdateProps((nextProps) => this.model.root.load(nextProps));
+        this.model = useState(useModel(this.props.Model, modelParams));
 
         this.dialog = useService("dialog");
         this.action = useService("action");
