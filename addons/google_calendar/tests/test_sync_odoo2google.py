@@ -622,3 +622,55 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
         self.call_post_commit_hooks()
         self.assertGoogleEventSendUpdates('none')
+
+    @patch_api
+    def test_recurrence_delete_single_events(self):
+        """
+        Creates a recurrence with two events, deletes the events and assert that the recurrence was updated.
+        """
+        # Setup recurrence with two recurrences (event_1 as the recurrence base_event).
+        google_id = 'aaaaaaaaa'
+        event_1 = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2023, 6, 15, 10, 0),
+            'stop': datetime(2023, 6, 15, 10, 0),
+            'need_sync': False,
+        })
+        event_2 = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2023, 6, 22, 10, 0),
+            'stop': datetime(2023, 6, 22, 10, 0),
+            'need_sync': False,
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=TH',
+            'base_event_id': event_1.id,
+            'calendar_event_ids': [(4, event_1.id), (4, event_2.id)],
+            'need_sync': False,
+        })
+        # Delete base_event and assert that patch was called.
+        event_1.action_mass_archive('self_only')
+        self.assertGoogleEventPatched(event_1.google_id, {
+            'id': event_1.google_id,
+            'start': {'dateTime': '2023-06-15T10:00:00+00:00'},
+            'end': {'dateTime': '2023-06-15T10:00:00+00:00'},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event_1.id}},
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+            'status': 'cancelled'
+        }, timeout=3)
+        # Assert that deleted event is not active anymore and the recurrence updated its calendar_event_ids.
+        self.assertFalse(event_1.active)
+        self.assertEqual(recurrence.base_event_id.id, event_2.id)
+        self.assertEqual(recurrence.calendar_event_ids.ids, [event_2.id])
+        # Delete last event and assert that the recurrence and event were archived after the last event deletion.
+        event_2.action_mass_archive('self_only')
+        self.assertFalse(event_2.active)
+        self.assertFalse(recurrence.active)
