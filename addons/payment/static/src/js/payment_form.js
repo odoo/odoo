@@ -2,7 +2,11 @@
 
 // TODO sort
 import publicWidget from 'web.public.widget';
-import core from "@web/legacy/js/services/core";
+import Dialog from '@web/legacy/js/core/dialog';
+import { escape, sprintf } from '@web/core/utils/strings';
+import framework from 'web.framework';
+import core from "../../../../web/static/src/legacy/js/services/core";
+
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '#o_payment_form',
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
@@ -11,19 +15,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     }),
 
     // #=== WIDGET LIFECYCLE ===#
-
-    /**
-     * @constructor
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-
-        // Prevent double-clicks and browser glitches on all inputs.
-        const preventDoubleClick = handlerMethod => debounce(handlerMethod, 500, true);
-        // this._onClickSubmitButton = preventDoubleClick(this._onClickSubmitButton);
-        this._submitForm = preventDoubleClick(this._submitForm);
-    },
 
     /**
      * @override
@@ -36,9 +27,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         await this._super(...arguments);
 
         // Expand the payment form of the selected payment option if there is only one.
-        const checkedRadios = document.querySelector('input[name="o_payment_radio"]:checked');
-        if (checkedRadios.length === 1) {
-            await this._expandInlineForm(checkedRadios[0]);
+        const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
+        if (checkedRadio) {
+            await this._expandInlineForm(checkedRadio);
             this._enableButton();
         } else {
             this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
@@ -78,18 +69,39 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @param {Event} ev
      * @return {void}
      */
-    _submitForm(ev) {
+    async _submitForm(ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
-        // this._onClickPay(ev); TODO
-        console.log("submit")
+        const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
+
+        // Extract contextual values from the radio button.
+        const flow = this._getPaymentFlow(checkedRadio);
+        const paymentOptionId = this._getPaymentOptionId(checkedRadio);
+        const providerCode = this._getProviderCode(checkedRadio);
+        // const paymentMethodId = this._getPaymentMethodIdFromRadio(checkedRadio);
+        // const operation = this._getOperationFromRadio(checkedRadio);
+        const inlineForm = this._getInlineForm(checkedRadio);
+        const tokenizeCheckbox = inlineForm?.querySelector('[name="o_payment_tokenize_checkbox"]');
+
+        // this._hideError(); // Don't keep the error displayed if the user is going through 3DS2 TODO problably useless now that we use a dialog
+        this._disableButton(true); // Block the entire UI to prevent fiddling with other widgets.
+
+        // TODO
+        if (flow === 'token' && this.txContext['assign_token_route']) { // Token must be assigned.
+            await this._assignToken(paymentOptionId); // TODO
+        } else { // Both tokens and payment methods must process a payment operation.
+            this.txContext.tokenizationRequested = tokenizeCheckbox?.checked ?? false;
+            await this._processPaymentFlow(flow, providerCode, paymentOptionId);
+        }
     },
 
     // #=== DOM MANIPULATION ===#
 
     /**
      * Check if the submit button can be enabled and do it if so.
+     *
+     * The UI is also unblocked in case it had been blocked.
      *
      * @private
      * @return {boolean} Whether the button was enabled.
@@ -99,6 +111,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this._getSubmitButton().removeAttribute('disabled');
             return true;
         }
+        $('body').unblock(); // TODO seems to work only when called from the console...
         return false;
     },
 
@@ -106,10 +119,17 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * Disable the submit button.
      *
      * @private
+     * @param {boolean} blockUI - Whether the UI should also be blocked.
      * @return {void}
      */
-    _disableButton() {
+    _disableButton(blockUI = false) {
         this._getSubmitButton().setAttribute('disabled', true);
+        if (blockUI) { // TODO not sure it can be done here; see https://github.com/odoo/odoo/pull/81661
+            $('body').block({
+                message: false,
+                overlayCSS: { backgroundColor: "#000", opacity: 0, zIndex: 1050 },
+            });
+        }
     },
 
     /**
@@ -161,14 +181,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         // Extract contextual values from the radio button.
         const flow = this._getPaymentFlow(radio);
         const paymentOptionId = this._getPaymentOptionId(radio);
-        const provider = this._getProviderCode(radio);
+        const providerCode = this._getProviderCode(radio);
 
         // Prepare the inline form of the selected payment option.
-        await this._prepareInlineForm(provider, paymentOptionId, flow);
+        await this._prepareInlineForm(providerCode, paymentOptionId, flow);
 
-        // Display the inline form if it is not empty.
-        const paymentOptionContainer = radio.closest('[name="o_payment_option"]');
-        const inlineForm = paymentOptionContainer.querySelector('[name="o_payment_inline_form"]');
+        // Display the prepared inline form if it is not empty.
+        const inlineForm = this._getInlineForm(radio);
         if (inlineForm && inlineForm.children.length > 0) {
             inlineForm.classList.remove('d-none');
         }
@@ -242,8 +261,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             $inlineForm.append(errorHtml).find('div[name="o_payment_error_dialog"]')[0]
                 .scrollIntoView({behavior: 'smooth', block: 'center'});
         }
-        this._enableButton(); // Enable button back after it was disabled before processing
-        $('body').unblock(); // The page is blocked at this point, unblock it
+        this._enableButton(); // Enable button back after it was disabled before processing TODO should be done in the guardedCatch of the processing methods
     },
 
     /**
@@ -292,7 +310,59 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         }
     },
 
+    /**
+     * Process the payment flow of the selected payment option.
+     *
+     * For a provider to do pre-processing work on the transaction processing flow, or to define its
+     * entire own flow that requires re-scheduling the RPC to the transaction route, it must
+     * override this method. If only post-processing work is needed, an override of
+     * `_processRedirectPayment`,`_processDirectPayment` or `_processTokenPayment` might be more
+     * appropriate. TODO
+     *
+     * @private
+     * @param {string} flow - The payment flow of the selected payment option.
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    _processPaymentFlow(flow, providerCode, paymentOptionId) {
+        // Create a transaction and retrieve its processing values.
+        // this._rpc({
+        //     route: this.txContext['transactionRoute'],
+        //     params: this._prepareTransactionRouteParams(
+        //         code, paymentOptionId, paymentMethodId, operation
+        //     ),
+        // }).then(processingValues => {
+        //     if (operation === 'online_redirect') {
+        //         this._processRedirectPayment(code, paymentOptionId, processingValues);
+        //     } else if (operation === 'direct') {
+        //         // TODO ANV
+        //     } else if (operation === 'token') {
+        //         // TODO ANV
+        //     }
+        // }).guardedCatch(error => {
+        //     error.event.preventDefault();
+        //     // this._displayError(
+        //     //     _t("Server Error"),
+        //     //     _t("We are not able to process your payment."),
+        //     //     error.message.data.message,
+        //     // ); TODO ANV
+        // });
+    },
+
     // #=== GETTERS ===#
+
+    /**
+     * Determine and return the inline form of the selected payment option.
+     *
+     * @private
+     * @param {HTMLInputElement} radio - The radio button linked to the payment option.
+     * @return {Element | null} The inline form of the selected payment option, if any.
+     */
+    _getInlineForm(radio) {
+        const inlineFormContainer = radio.closest('[name="o_payment_option"]');
+        return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
+    },
 
     /**
      * Find and return the submit button.
@@ -301,7 +371,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * modules to place it outside the payment form (e.g., eCommerce).
      *
      * @private
-     * @return {HTMLElement} The submit button.
+     * @return {Element} The submit button.
      */
     _getSubmitButton() {
         return document.querySelector('[name="o_payment_submit_button"]');
@@ -352,29 +422,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         return radio.dataset['providerCode'];
     },
 
-
     //
     // /**
     //  * TODO.
-    //  *
-    //  * @private
-    //  * @param {Event} ev
-    //  * @return {void}
-    //  */
-    // _onClickSubmitButton(ev) {
-    //     ev.stopPropagation();
-    //     ev.preventDefault();
-    //
-    //     const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
-    //     const provider = this._getProviderFromRadio(checkedRadio);
-    //     const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
-    //     const paymentMethodId = this._getPaymentMethodIdFromRadio(checkedRadio);
-    //     const operation = this._getOperationFromRadio(checkedRadio);
-    //     this.txContext['tokenizationRequested'] = false;  // TODO
-    //     this._processPayment(provider, paymentOptionId, paymentMethodId, operation);
-    // },
-    //
-
     //
     // /**
     //  * Determine and return the id of the selected payment method.
@@ -482,9 +532,5 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     // },
 
 });
-import { debounce } from "@web/core/utils/timing";
-import Dialog from "../../../../web/static/src/legacy/js/core/dialog";
-
-import {escape, sprintf} from "../../../../web/static/src/core/utils/strings";
 
 export default publicWidget.registry.PaymentForm;
