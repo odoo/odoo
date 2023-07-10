@@ -83,7 +83,10 @@ class MailComposer(models.TransientModel):
         compute='_compute_body', readonly=False, store=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', ondelete='set null')
-    template_id = fields.Many2one('mail.template', 'Use template', domain="[('model', '=', model)]")
+    template_id = fields.Many2one(
+        'mail.template', 'Use template',
+        domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', '=', uid)]"
+    )
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', string='Attachments',
@@ -700,32 +703,55 @@ class MailComposer(models.TransientModel):
 
         return mails_sudo
 
-    def action_save_as_template(self):
-        """ hit save as template button: current form value will be a new
-            template attached to the current document. """
-        for record in self:
-            model = self.env['ir.model']._get(record.model or 'mail.message')
-            model_name = model.name or ''
-            template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
-            values = {
-                'name': template_name,
-                'subject': record.subject or False,
-                'body_html': record.body or False,
-                'model_id': model.id or False,
-                'use_default_to': True,
-            }
-            template = self.env['mail.template'].create(values)
+    def open_template_creation_wizard(self):
+        """ hit save as template button: opens a wizard that prompts for the template's subject.
+            `create_mail_template` is called when saving the new wizard. """
 
-            if record.attachment_ids:
-                attachments = self.env['ir.attachment'].sudo().browse(record.attachment_ids.ids).filtered(
-                    lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
-                if attachments:
-                    attachments.write({'res_model': template._name, 'res_id': template.id})
-                template.attachment_ids |= record.attachment_ids
+        self.ensure_one()
+        saved_subject = self.subject
+        self.subject = False
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
+            'name': _('Create a new Mail Template'),
+            'res_model': 'mail.compose.message',
+            'context': {'dialog_size': 'medium', 'mail_composer_saved_subject': saved_subject},
+            'target': 'new',
+            'res_id': self.id,
+        }
 
-            # generate the saved template
-            record.write({'template_id': template.id})
-            return _reopen(self, record.id, record.model, context=self.env.context)
+    def create_mail_template(self):
+        """ creates a mail template with the information form the current mail composer """
+        self.ensure_one()
+        model_id = self.env['ir.model']._get_id(self.model)
+        values = {
+            'name': self.subject,
+            'subject': self.subject,
+            'body_html': self.body,
+            'model_id': model_id,
+            'use_default_to': True,
+            'user_id': self.env.uid,
+        }
+        template = self.env['mail.template'].create(values)
+
+        if self.attachment_ids:
+            attachments = self.env['ir.attachment'].sudo().browse(self.attachment_ids.ids).filtered(
+                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+            if attachments:
+                attachments.write({'res_model': template._name, 'res_id': template.id})
+                template.attachment_ids = self.attachment_ids
+
+        # generate the saved template
+        self.write({'template_id': template.id})
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    def cancel_save_template(self):
+        """ Restore old subject when canceling the 'save as template' action
+            as it was erased to let user give a more custom input. """
+        self.ensure_one()
+        self.subject = self.env.context.get('mail_composer_saved_subject')
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
 
     # ------------------------------------------------------------
     # RENDERING / VALUES GENERATION

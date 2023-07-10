@@ -15,7 +15,7 @@
     <record id="group_project_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="category_id" ref="base.module_category_services_project"/>
-        <field name="implied_ids" eval="[(4, ref('group_project_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_project_user')), (4, ref('mail.group_mail_template_editor'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 

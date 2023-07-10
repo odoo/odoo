@@ -46,7 +46,9 @@
                         <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
                         <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
-                            <field name="template_id" string="Load template" options="{'no_create': True}"
+                        </group>
+                        <group>
+                            <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
                                 context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                         </group>
                     </div>
@@ -56,7 +58,9 @@
                                 <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
                                 <group>
                                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
-                                    <field name="template_id" string="Load template" options="{'no_create': True}"
+                                </group>
+                                <group>
+                                    <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
                                         context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                                 </group>
                             </div>
@@ -80,10 +84,26 @@
                                 type="object" class="btn-primary" data-hotkey="q"
                                 invisible="not subtype_is_log"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
-                        <button icon="fa-lg fa-save" type="object"
-                                name="action_save_as_template" string="Save as new template"
+                        <button icon="fa-cloud-upload" type="object"
+                                name="open_template_creation_wizard" string="Save Template"
                                 invisible="not can_edit_body"
-                                class="float-end btn-secondary" help="Save as a new template" data-hotkey="w"/>
+                                class="float-end btn-secondary" data-hotkey="w" help="Save as a new template"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_compose_message_view_form_template_save" model="ir.ui.view">
+            <field name="name">mail.compose.message.view.form.template.save</field>
+            <field name="model">mail.compose.message</field>
+            <field name="arch" type="xml">
+                <form string="Templates">
+                    <group>
+                        <field name="subject" placeholder="e.g. &quot;Welcome to MyCompany&quot; or &quot;Nice to meet you, {{ object.name }}&quot;"/>
+                    </group>
+                    <footer>
+                        <button name="create_mail_template" type="object" class="btn btn-primary" string="Save"/>
+                        <button name="cancel_save_template" type="object" class="btn btn-secondary" string="Cancel"/>
                     </footer>
                 </form>
             </field>
