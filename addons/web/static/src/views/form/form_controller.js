@@ -18,6 +18,7 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
+import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -28,15 +29,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import {
-    Component,
-    onRendered,
-    onWillStart,
-    onWillUpdateProps,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -129,19 +122,12 @@ export class FormController extends Component {
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
 
-        const modelServices = Object.fromEntries(
-            this.props.Model.services.map((servName) => {
-                return [servName, useService(servName)];
-            })
-        );
-        this.model = useState(new this.props.Model(this.env, this.modelParams, modelServices));
-
         this.display = { ...this.props.display };
         if (this.env.inDialog) {
             this.display.controlPanel = false;
         }
 
-        onWillStart(async () => {
+        const beforeFirstLoad = async () => {
             await loadSubViews(
                 this.archInfo.fieldNodes,
                 this.props.fields,
@@ -162,13 +148,8 @@ export class FormController extends Component {
             }
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
-            return this.model.load();
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.resId !== this.model.root.resId) {
-                return this.model.root.load(nextProps.resId);
-            }
-        });
+        };
+        this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
 
         this.cpButtonsRef = useRef("cpButtons");
 

@@ -154,7 +154,7 @@ QUnit.test("nameGet method", async (assert) => {
     await env.services.orm.nameGet("sale.order", [2, 5], { context });
     assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read");
     assert.deepEqual(query.params, {
-        args: [[2, 5], ['display_name']],
+        args: [[2, 5], ["display_name"]],
         kwargs: {
             context: {
                 complete: true,
@@ -361,7 +361,7 @@ QUnit.test("webSearchRead method", async (assert) => {
     });
 });
 
-QUnit.test("useModel is specialized for component", async (assert) => {
+QUnit.test("orm is specialized for component", async (assert) => {
     const [, /* query */ rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
