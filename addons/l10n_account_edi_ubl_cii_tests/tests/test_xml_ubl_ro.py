@@ -9,7 +9,7 @@ from odoo.tools.misc import file_open
 from lxml import etree, isoschematron
 from odoo import Command
 
-from saxonpy import PySaxonProcessor
+import requests
 
 
 # TODO - remove 'yoni' tag when done
@@ -95,42 +95,13 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
 
         self.assertEqual(attachment.name[-11:], "cius_ro.xml")
 
-        # with PySaxonProcessor(license=False) as proc:
-        #     xsltproc = proc.new_xslt_processor()
-        #     document = proc.parse_xml(xml_text=xml_content)
-        #     xsltproc.set_source(xdm_node=document)
-        #     xsltproc.compile_stylesheet(stylesheet_text="<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='2.0'> <xsl:param name='values' select='(2,3,4)' /><xsl:output method='xml' indent='yes' /><xsl:template match='*'><output><xsl:value-of select='//person[1]'/><xsl:for-each select='$values' ><out><xsl:value-of select='. * 3'/></out></xsl:for-each></output></xsl:template></xsl:stylesheet>")
-        #     xsltproc.compile_stylesheet(stylesheet_text="<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='2.0'> <xsl:param name='values' select='(2,3,4)' /><xsl:output method='xml' indent='yes' /><xsl:template match='*'><output><xsl:value-of select='//person[1]'/><xsl:for-each select='$values' ><out><xsl:value-of select='. * 3'/></out></xsl:for-each></output></xsl:template></xsl:stylesheet>")
-        #     output2 = xsltproc.transform_to_string()
-        #     print(output2)
+        # make a request to anaf.ro API validator
+        url = 'https://webservicesp.anaf.ro/prod/FCTEL/rest/validare/FACT1'
+        headers = {'Content-Type': 'text/plain'}
+        response = requests.post(url, data=xml_content, headers=headers)
+        json = response.json()
+        print("\n")
 
-        # schematron_path = 'l10n_account_edi_ubl_cii_tests/tests/test_files/from_odoo/ciusro_EN16931-UBL-validation.sch'
-        # with file_open(schematron_path, "rb") as schematron_file:
-        #     xslt_content = schematron_file.read()
-
-        # xslt_etree = etree.fromstring(xslt_content)
-        # transformer = etree.XSLT(xslt_etree)
-        # result = transformer(xml_etree)
-        # validation_result = str(result)
-
-        #     sch_doc = etree.parse(schematron_file)
-        #     schematron = isoschematron.Schematron(sch_doc, store_report=True)
-        #     validation_result = schematron.validate(xml_etree)
-
-        #     with Path("~/work/odoo/.notes/result.xml").expanduser().open("wb") as f:
-        #         f.write(validation_result)
-
-        #     transform = etree.XSLT(xsl)
-        #     result_tree = transform(xml_etree)
-
-        #     errors = result_tree.xpath("//Error")
-        #     err = False
-        #     for error in errors:
-        #         err = True
-        #         print("")
-        #         print("")
-        #         print(error.xpath("//Xpath")[0].text)
-        #         print(error.xpath("//Description")[0].text)
-        #         print("")
-        #         print(error.xpath("//Pattern")[0].text)
-        #     self.assertFalse(err, "There is some error detected by the schematron")
+        for message_obj in json['Messages']:
+            message = message_obj['message']
+            print(message, "\n\n")
