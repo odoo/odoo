@@ -50,7 +50,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('project_root_id.allow_timesheets', '=', True), ('project_root_id', '=?', project_id)]")
+        domain="[('company_id', '=', company_id), ('project_id', '=?', project_id), '|', ('project_id.allow_timesheets', '=', True), '&', ('project_id', '=', False), ('parent_id', '!=', False)]")
     parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True)
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
@@ -64,6 +64,11 @@ class AccountAnalyticLine(models.Model):
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(string="Readonly Timesheet", compute="_compute_readonly_timesheet")
+
+    @api.constrains('task_id')
+    def _check_task_timesheetable(self):
+        if not all(task.allow_timesheets for task in self.task_id):
+            raise ValidationError(_("You cannot timesheet on a task in a project that doesn't allow timesheeting."))
 
     @api.depends('project_id', 'task_id')
     def _compute_display_name(self):

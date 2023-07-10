@@ -693,3 +693,35 @@ class TestTimesheet(TestCommonTimesheet):
             },
         ])
         self.assertEqual(self.task1.progress, 100, 'The percentage of planned hours should be 100%.')
+
+    def test_timesheet_on_subtaks_with_no_project(self):
+        project_timesheetable, project_non_timesheetable = self.env['project.project'].create([
+            {'name': 'Project Timesheetable', 'allow_timesheets': True},
+            {'name': 'Project Non-Timesheetable', 'allow_timesheets': False},
+        ])
+        project_timesheetable_task, project_non_timesheetable_task = self.env['project.task'].create([{
+            'name': 'Task in project timesheetable (Parent 1)',
+            'project_id': project_timesheetable.id,
+            'child_ids': [
+                Command.create({'name': 'Parent 1 / subtask with no project'}),
+            ],
+        }, {
+            'name': 'Task in project non timesheetable (Parent 2)',
+            'project_id': project_non_timesheetable.id,
+            'child_ids': [
+                Command.create({'name': 'Parent 2 / subtask with no project'}),
+            ],
+        }])
+
+        Timesheet = self.env['account.analytic.line'].with_context(default_employee_id=self.empl_employee.id)
+        with self.assertRaises(ValidationError):
+            with Form(Timesheet, view='hr_timesheet.hr_timesheet_line_form') as timesheet_form:
+                timesheet_form.task_id = project_non_timesheetable_task.child_ids
+                self.assertEqual(project_non_timesheetable_task.child_ids.project_root_id, project_non_timesheetable)
+                self.assertEqual(timesheet_form.project_id, project_non_timesheetable)
+
+        timesheet_form = Form(Timesheet, view='hr_timesheet.hr_timesheet_line_form')
+        timesheet_form.task_id = project_timesheetable_task.child_ids
+        timesheet = timesheet_form.save()
+        self.assertEqual(project_timesheetable_task.child_ids.project_root_id, project_timesheetable)
+        self.assertEqual(timesheet.project_id, project_timesheetable)
