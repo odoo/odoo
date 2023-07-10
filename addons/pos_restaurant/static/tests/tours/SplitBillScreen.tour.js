@@ -53,6 +53,7 @@ registry
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0001");
+            TicketScreen.do.loadSelectedOrder();
             ProductScreen.check.isShown();
             ProductScreen.do.clickOrderline("Water", "2.0");
             ProductScreen.do.clickOrderline("Minute Maid", "3.0");
@@ -86,12 +87,14 @@ registry
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0002");
+            TicketScreen.do.loadSelectedOrder();
             ProductScreen.do.clickOrderline("Water", "1.0");
             ProductScreen.do.clickOrderline("Coca-Cola", "1.0");
             ProductScreen.check.totalAmountIs("4.00");
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0001");
+            TicketScreen.do.loadSelectedOrder();
             ProductScreen.do.clickOrderline("Minute Maid", "1.0");
             ProductScreen.check.totalAmountIs("2.00");
             return getSteps(); 

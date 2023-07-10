@@ -20,6 +20,7 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -121,6 +122,7 @@ export class PosStore extends Reactive {
 
         this.numpadMode = "quantity";
         this.mobile_pane = "right";
+        this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
 
         // Record<orderlineId, { 'qty': number, 'orderline': { qty: number, refundedQty: number, orderUid: string }, 'destinationOrderUid': string }>
@@ -135,7 +137,7 @@ export class PosStore extends Reactive {
                 cacheDate: null,
             },
             ui: {
-                selectedSyncedOrderId: null,
+                selectedOrder: null,
                 searchDetails: this.getDefaultSearchDetails(),
                 filter: null,
                 // maps the order's backendId to it's selected orderline
@@ -1634,6 +1636,10 @@ export class PosStore extends Reactive {
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }
+    switchPaneTicketScreen() {
+        this.ticket_screen_mobile_pane =
+            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
+    }
     async logEmployeeMessage(action, message) {
         await this.orm.call("pos.session", "log_partner_message", [
             this.pos_session.id,
@@ -1876,7 +1882,8 @@ export class PosStore extends Reactive {
     showBackButton() {
         return (
             this.mainScreen.component === PaymentScreen ||
-            (this.mainScreen.component === ProductScreen && this.mobile_pane == "left")
+            (this.mainScreen.component === ProductScreen && this.mobile_pane == "left") ||
+            this.mainScreen.component === TicketScreen
         );
     }
 

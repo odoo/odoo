@@ -50,7 +50,7 @@ patch(TicketScreen.prototype, {
         // we came from the FloorScreen
         const orderTable = order.getTable();
         await this.pos.setTable(orderTable, order.uid);
-        this.pos.closeScreen();
+        this.closeTicketScreen();
     },
     get allowNewOrders() {
         return this.pos.config.module_pos_restaurant
@@ -126,7 +126,7 @@ patch(TicketScreen.prototype, {
         return result;
     },
     async onDoRefund() {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
         if (this.pos.config.module_pos_restaurant && order && !this.pos.table) {
             this.pos.setTable(order.table ? order.table : Object.values(this.pos.tables_by_id)[0]);
         }
