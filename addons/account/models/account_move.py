@@ -960,9 +960,13 @@ class AccountMove(models.Model):
                                 for move_type in x['counterpart_move_types']:
                                     reverse_move_types.add(move_type)
 
-                            if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == {'in_refund'}) \
-                              or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == {'out_refund'}) \
-                              or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == {'entry'}):
+                            in_reverse = (invoice.move_type in ('in_invoice', 'in_receipt')
+                                          and (reverse_move_types == {'in_refund'} or reverse_move_types == {'in_refund', 'entry'}))
+                            out_reverse = (invoice.move_type in ('out_invoice', 'out_receipt')
+                                           and (reverse_move_types == {'out_refund'} or reverse_move_types == {'out_refund', 'entry'}))
+                            misc_reverse = (invoice.move_type in ('entry', 'out_refund', 'in_refund')
+                                            and reverse_move_types == {'entry'})
+                            if in_reverse or out_reverse or misc_reverse:
                                 new_pmt_state = 'reversed'
 
                     elif reconciliation_vals:
