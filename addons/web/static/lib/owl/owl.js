@@ -2876,6 +2876,10 @@
     function validateBaseType(key, value, type) {
         if (typeof type === "function") {
             if (typeof value === "object") {
+                // Validate against the correct HTMLElement class with respect to iframes.
+                if (type === HTMLElement && value.ownerDocument && value.ownerDocument.defaultView) {
+                    type = value.ownerDocument.defaultView.HTMLElement;
+                }
                 if (!(value instanceof type)) {
                     return `'${key}' is not a ${describeType(type)}`;
                 }
