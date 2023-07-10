@@ -270,3 +270,26 @@ class TestDeleteEvents(TestCommon):
         """
         Same than test_delete_first_event_and_future_from_recurrence_from_outlook_calendar.
         """
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_delete_single_event_from_recurrence_from_odoo_calendar(self, mock_delete):
+        """
+        Deletes the base_event of a recurrence and checks if the event was archived and the recurrence was updated.
+        """
+        # arrange
+        idx = 0
+        event_id = self.recurrent_events[idx].ms_organizer_event_id
+
+        # act
+        self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('self_only')
+        self.call_post_commit_hooks()
+
+        # assert that event is not active anymore and that a new base_event was select for the recurrence
+        self.assertFalse(self.recurrent_events[idx].active)
+        self.assertNotEqual(self.id, self.recurrent_events[idx].recurrence_id.base_event_id.id)
+        self.assertTrue(self.id not in [rec.id for rec in self.recurrent_events[idx].recurrence_id.calendar_event_ids])
+        mock_delete.assert_called_once_with(
+            event_id,
+            token=mock_get_token(self.organizer_user),
+            timeout=ANY
+        )
