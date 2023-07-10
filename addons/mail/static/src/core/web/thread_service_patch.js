@@ -5,7 +5,7 @@ import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 import { createLocalId } from "@mail/utils/common/misc";
 
-import { markup } from "@odoo/owl";
+import { markup, toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -79,11 +79,21 @@ patch(ThreadService.prototype, "mail/core/web", {
             this.setMainAttachmentFromIndex(thread, 0);
         }
         if ("followers" in result) {
+            if (result.selfFollower) {
+                thread.selfFollower = this.insertFollower({
+                    followedThread: thread,
+                    ...result.selfFollower,
+                });
+            }
+            thread.followersCount = result.followersCount;
             for (const followerData of result.followers) {
-                this.insertFollower({
+                const follower = this.insertFollower({
                     followedThread: thread,
                     ...followerData,
                 });
+                if (toRaw(follower) !== toRaw(thread.selfFollower)) {
+                    thread.followers.add(follower);
+                }
             }
         }
         if ("suggestedRecipients" in result) {
@@ -138,7 +148,6 @@ patch(ThreadService.prototype, "mail/core/web", {
             partner: this.personaService.insert({ ...data.partner, type: "partner" }),
             _store: this.store,
         });
-        follower.followedThread.followers.add(follower);
         return follower;
     },
     /**
@@ -174,6 +183,21 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
         this._super(...arguments);
     },
+    async loadMoreFollowers(thread) {
+        const followers = await this.orm.call(thread.model, "message_get_followers", [
+            [thread.id],
+            Array.from(thread.followers).at(-1).id,
+        ]);
+        for (const data of followers) {
+            const follower = this.insertFollower({
+                followedThread: thread,
+                ...data,
+            });
+            if (toRaw(follower) !== toRaw(thread.selfFollower)) {
+                thread.followers.add(follower);
+            }
+        }
+    },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive || this.ui.isSmall) {
             this.chatWindowService.open(thread, replaceNewMessageChatWindow);
@@ -188,7 +212,12 @@ patch(ThreadService.prototype, "mail/core/web", {
             [follower.followedThread.id],
             [follower.partner.id],
         ]);
-        follower.followedThread.followers.delete(follower);
+        const thread = follower.followedThread;
+        if (toRaw(follower) === toRaw(thread.selfFollower)) {
+            thread.selfFollower = undefined;
+        } else {
+            thread.followers.delete(follower);
+        }
         delete this.store.followers[follower.id];
     },
     unpin(thread) {

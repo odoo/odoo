@@ -508,3 +508,14 @@ GROUP BY fol.id%s%s""" % (
                         update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update
+
+    def _format_for_chatter(self):
+        return [{
+            'id': follower.id,
+            'partner_id': follower.partner_id.id,
+            'name': follower.name,
+            'display_name': follower.display_name,
+            'email': follower.email,
+            'is_active': follower.is_active,
+            'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
+        } for follower in self]
