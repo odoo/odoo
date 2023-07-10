@@ -17,6 +17,8 @@
         "payment_odoo.menu_adyen_account",
         "payment_odoo.root_adyen_menu",
     ];
+    // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
+    const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
     const { isEnterprise } = odoo.info;
     const { onWillStart } = owl;
@@ -245,7 +247,7 @@
         if (!isStudioInstalled) {
             return;
         }
-        const studioIcon = document.querySelector(".o_web_studio_navbar_item:not(.o_disabled) a i");
+        const studioIcon = document.querySelector(STUDIO_SYSTRAY_ICON_SELECTOR);
         if (!studioIcon) {
             return;
         }
