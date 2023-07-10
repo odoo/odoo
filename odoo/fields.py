@@ -2002,7 +2002,11 @@ class Html(_String):
             if record.user_has_groups('base.group_sanitize_override'):
                 return value
 
-            original_value = record[self.name]
+            # This may cause an infinite recursion when accessing the field on a
+            # new record. Indeed, if record has no value in cache, we default
+            # on the field's value on record._origin and convert it to the
+            # cache format, which ends up here, accessing the field on record!
+            original_value = record[self.name] if record.id else None
             if original_value:
                 # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)

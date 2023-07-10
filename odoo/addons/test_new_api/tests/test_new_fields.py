@@ -3260,6 +3260,14 @@ class TestHtmlField(common.TransactionCase):
         self.assertEqual(record.comment5, '',
                          "should be sanitized (not in groups)")
 
+        # extra test with new record having 'record' as origin
+        new_record = record.new(origin=record)
+        new_record.with_user(bypass_user).comment5
+
+        # this was causing an infinite recursion (see explanation in fields.py)
+        new_record.invalidate_recordset()
+        new_record.with_user(internal_user).comment5
+
 
 class TestMagicFields(common.TransactionCase):
 
