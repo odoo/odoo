@@ -125,6 +125,15 @@ class AccountAnalyticAccount(models.Model):
                 name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
             analytic.display_name = name
 
+    @api.constrains('name')
+    def _check_unique_name_in_plan(self):
+        for account in self:
+            account_ids = account.plan_id.account_ids.ids
+            account_ids.remove(account.id)
+            analytic_accounts = self.env['account.analytic.account'].browse(account_ids)
+            if account.name in [a['name'] for a in analytic_accounts]:
+                raise UserError("Another entry with the same name already exists in the same plan.")
+
     def copy_data(self, default=None):
         default = dict(default or {})
         default.setdefault('name', _("%s (copy)", self.name))
