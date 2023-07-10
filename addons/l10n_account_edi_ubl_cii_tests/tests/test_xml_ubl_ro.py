@@ -6,11 +6,14 @@ from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommo
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
-from lxml import etree
+from lxml import etree, isoschematron
 from odoo import Command
 
+from saxonpy import PySaxonProcessor
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+
+# TODO - remove 'yoni' tag when done
+@tagged('post_install_l10n', 'post_install', '-at_install', 'yoni')
 class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
@@ -78,42 +81,45 @@ class TestUBLRO(TestUBLCommon, TestAccountMoveSendCommon):
                 },
             ],
         )
-        # invoice = self.env["account.move"].create({
-        #     'move_type': 'out_invoice',
-        #     'partner_id': self.partner_1.id,
-        #     'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
-        #     'invoice_payment_term_id': self.pay_terms_b.id,
-        #     # 'invoice_date': '2017-01-01',
-        #     # 'date': '2017-01-01',
-        #     # 'narration': 'test narration',
-        #     'ref': 'ref_move',
-        #     'invoice_line_ids': [
-        #         Command.create({
-        #             'product_id': self.product_a.id,
-        #             'quantity': 1.0,
-        #             'price_unit': 1000.0,
-        #             'tax_ids': [Command.set(self.env["account.chart.template"].ref('tax110').ids)],
-        #         }),
-        #     ],
-        # })
-        # invoice.action_post()
 
         invoice._generate_pdf_and_send_invoice(self.move_template)
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        # self.assertFalse(invoice.ubl_cii_xml_id)
-        # self.assertFalse(invoice.ubl_cii_xml_id)
-        # self.assertTrue(invoice.ubl_cii_xml_id)
-        # self.assertFalse(invoice.ubl_cii_xml_id)
-        # self.assertFalse(invoice.ubl_cii_xml_id)
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
 
-        # xml_content = base64.b64decode(invoice.ubl_cii_xml_id.with_context(bin_size=False).datas)
-        # xml_etree = self.get_xml_tree_from_string(xml_content)
+        # TODO: remove when done
+        # for manual check to https://www.anaf.ro/uploadxmi/
+        from pathlib import Path
+        with Path("~/work/odoo/.notes/test.xml").expanduser().open("wb") as f:
+            f.write(xml_content)
 
-        # from pathlib import Path
-        # with Path("~/Downloads/OIOUBL.xml").expanduser().open("wb") as f:
-        #     f.write(xml_content)
-        # with file_open("l10n_account_edi_ubl_cii_tests/tests/OIOUBL_Invoice_Schematron.xsl", "rb") as schematron_file:
-        #     xsl = etree.parse(schematron_file)
+        self.assertEqual(attachment.name[-11:], "cius_ro.xml")
+
+        # with PySaxonProcessor(license=False) as proc:
+        #     xsltproc = proc.new_xslt_processor()
+        #     document = proc.parse_xml(xml_text=xml_content)
+        #     xsltproc.set_source(xdm_node=document)
+        #     xsltproc.compile_stylesheet(stylesheet_text="<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='2.0'> <xsl:param name='values' select='(2,3,4)' /><xsl:output method='xml' indent='yes' /><xsl:template match='*'><output><xsl:value-of select='//person[1]'/><xsl:for-each select='$values' ><out><xsl:value-of select='. * 3'/></out></xsl:for-each></output></xsl:template></xsl:stylesheet>")
+        #     xsltproc.compile_stylesheet(stylesheet_text="<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='2.0'> <xsl:param name='values' select='(2,3,4)' /><xsl:output method='xml' indent='yes' /><xsl:template match='*'><output><xsl:value-of select='//person[1]'/><xsl:for-each select='$values' ><out><xsl:value-of select='. * 3'/></out></xsl:for-each></output></xsl:template></xsl:stylesheet>")
+        #     output2 = xsltproc.transform_to_string()
+        #     print(output2)
+
+        # schematron_path = 'l10n_account_edi_ubl_cii_tests/tests/test_files/from_odoo/ciusro_EN16931-UBL-validation.sch'
+        # with file_open(schematron_path, "rb") as schematron_file:
+        #     xslt_content = schematron_file.read()
+
+        # xslt_etree = etree.fromstring(xslt_content)
+        # transformer = etree.XSLT(xslt_etree)
+        # result = transformer(xml_etree)
+        # validation_result = str(result)
+
+        #     sch_doc = etree.parse(schematron_file)
+        #     schematron = isoschematron.Schematron(sch_doc, store_report=True)
+        #     validation_result = schematron.validate(xml_etree)
+
+        #     with Path("~/work/odoo/.notes/result.xml").expanduser().open("wb") as f:
+        #         f.write(validation_result)
+
         #     transform = etree.XSLT(xsl)
         #     result_tree = transform(xml_etree)
 

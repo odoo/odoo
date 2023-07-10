@@ -9,6 +9,4 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
     _description = "SI-UBL 2.0 (NLCIUS)"
 
     def _export_invoice_filename(self, invoice):
-        # TODO: test this
-        # return f"{invoice.name.replace('/', '_')}_cius_ro.xml"
-        return f"{invoice.name.replace('/', '_')}_cius_rooo.xml"
+        return f"{invoice.name.replace('/', '_')}_cius_ro.xml"
