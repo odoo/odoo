@@ -77,7 +77,8 @@ class LeaveReport(models.Model):
                     request.date_to as date_to,
                     'request' as leave_type,
                     request.employee_company_id as company_id
-                from hr_leave as request) leaves
+                from hr_leave as request
+                where request.active = True) leaves
             );
         """)
 
