@@ -1010,6 +1010,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"    ロック日を不可逆にします：\n"
+"\n"
+"    * アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日は請求書ロック日よりも前（または同じ）でなければなりません。\n"
+"    * まだ終了していない期間はロックできません。したがって、すべてのユーザーのロック日は、前月の最終日より前（または同じ）である必要があります。\n"
+"    * 新しい全てのユーザーのロック日は、前の日付より後（または同じ）である必要があります。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1240,6 +1247,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"CRMアプリでリードや案件を生成するために、ウェブサイトのフォームに機能を追加します。\n"
+"リードを作成するには、*Website Builder*内でフォームをカスタマイズする必要があります。\n"
+"\n"
+"このモジュールには、連絡先の電話番号と携帯電話番号の検証が含まれています。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -5514,6 +5526,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Implementation details\n"
+"\n"
+"### Supported features\n"
+"\n"
+"- リダイレクトフローによる支払\n"
+"- クレジットカード、デビットカード、クレジットカード、その他 [others]など、さまざまな支払い方法があります。\n"
+" (https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- [Webhook](https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  通知\n"
+"\n"
+"### Not implemented features\n"
+"\n"
+"- [Manual capture](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Partial refunds](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API and gateway\n"
+"\n"
+"当社は以下の組み合わせで統合することを選択しました\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) と\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing) 解決方法：\n"
+"リダイレクトを含む支払フローは顧客にCheckout ProのJavaScript SDKが内部で行うようにフォームがエンコードされたペイロードと\n"
+" HTTPリクエストを送付することで開始されます。残存しているAPIコールは\n"
+"Checkout APIのドキュメント化に応じて実施されます。 Checkout Proとの統合が不可能だったのは、Checkout APIのみでも\n"
+"顧客を決済ページにリダイレクトすることのみ許可しているからで、\n"
+"加盟店のウェブサイトから直接支払いを受け付けるには、カスタム支払いフォームを作成する必要があるためです。\n"
+"\n"
+"他のゲートウェイは除外されています。他のゲートウェイについての詳細はタスクの開発者メモを参照して下さい。\n"
+"\n"
+"このモジュールが実装するAPIはバージョン管理されていません。\n"
+"\n"
+"## Merge details\n"
+"\n"
+"モジュールの最初のバージョンは、以下のタスクに規定されています：\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) また以下と統合されています：PR\n"
+"odoo/odoo#83957 in `saas-15.5`.\n"
+"\n"
+"## Testing instructions\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -7889,7 +7942,7 @@ msgstr "連絡先の自動マージのリストを実行してもよろしいで
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Are you sure you want to hide these onboarding tips?"
-msgstr ""
+msgstr "このオンボーディングのヒントを非表示にしても大丈夫ですか？"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -8526,7 +8579,7 @@ msgstr "ベリーズ"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "以下の文章は提案であり、Odoo S.A.ではその責任を負いかねます。"
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -9995,7 +10048,7 @@ msgstr "都道府県/州"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "クーポン＆ロイヤルティ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
@@ -11851,7 +11904,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Eswatini"
-msgstr ""
+msgstr "エスワティニ"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -16038,7 +16091,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resume of your employees"
-msgstr ""
+msgstr "従業員のスキル、ナレッジ、履歴書を管理"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -18456,7 +18509,7 @@ msgstr "店頭で決済・ピッキング"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Onboarding Tips"
-msgstr ""
+msgstr "オンボーディングのヒント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
@@ -19727,7 +19780,7 @@ msgstr "POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
 msgid "Point of Sale - Coupons & Loyalty"
-msgstr ""
+msgstr "POS - クーポン＆ロイヤリティ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
@@ -21150,7 +21203,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "標準的な販売条件"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -21255,7 +21308,7 @@ msgstr "サービスアウトソーシングに基づく販売。"
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
-msgstr "営業"
+msgstr "販売"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -21349,7 +21402,7 @@ msgstr "サウジアラビア - 会計"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
 msgid "Saudi Arabia - Point of Sale"
-msgstr ""
+msgstr "サウジアラビア - POS"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -22288,7 +22341,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_pos_hr
 msgid "Spreadsheet dashboard for point of sale"
-msgstr ""
+msgstr "POS用スプレッドシートダッシュボード"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_purchase
@@ -23054,6 +23107,7 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"標準的な当該販売条件の後に作成されたものであっても、顧客は、顧客自身の標準販売条件を明示的に放棄するものとします。いかなる逸脱も、それを有効にするためには事前に書面で明示的に合意されなければなりません。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -24372,6 +24426,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"サーバーアクションのタイプ。以下の値が利用可能です：\n"
+"- 「Pythonコードの実行」：Pythonコードブロックが実行されます\n"
+"- 「新規記録の作成」： 新しい値で新しいレコードを作成します\n"
+"- 「記録のアップデート」： 記録の値を更新します\n"
+"- 「複数のアクションを実行」： 他の複数のサーバーアクションをトリガーするアクションを定義します。\n"
+"- 「メール送信」： メッセージやメモの投稿やメールを送信します。\n"
+"- 「フォロワーを追加」：記録にフォロワーを追加します (ディスカッション)\n"
+"- 「次のアクティビティを作成」：アクティビティを作成します（ディスカッション）\n"
+"- 「SMSテキストメッセージを送信」：SMSを送信し、ドキュメントに記録します（SMS）"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -24549,7 +24612,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
 msgid "United Arab Emirates - Point of Sale"
-msgstr ""
+msgstr "United Arab Emirates - POS"
 
 #. module: base
 #: model:res.country,name:base.uk
@@ -26027,7 +26090,7 @@ msgstr "他の検索条件を試してみてください。"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "お客様のT&amp;Cを反映させるために、この文書を更新する必要があります。"
 
 #. module: base
 #. odoo-python

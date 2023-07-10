@@ -3460,10 +3460,18 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with Form(move) as move_form:
             move_form.currency_id = self.currency_data['currency']
         self.assertEqual(move.currency_id, self.currency_data['currency'])
+        self.assertEqual(move.line_ids.currency_id, self.currency_data['currency'])
 
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            move_form.journal_id = self.company_data['default_journal_sale']
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.tax_ids.clear()
             move_form.currency_id = self.currency_data['currency']
             self.assertEqual(move_form.currency_id, self.currency_data['currency'])
+        move = move_form.save()
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+        self.assertEqual(move.line_ids.currency_id, self.currency_data['currency'])
 
     def test_change_journal_currency(self):
         second_journal = self.company_data['default_journal_sale'].copy({
@@ -3563,3 +3571,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
                 self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))
+
+    def test_invoice_mass_posting(self):
+        """
+        With some particular setup (in this case, rounding issue), partner get mixed up in the
+        invoice lines after mass posting.
+        """
+        currency = self.company_data['currency']
+        currency.rounding = 0.0001
+        invoice1 = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', products=self.product_a)
+        invoice1.invoice_line_ids.price_unit = 12.36
+        invoice2 = self.init_invoice(move_type='out_invoice', partner=self.partner_b, invoice_date='2016-01-20', products=self.product_a)
+
+        vam = self.env["validate.account.move"].create({"force_post": True})
+        vam.with_context(active_model='account.move', active_ids=[invoice2.id, invoice1.id]).validate_move()
+
+        for aml in invoice1.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_a)
+        for aml in invoice2.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_b)

@@ -5,7 +5,7 @@
 # Translators:
 # Trần Hà <tranthuha13590@gmail.com>, 2022
 # Vo Thanh Thuy, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2023-06-15 10:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -153,7 +153,6 @@ msgstr ""
 "  - Chuyển kho: số lượng dựa trên số lượng mã phiếu kho đã xác nhận\n"
 
 #. module: sale_timesheet
-#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
 msgstr "Dịch vụ hậu mãi"
@@ -224,7 +223,7 @@ msgstr "Billable"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Hours"
-msgstr ""
+msgstr "Số giờ có thể lập hoá đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
@@ -244,7 +243,7 @@ msgstr "Kiểu xuất hoá đơn"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed Manually"
-msgstr ""
+msgstr "Đã lập hoá đơn thủ công"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
@@ -264,7 +263,7 @@ msgstr "Billed at a Fixed price"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Milestones"
-msgstr ""
+msgstr "Đã lập hoá đơn theo mốc thời gian"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
@@ -358,8 +357,8 @@ msgid "Create SO from project"
 msgstr "Tạo đơn bán hàng từ dự án"
 
 #. module: sale_timesheet
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -490,7 +489,7 @@ msgstr "Dịch vụ Giá cố định"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Furniture Delivery (Manual)"
-msgstr ""
+msgstr "Giao nội thất (thủ công)"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -521,7 +520,7 @@ msgstr "Has Multi Sol"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Chi phí theo giờ"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
@@ -724,10 +723,13 @@ msgid "Margin"
 msgstr "Lợi nhuận biên"
 
 #. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+#, python-format
 msgid "Materials"
 msgstr "Vật liệu"
 
@@ -786,22 +788,22 @@ msgstr "Non-Billable"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Hours"
-msgstr ""
+msgstr "Giờ không thể lập hoá đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
-msgstr ""
+msgstr "Số giờ đã dùng nhân với đơn giá theo giờ/ngày"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Number of hours/days linked to a SOL."
-msgstr ""
+msgstr "Số giờ/ngày liên kết với một mục đơn bán hàng."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Number of hours/days not linked to a SOL."
-msgstr ""
+msgstr "Số giờ/ngày không liên kết với một mục đơn bán hàng."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
@@ -1077,6 +1079,9 @@ msgid ""
 "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
+"Hạng mục đơn bán hàng sẽ được chọn theo mặc định trên bảng chấm công của nhân viên tương ứng. Điều này bỏ qua mục đơn bán hàng được xác định trong dự án và nhiệm vụ, đồng thời có thể được điều chỉnh trên mỗi mục nhập bảng chấm công nếu cần. Nói cách khác, nó xác định mức phí mà thời gian của nhân viên được lập hóa đơn dựa trên các yếu tố như chuyên môn, kỹ năng hoặc kinh nghiệm của họ.\n"
+"Nếu bạn muốn lập hóa đơn cho cùng một dịch vụ ở một mức phí khác, bạn cần tạo hai hạng mục đơn bán hàng riêng biệt vì tại một thời điểm, mỗi hạng mục đơn bán hàng chỉ có thể có một đơn giá duy nhất.\n"
+"Bạn cũng có thể xác định chi phí theo giờ của nhân viên cho bảng chấm công của họ chỉ trong dự án này. Điều này sẽ bỏ qua chi phí bảng chấm công đã được thiết lập cho nhân viên."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1161,6 +1166,9 @@ msgid ""
 "task. It can be modified on each task individually by selecting a specific "
 "sales order item."
 msgstr ""
+"Dịch vụ sẽ được sử dụng theo mặc định khi lập hóa đơn thời gian dành cho một"
+" nhiệm vụ. Bạn có thể điều chỉnh trên từng nhiệm vụ bằng cách chọn một hạng "
+"mục đơn đặt hàng cụ thể."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1287,6 +1295,8 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
+"Chi phí này ghi đè tiền công theo giờ mặc định của nhân viên trong Cài đặt "
+"nhân sự của nhân viên đó"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1392,40 +1402,40 @@ msgstr "Bảng chấm công"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
-msgstr ""
+msgstr "Bảng chấm công (lập hoá đơn thủ công)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Milestones)"
-msgstr ""
+msgstr "Bảng chấm công (lập hoá đơn theo mốc thời gian)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Timesheets)"
-msgstr ""
+msgstr "Bảng chấm công (lập hoá đơn theo bảng chấm công)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Bảng chấm công (giá cố định)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
-msgstr ""
+msgstr "Bảng chấm công (không thể lập hoá đơn)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "Phân tích bảng chấm công"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
@@ -1445,7 +1455,7 @@ msgstr "Bảng chấm công theo kiểu hóa đơn"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "Bảng chấm công cho"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1464,12 +1474,12 @@ msgstr "Bảng chấm cômg theo dự án (một việc theo từng SO/Dự án)
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets revenues"
-msgstr ""
+msgstr "Doanh thu bảng chấm công"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Timesheets revenues minus the costs"
-msgstr ""
+msgstr "Doanh thu bảng chấm công trừ chi phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1670,4 +1680,4 @@ msgstr "biên lợi nhuận ("
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of hours sold."
-msgstr ""
+msgstr "của số giờ đã bán."

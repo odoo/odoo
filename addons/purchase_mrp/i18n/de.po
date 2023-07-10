@@ -3,7 +3,7 @@
 # 	* purchase_mrp
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -23,7 +23,7 @@ msgstr ""
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
 msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr "<span class=\"o_stat_text\">Fertigungsauftrag</span>"
+msgstr "<span class=\"o_stat_text\">Fertigung</span>"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
@@ -49,8 +49,7 @@ msgstr "Stücklistenposition"
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Components cost share have to be positive or equals to zero."
-msgstr ""
-"Die Aufteilung von Komponentenkosten muss positiv oder gleich null sein."
+msgstr "Der Kostenanteil der Komponenten muss positiv oder gleich Null sein."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
@@ -60,12 +59,12 @@ msgstr "Kostenanteil (%)"
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
 msgid "Count of MO Source"
-msgstr "Anzahl der Verkaufsauftragsquellen"
+msgstr "Anzahl der Fertigungsauftragsquellen"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
 msgid "Count of generated PO"
-msgstr "Anzahl generierter Einkaufsbestellungen"
+msgstr "Anzahl generierter Einkaufsaufträge"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_account_move_line
@@ -76,7 +75,7 @@ msgstr "Buchungszeile"
 #: code:addons/purchase_mrp/models/purchase.py:0
 #, python-format
 msgid "Manufacturing Source of %s"
-msgstr "Produktionsquelle von %s"
+msgstr "Fertigungsquelle von %s"
 
 #. module: purchase_mrp
 #: code:addons/purchase_mrp/models/stock_move.py:0
@@ -96,18 +95,18 @@ msgstr "Fertigungsauftrag"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
 msgid "Purchase Order"
-msgstr "Bestellung"
+msgstr "Einkaufsauftrag"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Bestellposition"
+msgstr "Einkaufsauftragszeile"
 
 #. module: purchase_mrp
 #: code:addons/purchase_mrp/models/mrp_production.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr "Bestellungen generiert aus %s"
+msgstr "Einkaufsauftrag generiert aus %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move
@@ -121,7 +120,8 @@ msgid ""
 "total of all components' cost have to be equal to 100."
 msgstr ""
 "Der prozentuale Anteil der Kosten für die Komponenten beim Kauf eines "
-"Bausatzes, wobei die Gesamtkosten für alle Komponenten gleich 100 sein muss."
+"Bausatzes, wobei die Gesamtkosten für alle Komponenten gleich 100 sein "
+"müssen."
 
 #. module: purchase_mrp
 #: code:addons/purchase_mrp/models/mrp_bom.py:0

@@ -36,7 +36,11 @@ ec_purchase_vat_goods_imports,11050104,IVA pagado en importacion de bienes,FALSE
 ec_purchase_vat_assets_imports,11050105,IVA pagado en importacion de activos fijos,FALSE,asset_current,l10n_ec_ifrs
 ec_sale_vat_outstanding_withholds,11050106,IVA pagado en retenciones de la fuente,FALSE,asset_current,l10n_ec_ifrs
 ec_purchase_vat_zero,11050107,IVA en compras 0%,FALSE,asset_current,l10n_ec_ifrs
-ec110502,110502,Credito tributario a favor de la empresa(i.r.),FALSE,asset_current,l10n_ec_ifrs
+ec_profit_tax_credit,11050201,Crédito tributario por Impuesto a la Renta,FALSE,asset_current,l10n_ec_ifrs
+ec_vat_tax_credit,11050202,Crédito tributario de IVA,FALSE,asset_current,l10n_ec_ifrs
+ec_withhold_tax_credit,11050203,Crédito tributario por Retenciones IVA,FALSE,asset_current,l10n_ec_ifrs
+ec_isd_tax_credit,11050204,Crédito tributario por ISD,FALSE,asset_current,l10n_ec_ifrs
+ec_others_tax_credit,11050205,Credito Tributario por otros conceptos,FALSE,asset_current,l10n_ec_ifrs
 ec110503,110503,Anticipo de impuesto a la renta,FALSE,asset_current,l10n_ec_ifrs
 ec_sale_profit_withhold,110504,Retenciones en la fuente pagadas,FALSE,asset_current,l10n_ec_ifrs
 ec1106,1106,Activos no corrientes mantenidos para la venta y operaciones discontinuadas,FALSE,asset_current,l10n_ec_ifrs
@@ -114,6 +118,11 @@ ec21050102,21050102,Otras provisiones locales,TRUE,liability_current,l10n_ec_ifr
 ec210502,210502,Provisiones del exterior,TRUE,liability_current,l10n_ec_ifrs
 ec2106,2106,Porcion corriente de obligaciones emitidas,FALSE,liability_current,l10n_ec_ifrs
 ec21070101,21070101,Impuesto a la renta retenido a empleados,TRUE,liability_current,l10n_ec_ifrs
+ec_vat_tax_deduction,21070102,Impuesto por pagar IVA,TRUE,liability_current,l10n_ec_ifrs
+ec_profit_tax_deduction,21070103,Retenciones en la fuente por pagar,TRUE,liability_current,l10n_ec_ifrs
+ec_ice_tax_deduction,21070104,Impuesto por pagar ICE,TRUE,liability_current,l10n_ec_ifrs
+ec_irbpnr_tax_deduction,21070105,Impuesto IRBPNR por pagar,TRUE,liability_current,l10n_ec_ifrs
+ec_others_tax_deduction,21070106,Otros impuestos por pagar,TRUE,liability_current,l10n_ec_ifrs
 ec210702,210702,Impuesto a la renta por pagar del ejercicio,TRUE,liability_payable,l10n_ec_ifrs
 ec21070301,21070301,Prestamos quirografarios,TRUE,liability_current,l10n_ec_ifrs
 ec21070302,21070302,Prestamos hipotecarios,TRUE,liability_current,l10n_ec_ifrs
@@ -399,7 +408,8 @@ ec52022001,52022001,Patente municipal,FALSE,expense,l10n_ec_ifrs
 ec52022002,52022002,1.5x mil activos totales,FALSE,expense,l10n_ec_ifrs
 ec52022003,52022003,Contribuciones super cias.,FALSE,expense,l10n_ec_ifrs
 ec52022004,52022004,Camara de comercio,FALSE,expense,l10n_ec_ifrs
-ec52022005,52022005,Otros impuestos,FALSE,expense,l10n_ec_ifrs
+ec52022005,52022005,Impuesto Salida de Divisas (ISD),FALSE,expense,l10n_ec_ifrs
+ec52022006,52022006,Otros impuestos,FALSE,expense,l10n_ec_ifrs
 ec5202210101,5202210101,Edificios,FALSE,expense_depreciation,l10n_ec_ifrs
 ec5202210102,5202210102,Contrucciones en curso,FALSE,expense_depreciation,l10n_ec_ifrs
 ec5202210103,5202210103,Instalaciones,FALSE,expense_depreciation,l10n_ec_ifrs
@@ -455,7 +465,7 @@ ec5202281803,5202281803,Gnd retenciones asumidas,FALSE,expense,l10n_ec_ifrs
 ec5202281804,5202281804,Gnd soporte tecnico,FALSE,expense,l10n_ec_ifrs
 ec5202281805,5202281805,Gnd movilización no deducible,FALSE,expense,l10n_ec_ifrs
 ec5202281806,5202281806,"Gnd impuestos, intereses y multas",FALSE,expense,l10n_ec_ifrs
-ec5202281807,5202281807,Gnd salidas de divisas,FALSE,expense,l10n_ec_ifrs
+ec5202281807,5202281807,Gnd Impuesto Salida de Divisas (ISD),FALSE,expense,l10n_ec_ifrs
 ec5202281808,5202281808,Gnd otros gastos no deducibles,FALSE,expense,l10n_ec_ifrs
 ec520301,520301,Intereses,FALSE,expense,l10n_ec_ifrs
 ec520302,520302,Comisiones,FALSE,expense,l10n_ec_ifrs

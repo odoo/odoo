@@ -1118,6 +1118,13 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         this.__pixelEl.style.width = `1px`;
         this.__pixelEl.style.height = `1px`;
         this.__pixelEl.style.marginTop = `-1px`;
+        // On safari, add a background attachment fixed to fix the glitches that
+        // appear when scrolling the page with a footer slide out.
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.__pixelEl.style.backgroundColor = "transparent";
+            this.__pixelEl.style.backgroundAttachment = "fixed";
+            this.__pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
+        }
         this.el.appendChild(this.__pixelEl);
 
         return this._super(...arguments);

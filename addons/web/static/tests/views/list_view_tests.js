@@ -263,8 +263,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "thead th:nth(2) .text-end",
-            "header cells of integer fields should be right aligned"
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of integer fields should have o_list_number_th class"
         );
         assert.strictEqual(
             $(target).find("tbody tr:first td:nth(2)").css("text-align"),
@@ -2464,16 +2464,58 @@ QUnit.module("Views", (hooks) => {
             await toggleGroupByMenu(target);
             await toggleMenuItem(target, "candle");
 
-            assert.containsNone(
+            assert.containsOnce(
                 target,
                 ".o_list_button_add",
-                "Create not available as list is grouped"
+                "Create available as list is grouped"
             );
             assert.containsNone(
                 target,
                 ".o_list_button_save",
                 "Save not available as no row in edition"
             );
+        }
+    );
+
+    QUnit.test(
+        "editable list view: check that add button is present when groupby applied",
+        async function (assert) {
+            assert.expect(4);
+
+            serverData.models.foo.fields.foo = { string: "Foo", type: "char", required: true };
+            serverData.actions = {
+                11: {
+                    id: 11,
+                    name: "Partners Action 11",
+                    res_model: "foo",
+                    type: "ir.actions.act_window",
+                    views: [[3, "list"], [4, "form"]],
+                    search_view_id: [9, "search"],
+                }
+            };
+            serverData.views = {
+                "foo,3,list":
+                    '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+                "foo,4,form":
+                    '<form><field name="display_name"/><field name="foo"/></form>',
+                "foo,9,search": `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
+            };
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 11);
+
+            assert.containsOnce(target, ".o_list_button_add");
+
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "candle");
+            assert.containsOnce(target, ".o_list_button_add");
+
+            assert.containsOnce(target, ".o_list_view");
+            await click(target.querySelector(".o_list_button_add"));
+            assert.containsOnce(target, ".o_form_view");
         }
     );
 
@@ -3194,8 +3236,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelectorAll("tfoot td")[1].textContent,
-            "—",
-            "aggregates monetary should never work if no currency field is present"
+            "2000.000",
+            "aggregates monetary use digits attribute if available"
         );
     });
 
@@ -3263,7 +3305,7 @@ QUnit.module("Views", (hooks) => {
             "0.00",
         ]);
 
-        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "2000.00");
     });
 
     QUnit.test("aggregates monetary (currency field in view)", async function (assert) {
@@ -7542,6 +7584,31 @@ QUnit.module("Views", (hooks) => {
             window.getSelection().toString(),
             "1",
             "the selection shouldn't be changed"
+        );
+    });
+
+    QUnit.test("click on a button cell in a list view", async (assert) => {
+        serverData.models.foo.records[0].foo = "bar";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="foo"/>
+                    <button name="action_do_something" type="object" string="Action"/>
+                </tree>`,
+        });
+
+        // Need to set the line in edition. 
+        await click(target, "td[name=foo]");
+        assert.strictEqual(window.getSelection().toString(), "bar");
+
+        await click(target.querySelector(".o_data_cell.o_list_button"));
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "bar",
+            "Focus should have returned to the editable cell without throwing an error"
         );
     });
 
@@ -12733,7 +12800,7 @@ QUnit.module("Views", (hooks) => {
         await toggleGroupByMenu(target);
         await toggleMenuItem(target, "bar");
 
-        assert.containsNone(target, ".o_list_button_add");
+        assert.containsOnce(target, ".o_list_button_add");
 
         // reload without groupby
         await toggleMenuItem(target, "bar");
@@ -17337,4 +17404,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, 'Value 1');
     });
+    QUnit.test("monetary field display for rtl languages", async function (assert){
+        patchWithCleanup(localization, {
+            direction: "rtl",
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="amount_currency"/></tree>',
+        });
+
+        assert.containsOnce(
+            target,
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of monetary fields should have o_list_number_th class"
+        );
+        assert.strictEqual(
+            $(target).find("thead th:nth(2)").css("text-align"),
+            "right",
+            "header cells of monetary fields should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("text-align"),
+            "right",
+            "Monetary cells should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("direction"),
+            "ltr",
+            "Monetary cells should have ltr direction"
+        );
+    })
 });

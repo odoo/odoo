@@ -42,7 +42,7 @@
                         Discard
                     </button>
                 </t>
-                <t t-elif="activeActions.create and (!model.root.isGrouped or !editable)">
+                <t t-elif="activeActions.create">
                     <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                         New
                     </button>

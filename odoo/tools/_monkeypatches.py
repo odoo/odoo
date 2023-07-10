@@ -6,6 +6,9 @@ from shutil import copyfileobj
 _logger = logging.getLogger(__name__)
 
 from werkzeug.datastructures import FileStorage
+from werkzeug.wrappers import Request, Response
+
+from .json import scriptsafe
 
 try:
     from xlrd import xlsx
@@ -28,6 +31,8 @@ else:
 
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
 
+Request.json_module = Response.json_module = scriptsafe
+
 orig_literal_eval = ast.literal_eval
 
 def literal_eval(expr):
@@ -44,7 +49,7 @@ def literal_eval(expr):
         else:
             _logger.error("ODOO_LIMIT_LITEVAL_BUFFER has to be an integer, defaulting to 100KiB")
 
-    if len(expr) > buffer_size:
+    if isinstance(expr, str) and len(expr) > buffer_size:
         raise ValueError("expression can't exceed buffer limit")
 
     return orig_literal_eval(expr)

@@ -19,6 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
+import { localization } from "@web/core/l10n/localization";
 
 import {
     Component,
@@ -200,6 +201,7 @@ export class ListRenderer extends Component {
             this.columnWidths = null;
             this.freezeColumnWidths();
         });
+        this.isRTL = localization.direction === "rtl";
     }
 
     displaySaveNotification() {
@@ -542,14 +544,10 @@ export class ListRenderer extends Component {
                     this.props.list.activeFields[fieldName].options.currency_field ||
                     this.fields[fieldName].currency_field ||
                     "currency_id";
-                if (!(currencyField in this.props.list.activeFields)) {
-                    aggregates[fieldName] = {
-                        help: _t("No currency provided"),
-                        value: "—",
-                    };
-                    continue;
-                }
-                currencyId = values[0][currencyField] && values[0][currencyField][0];
+                currencyId =
+                    currencyField in this.props.list.activeFields &&
+                    values[0][currencyField] &&
+                    values[0][currencyField][0];
                 if (currencyId) {
                     const sameCurrency = values.every(
                         (value) => currencyId === value[currencyField][0]
@@ -653,6 +651,10 @@ export class ListRenderer extends Component {
     isNumericColumn(column) {
         const { type } = this.fields[column.name];
         return ["float", "integer", "monetary"].includes(type);
+    }
+
+    shouldReverseHeader(column) {
+        return this.isNumericColumn(column) && (!this.isRTL);
     }
 
     isSortable(column) {
@@ -936,7 +938,7 @@ export class ListRenderer extends Component {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name='${column.name}']`
                 );
-                if (containsActiveElement(cell)) {
+                if (cell && containsActiveElement(cell)) {
                     this.lastEditedCell = { column, record };
                     // Cell is already focused.
                     return;

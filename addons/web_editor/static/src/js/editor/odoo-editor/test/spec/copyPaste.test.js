@@ -6,27 +6,11 @@ import {
     setTestSelection,
     Direction,
     nextTick,
+    pasteText,
+    pasteHtml,
+    pasteOdooEditorHtml,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
-
-// Mock an paste event and send it to the editor.
-const pasteData = async function (editor, text, type) {
-    var mockEvent = {
-        dataType: 'text/plain',
-        data: text,
-        clipboardData: {
-            getData: (datatype) => type === datatype ? text : null,
-            files: [],
-            items: [],
-        },
-        preventDefault: () => {},
-    };
-    await editor._onPaste(mockEvent);
-};
-
-const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
-const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
-const pasteOdooEditorHtml = async (editor, html) => pasteData(editor, html, 'text/odoo-editor');
 
 describe('Copy', () => {
     describe('range collapsed', async () => {
@@ -293,22 +277,28 @@ describe('Paste', () => {
             });
             // TODO: We might want to have it consider \n as paragraph breaks
             // instead of linebreaks but that would be an opinionated choice.
-            it('should paste text and understand \n newlines', async () => {
+            it('should paste text and understand \\n newlines', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[]<br/></p>',
                     stepFunction: async editor => {
                         await pasteText(editor, 'a\nb\nc\nd');
                     },
-                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                    contentAfter: '<p style="margin-bottom: 0px;">a</p>' +
+                                  '<p style="margin-bottom: 0px;">b</p>' +
+                                  '<p style="margin-bottom: 0px;">c</p>' +
+                                  '<p>d[]<br></p>',
                 });
             });
-            it('should paste text and understand \r\n newlines', async () => {
+            it('should paste text and understand \\r\\n newlines', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>[]<br/></p>',
                     stepFunction: async editor => {
                         await pasteText(editor, 'a\r\nb\r\nc\r\nd');
                     },
-                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                    contentAfter: '<p style="margin-bottom: 0px;">a</p>' +
+                                  '<p style="margin-bottom: 0px;">b</p>' +
+                                  '<p style="margin-bottom: 0px;">c</p>' +
+                                  '<p>d[]<br></p>',
                 });
             });
         });
@@ -412,7 +402,7 @@ describe('Paste', () => {
         });
     });
     describe('Simple html span', () => {
-        const simpleHtmlCharX = '<span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">x</span>';
+        const simpleHtmlCharX = '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">x</span>';
         describe('range collapsed', async () => {
             it('should paste a text at the beginning of a p', async () => {
                 await testEditor(BasicEditor, {
@@ -658,7 +648,7 @@ describe('Paste', () => {
         });
     });
     describe('Complex html span', () => {
-        const complexHtmlData = '<span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="color: rgb(0, 0, 0); font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
+        const complexHtmlData = '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
         describe('range collapsed', async () => {
             it('should paste a text at the beginning of a p', async () => {
                 await testEditor(BasicEditor, {
@@ -1478,7 +1468,8 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'odoo.com\ngoogle.com');
                     },
-                    contentAfter: '<p><a href="https://odoo.com">odoo.com</a><br><a href="https://google.com">google.com</a>[]<br></p>',
+                    contentAfter: '<p style="margin-bottom: 0px;"><a href="https://odoo.com">odoo.com</a></p>' +
+                                  '<p><a href="https://google.com">google.com</a>[]<br></p>'
                 });
             });
             it('should paste html content over an empty link', async () => {

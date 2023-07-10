@@ -66,7 +66,7 @@ msgstr "<i class=\"fa fa-trash\"/> Supprimer"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Modes de paiement sauvegardés</span>"
+msgstr "<span class=\"o_stat_text\">Modes de paiement enregistrés</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -238,7 +238,7 @@ msgstr "Autoriser l'enregistrement des modes de paiement"
 #: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr "Services de paiement Amazon"
+msgstr "Amazon Payment Services"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -351,7 +351,7 @@ msgstr "Rappel effectué"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Hash de rappel"
+msgstr "Hachage de rappel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -391,12 +391,12 @@ msgstr "Opérations annulées"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Saisir le montant manuellement"
+msgstr "Capturer le montant manuellement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "Saisir la transaction"
+msgstr "Capturer la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -405,7 +405,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Saisissez le montant depuis Odoo quand la livraison est effectuée.\n"
+"Capturez le montant depuis Odoo quand la livraison est effectuée.\n"
 "Utilisez-le si vous voulez débiter les cartes de vos clients uniquement quand\n"
 "vous êtes sûr de pouvoir leur livrer la marchandise."
 
@@ -991,7 +991,7 @@ msgstr "Manuel"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "Saisie manuelle prise en charge"
+msgstr "Capture manuelle prise en charge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1129,7 +1129,7 @@ msgstr "Seul les administrateurs peuvent accéder à ces données."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr "Seules les transactions autorisées peuvent être saisies."
+msgstr "Seules les transactions autorisées peuvent être capturées."
 
 #. module: payment
 #. odoo-python
@@ -1304,7 +1304,7 @@ msgstr "Transactions de paiement liées au jeton"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr "Détails de paiement sauvegardés le %(date)s"
+msgstr "Détails de paiement enregistrés le %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1875,8 +1875,8 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Ceci permet de contrôler si les clients peuvent sauvegarder leurs modes de paiement comme des jetons de paiement.\n"
-"Un jeton de paiement est un lien anonyme aux détails du mode de paiement sauvegardé dans \n"
+"Ceci permet de contrôler si les clients peuvent enregistrer leurs modes de paiement comme des jetons de paiement.\n"
+"Un jeton de paiement est un lien anonyme aux détails du mode de paiement enregistré dans \n"
 "la base de donnée du fournisseur, permettant au client de le réutiliser pour un achat suivant."
 
 #. module: payment

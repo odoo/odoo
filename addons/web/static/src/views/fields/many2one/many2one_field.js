@@ -136,6 +136,9 @@ export class Many2OneField extends Component {
     get resId() {
         return this.props.value && this.props.value[0];
     }
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
     get Many2XAutocompleteProps() {
         return {
             value: this.displayName,

@@ -77,7 +77,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids,
+        default=lambda self: self._get_default_project_ids(),
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
     legend_blocked = fields.Char(
@@ -92,7 +92,7 @@ class ProjectTaskType(models.Model):
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
     fold = fields.Boolean(string='Folded in Kanban',
-        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed (not applicable to personal stages).')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
@@ -1097,7 +1097,7 @@ class Task(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    description = fields.Html(string='Description')
+    description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High'),
@@ -1428,7 +1428,7 @@ class Task(models.Model):
                 stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
                 # In the case no stages have been found, we create the default stages for the user
                 if not stage:
-                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
+                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_ids=False).create(
                         self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
                     )
                     stage = stages[0]
@@ -2716,21 +2716,37 @@ class ProjectTags(models.Model):
     ]
 
     def _get_project_tags_domain(self, domain, project_id):
-        tag_ids = list(self.with_user(SUPERUSER_ID)._search(
-            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]))
-        return expression.AND([domain, [('id', 'in', tag_ids)]])
+        # TODO: Remove in master
+        return domain
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+            tag_ids = self._name_search()
+            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+            tag_ids = self._name_search()
+            domain = expression.AND([domain, [('id', 'in', tag_ids)]])
+            return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+
+    @api.model
+    def arrange_tag_list_by_id(self, tag_list, id_order):
+        """arrange_tag_list_by_id re-order a list of record values (dict) following a given id sequence
+           complexity: O(n)
+           param:
+                - tag_list: ordered (by id) list of record values, each record being a dict
+                  containing at least an 'id' key
+                - id_order: list of value (int) corresponding to the id of the records to re-arrange
+           result:
+                - Sorted list of record values (dict)
+        """
+        tags_by_id = {tag['id']: tag for tag in tag_list}
+        return [tags_by_id[id] for id in id_order if id in tags_by_id]
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):

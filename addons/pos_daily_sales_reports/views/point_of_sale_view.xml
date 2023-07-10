@@ -41,7 +41,7 @@
 
                     <!-- Orderlines -->
                     <t t-if="products" id="sales">
-                        <h3>Sales</h3>
+                        <h3 id="sales_title">Sales</h3>
                         <table class="table table-sm">
                             <thead><tr>
                                 <th>Product Category</th>
@@ -143,7 +143,7 @@
                     <br/>
 
                     <t t-if="refund_products" id="refunds">
-                        <h3>Refunds</h3>
+                        <h3 id="refunds_title">Refunds</h3>
                         <table class="table table-sm">
                             <thead><tr>
                                 <th>Product Category</th>
@@ -290,7 +290,7 @@
                     </div>
                 </div>
 
-                <t t-if="invoiceTotal" id="invoices">
+                <t id="invoices">
                     <br/>
                     <br/>
                     <h3>Invoices</h3>
@@ -336,7 +336,7 @@
                 <t id="closing_session">
                     <h3>Session Control</h3>
                     <br/>
-                    <strong>Total: 
+                    <strong id="turnover">Total: 
                         <t t-if="currency['position']">
                             <t t-esc='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
                         </t>

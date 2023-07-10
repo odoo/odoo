@@ -617,9 +617,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Tämän moduulin avulla kassa voi nopeasti tulostaa X- ja Z-myyntiraportin\n"
-"tietystä istunnosta tai myyntitiedot useista istunnoista\n"
-"ja konfiguraatioita.\n"
+"Tämän moduulin avulla kassa voi tulostaa nopeasti X- ja Z-myyntiraportin\n"
+"halutusta istunnosta tai myyntitiedot useista istunnoista\n"
+"ja määrityksistä.\n"
 "\n"
 
 #. module: base
@@ -737,7 +737,7 @@ msgid ""
 "        Bridge module for website_sale_stock / sale_product_configurator"
 msgstr ""
 "\n"
-"        Siltamoduuli verkkosivuston_sale_stock / sale_product_configurator varten"
+"        Siltamoduuli, jota käytetään kohteissa website_sale_stock / sale_product_configurator"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_product_configurator
@@ -747,7 +747,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Siltamoduuli, joka tekee verkkosivuston verkkokaupasta yhteensopivan tuotekonfiguraattorin kanssa\n"
+"        Siltamoduuli, joka tekee verkkosivun verkkokaupasta yhteensopivan tuotekonfiguraattorin kanssa\n"
 "    "
 
 #. module: base
@@ -758,7 +758,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Siltamoduuli, jonka avulla verkkosivuston sähköisen kaupankäynnin varastonhallinta on yhteensopiva tuotekonfiguraattorin kanssa\n"
+"        Siltamoduuli, jonka avulla verkkosivun sähköisen kaupankäynnin varastonhallinta on yhteensopiva tuotekonfiguraattorin kanssa\n"
 "    "
 
 #. module: base
@@ -18958,9 +18958,9 @@ msgid ""
 "'%%(field)s' and the following error was encountered when we attempted to "
 "create one: %(error_message)s"
 msgstr ""
-"Kentässä '%%(kenttä)s' ei löytynyt vastaavaa tietuetta kentälle "
-"%(field_type)s '%(value)s', ja kun yritimme luoda vastaavaa tietuetta, "
-"ilmeni seuraava virhe: %(error_message)s"
+"Etsittyä vastaavuutta ei löytynyt %(field_type)s '%(value)s' kentässä "
+"'%%(field)s' tästä seurasi seuraava virhe kohdetta luotaessa: "
+"%(error_message)s"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -18988,7 +18988,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr "Välilyöntejä ei sallita view_mode-tilassa: %r"
+msgstr "Välilyöntejä ei sallita tilassa view_mode: %r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -19001,14 +19001,14 @@ msgstr "Ei päivitettävissä"
 #, python-format
 msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
 msgstr ""
-"Ei-suhteellinen kenttä %(field)r polussa %(field_path)r polussa %(use)s)"
+"Ei-viittauksellinen kenttä %(field)r polussa %(field_path)r polussa %(use)s)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr "Ei-suhteellinen kenttä %r riippuvuudessa %r"
+msgstr "Ei-viittauksellinen kenttä %r riippuvuudessa %r"
 
 #. module: base
 #. odoo-python
@@ -19026,11 +19026,10 @@ msgid ""
 "supposed to do\n"
 "    "
 msgstr ""
-"Ei-triviaalit testausapuohjelmat voivat vaatia malleja & kaikki\n"
+"Ei-triviaalit testausapuohjelmat voivat vaatia malleja ja muutakin\n"
 "    \n"
-"Tämä tässä moduuli on hyödyllinen validoida, että ne tekevät mitä ne ovat\n"
-"pitäisi tehdä\n"
-"    "
+"Tätä moduulia kannattaa käyttää varmistamaan, että nämä tekevät mitä \n"
+"halutaan."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
@@ -19099,7 +19098,9 @@ msgstr "Ulkoisen tunnuksen käyttöoikeudet eivät riitä:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr "Huomautus: tämä ongelma voi joutua useasta yrityksestä."
+msgstr ""
+"Huomautus: tämä ongelma voi joutua siitä, että monen yritykesen tuki on "
+"otettu käyttöön."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment

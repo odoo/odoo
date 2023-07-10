@@ -402,6 +402,12 @@ var SnippetEditor = Widget.extend({
 
         const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
         this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
+        // If the element covered by the overlay has a scrollbar, we remove its
+        // right border as it interferes with proper scrolling. (e.g. modal)
+        const handleEReadonlyEl = this.$el[0].querySelector('.o_handle.e.readonly');
+        if (handleEReadonlyEl) {
+            handleEReadonlyEl.style.width = dom.hasScrollableContent(targetEl) ? 0 : '';
+        }
     },
     /**
      * DOMElements have a default name which appears in the overlay when they
@@ -1861,6 +1867,12 @@ var SnippetsMenu = Widget.extend({
         // own window and not on the top window lest jquery behave unexpectedly.
         this.$el = this.window.$(this.$el);
         this.$el.data('snippetMenu', this);
+        // We need to activate the touch events to be able to drag and drop
+        // snippets on devices with a touch screen.
+        this.__onTouchEvent = this._onTouchEvent.bind(this);
+        document.addEventListener("touchstart", this.__onTouchEvent, true);
+        document.addEventListener("touchmove", this.__onTouchEvent, true);
+        document.addEventListener("touchend", this.__onTouchEvent, true);
 
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
@@ -1884,8 +1896,8 @@ var SnippetsMenu = Widget.extend({
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
-            defs.push(this._updateInvisibleDOM());
             await this._loadSnippetsTemplates();
+            defs.push(this._updateInvisibleDOM());
             this.$el.find('.o_we_website_top_actions').removeClass('d-none');
             this.$('.o_snippet_search_filter').addClass('d-none');
             this.$('#o_scroll').addClass('d-none');
@@ -2063,6 +2075,10 @@ var SnippetsMenu = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
+        // Remove listeners for touch events.
+        document.removeEventListener("touchstart", this.__onTouchEvent, true);
+        document.removeEventListener("touchmove", this.__onTouchEvent, true);
+        document.removeEventListener("touchend", this.__onTouchEvent, true);
         if (this.$window) {
             if (this.$snippetEditorArea) {
                 this.$snippetEditorArea.remove();
@@ -3815,6 +3831,34 @@ var SnippetsMenu = Widget.extend({
         // Update the "Invisible Elements" panel as the order of invisible
         // snippets could have changed on the page.
         await this._updateInvisibleDOM();
+    },
+    /**
+     * Transforms an event coming from a touch screen into a mouse event.
+     *
+     * @private
+     * @param {Event} ev - a touch event
+     */
+    _onTouchEvent(ev) {
+        if (ev.touches.length > 1) {
+            // Ignore multi-touch events.
+            return;
+        }
+        const touch = ev.changedTouches[0];
+        const touchToMouse = {
+            touchstart: "mousedown",
+            touchmove: "mousemove",
+            touchend: "mouseup"
+        };
+        const simulatedEvent = new MouseEvent(touchToMouse[ev.type], {
+            screenX: touch.screenX,
+            screenY: touch.screenY,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            button: 0, // left mouse button
+            bubbles: true,
+            cancelable: true,
+        });
+        touch.target.dispatchEvent(simulatedEvent);
     },
     /**
      * Returns the droppable snippet from which a dropped snippet originates.

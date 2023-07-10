@@ -20,9 +20,6 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         invoices = self.env['account.move'].browse(res_ids)
-        if any(not x.is_purchase_document(include_receipts=True) for x in invoices):
-            raise UserError(_("You can only print the original document for purchase documents."))
-
         original_attachments = invoices.message_main_attachment_id
         if not original_attachments:
             raise UserError(_("No original purchase document could be found for any of the selected purchase documents."))

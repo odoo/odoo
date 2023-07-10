@@ -11,9 +11,9 @@
 # Eloïse Stilmant <est@odoo.com>, 2022
 # Melanie Bernard <mbe@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -875,7 +875,7 @@ msgstr "<strong>Note originale:</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici pour configurer la "
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer la "
 "fonctionnalité."
 
 #. module: mail
@@ -1412,6 +1412,13 @@ msgid ""
 msgstr ""
 "Une exception SSL s'est produite. Vérifiez la configuration SSL/TLS sur le port du serveur.\n"
 "%s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Un jeton d'accès doit être fourni pour chaque pièce jointe."
 
 #. module: mail
 #. odoo-python
@@ -2011,7 +2018,7 @@ msgstr "Peut annuler"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr "Peut éditer le corps de l'email"
+msgstr "Peut modifier le corps de l'email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -3357,19 +3364,19 @@ msgstr "Intensité du floutage des contours"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Edit"
-msgstr "Éditer"
+msgstr "Modifier"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr "Éditer les partenaires"
+msgstr "Modifier les partenaires"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/follower_subtype_list/follower_subtype_list.xml:0
 #, python-format
 msgid "Edit Subscription of"
-msgstr "Éditer l'abonnement de"
+msgstr "Modifier l'abonnement de"
 
 #. module: mail
 #. odoo-javascript
@@ -3377,14 +3384,14 @@ msgstr "Éditer l'abonnement de"
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Edit subscription"
-msgstr "Éditer abonnement"
+msgstr "Modifier abonnement"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/many2many_tags_email/many2many_tags_email.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr "Éditer : %s"
+msgstr "Modifier : %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -8158,7 +8165,7 @@ msgstr "Père Noël"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Enregistrer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -9198,6 +9205,22 @@ msgstr ""
 "Le numéro d'identification fiscale. Les valeurs ici seront validées en "
 "fonction du format du pays. Vous pouvez utiliser '/' pour indiquer que le "
 "partenaire n'est pas soumis à la taxe."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr ""
+"La pièce jointe %s n'existe pas ou vous n'avez pas les droits d'accès."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid "The attachment %s does not exist."
+msgstr "La pièce jointe %s n'existe pas."
 
 #. module: mail
 #. odoo-javascript
@@ -29666,7 +29689,7 @@ msgstr "saucisse"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "save"
-msgstr "sauvegarder"
+msgstr "enregistrer"
 
 #. module: mail
 #. odoo-javascript

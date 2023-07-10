@@ -9,9 +9,9 @@
 # jonas jensen <j.jensen@tcomp.dk>, 2022
 # Lucas Holm, 2023
 # Martin Trigaux, 2023
-# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Mads Søndergaard, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9962,6 +9962,13 @@ msgid "Compute"
 msgstr "Beregn"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -11219,7 +11226,7 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
-"Deco Addict integrere ERP for Globale Virksomheder, og understøtter PME\n"
+"Deco Addict integrere ERP for Globale virksomheder, og understøtter PME\n"
 "              med Open Source software til administration af deres forretninger. Vores\n"
 "             vejledere er eksperter indenfor følgende områder:"
 
@@ -15251,7 +15258,7 @@ msgstr "Lager"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Inventory and Warehouse management"
-msgstr "Inventar og Varehus Administration"
+msgstr "Inventar og varehusadministration"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_price_diff
@@ -16726,7 +16733,7 @@ msgstr "Masse mailing sms på salgsordre"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Materials Management"
-msgstr "Materiale Administration"
+msgstr "Materiale administration"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -26763,6 +26770,12 @@ msgstr "Du kan ikke deaktivere brugeren du i øjeblikket er logget ind som."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""

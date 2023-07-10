@@ -198,7 +198,13 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_translations: function (modules=null) {
-        return _t.database.load_translations(this, modules, this.user_context.lang, this.translationURL);
+        var lang = this.user_context.lang
+        var html = document.documentElement
+            , htmlLang = html.getAttribute('lang');
+        if (!this.user_context.lang && htmlLang) {
+            lang = htmlLang.replace('-', '_');
+        }
+        return _t.database.load_translations(this, modules, lang, this.translationURL);
     },
     load_js: function (files) {
         var self = this;

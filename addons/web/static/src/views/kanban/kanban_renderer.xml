@@ -57,13 +57,15 @@
                             </div>
                             <div t-if="(env.isSmall or !group.isFolded) and group.progressBars.length" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
                                 <div class="o_kanban_counter_progress progress w-75 bg-300">
+                                    <t t-set="maxWidth" t-value="100 - Math.max(0, group.progressBars.filter(x => x.count > 0).length - 1) * 5"/>
                                     <t t-foreach="group.progressBars" t-as="progressBar" t-key="progressBar.value">
+                                        <t t-set="progressWidth" t-value="Math.max(5, progressBar.count / (group.count or 1) * 100)"/>
                                         <div t-if="progressBar.count"
                                             role="progressbar"
                                             class="progress-bar o_bar_has_records cursor-pointer"
                                             t-att-class="{ 'progress-bar-animated progress-bar-striped': group.progressValue.active === progressBar.value, 'border border-white': !group.isFolded and group.hasActiveProgressValue }"
                                             t-attf-class="bg-{{ progressBar.color }}"
-                                            t-attf-style="width: {{ progressBar.count / (group.count or 1) * 100 }}%;"
+                                            t-attf-style="width: {{ Math.min(progressWidth, maxWidth) }}%;;"
                                             aria-valuemin="0"
                                             t-att-aria-valuemax="group.count"
                                             t-att-aria-valuenow="progressBar.count"
