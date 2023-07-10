@@ -50,7 +50,19 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
                 controlButtonsToPosition.push(controlButton);
             }
         };
-
+        /**
+         * Remove a Control Button from the list of control buttons for special cases.
+         *   @param {Object} controlButton
+         * **/
+        Extended.removeControlButton = function (controlButton) {
+            if (!controlButton.name) {
+                controlButton.name = controlButton.component.name;
+            }
+            const index = sortedControlButtons.findIndex((cb) => cb.name === controlButton.name);
+            if (index !== -1) {
+                sortedControlButtons.splice(index, 1);
+            }
+        };
         /**
          * Call this static method to make the added control buttons in proper
          * order.
