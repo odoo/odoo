@@ -799,7 +799,7 @@ class BaseModel(metaclass=MetaModel):
                 constraint_key = constraint[0]
                 if len(cls._table) + len(constraint_key) + 1 > 63:
                     _logger.warning(
-                        'Constrains `%s` combined to model table will have more than 63 character '
+                        'Constraint `%s` combined to model table will have more than 63 characters '
                         'and could be truncated leading to unexpected results',
                         constraint_key
                     )
@@ -2852,6 +2852,7 @@ class BaseModel(metaclass=MetaModel):
 
         for (key, definition, message) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
+
             current_definition = tools.constraint_definition(cr, self._table, conname)
             if current_definition == definition:
                 continue
