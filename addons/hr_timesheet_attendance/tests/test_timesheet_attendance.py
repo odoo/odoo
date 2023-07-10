@@ -25,7 +25,7 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             'date': datetime(2022, 2, 9),
         })
         total_timesheet, total_attendance = self.env['hr.timesheet.attendance.report']._read_group(
-            [('user_id', '=', self.user_employee.id),
+            [('employee_id', '=', self.empl_employee.id),
             ('date', '>=', datetime(2022, 2, 9, 8, 0)), ('date', '<=', datetime(2022, 2, 9, 16, 0))],
             aggregates=['total_timesheet:sum', 'total_attendance:sum'],
         )[0]
