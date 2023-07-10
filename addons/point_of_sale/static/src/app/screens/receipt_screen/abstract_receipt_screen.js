@@ -32,7 +32,7 @@ export class AbstractReceiptScreen extends Component {
                 });
                 const { confirmed } = await this.popup.add(ConfirmPopup, {
                     title: printResult.message.title,
-                    body: "Do you want to print using the web printer?",
+                    body: _t("Do you want to print using the web printer?"),
                 });
                 if (confirmed) {
                     // We want to call the _printWeb when the popup is fully gone
