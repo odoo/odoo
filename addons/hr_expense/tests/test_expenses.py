@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
+
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
 from odoo.tools.misc import formatLang
@@ -153,7 +155,6 @@ class TestExpenses(TestExpenseCommon):
             'name': 'First Expense for employee',
             'employee_id': self.expense_employee.id,
             'journal_id': self.company_data['default_journal_purchase'].id,
-            'accounting_date': '2017-01-01',
             'expense_line_ids': [
                 (0, 0, {
                     # Expense without foreign currency.
@@ -248,13 +249,13 @@ class TestExpenses(TestExpenseCommon):
         self.assertRecordValues(expense_sheet.account_move_id.line_ids.analytic_line_ids.sorted('amount'), [
             {
                 'amount': -869.57,
-                'date': fields.Date.from_string('2017-01-01'),
+                'date': fields.Date.from_string('2016-01-01'),
                 'account_id': self.analytic_account_1.id,
                 'currency_id': self.company_data['currency'].id,
             },
             {
                 'amount': -434.78,
-                'date': fields.Date.from_string('2017-01-01'),
+                'date': fields.Date.from_string('2016-01-01'),
                 'account_id': self.analytic_account_2.id,
                 'currency_id': self.company_data['currency'].id,
             },
@@ -1064,28 +1065,27 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
 
     def test_expense_sheet_due_date(self):
-        ''' Test expense sheet bill due date'''
+        """ Test expense sheet bill due date """
 
         self.expense_employee.user_partner_id.property_supplier_payment_term_id = self.env.ref('account.account_payment_term_30days')
-
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith',
-            'employee_id': self.expense_employee.id,
-            'accounting_date': '2021-01-01',
-            'expense_line_ids': [(0, 0, {
-                'name': 'Car Travel Expenses',
+        with freeze_time('2021-01-01'):
+            expense_sheet = self.env['hr.expense.sheet'].create({
+                'name': 'Expense for John Smith',
                 'employee_id': self.expense_employee.id,
-                'product_id': self.product_a.id,
-                'unit_amount': 350.00,
-            })]
-        })
-
-        expense_sheet.action_submit_sheet()
-        expense_sheet.approve_expense_sheets()
-        expense_sheet.action_sheet_move_create()
-        move = expense_sheet.account_move_id
-        expected_date = fields.Date.from_string('2021-01-31')
-        self.assertEqual(move.invoice_date_due, expected_date, 'Bill due date should follow employee payment terms')
+                'expense_line_ids': [Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 350.00,
+                    'date': '2021-01-01',
+                })]
+            })
+            expense_sheet.action_submit_sheet()
+            expense_sheet.approve_expense_sheets()
+            expense_sheet.action_sheet_move_create()
+            move = expense_sheet.account_move_id
+            expected_date = fields.Date.from_string('2021-01-31')
+            self.assertEqual(move.invoice_date_due, expected_date, 'Bill due date should follow employee payment terms')
 
     def test_inverse_total_amount(self):
         """ Test if the inverse method works correctly """
