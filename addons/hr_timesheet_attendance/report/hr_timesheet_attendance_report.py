@@ -9,7 +9,7 @@ class TimesheetAttendance(models.Model):
     _auto = False
     _description = 'Timesheet Attendance Report'
 
-    user_id = fields.Many2one('res.users', readonly=True)
+    employee_id = fields.Many2one('hr.employee', readonly=True)
     date = fields.Date(readonly=True)
     total_timesheet = fields.Float("Timesheets Hours", readonly=True)
     total_attendance = fields.Float("Attendance Hours", readonly=True)
@@ -24,7 +24,7 @@ class TimesheetAttendance(models.Model):
         self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
-                t.user_id,
+                t.employee_id,
                 t.date,
                 t.company_id,
                 coalesce(sum(t.attendance), 0) AS total_attendance,
@@ -37,19 +37,18 @@ class TimesheetAttendance(models.Model):
                 SELECT
                     -hr_attendance.id AS id,
                     hr_employee.hourly_cost AS emp_cost,
-                    resource_resource.user_id AS user_id,
+                    hr_attendance.employee_id AS employee_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
                     hr_attendance.check_in::date AS date,
-                    resource_resource.company_id as company_id
+                    hr_employee.company_id as company_id
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
-                LEFT JOIN resource_resource on resource_resource.id = hr_employee.resource_id
             UNION ALL
                 SELECT
                     ts.id AS id,
                     hr_employee.hourly_cost AS emp_cost,
-                    ts.user_id AS user_id,
+                    ts.employee_id AS employee_id,
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,
                     ts.date AS date,
@@ -58,7 +57,7 @@ class TimesheetAttendance(models.Model):
                 LEFT JOIN hr_employee ON hr_employee.id = ts.employee_id
                 WHERE ts.project_id IS NOT NULL
             ) AS t
-            GROUP BY t.user_id, t.date, t.company_id, t.emp_cost
+            GROUP BY t.employee_id, t.date, t.company_id, t.emp_cost
             ORDER BY t.date
         )
         """ % self._table)
