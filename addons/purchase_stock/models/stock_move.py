@@ -26,10 +26,14 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
 
+    def _should_ignore_pol_price(self):
+        self.ensure_one()
+        return self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id:
+        if self._should_ignore_pol_price():
             return super(StockMove, self)._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
@@ -63,13 +67,7 @@ class StockMove(models.Model):
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
             price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
         else:
-            price_unit = line.price_unit
-            if line.taxes_id:
-                qty = line.product_qty or 1
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
-                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
-            if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+            price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
             # The date must be today, and not the date of the move since the move move is still
             # in assigned state. However, the move date is the scheduled date until move is
