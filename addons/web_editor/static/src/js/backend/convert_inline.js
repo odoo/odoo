@@ -734,7 +734,7 @@ async function toInline($editable, cssRules, $iframe) {
         for (const image of images) {
             if (image.style[attributeName] !== 'auto') {
                 const value = image.getAttribute(attributeName) ||
-                    (attributeName === 'height' && image.offsetHeight);
+                    (attributeName === 'height' && image.offsetHeight) ||
                     (attributeName === 'width' ? _getWidth(image) : _getHeight(image));
                 if (value) {
                     image.setAttribute(attributeName, value);
