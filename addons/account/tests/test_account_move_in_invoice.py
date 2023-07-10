@@ -2266,6 +2266,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         for move_type, amount, counterpart_values_list, payment_state in (
             ('out_invoice', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_invoice', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('entry', -500.0)], 'reversed'),
             ('out_invoice', 1000.0, [('reverse', 1000.0)], 'reversed'),
             ('out_receipt', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_receipt', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
@@ -2273,6 +2274,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('out_refund', 1000.0, [('reverse', -1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('entry', 500.0)], 'reversed'),
             ('in_invoice', 1000.0, [('reverse', 1000.0)], 'reversed'),
             ('in_receipt', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_receipt', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
