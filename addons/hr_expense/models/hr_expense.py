@@ -1056,7 +1056,11 @@ class HrExpenseSheet(models.Model):
         readonly=False,
         help="The payment method used when the expense is paid by the company.",
     )
-    accounting_date = fields.Date("Accounting Date")
+    accounting_date = fields.Date(
+        string='Accounting Date',
+        compute='_compute_accounting_date',
+        store=True
+    )
     account_move_ids = fields.One2many('account.move', 'expense_sheet_id', string='Journal Entries', readonly=True)
     journal_id = fields.Many2one(
         'account.journal',
@@ -1196,6 +1200,11 @@ class HrExpenseSheet(models.Model):
     def _compute_nb_account_move(self):
         for sheet in self:
             sheet.nb_account_move = len(sheet.account_move_ids)
+
+    @api.depends('account_move_ids.date')
+    def _compute_accounting_date(self):
+        for sheet in self:
+            sheet.accounting_date = sheet.account_move_ids[:1].date
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
@@ -1493,9 +1502,6 @@ class HrExpenseSheet(models.Model):
         moves.action_post()
         self.activity_update()
 
-        for sheet in self.filtered(lambda sheet: not sheet.accounting_date):
-            sheet.accounting_date = sheet.account_move_ids[:1].date if sheet.account_move_ids else False
-
         return {move.expense_sheet_id.id: move for move in moves}
 
     def _do_reverse_moves(self):
@@ -1523,7 +1529,7 @@ class HrExpenseSheet(models.Model):
             # force the name to the default value, to avoid an eventual 'default_name' in the context
             # to set it to '' which cause no number to be given to the account.move when posted.
             'name': '/',
-            'date': self.accounting_date or fields.Date.context_today(self),
+            'date': self.accounting_date or max(self.expense_line_ids.mapped('date')) or fields.Date.context_today(self),
             'expense_sheet_id': self.id,
         }
 
