@@ -34,6 +34,26 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+<<<<<<< HEAD
+||||||| parent of c43bd745016 (temp)
+        useValidateCashInput("closingCashInput");
+        if (this.otherPaymentMethods.length > 0) {
+            this.otherPaymentMethods.forEach(pm => {
+                if (this._getShowDiff(pm)) {
+                    useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                }
+            })
+        }
+=======
+        useValidateCashInput("closingCashInput");
+        if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
+            this.otherPaymentMethods.forEach(pm => {
+                if (this._getShowDiff(pm)) {
+                    useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                }
+            })
+        }
+>>>>>>> c43bd745016 (temp)
     }
     //@override
     async confirm() {

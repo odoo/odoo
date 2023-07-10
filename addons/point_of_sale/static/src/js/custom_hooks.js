@@ -93,3 +93,140 @@ export function useAutoFocusToLast() {
     onMounted(autofocus);
     onPatched(autofocus);
 }
+<<<<<<< HEAD
+||||||| parent of c43bd745016 (temp)
+
+export function useBarcodeReader(callbackMap, exclusive = false) {
+    const current = useComponent();
+    const barcodeReader = current.env.barcode_reader;
+    for (const [key, callback] of Object.entries(callbackMap)) {
+        callbackMap[key] = callback.bind(current);
+    }
+    onMounted(() => {
+        if (barcodeReader) {
+            for (const key in callbackMap) {
+                if (exclusive) {
+                    barcodeReader.set_exclusive_callback(key, callbackMap[key]);
+                } else {
+                    barcodeReader.set_action_callback(key, callbackMap[key]);
+                }
+            }
+        }
+    });
+    onWillUnmount(() => {
+        if (barcodeReader) {
+            for (const key in callbackMap) {
+                if (exclusive) {
+                    barcodeReader.remove_exclusive_callback(key, callbackMap[key]);
+                } else {
+                    barcodeReader.remove_action_callback(key, callbackMap[key]);
+                }
+            }
+        }
+    });
+}
+
+export function useValidateCashInput(inputRef, startingValue) {
+    const cashInput = useRef(inputRef);
+    const current = useComponent();
+    const decimalPoint = current.env._t.database.parameters.decimal_point;
+    // Replace the thousands separator and decimal point with regex-escaped versions
+    const escapedThousandsSep = escapeRegExp(current.env._t.database.parameters.thousands_sep);
+    const escapedDecimalPoint = escapeRegExp(decimalPoint);
+    const floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+    function isValidFloat(inputValue) {
+        return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+    }
+    function handleCashInputChange(event) {
+        let inputValue = (event.target.value || "").trim();
+
+        // Check if the current input value is a valid float
+        if (!isValidFloat(inputValue)) {
+            event.target.classList.add('invalid-cash-input');
+        } else {
+            event.target.classList.remove('invalid-cash-input');
+        }
+    }
+    
+
+    onMounted(() => {
+        cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+        cashInput.el.addEventListener("input", handleCashInputChange);
+    });
+
+    onWillUnmount(() => {
+        cashInput.el.removeEventListener("input", handleCashInputChange);
+    })
+}
+=======
+
+export function useBarcodeReader(callbackMap, exclusive = false) {
+    const current = useComponent();
+    const barcodeReader = current.env.barcode_reader;
+    for (const [key, callback] of Object.entries(callbackMap)) {
+        callbackMap[key] = callback.bind(current);
+    }
+    onMounted(() => {
+        if (barcodeReader) {
+            for (const key in callbackMap) {
+                if (exclusive) {
+                    barcodeReader.set_exclusive_callback(key, callbackMap[key]);
+                } else {
+                    barcodeReader.set_action_callback(key, callbackMap[key]);
+                }
+            }
+        }
+    });
+    onWillUnmount(() => {
+        if (barcodeReader) {
+            for (const key in callbackMap) {
+                if (exclusive) {
+                    barcodeReader.remove_exclusive_callback(key, callbackMap[key]);
+                } else {
+                    barcodeReader.remove_action_callback(key, callbackMap[key]);
+                }
+            }
+        }
+    });
+}
+
+export function useValidateCashInput(inputRef, startingValue) {
+    const cashInput = useRef(inputRef);
+    const current = useComponent();
+    const decimalPoint = current.env._t.database.parameters.decimal_point;
+    const thousandsSep = current.env._t.database.parameters.thousands_sep;
+    // Replace the thousands separator and decimal point with regex-escaped versions
+    const escapedDecimalPoint = escapeRegExp(decimalPoint);
+    let floatRegex;
+    if (thousandsSep) {
+        const escapedThousandsSep = escapeRegExp(thousandsSep);
+        floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+    } else {
+        floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+    }
+    function isValidFloat(inputValue) {
+        return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+    }
+    function handleCashInputChange(event) {
+        let inputValue = (event.target.value || "").trim();
+
+        // Check if the current input value is a valid float
+        if (!isValidFloat(inputValue)) {
+            event.target.classList.add('invalid-cash-input');
+        } else {
+            event.target.classList.remove('invalid-cash-input');
+        }
+    }
+    onMounted(() => {
+        if (cashInput.el) {
+            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+            cashInput.el.addEventListener("input", handleCashInputChange);
+        }
+    });
+    onWillUnmount(() => {
+        if (cashInput.el) {
+            cashInput.el.removeEventListener("input", handleCashInputChange);
+        }
+    })
+}
+>>>>>>> c43bd745016 (temp)
