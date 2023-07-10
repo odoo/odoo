@@ -1176,14 +1176,14 @@ class TestComposerInternals(TestMailComposer):
         ).create({
             'subject': 'Template Subject',
             'body': '<p>Template Body</p>',
-        }).action_save_as_template()
+        }).create_mail_template()
 
         # Test: email_template subject, body_html, model
         template = self.env['mail.template'].search([
             ('model', '=', self.test_record._name),
             ('subject', '=', 'Template Subject')
         ], limit=1)
-        self.assertEqual(template.name, "%s: %s" % (self.env['ir.model']._get(self.test_record._name).name, 'Template Subject'))
+        self.assertEqual(template.name, 'Template Subject')
         self.assertEqual(template.body_html, '<p>Template Body</p>', 'email_template incorrect body_html')
 
     @users('erp_manager')
