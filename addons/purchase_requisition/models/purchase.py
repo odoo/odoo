@@ -23,8 +23,8 @@ class PurchaseOrderGroup(models.Model):
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    requisition_id = fields.Many2one('purchase.requisition', string='Blanket Order', copy=False)
-    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', readonly=False)
+    requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False)
+    requisition_type = fields.Selection(related='requisition_id.requisition_type')
 
     purchase_group_id = fields.Many2one('purchase.order.group')
     alternative_po_ids = fields.One2many(
@@ -39,7 +39,8 @@ class PurchaseOrder(models.Model):
     @api.depends('purchase_group_id')
     def _compute_has_alternatives(self):
         self.has_alternatives = False
-        self.filtered(lambda po: po.purchase_group_id).has_alternatives = True
+        if self.env.user.has_group('purchase_requisition.group_purchase_alternatives'):
+            self.filtered(lambda po: po.purchase_group_id).has_alternatives = True
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -69,10 +70,10 @@ class PurchaseOrder(models.Model):
             else:
                 self.origin = requisition.name
         self.notes = requisition.description
-        self.date_order = fields.Datetime.now()
-
-        if requisition.type_id.line_copy != 'copy':
-            return
+        if requisition.date_start:
+            self.date_order = max(fields.Datetime.now(), fields.Datetime.to_datetime(requisition.date_start))
+        else:
+            self.date_order = fields.Datetime.now()
 
         # Create PO lines if necessary
         order_lines = []
@@ -97,7 +98,7 @@ class PurchaseOrder(models.Model):
                 product_qty = line.product_qty
                 price_unit = line.price_unit
 
-            if requisition.type_id.quantity_copy != 'copy':
+            if requisition.requisition_type != 'purchase_template':
                 product_qty = 0
 
             # Create PO line
@@ -122,14 +123,6 @@ class PurchaseOrder(models.Model):
                     'context': dict(self.env.context, default_alternative_po_ids=alternative_po_ids.ids, default_po_ids=self.ids),
                 }
         res = super(PurchaseOrder, self).button_confirm()
-        for po in self:
-            if not po.requisition_id:
-                continue
-            if po.requisition_id.type_id.exclusive == 'exclusive':
-                others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
-                others_po.button_cancel()
-                if po.state not in ['draft', 'sent', 'to approve']:
-                    po.requisition_id.action_done()
         return res
 
     @api.model_create_multi

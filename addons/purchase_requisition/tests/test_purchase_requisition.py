@@ -35,18 +35,14 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         line1 = (0, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
         line2 = (0, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
 
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none'
-        })
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1, line2],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': self.res_partner_1.id,
         })
 
         # confirm the requisition
-        requisition_blanket.action_in_progress()
+        requisition_blanket.action_confirm()
 
         # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the purchase tab
         # and check the quantity
@@ -68,7 +64,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not correct')
 
         # Put the requisition in done Status
-        requisition_blanket.action_in_progress()
+        requisition_blanket.action_confirm()
         requisition_blanket.action_done()
 
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo09.id)]), 'The supplier info should be removed')
@@ -76,20 +72,16 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_03_blanket_order_rfq(self):
         """ Create a blanket order + an RFQ for it """
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none'
-        })
 
         bo_form = Form(self.env['purchase.requisition'])
         bo_form.vendor_id = self.res_partner_1
-        bo_form.type_id = requisition_type
+        bo_form.requisition_type = 'blanket_order'
         with bo_form.line_ids.new() as line:
             line.product_id = self.product_09
             line.product_qty = 5.0
             line.price_unit = 21
         bo = bo_form.save()
-        bo.action_in_progress()
+        bo.action_confirm()
 
         # lazy reproduction of clicking on "New Quotation" act_window button
         po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
@@ -127,10 +119,6 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
 
         # create an empty blanket order
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none'
-        })
         line1 = (0, 0, {
             'product_id': product2.id,
             'product_uom_id': product2.uom_po_id.id,
@@ -139,10 +127,10 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': vendor.id,
         })
-        requisition_blanket.action_in_progress()
+        requisition_blanket.action_confirm()
         self.env['purchase.requisition.line'].create({
             'product_id': product.id,
             'product_qty': 14.0,
@@ -331,10 +319,6 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             can be created and that the requisition_id is not set on it.
         """
         # create an empty blanket order
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none'
-        })
         line1 = (0, 0, {
             'product_id': self.product_13.id,
             'product_uom_id': self.product_13.uom_po_id.id,
@@ -343,10 +327,10 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
-            'type_id': requisition_type.id,
+            'requisition_type': 'blanket_order',
             'vendor_id': self.res_partner_1.id,
         })
-        requisition_blanket.action_in_progress()
+        requisition_blanket.action_confirm()
         # lazy reproduction of clicking on "New Quotation" act_window button
         po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": requisition_blanket.id, "default_user_id": False}))
         po_1 = po_form.save()
@@ -485,5 +469,42 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             'company_id': new_company.id,
         })
         self.bo_requisition.company_id = new_company
-        self.bo_requisition.action_in_progress()
+        self.bo_requisition.line_ids.write({'price_unit': 10.0})
+        self.bo_requisition.action_confirm()
         self.assertTrue(self.bo_requisition.name.startswith("REQ_"))
+
+    def test_09_purchase_template(self):
+        """ Create a Purchase Template + an RFQ for it """
+
+        self.supplierinfo10 = self.env['product.supplierinfo'].create({
+            'partner_id': self.res_partner_1.id,
+            'product_id': self.product_09.id,
+            'price': 15.0,
+            'min_qty': 2.0,
+        })
+
+        # Create a purchase requisition with type purchase template and two products
+        line1 = Command.create({'product_id': self.product_09.id, 'product_uom_id': self.product_uom_id.id})
+        line2 = Command.create({'product_id': self.product_13.id, 'product_uom_id': self.product_uom_id.id})
+
+        purchase_template = self.env['purchase.requisition'].create({
+            'line_ids': [line1, line2],
+            'requisition_type': 'purchase_template',
+            'vendor_id': self.res_partner_1.id,
+        })
+
+        # update the product_qty to get the Unit price
+        purchase_template.line_ids[0].product_qty = 2.0
+        purchase_template.line_ids[1].product_qty = 1.0
+        self.assertEqual(purchase_template.line_ids[0].price_unit, self.supplierinfo10.price, 'Unit Price should match supplierinfo price')
+        self.assertEqual(purchase_template.line_ids[1].price_unit, self.product_13.standard_price, 'Unit Price should equal standard_price when no supplierinfo')
+
+        purchase_template.action_confirm()
+
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": purchase_template.id, "default_user_id": False}))
+        po = po_form.save()
+        self.assertEqual(po.partner_id, purchase_template.vendor_id, 'The purchase template vendor should have been copied to purchase order')
+        self.assertEqual(po.order_line[0].price_unit, purchase_template.line_ids[0].price_unit, 'The purchase template unit price should have been copied to purchase order')
+        self.assertEqual(po.order_line[0].product_qty, purchase_template.line_ids[0].product_qty, 'The purchase template product quantity should have been copied to purchase order')
+        self.assertEqual(po.order_line[1].price_unit, purchase_template.line_ids[1].price_unit, 'The purchase template unit price should have been copied to purchase order')
+        self.assertEqual(po.order_line[1].product_qty, purchase_template.line_ids[1].product_qty, 'The purchase template product quantity should have been copied to purchase order')
