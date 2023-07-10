@@ -48,6 +48,7 @@ registry
             
             // Select order 1, should be at Product Screen
             TicketScreen.do.selectOrder("-0001");
+            TicketScreen.do.loadSelectedOrder();
             ProductScreen.check.productIsDisplayed("Desk Pad");
             ProductScreen.check.selectedOrderlineHas("Desk Pad", "1.0", "2.0");
             
@@ -55,6 +56,7 @@ registry
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0002");
+            TicketScreen.do.loadSelectedOrder();
             PaymentScreen.check.emptyPaymentlines("12.0");
             PaymentScreen.check.validateButtonIsHighlighted(false);
             
@@ -62,12 +64,14 @@ registry
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0003");
+            TicketScreen.do.loadSelectedOrder();
             ReceiptScreen.check.totalAmountContains("30.0");
             
             // Pay order 1, with change
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectOrder("-0001");
+            TicketScreen.do.loadSelectedOrder();
             ProductScreen.check.isShown();
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod("Cash");
@@ -85,6 +89,7 @@ registry
             // Select order 3, should still be at Receipt Screen
             // and the total amount doesn't change.
             TicketScreen.do.selectOrder("-0003");
+            TicketScreen.do.loadSelectedOrder();
             ReceiptScreen.check.totalAmountContains("30.0");
             
             // click next screen on order 3

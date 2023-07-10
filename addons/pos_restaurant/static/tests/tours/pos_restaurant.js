@@ -75,6 +75,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
         Chrome.check.isSyncStatusPending();
         Chrome.check.isSyncStatusConnected();
         TicketScreen.do.selectOrder("-0003");
+        TicketScreen.do.loadSelectedOrder();
         Chrome.do.backToFloor();
 
         // There should be 1 synced draft order.

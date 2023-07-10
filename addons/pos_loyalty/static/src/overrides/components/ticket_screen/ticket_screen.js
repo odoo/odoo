@@ -14,7 +14,7 @@ patch(TicketScreen.prototype, {
         this.notification = useService("pos_notification");
     },
     _onUpdateSelectedOrderline() {
-        const order = this.getSelectedSyncedOrder();
+        const order = this.getSelectedOrder();
         if (!order) {
             return this.numberBuffer.reset();
         }
