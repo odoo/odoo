@@ -791,11 +791,18 @@ class Project(models.Model):
     @api.model
     def _create_analytic_account_from_values(self, values):
         company = self.env['res.company'].browse(values.get('company_id')) if values.get('company_id') else self.env.company
+        
+        plan = company.analytic_plan_id
+        account_ids = plan.account_ids.ids
+        analytic_account_names = [a['name'] for a in self.env['account.analytic.account'].browse(account_ids)]
+        default_str = 'Unknown Analytic Account'
+        default_ctr = analytic_account_names.count(default_str)
+
         analytic_account = self.env['account.analytic.account'].create({
-            'name': values.get('name', _('Unknown Analytic Account')),
+            'name': values.get('name', _(f"{default_str}_{default_ctr + 1}")),
             'company_id': company.id,
             'partner_id': values.get('partner_id'),
-            'plan_id': company.analytic_plan_id.id,
+            'plan_id': plan.id,
         })
         return analytic_account
 
