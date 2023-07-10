@@ -3,12 +3,22 @@ from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
+
     _inherit = 'account.chart.template'
+
+    
+    @template(model='ir.sequence')
+    def _get_ir_sequence(self, template_code):
+        return self._parse_csv(template_code, 'ir.sequence')
 
     # ri chart
     @template('ar_ri', 'account.tax.group')
     def _get_ar_ri_withholding_account_tax_group(self):
         return self._parse_csv('ar_ri', 'account.tax.group', module='l10n_ar_withholding')
+
+    @template('ar_ri', 'ir.sequence')
+    def _get_ar_ri_withholding_ir_sequence(self):
+        return self._parse_csv('ar_ri', 'ir.sequence', module='l10n_ar_withholding')
 
     @template('ar_ri', 'account.tax')
     def _get_ar_ri_withholding_account_tax(self):
