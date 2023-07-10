@@ -22,7 +22,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             });
             Object.assign(this.state, this.props.info.state);
             useValidateCashInput("closingCashInput");
-            if (this.otherPaymentMethods.length > 0) {
+            if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
                 this.otherPaymentMethods.forEach(pm => {
                     if (this._getShowDiff(pm)) {
                         useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
