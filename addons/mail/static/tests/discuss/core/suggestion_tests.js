@@ -2,7 +2,13 @@
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
@@ -123,4 +129,23 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(2).text(), "User 3");
+});
+
+QUnit.test("suggestion are shown after deleting a character", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "/");
+    await insertText(".o-mail-Composer-input", "hee");
+    assert.containsNone($, ".o-mail-Composer-suggestion:contains(help)");
+    // Simulate pressing backspace
+    await afterNextRender(() => {
+        const textarea = document.querySelector(".o-mail-Composer-input");
+        textarea.value = textarea.value.slice(0, -1);
+    });
+    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(help)");
 });
