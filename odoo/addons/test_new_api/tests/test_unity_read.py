@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
@@ -14,6 +16,10 @@ class TestUnityRead(TransactionCase):
         cls.only_course_user = new_test_user(cls.env, 'no acc', 'base.group_public')
         cls.author = cls.env['test_new_api.person'].create({'name': 'ged'})
         cls.teacher = cls.env['test_new_api.person'].create({'name': 'aab'})
+        cls.account = cls.env['test_new_api.person.account'].create({
+            'person_id': cls.teacher.id,
+            'login': 'aab',
+        })
         cls.course = cls.env['test_new_api.course'].create({
             'name': 'introduction to OWL',
             'author_id': cls.author.id
@@ -145,6 +151,37 @@ class TestUnityRead(TransactionCase):
                     'display_name': 'ged special'
                 }
             }])
+
+    def test_new_record_with_inherits(self):
+        # virtualize a record
+        new_account = self.account.new(origin=self.account)
+        self.assertTrue(new_account)
+        self.assertFalse(new_account.id)
+
+        # read the virtualized record; field 'id' corresponds to record's origin
+        result = new_account.web_read({
+            'name': {},
+            'login': {},
+        })
+        self.assertEqual(result, [{
+            'id': new_account._origin.id,
+            'name': new_account.name,
+            'login': new_account.login,
+        }])
+
+        # special case: read the many2one field of _inherits
+        self.assertTrue(new_account.person_id)
+        self.assertFalse(new_account.person_id.id)
+        result = new_account.web_read({
+            'person_id': {'fields': {'name': {}}},
+        })
+        self.assertEqual(result, [{
+            'id': new_account._origin.id,
+            'person_id': {
+                'id': new_account.person_id._origin.id,
+                'name': new_account.person_id.name,
+            },
+        }])
 
     def test_multilevel_query_count(self):
         author = self.env['test_new_api.person'].create({'name': 'AAA'})

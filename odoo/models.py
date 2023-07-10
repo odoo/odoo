@@ -3354,7 +3354,7 @@ class BaseModel(metaclass=MetaModel):
         The current method is different from `read` because it retrieves its
         values from the cache without doing a query when it is avoidable.
         """
-        data = [(record, {'id': record._ids[0]}) for record in self]
+        data = [(record, {'id': record._origin.id}) for record in self]
         use_display_name = (load == '_classic_read')
         for name in fnames:
             field = self._fields[name]

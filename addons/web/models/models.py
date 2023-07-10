@@ -90,7 +90,7 @@ class Base(models.AbstractModel):
         if fields_to_read == ['id']:
             # if we request to read only the ids, we have them already so we can build the return dictionaries immediately
             # this also avoid a call to read on the co-model that might have different access rules
-            values_list = [{'id': id_} for id_ in self._ids]
+            values_list = [{'id': record._origin.id} for record in self]
         else:
             values_list: List[Dict] = self.read(fields_to_read, load=None)
 
@@ -117,7 +117,7 @@ class Base(models.AbstractModel):
 
                 if 'display_name' in field_spec['fields']:
                     for rec in co_records.sudo():
-                        many2one_data[rec.id]['display_name'] = rec.display_name
+                        many2one_data[rec._origin.id]['display_name'] = rec.display_name
 
                 for values in values_list:
                     if not values[field_name]:
