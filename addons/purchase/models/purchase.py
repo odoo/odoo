@@ -1330,6 +1330,18 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.product_uom_qty = line.product_qty
 
+    def _get_gross_price_unit(self):
+        self.ensure_one()
+        price_unit = self.price_unit
+        if self.taxes_id:
+            qty = self.product_qty or 1
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+            price_unit = self.taxes_id.with_context(round=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty)['total_void']
+            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
+        if self.product_uom.id != self.product_id.uom_id.id:
+            price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
+        return price_unit
+
     def action_purchase_history(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
