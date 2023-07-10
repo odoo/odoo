@@ -1,4 +1,7 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, fields
+
 
 class Course(models.Model):
     _name = 'test_new_api.course'
@@ -14,6 +17,7 @@ class Course(models.Model):
 
     def _selection_reference_model(self):
         return [('test_new_api.lesson', None)]
+
 
 class Lesson(models.Model):
     _name = 'test_new_api.lesson'
@@ -35,6 +39,7 @@ class Lesson(models.Model):
             else:
                 record.display_name = record.name
 
+
 class Person(models.Model):
     _name = 'test_new_api.person'
     _description = 'a person, can be an author, teacher or attendee of a lesson'
@@ -52,9 +57,19 @@ class Person(models.Model):
         for record in self:
             record.display_name = f"{particular}{record.name}{special}"
 
+
 class Employer(models.Model):
     _name = 'test_new_api.employer'
     _description = 'the employer of a person'
 
     name = fields.Char('Name')
     employee_ids = fields.One2many('test_new_api.person', 'employer_id')
+
+
+class PersonAccount(models.Model):
+    _name = 'test_new_api.person.account'
+    _description = 'an account with credentials for a given person'
+    _inherits = {'test_new_api.person': 'person_id'}
+
+    person_id = fields.Many2one('test_new_api.person', required=True, ondelete='cascade')
+    login = fields.Char()
