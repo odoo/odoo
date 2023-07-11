@@ -30,7 +30,7 @@ function useOpenView() {
     };
 }
 
-export class AttendanceReportGraphController extends graphView.Controller {
+export class AttendanceReportGraphRenderer extends graphView.Renderer {
     setup() {
         super.setup();
         this.openView = useOpenView();
@@ -39,10 +39,10 @@ export class AttendanceReportGraphController extends graphView.Controller {
 
 viewRegistry.add("attendance_report_graph", {
     ...graphView,
-    Controller: AttendanceReportGraphController
+    Renderer: AttendanceReportGraphRenderer
 });
 
-export class AttendanceReportPivotController extends pivotView.Controller {
+export class AttendanceReportPivotRenderer extends pivotView.Renderer {
     setup() {
         super.setup();
         this.openView = useOpenView();
@@ -51,5 +51,5 @@ export class AttendanceReportPivotController extends pivotView.Controller {
 
 viewRegistry.add("attendance_report_pivot", {
     ...pivotView,
-    Controller: AttendanceReportPivotController
+    Renderer: AttendanceReportPivotRenderer
 });
