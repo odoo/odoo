@@ -195,7 +195,7 @@ export class RelationalModel extends Model {
         for (const record of records) {
             for (const fieldName in record) {
                 const field = config.fields[fieldName];
-                if (fieldName !== "id" && field.type === "properties") {
+                if (fieldName !== "id" && field.type === "properties" && record[fieldName]) {
                     const parent = record[field.definition_record];
                     const relatedPropertyField = {
                         fieldName,
