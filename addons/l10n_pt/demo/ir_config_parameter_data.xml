@@ -6,17 +6,12 @@
             <field name="value">demo</field>
         </record>
 
-        <record model="ir.config_parameter" id="current_key_version">
-            <field name="key">l10n_pt.current_key_version</field>
-            <field name="value">1</field>
-        </record>
-
-        <record model="ir.config_parameter" id="private_key_v1">
+        <record model="ir.config_parameter" id="private_key">
     <!--
     This example of private key is taken from https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Faturacao/Paginas/certificacao-de-software.aspx
     and should be overridden by the software company that wants to be certified by the Portuguese Tax Authority.
     -->
-            <field name="key">l10n_pt.private_key_v1</field>
+            <field name="key">l10n_pt.private_key</field>
             <field name="value">-----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQDWDX9wVqj6ZqNZU1ojwBpyKKkuzHTCmfK39xx/T9vWkqpcV7h3
 sx++ZOv2KhhNkIe/1I4OCWDPCXRE4g0uIQr0NS29vMlP3aHHayy76+lbBCNVcHFx
@@ -34,8 +29,8 @@ zq+8ToOcOAKp9yQusNlRAkEA+0DarosTmn2I7+fj2/3ojVKdW/eIisz547U3bGbW
 -----END RSA PRIVATE KEY-----</field>
         </record>
 
-        <record model="ir.config_parameter" id="public_key_v1">
-            <field name="key">l10n_pt.public_key_v1</field>
+        <record model="ir.config_parameter" id="public_key">
+            <field name="key">l10n_pt.public_key</field>
             <field name="value">-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWDX9wVqj6ZqNZU1ojwBpyKKku
 zHTCmfK39xx/T9vWkqpcV7h3sx++ZOv2KhhNkIe/1I4OCWDPCXRE4g0uIQr0NS29

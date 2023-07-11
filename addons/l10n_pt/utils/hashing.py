@@ -17,6 +17,28 @@ class L10nPtHashingUtils:
     L10N_PT_SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/iap/l10n_pt'
 
     @staticmethod
+    def _l10n_pt_get_public_keys(env):
+        endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
+        res = {}
+        try:
+            params = {'db_uuid': env['ir.config_parameter'].sudo().get_param('database.uuid')}
+            response = requests.post(f'{endpoint}/get_public_keys', json={'params': params}, timeout=5000)
+            if not response.ok:
+                raise ConnectionError
+            result = response.json().get('result')
+            if result.get('error'):
+                raise Exception(result['error'])
+            for public_key_version, public_key_str in result.items():
+                res[int(public_key_version)] = public_key_str
+        except ConnectionError as e:
+            _logger.error("Error while contacting the IAP endpoint: %s", e)
+            raise UserError(_("Unable to connect to the IAP endpoint to sign the documents. Please check your internet connection."))
+        except Exception as e:
+            _logger.error("An error occurred when signing the document: %s", e)
+            raise UserError(_("An error occurred when signing the document: %s", e))
+        return res
+
+    @staticmethod
     def _l10n_pt_sign_records_using_iap(env, docs_to_sign):
         endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         res = {}
@@ -35,7 +57,7 @@ class L10nPtHashingUtils:
                 res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
         except ConnectionError as e:
             _logger.error("Error while contacting the IAP endpoint: %s", e)
-            raise UserError(_("Unable to connect to the IAP endpoint to sign the documents. Please check your internet connection."))
+            raise UserError(_("Currently unable to connect to the IAP endpoint to sign the documents"))
         except Exception as e:
             _logger.error("An error occurred when signing the document: %s", e)
             raise UserError(_("An error occurred when signing the document: %s", e))
@@ -67,15 +89,12 @@ class L10nPtHashingUtils:
         return f"${current_key_version}${base64.b64encode(signature).decode()}"
 
     @staticmethod
-    def _l10n_pt_verify_integrity(env, message, inalterable_hash):
+    def _l10n_pt_verify_integrity(message, inalterable_hash, public_key_string):
         """
         :return: True if the hash of the record is valid, False otherwise
         """
         try:
-            hash_version, inalterable_hash = inalterable_hash.split("$")[1:]
-            public_key_string = env['ir.config_parameter'].sudo().get_param(f'l10n_pt.public_key_v{hash_version}')
-            if not public_key_string:
-                raise UserError(_("The public key (version %s) for the local hash verification in Portugal is not set.", hash_version))
+            inalterable_hash = inalterable_hash.split('$')[2]
             public_key = serialization.load_pem_public_key(str.encode(public_key_string))
             public_key.verify(
                 base64.b64decode(inalterable_hash),

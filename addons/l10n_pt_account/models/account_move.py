@@ -200,6 +200,7 @@ class AccountMove(models.Model):
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         docs_to_sign = [{
             'id': move.id,
+            'sorting_key': move.sequence_number,
             'date': move.date.isoformat(),
             'system_entry_date': move.create_date.isoformat(timespec='seconds'),
             'l10n_pt_document_number': move._get_l10n_pt_account_document_number(),
@@ -238,14 +239,14 @@ class AccountMove(models.Model):
             previous_hash = res[move.id]
         return res
 
-    def _l10n_pt_account_verify_integrity(self, previous_hash):
+    def _l10n_pt_account_verify_integrity(self, previous_hash, public_key_string):
         """
         :return: True if the hash of the record is valid, False otherwise
         """
         self.ensure_one()
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         message = self._l10n_pt_account_get_message_to_hash(previous_hash)
-        return L10nPtHashingUtils._l10n_pt_verify_integrity(self.env, message, self.inalterable_hash)
+        return L10nPtHashingUtils._l10n_pt_verify_integrity(message, self.inalterable_hash, public_key_string)
 
     def l10n_pt_account_compute_missing_hashes(self, company_id):
         """

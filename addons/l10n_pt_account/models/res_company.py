@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools.misc import format_date, groupby
+from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
 
 
 class ResCompany(models.Model):
@@ -47,12 +49,20 @@ class ResCompany(models.Model):
 
             grouped = groupby(all_moves, key=lambda m: m.sequence_prefix)
 
+            if self.env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint') == 'demo':
+                public_key_string = self.env['ir.config_parameter'].sudo().get_param('l10n_pt.public_key')
+            else:
+                public_keys = L10nPtHashingUtils._l10n_pt_get_public_keys(self.env)
+                public_key_string = public_keys[max(public_keys, key=int)]
+            if not public_key_string:
+                raise UserError(_("The public key for the local hash verification in Portugal is not set."))
+
             hash_corrupted = False
             for prefix, moves in grouped:
                 moves = sorted(moves, key=lambda m: m.sequence_number)
                 previous_hash = ''
                 for move in moves:
-                    if not move._l10n_pt_account_verify_integrity(previous_hash):
+                    if not move._l10n_pt_account_verify_integrity(previous_hash, public_key_string):
                         results.append({
                             'name': f"{journal.name} [{prefix}]",
                             'status': 'corrupted',

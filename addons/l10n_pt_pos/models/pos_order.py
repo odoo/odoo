@@ -188,14 +188,14 @@ class PosOrder(models.Model):
             previous_hash = res[order.id]
         return res
 
-    def _l10n_pt_pos_verify_integrity(self, previous_hash):
+    def _l10n_pt_pos_verify_integrity(self, previous_hash, public_key_str):
         """
         :return: True if the hash of the record is valid, False otherwise
         """
         self.ensure_one()
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         message = self._l10n_pt_pos_get_message_to_hash(previous_hash)
-        return L10nPtHashingUtils._l10n_pt_verify_integrity(self.env, message, self.l10n_pt_pos_inalterable_hash)
+        return L10nPtHashingUtils._l10n_pt_verify_integrity(message, self.l10n_pt_pos_inalterable_hash, public_key_str)
 
     def l10n_pt_pos_compute_missing_hashes(self, company_id):
         """

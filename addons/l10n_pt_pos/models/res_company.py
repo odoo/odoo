@@ -34,7 +34,7 @@ class ResCompany(models.Model):
             hash_corrupted = False
             previous_hash = ""
             for order in pos_orders:
-                if not order._l10n_pt_pos_verify_integrity(previous_hash):
+                if not order._l10n_pt_pos_verify_integrity(previous_hash, public_key_str):
                     results.append({
                         'name': pos_config.name,
                         'status': 'corrupted',
