@@ -486,6 +486,27 @@ QUnit.test("leave command on channel", async (assert) => {
     assert.verifySteps(["You unsubscribed from general."]);
 });
 
+QUnit.test("Can handle leave notification from unknown member", async (assert) => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Dobby" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
+        context: { mockedUserId: userId },
+    });
+    await click("button[title='Show Member List']");
+    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Mitchell)");
+    assert.containsNone($, ".o-discuss-ChannelMember:contains(Dobby)");
+});
+
 QUnit.test("leave command on chat", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });

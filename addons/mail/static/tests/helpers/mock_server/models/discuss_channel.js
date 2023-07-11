@@ -91,7 +91,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
             return this._mockDiscussChannelCreateGroup(partners_to);
         }
         if (args.model === "discuss.channel" && args.method === "execute_command_leave") {
-            return this._mockDiscussChannelExecuteCommandLeave(args);
+            return this._mockDiscussChannelExecuteCommandLeave(args, args.kwargs?.context);
         }
         if (args.model === "discuss.channel" && args.method === "execute_command_who") {
             return this._mockDiscussChannelExecuteCommandWho(args);
@@ -218,9 +218,6 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
             ["channel_id", "in", ids],
             ["partner_id", "=", partnerId],
         ]);
-        const formattedChannelMember = this._mockDiscussChannelMember_DiscussChannelMemberFormat([
-            channelMember.id,
-        ])[0];
         if (!channelMember) {
             return true;
         }
@@ -241,7 +238,7 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
             this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
                 Channel: {
                     id: channel.id,
-                    channelMembers: [["insert-and-unlink", formattedChannelMember]],
+                    channelMembers: [["insert-and-unlink", { id: channelMember.id }]],
                     memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                         ["channel_id", "=", channel.id],
                     ]),
@@ -844,10 +841,10 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
      *
      * @private
      */
-    _mockDiscussChannelExecuteCommandLeave(args) {
+    _mockDiscussChannelExecuteCommandLeave(args, context = {}) {
         const channel = this.getRecords("discuss.channel", [["id", "in", args.args[0]]])[0];
         if (channel.channel_type === "channel") {
-            this._mockDiscussChannelActionUnfollow([channel.id]);
+            this._mockDiscussChannelActionUnfollow([channel.id], context);
         } else {
             this._mockDiscussChannelChannelPin([channel.id], false);
         }
