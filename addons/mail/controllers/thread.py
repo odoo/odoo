@@ -63,6 +63,10 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
+        guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
+            post_data.get("attachment_tokens")
+        )
         if context:
             request.update_context(**context)
         canned_response_ids = tuple(cid for cid in post_data.pop('canned_response_ids', []) if isinstance(cid, int))
@@ -90,8 +94,9 @@ class ThreadController(http.Controller):
         return message_data
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
-    def mail_message_update_content(self, message_id, body, attachment_ids, partner_ids=None):
+    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None):
         guest = request.env["mail.guest"]._get_guest_from_request(request)
+        guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
         message_sudo = guest.env["mail.message"].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
@@ -100,3 +105,4 @@ class ThreadController(http.Controller):
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
+        return message_sudo.message_format()[0]
