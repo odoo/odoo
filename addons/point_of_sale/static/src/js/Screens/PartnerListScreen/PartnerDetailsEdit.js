@@ -4,7 +4,7 @@ import { _t } from "web.core";
 import { getDataURLFromFile } from "web.utils";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillUnmount  } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";
@@ -14,11 +14,21 @@ export class PartnerDetailsEdit extends Component {
         this.popup = useService("popup");
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
-        this.changes = {
-            country_id: partner.country_id && partner.country_id[0],
+        this.changes = useState({
+            name: partner.name || "",
+            street: partner.street || "",
+            city: partner.city || "",
+            zip: partner.zip || "",
             state_id: partner.state_id && partner.state_id[0],
-            property_product_pricelist: this.setDefaultPricelist(partner),
-        };
+            country_id: partner.country_id && partner.country_id[0],
+            lang: partner.lang || "",
+            email: partner.email || "",
+            phone: partner.phone || "",
+            mobile: partner.mobile || "",
+            barcode: partner.barcode || "",
+            vat: partner.vat || "",
+            property_product_pricelist: this.getDefaultPricelist(partner),
+        });
 
         onMounted(() => {
             this.env.bus.on("save-partner", this, this.saveChanges);
@@ -27,14 +37,6 @@ export class PartnerDetailsEdit extends Component {
         onWillUnmount(() => {
             this.env.bus.off("save-partner", this);
         });
-    }
-    setDefaultPricelist(partner) {
-        if (partner.property_product_pricelist) {
-            return partner.property_product_pricelist[0];
-        } else if (this.env.pos.default_pricelist) {
-            return this.env.pos.default_pricelist.id;
-        }
-        return false;
     }
 
     get partnerImageUrl() {
@@ -49,12 +51,17 @@ export class PartnerDetailsEdit extends Component {
             return false;
         }
     }
+    getDefaultPricelist(partner) {
+        if (partner.property_product_pricelist) {
+            return partner.property_product_pricelist[0];
+        }
+        return this.env.pos.default_pricelist ? this.env.pos.default_pricelist.id : false;
+    }
     /**
      * Save to field `changes` all input changes from the form fields.
      */
-    captureChange(event) {
-        this.changes[event.target.name] = event.target.value;
-    }
+    captureChange(event) {}
+
     saveChanges() {
         const processedChanges = {};
         for (const [key, value] of Object.entries(this.changes)) {
@@ -64,6 +71,14 @@ export class PartnerDetailsEdit extends Component {
                 processedChanges[key] = value;
             }
         }
+        if (
+            processedChanges.state_id &&
+            this.env.pos.states.find((state) => state.id === processedChanges.state_id)
+                .country_id[0] !== processedChanges.country_id
+        ) {
+            processedChanges.state_id = false;
+        }
+
         if ((!this.props.partner.name && !processedChanges.name) || processedChanges.name === "") {
             return this.popup.add(ErrorPopup, {
                 title: _t("A Customer Name Is Required"),
