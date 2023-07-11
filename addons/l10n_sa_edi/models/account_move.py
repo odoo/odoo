@@ -47,7 +47,7 @@ class AccountMove(models.Model):
                     qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, b64decode(x509_cert), move.l10n_sa_invoice_signature, move._l10n_sa_is_simplified())
                     move.l10n_sa_qr_code_str = b64encode(qr_code_str).decode()
                 elif zatca_document.state == 'sent' and zatca_document.attachment_id.datas:
-                    document_xml = zatca_document.attachment_id.datas.decode()
+                    document_xml = zatca_document.attachment_id.with_context(bin_size=False).datas.decode()
                     root = etree.fromstring(b64decode(document_xml))
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
                     move.l10n_sa_qr_code_str = qr_node.text
