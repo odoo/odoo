@@ -657,59 +657,51 @@ class HrExpense(models.Model):
              ('company_id', '=', self.company_id.id)], limit=1)
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
-        if self.currency_id != self.company_currency_id:
-            total_amount_currency = self.total_amount
-            rate = total_amount_currency / self.total_amount_company if self.total_amount_company else 1.0
-        else:
-            total_amount_currency = self.total_amount_company
-            rate = 1
         move_lines = []
         # Due to rounding and conversion mismatch between vendor bills and payments, we have to force the computation into company account
-        amount_currency_diff = total_amount_currency
-        last_expense_line = None # Used for rounding in currency issues
-        tax_data = self.env['account.tax']._compute_taxes([self._convert_to_tax_base_line_dict(currency=self.sheet_id.currency_id)])
-        for base_line_data, update in tax_data['base_lines_to_update']:  # Add base lines
-            base_line_data.update(update)
-            amount_currency = self.currency_id.round(base_line_data['price_subtotal'] * rate)
-            expense_name = self.name.split("\n")[0][:64]
-            last_expense_line = base_move_line = {
-                'name': f'{self.employee_id.name}: {expense_name}',
-                'account_id': base_line_data['account'].id,
-                'analytic_distribution': base_line_data['analytic_distribution'],
-                'expense_id': self.id,
-                'tax_ids': [Command.set(self.tax_ids.ids)],
-                'tax_tag_ids': base_line_data['tax_tag_ids'],
-                'balance': base_line_data['price_subtotal'],
-                'amount_currency': amount_currency,
-                'currency_id': self.currency_id.id,
-                'product_id': base_line_data['product'].id,
-            }
-            amount_currency_diff -= amount_currency
-            move_lines.append(base_move_line)
+        tax_data = self.env['account.tax']._compute_taxes([
+            self._convert_to_tax_base_line_dict(price_unit=self.total_amount, currency=self.currency_id)
+        ])
+        rate = abs(self.total_amount / self.total_amount_company)
+        base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
+        amount_currency = to_update['price_subtotal']
+        expense_name = self.name.split("\n")[0][:64]
+        base_move_line = {
+            'name': f'{self.employee_id.name}: {expense_name}',
+            'account_id': base_line_data['account'].id,
+            'product_id': base_line_data['product'].id,
+            'analytic_distribution': base_line_data['analytic_distribution'],
+            'expense_id': self.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_tag_ids': to_update['tax_tag_ids'],
+            'amount_currency': amount_currency,
+            'currency_id': self.currency_id.id,
+        }
+        move_lines.append(base_move_line)
+        total_tax_line_balance = 0.0
         for tax_line_data in tax_data['tax_lines_to_add']:  # Add tax lines
-            amount_currency = self.sheet_id.currency_id.round(tax_line_data['tax_amount'] * rate)
-            last_expense_line = tax_line = {
+            tax_line_balance = self.company_currency_id.round(tax_line_data['tax_amount'] / rate)
+            total_tax_line_balance += tax_line_balance
+            tax_line = {
                 'name': self.env['account.tax'].browse(tax_line_data['tax_id']).name,
                 'account_id': tax_line_data['account_id'],
                 'analytic_distribution': tax_line_data['analytic_distribution'],
                 'expense_id': self.id,
                 'tax_tag_ids': tax_line_data['tax_tag_ids'],
-                'balance': tax_line_data['tax_amount'],
-                'amount_currency': amount_currency,
-                'tax_base_amount': tax_line_data['base_amount'],
+                'balance': tax_line_balance,
+                'amount_currency': tax_line_data['tax_amount'],
+                'tax_base_amount': self.company_currency_id.round(tax_line_data['base_amount'] / rate),
                 'currency_id': self.currency_id.id,
                 'tax_repartition_line_id': tax_line_data['tax_repartition_line_id'],
             }
             move_lines.append(tax_line)
-            amount_currency_diff -= amount_currency
-        if not self.sheet_id.currency_id.is_zero(amount_currency_diff) and last_expense_line:
-            last_expense_line['amount_currency'] += amount_currency_diff
+        base_move_line['balance'] = self.total_amount_company - total_tax_line_balance
         expense_name = self.name.split("\n")[0][:64]
         move_lines.append({  # Add outstanding payment line
             'name': f'{self.employee_id.name}: {expense_name}',
             'account_id': self.sheet_id._get_expense_account_destination(),
             'balance': -self.total_amount_company,
-            'amount_currency': self.currency_id.round(-total_amount_currency),
+            'amount_currency': self.currency_id.round(-self.total_amount),
             'currency_id': self.currency_id.id,
         })
         return {
@@ -717,7 +709,7 @@ class HrExpense(models.Model):
             'ref': self.name,
             'journal_id': journal.id,
             'move_type': 'entry',
-            'amount': total_amount_currency,
+            'amount': self.total_amount,
             'payment_type': 'outbound',
             'partner_type': 'supplier',
             'payment_method_line_id': payment_method_line.id,
@@ -1497,8 +1489,7 @@ class HrExpenseSheet(models.Model):
 
         moves = self.env['account.move'].create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
         payments = self.env['account.payment'].with_context(**skip_context).create([expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids])
-        payment_moves = payments.move_id
-        moves |= payment_moves
+        moves |= payments.move_id
         moves.action_post()
         self.activity_update()
 
