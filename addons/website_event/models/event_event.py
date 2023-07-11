@@ -10,6 +10,7 @@ from pytz import utc, timezone
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
 
@@ -245,6 +246,16 @@ class Event(models.Model):
                     }) for question in event.event_type_id.question_ids
                 ]
             event.question_ids = command
+
+    # -------------------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # -------------------------------------------------------------------------
+
+    @api.constrains('website_id')
+    def _check_website_id(self):
+        for event in self:
+            if event.website_id and event.website_id.company_id != event.company_id:
+                raise ValidationError(_("The website must be from the same company as the event."))
 
     # ------------------------------------------------------------
     # CRUD
