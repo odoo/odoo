@@ -583,6 +583,11 @@ class MrpWorkorder(models.Model):
         if self.state in ('done', 'cancel'):
             return True
 
+        if self.production_id.state != 'progress':
+            self.production_id.write({
+                'date_start': datetime.now(),
+            })
+
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
         elif self.qty_producing == 0:
@@ -591,10 +596,6 @@ class MrpWorkorder(models.Model):
         self.env['mrp.workcenter.productivity'].create(
             self._prepare_timeline_vals(self.duration, datetime.now())
         )
-        if self.production_id.state != 'progress':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
         if self.state == 'progress':
             return True
         start_date = datetime.now()
