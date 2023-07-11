@@ -69,11 +69,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
         string="Income Account",
         domain=[('deprecated', '=', False)],
         help="Account used for deposits")
-    deposit_taxes_id = fields.Many2many(
-        comodel_name='account.tax',
-        string="Customer Taxes",
-        domain=[('type_tax_use', '=', 'sale')],
-        help="Taxes used for deposits")
 
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")

@@ -49,9 +49,6 @@
                         options="{'no_create': True}"
                         attrs="{'invisible': [('product_id', '!=', False)]}"
                         groups="account.group_account_manager"/>
-                    <field name="deposit_taxes_id"
-                        widget="many2many_tags"
-                        attrs="{'invisible': [('product_id', '!=', False)]}"/>
                 </group>
                 <group attrs="{'invisible': [('has_down_payments', '=', False)]}">
                     <field name="amount_invoiced"/>
