@@ -41,7 +41,6 @@ class Project(models.Model):
     billable_percentage = fields.Integer(
         compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
-    display_create_order = fields.Boolean(compute='_compute_display_create_order')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
         domain="""[
@@ -135,11 +134,6 @@ class Project(models.Model):
                     timesheet_billable += unit_amount
             billable_percentage = timesheet_billable / timesheet_total * 100 if timesheet_total > 0 else 0
             project.billable_percentage = round(billable_percentage)
-
-    @api.depends('partner_id', 'pricing_type')
-    def _compute_display_create_order(self):
-        for project in self:
-            project.display_create_order = project.partner_id and project.pricing_type == 'task_rate'
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
