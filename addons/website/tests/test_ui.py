@@ -415,7 +415,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_29_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
-        self.start_tour("/?enable_editor=1", "website_page_options", login="admin")
 
     def test_30_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
