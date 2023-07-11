@@ -88,7 +88,7 @@
                 </button>
             </t>
             <t t-else="">
-                <ol class="breadcrumb flex-nowrap text-nowrap small lh-1">
+                <ol class="breadcrumb flex-nowrap text-nowrap small lh-sm">
                     <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex min-w-0">
                         <Dropdown togglerClass="'btn btn-light btn-sm p-0'">
                             <t t-set-slot="toggler">
@@ -108,7 +108,7 @@
                     </t>
                 </ol>
             </t>
-            <div class="d-flex gap-1">
+            <div class="d-flex gap-1 text-truncate">
                 <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm">
                     <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
                 </div>
@@ -116,7 +116,7 @@
             </div>
         </div>
 
-        <div t-else="" class="o_breadcrumb d-flex gap-1">
+        <div t-else="" class="o_breadcrumb d-flex gap-1 text-truncate">
             <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center">
                 <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
             </div>
