@@ -913,6 +913,7 @@ export class ThreadService {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
+                attachment_tokens: attachments.map((attachment) => attachment.accessToken),
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
