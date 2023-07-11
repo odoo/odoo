@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -35,3 +35,26 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart775',
             },
         }
+
+    @template(model='account.journal')
+    def _get_account_journal(self, template_code):
+        result = super()._get_account_journal(template_code)
+        if template_code != "pe":
+            return result
+        result.update({
+            "pe_opening": {
+                "name": _("Opening Operations"),
+                "type": "general",
+                "code": _("OPOP"),
+                "show_on_dashboard": True,
+                "sequence": 20,
+            },
+            "pe_closing": {
+                "name": _("Closing Operations"),
+                "type": "general",
+                "code": _("CLOP"),
+                "show_on_dashboard": True,
+                "sequence": 21,
+            },
+        })
+        return result
