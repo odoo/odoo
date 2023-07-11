@@ -119,10 +119,16 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         const cashInput = useRef(inputRef);
         const current = useComponent();
         const decimalPoint = current.env._t.database.parameters.decimal_point;
+        const thousandsSep = current.env._t.database.parameters.thousands_sep;
         // Replace the thousands separator and decimal point with regex-escaped versions
-        const escapedThousandsSep = escapeRegExp(current.env._t.database.parameters.thousands_sep);
         const escapedDecimalPoint = escapeRegExp(decimalPoint);
-        const floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+        let floatRegex;
+        if (thousandsSep) {
+            const escapedThousandsSep = escapeRegExp(thousandsSep);
+            floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+        } else {
+            floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+        }
         function isValidFloat(inputValue) {
             return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
         }
@@ -139,12 +145,16 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         
 
         onMounted(() => {
-            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
-            cashInput.el.addEventListener("input", handleCashInputChange);
+            if (cashInput.el) {
+                cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+                cashInput.el.addEventListener("input", handleCashInputChange);
+            }
         });
 
         onWillUnmount(() => {
-            cashInput.el.removeEventListener("input", handleCashInputChange);
+            if (cashInput.el) {
+                cashInput.el.removeEventListener("input", handleCashInputChange);
+            }
         })
     }
 

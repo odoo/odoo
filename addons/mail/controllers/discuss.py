@@ -246,7 +246,7 @@ class DiscussController(http.Controller):
             raise NotFound()
         if not message_sudo.model or not message_sudo.res_id:
             raise NotFound()
-        request.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
+        guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo,
             body,
             attachment_ids=attachment_ids
