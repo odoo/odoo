@@ -510,9 +510,10 @@ class QWebException(Exception):
             # Ignore to submit the traceback to sentry
             #   Case 1: If the template is created manualy by a user.
             #   Case 2: If the template is imported after exporting.
+            #   Case 3: If the template is created by web_studio.
             view = qweb.env['ir.ui.view'].browse(ref)
             xml_id = view.get_external_id().get(view.id)
-            if not xml_id or xml_id.startswith('__export__'):
+            if not xml_id or xml_id.startswith('__export__') or xml_id.startswith('studio_customization'):
                 self.sentry_ignored = True
         super().__init__(message)
 
