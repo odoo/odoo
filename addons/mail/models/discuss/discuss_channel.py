@@ -707,7 +707,7 @@ class Channel(models.Model):
         """
         self.ensure_one()
         message_to_update = self.env['mail.message'].search([
-            ['id', '=', message_id],
+            ['id', '=', int(message_id)],
             ['model', '=', 'discuss.channel'],
             ['res_id', '=', self.id],
             ['pinned_at', '=' if pinned else '!=', False]
