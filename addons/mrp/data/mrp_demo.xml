@@ -391,7 +391,7 @@
         <record id="mrp_production_4" model="mrp.production">
             <field name="product_id" ref="product_product_computer_desk_head"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="product_qty">2</field>
+            <field name="product_qty">1</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="bom_id" ref="mrp_bom_table_top"/>
@@ -498,6 +498,12 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
 
+        <record id="lot_product_product_leg_0" model="stock.lot">
+            <field name="name">0000000030010</field>
+            <field name="product_id" ref="product_product_computer_desk_leg"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
 
         <!-- Initital Inventory -->
 
@@ -540,6 +546,12 @@
             <field name="inventory_quantity">30.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
+        <record id="stock_inventory_product_leg" model="stock.quant">
+            <field name="product_id" ref="product_product_computer_desk_leg"/>
+            <field name="inventory_quantity">10.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_product_leg_0"/>
+        </record>
 
         <function model="stock.quant" name="action_apply_inventory">
             <function eval="[[('id', 'in', (ref('stock_inventory_drawer_lot0'),
@@ -549,6 +561,7 @@
                                             ref('stock_inventory_product_wood_panel'),
                                             ref('stock_inventory_product_ply'),
                                             ref('stock_inventory_product_wear'),
+                                            ref('stock_inventory_product_leg'),
                                             ))]]" model="stock.quant" name="search"/>
         </function>
 
@@ -688,14 +701,10 @@
         </record>
 
         <function model="mrp.production" name="action_confirm" eval="[[
-            ref('mrp.mrp_production_3'),
+            ref('mrp.mrp_production_1'),
             ref('mrp.mrp_production_4'),
             ref('mrp.mrp_production_drawer'),
         ]]"/>
-
-        <function model="mrp.production" name="button_plan">
-            <value eval="[ref('mrp.mrp_production_3')]"/>
-        </function>
 
         <function model="mrp.production" name="write">
             <value eval="[ref('mrp.mrp_production_drawer')]"/>
