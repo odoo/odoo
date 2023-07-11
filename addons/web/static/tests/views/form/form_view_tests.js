@@ -6,6 +6,8 @@ import {
     addRow,
     click,
     clickDiscard,
+    clickOpenM2ODropdown,
+    clickOpenedDropdownItem,
     clickSave,
     dragAndDrop,
     editInput,
@@ -4341,6 +4343,81 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
         await click(target.querySelector(".o_content button.btn-primary"));
         assert.verifySteps(["get_views", "read", "write", "read", "execute_action"]);
+    });
+
+    QUnit.test('buttons with attr "special" in dialog close the dialog', async function (assert) {
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <sheet>
+                        <field name="name" />
+                    </sheet>
+                    <footer>
+                        <button class="btn btn-primary" special="save" data-hotkey="s">Special button save</button>
+                        <button class="btn btn-secondary" special="cancel" data-hotkey="j">Special button cancel</button>
+                    </footer>
+                </form>
+            `,
+        };
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 2,
+            arch: `
+                <form>
+                    <sheet><group>
+                    <field name="product_id"/>
+                    </group></sheet>
+                </form>`,
+            mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/product/get_formview_id") {
+                    return false;
+                }
+                if (route === "/web/dataset/call_kw/product/create") {
+                    assert.step("create RPC");
+                }
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    assert.step("write RPC");
+                }
+            },
+        });
+
+        await editInput(target, "input[id=product_id]", "ABC");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickOpenedDropdownItem(target, "product_id", "Create and edit...");
+        assert.containsOnce(target, ".o_dialog", "dialog is present to create the product");
+
+        await editInput(target, ".o_field_widget[name=name] input", "ABCDE");
+        await click(target.querySelector("button[special=save]"));
+        assert.containsNone(target, ".o_dialog", "dialog has been closed");
+        assert.verifySteps(["create RPC"], "create RPC has been made");
+        assert.strictEqual(
+            target.querySelector("[name=product_id] input").value,
+            "ABCDE",
+            "value has been set correctly"
+        );
+        assert.containsOnce(
+            target,
+            ".o_form_status_indicator_buttons:not(.invisible)",
+            "form view is dirty"
+        );
+
+        await click(target.querySelector(".o_form_button_save"));
+        assert.verifySteps(["write RPC"], "write RPC has been made");
+
+        await editInput(target, "input[id=product_id]", "XYZ");
+        await clickOpenM2ODropdown(target, "product_id");
+        await clickOpenedDropdownItem(target, "product_id", "Create and edit...");
+        await click(target.querySelector("button[special=cancel]"));
+        assert.containsNone(target, ".o_dialog", "dialog has been closed");
+        assert.verifySteps([], "no create RPC has been made");
+        assert.containsOnce(
+            target,
+            ".o_form_status_indicator_buttons.invisible",
+            "form view is not dirty"
+        );
     });
 
     QUnit.test("missing widgets do not crash", async function (assert) {
