@@ -59,8 +59,14 @@ class ormcache(object):
         self.method = method
         self.determine_key()
         lookup = decorator(self.lookup, method)
-        lookup.ormcache = self
+        lookup.cache = self
         return lookup
+
+    def add_value(self, *args, cache_value=None, **kwargs):
+        model = args[0]
+        d, key0, _ = self.lru(model)
+        key = key0 + self.key(*args, **kwargs)
+        d[key] = cache_value
 
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
@@ -167,7 +173,7 @@ def log_ormcache_stats(sig=None, frame=None):
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
     model = bound_method.__self__
-    ormcache = bound_method.ormcache
+    ormcache = bound_method.cache
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
