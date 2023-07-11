@@ -67,7 +67,7 @@
                 <div class="d-flex flex-column flex-grow-1">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
                     <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
-                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef"/>
+                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.isNote ? 'note' : 'message') : undefined"/>
                 </div>
                 <PinnedMessagesPanel t-if="state.activeMode === MODES.PINNED_MESSAGES and thread.model === 'discuss.channel'" thread="thread"/>
             </div>

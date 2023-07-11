@@ -72,6 +72,45 @@ QUnit.test(
     }
 );
 
+QUnit.test("Message post in chat window of chatter should log a note", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create({
+        model: "res.partner",
+        body: "A needaction message to have it in messaging menu",
+        author_id: pyEnv.odoobotId,
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(
+        $,
+        ".o-mail-Message:contains(A needaction message to have it in messaging menu)"
+    );
+    assert.containsOnce(
+        $(".o-mail-Message:contains(A needaction message to have it in messaging menu)"),
+        ".o-mail-Message-bubble.border" // bordered bubble = "Send message" mode
+    );
+    assert.containsOnce($, ".o-mail-Composer [placeholder='Log an internal note...']");
+    await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
+    await afterNextRender(() => triggerHotkey("control+Enter"));
+    assert.containsOnce($, ".o-mail-Message:contains(Test)");
+    assert.containsNone(
+        $(".o-mail-Message:contains(Test)"),
+        ".o-mail-Message-bubble.border" // non-bordered bubble = "Log note" mode
+    );
+});
+
 QUnit.test("load messages from opening chat window from messaging menu", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
