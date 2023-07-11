@@ -738,7 +738,8 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         employee = self.env['hr.employee'].browse(employee_ids)
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+        domain = [('time_type', '=', 'leave'),
+                  ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
         result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)
         for employee_id in result:
