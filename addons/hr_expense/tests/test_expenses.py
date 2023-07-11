@@ -439,7 +439,7 @@ class TestExpenses(TestExpenseCommon):
         })
         self.env['res.currency.rate'].create({
             'name': '2016-01-01',
-            'rate': 1/1.52890,
+            'rate': 1/0.148431,
             'currency_id': foreign_currency.id,
             'company_id': self.company_data['company'].id,
         })
@@ -463,10 +463,10 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Own expense',
                 'date': '2022-11-16',
                 'payment_mode': 'own_account',
-                'total_amount': 1000,
+                'total_amount': 100,
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'currency_id': foreign_currency.id,  # rate is 1:0.148431
                 'tax_ids': [Command.set(tax.ids)],
             })],
         })
@@ -479,10 +479,10 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Own expense',
                 'date': '2022-11-17',
                 'payment_mode': 'own_account',
-                'total_amount': 1000,
+                'total_amount': 100,
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'currency_id': foreign_currency.id,  # rate is 1:0.148431
                 'tax_ids': [Command.set(taxes.ids)],
             })],
         })
@@ -495,10 +495,10 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Company expense',
                 'date': '2022-11-18',
                 'payment_mode': 'company_account',
-                'total_amount': 1000,
+                'total_amount': 100,
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'currency_id': foreign_currency.id,  # rate is 1:0.148431
                 'tax_ids': [Command.set(tax.ids)],
             })],
         })
@@ -511,48 +511,48 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Company expense',
                 'date': '2022-11-19',
                 'payment_mode': 'company_account',
-                'total_amount': 1000,
+                'total_amount': 100,
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'currency_id': foreign_currency.id,  # rate is 1:1.5289
+                'currency_id': foreign_currency.id,  # rate is 1:0.148431
                 'tax_ids': [Command.set(taxes.ids)],
             })],
         })
         sheets = expense_sheet_own_1_tax + expense_sheet_own_2_tax + expense_sheet_company_1_tax + expense_sheet_company_2_tax
-        self.assertRecordValues(sheets.mapped('expense_line_ids'), [
-            {'untaxed_amount':  869.57, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 130.43, 'amount_tax_company': 199.42},
-            {'untaxed_amount':  769.23, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 230.77, 'amount_tax_company': 352.82},
-            {'untaxed_amount':  869.57, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 130.43, 'amount_tax_company': 199.42},
-            {'untaxed_amount':  769.23, 'total_amount': 1000, 'total_amount_company': 1528.90, 'amount_tax': 230.77, 'amount_tax_company': 352.82},
+        self.assertRecordValues(sheets.expense_line_ids, [
+            {'untaxed_amount':  86.96, 'total_amount': 100.00, 'total_amount_company': 14.84, 'amount_tax': 13.04, 'amount_tax_company': 1.94},
+            {'untaxed_amount':  76.92, 'total_amount': 100.00, 'total_amount_company': 14.84, 'amount_tax': 23.08, 'amount_tax_company': 3.42},
+            {'untaxed_amount':  86.96, 'total_amount': 100.00, 'total_amount_company': 14.84, 'amount_tax': 13.04, 'amount_tax_company': 1.94},
+            {'untaxed_amount':  76.92, 'total_amount': 100.00, 'total_amount_company': 14.84, 'amount_tax': 23.08, 'amount_tax_company': 3.42},
         ])
 
         sheets.action_submit_sheet()
         sheets.approve_expense_sheets()
         sheets.action_sheet_move_create()
-        self.assertRecordValues(expense_sheet_own_1_tax.account_move_id.mapped('line_ids'), [
-            {'balance':  1329.48, 'amount_currency':  1329.48, 'currency_id': self.company_data['currency'].id},
-            {'balance':   199.42, 'amount_currency':   199.42, 'currency_id': self.company_data['currency'].id},
-            {'balance': -1528.90, 'amount_currency': -1528.90, 'currency_id': self.company_data['currency'].id},
+        self.assertRecordValues(expense_sheet_own_1_tax.account_move_id.line_ids, [
+            {'balance':  12.90, 'amount_currency':  12.90, 'currency_id': self.company_data['currency'].id},
+            {'balance':   1.94, 'amount_currency':   1.94, 'currency_id': self.company_data['currency'].id},
+            {'balance': -14.84, 'amount_currency': -14.84, 'currency_id': self.company_data['currency'].id},
         ])
 
-        self.assertRecordValues(expense_sheet_own_2_tax.account_move_id.mapped('line_ids'), [
-            {'balance':  1176.08, 'amount_currency':  1176.08, 'currency_id': self.company_data['currency'].id},
-            {'balance':   176.41, 'amount_currency':   176.41, 'currency_id': self.company_data['currency'].id},
-            {'balance':   176.41, 'amount_currency':   176.41, 'currency_id': self.company_data['currency'].id},  #  == 352.82 amount_tax_company
-            {'balance': -1528.90, 'amount_currency': -1528.90, 'currency_id': self.company_data['currency'].id},
+        self.assertRecordValues(expense_sheet_own_2_tax.account_move_id.line_ids, [
+            {'balance':  11.42, 'amount_currency':  11.42, 'currency_id': self.company_data['currency'].id},
+            {'balance':   1.71, 'amount_currency':   1.71, 'currency_id': self.company_data['currency'].id},
+            {'balance':   1.71, 'amount_currency':   1.71, 'currency_id': self.company_data['currency'].id},  #  == 3.42 amount_tax_company
+            {'balance': -14.84, 'amount_currency': -14.84, 'currency_id': self.company_data['currency'].id},
         ])
 
-        self.assertRecordValues(expense_sheet_company_1_tax.account_move_id.mapped('line_ids'), [
-            {'balance':  1329.48, 'amount_currency':   869.57, 'currency_id': foreign_currency.id},
-            {'balance':   199.42, 'amount_currency':   130.43, 'currency_id': foreign_currency.id},
-            {'balance': -1528.90, 'amount_currency': -1000.00, 'currency_id': foreign_currency.id},
+        self.assertRecordValues(expense_sheet_company_1_tax.account_move_id.line_ids, [
+            {'balance':  12.90, 'amount_currency':   86.96, 'currency_id': foreign_currency.id},
+            {'balance':   1.94, 'amount_currency':   13.04, 'currency_id': foreign_currency.id},
+            {'balance': -14.84, 'amount_currency': -100.00, 'currency_id': foreign_currency.id},
         ])
 
-        self.assertRecordValues(expense_sheet_company_2_tax.account_move_id.mapped('line_ids'), [
-            {'balance':  1176.08, 'amount_currency':   769.23, 'currency_id': foreign_currency.id},
-            {'balance':   176.41, 'amount_currency':   115.38, 'currency_id': foreign_currency.id},  #  == 352.82 amount_tax_company & 230.77 amount_tax
-            {'balance':   176.41, 'amount_currency':   115.39, 'currency_id': foreign_currency.id},  # One cent more in currency due to rounding
-            {'balance': -1528.90, 'amount_currency': -1000.00, 'currency_id': foreign_currency.id},
+        self.assertRecordValues(expense_sheet_company_2_tax.account_move_id.line_ids, [
+            {'balance':  11.42, 'amount_currency':   76.92, 'currency_id': foreign_currency.id},
+            {'balance':   1.71, 'amount_currency':   11.54, 'currency_id': foreign_currency.id},  #  == 3.42 amount_tax_company & 23.08 amount_tax
+            {'balance':   1.71, 'amount_currency':   11.54, 'currency_id': foreign_currency.id},  # One cent more in currency due to rounding
+            {'balance': -14.84, 'amount_currency': -100.00, 'currency_id': foreign_currency.id},
         ])
 
 
