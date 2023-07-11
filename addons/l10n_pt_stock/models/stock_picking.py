@@ -202,8 +202,10 @@ class StockPicking(models.Model):
         pickings = self.search([
             ('company_id', '=', company_id),
             ('state', '=', 'done'),
+            ('picking_type_id.code', '=', 'outgoing'),
             ('l10n_pt_stock_inalterable_hash', '=', False),
         ], order='l10n_pt_secure_sequence_number')
+        pickings = pickings.filtered(lambda p: not hasattr(p, 'pos_order_id') or not p.pos_order_id) # POS orders are hashed in their own way (see l10n_pt_pos)
         if not pickings:
             return ''
         pickings_hashes = self.env['stock.picking'].browse([p.id for p in pickings]).with_context(l10n_pt_force_compute_signature=True)._hash_compute()
