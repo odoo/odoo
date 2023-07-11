@@ -475,20 +475,24 @@ export class FormController extends Component {
     }
 
     async beforeExecuteActionButton(clickParams) {
+        const record = this.model.root;
         if (clickParams.special !== "cancel") {
-            const noReload = this.env.inDialog && clickParams.close;
-            const params = { noReload };
-            if (!this.env.inDialog) {
-                params.onError = this.onSaveError.bind(this);
-            }
-            return this.model.root.save(params).then((saved) => {
-                if (saved && this.props.onSave) {
-                    this.props.onSave(this.model.root);
+            let saved = false;
+            if (clickParams.special === "save" && this.props.saveRecord) {
+                saved = await this.props.saveRecord(record, clickParams);
+            } else {
+                const params = { noReload: this.env.inDialog && clickParams.close };
+                if (!this.env.inDialog) {
+                    params.onError = this.onSaveError.bind(this);
                 }
-                return saved;
-            });
+                saved = await record.save(params);
+            }
+            if (saved !== false && this.props.onSave) {
+                this.props.onSave(record, clickParams);
+            }
+            return saved;
         } else if (this.props.onDiscard) {
-            this.props.onDiscard(this.model.root);
+            this.props.onDiscard(record);
         }
     }
 
