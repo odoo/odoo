@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
@@ -17,7 +16,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'name': self.company_data['product_delivery_no'].name,
                 'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': 2,
@@ -40,7 +39,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'name': 'Air Travel',
             'product_id': self.company_data['product_delivery_cost'].id,
             'analytic_distribution': {so.analytic_account_id.id: 100},
-            'unit_amount': 621.54,
+            'quantity': 11.30,
             'employee_id': self.expense_employee.id,
             'sheet_id': sheet.id,
             'sale_order_id': so.id,
@@ -52,8 +51,8 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # expense should now be in sales order
         self.assertIn(self.company_data['product_delivery_cost'], so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == self.company_data['product_delivery_cost'].id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (621.54, 1.0), 'Sale Expense: error when invoicing an expense at cost')
-        self.assertEqual(so.amount_total, init_price + sol.price_unit, 'Sale Expense: price of so should be updated after adding expense')
+        self.assertEqual((sol.price_unit, sol.qty_delivered), (55.0, 11.3), 'Sale Expense: error when invoicing an expense at cost')
+        self.assertEqual(so.amount_total, init_price + exp.total_amount, 'Sale Expense: price of so should be updated after adding expense')
 
         # create some expense and validate it (expense at sale price)
         init_price = so.amount_total
@@ -66,7 +65,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'list_price': 0.50,
             'uom_id': self.env.ref('uom.product_uom_km').id,
             'uom_po_id': self.env.ref('uom.product_uom_km').id,
-            'standard_price': 1,
+            'standard_price': 0.15,
         })
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
@@ -79,7 +78,6 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'product_id': prod_exp_2.id,
             'analytic_distribution': {so.analytic_account_id.id: 100},
             'product_uom_id': self.env.ref('uom.product_uom_km').id,
-            'unit_amount': 0.15,
             'quantity': 100,
             'employee_id': self.expense_employee.id,
             'sheet_id': sheet.id,
@@ -98,4 +96,4 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         # both expenses should be invoiced
         inv = so._create_invoices()
-        self.assertEqual(inv.amount_untaxed, 621.54 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')
+        self.assertEqual(inv.amount_untaxed, 621.5 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')
