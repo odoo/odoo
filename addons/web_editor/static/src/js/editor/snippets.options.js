@@ -4006,19 +4006,6 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<boolean>|boolean}
      */
     _computeWidgetVisibility: async function (widgetName, params) {
-        const moveUpOrLeft = widgetName === 'move_up_opt' || widgetName === 'move_left_opt';
-        const moveDownOrRight = widgetName === 'move_down_opt' || widgetName === 'move_right_opt';
-
-        if (moveUpOrLeft || moveDownOrRight) {
-            // The arrows are not displayed if the target is in a grid and if
-            // not in mobile view.
-            const isMobileView = weUtils.isMobileView(this.$target[0]);
-            if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
-                return false;
-            }
-            const firstOrLastChild = moveUpOrLeft ? ':first-child' : ':last-child';
-            return !this.$target.is(firstOrLastChild);
-        }
         return true;
     },
     /**
@@ -4698,16 +4685,6 @@ registry.sizing = SnippetOptionWidget.extend({
             // columns.
             const moveHandleEl = this.$overlay[0].querySelector('.o_move_handle');
             moveHandleEl.classList.toggle('d-none', isMobileView);
-
-            // Hiding/showing the arrows.
-            if (isGrid) {
-                const moveLeftArrowEl = this.$overlay[0].querySelector('.fa-angle-left');
-                const moveRightArrowEl = this.$overlay[0].querySelector('.fa-angle-right');
-                const showLeft = await this._computeWidgetVisibility('move_left_opt');
-                const showRight = await this._computeWidgetVisibility('move_right_opt');
-                moveLeftArrowEl.classList.toggle('d-none', !showLeft);
-                moveRightArrowEl.classList.toggle('d-none', !showRight);
-            }
 
             // Show/hide the buttons to send back/front a grid item.
             const bringFrontBackEls = this.$overlay[0].querySelectorAll('.o_front_back');
@@ -5577,6 +5554,30 @@ registry.SnippetMove = SnippetOptionWidget.extend({
         // Update the "Invisible Elements" panel as the order of invisible
         // snippets could have changed on the page.
         this.trigger_up("update_invisible_dom");
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        const moveUpOrLeft = widgetName === "move_up_opt" || widgetName === "move_left_opt";
+        const moveDownOrRight = widgetName === "move_down_opt" || widgetName === "move_right_opt";
+
+        if (moveUpOrLeft || moveDownOrRight) {
+            // The arrows are not displayed if the target is in a grid and if
+            // not in mobile view.
+            const isMobileView = weUtils.isMobileView(this.$target[0]);
+            if (!isMobileView && this.$target[0].classList.contains("o_grid_item")) {
+                return false;
+            }
+            const firstOrLastChild = moveUpOrLeft ? ":first-child" : ":last-child";
+            return !this.$target.is(firstOrLastChild);
+        }
+        return this._super(...arguments);
     },
 });
 
