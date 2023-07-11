@@ -20,10 +20,10 @@
                         </t>
                     </div>
                 </div>
-                <div class="total-section bg-100 rounded py-2">
-                    <span>Total </span>
-                    <label t-esc="env.utils.formatCurrency(state.total)"/>
-                </div>
+                <h4 class="total-section rounded py-2">
+                    Total 
+                    <t t-esc="env.utils.formatCurrency(state.total)"/>
+                </h4>
             </main>
             <footer class="footer footer-flex modal-footer">
                 <div class="button btn btn-lg btn-secondary" t-on-click="cancel">Discard</div>

@@ -36,7 +36,7 @@
                         <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;"></textarea>
                         <label for="reason">Reason</label>
                     </div>
-                    <span t-if="state.errorMessage" class="error-message">
+                    <span t-if="state.errorMessage" class="error-message alert alert-danger mt-2">
                         <t t-esc="state.errorMessage" />
                     </span>
                 </div>

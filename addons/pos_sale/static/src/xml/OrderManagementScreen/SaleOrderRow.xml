@@ -24,10 +24,10 @@
             <div class="col end total p-2">
                 <div t-if="ui.isSmall">Total</div>
                 <div class="flex-container d-flex flex-column h-100">
-                    <div class="align-self-end">
+                    <div >
                         <t t-esc="total"/>
                     </div>
-                    <div t-if="showAmountUnpaid" class="align-self-end text-muted">
+                    <div t-if="showAmountUnpaid" class="text-muted">
                         (left: <t t-esc="amountUnpaidRepr"/>)
                     </div>
                 </div>
