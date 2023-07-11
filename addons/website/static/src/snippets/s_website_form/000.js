@@ -136,9 +136,14 @@ odoo.define('website.s_website_form', function (require) {
             if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
-                        .replace('False', '""')
-                        .replace('None', '""')
-                        .replace(/'/g, '"')
+                        // replaces `True` by `true` if they are after `,` or `:` or `[`
+                        .replace(/([,:\[]\s*)True/g, '$1true')
+                        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+                        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+                        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+                        .replace(/'(\s*[,:\]}])/g, '"$1')
+                        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+                        .replace(/([{\[:,]\s*)'/g, '$1"')
                     ) : {};
                 const fieldNames = this.$target.serializeArray().map(el => el.name);
                 // All types of inputs do not have a value property (eg:hidden),
