@@ -33,11 +33,77 @@ class CashMovePopup extends AbstractAwaitablePopup {
             this.state.errorMessage = this.env._t("Insert a positive amount");
             return;
         }
+<<<<<<< HEAD
         return super.confirm();
     }
     _onAmountKeypress(event) {
         if (["-", "+"].includes(event.key)) {
             event.preventDefault();
+||||||| parent of 920001e02e3 (temp)
+        _onAmountKeypress(event) {
+            if (event.key === '-') {
+                event.preventDefault();
+                this.state.inputAmount = this.state.inputType === 'out' ? this.state.inputAmount.substring(1) : `-${this.state.inputAmount}`;
+                this.state.inputType = this.state.inputType === 'out' ? 'in' : 'out';
+                this.handleInputChange();
+            }
+        }
+        onClickButton(type) {
+            let amount = this.state.inputAmount;
+            if (type === 'in') {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount.substring(1) : amount;
+            } else {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount : `-${amount}`;
+            }
+            this.state.inputType = type;
+            this.state.inputHasError = false;
+            this.inputAmountRef.el && this.inputAmountRef.el.focus();
+            this.handleInputChange();
+        }
+        getPayload() {
+            return {
+                amount: parse.float(this.state.inputAmount),
+                reason: this.state.inputReason.trim(),
+                type: this.state.inputType,
+            };
+        }
+        handleInputChange() {
+            if (this.inputAmountRef.el.classList.contains('invalid-cash-input')) return;
+            this.state.parsedAmount = parse.float(this.state.inputAmount);
+=======
+        _onAmountKeypress(event) {
+            if (event.key === '-') {
+                event.preventDefault();
+                this.state.inputAmount = this.state.inputType === 'out' ? this.state.inputAmount.substring(1) : `-${this.state.inputAmount}`;
+                this.state.inputType = this.state.inputType === 'out' ? 'in' : 'out';
+                this.handleInputChange();
+            }
+        }
+        onClickButton(type) {
+            let amount = this.state.inputAmount;
+            if (type === 'in') {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount.substring(1) : amount;
+            } else {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount : `-${amount}`;
+            }
+            this.state.inputType = type;
+            this.state.inputHasError = false;
+            this.inputAmountRef.el && this.inputAmountRef.el.focus();
+            if (amount && amount !== '-') {
+                this.handleInputChange();
+            }
+        }
+        getPayload() {
+            return {
+                amount: parse.float(this.state.inputAmount),
+                reason: this.state.inputReason.trim(),
+                type: this.state.inputType,
+            };
+        }
+        handleInputChange() {
+            if (this.inputAmountRef.el.classList.contains('invalid-cash-input')) return;
+            this.state.parsedAmount = parse.float(this.state.inputAmount);
+>>>>>>> 920001e02e3 (temp)
         }
     }
     onClickButton(type) {
