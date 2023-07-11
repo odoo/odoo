@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         {
             trigger: ".o-mail-DiscussPublic",
             extraTrigger: ".o-mail-Thread",
+            run() {},
         },
         {
             content: "Check that we are on channel page",
@@ -34,6 +35,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         {
             content: "Wait for all modules loaded check in previous step",
             trigger: ".o_discuss_channel_public_modules_loaded",
+            run() {},
         },
         {
             content: "Write something in composer",
@@ -67,10 +69,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         {
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("cheese")',
+            run() {},
         },
         {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            run() {},
         },
     ],
 });
