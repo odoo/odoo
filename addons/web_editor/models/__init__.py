@@ -11,5 +11,6 @@ from . import models
 from . import html_field_history_mixin
 
 from . import assets
+from . import edited
 
 from . import test_models

@@ -3,6 +3,7 @@
 
 from . import assets
 from . import base_partner_merge
+from . import edited
 from . import ir_actions_server
 from . import ir_asset
 from . import ir_attachment
