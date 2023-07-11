@@ -29,9 +29,8 @@
                 <div class="rightpane d-flex flex-column flex-grow-1 w-100 h-100 bg-300" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                     <ProductsWidget />
                     <t t-if="ui.isSmall">
-                        <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="showProductReminder" t-key="animationKey">
-                            <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/></span>
-                            <span><t t-esc="selectedOrderlineTotal"/></span>
+                        <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="showProductReminder" t-key="animationKey" >
+                            <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                         </div>
                         <div class="switchpane d-flex">
                             <button class="btn-switchpane pay-button btn btn-primary flex-fill rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
