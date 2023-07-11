@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
@@ -20,7 +19,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'name': self.company_data['product_order_sales_price'].name,
                 'product_id': self.company_data['product_order_sales_price'].id,
                 'product_uom_qty': 2.0,
@@ -35,47 +34,47 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'journal_id': self.company_data['default_journal_purchase'].id,
             'accounting_date': '2017-01-01',
             'expense_line_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_order_sales_price'].id,
-                    'unit_amount': self.company_data['product_order_sales_price'].list_price,
+                    'total_amount_currency': self.company_data['product_order_sales_price'].list_price,
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'expense_2',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,
-                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'total_amount_currency': self.company_data['product_delivery_sales_price'].list_price,
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'expense_3',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_order_sales_price'].id,
-                    'unit_amount': self.company_data['product_order_sales_price'].list_price,
+                    'total_amount_currency': self.company_data['product_order_sales_price'].list_price,
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'expense_4',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,
-                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'total_amount_currency': self.company_data['product_delivery_sales_price'].list_price,
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'expense_5',
                     'date': '2016-01-01',
                     'product_id': self.company_data['product_delivery_sales_price'].id,
-                    'unit_amount': self.company_data['product_delivery_sales_price'].list_price,
+                    'total_amount_currency': self.company_data['product_delivery_sales_price'].list_price,
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id,

@@ -6,7 +6,7 @@
             <field name="model">hr.expense.split.wizard</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="total_amount_original" invisible="1"/>
+                    <field name="total_amount_currency_original" invisible="1"/>
                     <field name="expense_id" invisible="1"/>
                     <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
                         <tree editable="bottom">
@@ -17,9 +17,9 @@
                             <field name="product_has_cost" column_invisible="True"/>
                             <field name="name"/>
                             <field name="product_id"/>
-                            <field name="total_amount" force_save="1" readonly="product_has_cost"/>
+                            <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
                             <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
-                            <field name="amount_tax"/>
+                            <field name="tax_amount_currency"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 optional="show"
                                 groups="analytic.group_analytic_accounting"/>
@@ -28,11 +28,11 @@
                     </field>
                     <field name="currency_id" invisible="1"/>
                     <group class="oe_subtotal_footer" colspan="2" name="expense_total">
-                        <label for="total_amount" invisible="split_possible"/>
-                        <field name="total_amount" nolabel="1" class="text-danger" invisible="split_possible"/>
-                        <field name="total_amount" invisible="not split_possible"/>
-                        <field name="total_amount_original" widget='monetary' string="Original Amount"/>
-                        <field name="total_amount_taxes" widget='monetary' string="Taxes"/>
+                        <label for="total_amount_currency" invisible="split_possible"/>
+                        <field name="total_amount_currency" nolabel="1" class="text-danger" invisible="split_possible"/>
+                        <field name="total_amount_currency" invisible="not split_possible"/>
+                        <field name="total_amount_currency_original" widget='monetary' string="Original Amount"/>
+                        <field name="tax_amount_currency" widget='monetary' string="Taxes"/>
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>

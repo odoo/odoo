@@ -10,7 +10,7 @@ from odoo.tools.misc import frozendict
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    expense_sheet_id = fields.Many2one('hr.expense.sheet', ondelete='set null', copy=False)
+    expense_sheet_id = fields.Many2one(comodel_name='hr.expense.sheet', ondelete='set null', copy=False)
 
     def action_open_expense_report(self):
         self.ensure_one()
@@ -44,8 +44,7 @@ class AccountMove(models.Model):
                     frozendict(
                         {
                             "move_id": move.id,
-                            "date_maturity": move.expense_sheet_id.accounting_date
-                            or fields.Date.context_today(move.expense_sheet_id),
+                            "date_maturity": move.expense_sheet_id.accounting_date or fields.Date.context_today(move.expense_sheet_id),
                         }
                     ): {
                         "balance": -sum(term_lines.mapped("balance")),

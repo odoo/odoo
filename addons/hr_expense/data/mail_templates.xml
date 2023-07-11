@@ -24,7 +24,7 @@
                 <p>The first word of the email subject did not correspond to any category code. You'll have to set the category manually on the expense.</p>
             </div>
             <p>
-                Price: <t t-out="expense.unit_amount"/><t t-out="expense.currency_id.symbol"/>
+                Price: <t t-out="expense.price_unit"/><t t-out="expense.currency_id.symbol"/>
             </p>
             <p t-if="expense.employee_id.user_id">
                 <br/>

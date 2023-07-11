@@ -20,8 +20,8 @@ class TestExpensesTax(TestExpenseCommon):
         self.env['hr.expense'].create({
             'name': 'Test Tax Used',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 350.00,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 350.00,
             'tax_ids': [Command.set(tax_expense.ids)]
         })
         tax_expense.invalidate_model(fnames=['is_used'])

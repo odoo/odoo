@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
@@ -46,8 +45,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense = self.env['hr.expense'].create({
             'name': 'Car Travel Expenses',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 350.00,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 350.00,
             'company_id': self.env.company.id,
             'analytic_distribution': {self.project.analytic_account_id.id: 100},
         })
@@ -65,8 +64,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount}],
-                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency}],
+                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
@@ -76,8 +75,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         expense_foreign = self.env['hr.expense'].create({
             'name': 'Car Travel Expenses foreign',
             'employee_id': foreign_employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 350.00,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 350.00,
             'company_id': foreign_company.id,
             'analytic_distribution': {self.project.analytic_account_id.id: 100},
             'currency_id': self.foreign_currency.id,
@@ -99,9 +98,9 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                         'id': 'expenses',
                         'sequence': expense_sequence,
                         'to_bill': 0.0,
-                        'billed': -expense.untaxed_amount - expense_foreign.untaxed_amount * 0.2
+                        'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2
                     }],
-                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount - expense_foreign.untaxed_amount * 0.2},
+                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
@@ -113,8 +112,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount * 0.2}],
-                    'total': {'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount * 0.2},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2}],
+                    'total': {'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
