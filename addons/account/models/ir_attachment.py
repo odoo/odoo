@@ -4,6 +4,7 @@ from odoo.tools.pdf import OdooPdfFileReader
 
 from lxml import etree
 from struct import error as StructError
+from PyPDF2.utils import PdfReadError
 import io
 import logging
 
@@ -57,7 +58,7 @@ class IrAttachment(models.Model):
         try:
             for xml_name, xml_content in pdf_reader.getAttachments():
                 to_process.extend(self._decode_edi_xml(xml_name, xml_content))
-        except (NotImplementedError, StructError) as e:
+        except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
 
         # Process the pdf itself.
