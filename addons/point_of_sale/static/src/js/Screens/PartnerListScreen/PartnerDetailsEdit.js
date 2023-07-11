@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class PartnerDetailsEdit extends Component {
@@ -16,21 +16,34 @@ export class PartnerDetailsEdit extends Component {
         this.pos = usePos();
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
-        this.changes = {
-            country_id: partner.country_id && partner.country_id[0],
+        this.changes = useState({
+            name: partner.name || "",
+            street: partner.street || "",
+            city: partner.city || "",
+            zip: partner.zip || "",
             state_id: partner.state_id && partner.state_id[0],
-            property_product_pricelist: this.setDefaultPricelist(partner),
-        };
+            country_id: partner.country_id && partner.country_id[0],
+            lang: partner.lang || "",
+            email: partner.email || "",
+            phone: partner.phone || "",
+            mobile: partner.mobile || "",
+            barcode: partner.barcode || "",
+            vat: partner.vat || "",
+            property_product_pricelist: this.getDefaultPricelist(partner),
+        });
+
         Object.assign(this.props.imperativeHandle, {
             save: () => this.saveChanges(),
         });
     }
     // FIXME POSREF naming
-    setDefaultPricelist(partner) {
+    getDefaultPricelist(partner) {
         if (partner.property_product_pricelist) {
             return partner.property_product_pricelist[0];
         }
-        return this.pos.globalState.default_pricelist?.id ?? false;
+        return this.pos.globalState.default_pricelist
+            ? this.pos.globalState.default_pricelist.id
+            : false;
     }
 
     get partnerImageUrl() {
@@ -48,25 +61,22 @@ export class PartnerDetailsEdit extends Component {
     /**
      * Save to field `changes` all input changes from the form fields.
      */
-    captureChange(event) {
-        this.changes[event.target.name] = event.target.value;
-    }
+    captureChange(event) {}
     saveChanges() {
-        const processedChanges = {};
         for (const [key, value] of Object.entries(this.changes)) {
             if (this.intFields.includes(key)) {
-                processedChanges[key] = parseInt(value) || false;
+                this.changes[key] = parseInt(value) || false;
             } else {
-                processedChanges[key] = value;
+                this.changes[key] = value;
             }
         }
-        if ((!this.props.partner.name && !processedChanges.name) || processedChanges.name === "") {
+        if ((!this.props.partner.name && !this.changes.name) || this.changes.name === "") {
             return this.popup.add(ErrorPopup, {
                 title: _t("A Customer Name Is Required"),
             });
         }
-        processedChanges.id = this.props.partner.id || false;
-        this.props.saveChanges(processedChanges);
+        this.changes.id = this.props.partner.id || false;
+        this.props.saveChanges(this.changes);
     }
     async uploadImage(event) {
         const file = event.target.files[0];
