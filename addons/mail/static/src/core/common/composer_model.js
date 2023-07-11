@@ -28,8 +28,6 @@ export class Composer {
     };
     /** @type {boolean} */
     forceCursorMove;
-    /** @typedef {'message' | 'note' | false} */
-    type;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     isFocused = false;
@@ -45,7 +43,6 @@ export class Composer {
         }
         Object.assign(this, {
             textInputContent: "",
-            type: thread?.type === "chatter" ? false : "message",
             _store: store,
         });
     }

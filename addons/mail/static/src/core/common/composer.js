@@ -41,6 +41,7 @@ const EDIT_CLICK_TYPE = {
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} messageToReplyTo
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
+ * @property {'message'|'note'|false} [type] default: false
  * @property {string} [placeholder]
  * @property {string} [className]
  * @property {function} [onDiscardCallback]
@@ -75,6 +76,7 @@ export class Composer extends Component {
         "messageComponent?",
         "className?",
         "sidebar?",
+        "type?",
     ];
     static template = "mail.Composer";
 
@@ -92,9 +94,7 @@ export class Composer extends Component {
         this.store = useStore();
         if (this.allowUpload) {
             this.attachmentUploader = useAttachmentUploader(
-                this.props.messageToReplyTo?.message?.originThread ??
-                    this.props.composer.thread ??
-                    this.props.composer.message.originThread,
+                this.thread ?? this.props.composer.message.originThread,
                 { composer: this.props.composer }
             );
         }
@@ -247,7 +247,7 @@ export class Composer extends Component {
     }
 
     get SEND_TEXT() {
-        return this.props.composer.type === "note" ? _t("Log") : _t("Send");
+        return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 
     get sendKeybind() {
@@ -266,7 +266,9 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.composer.thread ?? null;
+        return (
+            this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread ?? null
+        );
     }
 
     get allowUpload() {
@@ -436,12 +438,11 @@ export class Composer extends Component {
                 (recipient) => recipient.persona.id
             ),
             default_res_ids: [this.props.composer.thread.id],
-            default_subtype_xmlid:
-                this.props.composer.type === "note" ? "mail.mt_note" : "mail.mt_comment",
+            default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             mail_post_autofollow: this.props.composer.thread.hasWriteAccess,
         };
         const action = {
-            name: this.props.composer.type === "note" ? _t("Log note") : _t("Compose Email"),
+            name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
             type: "ir.actions.act_window",
             res_model: "mail.compose.message",
             view_mode: "form",
@@ -507,9 +508,7 @@ export class Composer extends Component {
         await this.processMessage(async (value) => {
             const postData = {
                 attachments: this.props.composer.attachments,
-                isNote:
-                    this.props.composer.type === "note" ||
-                    this.props.messageToReplyTo?.message?.isNote,
+                isNote: this.props.type === "note",
                 rawMentions: this.props.composer.rawMentions,
                 cannedResponseIds: [...this.props.composer.cannedResponseIds],
                 parentId: this.props.messageToReplyTo?.message?.id,
@@ -523,7 +522,7 @@ export class Composer extends Component {
      * @property {import('@mail/attachments/attachment_model').Attachment[]} attachments
      * @property {boolean} isNote
      * @property {number} parentId
-     * @property {import("@mail/composer/composer_model").RawMentions} rawMentions
+     * @property {import("@mail/core/common").RawMentions} rawMentions
      */
 
     /**
@@ -531,9 +530,7 @@ export class Composer extends Component {
      * @param {postData} postData Message meta data info
      */
     async _sendMessage(value, postData) {
-        const thread =
-            this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
-        const message = await this.threadService.post(thread, value, postData);
+        const message = await this.threadService.post(this.thread, value, postData);
         if (this.props.composer.thread.type === "mailbox") {
             this.env.services.notification.add(
                 sprintf(_t('Message posted on "%s"'), message.originThread.displayName),

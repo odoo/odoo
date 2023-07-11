@@ -64,6 +64,13 @@ export class ChatWindow extends Component {
         });
     }
 
+    get composerType() {
+        if (this.thread && this.thread.model !== "discuss.channel") {
+            return "note";
+        }
+        return undefined;
+    }
+
     get thread() {
         return this.props.chatWindow.thread;
     }
