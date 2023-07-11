@@ -8,17 +8,18 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
 # Jussi Lehto <jussi@gulfeo.com>, 2021
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2021
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
 # Timo Koukkari <ti.ko@netikka.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2021
-# Johanna Valkonen <johanna@vividi.fi>, 2021
+# Johanna Valkonen <miujohanna@gmail.com>, 2021
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2021
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Anni Saarelainen, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Anni Saarelainen, 2021\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -54,7 +55,7 @@ msgstr "Aktiivinen"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "Lisää uusi analytiikkatili"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -186,7 +187,7 @@ msgstr "Saldo"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "Saldo:"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
@@ -202,7 +203,7 @@ msgstr "Kustannuspaikat"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Alataso"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
@@ -248,7 +249,7 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kirjatessasi ostolaskuja, kuluja tai tuntikortteja, luodaan kulut \n"
+"Tehdessäsi ostolaskuja, kuluja tai tuntikirjauksia, luodaan kulut \n"
 "automaattisesti."
 
 #. module: analytic
@@ -382,6 +383,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"Odoossa myyntitilaukset ja projektit käsitellään käyttämällä\n"
+"                analyyttisiä tilejä. Voit seurata kustannuksia ja tuloja analysoidaksesi\n"
+"                katteitasi helposti."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -440,12 +444,12 @@ msgstr "Nimi"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "Ei vielä toimintaa"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "Tällä tilillä ei ole vielä toimintaa"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -522,6 +526,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"Tulot luodaan automaattisesti, kun luot asiakkaan\n"
+"                laskuja. Asiakaslaskut voidaan luoda myyntitilausten perusteella\n"
+"                (kiinteähintaiset laskut), työaikataulujen perusteella (tehdyn työn perusteella) tai\n"
+"                kulujen perusteella (esim. matkakulujen uudelleen laskuttaminen)."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -556,6 +564,8 @@ msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
+"Valittu tili kuuluu toiseen yritykseen kuin se, jolle yrität luoda "
+"analyyttisen kohteen"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
@@ -585,7 +595,7 @@ msgstr "Lukemattomien viestien laskuri"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr ""
+msgstr "Mittayksikön luokka"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

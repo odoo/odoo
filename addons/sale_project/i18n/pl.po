@@ -12,6 +12,8 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,7 +38,7 @@ msgstr "Utwórz fakturę"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Utwórz na zamówienie"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -56,7 +58,7 @@ msgstr "Wygeneruj Zadanie"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Ma SO do faktury"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -87,7 +89,7 @@ msgstr ""
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Zafakturuj zamówione ilości, gdy tylko usługa zostanie sprzedana."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -108,12 +110,12 @@ msgstr "Brak"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr ""
+msgstr "Nic"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Liczba projektów"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -127,6 +129,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Po potwierdzeniu zamówienia sprzedaży produkt ten może wygenerować projekt i/lub zadanie. Na ich podstawie można śledzić sprzedawaną usługę.\n"
+"\"W projekcie zamówienia sprzedaży\": Użyje skonfigurowanego projektu zamówienia sprzedaży, jeśli został zdefiniowany, lub utworzy nowy projekt na podstawie wybranego szablonu."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -150,7 +154,7 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt i zadanie"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -166,7 +170,7 @@ msgstr "Projekt wygenerowany przez przedmiot zamówienia sprzedaży."
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Zlecenie sprzedaży projektu"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -204,7 +208,7 @@ msgstr "Zamówienie sprzedaży"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Identyfikator zamówienia sprzedaży"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -262,19 +266,19 @@ msgstr "Zamówienie sprzedaży do którego jest podłączony projekt."
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Wyszukiwanie w fakturze"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Wyszukiwanie w zleceniu sprzedaży"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Wyszukiwanie w pozycji zlecenia sprzedaży"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -296,6 +300,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
+"Wybierz projekt niepodlegający rozliczeniu, dla którego można tworzyć "
+"zadania."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -315,7 +321,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Powtarzalność zadań"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -345,6 +351,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Produkt %s nie powinien mieć projektu globalnego, ponieważ wygeneruje on "
+"projekt."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -353,6 +361,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Produkt %s nie powinien mieć projektu ani szablonu projektu, ponieważ nie "
+"będzie generował projektu."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -361,6 +371,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Produkt %s nie powinien mieć szablonu projektu, ponieważ wygeneruje zadanie "
+"w projekcie globalnym."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -390,6 +402,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Nie można powiązać pozycji zamówienia %(order_id)s - %(product_id)s z tym "
+"zadaniem, ponieważ jest to refakturowany wydatek."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

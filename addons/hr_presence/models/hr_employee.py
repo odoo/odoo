@@ -58,7 +58,7 @@ class Employee(models.AbstractModel):
 
 
         # Check on IP
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_ip', 'False')):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_ip', 'False')):
             ip_list = company.hr_presence_control_ip_list
             ip_list = ip_list.split(',') if ip_list else []
             ip_employees = self.env['hr.employee']
@@ -74,7 +74,7 @@ class Employee(models.AbstractModel):
             employees = employees - ip_employees
 
         # Check on sent emails
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_email', 'False')):
+        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_email', 'False')):
             email_employees = self.env['hr.employee']
             threshold = company.hr_presence_control_email_amount
             for employee in employees:
@@ -108,7 +108,7 @@ class Employee(models.AbstractModel):
             "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
             'view_mode': 'kanban,tree,form',
             "domain": [],
-            "name": "Employee's Presence to Define",
+            "name": _("Employee's Presence to Define"),
             "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],
             "context": {'search_default_group_hr_presence_state': 1,
                         'searchpanel_default_hr_presence_state_display': 'to_define'},

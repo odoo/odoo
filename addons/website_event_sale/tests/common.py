@@ -13,10 +13,15 @@ class TestWebsiteEventSaleCommon(TransactionCase):
     def setUpClass(cls):
         super(TestWebsiteEventSaleCommon, cls).setUpClass()
 
+        cls.zero_tax = cls.env['account.tax'].sudo().create({
+            'name': 'Tax 0',
+            'amount': 0,
+        })
         cls.product_event = cls.env['product.product'].create({
             'base_unit_price': 100,
             'detailed_type': 'event',
             'name': 'Event Registration No Company Assigned',
+            'taxes_id': [(6, 0, cls.zero_tax.ids)],
         })
 
         cls.event = cls.env['event.event'].create({
@@ -34,18 +39,14 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         }])
         cls.currency_test = cls.env['res.currency'].create({
             'name': 'eventX',
-            'rate': 10,
             'rounding': 0.01,
             'symbol': 'EX',
         })
         cls.partner = cls.env['res.partner'].create({'name': 'test'})
-        cls.new_company = cls.env['res.company'].create({
-            'currency_id': cls.env.ref('base.EUR').id,
-            'name': 'Great Company EUR',
-            'partner_id': cls.partner.id,
-        })
-        cls.env['res.currency.rate'].create({
-            'company_id': cls.new_company.id,
+
+        cls.env['res.currency.rate'].search([]).unlink()
+        cls.rate = cls.env['res.currency.rate'].create({
+            'company_id': cls.env.company.id,
             'currency_id': cls.currency_test.id,
             'name': '2022-01-01',
             'rate': 10,
@@ -55,7 +56,25 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         cls.pricelist = cls.current_website.get_current_pricelist()
 
         cls.so = cls.env['sale.order'].create({
-            'company_id': cls.new_company.id,
+            'company_id': cls.env.company.id,
             'partner_id': cls.partner.id,
             'pricelist_id': cls.pricelist.id,
         })
+
+        def create_pricelist(currency, name, policy):
+            return cls.env['product.pricelist'].create({
+                'currency_id': currency.id,
+                'discount_policy': policy,
+                'item_ids': [(5, 0, 0), (0, 0, {
+                    'applied_on': '3_global',
+                    'compute_price': 'percentage',
+                    'percent_price': 10,
+                })],
+                'name': name,
+                'selectable': True,
+            })
+
+        cls.pricelist_with_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR With Discount Included', policy='with_discount')
+        cls.pricelist_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR Without Discount Included', policy='without_discount')
+        cls.ex_pricelist_with_discount = create_pricelist(currency=cls.currency_test, name='EX With Discount Included', policy='with_discount')
+        cls.ex_pricelist_without_discount = create_pricelist(currency=cls.currency_test, name='EX Without Discount Included', policy='without_discount')

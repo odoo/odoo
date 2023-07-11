@@ -13,6 +13,7 @@
 # Levent Karakaş <levent@mektup.at>, 2021
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2021
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,13 +21,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "(left:"
+msgstr "(sol:"
 
 #. module: pos_sale
 #. openerp-web
@@ -97,6 +105,13 @@ msgstr "Para Birimi Çevrim Oranı"
 #, python-format
 msgid "Customer"
 msgstr "Müşteri"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Customer loading error"
+msgstr "Müşteri yükleme hatası"
 
 #. module: pos_sale
 #. openerp-web
@@ -429,6 +444,13 @@ msgstr "Satış Siparişini Ayarla"
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
+msgid "Settle the order"
+msgstr "Siparişi ver"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
 msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
@@ -440,13 +462,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
 msgstr "Kaynak Satış Sipariş Satırı"
-
-#. module: pos_sale
-#. openerp-web
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-#, python-format
-msgid "Settle the order"
-msgstr "Siparişi ver"
 
 #. module: pos_sale
 #. openerp-web
@@ -467,6 +482,13 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr "Para biriminin sipariş tarihinde geçerli olan para birimine oranı"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "There was a problem in loading the %s customer."
+msgstr "%s müşteri yüklenirken bir sorun oluştu."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -533,3 +555,14 @@ msgstr "Ne yapmak istiyorsunuz?"
 #, python-format
 msgid "Yes"
 msgstr "Evet"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"%s peşinat ödemesi almaya çalıştınız, ancak yalnızca %s ödenmesi kaldı %s "
+"satınalma siparişi satırına uygulanacak."

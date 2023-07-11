@@ -15,7 +15,7 @@ const ProjectFormController = FormController.extend({
         }
     },
     _onDomUpdated() {
-        const $editable = this.$el.find('.note-editable');
+        const $editable = this.$el.find('[name="description"] .note-editable');
         if ($editable.length) {
             const minHeight = window.innerHeight - $editable.offset().top - 42;
             $editable.css('min-height', minHeight + 'px');

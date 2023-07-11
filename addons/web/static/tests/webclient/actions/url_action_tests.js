@@ -48,4 +48,23 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(env, { type: "ir.actions.act_url" }, options);
         assert.verifySteps(["browser open", "onClose"]);
     });
+    
+    QUnit.test("execute an 'ir.actions.act_url' action with url javascript:", async (assert) => {
+        assert.expect(1);
+        serviceRegistry.add(
+            "router",
+            makeFakeRouterService({
+                onRedirect(url) {
+                    assert.strictEqual(url, "/javascript:alert()");
+                },
+            })
+        );
+        setupWebClientRegistries();
+        const env = await makeTestEnv({ serverData });
+        await doAction(env, {
+            type: "ir.actions.act_url",
+            target: "self",
+            url: "javascript:alert()",
+        });
+    });
 });

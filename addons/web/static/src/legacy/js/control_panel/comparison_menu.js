@@ -3,6 +3,7 @@ odoo.define("web.ComparisonMenu", function (require) {
 
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require("web.Model");
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
 
     const { Component } = owl;
 
@@ -30,6 +31,7 @@ odoo.define("web.ComparisonMenu", function (require) {
         }
     }
     ComparisonMenu.template = "web.ComparisonMenu";
+    ComparisonMenu.components = { DropdownItem: SearchDropdownItem };
 
     return ComparisonMenu;
 });

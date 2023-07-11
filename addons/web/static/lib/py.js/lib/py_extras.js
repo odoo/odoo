@@ -556,7 +556,7 @@ datetime.datetime = py.type('datetime', null, {
             }));
     },
     to_utc: function () {
-        var d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        var d = new Date(this.year, this.month - 1, this.day, this.hour, this.minute, this.second);
         var offset = d.getTimezoneOffset();
         var kwargs = {minutes: py.float.fromJSON(offset)};
         var timedelta = py.PY_call(py.extras.datetime.timedelta,[],kwargs);

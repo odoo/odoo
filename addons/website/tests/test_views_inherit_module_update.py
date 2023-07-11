@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import HttpCase, standalone, tagged
+
+
+@tagged('website_nightly', '-standard')
+class TestWebsiteNightlyRunbot(HttpCase):
+    def test_01_website_nightly_runbot(self):
+        """ This test is just here to avoid runbot to raise an error on the
+        ``website_nightly`` build. Indeed, if not a single test with this tag is
+        found, the build will be considered as failed.
+        In Odoo 16.4 a real test is using this tag.
+        """
+
+
 """ This test ensure `inherit_id` update is correctly replicated on cow views.
 The view receiving the `inherit_id` update is either:
 1. in a module loaded before `website`. In that case, `website` code is not
@@ -12,8 +25,6 @@ The view receiving the `inherit_id` update is either:
    `test_module_new_inherit_view_on_parent_already_forked` and
    `test_specific_view_module_update_inherit_change` in `website` module.
 """
-
-from odoo.tests import standalone
 
 
 @standalone('cow_views_inherit', 'website_standalone')
@@ -27,6 +38,9 @@ def test_01_cow_views_inherit_on_module_update(env):
     View.with_context(_force_unlink=True, active_test=False).search([('website_id', '=', 1)]).unlink()
     child_view = env.ref('portal.footer_language_selector')
     parent_view = env.ref('portal.portal_back_in_edit_mode')
+    # Remove any possibly existing COW view (another theme etc)
+    parent_view.with_context(_force_unlink=True, active_test=False)._get_specific_views().unlink()
+    child_view.with_context(_force_unlink=True, active_test=False)._get_specific_views().unlink()
     # Change `inherit_id` so the module update will set it back to the XML value
     child_view.write({'inherit_id': parent_view.id, 'arch': child_view.arch_db.replace('o_footer_copyright_name', 'text-center')})
     # Trigger COW on view
@@ -34,6 +48,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     child_cow_view = child_view._get_specific_views()
 
     # 2. Ensure setup is as expected
+    assert len(child_cow_view.inherit_id) == 1, "Should only be the XML view and its COW counterpart."
     assert child_cow_view.inherit_id == parent_view, "Ensure test is setup as expected."
 
     # 3. Upgrade the module

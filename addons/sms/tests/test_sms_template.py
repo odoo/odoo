@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('post_install')
+@tagged('post_install', '-at_install')
 class TestSmsTemplateAccessRights(TransactionCase):
 
     @classmethod

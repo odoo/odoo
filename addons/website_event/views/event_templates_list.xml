@@ -203,10 +203,10 @@
                             </time>
                             <!-- Location -->
                             <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
-                            <div class="mt8 d-flex align-items-center">
+                            <div class="mt8">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.is_published)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+                                        t-attf-class="badge mr4 #{'badge-primary' if tag in search_tags else 'badge-light'} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                                         <span t-esc="tag.name"/>
                                     </span>
                                 </t>

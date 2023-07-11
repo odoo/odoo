@@ -435,8 +435,8 @@ function makeActionManager(env) {
             }
         }
 
-        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
-            viewProps.activateFavorite = false; // not sure --> check logic
+        if (context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false;
         }
 
         // view specific
@@ -757,10 +757,13 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     function _executeActURLAction(action, options) {
+        let url = action.url;
+        if (url && !(url.startsWith('http') || url.startsWith('/')))
+            url = '/' + url;
         if (action.target === "self") {
-            env.services.router.redirect(action.url);
+            env.services.router.redirect(url);
         } else {
-            const w = browser.open(action.url, "_blank");
+            const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
                 const msg = env._t(
                     "A popup window has been blocked. You may need to change your " +

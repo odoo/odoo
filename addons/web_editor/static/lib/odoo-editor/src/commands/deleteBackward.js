@@ -25,6 +25,7 @@ import {
     isVisibleEmpty,
     isNotEditableNode,
     createDOMPathGenerator,
+    closestElement,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -113,8 +114,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             throw UNREMOVABLE_ROLLBACK_CODE;
         }
         const parentEl = this.parentNode;
-
-        if (!isBlock(this) || isVisibleEmpty(this)) {
+        const closestLi = closestElement(this, 'li');
+        if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isVisibleEmpty(this)) {
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -147,9 +148,11 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         }
 
         /**
-         * Backspace at the beginning of a block node, we have to move the
-         * inline content at its beginning outside of the element and propagate
-         * to the left block if any.
+         * Backspace at the beginning of a block node. If it doesn't have a left
+         * block and it is one of the special block formatting tags below then
+         * convert the block into a P and return immediately. Otherwise, we have
+         * to move the inline content at its beginning outside of the element
+         * and propagate to the left block.
          *
          * E.g. (prev == block)
          *      <p>abc</p><div>[]def<p>ghi</p></div> + BACKSPACE
@@ -159,7 +162,19 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          *      abc<div>[]def<p>ghi</p></div> + BACKSPACE
          * <=>  abc[]def<div><p>ghi</p></div>
          */
-        moveDest = leftPos(this);
+        if (
+            !this.previousElementSibling &&
+            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            !closestLi
+        ) {
+            const p = document.createElement('p');
+            p.replaceChildren(...this.childNodes);
+            this.replaceWith(p);
+            setSelection(p, offset);
+            return;
+        } else {
+            moveDest = leftPos(this);
+        }
     }
 
     const domPathGenerator = createDOMPathGenerator(DIRECTIONS.LEFT, {
@@ -239,6 +254,12 @@ HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false
     if (rightState & CTYPES.BLOCK_INSIDE) {
         this.parentElement.oDeleteBackward(parentOffset, alreadyMoved);
     } else {
+        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    }
+};
+
+HTMLTableCellElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    if (offset) {
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
     }
 };

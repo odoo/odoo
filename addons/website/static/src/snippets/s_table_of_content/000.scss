@@ -4,6 +4,9 @@
             &.s_table_of_content_horizontal_navbar, &.s_table_of_content_vertical_navbar .s_table_of_content_navbar {
                 @include o-position-sticky($top: 0px);
             }
+            &.s_table_of_content_vertical_navbar .s_table_of_content_navbar {
+                overflow: auto;
+            }
         }
         &:not(.s_table_of_content_navbar_sticky) {
             &, .s_table_of_content_navbar {
@@ -11,6 +14,8 @@
             }
         }
         &.s_table_of_content_vertical_navbar .s_table_of_content_navbar {
+            overflow-wrap: break-word;
+
             > a.list-group-item-action {
                 background: none;
                 color: inherit;

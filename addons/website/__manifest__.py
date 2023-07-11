@@ -138,11 +138,13 @@
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
+            'website/static/src/js/content/adapt_content.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
+            ('remove', 'website/static/src/js/content/adapt_content.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

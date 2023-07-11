@@ -47,6 +47,8 @@ class StockPicking(models.Model):
     def create(self, vals):
         res = super().create(vals)
         if vals.get('batch_id'):
+            if not res.batch_id.picking_type_id:
+                res.batch_id.picking_type_id = res.picking_type_id[0]
             res.batch_id._sanity_check()
         return res
 

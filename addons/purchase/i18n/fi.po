@@ -29,7 +29,8 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Joni Winsten, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,8 +38,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -52,6 +53,9 @@ msgid ""
 "                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
+"\n"
+"                (object.state in ('draft', 'sent') and 'Tarjouspyyntö - %s' % (object.name) or\n"
+"                'Ostotilaus - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -69,19 +73,19 @@ msgstr "Rivien lukumäärä"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
-msgstr ""
+msgstr "%(product)s alkaen %(original_receipt_date)s - %(new_receipt_date)s"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
-msgstr ""
+msgstr "%s vahvisti, että vastaanotto tapahtuu %s."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
+msgstr "%s seuraavien tuotteiden muutetut vastaanottopäivät:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -226,6 +230,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Purchases\" "
 "title=\"Purchases\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-label=\"Ostot\" "
+"title=\"Ostot\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -258,6 +264,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
 "                          <span class=\"d-block d-md-none\">Confirmation</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Vahvistuspäivä</span>\n"
+"                          <span class=\"d-block d-md-none\">Vahvistus</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -265,6 +273,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Ostotilaus #</span>\n"
+"                          <span class=\"d-block d-md-none\">Viite</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -272,6 +282,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Tarjouspyyntö #</span>\n"
+"                        <span class=\"d-block d-md-none\">Viite</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -323,6 +335,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Hinta</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Kokonaishinta</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -342,7 +356,7 @@ msgstr "<span>Verot</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Lähettäjä:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -411,7 +425,7 @@ msgstr "<strong>Vastaanottopvm:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Request For Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>Tarjouspyynnön päivämäärä:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -432,12 +446,12 @@ msgstr "<strong>Tilattua määrää on päivitetty.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 msgid "<strong>The received quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Vastaanotettua määrää on päivitetty.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been canceled.</strong>"
-msgstr ""
+msgstr "<strong>Tämä ostos on peruttu.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -447,7 +461,7 @@ msgstr "<strong>Yksikköhinta</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Update Here</strong>"
-msgstr ""
+msgstr "<strong>Päivitä täällä</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -482,6 +496,8 @@ msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Mahdollisuus valita pakettityyppi ostotilauksissa ja pakottaa määrä, joka on"
+" moninkertainen pakettikohtaiseen kappalemäärään nähden."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -495,11 +511,14 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Tuotekonfiguraation mukaan vastaanotettu määrä voidaan laskea automaattisesti mekanismilla :\n"
+"  - Manuaalinen: määrä asetetaan manuaalisesti linjalla\n"
+"  - Varastosiirrot: määrä tulee vahvistetuista poiminnoista\n"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
 msgid "Accrued Expense Entry"
-msgstr ""
+msgstr "Kertyneiden kulujen kirjaus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -552,6 +571,7 @@ msgstr "Lisää ostotilaukselle useita variantteja  taulukosta"
 #, python-format
 msgid "Add some products or services to your quotation."
 msgstr ""
+"Napsauta tätä lisätäksesi joitain tuotteita tai palveluita tarjoukseesi."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -615,6 +635,8 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
+"Suunnitellun päivämäärän ja tilauspäivämäärän välinen aika kunkin "
+"ostotilausrivin osalta."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
@@ -624,11 +646,15 @@ msgid ""
 "same average value, therefore only use this as an aggregated value with "
 "group_operator=avg"
 msgstr ""
+"Ostohyväksynnän ja asiakirjan luontipäivän välinen aika. Koska tämän "
+"laskemiseen tarvitaan kikkailua, jokainen tietue näyttää saman keskiarvon, "
+"joten tätä arvoa saa käyttää vain aggregoituna arvona group_operator=avg "
+"-asetuksella"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
+msgstr "Ostohyväksynnän ja tilauksen välillä kulunut aika päivämäärän mukaan."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -687,11 +713,12 @@ msgstr "Automaattitäydennys olemassaolevasta ostotilauksesta"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
 msgstr ""
+"Lukitse automaattisesti vahvistetut tilaukset muokkaamisen estämiseksi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically remind the receipt date to your vendors"
-msgstr ""
+msgstr "Muistuta automaattisesti kuitin päivämäärästä myyjiäsi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
@@ -892,7 +919,7 @@ msgstr "Vahvista ostotilaukset yhdellä toiminnolla"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
-msgstr ""
+msgstr "Vahvista ostoksesi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
@@ -904,7 +931,7 @@ msgstr "Vahvistuspvm"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date Last Year"
-msgstr ""
+msgstr "Vahvistuspäivä Viime vuosi"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -941,7 +968,7 @@ msgstr "Luo ostolasku"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr ""
+msgstr "Luo ostolaskuja"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
@@ -991,14 +1018,14 @@ msgstr "Päivämäärä"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
 msgid "Date Calendar Start"
-msgstr ""
+msgstr "Päivämäärä Kalenterin alku"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Date Updated"
-msgstr ""
+msgstr "Päivitetty"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1017,7 +1044,7 @@ msgstr "Päivää"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr ""
+msgstr "Päivät ennen vastaanottoa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1045,6 +1072,9 @@ msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
 msgstr ""
+"Toimituspäivää odotetaan tuotteen toimittajalta. Tämä päivämäärä on "
+"vastaavasti oletusarvoisesti myyjän hinnaston toimitusaika ja tämän päivän "
+"päivämäärä."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -1052,6 +1082,8 @@ msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
 msgstr ""
+"Toimittajan lupaama toimituspäivä. Tätä päivämäärää käytetään tuotteiden "
+"odotetun saapumisen määrittämiseen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__date_order
@@ -1067,6 +1099,8 @@ msgid ""
 "Depicts the date within which the Quotation should be confirmed and "
 "converted into a purchase order."
 msgstr ""
+"Kuvaa päivämäärää, jonka kuluessa tarjous on vahvistettava ja muutettava "
+"ostotilaukseksi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -1161,7 +1195,7 @@ msgstr "Font awesome ikoni esim.. fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "Kielletyt arvot muussa kuin tilitettävissä olevassa ostotilausrivissä"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1262,7 +1296,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
 msgid "If true, the packaging can be used for purchase orders"
-msgstr ""
+msgstr "Jos true, pakkausta voidaan käyttää ostotilauksissa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1291,7 +1325,7 @@ msgstr "Incoterm"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
-msgstr ""
+msgstr "Ilmoita haluamasi tuotemäärä."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1377,7 +1411,7 @@ msgstr "Oston läpimenoaika"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
-msgstr ""
+msgstr "Luodaan ensimmäinen tarjouspyyntö."
 
 #. module: purchase
 #. openerp-web
@@ -1388,6 +1422,8 @@ msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and"
 " invoice control."
 msgstr ""
+"Kokeillaan Osto-sovellusta, jolla hallitaan ostosta vastaanottoon ja "
+"laskujen valvontaan kulkevaa virtaa."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1455,6 +1491,10 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Toimittajien toimitusaikojen virhemarginaali. Kun järjestelmä luo "
+"ostotilauksia tuotteiden hankintaa varten, ne ajoitetaan näin monta päivää "
+"aikaisemmin, jotta voidaan varautua odottamattomiin toimittajien "
+"viivästyksiin."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1463,6 +1503,10 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Toimittajien toimitusaikojen virhemarginaali. Kun järjestelmä luo "
+"ostotilauksia tuotteiden uudelleen tilaamista varten, ne ajoitetaan näin "
+"monta päivää aikaisemmin, jotta voidaan varautua odottamattomiin "
+"toimittajien viivästyksiin."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1500,7 +1544,7 @@ msgstr "Minimisumma jolle kaksinkertainen validointi on vaadittu"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "Puuttuvat pakolliset kentät tilitettävän ostotilauksen rivillä."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1602,12 +1646,12 @@ msgstr "Tuotetta ei löydy. Tehdään uusi!"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "No purchase order found. Let's create one!"
-msgstr ""
+msgstr "Ostotilausta ei löytynyt. Luodaan sellainen!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr ""
+msgstr "Tarjouspyyntöä ei löytynyt. Luodaan sellainen!"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1622,7 +1666,7 @@ msgstr "Normaali"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Not Acknowledged"
-msgstr ""
+msgstr "Ei kuitattu"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
@@ -1702,6 +1746,7 @@ msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
 msgstr ""
+"Kun saat hinnan toimittajalta, voit tehdä ostotilauksen oikealla hinnalla."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1709,6 +1754,8 @@ msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
 msgstr ""
+"Kun olet tilannut tuotteet toimittajallesi, vahvista tarjouspyyntösi, niin "
+"se muuttuu ostotilaukseksi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -1815,7 +1862,7 @@ msgstr "Portaalin osoite"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr ""
+msgstr "Esikatsele muistutussähköpostia lähettämällä se itsellesi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1948,7 +1995,7 @@ msgstr "Kuvaus ostotilaukselle"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
-msgstr ""
+msgstr "Ostoruudukon syöttö"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -2012,7 +2059,7 @@ msgstr "Ostotilausrivi"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr ""
+msgstr "Ostotilausrivin varoitus"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2056,6 +2103,7 @@ msgid "Purchase Order: Vendor Reminder"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2065,6 +2113,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Ostotilaukset"
 
@@ -2100,19 +2149,19 @@ msgstr "Ostotilaukset jotka sisältävät laskuttamattomia rivejä"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr ""
+msgstr "Osta tuotteita yksikkömäärän kerrannaisina pakkausta kohti"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
 #: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
-msgstr ""
+msgstr "Ostomuistutus"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Tuotteen varianttien ostaminen attribuuttien (koko, väri jne.) avulla"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2276,7 +2325,7 @@ msgstr "Vastaanotettu määrä"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Vastaanotettu määrä Menetelmä"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2297,7 +2346,7 @@ msgstr "Vastaanotetut määrät"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
 msgid "Reception Confirmed"
-msgstr ""
+msgstr "Vastaanotto vahvistettu"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2338,11 +2387,14 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Myyjän lähettämän myyntitilauksen tai tarjouksen viite. Tätä käytetään "
+"vastaavuuden määrittämiseen, kun vastaanotat tuotteet, sillä tämä viite on "
+"yleensä merkitty myyjän lähettämään toimitustilaukseen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "Reminder Confirmed"
-msgstr ""
+msgstr "Muistutus vahvistettu"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
@@ -2371,7 +2423,7 @@ msgstr "Pyydä päälliköitä hyväksymään tilaukset jotka ylittävät minimi
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Requests For Quotation"
-msgstr ""
+msgstr "Tarjouspyynnöt"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -2391,6 +2443,8 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
+"Tarjouspyynnöt ovat asiakirjoja, jotka lähetetään tavarantoimittajille ja joissa pyydetään hintoja eri tuotteille, joita aiot ostaa.\n"
+"                Kun toimittajan kanssa on päästy sopimukseen, ne vahvistetaan ja muutetaan ostotilauksiksi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2424,7 +2478,7 @@ msgstr "Hae viitedokumenttia"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
-msgstr ""
+msgstr "Etsi myyjän nimi tai luo sellainen lennosta."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -2481,7 +2535,7 @@ msgstr "Lähetä ostotilaus"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
 msgid "Send Reminder"
-msgstr ""
+msgstr "Lähetä muistutus"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
@@ -2499,7 +2553,7 @@ msgstr "Lähetä sähköpostilla"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
-msgstr ""
+msgstr "Lähetä tarjouspyyntö toimittajalle."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2574,17 +2628,17 @@ msgstr "Välisumma"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Billed"
-msgstr ""
+msgstr "Laskutettujen määrien summa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Ordered"
-msgstr ""
+msgstr "Tilattujen määrien summa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Received"
-msgstr ""
+msgstr "Vastaanotettujen määrien summa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
@@ -2656,7 +2710,7 @@ msgstr "Toimitusehdot"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "The order receipt has been acknowledged by %s."
-msgstr ""
+msgstr "%s on kuitannut tilauksen vastaanottamisen."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2665,16 +2719,19 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Tarjouspyyntö on ostovirran ensimmäinen vaihe. Kun\n"
+"                    muutettu ostotilaukseksi, voit valvoa kuittausta\n"
+"                    tuotteiden ja toimittajan ostolaskun vastaanottoa."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "There are currently no purchase orders for your account."
-msgstr ""
+msgstr "Tilillesi ei ole tällä hetkellä ostotilauksia."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "There are currently no requests for quotation for your account."
-msgstr ""
+msgstr "Tilillesi ei ole tällä hetkellä tarjouspyyntöjä."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2683,6 +2740,8 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
+"Laskutettavaa riviä ei ole. Jos tuotteella on vastaanotettuun määrään "
+"perustuva valvontakäytäntö, varmista, että määrä on vastaanotettu."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
@@ -2692,6 +2751,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Tätä tiliä käytetään automatisoidussa varaston arvonmäärityksessä kirjaamaan"
+" ostotilauksen ja siihen liittyvän toimittajan laskun välinen hintaero, kun "
+"kyseinen toimittajan lasku vahvistetaan."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2699,6 +2761,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Tätä tiliä käytetään ostohinnan ja kirjanpitokustannusten välisen hintaeron "
+"arvostamiseen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -2732,6 +2796,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
+"Tämän tuotteen on pakannut %(pack_size).2f %(pack_name)s. Sinun pitäisi "
+"ostaa %(quantity).2f %(unit)s."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0
@@ -2755,13 +2821,13 @@ msgstr ""
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
 msgid "Tip: How to keep late receipts under control?"
-msgstr ""
+msgstr "Vinkki: Miten pitää myöhästyneet toimitukset kurissa?"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_1
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
 msgid "Tip: Never miss a purchase order"
-msgstr ""
+msgstr "Vihje: Älä koskaan jätä ostotilausta tekemättä"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -2821,12 +2887,12 @@ msgstr "Yhteensä"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
 msgid "True if PO reception is confirmed by the vendor."
-msgstr ""
+msgstr "True, jos myyjä on vahvistanut ostotilauksen vastaanoton."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "True if the reminder email is confirmed by the vendor."
-msgstr ""
+msgstr "True, jos tuotteen toimittaja on vahvistanut muistutussähköpostin."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -2983,6 +3049,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Toimittajien ostolaskut voidaan luoda etukäteen oston perusteella\n"
+"                    tilausten tai kuittien perusteella. Näin voit valvoa laskuja\n"
+"                    joita saat myyjältäsi luonnoksen mukaan\n"
+"                    asiakirjan mukaisesti Odoossa."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3059,6 +3129,13 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Kun luot ostotilausta, katso toimittajan <i>Toimitettu ajallaan</i> "
+"-prosentti: ajallaan toimitettujen tuotteiden prosenttiosuus. Jos se on "
+"liian alhainen, aktivoi <i>automaattiset muistutukset</i>. Muutama päivä "
+"ennen erääntynyttä toimitusta Odoo lähettää toimittajalle sähköpostin, jossa"
+" se pyytää vahvistusta toimituspäivistä ja pitää sinut ajan tasalla, jos "
+"viivästyksiä ilmenee. Saat myyjän suoritustilastot näkyviin napsauttamalla "
+"OTD-astetta."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3068,6 +3145,10 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"Kun ostotilaus lähetetään sähköpostitse, Odoo pyytää toimittajaa kuittaamaan"
+" tilauksen vastaanottamisen. Kun toimittaja kuittaa tilauksen klikkaamalla "
+"sähköpostissa olevaa painiketta, tiedot lisätään ostotilaukseen. Voit "
+"seurata suodattimien avulla tilauksia, joita ei ole kuitattu."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -3089,6 +3170,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Et voi muuttaa ostotilausrivin tyyppiä. Sen sijaan nykyinen rivi on "
+"poistettava ja luotava uusi, oikean tyyppinen rivi."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

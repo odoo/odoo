@@ -136,11 +136,11 @@ class FetchmailServer(models.Model):
                     self._message_receipt_invoice(split_underscore[1], attachment)
                 else:
                     att_filename = attachment.fname
-                    match = re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", att_filename)
+                    match = re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", att_filename)
                     # If match, we have an invoice.
                     if match:
                         # If it's signed, the content has a bytes type and we just remove the signature's envelope
-                        if match.groups()[1] == 'xml.p7m':
+                        if match.groups()[0].lower() == 'xml.p7m':
                             att_content_data = remove_signature(attachment.content)
                             # If the envelope cannot be removed, the remove_signature returns None, so we skip
                             if not att_content_data:

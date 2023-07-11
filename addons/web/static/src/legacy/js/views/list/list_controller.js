@@ -520,6 +520,21 @@ var ListController = BasicController.extend({
             isDomainSelected: this.isDomainSelected,
         });
     },
+    _isValueSet(fieldType, value) {
+        switch (fieldType) {
+            case 'boolean':
+            case 'one2many':
+            case 'many2many':
+            case 'integer':
+            case 'monetary':
+            case 'float':
+                return true;
+            case 'selection':
+                return value !== false;
+            default:
+                return !!value;
+        }
+    },
     /**
      * Saves multiple records at once. This method is called by the _onFieldChanged method
      * since the record must be confirmed as soon as the focus leaves a dirty cell.
@@ -539,7 +554,8 @@ var ListController = BasicController.extend({
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
             var modifiers = this.renderer._registerModifiers(node, record);
-            if (!modifiers.readonly && (!modifiers.required || value)) {
+            const fieldType = record.fields[fieldName].type;
+            if (!modifiers.readonly && (!modifiers.required || this._isValueSet(fieldType, value))) {
                 result.push(nextRecordId);
             }
             return result;
@@ -906,8 +922,9 @@ var ListController = BasicController.extend({
                 // that triggered the event, otherwise ev.target is the legacy field
                 // Widget that triggered the event
                 const target = ev.data.__originalComponent || ev.target;
+                const node = target.__node || ev.data.node;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save

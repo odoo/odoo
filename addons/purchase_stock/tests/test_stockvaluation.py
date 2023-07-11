@@ -25,6 +25,8 @@ class TestStockValuation(TransactionCase):
             'name': 'Large Desk',
             'standard_price': 1299.0,
             'list_price': 1799.0,
+            # Ignore tax calculations for these tests.
+            'supplier_taxes_id': False,
             'type': 'product',
         })
         Account = self.env['account.account']
@@ -277,6 +279,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'type': 'general',
         })
         cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
@@ -525,6 +528,186 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # has gone to the stock account, and must be reflected in inventory valuation
         self.assertEqual(self.product1.value_svl, 150)
 
+    def test_standard_valuation_multicurrency(self):
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        date_po = '2019-01-01'
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.property_account_creditor_price_difference = self.price_diff_account
+        self.product1.standard_price = 10
+
+        # SetUp currency and rates   1$ = 2 Euros
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # Create PO
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0, # 50$
+                    'date_planned': date_po,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        # Receive the goods
+        receipt = po.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Create a vendor bill
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
+            'invoice_date': date_po,
+            'date': date_po,
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test',
+                'price_unit': 100.0,
+                'product_id': self.product1.id,
+                'purchase_line_id': po.order_line.id,
+                'quantity': 1.0,
+                'account_id': self.stock_input_account.id,
+            })]
+        })
+
+        inv.action_post()
+
+        # Check what was posted in stock input account
+        input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(len(input_amls), 3, "Only three lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
+        invoice_amls = input_amls.filtered(lambda l: l.move_id == inv)
+        picking_aml = input_amls - invoice_amls
+        payable_aml = invoice_amls.filtered(lambda l: l.amount_currency > 0)
+        diff_aml = invoice_amls - payable_aml
+
+        # check USD
+        self.assertAlmostEqual(payable_aml.debit, 50, "Total debit value should be equal to the original PO price of the product.")
+        self.assertAlmostEqual(picking_aml.credit, 10, "credit value for stock should be equal to the standard price of the product.")
+        self.assertAlmostEqual(diff_aml.credit, 40, "credit value for price difference")
+
+        # check EUR
+        self.assertAlmostEqual(payable_aml.amount_currency, 100, "Total debit value should be equal to the original PO price of the product.")
+        self.assertAlmostEqual(picking_aml.amount_currency, -20, "credit value for stock should be equal to the standard price of the product.")
+        self.assertAlmostEqual(diff_aml.amount_currency, -80, "credit value for price difference")
+
+    def test_valuation_multicurecny_with_tax(self):
+        """ Check that a tax without account will increment the stock value.
+        """
+
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        date_po = '2019-01-01'
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.property_account_creditor_price_difference = self.price_diff_account
+
+        # SetUp currency and rates 1$ = 2Euros
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        self.env['res.currency.rate'].create({
+            'name': date_po,
+            'rate': 2,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        tax_with_no_account = self.env['account.tax'].create({
+            'name': "Tax with no account",
+            'amount_type': 'fixed',
+            'amount': 5,
+            'sequence': 8,
+            'price_include': True,
+        })
+
+        # Create PO
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0, # 50$
+                    'taxes_id': [(4, tax_with_no_account.id)],
+                    'date_planned': date_po,
+                }),
+            ],
+        })
+
+        po.button_confirm()
+
+        # Receive the goods
+        receipt = po.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Create a vendor bill
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
+            'invoice_date': date_po,
+            'date': date_po,
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test',
+                'price_unit': 100.0,
+                'product_id': self.product1.id,
+                'purchase_line_id': po.order_line.id,
+                'quantity': 1.0,
+                'account_id': self.stock_input_account.id,
+            })]
+        })
+
+        inv.action_post()
+
+        # Check what was posted in stock input account
+        input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(len(input_amls), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
+        invoice_aml = input_amls.filtered(lambda l: l.move_id == inv)
+        picking_aml = input_amls - invoice_aml
+
+        # check EUR
+        self.assertAlmostEqual(invoice_aml.amount_currency, 100, "Total debit value should be equal to the original PO price of the product.")
+        self.assertAlmostEqual(picking_aml.amount_currency, -95, "credit value for stock should be equal to the untaxed price of the product.")
+
     def test_average_realtime_anglo_saxon_valuation_multicurrency_same_date(self):
         """
         The PO and invoice are in the same foreign currency.
@@ -597,14 +780,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 2)
+        self.assertEqual(len(move_lines), 4)
 
         payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
 
         self.assertEqual(payable_line.amount_currency, -100.0)
         self.assertAlmostEqual(payable_line.balance, -66.67)
 
-        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account and l.balance > 0)
         self.assertEqual(stock_line.amount_currency, 100.0)
         self.assertAlmostEqual(stock_line.balance, 66.67)
 

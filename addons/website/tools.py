@@ -107,7 +107,8 @@ def MockRequest(
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
         ),
-        website=website
+        website=website,
+        render=lambda *a, **kw: '<MockResponse>',
     )
 
     with contextlib.ExitStack() as s:

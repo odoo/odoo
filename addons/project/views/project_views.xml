@@ -18,7 +18,7 @@
                <search string="Tasks">
                     <field name="name" string="Task"/>
                     <field name="tag_ids"/>
-                    <field name="user_ids" filter_domain="[('user_ids', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                    <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                     <field string="Project" name="display_project_id"/>
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
@@ -128,7 +128,7 @@
                             <group>
                                 <field name="fold"/>
                                 <field name="is_closed" groups="base.group_no_one"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="base.group_no_one"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" required="1"/>
                             </group>
                         </group>
                         <group string="Stage Description and Tooltips">
@@ -249,6 +249,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
+            <field name="domain">[('user_id', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stages found. Let's create one!
@@ -506,6 +507,14 @@
                     <filter string="Open" name="open" domain="[('stage_id.fold', '=', False)]" groups="project.group_project_stages"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
@@ -878,7 +887,7 @@
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}" />
+                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -1034,9 +1043,10 @@
                     <group>
                         <field name="name" string = "Task Title" placeholder="e.g. New Design"/>
                         <field name="user_ids" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
-                            widget="many2many_tags"/>
+                            widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
+                        <field name="description" invisible="1"/>
                     </group>
                 </form>
             </field>

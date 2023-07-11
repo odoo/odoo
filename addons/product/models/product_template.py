@@ -28,6 +28,9 @@ class ProductTemplate(models.Model):
         # Deletion forbidden (at least through unlink)
         return self.env.ref('uom.product_uom_unit')
 
+    def _get_default_uom_po_id(self):
+        return self.default_get(['uom_id']).get('uom_id') or self._get_default_uom_id()
+
     def _read_group_categ_id(self, categories, domain, order):
         category_ids = self.env.context.get('default_categ_id')
         if not category_ids and self.env.context.get('group_expand'):
@@ -109,7 +112,7 @@ class ProductTemplate(models.Model):
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase UoM',
-        default=_get_default_uom_id, required=True,
+        default=_get_default_uom_po_id, required=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company', index=1)
@@ -287,12 +290,17 @@ class ProductTemplate(models.Model):
                     template.barcode = archived_variants.barcode
 
     def _search_barcode(self, operator, value):
-        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
-        return [('id', 'in', templates.ids)]
+        query = self.with_context(active_test=False)._search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', query)]
 
     def _set_barcode(self):
-        if len(self.product_variant_ids) == 1:
+        variant_count = len(self.product_variant_ids)
+        if variant_count == 1:
             self.product_variant_ids.barcode = self.barcode
+        elif variant_count == 0:
+            archived_variants = self.with_context(active_test=False).product_variant_ids
+            if len(archived_variants) == 1:
+                archived_variants.barcode = self.barcode
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -1065,6 +1073,18 @@ class ProductTemplate(models.Model):
             'product_tmpl_id': self.id,
             'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
         })
+
+    def _create_first_product_variant(self, log_warning=False):
+        """Create if necessary and possible and return the first product
+        variant for this template.
+
+        :param log_warning: whether a warning should be logged on fail
+        :type log_warning: bool
+
+        :return: the first product variant or none
+        :rtype: recordset of `product.product`
+        """
+        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
     @tools.ormcache('self.id', 'frozenset(filtered_combination.ids)')
     def _get_variant_id_for_combination(self, filtered_combination):

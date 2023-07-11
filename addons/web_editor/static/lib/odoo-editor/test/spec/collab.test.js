@@ -346,7 +346,7 @@ describe('Collaboration', () => {
                 clientInfos.c1.editor._historyMakeSnapshot();
                 // Insure the snapshot is considered to be older than 30 seconds.
                 clientInfos.c1.editor._historySnapshots[0].time = 1;
-                const steps = clientInfos.c1.editor.historyGetSnapshotSteps();
+                const { steps } = clientInfos.c1.editor.historyGetSnapshotSteps();
                 clientInfos.c2.editor.historyResetFromSteps(steps);
 
                 chai.expect(clientInfos.c2.editor._historySteps.map(x => x.id)).to.deep.equal([
@@ -401,7 +401,7 @@ describe('Collaboration', () => {
                     // Fake the time of the snapshot so it is considered to be
                     // older than 30 seconds.
                     clientInfos.c1.editor._historySnapshots[0].time = 1;
-                    const steps = clientInfos.c1.editor.historyGetSnapshotSteps();
+                    const { steps } = clientInfos.c1.editor.historyGetSnapshotSteps();
                     clientInfos.c3.editor.historyResetFromSteps(steps);
 
                     // In the meantime client 2 send the step to client 1

@@ -31,6 +31,17 @@ odoo.define('pos_coupon.PaymentScreen', function (require) {
                 );
                 return super._postPushOrderResolve(order, server_ids);
             }
+
+            mounted() {
+                super.mounted();
+                this.currentOrder.on('rewards-updated', () => this.render(), this);
+            }
+
+            willUnmount() {
+                super.willUnmount();
+                this.currentOrder.off('rewards-updated', null, this);
+            }
+
         };
 
     Registries.Component.extend(PaymentScreen, PosCouponPaymentScreen);

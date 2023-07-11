@@ -26,7 +26,20 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
             });
 
             if (confirmed) {
-                this.env.pos.get_order().set_customer_count(parseInt(inputNumber, 10) || 1);
+                const guestCount = parseInt(inputNumber, 10) || 1;
+                // Set the maximum number possible for an integer
+                const max_capacity = 2**31 - 1;
+                if (guestCount > max_capacity) {
+                    await this.showPopup('ErrorPopup', {
+                        title: this.env._t('Blocked action'),
+                        body: _.str.sprintf(
+                            this.env._t('You cannot put a number that exceeds %s '),
+                            max_capacity,
+                        ),
+                    });
+                    return;
+                }
+                this.env.pos.get_order().set_customer_count(guestCount);
             }
         }
     }

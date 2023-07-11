@@ -966,6 +966,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
             isText: result.context.translation_type === 'text',
             showSrc: result.context.translation_show_src,
+            node: ev.target && ev.target.__node,
         });
         return this.translationDialog.open();
     },

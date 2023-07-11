@@ -31,6 +31,18 @@ class IapAccount(models.Model):
                 ('company_ids', '=', False)
         ]
         accounts = self.search(domain, order='id desc')
+        accounts_without_token = accounts.filtered(lambda acc: not acc.account_token)
+        if accounts_without_token:
+            with self.pool.cursor() as cr:
+                # In case of a further error that will rollback the database, we should
+                # use a different SQL cursor to avoid undo the accounts deletion.
+
+                # Flush the pending operations to avoid a deadlock.
+                self.flush()
+                IapAccount = self.with_env(self.env(cr=cr))
+                # Need to use sudo because regular users do not have delete right
+                IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
+                accounts = accounts - accounts_without_token
         if not accounts:
             with self.pool.cursor() as cr:
                 # Since the account did not exist yet, we will encounter a NoCreditError,

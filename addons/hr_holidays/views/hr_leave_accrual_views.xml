@@ -154,7 +154,7 @@
                                                     </t>
                                                 </div>
                                                 <div>
-                                                    Adds <field name="added_value"/> <field name="added_value_type"/>
+                                                    Adds <field name="added_value" widget="float_without_trailing_zeros"/> <field name="added_value_type"/>
                                                     <t t-if="record.is_based_on_worked_time.raw_value">(based on worked time)</t>
                                                 </div>
                                                 <div>
@@ -176,7 +176,7 @@
                                                     </t>
                                                 </div>
                                                 <div t-if="record.maximum_leave.value">
-                                                    Limit of <field name="maximum_leave"/> <field name="added_value_type"/>
+                                                    Limit of <field name="maximum_leave" widget="float_without_trailing_zeros"/> <field name="added_value_type"/>
                                                 </div>
                                                 <div t-if="record.action_with_unused_accruals.raw_value">
                                                     At the end of the year, unused accruals will be <t t-if="record.action_with_unused_accruals.raw_value == 'postponed'">postponed</t><t t-else="">lost</t>

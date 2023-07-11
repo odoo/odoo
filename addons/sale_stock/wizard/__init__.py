@@ -3,3 +3,4 @@
 
 from . import stock_rules_report
 from . import sale_order_cancel
+from . import sale_make_invoice_advance

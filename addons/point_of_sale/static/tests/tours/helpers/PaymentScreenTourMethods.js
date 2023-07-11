@@ -4,6 +4,33 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
     const { createTourMethods } = require('point_of_sale.tour.utils');
 
     class Do {
+        clickCustomerButton() {
+            return [
+                {
+                    content: 'click customer button',
+                    trigger: '.customer-button .button',
+                },
+            ];
+        }
+
+        clickCustomer(name) {
+            return [
+                {
+                    content: `select customer ${name}`,
+                    trigger: `.client-line:contains("${name}")`,
+                },
+            ];
+        }
+
+        clickValidateCustomer() {
+            return [
+                {
+                    content: 'validate customer',
+                    trigger: '.clientlist-screen .button.next.highlight',
+                },
+            ];
+        }
+
         clickPaymentMethod(name) {
             return [
                 {
@@ -95,6 +122,17 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
     }
 
     class Check {
+
+        dueIs(amount) {
+            return [
+                {
+                    content: `due is ${amount}`,
+                    trigger: `.total:contains("${amount}")`,
+                    run: () => {},
+                },
+            ];
+        }
+
         isShown() {
             return [
                 {
@@ -184,6 +222,18 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 {
                     content: `amount tendered in the line is '${amount}'`,
                     trigger: `.paymentlines .paymentline.selected .payment-amount:contains("${amount}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        /**
+         * Check if en error popup is shown
+         */
+        errorPopupIsShown() {
+            return [
+                {
+                    content: 'error popup is shown',
+                    trigger: '.popup.popup-error',
                     run: () => {},
                 },
             ];

@@ -3,6 +3,7 @@ odoo.define('website.snippet.editor', function (require) {
 
 const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
+const publicWidget = require('web.public.widget');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/utils/utils');
@@ -84,22 +85,46 @@ weSnippetEditor.SnippetsMenu.include({
      * if not already defined.
      *
      * @private
-     * @param {boolean} [reconfigure=false]
-     * @param {boolean} [onlyIfUndefined=false]
+     * @param {boolean} [reconfigure=false] // TODO name is confusing "alwaysReconfigure" is better
+     * @param {boolean} [onlyIfUndefined=false] // TODO name is confusing "configureIfNecessary" is better
      */
     async _configureGMapAPI({reconfigure, onlyIfUndefined}) {
+        if (!reconfigure && !onlyIfUndefined) {
+            return false;
+        }
+
         const apiKey = await new Promise(resolve => {
             this.getParent().trigger_up('gmap_api_key_request', {
                 onSuccess: key => resolve(key),
             });
         });
-        if (!reconfigure && (apiKey || !onlyIfUndefined)) {
+        const apiKeyValidation = apiKey ? await this._validateGMapAPIKey(apiKey) : {
+            isValid: false,
+            message: undefined,
+        };
+        if (!reconfigure && onlyIfUndefined && apiKey && apiKeyValidation.isValid) {
             return false;
         }
+
         let websiteId;
         this.trigger_up('context_get', {
             callback: ctx => websiteId = ctx['website_id'],
         });
+
+        function applyError(message) {
+            const $apiKeyInput = this.find('#api_key_input');
+            const $apiKeyHelp = this.find('#api_key_help');
+            $apiKeyInput.addClass('is-invalid');
+            $apiKeyHelp.empty().text(message);
+        }
+
+        const $content = $(qweb.render('website.s_google_map_modal', {
+            apiKey: apiKey,
+        }));
+        if (!apiKeyValidation.isValid && apiKeyValidation.message) {
+            applyError.call($content, apiKeyValidation.message);
+        }
+
         return new Promise(resolve => {
             let invalidated = false;
             const dialog = new Dialog(this, {
@@ -107,54 +132,56 @@ weSnippetEditor.SnippetsMenu.include({
                 title: _t("Google Map API Key"),
                 buttons: [
                     {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
-                        const $apiKeyInput = dialog.$('#api_key_input');
-                        const valueAPIKey = $apiKeyInput.val();
-                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        const valueAPIKey = dialog.$('#api_key_input').val();
                         if (!valueAPIKey) {
-                            $apiKeyInput.addClass('is-invalid');
-                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            applyError.call(dialog.$el, _t("Enter an API Key"));
                             return;
                         }
                         const $button = $(ev.currentTarget);
                         $button.prop('disabled', true);
-                        try {
-                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
-                            if (response.status === 200) {
-                                await this._rpc({
-                                    model: 'website',
-                                    method: 'write',
-                                    args: [
-                                        [websiteId],
-                                        {google_maps_api_key: valueAPIKey},
-                                    ],
-                                });
-                                invalidated = true;
-                                dialog.close();
-                            } else {
-                                const text = await response.text();
-                                $apiKeyInput.addClass('is-invalid');
-                                $apiKeyHelp.empty().text(
-                                    _t("Invalid API Key. The following error was returned by Google:")
-                                ).append($('<i/>', {
-                                    text: text,
-                                    class: 'ml-1',
-                                }));
-                            }
-                        } catch (e) {
-                            $apiKeyHelp.text(_t("Check your connection and try again"));
-                        } finally {
-                            $button.prop("disabled", false);
+                        const res = await this._validateGMapAPIKey(valueAPIKey);
+                        if (res.isValid) {
+                            await this._rpc({
+                                model: 'website',
+                                method: 'write',
+                                args: [
+                                    [websiteId],
+                                    {google_maps_api_key: valueAPIKey},
+                                ],
+                            });
+                            invalidated = true;
+                            dialog.close();
+                        } else {
+                            applyError.call(dialog.$el, res.message);
                         }
+                        $button.prop("disabled", false);
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
-                $content: $(qweb.render('website.s_google_map_modal', {
-                    apiKey: apiKey,
-                })),
+                $content: $content,
             });
             dialog.on('closed', this, () => resolve(invalidated));
             dialog.open();
         });
+    },
+    /**
+     * @private
+     */
+    async _validateGMapAPIKey(key) {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(key)}`);
+            const isValid = (response.status === 200);
+            return {
+                isValid: isValid,
+                message: !isValid &&
+                    _t("Invalid API Key. The following error was returned by Google:") + " " + (await response.text()),
+            };
+        } catch (err) {
+            return {
+                isValid: false,
+                message: _t("Check your connection and try again"),
+            };
+        }
     },
     /**
      * @override
@@ -401,6 +428,85 @@ weSnippetEditor.SnippetEditor.include({
             return _t("Logo");
         }
         return this._super(...arguments);
+    },
+});
+
+// Edit mode customizations of public widgets.
+
+publicWidget.registry.hoverableDropdown.include({
+    /**
+     * @override
+     */
+    start() {
+        if (this.editableMode) {
+            this._onPageClick = this._onPageClick.bind(this);
+            this.el.closest('#wrapwrap').addEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.editableMode) {
+            this.el.closest('#wrapwrap').removeEventListener('click', this._onPageClick, {capture: true});
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll('.dropdown.show .dropdown-toggle')) {
+            $(toggleEl).dropdown('hide');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest('.dropdown.show')) {
+            return;
+        }
+        this._hideDropdowns();
+    },
+    /**
+     * @override
+     */
+    _onMouseEnter(ev) {
+        if (this.editableMode) {
+            // Do not handle hover if another dropdown is opened.
+            if (this.el.querySelector('.dropdown.show')) {
+                return;
+            }
+        }
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _onMouseLeave(ev) {
+        if (this.editableMode) {
+            // Cancel handling from view mode.
+            return;
+        }
+        this._super(...arguments);
     },
 });
 });

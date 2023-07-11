@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, tagged
 from odoo.tests.common import users
@@ -299,3 +299,24 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         crm_lead_form.user_id = self.env['res.users']
         # ensuring that company_id is not overwritten when the salesperson becomes empty (w\o any team_id)
         self.assertEqual(crm_lead_form.company_id, self.company_2, 'Crm: company comes from partner')
+
+    def test_gateway_incompatible_company_error_on_incoming_email(self):
+        self.assertTrue(self.sales_team_1.alias_name)
+        self.assertFalse(self.sales_team_1.company_id)
+        customer_company = self.env['res.partner'].create({
+            'company_id': self.company_2.id,
+            'email': 'customer.another.company@test.customer.com',
+            'mobile': '+32455000000',
+            'name': 'InCompany Customer',
+        })
+
+        new_lead = self.format_and_process(
+            INCOMING_EMAIL,
+            customer_company.email,
+            '%s@%s' % (self.sales_team_1.alias_name, self.alias_domain),
+            subject='Team having partner in company',
+            target_model='crm.lead',
+        )
+        self.assertEqual(new_lead.company_id, self.company_2)
+        self.assertEqual(new_lead.email_from, customer_company.email)
+        self.assertEqual(new_lead.partner_id, customer_company)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResCountry(models.Model):
@@ -16,3 +16,8 @@ class ResCountry(models.Model):
              "\n%(street_number)s: the house number"
              "\n%(street_number2)s: the door number",
         default='%(street_number)s/%(street_number2)s %(street_name)s', required=True)
+
+    @api.onchange("street_format")
+    def onchange_street_format(self):
+        # Prevent unexpected truncation with whitespaces in front of the street format
+        self.street_format = self.street_format.strip()

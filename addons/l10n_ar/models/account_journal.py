@@ -77,27 +77,31 @@ class AccountJournal(models.Model):
 
     def _get_journal_codes(self):
         self.ensure_one()
+        if self.type != 'sale':
+            return []
+        return self._get_codes_per_journal_type(self.l10n_ar_afip_pos_system)
+
+    @api.model
+    def _get_codes_per_journal_type(self, afip_pos_system):
         usual_codes = ['1', '2', '3', '6', '7', '8', '11', '12', '13']
         mipyme_codes = ['201', '202', '203', '206', '207', '208', '211', '212', '213']
         invoice_m_code = ['51', '52', '53']
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
-        if self.type != 'sale':
-            return []
-        elif self.l10n_ar_afip_pos_system == 'II_IM':
+        if afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
-        elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
             return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
-        elif self.l10n_ar_afip_pos_system in ['CPERCEL', 'CPEWS']:
+        elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code
-        elif self.l10n_ar_afip_pos_system in ['BFERCEL', 'BFEWS']:
+        elif afip_pos_system in ['BFERCEL', 'BFEWS']:
             # Bonds invoice
             return usual_codes + mipyme_codes
-        elif self.l10n_ar_afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
+        elif afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
 
     @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_ar_share_sequences',

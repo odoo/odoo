@@ -3,7 +3,7 @@
 import logging
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -259,6 +259,17 @@ class PaymentAcquirer(models.Model):
             raise ValidationError(
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_data(self):
+        """ Prevent the deletion of the payment acquirer if it has an xmlid. """
+        external_ids = self.get_external_id()
+        for acquirer in self:
+            external_id = external_ids[acquirer.id]
+            if external_id and not external_id.startswith('__export__'):
+                raise UserError(
+                    _("You cannot delete the payment acquirer %s; archive it instead.", acquirer.name)
+                )
 
     #=== ACTION METHODS ===#
 

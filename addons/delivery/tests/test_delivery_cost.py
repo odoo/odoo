@@ -17,7 +17,7 @@ class TestDeliveryCost(common.TransactionCase):
 
         self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
         self.pricelist = self.env.ref('product.list0')
-        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver'})
+        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.product_delivery_normal = self.env['product.product'].create({
             'name': 'Normal Delivery Charges',
@@ -39,7 +39,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.product_uom_hour = self.env.ref('uom.product_uom_hour')
         self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
-        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct'})
+        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct', 'weight': 1.0})
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
@@ -129,7 +129,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,
-                'product_uom': self.product_uom_hour.id,
+                'product_uom': self.product_uom_unit.id,
                 'price_unit': 38.25,
             })],
         })
@@ -299,3 +299,108 @@ class TestDeliveryCost(common.TransactionCase):
         ])
 
         self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+
+    def test_add_carrier_on_picking(self):
+        """
+        A user confirms a SO, then adds a carrier on the picking. The invoicing
+        policy of the carrier is set to "Real Cost". He then confirms the
+        picking: a line with the carrier cost should be added to the SO
+        """
+        self.normal_delivery.invoice_policy = 'real'
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_4
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_2
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.carrier_id = self.normal_delivery
+        picking.move_lines.quantity_done = 1
+        picking.button_validate()
+
+        so.order_line.invalidate_cache(ids=so.order_line.ids)
+
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(so.order_line, [
+            {'product_id': self.product_2.id, 'is_delivery': False, 'product_uom_qty': 1, 'qty_delivered': 1},
+            {'product_id': self.normal_delivery.product_id.id, 'is_delivery': True, 'product_uom_qty': 1, 'qty_delivered': 0},
+        ])
+
+
+    def test_delivery_cost_gift_card(self):
+        """
+        A customer has a carrier with the amount greater than the one to have
+        free shipping cost, then uses a gift card that lowers that amount to less
+        than the threshold: the shipping cost should still be 0.0
+        """
+
+        if "gift.card" not in self.env:
+            return
+
+        product_delivery_free = self.env['product.product'].create({
+            'name': 'Free Delivery Charges',
+            'type': 'service',
+            'list_price': 40.0,
+            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+        })
+        free_delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Now Free Over 100',
+            'fixed_price': 40,
+            'delivery_type': 'fixed',
+            'product_id': product_delivery_free.id,
+            'free_over': True,
+            'amount': 100,
+        })
+
+
+        sale_normal_delivery_charges = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'pricelist_id': self.pricelist.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 120.00,
+            })],
+        })
+        gift_card = self.env['gift.card'].create({
+            'initial_amount': 40,
+        })
+        sale_normal_delivery_charges._pay_with_gift_card(gift_card)
+
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_normal_delivery_charges.id,
+            'default_carrier_id': free_delivery.id
+        }))
+        delivery_wizard.save().button_confirm()
+
+        self.assertEqual(len(sale_normal_delivery_charges.order_line), 3)
+        self.assertEqual(sale_normal_delivery_charges.amount_untaxed, 80.0, "Delivery cost is not Added")
+
+    def test_estimated_weight(self):
+        """
+        Test that negative qty SO lines are not included in the estimated weight calculation
+        of delivery carriers (since it's used when calculating their rates).
+        """
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'name': 'SO - neg qty',
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_4.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_uom_qty': -1,
+                    'product_uom': self.product_uom_unit.id,
+                })],
+        })
+        shipping_weight = sale_order._get_estimated_weight()
+        self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")

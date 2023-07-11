@@ -25,7 +25,7 @@ odoo.define('web.ActionMenus', function (require) {
         setup() {
             this.actionButtonStrings = {
                 title: this.env._t("Action"),
-                hotkey: this.env._t("Additionnal actions"),
+                hotkey: this.env._t("Additional actions"),
             };
             this.printButtonStrings = {
                 title: this.env._t("Print"),

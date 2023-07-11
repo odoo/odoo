@@ -138,7 +138,8 @@ class RecurrenceRule(models.Model):
         # older versions of the module. When synced, these recurrence may come back from Microsoft after database cleaning
         # and trigger errors as the records are not properly populated.
         # We also prevent sync of other user recurrent events.
-        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        domain = [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        return self._extend_microsoft_domain(domain)
 
     def _cancel_microsoft(self):
         self.calendar_event_ids._cancel_microsoft()

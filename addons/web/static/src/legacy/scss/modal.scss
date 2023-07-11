@@ -18,6 +18,11 @@
                 padding: 0;
             }
 
+            // Fix dropzones of nested sortable.
+            .mjs-nestedSortable-error {
+                outline: none;
+            }
+
             .o_modal_header {
                 @include o-webclient-padding($top: 10px, $bottom: 10px);
                 @include clearfix;

@@ -118,6 +118,7 @@ class PurchaseOrder(models.Model):
                     line._product_id_change()
                     line._onchange_quantity()
                     line._onchange_suggest_packaging()
+                    line._onchange_update_product_packaging_qty()
                     res = line.onchange_product_id_warning() or res
                 return res
 

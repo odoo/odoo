@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -158,7 +158,7 @@ msgid ""
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"text-muted\">قم بمشاركة اختبار قصير مع حاضريك بمجرد انتهاء المقطع</span>"
+"                                            <span class=\"text-muted\">قم بمشاركة اختبار قصير مع حاضريك بمجرد انتهاء المسار</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -980,18 +980,18 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        مرحباً <t t-out=\"object.name or ''\">أوسكار مورغان</t>،<br/>\n"
-"                        يسعدنا تأكيد تسجيلك للفعالية\n"
+"                        يسرنا تأكيد تسجيلك للفعالية\n"
 "                        <t t-if=\"is_online\">\n"
-"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</a>\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</strong>\n"
+"                            <strong t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</strong>\n"
 "                        </t>\n"
 "                        للحاضر <t t-out=\"object.name or ''\">أوسكار مورغان</t>.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br/>\n"
-"                        <strong>قم بإضافة هذه الفعالية إلى</strong>\n"
+"                        <strong>أضف هذه الفعالية إلى تقويمك</strong>\n"
 "                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
 "                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -1007,7 +1007,7 @@ msgstr ""
 "                            <t t-out=\"event_organizer.name or ''\">شركتك</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>\n"
+"                            فريق <t t-out=\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood أونلاين</t>\n"
 "                        </t>\n"
 "                        </span>\n"
 "                    </div>\n"
@@ -1029,8 +1029,8 @@ msgstr ""
 "                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">مايو 4, 2021, 7:00:00 صباحاً</t></div>\n"
-"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">مايو 6, 2021, 5:00:00 مساءً</t></div>\n"
+"                                <div><strong>من</strong> <t t-out=\"object.event_id.date_begin_located or ''\">4 مايو 2021، 7:00:00 صباحاً</t></div>\n"
+"                                <div><strong>إلى</strong> <t t-out=\"object.event_id.date_end_located or ''\">6 مايو 2021، 5:00:00 مساءً</t></div>\n"
 "                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>المنطقة الزمنية</strong> <t t-out=\"object.event_id.date_tz or ''\">أوروبا/براسيلز</t></i></div>\n"
 "                            </td>\n"
 "                            <td style=\"vertical-align:top;\">\n"
@@ -1054,11 +1054,11 @@ msgstr ""
 "                                    </t>\n"
 "                                    <div>\n"
 "                                    <t t-if=\"object.event_id.address_id.city\">\n"
-"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-out=\"object.event_id.address_id.city or ''\">Pudahuel</t>،\n"
 "                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.city)\"/>\n"
 "                                    </t>\n"
 "                                    <t t-if=\"object.event_id.address_id.state_id.name\">\n"
-"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-out=\"object.event_id.address_id.state_id.name or ''\">C1</t>،\n"
 "                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
 "                                    </t>\n"
 "                                    <t t-if=\"object.event_id.address_id.zip\">\n"
@@ -1067,7 +1067,7 @@ msgstr ""
 "                                    </t>\n"
 "                                    </div>\n"
 "                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
-"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">الأرجنتين</div>\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
 "                                        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
 "                                    </t>\n"
 "                                </t>\n"
@@ -1085,15 +1085,15 @@ msgstr ""
 "                    <!-- CONTACT ORGANIZER -->\n"
 "                    <t t-if=\"event_organizer\">\n"
 "                        <div>\n"
-"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أي أسئلة حول الفعالية؟</span>\n"
-"                            <div>لا تتردد في التواصل مع منظم الفعالية:</div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ألديك أسئلة حول هذه الفعالية؟</span>\n"
+"                            <div>يرجى التواصل مع المنظم:</div>\n"
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">شركتك</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>البريد الإلكتروني: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
-"                                    <li>الهاتف: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
+"                                    <li>رقم الهاتف: <t t-out=\"event_organizer.phone or ''\">+1 650-123-4567</t></li>\n"
 "                                </t>\n"
 "                            </ul>\n"
 "                        </div>\n"
@@ -1111,7 +1111,7 @@ msgstr ""
 "                    <t t-if=\"is_online\">\n"
 "                        <div>\n"
 "                            <strong>احصل على أفضل تجربة على الهاتف المحمول.</strong>\n"
-"                            <a href=\"/event\">قم بتثبيت تطبيقنا على الهاتف المحمول</a>\n"
+"                            <a href=\"/event\">قم بتثبيت تطبيق الهاتف المحمول</a>\n"
 "                        </div>\n"
 "                    </t>\n"
 "                </td></tr>\n"
@@ -1145,7 +1145,7 @@ msgstr ""
 "    <t t-if=\"object.company_id\">\n"
 "        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"            تم الإرسال بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
+"            أُرسِل بواسطة <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">شركتك</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                استكشف <a href=\"/event\" style=\"color:#875A7B;\">كافة فعالياتنا</a>.\n"
@@ -2678,7 +2678,7 @@ msgstr "المرفق الرئيسي "
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr "إدارة ونشر جدول بمسارات تتبع"
+msgstr "إدارة ونشر جدول بمسارات "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3054,7 +3054,7 @@ msgstr "الشراء، إدارة البيع والشراء، المحاسبة �
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "اختبار قصير حول المقاطع "
+msgstr "اختبار قصير في المسارات "
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0

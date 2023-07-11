@@ -4,6 +4,7 @@ import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
 import { _t } from 'web.core';
 import datepicker from 'web.datepicker';
+const urlRegExp = /http(s)?:\/\/(www\.)?[a-zA-Z0-9@:%_+~#=~#?&/=\-;!.]{3,2000}/g;
 
 ActivityMenu.include({
     events: _.extend({}, ActivityMenu.prototype.events, {
@@ -38,7 +39,7 @@ ActivityMenu.include({
      * @private
      */
     _saveNote: function () {
-        var note = this.$('.o_note_input').val().trim();
+        var note = this.$('.o_note_input').val().replace(urlRegExp, '<a href="$&">$&</a>').trim();
         if (! note) {
             return;
         }

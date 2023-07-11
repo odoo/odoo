@@ -561,6 +561,8 @@ class Profiler:
             if line != '':
                 continue
             # retrieve file lines from the filecache
+            if not lineno:
+                continue
             try:
                 filelines = self.filecache[filename]
             except KeyError:

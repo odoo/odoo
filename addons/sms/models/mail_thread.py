@@ -235,8 +235,8 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
-        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
+        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, notify_by_email=notify_by_email, **kwargs)
         self._notify_record_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
 

@@ -189,6 +189,11 @@ function matchCondition(record, condition) {
     const [field, operator, value] = condition;
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
+        case "=?":
+            if ([false, null].includes(value)) {
+                return true;
+            }
+        // eslint-disable-next-line no-fallthrough
         case "=":
         case "==":
             return fieldValue === value;

@@ -8,6 +8,7 @@
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -580,7 +581,7 @@ msgstr "Spalten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinationshinweise"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1691,6 +1692,16 @@ msgid "Next Activity Type"
 msgstr "Nächster Aktivitätstyp"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Kein zu druckendes Produkt, wenn das Produkt archiviert ist, deaktivieren "
+"Sie es bitte, bevor Sie sein Etikett drucken."
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "Keine Lieferantenpreisliste gefunden"
@@ -2108,7 +2119,7 @@ msgstr "Produktetikett (PDF)"
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Produktetikettenbericht"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2494,11 +2505,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Hinterlegen Sie den festen Betrag, den Sie zum errechneten reduzierten "
-"Betrag addieren /subtrahieren (wenn negativer Wert) möchten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2709,6 +2718,12 @@ msgstr ""
 "zu profitieren, ausgedrückt in der Produktmengeneinheit des Lieferanten, "
 "falls keine vorhanden ist, ansonsten in der Standardmengeneinheit des "
 "Produkts."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "Die Rundungsmethode muss unbedingt positiv sein."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2987,7 +3002,7 @@ msgstr "Werteanzahl"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Preisaufschlag für Wert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3298,6 +3313,12 @@ msgstr ""
 "Rundungsfaktor für die Hauptwährung des Unternehmens."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "Sie können die Produktkategorie %s nicht löschen."
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3312,10 +3333,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Sie können den Wert %s nicht löschen, da er für die folgenden Produkte verwendet wird:\n"
-"%s"
+"Sie können den Wert %s nicht löschen, da er für folgende Produkte verwendet wird:\n"
+"%s\n"
+" Wenn der Wert in der Vergangenheit mit einem Produkt verknüpft wurde, können Sie ihn nicht löschen."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3343,10 +3366,10 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
-"SIe können das Attribut %s nicht vom Produkt %s zum Produkt %s verschieben."
+"Sie können den Wert %s nicht löschen, da er in einigen Produkten verwendet "
+"wird."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3357,6 +3380,14 @@ msgid ""
 msgstr ""
 "Sie können eine Preislistenregel nicht deaktivieren, bitte löschen Sie sie "
 "oder archivieren Sie stattdessen ihre Preisliste."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr ""
+"SIe können das Attribut %s nicht vom Produkt %s zum Produkt %s verschieben."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

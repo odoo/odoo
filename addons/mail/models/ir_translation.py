@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models, api, _
 from odoo.exceptions import AccessError
 
 
 class IrTranslation(models.Model):
     _inherit = 'ir.translation'
 
+    @api.model_create_multi
     def create(self, vals_list):
         translations = super().create(vals_list)
         translations._check_is_dynamic()

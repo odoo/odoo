@@ -159,7 +159,7 @@ class CustomerPortal(portal.CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
@@ -187,11 +187,6 @@ class CustomerPortal(portal.CustomerPortal):
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
 
-            # Make sure that the partner's company matches the sales order's company.
-            payment_portal.PaymentPortal._ensure_matching_companies(
-                order_sudo.partner_id, order_sudo.company_id
-            )
-
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
@@ -202,6 +197,14 @@ class CustomerPortal(portal.CustomerPortal):
                 ('acquirer_id', 'in', acquirers_sudo.ids),
                 ('partner_id', '=', order_sudo.partner_id.id)
             ]) if logged_in else request.env['payment.token']
+
+            # Make sure that the partner's company matches the order's company.
+            if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+                order_sudo.partner_id, order_sudo.company_id
+            ):
+                acquirers_sudo = request.env['payment.acquirer'].sudo()
+                tokens = request.env['payment.token']
+
             fees_by_acquirer = {
                 acquirer: acquirer._compute_fees(
                     order_sudo.amount_total,
@@ -313,7 +316,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
@@ -321,6 +324,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
@@ -357,13 +361,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
             # Check the access token against the order values. Done after fetching the order as we
             # need the order fields to check the access token.
             if not payment_utils.check_access_token(
-                access_token, order_sudo.partner_id.id, amount, order_sudo.currency_id.id
+                access_token, order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
 
             kwargs.update({
                 'currency_id': order_sudo.currency_id.id,
-                'partner_id': order_sudo.partner_id.id,
+                'partner_id': order_sudo.partner_invoice_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
             })

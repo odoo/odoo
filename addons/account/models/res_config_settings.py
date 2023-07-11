@@ -68,7 +68,11 @@ class ResConfigSettings(models.TransientModel):
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
         related='company_id.transfer_account_id', readonly=False,
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain=lambda self: [
+            ('reconcile', '=', True),
+            ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id),
+            ('deprecated', '=', False)
+        ],
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')

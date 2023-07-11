@@ -55,6 +55,19 @@ tour.register('edit_megamenu', {
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
     toggleMegaMenu({extra_trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
     {
+        content: "Select the last menu link of the first column",
+        trigger: '.s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)', // 6th is the last one
+    },
+    {
+        content: "Hit the delete button to remove the menu link",
+        trigger: '.oe_overlay .oe_snippet_remove',
+    },
+    {
+        content: "Check that the last menu link was deleted",
+        trigger: '.s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(> :nth-child(6)))',
+        run: () => null,
+    },
+    {
         content: "Clicks on the first title item.",
         trigger: '.o_mega_menu h4',
     },

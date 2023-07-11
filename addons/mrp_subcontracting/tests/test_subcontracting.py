@@ -665,6 +665,27 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         self.assertEqual(self.env['mrp.production'].search_count([('bom_id', '=', bom.id)]), 3)
 
+    def test_mo_name(self):
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        receipt_form.partner_id = self.subcontractor_partner1
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 1
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+
+        display_name = mo.display_name
+        self.assertIn(receipt.name, display_name, "If subcontracted, the name of a MO should contain the associated receipt name")
+        self.assertIn(mo.name, display_name)
+
+        for key_search in [mo.name, receipt.name]:
+            res = mo.name_search(key_search)
+            self.assertTrue(res, 'When looking for "%s", it should find something' % key_search)
+            self.assertEqual(res[0][0], mo.id, 'When looking for "%s", it should find the MO processed above' % key_search)
+
 
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):

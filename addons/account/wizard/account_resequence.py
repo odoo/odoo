@@ -52,7 +52,7 @@ class ReSequenceWizard(models.TransientModel):
         self.first_name = ""
         for record in self:
             if record.move_ids:
-                record.first_name = min(record.move_ids._origin.mapped('name'))
+                record.first_name = min(record.move_ids._origin.mapped(lambda move: move.name or ""))
 
     @api.depends('new_values', 'ordering')
     def _compute_preview_moves(self):
@@ -100,7 +100,7 @@ class ReSequenceWizard(models.TransientModel):
             for move in record.move_ids._origin:  # Sort the moves by period depending on the sequence number reset
                 moves_by_period[_get_move_key(move)] += move
 
-            format, format_values = self.env['account.move']._get_sequence_format_param(record.first_name)
+            seq_format, format_values = record.move_ids[0]._get_sequence_format_param(record.first_name)
 
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
@@ -114,7 +114,7 @@ class ReSequenceWizard(models.TransientModel):
                         'server-date': str(move.date),
                     }
 
-                new_name_list = [format.format(**{
+                new_name_list = [seq_format.format(**{
                     **format_values,
                     'year': period_recs[0].date.year % (10 ** format_values['year_length']),
                     'month': period_recs[0].date.month,
@@ -125,7 +125,7 @@ class ReSequenceWizard(models.TransientModel):
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
-                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name, m.id)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name or "", m.id)), new_name_list):
                     new_values[move.id]['new_by_date'] = new_name
 
             record.new_values = json.dumps(new_values)

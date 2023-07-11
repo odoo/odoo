@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.tools import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -105,6 +106,7 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
@@ -124,7 +126,6 @@ class AccountMove(models.Model):
                 credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
-
                 interim_account_line_vals = self._prepare_interim_account_line_vals(
                     line, move, debit_interim_account
                 )
@@ -133,7 +134,6 @@ class AccountMove(models.Model):
                     line, move, credit_expense_account
                 )
                 lines_vals_list.append(expense_account_line_vals)
-
         return lines_vals_list
 
     def _stock_account_get_last_step_stock_moves(self):
@@ -238,7 +238,7 @@ class AccountMoveLine(models.Model):
         # with anglo-saxon accounting.
         self.ensure_one()
         self = self.with_company(self.move_id.journal_id.company_id)
-        if self.product_id.type == 'product' \
+        if self._can_use_stock_accounts() \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
@@ -250,6 +250,9 @@ class AccountMoveLine(models.Model):
     def _eligible_for_cogs(self):
         self.ensure_one()
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
+
+    def _can_use_stock_accounts(self):
+        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

@@ -10,6 +10,11 @@ export const Direction = {
     FORWARD: 'FORWARD',
 };
 
+// True iff test is being run with its mobile implementation.
+let isMobileTest = false;
+// True iff test has mobile implementation for any called method.
+let hasMobileTest = false;
+
 function _nextNode(node) {
     let next = node.firstChild || node.nextSibling;
     if (!next) {
@@ -157,7 +162,9 @@ export function setTestSelection(selection, doc = document) {
     try {
         domSelection.extend(selection.focusNode, selection.focusOffset);
     } catch (e) {
-        // Firefox yells not happy when setting selection on elem with contentEditable=false.
+        // Firefox throws NS_ERROR_FAILURE when setting selection on element
+        // with contentEditable=false for no valid reason since non-editable
+        // content are selectable by the user anyway.
     }
 }
 
@@ -264,16 +271,25 @@ export function renderTextualSelection() {
  */
 export function customErrorMessage(assertLocation, value, expected) {
     const zws = '//zws//';
-    value = value.replace('\u200B', zws);
-    expected = expected.replace('\u200B', zws);
+    value = value.replaceAll('\u200B', zws);
+    expected = expected.replaceAll('\u200B', zws);
 
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
+    hasMobileTest = false;
+    isMobileTest = options.isMobile;
+
     const testNode = document.createElement('div');
     document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
+    let styleTag;
+    if (spec.styleContent) {
+        styleTag = document.createElement('style');
+        styleTag.textContent = spec.styleContent;
+        document.querySelector('#editor-test-container').appendChild(styleTag);
+    }
 
     // Add the content to edit and remove the "[]" markers *before* initializing
     // the editor as otherwise those would genererate mutations the editor would
@@ -290,6 +306,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     } else {
         document.getSelection().removeAllRanges();
     }
+    editor.observerUnactive('beforeUnitTests');
 
     // we have to sanitize after having put the cursor
     sanitize(editor.editable);
@@ -306,20 +323,18 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         }
     }
 
-    let firefoxExecCommandError = false;
     if (spec.stepFunction) {
+        editor.observerActive('beforeUnitTests');
         try {
             await spec.stepFunction(editor);
-        } catch (err) {
-            if (typeof err === 'object' && err.name === 'NS_ERROR_FAILURE') {
-                firefoxExecCommandError = true;
-            } else {
-                throw err;
-            }
+        } catch (e) {
+            e.message = (isMobileTest ? '[MOBILE VERSION] ' : '') + e.message;
+            throw e;
         }
+        editor.observerUnactive('afterUnitTests');
     }
 
-    if (spec.contentAfterEdit && !firefoxExecCommandError) {
+    if (spec.contentAfterEdit) {
         renderTextualSelection();
         const afterEditValue = testNode.innerHTML;
         window.chai.expect(afterEditValue).to.be.equal(
@@ -336,18 +351,24 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     // reading the "[]" markers would broke the test.
     await editor.destroy();
 
-    if (spec.contentAfter && !firefoxExecCommandError) {
+    if (spec.contentAfter) {
         renderTextualSelection();
+
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checklist-id-')) {
+                li.removeAttribute('id');
+            }
+        }
+
         const value = testNode.innerHTML;
         window.chai.expect(value).to.be.equal(
             spec.contentAfter,
             customErrorMessage('contentAfter', value, spec.contentAfter));
     }
     await testNode.remove();
-
-    if (firefoxExecCommandError) {
-        // FIXME
-        throw new Error('Firefox was not able to test this case because of an execCommand error');
+    if (hasMobileTest && !isMobileTest) {
+        await testEditor(Editor, spec, { ...options, isMobile: true });
     }
 }
 
@@ -396,6 +417,7 @@ export async function click(el, options) {
             bubbles: true,
             clientX: pos.left + 1,
             clientY: pos.top + 1,
+            view: el.ownerDocument.defaultView,
         },
         options,
     );
@@ -418,7 +440,21 @@ export async function deleteForward(editor) {
 }
 
 export async function deleteBackward(editor) {
-    editor.execCommand('oDeleteBackward');
+    // This method has two implementations (desktop and mobile)
+    if (isMobileTest) {
+        // Some mobile keyboards use input event to trigger delete. 
+        // This is a way to simulate this behavior.
+        const inputEvent = new InputEvent('input', {
+            inputType: 'deleteContentBackward',
+            data: null,
+            bubbles: true,
+            cancelable: false,
+        });
+        editor._onInput(inputEvent);
+    } else {
+        hasMobileTest = true; // flag test for a re-run as mobile
+        editor.execCommand('oDeleteBackward');
+    }
 }
 
 export async function insertParagraphBreak(editor) {
@@ -581,5 +617,23 @@ export function triggerEvent(
     currentElement.dispatchEvent(ev);
     return ev;
 }
+
+// Mock an paste event and send it to the editor.
+async function pasteData (editor, text, type) {
+    var mockEvent = {
+        dataType: 'text/plain',
+        data: text,
+        clipboardData: {
+            getData: (datatype) => type === datatype ? text : null,
+            files: [],
+            items: [],
+        },
+        preventDefault: () => { },
+    };
+    await editor._onPaste(mockEvent);
+};
+
+export const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
+export const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
 
 export class BasicEditor extends OdooEditor {}

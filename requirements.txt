@@ -1,5 +1,6 @@
 Babel==2.9.1  # min version = 2.6.0 (Focal with security backports)
 chardet==3.0.4
+cryptography==2.6.1  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
 decorator==4.4.2
 docutils==0.16
 ebaysdk==2.1.5
@@ -33,7 +34,7 @@ pyserial==3.4
 python-dateutil==2.7.3
 python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
 python-stdnum==1.13
-pytz==2019.3
+pytz  # no version pinning to avoid OS perturbations
 pyusb==1.0.2
 qrcode==6.1
 reportlab==3.5.59 # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye

@@ -45,9 +45,10 @@ class PayuLatamController(http.Controller):
         }
 
         try:
-            request.env['payment.transaction'].sudo()._handle_feedback_data('payulatam', data)
+            request.env['payment.transaction'].sudo().with_context(payulatam_is_confirmation_page=True)\
+                ._handle_feedback_data('payulatam', data)
         except ValidationError:
-            _logger.warning(
+            _logger.exception(
                 'An error occurred while handling the confirmation from PayU with data:\n%s',
                 pprint.pformat(data))
         return http.Response(status=200)

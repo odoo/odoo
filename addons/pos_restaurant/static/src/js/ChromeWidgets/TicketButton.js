@@ -7,6 +7,39 @@ odoo.define('pos_restaurant.TicketButton', function (require) {
 
     const PosResTicketButton = (TicketButton) =>
         class extends TicketButton {
+            async onClick() {
+                if (this.env.pos.config.iface_floorplan && !this.props.isTicketScreenShown && !this.env.pos.table) {
+                    await this._syncAllFromServer();
+                    this.showScreen('TicketScreen');
+                } else {
+                    super.onClick();
+                }
+            }
+            async _syncAllFromServer() {
+                const pos = this.env.pos;
+                const pos_config_id = pos.config.id
+                try {
+                    const server_orders = await this.rpc({
+                        model: 'pos.order',
+                        method: 'get_all_table_draft_orders',
+                        args: [pos_config_id],
+                        kwargs: {context: pos.session.user_context},
+                    }, {
+                        timeout: 7500,
+                        shadow: false,
+                    });
+                    const orders = Object.keys(pos.tables_by_id).reduce(function (acm, table_id){
+                        const orders = pos.get_table_orders(pos.tables_by_id[table_id]);
+                        return acm.concat(orders);
+                    },[])
+                    pos._replace_orders(orders, server_orders);
+                } catch (e) {
+                    await this.showPopup('ErrorPopup', {
+                        title: this.env._t('Connection Error'),
+                        body: this.env._t('Due to a connection error, the orders are not synchronized.'),
+                    });
+                }
+            }
             mounted() {
                 posbus.on('table-set', this, this.render);
             }

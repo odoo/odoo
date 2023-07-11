@@ -94,12 +94,15 @@ class CouponProgram(models.Model):
 
     def write(self, vals):
         res = super(CouponProgram, self).write(vals)
+        if not self:
+            return res
         reward_fields = [
             'reward_type', 'reward_product_id', 'discount_type', 'discount_percentage',
             'discount_apply_on', 'discount_specific_product_ids', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
-            self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
+            for program in self:
+                program.discount_line_product_id.write({'name': program.reward_id.display_name})
         return res
 
     @api.ondelete(at_uninstall=False)

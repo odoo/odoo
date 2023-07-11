@@ -67,7 +67,7 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
         map.setCenter(gps);
 
         // Update Map on screen resize
-        google.maps.event.addDomListener(window, 'resize', () => {
+        window.addEventListener('resize', () => {
             map.setCenter(gps);
         });
 

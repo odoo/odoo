@@ -47,6 +47,13 @@ class TestItEdi(AccountEdiTestCommon):
             'company_id': cls.company.id,
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': '10% tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'company_id': cls.company.id,
+        })
+
         cls.tax_zero_percent_hundred_percent_repartition = cls.env['account.tax'].create({
             'name': 'all of nothing',
             'amount': 0,
@@ -80,7 +87,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.italian_partner_a = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
+            'l10n_it_codice_fiscale': '93026890017',
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
@@ -310,6 +317,33 @@ class TestItEdi(AccountEdiTestCommon):
             ],
         })
 
+        cls.negative_price_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line,
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'negative_line',
+                    'price_unit': -100.0,
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'negative_line_different_tax',
+                    'price_unit': -50.0,
+                    'tax_ids': [(6, 0, [cls.tax_10.id])]
+                    }),
+                ],
+            })
+
+        cls.negative_price_credit_note = cls.negative_price_invoice.with_company(cls.company)._reverse_moves([{
+            'invoice_date': datetime.date(2022, 3, 24),
+        }])
+
         # post the invoices
         cls.price_included_invoice._post()
         cls.partial_discount_invoice._post()
@@ -319,6 +353,8 @@ class TestItEdi(AccountEdiTestCommon):
         cls.total_400_VAT_simplified_invoice._post()
         cls.pa_partner_invoice._post()
         cls.zero_tax_invoice._post()
+        cls.negative_price_invoice._post()
+        cls.negative_price_credit_note._post()
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
         cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
@@ -505,7 +541,7 @@ class TestItEdi(AccountEdiTestCommon):
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
-    def test_non_latin_and_latin_inovice(self):
+    def test_non_latin_and_latin_invoice(self):
         invoice_etree = etree.fromstring(self.non_latin_and_latin_invoice._export_as_xml())
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
@@ -667,5 +703,116 @@ class TestItEdi(AccountEdiTestCommon):
             </xpath>
             '''
         )
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_negative_price_invoice(self):
+        invoice_etree = etree.fromstring(self.negative_price_invoice._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_basis_xml),
+            '''
+                <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+                    <DatiBeniServizi>
+                      <DettaglioLinee>
+                        <NumeroLinea>1</NumeroLinea>
+                        <Descrizione>standard_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>800.400000</PrezzoUnitario>
+                        <PrezzoTotale>800.40</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>2</NumeroLinea>
+                        <Descrizione>negative_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-100.000000</PrezzoUnitario>
+                        <PrezzoTotale>-100.00</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>3</NumeroLinea>
+                        <Descrizione>negative_line_different_tax</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-50.000000</PrezzoUnitario>
+                        <PrezzoTotale>-50.00</PrezzoTotale>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                        <ImponibileImporto>700.40</ImponibileImporto>
+                        <Imposta>154.09</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                        <ImponibileImporto>-50.00</ImponibileImporto>
+                        <Imposta>-5.00</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
+                    </DatiBeniServizi>
+                </xpath>
+                <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+                    799.49
+                </xpath>
+                <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                    799.49
+                </xpath>
+            ''')
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_negative_price_credit_note(self):
+        invoice_etree = etree.fromstring(self.negative_price_credit_note._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_basis_xml),
+            '''
+                <xpath expr="//DatiGeneraliDocumento/TipoDocumento" position="replace">
+                    <TipoDocumento>TD04</TipoDocumento>
+                </xpath>
+                <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                    799.49
+                </xpath>
+                <xpath expr="//DatiBeniServizi" position="replace">
+                    <DatiBeniServizi>
+                      <DettaglioLinee>
+                        <NumeroLinea>1</NumeroLinea>
+                        <Descrizione>standard_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>800.400000</PrezzoUnitario>
+                        <PrezzoTotale>800.40</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>2</NumeroLinea>
+                        <Descrizione>negative_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-100.000000</PrezzoUnitario>
+                        <PrezzoTotale>-100.00</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>3</NumeroLinea>
+                        <Descrizione>negative_line_different_tax</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-50.000000</PrezzoUnitario>
+                        <PrezzoTotale>-50.00</PrezzoTotale>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                        <ImponibileImporto>700.40</ImponibileImporto>
+                        <Imposta>154.09</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                        <ImponibileImporto>-50.00</ImponibileImporto>
+                        <Imposta>-5.00</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
+                    </DatiBeniServizi>
+                </xpath>
+                <xpath expr="//DatiPagamento" position="replace"/>
+            ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)

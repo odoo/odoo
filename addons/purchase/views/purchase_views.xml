@@ -252,6 +252,8 @@
                                     <field name="price_unit" attrs="{'readonly': [('qty_invoiced', '!=', 0)]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>
@@ -515,10 +517,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" decoration-bf="message_unread==True"
+                <tree string="Purchase Order"
                       decoration-muted="state=='cancel'" sample="1">
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
@@ -547,13 +548,12 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
-                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True"
+                decoration-muted="state == 'cancel'"
                 class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_approve" invisible="context.get('quotation_only', False)" optional="show"/>
@@ -580,8 +580,7 @@
             <field name="name">purchase.order.view.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True"
-                    decoration-muted="state == 'cancel'"
+                <tree decoration-muted="state == 'cancel'"
                     decoration-info="invoice_status == 'to invoice'"
                     string="Purchase Order"
                     class="o_purchase_order"
@@ -590,7 +589,6 @@
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
-                    <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>

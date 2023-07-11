@@ -15,6 +15,9 @@
 
     .o_expense_container {
         @include o-position-sticky($left: 0px);
+        &.o_form_statusbar {
+            margin: 0;  // reset margins for correct view of title header in dashboard
+        }
     }
 
     .o_expense_card_last {

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
-"PO-Revision-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2023-01-31 17:26+0000\n"
+"PO-Revision-Date: 2023-01-31 17:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,24 @@ msgstr ""
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
 msgstr ""
 
 #. module: payment_paypal

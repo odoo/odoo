@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2023-01-31 17:26+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -99,7 +100,7 @@ msgstr "PayPal-transactietype"
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_account_payment_method
@@ -161,6 +162,30 @@ msgid ""
 msgstr ""
 "Het openbare zakelijke e-mailadres dat uitsluitend wordt gebruikt om het "
 "account bij PayPal te identificeren"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+"De status van de transactie met referentie %(ref)s werd niet "
+"gesynchroniseerd omdat de optie 'Betalingsgegevens overdracht' niet "
+"ingeschakeld is op het PayPal dashboard."
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
+msgstr ""
+"De status van de transactie met referentie %(ref)s werd niet "
+"gesynchroniseerd omdat de PDT identiteitstoken niet geconfigureerd is op de "
+"provider %(acq_link)s."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type

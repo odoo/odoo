@@ -2,7 +2,8 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
     const { Component } = owl;
-    const { onMounted, onPatched, onWillUnmount } = owl.hooks;
+    const { onMounted, onPatched, onWillUnmount, useRef} = owl.hooks;
+    const { escapeRegExp } = require('@web/core/utils/strings');
 
     /**
      * Introduce error handlers in the component.
@@ -39,12 +40,23 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                         this.env._t('The server encountered an error while receiving your order.'),
                 });
             } else if (error.code === 700) {
-                // Fiscal module errors
+                // Sweden Fiscal module errors
                 await this.showPopup('ErrorPopup', {
                     title: this.env._t('Fiscal data module error'),
                     body:
                         error.data.error.status ||
                         this.env._t('The fiscal data module encountered an error while receiving your order.'),
+                });
+            } else if (error.code === 701) {
+                // Belgian Fiscal module errors
+                let bodyMessage = "";
+                if(error.error.errorCode)
+                    bodyMessage = "'" + error.error.errorCode + "': " + error.error.errorMessage;
+                else
+                    bodyMessage = "Fiscal data module is not on.";
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal data module error'),
+                    body: bodyMessage
                 });
             } else {
                 // ???
@@ -161,5 +173,48 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         };
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, onChangeOrder, useBarcodeReader, useAsyncLockedMethod };
+    function useValidateCashInput(inputRef, startingValue) {
+        const cashInput = useRef(inputRef);
+        const current = Component.current;
+        const decimalPoint = current.env._t.database.parameters.decimal_point;
+        const thousandsSep = current.env._t.database.parameters.thousands_sep;
+        // Replace the thousands separator and decimal point with regex-escaped versions
+        const escapedDecimalPoint = escapeRegExp(decimalPoint);
+        let floatRegex;
+        if (thousandsSep) {
+            const escapedThousandsSep = escapeRegExp(thousandsSep);
+            floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+        } else {
+            floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+        }
+        function isValidFloat(inputValue) {
+            return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+        }
+        function handleCashInputChange(event) {
+            let inputValue = (event.target.value || "").trim();
+
+            // Check if the current input value is a valid float
+            if (!isValidFloat(inputValue)) {
+                event.target.classList.add('invalid-cash-input');
+            } else {
+                event.target.classList.remove('invalid-cash-input');
+            }
+        }
+        
+
+        onMounted(() => {
+            if (cashInput.el) {
+                cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+                cashInput.el.addEventListener("input", handleCashInputChange);
+            }
+        });
+
+        onWillUnmount(() => {
+            if (cashInput.el) {
+                cashInput.el.removeEventListener("input", handleCashInputChange);
+            }
+        })
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, onChangeOrder, useBarcodeReader, useAsyncLockedMethod, useValidateCashInput };
 });

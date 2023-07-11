@@ -7,8 +7,9 @@
 # Alejandro Concepción <alconor23@hotmail.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Francisco J. Luna Vázquez, 2021
-# Camille Dantinne <cmd@odoo.com>, 2022
 # marcescu, 2022
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,13 +17,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: marcescu, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -63,8 +64,7 @@ msgstr "%s confirmó que la recolección será en %s."
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
-"%s se modificaron las fechas de recolección de los siguientes productos:"
+msgstr "%s modificó las fechas de recepción de los siguientes productos:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -178,17 +178,17 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Adjuntamos la orden de compra <strong t-out=\"object.name or ''\">P00015</strong>\n"
+"        Aquí se adjunta el pedido de compra <strong t-out=\"object.name or ''\">P00015</strong>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con la referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        por el valor de <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
+"        por valor de <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
 "        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            Se espera que lo recibe el <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
+"            La recepción se espera para <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
 "            <br/><br/>\n"
-"            ¿Podría confirmar la recepción de esta ordén?\n"
+"            ¿Podría por favor confirmar la recepción de este pedido?\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -867,10 +867,10 @@ msgid ""
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
 "Las convocatorias de ofertas se utilizan cuando desea generar solicitudes de"
-" cotizaciones a varios proveedores para un conjunto determinado de "
-"productos. Puede configurar por producto si realiza directamente una "
-"Solicitud de oferta a un proveedor o si desea que una Convocatoria de "
-"ofertas compare las ofertas de varios proveedores."
+" presupuesto a varios proveedores para un conjunto determinado de productos."
+" Puede configurar por producto si realiza directamente una solicitud de "
+"presupuesto a un proveedor o si desea que una licitación compare los "
+"presupuestos de varios proveedores."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2165,6 +2165,7 @@ msgid "Purchase Order: Vendor Reminder"
 msgstr "Orden de compra: recordar al proveedor"
 
 #. module: purchase
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2174,6 +2175,7 @@ msgstr "Orden de compra: recordar al proveedor"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Pedidos de compra"
 

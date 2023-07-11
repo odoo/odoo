@@ -769,6 +769,44 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('numeric field: field with type `number` and with keydown on numpad decimal key', async function (assert) {
+        assert.expect(2);
+
+        patchWithCleanup(basicFields.NumericField.constructor.prototype, {
+           _onKeydown(ev) {
+                const res = this._super(...arguments);
+
+                // This _onKeydown handler must not prevent default
+                // a keydown event for NumericField with type=number
+                assert.ok(!ev.defaultPrevented);
+                return res;
+            },
+        });
+
+        this.data.partner.fields.float_field = { string: "Float", type: 'float' };
+        this.data.partner.records[0].float_field = 123;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_field" options="{'type': 'number'}"/>
+                </form>
+            `,
+            res_id: 1,
+        });
+
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+        const floatField = form.el.querySelector('.o_input[name="float_field"]');
+        assert.strictEqual(floatField.type, 'number')
+
+        floatField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+
+        form.destroy();
+    });
+
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', async function (assert) {
@@ -5323,6 +5361,75 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
+    QUnit.test("datetime field: use picker with arabic numbering system", async function (assert) {
+        assert.expect(2);
+
+        const symbols = [
+            ["1", "١"],
+            ["2", "٢"],
+            ["3", "٣"],
+            ["4", "٤"],
+            ["5", "٥"],
+            ["6", "٦"],
+            ["7", "٧"],
+            ["8", "٨"],
+            ["9", "٩"],
+            ["0", "٠"],
+        ];
+        const symbolMap = Object.fromEntries(symbols);
+        const numberMap = Object.fromEntries(symbols.map(([latn, arab]) => [arab, latn]));
+
+        const originalLocale = moment.locale();
+        moment.defineLocale("TEST_ar", {
+            preparse:
+                (string) => string
+                    .replace(/\u200f/g, "")
+                    .replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => numberMap[match])
+                    .replace(/،/g, ","),
+            postformat:
+                (string) => string
+                    .replace(/\d/g, (match) => symbolMap[match])
+                    .replace(/,/g, "،"),
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: /* xml */ `
+                <form string="Partners">
+                    <field name="datetime" />
+                </form>
+            `,
+            res_id: 1,
+            viewOptions: {
+                mode: "edit",
+            },
+        });
+
+        const getInput = () => form.el.querySelector("[name=datetime] input")
+        const click = (el) => testUtils.dom.click($(el));
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١٠:٠٠:٠٠");
+
+        await click(getInput());
+
+        await click(document.querySelector("[data-action=togglePicker]"));
+
+        await click(document.querySelector("[data-action=showMinutes]"));
+        await click(document.querySelectorAll("[data-action=selectMinute]")[9]);
+
+        await click(document.querySelector("[data-action=showSeconds]"));
+        await click(document.querySelectorAll("[data-action=selectSecond]")[3]);
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١٠:٤٥:١٥");
+
+        moment.locale(originalLocale);
+        moment.updateLocale("TEST_ar", null);
+
+        form.destroy();
+    })
 
     QUnit.module('RemainingDays');
 

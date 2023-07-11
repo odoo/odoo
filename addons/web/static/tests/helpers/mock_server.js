@@ -443,6 +443,8 @@ export class MockServer {
                 return this.mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
             case "search_read":
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
+            case "unlink":
+                return this.mockUnlink(args.model, args.args);
             case "web_search_read":
                 return this.mockWebSearchRead(args.model, args.args, args.kwargs);
             case "read_group":
@@ -1555,6 +1557,36 @@ export class MockServer {
         });
         return result.records;
     }
+
+    /**
+     * @param {string} modelName
+     * @param {[number | number[]]} args
+     * @returns {true} currently, always returns true
+     */
+    mockUnlink(modelName, [ids]) {
+        ids = Array.isArray(ids) ? ids : [ids];
+        this.models[modelName].records = this.models[modelName].records.filter(
+            (record) => !ids.includes(record.id)
+        );
+
+        // update value of relationnal fields pointing to the deleted records
+        for (const {fields, records} of Object.values(this.models)) {
+            for (const [fieldName, field] of Object.entries(fields)) {
+                if (field.relation === modelName) {
+                    for (const record of records) {
+                        if (Array.isArray(record[fieldName])) {
+                            record[fieldName] = record[fieldName].filter((id) => !ids.includes(id))
+                        } else if (ids.includes(record[fieldName])) {
+                            record[fieldName] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     mockWebSearchRead(modelName, args, kwargs) {
         const result = this.mockSearchReadController({

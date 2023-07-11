@@ -151,7 +151,7 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
   box-shadow: $o-dropdown-box-shadow;
 }
 
-.dropdown-item {
+:not(.dropleft) > .dropdown-item {
   &.active, &.selected {
     position: relative;
     font-weight: $font-weight-bold;
@@ -175,6 +175,26 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
     }
   }
 }
+
+/*!rtl:begin:ignore*/
+.o-dropdown.dropleft > .dropdown-item.dropdown-toggle:not(.dropdown-item_active_noarrow) {
+  &.active, &.selected {
+    &::after {
+      @include o-position-absolute(0, $left: 90%);
+      transform: translate(0, 90%);
+      font: .7em/1em FontAwesome;
+      color: $link-color;
+      display: inline-block;
+      content: "\f00c";
+      border: 0;
+    }
+
+    &.disabled:after {
+      color: $dropdown-link-disabled-color;
+    }
+  }
+}
+/*!rtl:end:ignore*/
 
 .dropdown-header {
   font-weight: $font-weight-bold;

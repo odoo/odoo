@@ -70,6 +70,9 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
+        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
+        if expense_category and expense_category in self:
+            raise UserError(_("You cannot delete the %s product category.", expense_category.name))
 
 
 class ProductProduct(models.Model):
@@ -458,7 +461,12 @@ class ProductProduct(models.Model):
         For convenience the template is copied instead and its first variant is
         returned.
         """
-        return self.product_tmpl_id.copy(default=default).product_variant_id
+        # copy variant is disabled in https://github.com/odoo/odoo/pull/38303
+        # this returns the first possible combination of variant to make it
+        # works for now, need to be fixed to return product_variant_id if it's
+        # possible in the future
+        template = self.product_tmpl_id.copy(default=default)
+        return template.product_variant_id or template._create_first_product_variant()
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -704,8 +712,9 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
+                company = company or self.env.company
                 prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                    prices[product.id], currency, company, fields.Date.today())
 
         return prices
 

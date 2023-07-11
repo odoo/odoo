@@ -71,6 +71,12 @@ class PosOrder(models.Model):
         })
         return fields
 
+    def _prepare_order_line(self, order_line):
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+        if order_line['program_id']:
+            order_line['program_id'] = order_line['program_id'][0]
+        return order_line
+
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 

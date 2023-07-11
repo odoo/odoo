@@ -69,6 +69,29 @@ def resolve_mro(model, name, predicate):
     return result
 
 
+def determine(needle, records, *args):
+    """ Simple helper for calling a method given as a string or a function.
+
+    :param needle: callable or name of method to call on ``records``
+    :param BaseModel records: recordset to call ``needle`` on or with
+    :params args: additional arguments to pass to the determinant
+    :returns: the determined value if the determinant is a method name or callable
+    :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
+                      a callable or valid method name
+    """
+    if not isinstance(records, BaseModel):
+        raise TypeError("Determination requires a subject recordset")
+    if isinstance(needle, str):
+        needle = getattr(records, needle)
+        if needle.__name__.find('__'):
+            return needle(*args)
+    elif callable(needle):
+        if needle.__name__.find('__'):
+            return needle(records, *args)
+
+    raise TypeError("Determination requires a callable or method name")
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -192,6 +215,10 @@ class Field(MetaField('DummyField', (object,), {})):
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
 
+    :param bool recursive: whether the field has recursive dependencies (the field
+        ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
+        must be explicit to guarantee that recomputation is correct
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str search: name of a method that implement search on the field (optional)
@@ -245,7 +272,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False             # whether the field is invisible
+    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -262,10 +289,6 @@ class Field(MetaField('DummyField', (object,), {})):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
-
-    def new(self, **kwargs):
-        """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
 
     def __str__(self):
         if self.name is None:
@@ -554,7 +577,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for attr, prop in self.related_attrs:
             # check whether 'attr' is explicitly set on self (from its field
             # definition), and ignore its class-level value (only a default)
-            if attr not in self.__dict__:
+            if attr not in self.__dict__ and prop.startswith('_related_'):
                 setattr(self, attr, getattr(field, prop))
 
         for attr in field._extra_keys:
@@ -744,6 +767,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return a dictionary that describes the field ``self``. """
         desc = {'type': self.type}
         for attr, prop in self.description_attrs:
+            if not prop.startswith('_description_'):
+                continue
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
@@ -1083,7 +1108,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1271,22 +1296,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, str):
-            getattr(records, self.inverse)()
-        else:
-            self.inverse(records)
+        determine(self.inverse, records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if isinstance(self.search, str):
-            return getattr(records, self.search)(operator, value)
-        else:
-            return self.search(records, operator, value)
-
-    ############################################################################
-    #
-    # Notification when fields are modified
-    #
+        return determine(self.search, records, operator, value)
 
 
 class Boolean(Field):
@@ -1489,17 +1503,21 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        currency_field = self.get_currency_field(record)
-        if values and currency_field in values:
-            field = record._fields[currency_field]
-            currency = field.convert_to_cache(values[currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+        currency_field_name = self.get_currency_field(record)
+        currency_field = record._fields[currency_field_name]
+        if values and currency_field_name in values:
+            dummy = record.new({currency_field_name: values[currency_field_name]})
+            currency = dummy[currency_field_name]
+        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
+            related_field_name = currency_field.related.split('.')[0]
+            dummy = record.new({related_field_name: values[related_field_name]})
+            currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field_name]
 
         value = float(value or 0.0)
         if currency:
@@ -2258,7 +2276,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -2493,10 +2511,8 @@ class Selection(Field):
             translated according to context language
         """
         selection = self.selection
-        if isinstance(selection, str):
-            return getattr(env[self.model_name], selection)()
-        if callable(selection):
-            return selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            return determine(selection, env[self.model_name])
 
         # translate selection labels
         if env.lang:
@@ -2511,10 +2527,8 @@ class Selection(Field):
     def get_values(self, env):
         """Return a list of the possible values."""
         selection = self.selection
-        if isinstance(selection, str):
-            selection = getattr(env[self.model_name], selection)()
-        elif callable(selection):
-            selection = selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            selection = determine(selection, env[self.model_name])
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -2833,9 +2847,8 @@ class Many2one(_Relational):
         return ustr(value.display_name)
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records

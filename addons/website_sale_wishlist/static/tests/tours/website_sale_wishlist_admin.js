@@ -5,7 +5,7 @@ var rpc = require('web.rpc');
 var tour = require("web_tour.tour");
 
 tour.register('shop_wishlist_admin', {
-    test: false,
+    test: true,
     url: '/shop',
 },
     [

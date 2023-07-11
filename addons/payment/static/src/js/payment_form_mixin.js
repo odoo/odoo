@@ -12,6 +12,8 @@ odoo.define('payment.payment_form_mixin', require => {
          * @override
          */
         start: async function () {
+            this.txContext = {}; // Synchronously initialize txContext before any await.
+            Object.assign(this.txContext, this.$el.data());
             await this._super(...arguments);
             window.addEventListener('pageshow', function (event) {
                 if (event.persisted) {
@@ -19,8 +21,6 @@ odoo.define('payment.payment_form_mixin', require => {
                 }
             });
             this.$('[data-toggle="tooltip"]').tooltip();
-            this.txContext = {};
-            Object.assign(this.txContext, this.$el.data());
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length === 1) {
                 const checkedRadio = $checkedRadios[0];

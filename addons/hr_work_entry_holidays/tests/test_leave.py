@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.tests import tagged
 
-
+@tagged('test_leave')
 class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_resource_leave_has_work_entry_type(self):
@@ -136,3 +137,34 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         work_entry.toggle_active()
         self.assertEqual(work_entry.state, 'cancelled', "Attendance work entries should be cancelled and not conflict")
         self.assertFalse(work_entry.active)
+
+    def test_work_entry_generation_company_time_off(self):
+        existing_leaves = self.env['hr.leave'].search([])
+        existing_leaves.action_refuse()
+        existing_leaves.action_draft()
+        existing_leaves.unlink()
+        start = date(2022, 8, 1)
+        end = date(2022, 8, 31)
+        self.contract_cdi._generate_work_entries(start, end)
+        work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', self.jules_emp.id),
+            ('date_start', '>=', start),
+            ('date_stop', '<=', end),
+        ])
+        self.assertEqual(len(work_entries.work_entry_type_id), 1)
+        leave = self.env['hr.leave'].create({
+            'name': 'Holiday !!!',
+            'holiday_type': 'company',
+            'mode_company_id': self.env.company.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_from': datetime(2022, 8, 8, 9, 0),
+            'date_to': datetime(2022, 8, 8, 18, 0),
+            'number_of_days': 1,
+        })
+        leave.action_validate()
+        work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', self.jules_emp.id),
+            ('date_start', '>=', start),
+            ('date_stop', '<=', end),
+        ])
+        self.assertEqual(len(work_entries.work_entry_type_id), 2)

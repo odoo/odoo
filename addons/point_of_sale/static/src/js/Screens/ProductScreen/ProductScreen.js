@@ -22,6 +22,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
+                quantity: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
                 client: this._barcodeClientAction,
@@ -154,7 +155,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Do not add product if options is undefined.
             if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, options);
+            await this.currentOrder.add_product(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
@@ -166,6 +167,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _updateSelectedOrderline(event) {
             if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
+                if(!order.orderlines.length)
+                    return;
                 let selectedLine = order.get_selected_orderline();
                 let lastId = order.orderlines.last().cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
@@ -220,7 +223,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     foundProductIds = await this.rpc({
                         model: 'product.product',
                         method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
+                        args: [[['barcode', '=', code.base_code], ['sale_ok', '=', true]]],
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
@@ -254,7 +257,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         price_manually_set: true,
                     },
                 });
-            } else if (code.type === 'weight') {
+            } else if (code.type === 'weight' || code.type === 'quantity') {
                 Object.assign(options, {
                     quantity: code.value,
                     merge: false,
@@ -265,18 +268,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     merge: false,
                 });
             }
-            this.currentOrder.add_product(product,  options)
+            await this.currentOrder.add_product(product,  options);
         }
         _barcodeClientAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
             if (partner) {
                 if (this.currentOrder.get_client() !== partner) {
                     this.currentOrder.set_client(partner);
-                    this.currentOrder.set_pricelist(
-                        _.findWhere(this.env.pos.pricelists, {
-                            id: partner.property_product_pricelist[0],
-                        }) || this.env.pos.default_pricelist
-                    );
+                    this.currentOrder.updatePricelist(partner);
                 }
                 return true;
             }

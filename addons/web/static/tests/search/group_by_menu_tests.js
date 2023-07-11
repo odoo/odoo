@@ -85,8 +85,6 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("simple rendering with a single groupby", async function (assert) {
-        assert.expect(4);
-
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -103,14 +101,15 @@ QUnit.module("Search", (hooks) => {
         await toggleGroupByMenu(controlPanel);
 
         assert.containsOnce(controlPanel, ".o_menu_item");
-        assert.strictEqual(controlPanel.el.querySelector(".o_menu_item").innerText.trim(), "Foo");
+        const menuItem = controlPanel.el.querySelector(".o_menu_item");
+        assert.strictEqual(menuItem.innerText.trim(), "Foo");
+        assert.strictEqual(menuItem.getAttribute("role"), "menuitemcheckbox");
+        assert.strictEqual(menuItem.ariaChecked, "false");
         assert.containsOnce(controlPanel, ".dropdown-divider");
         assert.containsOnce(controlPanel, ".o_add_custom_group_menu");
     });
 
     QUnit.test('toggle a "simple" groupby in groupby menu works', async function (assert) {
-        assert.expect(10);
-
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -129,8 +128,12 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
         assert.deepEqual(getFacetTexts(controlPanel), []);
         assert.notOk(isItemSelected(controlPanel, "Foo"));
-
+        const menuItem = controlPanel.el.querySelector(".o_menu_item");
+        assert.strictEqual(menuItem.innerText.trim(), "Foo");
+        assert.strictEqual(menuItem.getAttribute("role"), "menuitemcheckbox");
+        assert.strictEqual(menuItem.ariaChecked, "false");
         await toggleMenuItem(controlPanel, "Foo");
+        assert.strictEqual(menuItem.ariaChecked, "true");
 
         assert.deepEqual(controlPanel.env.searchModel.groupBy, ["foo"]);
         assert.deepEqual(getFacetTexts(controlPanel), ["Foo"]);
