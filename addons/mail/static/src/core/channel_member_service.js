@@ -38,8 +38,8 @@ export class ChannelMemberService {
                 channelId: memberData.persona.guest ? memberData.channel.id : null,
             });
         }
-        member.threadId = memberData.threadId ?? member.threadId ?? memberData.channel.id;
-        if (!member.thread) {
+        member.threadId = memberData.threadId ?? member.threadId ?? memberData.channel?.id;
+        if (member.threadId && !member.thread) {
             // this prevents cyclic dependencies between mail.thread and discuss.channel.member
             this.env.bus.trigger("mail.thread/insert", {
                 id: member.threadId,
@@ -49,7 +49,7 @@ export class ChannelMemberService {
         switch (command) {
             case "insert":
                 {
-                    if (!member.thread.channelMembers.includes(member)) {
+                    if (member.thread && !member.thread.channelMembers.includes(member)) {
                         member.thread.channelMembers.push(member);
                     }
                 }
@@ -58,7 +58,9 @@ export class ChannelMemberService {
                 removeFromArray(this.store.channelMembers, member);
             // eslint-disable-next-line no-fallthrough
             case "insert-and-unlink":
-                removeFromArray(member.thread.channelMembers, member);
+                if (member.thread) {
+                    removeFromArray(member.thread.channelMembers, member);
+                }
                 break;
         }
     }
