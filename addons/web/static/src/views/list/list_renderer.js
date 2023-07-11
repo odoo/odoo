@@ -727,7 +727,7 @@ export class ListRenderer extends Component {
     }
 
     shouldReverseHeader(column) {
-        return this.isNumericColumn(column) && (!this.isRTL);
+        return this.isNumericColumn(column) && !this.isRTL;
     }
 
     isSortable(column) {
@@ -1073,10 +1073,7 @@ export class ListRenderer extends Component {
         switch (direction) {
             case "up": {
                 let futureRow = row.previousElementSibling;
-                futureRow =
-                    futureRow ||
-                    (row.parentElement.previousElementSibling &&
-                        row.parentElement.previousElementSibling.lastElementChild);
+                futureRow = futureRow || row.parentElement.previousElementSibling?.lastElementChild;
 
                 if (futureRow) {
                     const addCell = [...futureRow.children].find((c) =>
@@ -1096,10 +1093,7 @@ export class ListRenderer extends Component {
             }
             case "down": {
                 let futureRow = row.nextElementSibling;
-                futureRow =
-                    futureRow ||
-                    (row.parentElement.nextElementSibling &&
-                        row.parentElement.nextElementSibling.firstElementChild);
+                futureRow = futureRow || row.parentElement.nextElementSibling?.firstElementChild;
                 if (futureRow) {
                     const addCell = [...futureRow.children].find((c) =>
                         c.classList.contains("o_group_field_row_add")
@@ -1221,6 +1215,12 @@ export class ListRenderer extends Component {
 
     expandCheckboxes(record, direction) {
         const { records } = this.props.list;
+        if (!record && direction === "down") {
+            const defaultRecord = records[0];
+            this.shiftKeyedRecord = defaultRecord;
+            defaultRecord.toggleSelection(true);
+            return true;
+        }
         const recordIndex = records.indexOf(record);
         const shiftKeyedRecordIndex = records.indexOf(this.shiftKeyedRecord);
         let nextRecord;
@@ -1243,7 +1243,8 @@ export class ListRenderer extends Component {
         }
 
         if (isExpanding) {
-            nextRecord.toggleSelection(this.shiftKeyedRecord.selected);
+            record.toggleSelection(true);
+            nextRecord.toggleSelection(true);
         } else {
             record.toggleSelection(false);
         }
@@ -1740,7 +1741,7 @@ export class ListRenderer extends Component {
         }
     }
 
-    toggleRecordSelection(record) {
+    toggleRecordSelection(record, ev) {
         if (!this.canSelectRecord) {
             return;
         }
