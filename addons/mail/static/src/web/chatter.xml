@@ -6,16 +6,16 @@
         <div class="o-mail-Chatter-top position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 px-3 overflow-x-auto">
                 <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-1" t-att-class="{
-                    'btn-primary': state.thread.composer.type !== 'note',
-                    'btn-secondary': state.thread.composer.type === 'note',
-                    'active': state.thread.composer.type === 'message',
+                    'btn-primary': state.composerType !== 'note',
+                    'btn-secondary': state.composerType === 'note',
+                    'active': state.composerType === 'message',
                     'my-2': !props.compactHeight
                 }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                     Send message
                 </button>
                 <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{
-                    'btn-primary active': state.thread.composer.type === 'note',
-                    'btn-secondary': state.thread.composer.type !== 'note',
+                    'btn-primary active': state.composerType === 'note',
+                    'btn-secondary': state.composerType !== 'note',
                     'my-2': !props.compactHeight
                 }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                     Log note
@@ -91,15 +91,13 @@
                     <i class="oi oi-large oi-close"/>
                 </button>
             </div>
-            <t t-if="state.thread.composer.type">
-                <t t-if="state.thread.composer.type === 'message'">
+            <t t-if="state.composerType">
+                <t t-if="state.composerType === 'message'">
                     <div class="flex-shrink-0 px-3 pt-3 text-truncate small" style="margin-left:48px" t-out="toFollowersText"/>
                 </t>
-                <t t-if="state.thread.composer.type === 'message'" t-set="placeholder">Send a message to followers...</t>
-                <t t-else="" t-set="placeholder">Log an internal note...</t>
-                <t t-set="type" t-value="state.thread.composer.type === 'message' ? 'message' : 'note'"/>
-                <SuggestedRecipientsList t-if="props.hasFollowers and state.thread.composer.type !== 'note'" className="'px-3'" styleString="'margin-left:48px;'" thread="state.thread"/>
-                <Composer composer="state.thread.composer" autofocus="true" mode="'extended'" onPostCallback.bind="onPostCallback" placeholder="placeholder" dropzoneRef="rootRef"/>
+                <t t-set="type" t-value="state.composerType === 'message' ? 'message' : 'note'"/>
+                <SuggestedRecipientsList t-if="props.hasFollowers and state.composerType !== 'note'" className="'px-3'" styleString="'margin-left:48px;'" thread="state.thread"/>
+                <Composer composer="state.thread.composer" autofocus="true" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" type="state.composerType"/>
             </t>
         </div>
         <div class="o-mail-Chatter-content">
