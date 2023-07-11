@@ -604,6 +604,58 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
+    QUnit.test(
+        "one2many wait for the onchange of the resequenced finish before save",
+        async function (assert) {
+            assert.expect(4);
+
+            serverData.models.partner.records[0].p = [1, 2];
+            serverData.models.partner.onchanges = {
+                p: function (obj) {
+                    obj.p = [[1, 2, { qux: 99 }]];
+                },
+            };
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="int_field" widget="handle"/>
+                            <field name="foo"/>
+                            <field name="qux"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+                async mockRPC(route, args) {
+                    if (args.method === "onchange2") {
+                        await def;
+                        assert.step("onchange");
+                    }
+                    if (args.method === "write") {
+                        assert.step("write");
+                        assert.deepEqual(args.args[1].p, [
+                            [1, 1, { int_field: 9 }],
+                            [1, 2, { int_field: 10, qux: 99 }],
+                        ]);
+                    }
+                },
+            });
+            // Drag and drop the second line in first position
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
+            await clickSave(target);
+
+            // resolve the onchange promise
+            def.resolve();
+            await nextTick();
+            assert.verifySteps(["onchange", "write"]);
+        }
+    );
+
     QUnit.test("one2many basic properties", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
@@ -5612,7 +5664,8 @@ QUnit.module("Fields", (hooks) => {
                         const fieldValues = args.args[1];
                         if (count === 1) {
                             assert.deepEqual(fieldValues.trululu, {
-                                foo: "hello", id: 1,
+                                foo: "hello",
+                                id: 1,
                             });
                         } else if (count === 2) {
                             assert.deepEqual(fieldValues.trululu, {
