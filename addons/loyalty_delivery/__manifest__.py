@@ -5,7 +5,7 @@
     'summary': "Add a free shipping option to your rewards",
     'category': 'Sales',
     'version': '1.0',
-    'depends': ['loyalty', 'delivery'],
+    'depends': ['delivery', 'sale_loyalty'],
     'data': [
         'data/loyalty_delivery_data.xml',
         'views/loyalty_reward_views.xml',
