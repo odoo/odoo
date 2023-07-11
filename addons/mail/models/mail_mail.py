@@ -518,6 +518,7 @@ class MailMail(models.Model):
                 email sending process has failed
             :return: True
         """
+        write_date_by_message = {message: message.write_date for message in self.mail_message_id}
         for mail_server_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             smtp_session = None
             try:
@@ -542,6 +543,9 @@ class MailMail(models.Model):
             finally:
                 if smtp_session:
                     smtp_session.quit()
+        # reset write_date to avoid incorrectly having "edited" label on mail.message that are notified by email
+        for message, write_date in write_date_by_message.items():
+            message._write({"write_date": write_date})
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
         IrMailServer = self.env['ir.mail_server']
