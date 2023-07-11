@@ -49,7 +49,7 @@ export class Order extends Reactive {
         this.lines = this.lines.map((line) => new Line(line));
     }
 
-    computelastChangesSent() {
+    updateLastChanges() {
         for (const changeIdx in this.lastChangesSent) {
             const changeFound = this.lines.find((line) => line.uuid === changeIdx);
             if (!changeFound) {
@@ -60,7 +60,7 @@ export class Order extends Reactive {
         this.lastChangesSent = this.lines.reduce((acc, line) => {
             acc[line.uuid] = {
                 qty: line.qty,
-                selected_attributes: line.selected_attributes,
+                selected_attributes: { ...line.selected_attributes },
                 customer_note: line.customer_note,
             };
             return acc;

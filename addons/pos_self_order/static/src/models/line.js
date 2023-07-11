@@ -28,7 +28,7 @@ export class Line extends Reactive {
         this.customer_note = line.customer_note;
         this.price_subtotal_incl = line.price_subtotal_incl || 0;
         this.price_subtotal = line.price_subtotal || 0;
-        this.selected_attributes = line.selected_attributes || [];
+        this.selected_attributes = line.selected_attributes || {};
     }
 
     isChange(lastChange) {

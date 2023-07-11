@@ -20,6 +20,7 @@ export class OrderCart extends Component {
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
+            cancelConfirmation: false,
         });
 
         onWillStart(() => {
@@ -29,6 +30,10 @@ export class OrderCart extends Component {
 
     get buttonToShow() {
         return this.selfOrder.self_order_mode === "each" ? "Pay" : "Order";
+    }
+
+    get orderToPay() {
+        return this.selfOrder.self_order_mode === "each";
     }
 
     async selectTable(table) {
@@ -61,5 +66,14 @@ export class OrderCart extends Component {
         } else {
             this.selfOrder.notification.add(_t("Not yet implemented!"), { type: "danger" });
         }
+    }
+
+    cancelToggle() {
+        this.state.cancelConfirmation = !this.state.cancelConfirmation;
+    }
+
+    cancelOrder() {
+        this.selfOrder.cancelOrder();
+        this.cancelToggle();
     }
 }

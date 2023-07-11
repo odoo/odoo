@@ -87,6 +87,18 @@ export const PosSelf = {
         },
     },
     action: {
+        cancelOrder: () => {
+            return [
+                {
+                    content: `Toggle 'Cancel' button`,
+                    trigger: `.o_self-cancel-toggle-btn`,
+                },
+                {
+                    content: `Click on 'Cancel' button`,
+                    trigger: `.o_self-cancel-btn`,
+                },
+            ];
+        },
         clickBack: () => {
             return {
                 content: "Click the navbar back button",
@@ -118,6 +130,19 @@ export const PosSelf = {
                 {
                     content: `Click on 'Add' button`,
                     trigger: `.o_self_order_main_button:contains('Add')`,
+                },
+            ];
+        },
+        editSentOrderline: (name, price, description, addQuantity = 0) => {
+            return [
+                {
+                    content: `Click on orderline ${name}, price ${price} and description ${description}`,
+                    trigger: `.o_self_order_item_card:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span.card-text:contains("${price}"))`,
+                },
+                ...quantityHelper(addQuantity),
+                {
+                    content: `Click on 'Add' button`,
+                    trigger: `.o_self_order_main_button`,
                 },
             ];
         },

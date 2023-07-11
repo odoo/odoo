@@ -39,6 +39,15 @@ export class ProductMainView extends Component {
         this.initState();
     }
 
+    get disableAttributes() {
+        const order = this.selfOrder.currentOrder;
+        return (
+            this.selfOrder.editedLine &&
+            this.selfOrder.editedLine.uuid &&
+            order.lastChangesSent[this.selfOrder.editedLine.uuid]
+        );
+    }
+
     initState() {
         const editedLine = this.selfOrder.editedLine;
 

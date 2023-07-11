@@ -113,6 +113,29 @@ export class SelfOrder {
         return this.editedOrder;
     }
 
+    cancelOrder() {
+        const changes = this.currentOrder.lastChangesSent;
+        const lines = this.currentOrder.lines;
+        const keptLines = [];
+
+        for (const line of lines) {
+            const change = changes[line.uuid];
+
+            if (change) {
+                line.qty = change.qty;
+                line.customer_note = change.customer_note;
+                line.selected_attributes = change.selected_attributes;
+                keptLines.push(line);
+            }
+        }
+
+        this.currentOrder.lines = keptLines;
+
+        if (this.currentOrder.totalQuantity === 0) {
+            this.router.navigate("default");
+        }
+    }
+
     formatMonetary(price) {
         return formatMonetary(price, { currencyId: this.currency_id });
     }
@@ -131,7 +154,7 @@ export class SelfOrder {
 
             this.editedOrder.access_token = order.access_token;
             this.updateOrdersFromServer([order], [order.access_token]);
-            this.editedOrder.computelastChangesSent();
+            this.editedOrder.updateLastChanges();
 
             if (this.self_order_mode === "each") {
                 this.editedOrder = null;

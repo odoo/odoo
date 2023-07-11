@@ -11,6 +11,14 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.check.isNotPrimaryBtn("My Orders"),
         PosSelf.action.clickPrimaryBtn("View Menu"),
 
+        // Cancel an orders
+        ...PosSelf.action.addProduct("Office Chair Black", 1),
+        ...PosSelf.action.addProduct("Office Chair Black", 2, "Description"),
+        ...PosSelf.action.addProduct("Large Cabinet", 2),
+        PosSelf.action.clickPrimaryBtn("Review"),
+        ...PosSelf.action.cancelOrder(),
+        PosSelf.action.clickPrimaryBtn("View Menu"),
+
         // Add some products
         ...PosSelf.action.addProduct("Office Chair Black", 1),
         ...PosSelf.action.addProduct("Office Chair Black", 2, "Description"),
@@ -39,7 +47,7 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         // longer reduce the quantity of his orderlines. We check this behaviour.
         PosSelf.action.clickPrimaryBtn("View Menu"),
         PosSelf.action.clickPrimaryBtn("Review"),
-        ...PosSelf.action.editOrderline("Large Cabinet", "736.00", "", -1),
+        ...PosSelf.action.editSentOrderline("Large Cabinet", "736.00", "", -1),
         PosSelf.check.isNotification("You cannot reduce the quantity"),
         PosSelf.check.isOrderline("Large Cabinet", "736.00", ""),
 
@@ -59,9 +67,9 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         ...PosSelf.action.addProduct("Office Chair Black", 1, "kidding"),
         PosSelf.action.clickPrimaryBtn("Review"),
         PosSelf.check.isOrderline("Office Chair Black", "277.16", "kidding"),
-        ...PosSelf.action.editOrderline("Office Chair Black", "277.16", "kidding", -1),
+        ...PosSelf.action.editSentOrderline("Office Chair Black", "277.16", "kidding", -1),
         PosSelf.check.isOrderline("Office Chair Black", "138.58", "kidding"),
-        ...PosSelf.action.editOrderline("Office Chair Black", "138.58", "kidding", -1),
+        ...PosSelf.action.editSentOrderline("Office Chair Black", "138.58", "kidding", -1),
         PosSelf.check.isNotification("You cannot reduce the quantity"),
         PosSelf.action.clickPrimaryBtn("Order"),
 
@@ -78,11 +86,8 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         PosSelf.action.clickPrimaryBtn("Review"),
         PosSelf.check.isOrderline("Desk Organizer", "5.87", "kidding", "M, Leather"),
         PosSelf.check.isOrderline("Desk Organizer", "11.74", "okkk", "L, Custom"),
-        PosSelf.action.clickPrimaryBtn("Order"),
 
         // Check if we can edit the product attributes, and if the changes are made to the orderline
-        PosSelf.action.clickPrimaryBtn("View Menu"),
-        PosSelf.action.clickPrimaryBtn("Review"),
         ...PosSelf.action.editOrderline("Desk Organizer", "5.87", "kidding", 0, "dav", {
             radio: { name: "Size", value: "S" },
             select: { name: "Fabric", value: "Custom" },
