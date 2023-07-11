@@ -76,22 +76,13 @@ class Http(models.AbstractModel):
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
     @tools.ormcache('website_id', cache='routing')
-    def _rewrite_len(self, website_id, rewrites=None):
-        # This little hack allow to store a _rewrite_len in cache if we have the value,
-        # (Populated during routing map computation)
-        # but also ensures that we will have the correct value if the cache is not populated.
-        # The cache key actually does not depends on "rewrites" because this is the information
-        # we are storing, rewrites actually depends on website_id
-        if rewrites is None:
-            rewrites = self._get_rewrites(website_id)
+    def _rewrite_len(self, website_id):
+        rewrites = self._get_rewrites(website_id)
         return len(rewrites)
 
     def _get_rewrites(self, website_id):
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
-        rewrites = {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
-        self._rewrite_len(website_id, rewrites)  # optionnal, update value in cache
-        #self._rewrite_len.add_cache_value(website_id, value=rewrites)
-        return rewrites
+        return  {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
 
     def _generate_routing_rules(self, modules, converters):
         if not request:
@@ -100,6 +91,7 @@ class Http(models.AbstractModel):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
+        self._rewrite_len.cache.add_value(self, website_id, cache_value=len(rewrites))
 
         for url, endpoint in super()._generate_routing_rules(modules, converters):
             if url in rewrites:

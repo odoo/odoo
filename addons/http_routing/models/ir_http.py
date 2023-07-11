@@ -677,5 +677,5 @@ class IrHttp(models.AbstractModel):
             new_url = path
         return new_url or path, endpoint and endpoint[0]
 
-    def _rewrite_len(self, website_id, rewrites=None):
+    def _rewrite_len(self, website_id):
         return 0
