@@ -46,20 +46,22 @@ export class AceField extends Component {
     }
 
     handleChange(newValue) {
-        this.state.value = newValue;
-        this.debouncedCommit();
+        this.debouncedCommit(newValue);
     }
 
     updateCodeEditor({ record, mode, readonly }) {
-        this.state.value = formatText(record.data[this.props.name]);
+        const modelValue = formatText(record.data[this.props.name]);
+        if (modelValue !== this.internalValue) {
+            this.state.value = modelValue;
+        }
         this.state.mode = mode === "xml" ? "qweb" : mode;
         this.state.readonly = readonly;
     }
 
-    commitChanges() {
+    commitChanges(value) {
         if (!this.props.readonly) {
-            const value = this.state.value;
             if (this.props.record.data[this.props.name] !== value) {
+                this.internalValue = value;
                 return this.props.record.update({ [this.props.name]: value });
             }
         }
