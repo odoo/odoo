@@ -62,12 +62,16 @@ class Home(http.Controller):
             return request.redirect('/web/login?error=access')
 
     @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
-    def web_load_menus(self, unique):
+    def web_load_menus(self, unique, lang=None):
         """
         Loads the menus for the webclient
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param lang: language in which the menus should be loaded (only works if language is installed)
         :return: the menus (including the images in Base64)
         """
+        if lang:
+            request.update_context(lang=lang)
+
         menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
