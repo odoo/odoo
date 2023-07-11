@@ -76,5 +76,61 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
             run() {},
         },
+        {
+            content: "Click on more menu",
+            trigger: ".o-mail-Message [title='Expand']",
+        },
+        {
+            content: "Click on edit",
+            trigger: ".o-mail-Message [title='Edit']",
+        },
+        {
+            content: "Edit message",
+            trigger: ".o-mail-Message .o-mail-Composer-input",
+            run: "text vegetables",
+        },
+        {
+            content: "Add one more file in composer",
+            trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach files']",
+            async run() {
+                const file = await createFile({
+                    content: "hello 2",
+                    contentType: "text/plain",
+                    name: "extra.txt",
+                });
+                inputFiles(
+                    document.querySelector(
+                        ".o-mail-Message .o-mail-Composer-coreMain .o_input_file"
+                    ),
+                    [file]
+                );
+            },
+        },
+        {
+            content: "Check the earlier provided extra attachment is listed",
+            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title="extra.txt"]',
+            extra_trigger:
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            run() {},
+        },
+        {
+            content: "Save edited message",
+            trigger: ".o-mail-Message a:contains(save)",
+        },
+        {
+            content: "Check message is edited",
+            trigger: '.o-mail-Message-body:contains("vegetables")',
+            run() {},
+        },
+        {
+            content: "Check edited message contains the first attachment",
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            run() {},
+        },
+        {
+            content: "Check edited message contains the extra attachment",
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("extra.txt")',
+            run() {},
+        },
     ],
 });

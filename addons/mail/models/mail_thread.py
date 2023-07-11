@@ -4097,7 +4097,7 @@ class MailThread(models.AbstractModel):
             'Message': {
                 'id': message.id,
                 'body': message.body,
-                'attachment_ids': message.attachment_ids._attachment_format(),
+                'attachment_ids': message.attachment_ids.sorted("id")._attachment_format(),
                 'recipients': [{'id': p.id, 'name': p.name} for p in message.partner_ids],
                 'write_date': message.write_date,
             }

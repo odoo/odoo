@@ -4,6 +4,7 @@ import { Message } from "./message_model";
 import { Message as MessageComponent } from "@mail/core_ui/message";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
+import { markup } from "@odoo/owl";
 import { MessageConfirmDialog } from "@mail/core_ui/message_confirm_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -36,14 +37,22 @@ export class MessageService {
             return;
         }
         const validMentions = this.getMentionsFromText(rawMentions, body);
-        await this.rpc("/mail/message/update_content", {
+        const messageData = await this.rpc("/mail/message/update_content", {
             attachment_ids: attachments
-                .map(({ id }) => id)
-                .concat(message.attachments.map(({ id }) => id)),
+                .concat(message.attachments)
+                .map((attachment) => attachment.id),
+            attachment_tokens: attachments
+                .concat(message.attachments)
+                .map((attachment) => attachment.accessToken),
             body: await prettifyMessageContent(body, validMentions),
             message_id: message.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });
+        this.insert(
+            Object.assign(messageData, {
+                body: messageData.body ? markup(messageData.body) : messageData.body,
+            })
+        );
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc(
                 "/mail/link_preview",
@@ -65,6 +74,7 @@ export class MessageService {
         message.attachments = [];
         await this.rpc("/mail/message/update_content", {
             attachment_ids: [],
+            attachment_tokens: [],
             body: "",
             message_id: message.id,
         });
