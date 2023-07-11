@@ -95,17 +95,26 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailLoadMessageFailures();
         }
         if (route === "/mail/message/post") {
+            const finalData = {};
+            for (const allowedField of [
+                "attachment_ids",
+                "body",
+                "message_type",
+                "partner_ids",
+                "subtype_xmlid",
+                "parent_id",
+            ]) {
+                if (args.post_data[allowedField] !== undefined) {
+                    finalData[allowedField] = args.post_data[allowedField];
+                }
+            }
             if (args.thread_model === "discuss.channel") {
-                return this._mockDiscussChannelMessagePost(
-                    args.thread_id,
-                    args.post_data,
-                    args.context
-                );
+                return this._mockDiscussChannelMessagePost(args.thread_id, finalData, args.context);
             }
             return this._mockMailThreadMessagePost(
                 args.thread_model,
                 [args.thread_id],
-                args.post_data,
+                finalData,
                 args.context
             );
         }
@@ -124,7 +133,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                     attachment_ids: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
                 },
             });
-            return "dummy value for mock server";
+            return this._mockMailMessageMessageFormat([args.message_id])[0];
         }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;

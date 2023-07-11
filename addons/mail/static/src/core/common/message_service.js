@@ -9,6 +9,8 @@ import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/uti
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
+import { markup } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -34,14 +36,22 @@ export class MessageService {
             return;
         }
         const validMentions = this.getMentionsFromText(rawMentions, body);
-        await this.rpc("/mail/message/update_content", {
+        const messageData = await this.rpc("/mail/message/update_content", {
             attachment_ids: attachments
-                .map(({ id }) => id)
-                .concat(message.attachments.map(({ id }) => id)),
+                .concat(message.attachments)
+                .map((attachment) => attachment.id),
+            attachment_tokens: attachments
+                .concat(message.attachments)
+                .map((attachment) => attachment.accessToken),
             body: await prettifyMessageContent(body, validMentions),
             message_id: message.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
         });
+        this.insert(
+            Object.assign(messageData, {
+                body: messageData.body ? markup(messageData.body) : messageData.body,
+            })
+        );
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc(
                 "/mail/link_preview",
@@ -63,6 +73,7 @@ export class MessageService {
         message.attachments = [];
         await this.rpc("/mail/message/update_content", {
             attachment_ids: [],
+            attachment_tokens: [],
             body: "",
             message_id: message.id,
         });
