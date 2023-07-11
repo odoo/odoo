@@ -427,3 +427,6 @@ class TestUi(odoo.tests.HttpCase):
         self.env.ref('base.user_admin').action_id = self.env.ref('base.menu_administration').id
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
+
+    def test_website_media_dialog_image_shape(self):
+        self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
