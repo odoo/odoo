@@ -54,7 +54,7 @@
                                             </div>
                                         </span>
                                     </td>
-                                    <td class="text-end"><span t-field="line.unit_amount"/></td>
+                                    <td class="text-end"><span t-field="line.price_unit"/></td>
                                     <td class="text-end"><span t-field="line.quantity"/></td>
                                     <td class="text-end">
                                         <t t-foreach="line.tax_ids" t-as="tax">
@@ -62,8 +62,8 @@
                                             <t t-if="not tax.description"><span t-field="tax.name"/></t>
                                         </t>
                                     </td>
-                                    <td t-if="foreign_currencies" class="text-end"><span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
-                                    <td class="text-end"><span t-field="line.total_amount_company"  t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
+                                    <td t-if="foreign_currencies" class="text-end"><span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
+                                    <td class="text-end"><span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -77,7 +77,7 @@
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td class="text-end"><span t-field="o.total_amount_taxes" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                                         </tr>
                                         <tr class="fw-bold">
                                             <td>Total</td>

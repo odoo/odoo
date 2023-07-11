@@ -7,9 +7,9 @@ class AttachmentNumber extends Component {
 
     setup() {
         super.setup();
-        this.attachment_number = this.props.record.data.attachment_number
+        this.nb_attachment = this.props.record.data.nb_attachment
     }
     static template = "hr_expense.AttachmentNumber"
 }
 
-registry.category("fields").add("attachment_number", {component: AttachmentNumber});
+registry.category("fields").add("nb_attachment", {component: AttachmentNumber});
