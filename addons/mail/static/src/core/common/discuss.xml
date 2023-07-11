@@ -63,7 +63,7 @@
             <div class="overflow-auto bg-view d-flex flex-grow-1" t-ref="core">
                 <div class="d-flex flex-column flex-grow-1">
                     <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
-                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef"/>
+                    <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.isNote ? 'note' : 'message') : undefined"/>
                 </div>
                 <t t-if="threadActions.activeAction?.componentCondition" t-component="threadActions.activeAction.component" thread="thread" className="'o-mail-Discuss-inspector border-start'" t-props="threadActions.activeAction.componentProps"/>
             </div>

@@ -94,6 +94,7 @@ export class Chatter extends Component {
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
+            composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
             showActivities: true,
@@ -112,7 +113,7 @@ export class Chatter extends Component {
         useDropzone(
             this.rootRef,
             async (ev) => {
-                if (this.state.thread.composer.type) {
+                if (this.state.composerType) {
                     return;
                 }
                 if (isDragSourceExternalFile(ev.dataTransfer)) {
@@ -149,7 +150,7 @@ export class Chatter extends Component {
         onWillUpdateProps((nextProps) => {
             this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
             if (nextProps.threadId === false) {
-                this.state.thread.composer.type = false;
+                this.state.composerType = false;
             }
             this.attachmentUploader.thread = this.threadService.getThread(
                 nextProps.threadModel,
@@ -345,10 +346,10 @@ export class Chatter extends Component {
 
     toggleComposer(mode = false) {
         const toggle = () => {
-            if (this.state.thread.composer.type === mode) {
-                this.state.thread.composer.type = false;
+            if (this.state.composerType === mode) {
+                this.state.composerType = false;
             } else {
-                this.state.thread.composer.type = mode;
+                this.state.composerType = mode;
             }
         };
         if (this.props.threadId) {
