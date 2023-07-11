@@ -728,7 +728,8 @@ class HolidaysRequest(models.Model):
     def _get_number_of_days_batch(self, date_from, date_to, employees):
         """ Returns a float equals to the timedelta between two dates given as string."""
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+        domain = [('time_type', '=', 'leave'),
+                  ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
         result = employees._get_work_days_data_batch(date_from, date_to, domain=domain)
         for employee_id in result:
