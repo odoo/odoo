@@ -31,6 +31,7 @@ class Project(models.Model):
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly')
     vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
+    display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons')
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -109,6 +110,10 @@ class Project(models.Model):
         for project in self:
             project.invoice_count = data.get(project.analytic_account_id.id, 0)
 
+    @api.depends('allow_billable', 'partner_id')
+    def _compute_display_sales_stat_buttons(self):
+        for project in self:
+            project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
     def action_view_sos(self):
         self.ensure_one()
@@ -608,7 +613,7 @@ class Project(models.Model):
                 'number': self_sudo.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
-                'show': self_sudo.sale_order_count > 0,
+                'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
         if self.user_has_groups('account.group_account_readonly'):
