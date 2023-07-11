@@ -6,6 +6,7 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
 from odoo.tools import html_escape
 from odoo.exceptions import RedirectWarning
+from PyPDF2.utils import PdfReadError
 
 from lxml import etree
 from struct import error as StructError
@@ -14,6 +15,7 @@ import io
 import logging
 import pathlib
 import re
+
 
 _logger = logging.getLogger(__name__)
 
@@ -408,7 +410,7 @@ class AccountEdiFormat(models.Model):
         try:
             for xml_name, content in pdf_reader.getAttachments():
                 to_process.extend(self._decode_xml(xml_name, content))
-        except (NotImplementedError, StructError) as e:
+        except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
