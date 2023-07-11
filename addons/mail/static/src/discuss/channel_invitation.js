@@ -97,7 +97,7 @@ export class ChannelInvitation extends Component {
                 ...this.state.selectedPartners.map((partner) => partner.id),
             ];
             await this.threadService.createGroupChat({ partners_to });
-        } else if (["channel", "group"].includes(this.props.thread.type)) {
+        } else {
             await this.messaging.orm.call(
                 "discuss.channel",
                 "add_members",
