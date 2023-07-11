@@ -868,7 +868,7 @@ export class StaticList extends DataPoint {
         await Promise.all(proms);
 
         await this._sort();
-        this._onUpdate();
+        await this._onUpdate();
     }
 
     async _sort(currentIds = this.currentIds, orderBy = this.orderBy) {
