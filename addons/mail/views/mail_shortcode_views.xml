@@ -3,15 +3,30 @@
     <data>
 
         <!-- mail.shortcode -->
+        <record id="mail_shortcode_view_search" model="ir.ui.view">
+            <field name="name">mail.shortcode.search</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <search string="Canned Responses Search">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </search>
+            </field>
+        </record>
+
         <record id="mail_shortcode_action" model="ir.actions.act_window">
-            <field name="name">Chat Shortcode</field>
+            <field name="name">Canned Responses</field>
             <field name="res_model">mail.shortcode</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail_shortcode_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Define a new chat shortcode
+                Create a new canned response
               </p><p>
-                A shortcode is a keyboard shortcut. For instance, you type #gm and it will be transformed into "Good Morning".
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
               </p>
             </field>
         </record>
@@ -20,10 +35,11 @@
             <field name="name">mail.shortcode.tree</field>
             <field name="model">mail.shortcode</field>
             <field name="arch" type="xml">
-                <tree string="Shortcodes">
+                <tree string="Shortcodes" editable="bottom" default_order="source" sample="1">
                     <field name="source"/>
                     <field name="substitution"/>
                     <field name="description"/>
+                    <field name="last_used" readonly="1"/>
                 </tree>
             </field>
         </record>
