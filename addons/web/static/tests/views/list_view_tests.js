@@ -429,6 +429,80 @@ QUnit.module("Views", (hooks) => {
         }
     });
 
+    QUnit.test(
+        "multiple interactions to change the range of checked boxes",
+        async function (assert) {
+            for (let i = 0; i < 5; i++) {
+                serverData.models.foo.records.push({ id: 5 + i, bar: true, foo: "foo" + i });
+            }
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+            });
+
+            await triggerHotkey("ArrowDown");
+            const firstCheckbox = target.querySelector(
+                ".o_data_row:nth-child(1) .o_list_record_selector input"
+            );
+            assert.notEqual(
+                document.activeElement,
+                firstCheckbox,
+                "first checkbox should not be focused initially"
+            );
+
+            await triggerEvent(document.activeElement, null, "keydown", {
+                key: "Shift",
+                shiftKey: true,
+            });
+            await triggerHotkey("shift+ArrowDown");
+            assert.strictEqual(
+                document.activeElement,
+                firstCheckbox,
+                "first checkbox is now focused"
+            );
+            triggerHotkey("shift+ArrowDown");
+            triggerHotkey("shift+ArrowDown");
+            triggerHotkey("shift+ArrowDown");
+            triggerHotkey("shift+ArrowUp");
+            triggerHotkey("ArrowDown");
+            triggerHotkey("ArrowDown");
+            triggerHotkey("shift+ArrowDown");
+
+            await click(
+                target.querySelector(".o_data_row:nth-child(8) .o_list_record_selector .o-checkbox")
+            );
+            await triggerEvent(document.activeElement, null, "keydown", {
+                key: "Shift",
+                shiftKey: true,
+            });
+            await triggerHotkey("shift+ArrowDown");
+            await nextTick();
+
+            const expectedCheckedRows = [1, 2, 3, 5, 6, 8, 9];
+
+            for (let i = 1; i < 10; i++) {
+                if (expectedCheckedRows.includes(i)) {
+                    assert.ok(
+                        target.querySelector(
+                            `.o_data_row:nth-child(${i}) .o_list_record_selector input`
+                        ).checked,
+                        `row ${i} checked`
+                    );
+                } else {
+                    assert.notOk(
+                        target.querySelector(
+                            `.o_data_row:nth-child(${i}) .o_list_record_selector input`
+                        ).checked,
+                        `row ${i} unchecked`
+                    );
+                }
+            }
+        }
+    );
+
     QUnit.test("list with class", async function (assert) {
         await makeView({
             type: "list",
