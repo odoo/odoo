@@ -115,6 +115,7 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-Message");
 
         await click("[title='Reply']");
+        assert.containsOnce($, ".o-mail-Composer [placeholder='Log an internal note...']");
         await insertText(".o-mail-Composer-input", "Test");
         await click(".o-mail-Composer-send");
         assert.verifySteps(["/mail/message/post"]);

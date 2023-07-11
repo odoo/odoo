@@ -6,10 +6,9 @@
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <div t-ref="composer">
-        <div class="o-mail-Composer d-grid flex-shrink-0"
+        <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
                 t-att-class="{
-                    'pt-0': props.composer.type === 'message',
-                    'pt-4': props.composer.type !== 'message',
+                    'pt-4': env.inChatter and props.type !== 'message',
                     'px-3 pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
@@ -23,7 +22,7 @@
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message.id, props.composer.thread)">
                     Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
                 </span>
-                <span t-if="props.messageToReplyTo.message.originThread !== thread">
+                <span t-if="props.messageToReplyTo.message.originThread !== props.composer.thread">
                     on: <b><t t-esc="props.messageToReplyTo.message.originThread.displayName"/></b>
                 </span>
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
