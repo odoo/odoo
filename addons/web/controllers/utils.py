@@ -16,8 +16,7 @@ import werkzeug.wsgi
 from lxml import etree
 from werkzeug.urls import iri_to_uri
 
-from odoo.tools import apply_inheritance_specs
-from odoo.tools.translate import _
+from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
 from odoo.tools.misc import file_open
 from odoo import http
 from odoo.http import request
@@ -212,6 +211,7 @@ def _local_web_translations(trans_file):
     except Exception:
         return
     for x in po:
-        if x.id and x.string and "openerp-web" in x.auto_comments:
+        if x.id and x.string and (JAVASCRIPT_TRANSLATION_COMMENT in x.auto_comments
+                                  or WEB_TRANSLATION_COMMENT in x.auto_comments):
             messages.append({'id': x.id, 'string': x.string})
     return messages
