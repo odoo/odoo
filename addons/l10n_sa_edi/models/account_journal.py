@@ -114,13 +114,6 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
 
-        def _encode(s):
-            """
-                Some of the information included in the CSR could be in arabic, and thus needs to be encoded in a
-                specific format in order to be compliant with the ZATCA CCSID/PCSID APIs
-            """
-            return s.encode().decode('CP1252')
-
         company_id = self.company_id
         version_info = service.common.exp_version()
         builder = x509.CertificateSigningRequestBuilder()
@@ -130,15 +123,15 @@ class AccountJournal(models.Model):
             # Organization Unit Name
             (NameOID.ORGANIZATIONAL_UNIT_NAME, (company_id.vat or '')[:10]),
             # Organization Name
-            (NameOID.ORGANIZATION_NAME, _encode(company_id.name)),
+            (NameOID.ORGANIZATION_NAME, company_id.name),
             # Subject Common Name
-            (NameOID.COMMON_NAME, _encode(company_id.name)),
+            (NameOID.COMMON_NAME, company_id.name),
             # Organization Identifier
             (ObjectIdentifier('2.5.4.97'), company_id.vat),
             # State/Province Name
-            (NameOID.STATE_OR_PROVINCE_NAME, _encode(company_id.state_id.name)),
+            (NameOID.STATE_OR_PROVINCE_NAME, company_id.state_id.name),
             # Locality Name
-            (NameOID.LOCALITY_NAME, _encode(company_id.city)),
+            (NameOID.LOCALITY_NAME, company_id.city),
         )
         # The CertificateSigningRequestBuilder instances are immutable, which is why everytime we modify one,
         # we have to assign it back to itself to keep track of the changes
@@ -157,10 +150,9 @@ class AccountJournal(models.Model):
                 # Invoice Type. 4-digit numerical input using 0 & 1
                 x509.NameAttribute(NameOID.TITLE, company_id._l10n_sa_get_csr_invoice_type()),
                 # Location
-                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), _encode(company_id.street)),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), company_id.street),
                 # Industry
-                x509.NameAttribute(ObjectIdentifier('2.5.4.15'),
-                                   _encode(company_id.partner_id.industry_id.name or 'Other')),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.15'), company_id.partner_id.industry_id.name or 'Other'),
             ]))
         ])
 
