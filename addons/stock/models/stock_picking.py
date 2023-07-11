@@ -675,12 +675,15 @@ class Picking(models.Model):
         for picking in self:
             picking.has_packages = bool(cnt_by_picking.get(picking.id, False))
 
-    @api.depends('state')
+    @api.depends('state', 'move_ids.product_uom_qty', 'picking_type_code')
     def _compute_show_check_availability(self):
         """ According to `picking.show_check_availability`, the "check availability" button will be
         displayed in the form view of a picking.
         """
         for picking in self:
+            if picking.immediate_transfer and picking.picking_type_code == 'incoming':
+                picking.show_check_availability = False
+                continue
             if picking.state not in ('confirmed', 'waiting', 'assigned'):
                 picking.show_check_availability = False
                 continue
