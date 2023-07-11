@@ -291,17 +291,21 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 2, "There are still timesheets linked to Project1")
-        self.assertEqual(timesheet_count2, 1, "1 timesheets should be linked to Project2")
+        self.assertEqual(timesheet_count1, 3, "All timesheets are still linked to Project1")
+        self.assertEqual(timesheet_count2, 0, "No timesheets should be linked to Project2")
         self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task1")
         self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
         self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
 
-        # it is forbidden to set a task with timesheet without project
+        # It is forbidden to unset the project of a task with timesheet...
         with self.assertRaises(UserError):
             self.task1.write({
                 'project_id': False
             })
+        # ...except if one of its ascendant has one.
+        task_child.write({
+            'project_id': False
+        })
 
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
@@ -363,7 +367,6 @@ class TestTimesheet(TestCommonTimesheet):
 
     def test_task_with_timesheet_project_change(self):
         '''This test checks that no error is raised when moving a task that contains timesheet to another project.
-           This move implying writing on the account.analytic.line.
         '''
 
         project_manager = self.env['res.users'].create({
@@ -403,7 +406,7 @@ class TestTimesheet(TestCommonTimesheet):
             'project_id': second_project.id
         })
 
-        self.assertEqual(timesheet.project_id, second_project, 'The project_id of timesheet should be second_project')
+        self.assertEqual(timesheet.project_id, project, 'The project_id of timesheet shouldn\'t have changed')
 
     def test_create_timesheet_employee_not_in_company(self):
         ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.

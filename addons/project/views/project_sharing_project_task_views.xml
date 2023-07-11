@@ -124,6 +124,7 @@
         <field name="groups_id" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
+                <field name="project_root_id" invisible="1"/>
                 <header>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}" />
                 </header>
@@ -185,6 +186,7 @@
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{'default_project_id': project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
+                                    <field name="project_root_id" invisible="1"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
