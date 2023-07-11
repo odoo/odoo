@@ -39,6 +39,7 @@
                                             t-att-value="value.name"
                                             t-attf-id="{{ attribute.id }}_{{ value.id }}"
                                             t-model="state.selectedVariants[attribute.name]"
+                                            t-att-disabled="disableAttributes"
                                             />
                                         <span class="flex-grow-1">
                                             <t t-esc="value.name"/>
@@ -51,7 +52,7 @@
                             </t>
                             <select t-elif="attribute.display_type === 'select'" class="configurator_select form-select"
                                 t-model="state.selectedVariants[attribute.name]">
-                                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
+                                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name" t-att-disabled="disableAttributes">
                                     <t t-esc="value.name"/>
                                     <t t-if="value.price_extra.list_price">
                                         + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
@@ -71,6 +72,7 @@
                                                 t-att-value="value.name"
                                                 t-attf-id="{{ attribute.id }}_{{ value.id }}"
                                                 t-model="state.selectedVariants[attribute.name]"
+                                                t-att-disabled="disableAttributes"
                                                 />
                                         </label>
                                         <span class="flex-grow-1">
@@ -84,9 +86,9 @@
                             </div>
                         </div>
                     </t>
-                    <div t-if="selfOrder.ordering">
+                    <div t-if="selfOrder.ordering and (!disableAttributes || state.customer_note)">
                         <label class="form-label fw-bold" for="note">Add a note:</label>
-                        <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="state.customer_note"/>
+                        <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="state.customer_note" t-att-disabled="disableAttributes" />
                     </div>
                 </div>
             </div>
