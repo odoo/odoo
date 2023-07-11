@@ -65,8 +65,8 @@
     }
 }
 
-.o_loyalty_program_list_view_view .o_list_renderer {
-    .o_view_nocontent {
-        top: 10% !important;
+.o_loyalty_program_list_view_view .o_list_renderer .o_view_nocontent{
+    @include media-breakpoint-down(lg){
+        height: fit-content;
     }
 }
