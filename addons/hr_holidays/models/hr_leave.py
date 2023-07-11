@@ -795,7 +795,8 @@ class HolidaysRequest(models.Model):
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
             # We force the company in the domain as we are more than likely in a compute_sudo
-            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+            domain = [('time_type', '=', 'leave'),
+                      ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
             result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)[employee.id]
             if self.request_unit_half and result['hours'] > 0:
                 result['days'] = 0.5
