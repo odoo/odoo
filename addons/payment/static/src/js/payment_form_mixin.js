@@ -274,7 +274,7 @@
          * @return {undefined}
          */
         _hideInputs: function () {
-            const $submitButton = this.$('button[name="o_payment_submit_button"]');
+            const $submitButton = this._getSubmitButton();
             const $tokenizeCheckboxes = this.$('input[name="o_payment_save_as_token"]');
             $submitButton.addClass('d-none');
             $tokenizeCheckboxes.closest('label').addClass('d-none');
@@ -480,7 +480,7 @@
          * @return {undefined}.
          */
         _showInputs: function () {
-            const $submitButton = this.$('button[name="o_payment_submit_button"]');
+            const $submitButton = this._getSubmitButton();
             const $tokenizeCheckboxes = this.$('input[name="o_payment_save_as_token"]');
             $submitButton.removeClass('d-none');
             $tokenizeCheckboxes.closest('label').removeClass('d-none');

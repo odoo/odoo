@@ -1,5 +1,5 @@
 /** @odoo-module alias=payment.checkout_form **/
-    
+
     import publicWidget from "web.public.widget";
 
     import paymentFormMixin from "payment.payment_form_mixin";
