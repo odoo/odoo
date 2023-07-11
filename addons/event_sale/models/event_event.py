@@ -41,7 +41,7 @@ class Event(models.Model):
             event_subtotals_mapping[event] += event.currency_id._convert(
                 sum_price_subtotal,
                 currency,
-                event.company_id,
+                event.company_id or self.env.company,
                 date_now,
             )
 
