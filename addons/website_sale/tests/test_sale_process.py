@@ -1,65 +1,69 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
-
 from odoo import api
+from odoo.fields import Command
+from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+@tagged('post_install', '-at_install')
+class TestSaleProcess(HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestUi, self).setUp()
-        self.env['product.pricelist'].sudo().search([]).action_archive()
-        product_product_7 = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['product.pricelist'].sudo().search([]).action_archive()
+        product_product_7 = cls.env['product.product'].create({
             'name': 'Storage Box',
             'standard_price': 70.0,
             'list_price': 79.0,
             'website_published': True,
         })
-        self.product_attribute_1 = self.env['product.attribute'].create({
+        cls.product_attribute_1 = cls.env['product.attribute'].create({
             'name': 'Legs',
             'sequence': 10,
+            'value_ids': [
+                Command.create({
+                    'name': 'Steel',
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'name': 'Aluminium',
+                    'sequence': 2,
+                })
+            ],
         })
-        product_attribute_value_1 = self.env['product.attribute.value'].create({
-            'name': 'Steel',
-            'attribute_id': self.product_attribute_1.id,
-            'sequence': 1,
-        })
-        product_attribute_value_2 = self.env['product.attribute.value'].create({
-            'name': 'Aluminium',
-            'attribute_id': self.product_attribute_1.id,
-            'sequence': 2,
-        })
-        self.product_product_11_product_template = self.env['product.template'].create({
+        cls.product_product_11_product_template = cls.env['product.template'].create({
             'name': 'Conference Chair',
             'list_price': 16.50,
-            'accessory_product_ids': [(4, product_product_7.id)],
-        })
-        self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': self.product_product_11_product_template.id,
-            'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+            'accessory_product_ids': [Command.link(product_product_7.id)],
+            'attribute_line_ids': [Command.create({
+                'attribute_id': cls.product_attribute_1.id,
+                'value_ids': [Command.set(cls.product_attribute_1.value_ids.ids)],
+            })],
         })
 
-        self.product_product_1_product_template = self.env['product.template'].create({
+        cls.product_product_1_product_template = cls.env['product.template'].create({
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
 
-        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        cls.env['account.journal'].create({
+            'name': 'Cash - Test',
+            'type': 'cash',
+            'code': 'CASH - Test',
+        })
 
         # Avoid Shipping/Billing address page
-        (self.env.ref('base.partner_admin') + self.partner_demo).write({
+        (cls.env.ref('base.partner_admin') + cls.partner_demo).write({
             'street': '215 Vine St',
             'city': 'Scranton',
             'zip': '18503',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_39').id,
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
             'phone': '+1 555-555-5555',
             'email': 'admin@yourcompany.example.com',
         })
@@ -95,10 +99,13 @@ class TestUi(HttpCaseWithUserDemo):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
-        self.env.ref('payment.payment_provider_transfer').write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
@@ -114,14 +121,22 @@ class TestUi(HttpCaseWithUserDemo):
             'categ_id': self.env.ref('product.product_category_all').id,
             'website_published': True,
             'invoice_policy': 'delivery',
+            'taxes_id': [Command.set(tax.ids)],
         })
-        self.product_product_7.taxes_id = [tax.id]
+
+        # B2C
         self.env['res.config.settings'].create({
             'auth_signup_uninvited': 'b2c',
             'show_line_subtotals_tax_selection': 'tax_excluded',
         }).execute()
+        self.start_tour("/", 'website_sale_tour_b2c')
 
-        self.start_tour("/", 'website_sale_tour_1')
+        # B2B
+        self.env['res.config.settings'].create({
+            'auth_signup_uninvited': 'b2b',
+            'show_line_subtotals_tax_selection': 'tax_included',
+        }).execute()
+        self.start_tour("/", 'website_sale_tour_b2b')
         self.start_tour(self.env['website'].get_client_action_url('/shop/cart'), 'website_sale_tour_backend', login='admin')
         self.start_tour("/", 'website_sale_tour_2', login="admin")
 
@@ -131,7 +146,7 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).

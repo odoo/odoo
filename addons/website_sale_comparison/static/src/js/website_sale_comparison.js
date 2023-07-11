@@ -101,7 +101,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             }
 
             let $form = $elem.closest('form');
-            $form = $form.length ? $form : $('#product_details > form');
+            $form = $form.length ? $form : $('div#product_details > div > form');
             this.selectOrCreateProduct(
                 $form,
                 productId,

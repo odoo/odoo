@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
     import { debounce } from "@web/core/utils/timing";
-import checkoutForm from "payment.checkout_form";
+    import checkoutForm from "payment.checkout_form";
     import publicWidget from "web.public.widget";
 
     const websiteSalePaymentMixin = {
@@ -19,7 +19,7 @@ import checkoutForm from "payment.checkout_form";
          */
         start: function () {
             this.$checkbox = this.$('#checkbox_tc');
-            this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+            this.$submitButton = this.$('button[name="o_wsale_payment_submit_button"]');
             this._adaptConfirmButton();
             return this._super(...arguments);
         },
@@ -67,6 +67,20 @@ import checkoutForm from "payment.checkout_form";
             return !disabledReasonFound && this._super();
         },
 
+        /**
+         * In ecommerce, return the specific "Pay Now" button, which should be enable/disabled
+         * according to the readiness of the payment form.
+         *
+         * @returns submit Button
+         */
+        _getSubmitButton() {
+            const res = this._super();
+            if (res.length > 0) {
+                return res
+            }
+            return $('button[name="o_wsale_payment_submit_button"]');
+        },
+
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
@@ -87,7 +101,7 @@ import checkoutForm from "payment.checkout_form";
 
     }));
 
-    publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
+    publicWidget.registry.WebsiteSalePaymentFreeCart = publicWidget.Widget.extend(
         Object.assign({}, websiteSalePaymentMixin, {
             selector: 'div[name="o_website_sale_free_cart"]',
             events: {
@@ -99,7 +113,7 @@ import checkoutForm from "payment.checkout_form";
              */
             start: function () {
                 this.$checkbox = this.$('#checkbox_tc');
-                this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+                this.$submitButton = this.$('button[name="o_wsale_payment_submit_button"]');
                 this._onClickTCCheckbox();
                 return this._super(...arguments);
             },
@@ -122,3 +136,23 @@ import checkoutForm from "payment.checkout_form";
                 this.$submitButton.prop('disabled', disabledReasonFound);
             },
         }));
+
+publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend({
+    selector: '.oe_website_sale',
+    events: {
+        'click button[name="o_wsale_payment_submit_button"]': '_onClickPayWebsiteSale',
+    },
+
+    /**
+     * Submit the payment form when the custom 'Pay Now' button of ecommerce is clicked on
+     *
+     * @param {Event} ev
+     */
+    _onClickPayWebsiteSale(ev) {
+        const $paymentform = $('form.o_payment_form');
+        if ($paymentform.length == 1) {
+            ev.preventDefault()
+            $paymentform.submit()
+        }
+    },
+});

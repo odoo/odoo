@@ -792,6 +792,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
             wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
         }
     },
+
 });
 
 publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({

@@ -1,5 +1,5 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
 
     // This tour relies on a data created from the python test.
@@ -43,22 +43,22 @@
         },
         {
             content: "Check the product is in the cart",
-            trigger: 'td.td-product_name:contains(Short (TEST))',
+            trigger: 'div.o_cart_product_name:contains(Short (TEST))',
         },
         {
             content: "Check always variant",
-            trigger: 'td.td-product_name:contains(M always)',
+            trigger: 'div.o_cart_product_name:contains(M always)',
         },
         {
             content: "Check dynamic variant",
-            trigger: 'td.td-product_name:contains(M dynamic)',
+            trigger: 'div.o_cart_product_name:contains(M dynamic)',
         },
         {
             content: "Check never variant",
-            trigger: 'td.td-product_name:contains(Never attribute size: M never)',
+            trigger: 'div.o_cart_product_name:contains(Never attribute size: M never)',
         },
         {
             content: "Check never custom variant",
-            trigger: 'td.td-product_name:contains(Never attribute size custom: Yes never custom: TEST)',
+            trigger: 'div.o_cart_product_name:contains(Never attribute size custom: Yes never custom: TEST)',
         }
     ]});

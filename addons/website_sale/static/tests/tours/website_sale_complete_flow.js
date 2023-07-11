@@ -1,15 +1,14 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
-    import rpc from "web.rpc";
     import tourUtils from "website_sale.tour_utils";
 
-    registry.category("web_tour.tours").add('website_sale_tour_1', {
+    // Testing b2c with Tax-Excluded Prices
+    registry.category("web_tour.tours").add('website_sale_tour_b2c', {
         test: true,
         checkDelay: 250,
         url: '/shop?search=Storage Box Test',
         steps: [
-    // Testing b2c with Tax-Excluded Prices
     {
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
@@ -27,25 +26,25 @@
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
-        tourUtils.goToCart({quantity: 2}),
+    tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
-        trigger: 'a[role="button"][href*="/shop/checkout"]',
+        trigger: '#cart_products div:contains("Storage Box Test") input.js_quantity:propValue(2)',
     },
+    tourUtils.goToCheckout(),
     {
         content: "Check Price b2b subtotal",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
+        trigger: '#order_total_untaxed .oe_currency_value:containsExact(158.00)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2b Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
+        trigger: '#order_total_taxes .oe_currency_value:containsExact(23.70)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2b Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
+        trigger: '#order_total .oe_currency_value:containsExact(181.70)',
         run: function () {}, // it's a check
     },
     {
@@ -67,7 +66,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
+        trigger: '.oe_cart a:contains("Continue checkout")',
     },
     {
         content: "Fulfill shipping address form",
@@ -84,7 +83,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
+        trigger: '.oe_cart a:contains("Save address")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
@@ -117,26 +116,18 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
+        trigger: '.oe_cart a:contains("Save address")',
     },
     {
         content: "Confirm Address",
-        trigger: 'a.btn:contains("Confirm")',
+        trigger: 'button:contains("Confirm")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
         run: function () {}, // it's a check
     },
-    {
-        content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
-    },
-    {
-        content: "Pay Now",
-        // extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-    },
+    ...tourUtils.payWithTransfer(),
     {
         content: "Sign up",
         trigger: '.oe_cart a:contains("Sign Up")',
@@ -153,57 +144,16 @@
     {
         content: "See Quotations",
         trigger: '.o_portal_docs a:contains("Quotations")',
+        timeout: 30000,
     },
-    // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
-    {
-        content: "Open Dropdown for logout",
-        extra_trigger: ".o_header_standard:not(.o_transitioning)",
-        trigger: '#top_menu li.dropdown:visible a:contains("abcd")',
-    },
-    {
-        content: "Logout",
-        trigger: '#o_logout:contains("Logout")',
-    },
-    {
-        content: "Sign in as admin",
-        trigger: 'header a[href="/web/login"]',
-    },
-    {
-        content: "Submit login",
-        trigger: '.oe_login_form',
-        run: function () {
-            $('.oe_login_form input[name="login"]').val("admin");
-            $('.oe_login_form input[name="password"]').val("admin");
-            $('.oe_login_form input[name="redirect"]').val("/");
-            $('.oe_login_form').submit();
-        },
-    },
-    {
-        content: "Configuration Settings for 'Tax Included' and sign up 'On Invitation'",
-        extra_trigger: '.o_frontend_to_backend_nav', // Check if the user is connected
-        trigger: '#wrapwrap',
-        run: function () {
-            var def1 = rpc.query({
-                model: 'res.config.settings',
-                method: 'create',
-                args: [{
-                    'auth_signup_uninvited': 'b2b',
-                    'show_line_subtotals_tax_selection': 'tax_included',
-                }],
-            });
-            var def2 = def1.then(function (resId) {
-                return rpc.query({
-                    model: 'res.config.settings',
-                    method: 'execute',
-                    args: [[resId]],
-                });
-            });
-            def2.then(function () {
-                window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box Test';
-            });
-        },
-    },
-    // Testing b2b with Tax-Included Prices
+]})
+
+// Testing b2b with Tax-Included Prices
+registry.category("web_tour.tours").add('website_sale_tour_b2b', {
+    test: true,
+    checkDelay: 250,
+    url: '/shop?search=Storage Box Test',
+    steps: [
     {
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
@@ -224,22 +174,22 @@
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
-        trigger: 'a[href*="/shop/checkout"]',
+        trigger: '#cart_products div:contains("Storage Box Test") input.js_quantity:propValue(2)',
     },
+    tourUtils.goToCheckout(),
     {
         content: "Check Price b2c total",
-        trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(158.00)',
+        trigger: '#order_total_untaxed .oe_currency_value:containsExact(158.00)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2c Sale Tax(15%)",
-        trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(23.70)',
+        trigger: '#order_total_taxes .oe_currency_value:containsExact(23.70)',
         run: function () {}, // it's a check
     },
     {
         content: "Check Price b2c Total amount",
-        trigger: 'tr#order_total .oe_currency_value:containsExact(181.70)',
+        trigger: '#order_total .oe_currency_value:containsExact(181.70)',
         run: function () {}, // it's a check
     },
     {
@@ -273,17 +223,9 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
+        trigger: '.oe_cart a:contains("Save address")',
     },
-    {
-        content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
-    },
-    {
-        content: "Pay Now",
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-    },
+    ...tourUtils.payWithTransfer(),
     {
         content: "Open Dropdown for See quotation",
         extra_trigger: '.oe_cart .oe_website_sale_tx_status',
@@ -330,7 +272,7 @@
         steps: [
     {
         content: "Open Dropdown for logout",
-        extra_trigger: '.progress-wizard-step:contains("Extra Info")',
+        extra_trigger: '.o_wizard_steplabel:contains("Extra Info")',
         trigger: '#top_menu li.dropdown:visible a:contains("Mitchell Admin")',
     },
     {
@@ -351,19 +293,9 @@
             $('.oe_login_form').submit();
         },
     },
-    {
-        content: "Open product page",
-        trigger: '.oe_product_cart a:contains("Storage Box Test")',
-    },
-    {
-        content: "Click on add to cart",
-        trigger: '#add_to_cart',
-    },
-        tourUtils.goToCart(),
-    {
-        content: "Proceed to checkout",
-        trigger: 'a[href*="/shop/checkout"]',
-    },
+    ...tourUtils.addToCart({productName:"Storage Box Test", search: false}),
+    tourUtils.goToCart(),
+    tourUtils.goToCheckout(),
     {
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
@@ -378,12 +310,5 @@
         trigger: '#shipping_and_billing:contains(SO2New Shipping Street, 5):contains(SO2NewShipping):contains(Afghanistan)',
         run: function () {}, // it's a check
     },
-    {
-        content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
-    },
-    {
-        content: "Pay Now",
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible',
-    }]});
+    ...tourUtils.payWithTransfer(),
+]});

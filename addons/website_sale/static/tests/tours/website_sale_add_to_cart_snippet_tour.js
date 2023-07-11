@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        wTourUtils.clickOnElement('continue shopping', 'iframe a:contains("Continue shopping")'),
+        wTourUtils.clickOnElement('continue shopping', 'iframe button > span:contains("Continue shopping")'),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        wTourUtils.assertPathName('/shop/payment', 'iframe button[name=o_payment_submit_button]'),
+        wTourUtils.assertPathName('/shop/payment', 'iframe button[name=o_wsale_payment_submit_button]'),
 
         wsTourUtils.goToCart({quantity: 4, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens', backend: true}),

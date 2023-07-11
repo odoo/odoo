@@ -1,4 +1,5 @@
 /** @odoo-module alias=website_sale.utils **/
+/* global Toast */
 
 import wUtils from "website.utils";
 

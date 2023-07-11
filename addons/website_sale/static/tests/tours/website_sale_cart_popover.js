@@ -24,21 +24,21 @@ registry.category("web_tour.tours").add('website_sale_cart_popover_tour', {
         },
         {
             content: "check that popover is visible",
-            trigger: '.mycart-popover:visible',
+            trigger: 'div.toast:visible:visible',
             run: () => {},
         },
         // Trigger mouseleave to close the popover
         {
             content: "hover on cart popover",
-            trigger: '#top_menu a[href$="/shop/cart"]',
+            trigger: '#cart_toast_container a[href$="/shop/cart"]',
             run: () => {
-                $('#top_menu a[href$="/shop/cart"]').mouseleave();
+                $('#cart_toast_container a[href$="/shop/cart"]').mouseleave();
             },
         },
         // Check that popover is not visible
         {
             content: "check that popover is not visible",
-            trigger: ':not(.mycart-popover:visible)',
+            trigger: ':not(.div.toast:visible:visible)',
             run: () => {},
         },
     ]

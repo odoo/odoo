@@ -62,10 +62,13 @@ class TestUi(odoo.tests.HttpCase):
             'list_base_price': 0,
         }])
 
-        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
         # Ensure "Wire Transfer" is the default provider.
         # Providers are sorted by state, showing `test` providers first (don't ask why).
-        self.env.ref("payment.payment_provider_transfer").write({"state": "test"})
+        self.env['payment.provider'].search([('code', '=', 'demo')]).write({
+            'journal_id': cash_journal.id,
+            'state': 'test'
+        })
 
         self.start_tour("/", 'check_free_delivery', login="admin")

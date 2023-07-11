@@ -2,7 +2,7 @@
 
 import publicWidget from "web.public.widget";
 import DynamicSnippetCarousel from "website.s_dynamic_snippet_carousel";
-import wSaleUtils from "website_sale.utils"
+import wSaleUtils from "website_sale.utils";
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',

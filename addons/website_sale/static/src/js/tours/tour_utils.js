@@ -1,5 +1,5 @@
 /** @odoo-module alias=website_sale.tour_utils **/
-    
+
     import core from "web.core";
     const _t = core._t;
     import wTourUtils from "website.tour_utils";
@@ -13,7 +13,7 @@
         steps.push(wTourUtils.clickOnElement(productName, `a:contains(${productName})`));
         steps.push(wTourUtils.clickOnElement('Add to cart', '#add_to_cart'));
         if (productHasVariants) {
-            steps.push(wTourUtils.clickOnElement('Continue shopping', 'button:contains("Continue shopping")'));
+            steps.push(wTourUtils.clickOnElement('Continue shopping', 'button > span:contains("Continue shopping")'));
         }
         return steps;
     }
@@ -80,6 +80,73 @@
         };
     }
 
+    function goToCheckout() {
+        return {
+            content: 'Checkout your order',
+            trigger: 'button:contains("Checkout")',
+            run: 'click',
+        };
+    }
+
+    function pay() {
+        return {
+            content: 'Pay',
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[name="o_wsale_payment_submit_button"]:visible:not(:disabled)'
+        };
+    }
+
+    function payWithDemo() {
+        return [{
+            content: 'eCommerce: select Test payment provider',
+            trigger: '.o_payment_option_card:contains("Demo")'
+        }, {
+            content: 'eCommerce: add card number',
+            trigger: 'input[name="customer_input"]',
+            run: 'text 4242424242424242'
+        },
+        pay(),
+        {
+            content: 'eCommerce: check that the payment is successful',
+            trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
+            run: function () {}
+        }]
+    }
+
+    function payWithTransfer(redirect=false) {
+        if (!redirect) {
+            return [{
+                content: "Select `Wire Transfer` payment method",
+                trigger: '#payment_method label:contains("Wire Transfer")',
+            },
+            pay(),
+            {
+                content: "Last step",
+                trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+                timeout: 30000,
+            }]
+        } else {
+            return [{
+                content: "Select `Wire Transfer` payment method",
+                trigger: '#payment_method label:contains("Wire Transfer")',
+            },
+            pay(),
+            {
+                content: "Last step",
+                trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+                timeout: 30000,
+                run: () => {
+                    window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
+                },
+            }, {
+                content: "wait page loaded",
+                trigger: 'h1:contains("Contact us")',
+                run: function () {}, // it's a check
+            }]
+        }
+    }
+
     function searchProduct(productName) {
         return [
             wTourUtils.clickOnElement('Shop', 'a:contains("Shop")'),
@@ -114,6 +181,10 @@
         assertProductPrice,
         fillAdressForm,
         goToCart,
+        goToCheckout,
+        pay,
+        payWithDemo,
+        payWithTransfer,
         selectPriceList,
         searchProduct,
     };

@@ -4,28 +4,12 @@ import { registry } from "@web/core/registry";
 import wsTourUtils from "website_sale.tour_utils";
 
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
-        test: true,
-        url: '/shop?search=Accoustic',
-        steps: [
-        {
-            content: "select Small Cabinet",
-            trigger: '.oe_product a:contains("Acoustic Bloc Screens")',
-        },
-        {
-            content: "add 1 Small Cabinet into cart",
-            trigger: '#product_details input[name="add_qty"]',
-            run: "text 1",
-        },
-        {
-            content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to cart)",
-        },
-        wsTourUtils.goToCart(1),
-        {
-            content: "go to checkout",
-            trigger: 'a[role="button"][href="/shop/checkout?express=1"]',
-            run: 'click'
-        },
+    test: true,
+    url: '/shop',
+    steps: [
+        ...wsTourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
+        wsTourUtils.goToCart(),
+        wsTourUtils.goToCheckout(),
         {
             content: "select delivery method 1",
             trigger: "li label:contains(delivery1)",
@@ -48,7 +32,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         },
         {
             content: "check if total price is correct",
-            trigger: "tr#order_total span.oe_currency_value:contains(0.00)",
+            trigger: "#order_total span.oe_currency_value:contains(0.00)",
             run: () => {} // this is a check
         },
     ]

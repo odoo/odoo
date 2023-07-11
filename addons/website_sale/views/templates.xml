@@ -895,9 +895,10 @@
 
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale o_wsale_product_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
-                <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
+                <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}"
                     t-att-data-view-track="view_track and '1' or '0'"
-                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))"
+                    id="product_detail">
                     <t t-call="website_sale.cart_toast_container"/>
                     <div class="row align-items-center">
                         <div t-attf-class="{{'col-lg-6' if o_product_width_fw else 'col-xl-' + str(image_cols[0]) + ' col-lg-' + str(image_cols[0] + 1)}} d-flex align-items-center">
@@ -961,7 +962,10 @@
                                     <span itemprop="image" style="display:none;" t-out="base_url + website.image_url(product, 'image_1920')" />
                                     <p t-field="product.description_sale" class="text-muted" placeholder="A short description that will also appear on documents."/>
                                 </div>
-                                <form t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else ''}}" t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                                <form t-if="product._is_add_to_cart_possible()"
+                                      t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else ''}}"
+                                      action="/shop/cart/update"
+                                      method="POST">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <div class="js_product js_main_product">
                                         <t t-placeholder="select">
@@ -1073,7 +1077,7 @@
     </template>
 
     <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
-        <xpath expr="//div[@id='product_option_block']" position="inside">
+        <div id="product_option_block" position="inside">
             <div class="dropdown">
                 <button class="o_wsale_share_btn btn btn-link d-flex p-0 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-share-alt fs-3" role="img" aria-label="Share product" data-bs-original-title="" title="" aria-describedby="tooltip374124"></i>
@@ -1085,7 +1089,7 @@
                     <t t-set="_link_classes" t-valuef="dropdown-item m-0 p-0 py-2"/>
                 </t>
             </div>
-        </xpath>
+        </div>
     </template>
 
     <!-- Product options: Zoom -->
@@ -1258,6 +1262,7 @@
 
     <template id="website_sale.wizard_values_xpath" inherit_id="website.step_wizard">
         <xpath expr="//t[@t-set='_titles']" position="before">
+            <!-- FIXME MANO Translation of titles -->
             <t t-set="extra_step" t-value="false"/>
             <t t-set="o_wizard_titles" t-value="['Review Order', 'Shipping', 'Extra Info', 'Payment'] if extra_step else ['Review Order', 'Shipping', 'Payment']"/>
             <t t-set="o_wizard_urls" t-value="['/shop/cart', '/shop/checkout', '/shop/extra_info', '/shop/payment'] if extra_step else ['/shop/cart', '/shop/checkout', '/shop/payment']"/>
@@ -1279,7 +1284,7 @@
                     <div class="row justify-content-center">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="'Extra Info'"/>
+                                <t t-set="o_wizard_step_active">Extra Info</t>
                             </t>
                         </div>
                         <div class="col-12 col-lg-7 order-lg-1 oe_cart">
@@ -1492,7 +1497,7 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="'Review Order'"/>
+                                <t t-set="o_wizard_step_active">Review Order</t>
                             </t>
                         </div>
                         <div class="col-12 col-lg-7 oe_cart">
@@ -1654,15 +1659,15 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="'Shipping'"/>
+                                <t t-set="o_wizard_step_active">Shipping</t>
                             </t>
                         </div>
                         <div class="offset-xl-1 col-12 col-lg-5 col-xl-4 order-lg-2">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="redirect" t-valuef="/shop/checkout"/>
-                                <t t-set="main_cta_text" t-value="'Confirm'"/>
+                                <t t-set="main_cta_text">Confirm</t>
                                 <t t-set="main_cta_href" t-value="'/shop/confirm_order'"/>
-                                <t t-set="back_cta_text" t-value=" 'Return to cart'"/>
+                                <t t-set="back_cta_text">Return to cart</t>
                                 <t t-set="back_cta_href" t-value="'/shop/cart'"/>
                             </t>
                         </div>
@@ -1711,9 +1716,9 @@
                             </t>
                             <div class="d-lg-none mb32 mt16">
                                 <t t-call="website_sale.cta_buttons_navigation">
-                                    <t t-set="main_cta_text" t-value="'Confirm'"/>
+                                    <t t-set="main_cta_text">Confirm</t>
                                     <t t-set="main_cta_href" t-value="'/shop/confirm_order'"/>
-                                    <t t-set="back_cta_text" t-value=" 'Return to cart'"/>
+                                    <t t-set="back_cta_text">Return to Cart</t>
                                     <t t-set="back_cta_href" t-value="'/shop/cart'"/>
                                 </t>
                             </div>
@@ -1749,7 +1754,7 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="'Shipping'"/>
+                                <t t-set="o_wizard_step_active">Shipping</t>
                                 <t t-set="o_wizard_back_custom" t-value="'/shop/checkout' if not mode == ('new', 'billing') else '/shop/cart'"/>
                             </t>
                         </div>
@@ -1941,7 +1946,7 @@
                     <div class="row">
                         <div class='col-12'>
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="'Payment'"/>
+                                <t t-set="o_wizard_step_active">Payment</t>
                             </t>
                         </div>
                         <div class="col-12" t-if="errors">
@@ -1955,11 +1960,16 @@
                             </t>
                         </div>
                         <div class="col-12 offset-xl-1 col-lg-5 col-xl-4 order-lg-2">
+                            <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                             <t t-call="website_sale.cart_summary">
-                                <t t-set="main_cta_custom_attr" t-value="{'name':'o_payment_submit_button', 'disabled':true, 'data-icon-class':'fa-angle-right', 'type':'submit', 'form':'o_checkout_test'}"/>
-                                <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Pay now'"/>
-                                <t t-set="main_cta_href" t-value="'#'"/>
-                                <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
+                                <t t-if="redirect_to_sign_in">
+                                    <t t-set="main_cta_text">Sign in</t>
+                                    <t t-set="main_cta_href" t-value="'/web/login?redirect=/shop/checkout'"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="payment_step" t-value="1"/>
+                                </t>
+                                <t t-set="back_cta_text">Continue shopping</t>
                                 <t t-set="back_cta_href" t-value="'/shop'"/>
                             </t>
                         </div>
@@ -2017,11 +2027,17 @@
                                 </form>
                             </div>
                             <div class="d-lg-none mb32 mt16">
+                                <!-- TODO VFE test cart confirmation with zero amount -->
+                                <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                                 <t t-call="website_sale.cta_buttons_navigation">
-                                    <t t-set="main_cta_custom_attr" t-value="{'name':'o_payment_submit_button', 'disabled':true, 'data-icon-class':'fa-angle-right', 'type':'submit', 'form':'o_checkout_test'}"/>
-                                    <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Pay now'"/>
-                                    <t t-set="main_cta_href" t-value="'#'"/>
-                                    <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
+                                    <t t-if="redirect_to_sign_in">
+                                        <t t-set="main_cta_text">Sign in</t>
+                                        <t t-set="main_cta_href" t-value="'/web/login?redirect=/shop/checkout'"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="payment_step" t-value="1"/>
+                                    </t>
+                                    <t t-set="back_cta_text">Continue shopping</t>
                                     <t t-set="back_cta_href" t-value="'/shop'"/>
                                 </t>
                             </div>
@@ -2055,14 +2071,19 @@
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
 
-                    <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
-                    <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-
                     <t t-call="payment.express_checkout"/>
+
+                    <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                     <t t-call="website_sale.cta_buttons_navigation">
-                        <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Checkout'"/>
-                        <t t-set="main_cta_href" t-value="redirect_url"/>
-                        <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
+                        <t t-if="redirect_to_sign_in">
+                            <t t-set="main_cta_text">Sign in</t>
+                            <t t-set="main_cta_href" t-value="'/web/login?redirect=/shop/checkout'"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="main_cta_text">Checkout</t>
+                            <t t-set="main_cta_href" t-value="'/shop/checkout?express=1'"/>
+                        </t>
+                        <t t-set="back_cta_text">Continue shopping</t>
                         <t t-set="back_cta_href" t-value="'/shop'"/>
                     </t>
                 </div>
@@ -2072,20 +2093,32 @@
 
     <template id="cta_buttons_navigation" name="Navigation buttons">
         <div class="d-flex flex-column mt-4">
-            <button t-if="website_sale_order and website_sale_order.website_order_line and not address_form_submit"
-                    class="btn btn-primary w-100"
-                    t-att="main_cta_custom_attr"
-                    t-attf-onclick="window.location.href='{{main_cta_href}}';">
-                <t t-out="main_cta_text"/>
-                <i class="fw-light fa fa-angle-right ms-2"/>
-            </button>
+            <t t-if="website_sale_order and website_sale_order.website_order_line and not address_form_submit">
+                <t t-if="payment_step">
+                    <button class="btn btn-primary w-100"
+                            name="o_wsale_payment_submit_button"
+                            disabled="true"
+                            icon-class="fa-angle-right">
+                        Pay now
+                        <i class="fw-light fa fa-angle-right ms-2"/>
+                    </button>
+                </t>
+                <t t-else="">
+                    <button class="btn btn-primary w-100"
+                            t-attf-onclick="window.location.href='{{main_cta_href}}';">
+                        <t t-out="main_cta_text"/>
+                        <i class="fw-light fa fa-angle-right ms-2"/>
+                    </button>
+                </t>
+            </t>
             <div class="position-relative w-100 d-flex justify-content-center align-items-center my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
             </div>
             <a t-attf-href="{{back_cta_href}}" class="text-center">
-                <i class="fw-light fa fa-angle-left me-2"/><t t-out="back_cta_text"/>
+                <i class="fw-light fa fa-angle-left me-2"/>
+                <t t-out="back_cta_text"/>
             </a>
         </div>
     </template>
@@ -2110,39 +2143,54 @@
                     Your cart is empty!
                 </div>
                 <!-- should be and hidden accordion on mobile screen size -->
-                <div id="o_wsale_total_accordion_item" class="accordion-collapse collapse show" data-bs-parent="#o_wsale_total_accordion">
-                    <table class="table accordion-body" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                <div id="o_wsale_total_accordion_item"
+                     class="accordion-collapse collapse show"
+                     data-bs-parent="#o_wsale_total_accordion">
+                    <table t-if="website_sale_order and website_sale_order.website_order_line"
+                           class="table accordion-body"
+                           id="cart_products">
                         <tbody>
                             <tr t-foreach="website_sale_order.website_order_line" t-as="line">
-                            <t t-set="o_cart_sum_padding_top" t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
-                                <td colspan="2" t-if="not line.product_id.product_tmpl_id"/>
+                                <t t-set="o_cart_sum_padding_top"
+                                   t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
+                                <td t-if="not line.product_id" colspan="2"/>
                                 <t t-else="">
                                     <td t-attf-class='td-img ps-0 #{o_cart_sum_padding_top}'>
                                         <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                                            <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
+                                            <img t-att-src="image_data_uri(line.product_id.image_128)"
+                                                 class="img o_image_64_max rounded"
+                                                 t-att-alt="line.name_short"/>
                                         </span>
                                         <span t-else=""
                                             t-field="line.product_id.image_128"
                                             t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
                                         />
                                     </td>
-                                    <td t-attf-class="td-product_name td-qty #{o_cart_sum_padding_top}" data-cell-type="product_name">
+                                    <td t-attf-class="td-product_name td-qty #{o_cart_sum_padding_top}"
+                                        data-cell-type="product_name">
                                         <h6>
                                             <t t-out="int(line.product_uom_qty)" />
                                             <t t-if="line._get_shop_warning(clear=False)">
-                                                <i class="fa fa-warning text-warning" t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
+                                                <i class="fa fa-warning text-warning"
+                                                   role="img"
+                                                   t-att-title="line._get_shop_warning()"
+                                                   aria-label="Warning"/>
                                             </t>
                                             x
-                                            <t t-out="line.name_short" />
+                                            <t t-out="line.name_short"/>
                                         </h6>
                                     </td>
                                 </t>
-                                <td t-attf-class="td-price text-end #{o_cart_sum_padding_top} pe-0" data-cell-type="price">
+                                <td t-attf-class="td-price text-end #{o_cart_sum_padding_top} pe-0"
+                                    data-cell-type="price"
+                                    name="cart_line_price">
                                     <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-                                          t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
+                                          t-field="line.price_reduce_taxexcl"
+                                          style="white-space: nowrap;"
                                           t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                                     <span t-else=""
-                                          t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
+                                          t-field="line.price_reduce_taxinc"
+                                          style="white-space: nowrap;"
                                           t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                                 </td>
                             </tr>
@@ -2173,10 +2221,10 @@
                     <div class="row">
                         <div class="col-12 col-lg-7 order-2 order-lg-1">
                             <div class="oe_cart">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Thank you for your purchase.</h3>
-                                <a role="button" class="btn btn-primary d-none d-md-inline-block ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
-                            </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3>Thank you for your purchase.</h3>
+                                    <a role="button" class="btn btn-primary d-none d-md-inline-block ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
+                                </div>
                                 <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
                                 <t t-if="tx_sudo.state == 'done'">
                                     <div class="thanks_msg mb-4">
@@ -2185,13 +2233,16 @@
                                 </t>
                                 <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                                     <p class="alert alert-info mt-3" role="status">
-                                        <a role="button" t-att-href='order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url' class='btn btn-primary'>Sign Up</a>
-                                         to follow your order.
+                                        <a role="button"
+                                           t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url"
+                                           class="btn btn-primary">
+                                           Sign Up
+                                        </a>
+                                        to follow your order.
                                     </p>
                                 </t>
                                 <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
                                 <h4 class="text-start mt-3">Payment Information</h4>
-                                <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -2209,11 +2260,11 @@
                                 </table>
                                 <t t-call="website_sale.payment_confirmation_status"/>
                                 <div class="card mt-3">
-                                  <div class="card-body">
-                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
-                                    <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
-                                  </div>
+                                    <div class="card-body">
+                                        <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
+                                        <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_invoice_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
+                                        <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
+                                    </div>
                                 </div>
                                 <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
                             </div>

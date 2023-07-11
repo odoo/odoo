@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import tourUtils from 'website_sale.tour_utils';
 
 var registerSteps = [{
     content: "Select 2 units of 'Ticket1' ticket type",
@@ -52,26 +53,10 @@ var registerSteps = [{
         $('input[name="zip"]').val('8888');
         $('#country_id option:eq(1)').attr('selected', true);
     },
-}, {
-    content: "Next",
-    trigger: '.oe_cart .btn:contains("Continue checkout")',
-}, {
-    content: 'Select Test payment provider',
-    trigger: '.o_payment_option_card:contains("Demo")'
-}, {
-    content: 'Add card number',
-    trigger: 'input[name="customer_input"]',
-    run: 'text 4242424242424242'
-}, {
-    content: "Pay now",
-    extra_trigger: "#cart_products:contains(Ticket1):contains(Ticket2)",
-    trigger: 'button:contains(Pay Now)',
-    run: 'click',
-}, {
-    content: 'Payment is successful',
-    trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
-    run: function () {}
-}];
+},
+tourUtils.goToCheckout(),
+...tourUtils.payWithDemo(),
+];
 
 
 registry.category("web_tour.tours").add('wevent_performance_register', {

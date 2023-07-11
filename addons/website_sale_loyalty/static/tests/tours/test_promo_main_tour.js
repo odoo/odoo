@@ -36,13 +36,13 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reward product",
-            trigger: 'o_cart_product_name:contains("10.0% discount on total amount")',
+            trigger: '.o_cart_product_name:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: 'o_cart_product_name:contains("10.0% discount on total amount")',
+            trigger: '.o_cart_product_name:contains("10.0% discount on total amount")',
             run: function () {
                 ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'account.tax',
@@ -126,13 +126,10 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
-        {
-            content: "go to checkout",
-            trigger: 'a[role="button"][href="/shop/checkout?express=1"]',
-        },
+        tourUtils.goToCheckout(),
         {
             content: "check total is unchanged once we land on payment page",
-            trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
+            trigger: '#order_total .oe_currency_value:contains("967.50")',
             run: function () {}, // it's a check
         },
     ]

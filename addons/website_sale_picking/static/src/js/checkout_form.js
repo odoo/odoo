@@ -68,7 +68,7 @@ publicWidget.registry.websiteSaleDelivery.include({
         }
 
         // Jquery because the button does not behave nicely with vanilla dataset.
-        let $payButton = $('button[name="o_payment_submit_button"]');
+        let $payButton = $('button[name="o_wsale_payment_submit_button"]');
         let disabledReasons = $payButton.data('disabled_reasons') || {};
         disabledReasons.noOptionAvailableOnsite = false;
 

@@ -1,4 +1,5 @@
 /** @odoo-module alias=website_sale_options.website_sale **/
+/* global Toast */
 
 import core from "web.core";
 import publicWidget from "web.public.widget";
@@ -82,7 +83,6 @@ publicWidget.registry.WebsiteSale.include({
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
     _onModalSubmit: function (goToShop) {
-        const self = this;
         const $product = $('#product_detail');
         let currency;
         if ($product.length) {
@@ -120,9 +120,11 @@ publicWidget.registry.WebsiteSale.include({
                     } else {
                         // Show the notification about the cart
                         let divToast = document.getElementById('cart_toast_container');
-                        divToast.innerHTML = values['website_sale.cart_toast'];
-                        var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
-                        toast.show();
+                        if (divToast) {
+                            divToast.innerHTML = values['website_sale.cart_toast'];
+                            var toast = new Toast(divToast.getElementsByClassName('toast')[0]);
+                            toast.show();
+                        }
                     }
                     const $quantity = $(".my_cart_quantity");
                     $quantity.parent().parent().removeClass('d-none');

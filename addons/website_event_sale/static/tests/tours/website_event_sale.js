@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import tourUtils from 'website_sale.tour_utils';
 
 registry.category("web_tour.tours").add('event_buy_tickets', {
     test: true,
@@ -66,20 +67,6 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             trigger: '#order_total_untaxed .oe_currency_value:contains("4,000.00")',
             run: function () {}, // it's a check
         },
-        {
-            content: "Select `Wire Transfer` payment method",
-            trigger: '#payment_method label:contains("Wire Transfer")',
-        },
-        {
-            content: "Pay",
-            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
-            // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
-            trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
-        },
-        {
-            content: "Last step",
-            trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
-            timeout: 30000,
-        }
+        ...tourUtils.payWithTransfer(),
     ]
 });
