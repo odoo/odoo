@@ -1151,9 +1151,8 @@ class HrExpenseSheet(models.Model):
 
         moves = self.env['account.move'].create([sheet._prepare_bill_vals() for sheet in own_account_sheets])
         payments = self.env['account.payment'].with_context(**skip_context).create([sheet._prepare_payment_vals() for sheet in company_account_sheets])
-        (moves + payments.move_id).flush_recordset()  # Else moves may be improperly set when posted, causing posting to fail
+        moves |= payments.move_id
         moves.action_post()
-        payments.move_id.with_context(**skip_context).action_post()
 
         self.activity_update()
 
@@ -1175,53 +1174,46 @@ class HrExpenseSheet(models.Model):
         else:
             currency = self.expense_line_ids[0].currency_id
             amount = sum(self.expense_line_ids.mapped('total_amount'))
-        rate = amount / self.total_amount if self.total_amount else 0.0
         move_lines = []
         for expense in self.expense_line_ids:
-            # Due to rounding and conversion mismatch between vendor bills and payments, we have to force the computation into company account
-            amount_currency_diff = expense.total_amount_company if currency == expense.company_currency_id else expense.total_amount
-            last_expense_line = None # Used for rounding in currency issues
-            tax_data = self.env['account.tax']._compute_taxes([expense._convert_to_tax_base_line_dict()])
-            for base_line_data, update in tax_data['base_lines_to_update']:  # Add base lines
-                base_line_data.update(update)
-                amount_currency = currency.round(base_line_data['price_subtotal'] * rate)
-                expense_name = expense.name.split("\n")[0][:64]
-                last_expense_line = base_move_line = {
-                    'name': f'{expense.employee_id.name}: {expense_name}',
-                    'account_id':base_line_data['account'].id,
-                    'product_id': base_line_data['product'].id,
-                    'analytic_distribution': base_line_data['analytic_distribution'],
-                    'expense_id': expense.id,
-                    'tax_ids': [Command.set(expense.tax_ids.ids)],
-                    'tax_tag_ids': base_line_data['tax_tag_ids'],
-                    'balance': base_line_data['price_subtotal'],
-                    'amount_currency': amount_currency,
-                    'currency_id': currency.id,
-                }
-                amount_currency_diff -= amount_currency
-                move_lines.append(base_move_line)
+            tax_data = self.env['account.tax']._compute_taxes([expense._convert_to_tax_base_line_dict(price_unit=expense.total_amount, currency=expense.currency_id)])
+            rate = abs(expense.total_amount / expense.total_amount_company)
+            base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base lines
+            amount_currency = to_update['price_subtotal']
+            expense_name = expense.name.split("\n")[0][:64]
+            base_move_line = {
+                'name': f'{expense.employee_id.name}: {expense_name}',
+                'account_id': base_line_data['account'].id,
+                'product_id': base_line_data['product'].id,
+                'analytic_distribution': base_line_data['analytic_distribution'],
+                'expense_id': expense.id,
+                'tax_ids': [Command.set(expense.tax_ids.ids)],
+                'tax_tag_ids': to_update['tax_tag_ids'],
+                'amount_currency': amount_currency,
+                'currency_id': currency.id,
+            }
+            move_lines.append(base_move_line)
+            total_tax_line_balance = 0.0
             for tax_line_data in tax_data['tax_lines_to_add']:  # Add tax lines
-                amount_currency = currency.round(tax_line_data['tax_amount'] * rate)
-                last_expense_line = tax_line = {
+                tax_line_balance = expense.currency_id.round(tax_line_data['tax_amount'] / rate)
+                total_tax_line_balance += tax_line_balance
+                tax_line = {
                     'name': self.env['account.tax'].browse(tax_line_data['tax_id']).name,
-                    'display_type': 'tax',
                     'account_id': tax_line_data['account_id'],
                     'analytic_distribution': tax_line_data['analytic_distribution'],
                     'expense_id': expense.id,
                     'tax_tag_ids': tax_line_data['tax_tag_ids'],
-                    'balance': tax_line_data['tax_amount'],
-                    'amount_currency': amount_currency,
+                    'balance': tax_line_balance,
+                    'amount_currency': tax_line_data['tax_amount'],
+                    'tax_base_amount': expense.currency_id.round(tax_line_data['base_amount'] / rate),
                     'currency_id': currency.id,
                     'tax_repartition_line_id': tax_line_data['tax_repartition_line_id'],
                 }
                 move_lines.append(tax_line)
-                amount_currency_diff -= amount_currency
-            if not currency.is_zero(amount_currency_diff) and last_expense_line:
-                last_expense_line['amount_currency'] += amount_currency_diff
+            base_move_line['balance'] = expense.total_amount_company - total_tax_line_balance
         expense_name = self.name.split("\n")[0][:64]
         move_lines.append({  # Add outstanding payment line
             'name': f'{self.employee_id.name}: {expense_name}',
-            'display_type': 'payment_term',
             'account_id': self.expense_line_ids[0]._get_expense_account_destination(),
             'balance': -self.total_amount,
             'amount_currency': currency.round(-amount),
