@@ -42,6 +42,7 @@ export class ImageField extends Component {
         this.state = useState({
             isValid: true,
         });
+        this.lastURL = undefined;
     }
 
     get rawCacheKey() {
@@ -75,9 +76,12 @@ export class ImageField extends Component {
     }
 
     getUrl(previewFieldName) {
+        if (this.props.noReload && this.lastURL) {
+            return this.lastURL;
+        }
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
-                return url("/web/image", {
+                this.lastURL = url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
                     field: previewFieldName,
@@ -86,8 +90,9 @@ export class ImageField extends Component {
             } else {
                 // Use magic-word technique for detecting image type
                 const magic = fileTypeMagicWordMap[this.props.value[0]] || "png";
-                return `data:image/${magic};base64,${this.props.value}`;
+                this.lastURL = `data:image/${magic};base64,${this.props.value}`;
             }
+            return this.lastURL;
         }
         return placeholder;
     }
@@ -119,6 +124,7 @@ ImageField.props = {
     acceptedFileExtensions: { type: String, optional: true },
     width: { type: Number, optional: true },
     height: { type: Number, optional: true },
+    noReload: { type: Boolean, optional: true },
 };
 ImageField.defaultProps = {
     acceptedFileExtensions: "image/*",
@@ -145,6 +151,7 @@ ImageField.extractProps = ({ attrs }) => {
             attrs.options.size && Boolean(attrs.options.size[1])
                 ? attrs.options.size[1]
                 : attrs.height,
+        noReload: Boolean(attrs.options.no_reload),
     };
 };
 
