@@ -136,6 +136,7 @@ export class SignatureField extends Component {
 
 export const signatureField = {
     component: SignatureField,
+    fieldDependencies: [{ name: "write_date", type: "datetime" }],
     extractProps: ({ attrs, options }) => ({
         defaultFont: options.default_font || "",
         fullName: options.full_name,
