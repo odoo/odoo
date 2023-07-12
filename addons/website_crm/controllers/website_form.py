@@ -69,7 +69,9 @@ class WebsiteForm(form.WebsiteForm):
                 # or if both numbers (after formating) are the same. This way we get additional phone
                 # if possible, without modifying an existing one. (see inverse function on model crm.lead)
                 if values_phone and visitor_partner.phone:
-                    if visitor_partner._phone_format(visitor_partner.phone) == values_phone:
+                    if values_phone == visitor_partner.phone:
+                        values['partner_id'] = visitor_partner.id
+                    elif (visitor_partner._phone_format('phone') or visitor_partner.phone) == values_phone:
                         values['partner_id'] = visitor_partner.id
                 else:
                     values['partner_id'] = visitor_partner.id

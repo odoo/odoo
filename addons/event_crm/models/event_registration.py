@@ -208,14 +208,8 @@ class EventRegistration(models.Model):
 
             # compare phone, taking into account formatting
             if valid_partner and self.phone and valid_partner.phone:
-                phone_formatted = phone_validation.phone_format(
-                    self.phone,
-                    valid_partner.country_id.code or None,
-                    valid_partner.country_id.phone_code or None,
-                    force_format='E164',
-                    raise_exception=False
-                )
-                partner_phone_formatted = valid_partner._phone_format(valid_partner.phone)
+                phone_formatted = self._phone_format(fname='phone', country=valid_partner.country_id)
+                partner_phone_formatted = valid_partner._phone_format(fname='phone')
                 if phone_formatted and partner_phone_formatted and phone_formatted != partner_phone_formatted:
                     valid_partner = self.env['res.partner']
                 if (not phone_formatted or not partner_phone_formatted) and self.phone != valid_partner.phone:

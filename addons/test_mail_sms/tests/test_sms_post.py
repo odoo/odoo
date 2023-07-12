@@ -329,7 +329,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
         ], self._test_body, messages)
 
     def test_message_sms_crash_credit_single(self):
-        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2.phone_get_sanitized_number(): 'credit'}):
+        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2._phone_format(): 'credit'}):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
@@ -361,7 +361,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
         ], self._test_body, messages)
 
     def test_message_sms_crash_unregistered_single(self):
-        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2.phone_get_sanitized_number(): 'unregistered'}):
+        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2._phone_format(): 'unregistered'}):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
@@ -382,7 +382,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number_single(self):
-        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2.phone_get_sanitized_number(): 'wrong_number_format'}):
+        with self.with_user('employee'), self.mockSMSGateway(nbr_t_error={self.partner_2._phone_format(): 'wrong_number_format'}):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 

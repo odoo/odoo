@@ -4,7 +4,6 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 
@@ -127,7 +126,7 @@ class PhoneMixin(models.AbstractModel):
         number_fields = self._phone_get_number_fields()
         for record in self:
             for fname in number_fields:
-                sanitized = record.phone_get_sanitized_number(number_fname=fname)
+                sanitized = record._phone_format(fname=fname)
                 if sanitized:
                     break
             record.phone_sanitized = sanitized
@@ -148,9 +147,9 @@ class PhoneMixin(models.AbstractModel):
             # may not be calculated as blacklisted even though it is if both field values exist in a model.
             for number_field in number_fields:
                 if 'mobile' in number_field:
-                    mobile_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+                    mobile_blacklisted = record.phone_sanitized_blacklisted and record._phone_format(fname=number_field) == record.phone_sanitized
                 else:
-                    phone_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+                    phone_blacklisted = record.phone_sanitized_blacklisted and record._phone_format(fname=number_field) == record.phone_sanitized
             record.mobile_blacklisted = mobile_blacklisted
             record.phone_blacklisted = phone_blacklisted
 
@@ -195,20 +194,6 @@ class PhoneMixin(models.AbstractModel):
         """ Tool method to get all triggers for sanitize """
         res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
         return res + self._phone_get_number_fields()
-
-    def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
-        res = dict.fromkeys(self.ids, False)
-        country_fname = self._phone_get_country_field()
-        for record in self:
-            number = record[number_fname]
-            res[record.id] = phone_validation.phone_sanitize_numbers_w_record([number], record, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
-        return res
-
-    def phone_get_sanitized_number(self, number_fname='mobile', force_format='E164'):
-        self.ensure_one()
-        country_fname = self._phone_get_country_field()
-        number = self[number_fname]
-        return phone_validation.phone_sanitize_numbers_w_record([number], self, record_country_fname=country_fname, force_format=force_format)[number]['sanitized']
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])

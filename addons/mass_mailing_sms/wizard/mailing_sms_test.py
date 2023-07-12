@@ -21,9 +21,8 @@ class MassSMSTest(models.TransientModel):
         self.ensure_one()
 
         numbers = [number.strip() for number in self.numbers.splitlines()]
-        sanitize_res = phone_validation.phone_sanitize_numbers_w_record(numbers, self.env.user)
-        sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
-        invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
+        sanitized_numbers = [self.env.user._phone_format(number=number) for number in numbers]
+        invalid_numbers = [number for sanitized, number in zip(sanitized_numbers, numbers) if not sanitized]
 
         record = self.env[self.mailing_id.mailing_model_real].search([], limit=1)
         body = self.mailing_id.body_plaintext

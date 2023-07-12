@@ -573,7 +573,7 @@ class TestSMSComposerMass(SMSCommon):
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 
-        number = self.partners[2].phone_get_sanitized_number()
+        number = self.partners[2]._phone_format()
         self.assertSMSNotification(
             [{'partner': test_record_2.customer_id, 'number': number}],
             "Hello %s ceci est en français." % test_record_2.display_name, messages
