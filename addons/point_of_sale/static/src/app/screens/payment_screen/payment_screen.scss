@@ -1,52 +1,5 @@
-.payment-screen .center-content {
-    grid-template-rows: auto 1fr;
-    width: 30rem;
-}
-
-@include media-breakpoint-down(lg)  {
-    .payment-screen {
-
-        .main-content {
-            grid-template-columns: 300px 1fr;
-            grid-template-rows: 1fr auto;
-        }
-        .center-content {
-            border-bottom: none;
-        }
-    }
-
-    .payment-status-container > div:first-child {
-        margin-top: map-get($spacers, 2);
-    }
-}
-
-@include media-breakpoint-down(md) {
-    .payment-screen .main-content {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-    }
-    .payment-screen .center-content {
-        grid-template-rows: 1fr;
-    }
-    .payment-screen .left-content,
-    .payment-screen .right-content {
-        justify-content: flex-start;
-        overflow: initial;
-    }
-    .screen .right-content {
-        grid-column: span 1;
-    }
-    
-    .pos .paymentlines-container {
-        position: sticky;
-        top: 0;
-    }
-}
-
 .payment-method-icon {
     max-width: 50px;
     max-height: 50px;
     vertical-align: middle;
 }
-
-
