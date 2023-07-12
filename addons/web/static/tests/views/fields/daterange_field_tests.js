@@ -648,6 +648,7 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
 
         assert.notOk(isHiddenByCSS(target.querySelector(".o_add_date")));
+        assert.containsNone(target, ".o_datetime_picker");
         assert.strictEqual(
             target.querySelector(".o_add_date").innerText.trim().toLowerCase(),
             "add end date"
@@ -657,6 +658,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_add_date"));
 
         const [startInput, endInput] = target.querySelectorAll(".o_field_daterange input");
+        assert.containsOnce(target, ".o_datetime_picker");
         assert.strictEqual(
             startInput.value,
             endInput.value,

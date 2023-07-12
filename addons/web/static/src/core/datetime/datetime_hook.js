@@ -88,24 +88,27 @@ export const useDateTimePicker = (hookParams) => {
     };
 
     /**
-     * Ensures the given input has the focus and applies the class names on all
-     * inputs accordingly.
-     *
-     * @param {HTMLInputElement} inputEl
+     * Ensures the current focused input (indicated by `pickerProps.focusedDateIndex`)
+     * is actually focused.
      */
-    const focusInput = (inputEl) => {
+    const focusActiveInput = () => {
+        const inputEl = getInput(pickerProps.focusedDateIndex);
+        if (!inputEl) {
+            shouldFocusOnPatched = true;
+            return;
+        }
+
         const { activeElement } = inputEl.ownerDocument;
         if (activeElement !== inputEl) {
             inputEl.focus();
         }
-        inputEl.selectionStart = 0;
-        inputEl.selectionEnd = inputEl.value.length;
-        setFocusClass(inputEl);
+
+        setInputFocus(inputEl);
     };
 
     /**
      * @param {number} valueIndex
-     * @returns
+     * @returns {HTMLInputElement | null}
      */
     const getInput = (valueIndex) => {
         const el = inputRefs[valueIndex]?.el;
@@ -174,17 +177,7 @@ export const useDateTimePicker = (hookParams) => {
      * @param {PointerEvent} ev
      */
     const onInputClick = ({ target }) => {
-        pickerProps.focusedDateIndex = target === getInput(1) ? 1 : 0;
-
-        if (!popover.isOpen) {
-            if (target && env.isSmall) {
-                target.scrollIntoView(true);
-            }
-
-            popover.open(getPopoverTarget(), { pickerProps });
-        }
-
-        focusInput(target);
+        openPicker(target === getInput(1) ? 1 : 0);
     };
 
     /**
@@ -192,7 +185,7 @@ export const useDateTimePicker = (hookParams) => {
      */
     const onInputFocus = ({ target }) => {
         pickerProps.focusedDateIndex = target === getInput(1) ? 1 : 0;
-        focusInput(target);
+        setInputFocus(target);
     };
 
     /**
@@ -202,7 +195,6 @@ export const useDateTimePicker = (hookParams) => {
         switch (ev.key) {
             case "Enter":
             case "Escape": {
-                ev.preventDefault();
                 return saveAndClose();
             }
             case "Tab": {
@@ -211,6 +203,23 @@ export const useDateTimePicker = (hookParams) => {
                 }
             }
         }
+    };
+
+    /**
+     * @param {number} inputIndex Input from which to open the picker
+     */
+    const openPicker = (inputIndex) => {
+        pickerProps.focusedDateIndex = inputIndex;
+
+        if (!popover.isOpen) {
+            const popoverTarget = getPopoverTarget();
+            if (env.isSmall) {
+                popoverTarget.scrollIntoView(true);
+            }
+            popover.open(popoverTarget, { pickerProps });
+        }
+
+        focusActiveInput();
     };
 
     /**
@@ -263,6 +272,20 @@ export const useDateTimePicker = (hookParams) => {
     };
 
     /**
+     * Applies class names to all inputs according to whether they are focused or not.
+     *
+     * @param {HTMLInputElement} inputEl
+     */
+    const setInputFocus = (inputEl) => {
+        inputEl.selectionStart = 0;
+        inputEl.selectionEnd = inputEl.value.length;
+
+        setFocusClass(inputEl);
+
+        shouldFocusOnPatched = false;
+    };
+
+    /**
      * Synchronizes the given input with the given value.
      *
      * @param {HTMLInputElement} el
@@ -277,26 +300,26 @@ export const useDateTimePicker = (hookParams) => {
      * @param {DateTimePickerProps["value"]} value
      */
     const updateValue = (value) => {
+        const previousValue = pickerProps.value;
+        pickerProps.value = value;
+
+        if (areDatesEqual(previousValue, pickerProps.value)) {
+            return;
+        }
+
         if (pickerProps.range) {
             // When in range: compare each individual value
-            const [currentStart, currentEnd] = ensureArray(pickerProps.value);
-            const [nextStart, nextEnd] = ensureArray(value);
-            const areStartDatesEqual = areDatesEqual(currentStart, nextStart);
-            const areEndDatesEqual = areDatesEqual(currentEnd, nextEnd);
+            const [prevStart, prevEnd] = ensureArray(previousValue);
+            const [nextStart, nextEnd] = ensureArray(pickerProps.value);
             if (
-                (pickerProps.focusedDateIndex === 0 && areEndDatesEqual) ||
-                (pickerProps.focusedDateIndex === 1 && areStartDatesEqual)
+                (pickerProps.focusedDateIndex === 0 && areDatesEqual(prevEnd, nextEnd)) ||
+                (pickerProps.focusedDateIndex === 1 && areDatesEqual(prevStart, nextStart))
             ) {
                 pickerProps.focusedDateIndex = pickerProps.focusedDateIndex === 1 ? 0 : 1;
             }
         }
 
-        const previousValue = pickerProps.value;
-        pickerProps.value = value;
-
-        if (!areDatesEqual(previousValue, pickerProps.value)) {
-            onChange?.(pickerProps.value);
-        }
+        onChange?.(pickerProps.value);
     };
 
     const updateValueFromInputs = () => {
@@ -322,8 +345,8 @@ export const useDateTimePicker = (hookParams) => {
     // Hook variables
 
     const { format, onApply, onChange, target } = hookParams;
-    /** @type {ReturnType<typeof useRef<HTMLInputElement>>[]} */
     const targetRef = typeof target === "string" ? useRef(target) : target;
+    /** @type {ReturnType<typeof useRef<HTMLInputElement>>[]} */
     const inputRefs = [useRef("start-date"), useRef("end-date")];
     const env = useEnv();
     const popover = usePopover(DateTimePickerPopover, {
@@ -367,32 +390,19 @@ export const useDateTimePicker = (hookParams) => {
             }
         }
 
-        // Will focus input on next patch
-        shouldFocus = true;
-        setFocusClass(getInput(pickerProps.focusedDateIndex));
+        shouldFocusOnPatched = true;
     });
 
     /** Decides whether the popover 'onClose' callback can be called */
     let allowOnClose = true;
     /** @type {boolean[]} */
     let inputsChanged = [];
-    let lastIsRange = pickerProps.range;
     /** @type {DateTimePickerProps | null} */
     let lastInitialProps = null;
-    let shouldFocus = false;
+    let lastIsRange = pickerProps.range;
+    let shouldFocusOnPatched = false;
 
     onWillRender(computeBasePickerProps);
-
-    onPatched(() => {
-        if (!shouldFocus || !popover.isOpen) {
-            return;
-        }
-        const input = getInput(pickerProps.focusedDateIndex);
-        if (input) {
-            shouldFocus = false;
-            focusInput(input);
-        }
-    });
 
     const cleanups = [];
     useEffect(() => {
@@ -418,5 +428,13 @@ export const useDateTimePicker = (hookParams) => {
         };
     });
 
-    return pickerProps;
+    // Note: this `onPatched` callback must be called after the `useEffect` since
+    // the effect may change input values that will be selected by the patch callback.
+    onPatched(() => {
+        if (popover.isOpen && shouldFocusOnPatched) {
+            focusActiveInput();
+        }
+    });
+
+    return { state: pickerProps, open: openPicker };
 };

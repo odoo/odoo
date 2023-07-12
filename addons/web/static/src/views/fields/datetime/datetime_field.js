@@ -98,7 +98,7 @@ export class DateTimeField extends Component {
             return pickerProps;
         };
 
-        const pickerState = useDateTimePicker({
+        const dateTimePicker = useDateTimePicker({
             target: "root",
             get pickerProps() {
                 return getPickerProps();
@@ -125,9 +125,9 @@ export class DateTimeField extends Component {
                 }
             },
         });
-
         // Subscribes to changes made on the picker state
-        this.state = useState(pickerState);
+        this.state = useState(dateTimePicker.state);
+        this.openPicker = dateTimePicker.open;
 
         onWillRender(() => this.triggerIsDirty());
     }
@@ -146,6 +146,8 @@ export class DateTimeField extends Component {
         this.state.focusedDateIndex = valueIndex;
         this.state.value = values;
         this.state.range = true;
+
+        this.openPicker(valueIndex);
     }
 
     /**
