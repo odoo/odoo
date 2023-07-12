@@ -22,7 +22,6 @@
        -moz-user-select: none;
             user-select: none;
     text-shadow: none;
-    overflow: hidden;
 }
 
 
@@ -32,13 +31,17 @@
     text-decoration: none;
     color: $gray-700;
 }
-
 .pos ul, .pos ol {
     padding: 0;
     margin: 0;
 }
+
 .pos li {
     list-style-type: none;
+}
+
+.modal-footer {
+    justify-content: start;
 }
 
 /* --- Generic Restyling and Resets --- */
@@ -71,27 +74,8 @@ td {
     clear: both;
 }
 
-
-.pos input::-webkit-outer-spin-button,
-.pos input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-
-.pos .oe_hidden{
-    display: none !important;
-}
-
-.pos ul, .pos li  {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-
-/*  ********* POS CONTENT ********* */
-
-.pos-content {
-    height: calc(100% - #{$navbar-height});
-}
-

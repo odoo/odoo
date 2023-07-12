@@ -78,11 +78,11 @@
                 </main>
     
                 <footer class="footer footer-flex modal-footer">
-                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                        Cancel
-                    </div>
                     <div class="button highlight confirm btn btn-lg btn-primary" t-on-click="confirm">
                         Add
+                    </div>
+                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                        Cancel
                     </div>
                 </footer>
             </div>
@@ -106,6 +106,12 @@
                 </main>
     
                 <footer class="footer footer-flex mobile modal-footer">
+                    <div class="button highlight confirm btn btn-lg btn-primary" t-on-click="confirm">
+                        Add
+                    </div>
+                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                        Cancel
+                    </div>
                     <div class="quantity-selector d-flex align-items-center justify-content-center w-100 py-2 fw-bolder">
                         <button class="btn btn-lg btn-secondary" t-on-click="removeOneQuantity">
                             <i class="fa fa-minus" aria-hidden="true"></i>
@@ -114,12 +120,6 @@
                         <button class="btn btn-lg btn-secondary" t-on-click="addOneQuantity">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
-                    </div>
-                    <div class="button highlight confirm btn btn-lg btn-primary" t-on-click="confirm">
-                        Add
-                    </div>
-                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                        Cancel
                     </div>
                 </footer>
             </div>

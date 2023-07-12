@@ -8,7 +8,7 @@
             </div>
             <div class="selection btn-group-vertical justify-content-start w-100 p-3 overflow-y-auto">
                 <t t-foreach="props.list" t-as="item" t-key="item.id">
-                    <button type="button" class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start" t-att-class="{ 'selected text-bg-primary': item.isSelected }"
+                    <button type="button" class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start" t-att-class="{ 'selected active': item.isSelected }"
                             t-on-click="() => this.selectItem(item.id)">
                         <div class="d-flex flex-column">
                             <span t-esc="item.label" />

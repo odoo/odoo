@@ -5,7 +5,7 @@
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
             <button
                 t-if="this.swapButton"
-                class="btn-switchpane btn btn-primary flex-fill rounded-0 fw-bolder py-5"
+                class="btn-switchpane btn btn-primary flex-fill rounded-0 fw-bolder py-3"
                 t-on-click="submitOrder"
                 t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}">
                 <!-- Replace the payment button by the order button -->
@@ -14,7 +14,7 @@
             </button>
             <t t-else="">
                 <button 
-                    class="btn-switchpane btn btn-primary flex-fill rounded-0 fw-bolder py-5" 
+                    class="btn-switchpane btn btn-primary flex-fill rounded-0 fw-bolder py-3" 
                     t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}"
                     t-on-click="() => currentOrder.pay()">
                     <span class="fs-1 d-block">Pay</span>

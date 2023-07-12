@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen" owl="1">
-        <div class="ticket-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+        <div class="ticket-screen screen h-100 bg-100" t-att-class="{ oe_hidden: !props.isShown }">
             <div class="screen-full-width d-flex w-100 h-100">
                 <div class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-50 h-md-100 bg-300 overflow-y-auto">
-                    <div class="controls d-flex align-items-center justify-content-between p-3">
+                    <div class="controls d-flex align-items-center justify-content-between mt-1 mt-md-0 p-2 bg-400">
                         <t t-if="!ui.isSmall || !state.showSearchBar">
                             <div class="buttons d-flex gap-2">
                                 <button class="discard btn btn-lg btn-light" t-on-click="() => this.pos.closeScreen()">
@@ -69,7 +69,7 @@
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ 'highlight text-bg-primary': isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
+                                <div class="order-row" t-att-class="{ 'highlight': isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                         <div t-if="ui.isSmall"><t t-esc="getTotal(order)"></t></div>
@@ -104,7 +104,7 @@
                         <t t-else="">
                             <div class="empty-order-list m-5 text-center text-muted">
                                 <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-4x fa-shopping-cart"></i>
-                                <h3 class="mt-2">No orders found</h1>
+                                <h3 class="mt-2">No orders found</h3>
                             </div>
                         </t>
                     </div>
@@ -119,7 +119,7 @@
                         selectedOrderlineId="_selectedOrderlineId"
                         highlightHeaderNote="_state.ui.highlightHeaderNote" />
                     <div class="pads border-top">
-                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden">
+                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
                             <InvoiceButton
                                 onInvoiceOrder.bind="onInvoiceOrder"
                                 order="_selectedSyncedOrder" />

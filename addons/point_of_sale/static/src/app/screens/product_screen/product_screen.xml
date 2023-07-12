@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductScreen" owl="1">
-        <div class="product-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+        <div class="product-screen screen h-100 bg-100" t-att-class="{ oe_hidden: !props.isShown }">
             <div class="screen-full-width d-flex w-100 h-100">
-                <div class="leftpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 border-end border-3 bg-200" t-if="!ui.isSmall || pos.mobile_pane === 'left'">
+                <div class="leftpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 border-end bg-200" t-if="!ui.isSmall || pos.mobile_pane === 'left'">
                     <OrderWidget/>
                     <div class="pads border-top">
-                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden">
+                        <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300">
                             <t t-if="!ui.isSmall">
                                 <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
                                     <t t-component="cb.component" t-key="cb.name"/>
@@ -33,13 +33,13 @@
                             <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                         </div>
                         <div class="switchpane d-flex">
-                            <button class="btn-switchpane pay-button btn btn-primary flex-fill rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
+                            <button class="btn-switchpane pay-button btn btn-primary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
                                 <span class="fs-1 d-block">Pay</span>
                                 <span><t t-esc="total" /></span>
                             </button>
-                            <button class="btn-switchpane btn btn-secondary flex-fill rounded-0 fw-bolder" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
+                            <button class="btn-switchpane btn btn-secondary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
                                 <span class="fs-1 d-block">Review</span>
-                                <span><t t-esc="items_number"/> items</span>
+                                <span><t t-esc="items"/> items</span>
                             </button>
                         </div>
                     </t>

@@ -17,8 +17,8 @@
                             <tr class="text-dark">
                                 <th>Payment Method</th>
                                 <th>Expected</th>
-                                <th style="width: 20%">Counted</th>
-                                <th style="width: 20%">Difference</th>
+                                <th style="width:20%">Counted</th>
+                                <th>Difference</th>
                             </tr>
                         </thead>
                         <t t-if="cashControl">
@@ -26,19 +26,20 @@
                                 <tr>
                                     <td t-esc="defaultCashDetails.name"/>
                                     <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
-                                    <td class="d-flex" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
-                                        <input class="pos-input form-control" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
+                                    <td class="input-group" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
+                                        <input class="pos-input form-control text-end" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
                                         <div class="button icon ClosePosPopup btn btn-secondary" t-on-click="openDetailsPopup">
                                             <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning text-danger fw-bolder': state.payments[defaultCashDetails.id].difference}"/>
+                                    <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" 
+                                        t-att-class="{'warning text-danger fw-bolder': state.payments[defaultCashDetails.id].difference}"/>
                                 </tr>
                             </tbody>
-                            <tbody class="cash-overview d-flex flex-column mb-2 border-start small text-muted">
+                            <tbody class="cash-overview border-start small text-muted">
                                 <tr>
                                     <td>Opening</td>
-                                    <td t-esc="env.utils.formatCurrency(defaultCashDetails.opening)"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(defaultCashDetails.opening)"/>
                                 </tr>
                                 <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
                                     <td>
@@ -47,7 +48,7 @@
                                             <t t-esc="move.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
                                 </tr>
                                 <tr t-if="defaultCashDetails.payment_amount">
                                     <td>
@@ -56,7 +57,7 @@
                                             Payments in <t t-esc="defaultCashDetails.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(defaultCashDetails.payment_amount))"/>
                                 </tr>
                             </tbody>
                         </t>
@@ -73,22 +74,26 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="notes-container d-flex flex-column gap-3 border-top mt-3 pt-3">
-                    <div class="opening-notes-container d-flex flex-column align-items-start" t-if="openingNotes" >
+                <div class="notes-container d-flex flex-column flex-sm-row gap-3 border-top mt-3 pt-3">
+                    <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="openingNotes" >
                         <label class="form-label" for="openingNotes">Opening note</label>
                         <textarea class="opening-notes form-control" id="openingNotes">
                             <t t-esc="openingNotes"/>
                         </textarea>
                     </div>
-                    <div class="closing-notes-container d-flex flex-column align-items-start">
+                    <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
                         <label class="form-label" for="closingNotes">Closing note</label>
                         <textarea class="closing-notes form-control" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
                     </div>
                 </div>
             </main>
             <footer class="footer modal-footer justify-content-between">
-                <!-- Download Sale Details -->
                 <div class="modal-footer-left d-flex gap-2">
+                    <button class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Close Session</button>
+                    <button class="button btn btn-lg btn-secondary" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</button>
+                </div>
+                <!-- Download Sale Details -->
+                <div class="modal-footer-right d-flex gap-2">
                     <button class="button icon btn btn-lg btn-secondary"
                         t-on-click="downloadSalesReport"
                         title="Download a report with all the sales of the current PoS Session">
@@ -99,10 +104,6 @@
                     <button t-if="hardwareProxy.printer" class="button icon btn btn-lg btn-secondary">
                         <SaleDetailsButton/>
                     </button>
-                </div>
-                <div class="modal-footer-right d-flex gap-2">
-                    <button class="button btn btn-lg btn-secondary" t-att-class="{'disabled': !canCancel()}" t-on-click="cancel">Discard</button>
-                    <button class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Close Session</button>
                 </div>
             </footer>
         </div>
