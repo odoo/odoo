@@ -30,7 +30,7 @@ class ResCurrencyRate(models.Model):
         ])
         return [
             ('currency_id', populate.randomize(self.env['res.currency'].search([('active', '=', True)]).ids)),
-            ('company_id', populate.randomize(company_ids.ids)),
+            ('company_id', populate.randomize(company_ids.root_id.ids)),
             ('name', populate.compute(get_date)),
             ('rate', populate.compute(get_rate)),
         ]
