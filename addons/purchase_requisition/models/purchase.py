@@ -215,22 +215,45 @@ class PurchaseOrder(models.Model):
         product_to_best_price_line = defaultdict(lambda: self.env['purchase.order.line'])
         product_to_best_date_line = defaultdict(lambda: self.env['purchase.order.line'])
         product_to_best_price_unit = defaultdict(lambda: self.env['purchase.order.line'])
-        order_lines = self.order_line | self.alternative_po_ids.order_line
-        for line in order_lines:
+        po_alternatives = self | self.alternative_po_ids
+
+        multiple_currencies = False
+        if len(po_alternatives.currency_id) > 1:
+            multiple_currencies = True
+
+        for line in po_alternatives.order_line:
             if not line.product_qty or not line.price_subtotal or line.state in ['cancel', 'purchase', 'done']:
                 continue
-            if not product_to_best_price_line[line.product_id] or product_to_best_price_line[line.product_id][0].price_subtotal > line.price_subtotal:
+
+            # if no best price line => no best price unit line either
+            if not product_to_best_price_line[line.product_id]:
                 product_to_best_price_line[line.product_id] = line
-            elif product_to_best_price_line[line.product_id][0].price_subtotal == line.price_subtotal:
-                product_to_best_price_line[line.product_id] |= line
+                product_to_best_price_unit[line.product_id] = line
+            else:
+                price_subtotal = line.price_subtotal
+                price_unit = line.price_unit
+                current_price_subtotal = product_to_best_price_line[line.product_id][0].price_subtotal
+                current_price_unit = product_to_best_price_unit[line.product_id][0].price_unit
+                if multiple_currencies:
+                    price_subtotal *= line.order_id.currency_rate
+                    price_unit *= line.order_id.currency_rate
+                    current_price_subtotal *= product_to_best_price_line[line.product_id][0].order_id.currency_rate
+                    current_price_unit *= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
+
+                if current_price_subtotal > price_subtotal:
+                    product_to_best_price_line[line.product_id] = line
+                elif current_price_subtotal == price_subtotal:
+                    product_to_best_price_line[line.product_id] |= line
+                if current_price_unit > price_unit:
+                    product_to_best_price_unit[line.product_id] = line
+                elif current_price_unit == price_unit:
+                    product_to_best_price_unit[line.product_id] |= line
+
             if not product_to_best_date_line[line.product_id] or product_to_best_date_line[line.product_id][0].date_planned > line.date_planned:
                 product_to_best_date_line[line.product_id] = line
             elif product_to_best_date_line[line.product_id][0].date_planned == line.date_planned:
                 product_to_best_date_line[line.product_id] |= line
-            if not product_to_best_price_unit[line.product_id] or product_to_best_price_unit[line.product_id][0].price_unit > line.price_unit:
-                product_to_best_price_unit[line.product_id] = line
-            elif product_to_best_price_unit[line.product_id][0].price_unit == line.price_unit:
-                product_to_best_price_unit[line.product_id] |= line
+
         best_price_ids = set()
         best_date_ids = set()
         best_price_unit_ids = set()
