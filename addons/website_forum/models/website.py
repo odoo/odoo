@@ -38,6 +38,8 @@ class Website(models.Model):
             result.append(self.env['forum.forum']._search_get_detail(self, order, options))
         if search_type in ['forums', 'forum_posts_only', 'all']:
             result.append(self.env['forum.post']._search_get_detail(self, order, options))
+        if search_type in ['forums', 'forum_tags_only', 'all']:
+            result.append(self.env['forum.tag']._search_get_detail(self, order, options))
         return result
 
     def _update_forum_count(self):

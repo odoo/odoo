@@ -2,12 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
+from collections import defaultdict
+from operator import itemgetter
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools.translate import html_translate
+
+MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
 
 class Forum(models.Model):
@@ -20,7 +24,7 @@ class Forum(models.Model):
         'website.multi.mixin',
         'website.searchable.mixin',
     ]
-    _order = "sequence"
+    _order = "sequence, id"
 
     def _get_default_welcome_message(self):
         return Markup("""
@@ -136,6 +140,11 @@ class Forum(models.Model):
     has_pending_post = fields.Boolean(string='Has pending post', compute='_compute_has_pending_post')
     can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
 
+    # tags
+    tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
+    tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
+    tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_ids_usage')
+
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
         domain = [
@@ -155,6 +164,35 @@ class Forum(models.Model):
     def _compute_can_moderate(self):
         for forum in self:
             forum.can_moderate = self.env.user.karma >= forum.karma_moderate
+
+    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
+    def _compute_tag_ids_usage(self):
+        forums_without_tags = self.filtered(lambda f: not f.tag_ids)
+        forums_without_tags.tag_most_used_ids = forums_without_tags.tag_unused_ids = False
+        forums_with_tags = self - forums_without_tags
+        if not forums_with_tags:
+            return
+
+        tags_data = self.env['forum.tag'].search_read(
+            [('forum_id', 'in', forums_with_tags.ids)],
+            fields=['id', 'forum_id', 'posts_count'],
+            order='forum_id, posts_count DESC, name, id',
+        )
+        current_forum_id = tags_data[0]['forum_id'][0]
+        forum_tags = defaultdict(lambda: {'most_used_ids': [], 'unused_ids': []})
+
+        for tag_data in tags_data:
+            tag_id, tag_forum_id, posts_count = itemgetter('id', 'forum_id', 'posts_count')(tag_data)
+            if tag_forum_id[0] != current_forum_id:
+                current_forum_id = tag_forum_id[0]
+            if not posts_count:  # Could be 0 or None
+                forum_tags[current_forum_id]['unused_ids'].append(tag_id)
+            elif len(forum_tags[current_forum_id]['most_used_ids']) < MOST_USED_TAGS_COUNT:
+                forum_tags[current_forum_id]['most_used_ids'].append(tag_id)
+
+        for forum in forums_with_tags:
+            forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
+            forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
 
     @api.depends('description')
     def _compute_teaser(self):
@@ -276,10 +314,13 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
-    def get_tags_first_char(self):
-        """ get set of first letter of forum tags """
-        tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
+    def _get_tags_first_char(self, tags=None):
+        """Get set of first letter of forum tags.
+
+        :param tags: tags recordset to further filter forum's tags that are also in these tags.
+        """
+        tag_ids = self.tag_ids if tags is None else (self.tag_ids & tags)
+        return sorted({tag.name[0].upper() for tag in tag_ids if len(tag.name)})
 
     # ----------------------------------------------------------------------
     # WEBSITE
