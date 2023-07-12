@@ -31,7 +31,7 @@ from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -610,6 +610,12 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         self._outcome.errors = _ErrorCatcher(self)
         super()._callSetUp()
 
+    def patch_requests(self):
+        # requests.get -> requests.api.request -> Session().request
+        # TBD: enable by default & set side_effect=NotImplementedError to force an error
+        p = patch('requests.Session.request', Mock(spec_set=[]))
+        self.addCleanup(p.stop)
+        return p.start()
 
 class _ErrorCatcher(list):
     """ This extends a list where errors are appended whenever they occur. The
