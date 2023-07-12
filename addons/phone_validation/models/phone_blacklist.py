@@ -4,7 +4,6 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -26,21 +25,20 @@ class PhoneBlackList(models.Model):
 
     @api.model_create_multi
     def create(self, values):
-        # First of all, extract values to ensure emails are really unique (and don't modify values in place)
+        # First of all, extract values to ensure numbers are really unique (and don't modify values in place)
         to_create = []
         done = set()
         for value in values:
-            number = value['number']
-            sanitized_values = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]
-            sanitized = sanitized_values['sanitized']
-            if not sanitized:
-                raise UserError(sanitized_values['msg'] + _(" Please correct the number and try again."))
-            if sanitized in done:
+            try:
+                sanitized_value = self.env.user._phone_format(number=value['number'], raise_exception=True)
+            except UserError as err:
+                raise UserError(str(err) + _(" Please correct the number and try again.")) from err
+            if sanitized_value in done:
                 continue
-            done.add(sanitized)
-            to_create.append(dict(value, number=sanitized))
+            done.add(sanitized_value)
+            to_create.append(dict(value, number=sanitized_value))
 
-        """ To avoid crash during import due to unique email, return the existing records if any """
+        # To avoid crash during import due to unique number, return the existing records if any
         bl_entries = {}
         if to_create:
             sql = '''SELECT number, id FROM phone_blacklist WHERE number = ANY(%s)'''
@@ -54,11 +52,10 @@ class PhoneBlackList(models.Model):
 
     def write(self, values):
         if 'number' in values:
-            number = values['number']
-            sanitized_values = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]
-            sanitized = sanitized_values['sanitized']
-            if not sanitized:
-                raise UserError(sanitized_values['msg'] + _(" Please correct the number and try again."))
+            try:
+                sanitized = self.env.user._phone_format(number=values['number'], raise_exception=True)
+            except UserError as err:
+                raise UserError(str(err) + _(" Please correct the number and try again.")) from err
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 
@@ -67,7 +64,7 @@ class PhoneBlackList(models.Model):
         def sanitize_number(arg):
             if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
                 number = arg[2]
-                sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+                sanitized = self.env.user._phone_format(number=number)
                 if sanitized:
                     return (arg[0], arg[1], sanitized)
             return arg
@@ -76,7 +73,7 @@ class PhoneBlackList(models.Model):
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def add(self, number, message=None):
-        sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+        sanitized = self.env.user._phone_format(number=number)
         return self._add([sanitized], message=message)
 
     def _add(self, numbers, message=None):
@@ -101,7 +98,7 @@ class PhoneBlackList(models.Model):
         return records
 
     def remove(self, number, message=None):
-        sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+        sanitized = self.env.user._phone_format(number=number)
         return self._remove([sanitized], message=message)
 
     def _remove(self, numbers, message=None):

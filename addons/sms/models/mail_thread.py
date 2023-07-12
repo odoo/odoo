@@ -88,7 +88,7 @@ class MailThread(models.AbstractModel):
 
             valid_number = False
             for fname in [f for f in tocheck_fields if f in record]:
-                valid_number = phone_validation.phone_sanitize_numbers_w_record([record[fname]], record)[record[fname]]['sanitized']
+                valid_number = record._phone_format(fname=fname)
                 if valid_number:
                     break
 
@@ -104,7 +104,7 @@ class MailThread(models.AbstractModel):
                 partner = self.env['res.partner']
                 for partner in all_partners:
                     for fname in self.env['res.partner']._phone_get_number_fields():
-                        valid_number = phone_validation.phone_sanitize_numbers_w_record([partner[fname]], record)[partner[fname]]['sanitized']
+                        valid_number = partner._phone_format(fname=fname)
                         if valid_number:
                             break
 
@@ -271,20 +271,17 @@ class MailThread(models.AbstractModel):
         if partner_ids:
             for partner in self.env['res.partner'].sudo().browse(partner_ids):
                 number = sms_pid_to_number.get(partner.id) or partner.mobile or partner.phone
-                sanitize_res = phone_validation.phone_sanitize_numbers_w_record([number], partner)[number]
-                number = sanitize_res['sanitized'] or number
                 sms_create_vals.append(dict(
                     sms_base_vals,
                     partner_id=partner.id,
-                    number=number
+                    number=partner._phone_format(number=number) or number,
                 ))
 
         # notify from additional numbers
         if sms_numbers:
-            sanitized = phone_validation.phone_sanitize_numbers_w_record(sms_numbers, self)
             tocreate_numbers = [
-                value['sanitized'] or original
-                for original, value in sanitized.items()
+                self._phone_format(number=sms_number) or sms_number
+                for sms_number in sms_numbers
             ]
             sms_create_vals += [dict(
                 sms_base_vals,

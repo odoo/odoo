@@ -11,7 +11,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_razorpay.controllers.main import RazorpayController
-from odoo.addons.phone_validation.tools.phone_validation import phone_sanitize_numbers
 
 
 _logger = logging.getLogger(__name__)
@@ -52,16 +51,14 @@ class PaymentTransaction(models.Model):
         return_url_params = {'reference': self.reference}
 
         phone = self.partner_phone
-        error_message = _("The phone number is missing.")
         if phone:
             # sanitize partner phone
-            country_code = self.partner_country_id.code
-            country_phone_code = self.partner_country_id.phone_code
-            phone_info = phone_sanitize_numbers([phone], country_code, country_phone_code)
-            phone = phone_info[self.partner_phone]['sanitized']
-            error_message = phone_info[self.partner_phone]['msg']
-        if not phone:
-            raise ValidationError("Razorpay: " + error_message)
+            try:
+                phone = self._phone_format(number=phone, country=self.partner_country_id, raise_exception=True)
+            except Exception as err:
+                raise ValidationError("Razorpay: " + str(err)) from err
+        else:
+            raise ValidationError("Razorpay: " + _("The phone number is missing."))
 
         rendering_values = {
             'key_id': self.provider_id.razorpay_key_id,

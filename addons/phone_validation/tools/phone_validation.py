@@ -17,7 +17,9 @@ try:
         try:
             phone_nbr = phonenumbers.parse(number, region=country_code or None, keep_raw_input=True)
         except phonenumbers.phonenumberutil.NumberParseException as e:
-            raise UserError(_('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e)))
+            raise UserError(
+                _('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e))
+            ) from e
 
         if not phonenumbers.is_possible_number(phone_nbr):
             raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
@@ -44,11 +46,10 @@ try:
         """
         try:
             phone_nbr = phone_parse(number, country_code)
-        except (phonenumbers.phonenumberutil.NumberParseException, UserError) as e:
+        except UserError:
             if raise_exception:
                 raise
-            else:
-                return number
+            return number
         if force_format == 'E164':
             phone_fmt = phonenumbers.PhoneNumberFormat.E164
         elif force_format == 'RFC3966':
@@ -73,44 +74,3 @@ except ImportError:
             )
             _phonenumbers_lib_warning = True
         return number
-
-
-def phone_sanitize_numbers(numbers, country_code, country_phone_code, force_format='E164'):
-    """ Given a list of numbers, return parsezd and sanitized information
-
-    :return dict: {number: {
-        'sanitized': sanitized and formated number or False (if cannot format)
-        'code': 'empty' (number was a void string), 'invalid' (error) or False (sanitize ok)
-        'msg': error message when 'invalid'
-    }}
-    """
-    if not isinstance(numbers, (list)):
-        raise NotImplementedError()
-    result = dict.fromkeys(numbers, False)
-    for number in numbers:
-        if not number:
-            result[number] = {'sanitized': False, 'code': 'empty', 'msg': False}
-            continue
-        try:
-            stripped = number.strip()
-            sanitized = phone_format(
-                stripped, country_code, country_phone_code,
-                force_format=force_format, raise_exception=True)
-        except Exception as e:
-            result[number] = {'sanitized': False, 'code': 'invalid', 'msg': str(e)}
-        else:
-            result[number] = {'sanitized': sanitized, 'code': False, 'msg': False}
-    return result
-
-
-def phone_sanitize_numbers_w_record(numbers, record, country=False, record_country_fname='country_id', force_format='E164'):
-    if not isinstance(numbers, (list)):
-        raise NotImplementedError()
-    if not country:
-        if record and record_country_fname and hasattr(record, record_country_fname) and record[record_country_fname]:
-            country = record[record_country_fname]
-        elif record:
-            country = record.env.company.country_id
-    country_code = country.code if country else None
-    country_phone_code = country.phone_code if country else None
-    return phone_sanitize_numbers(numbers, country_code, country_phone_code, force_format=force_format)
