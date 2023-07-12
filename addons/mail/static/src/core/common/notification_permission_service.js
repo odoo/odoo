@@ -3,6 +3,7 @@
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { isAndroidApp, isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -31,9 +32,12 @@ export const notificationPermissionService = {
         }
         const state = reactive({
             /** @type {"prompt" | "granted" | "denied"} */
-            permission: this._normalizePermission(
-                permission?.state ?? browser.Notification?.permission
-            ),
+            permission:
+                isIosApp() || isAndroidApp()
+                    ? "denied"
+                    : this._normalizePermission(
+                          permission?.state ?? browser.Notification?.permission
+                      ),
             requestPermission: async () => {
                 if (browser.Notification && state.permission === "prompt") {
                     state.permission = this._normalizePermission(
