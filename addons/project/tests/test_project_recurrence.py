@@ -24,6 +24,11 @@ class TestProjectRecurrence(TransactionCase):
                 (4, cls.stage_b.id),
             ]
         })
+        cls.user = cls.env['res.users'].create({
+            'name': 'Recurring Project User',
+            'login': 'RPU',
+            'email': 'rp.u@example.com',
+        })
 
         cls.classPatch(cls.env.cr, 'now', fields.Datetime.now)
 
@@ -62,6 +67,7 @@ class TestProjectRecurrence(TransactionCase):
             form.stage_id = self.stage_b
             form.tag_ids.add(self.env['project.tags'].search([], limit=1))
             form.date_deadline = self.date_01_01 + relativedelta(weeks=1)
+            form.user_ids = self.user
 
             form.recurring_task = True
             form.repeat_interval = 2
@@ -77,7 +83,7 @@ class TestProjectRecurrence(TransactionCase):
             other_task.date_deadline, task.date_deadline + relativedelta(months=2),
             "Next occurrence should have previous deadline + interval * unit",
         )
-        for copied_field in ['project_id', 'name', 'description', 'tag_ids']:
+        for copied_field in ['project_id', 'name', 'description', 'tag_ids', 'user_ids']:
             self.assertEqual(other_task[copied_field], task[copied_field], f"Next occurrence's {copied_field} should have been copied")
 
         for reset_field in ['priority', 'stage_id', 'state']:
