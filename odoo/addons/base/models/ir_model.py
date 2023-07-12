@@ -1655,7 +1655,8 @@ class IrModelConstraint(models.Model):
         return super(IrModelConstraint, self).copy(default)
 
     def _reflect_constraint(self, model, conname, type, definition, module, message=None):
-        """ Reflect the given constraint, and return its corresponding record.
+        """ Reflect the given constraint, and return its corresponding record
+            if a record is created or modified; returns ``None`` otherwise.
             The reflection makes it possible to remove a constraint when its
             corresponding module is uninstalled. ``type`` is either 'f' or 'u'
             depending on the constraint being a foreign key or not.
@@ -1692,7 +1693,7 @@ class IrModelConstraint(models.Model):
                             write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
             cr.execute(query, (self.env.uid, type, definition, Json({'en_US': message}), cons_id))
-        return self.browse(cons_id)
+            return self.browse(cons_id)
 
     def _reflect_constraints(self, model_names):
         """ Reflect the SQL constraints of the given models. """
@@ -1720,8 +1721,8 @@ class IrModelConstraint(models.Model):
             if record:
                 xml_id = '%s.constraint_%s' % (module, conname)
                 data_list.append(dict(xml_id=xml_id, record=record))
-
-        self.env['ir.model.data']._update_xmlids(data_list)
+        if data_list:
+            self.env['ir.model.data']._update_xmlids(data_list)
 
 
 class IrModelRelation(models.Model):
@@ -2007,7 +2008,7 @@ class IrModelData(models.Model):
 
     # NEW V8 API
     @api.model
-    @tools.ormcache('xmlid', cache='xmlid')
+    @tools.ormcache('xmlid')
     def _xmlid_lookup(self, xmlid: str) -> tuple:
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
@@ -2055,12 +2056,12 @@ class IrModelData(models.Model):
         return super().copy(default)
 
     def write(self, values):
-        self.env.registry.clear_cache('xmlid')  # _xmlid_lookup
+        self.env.registry.clear_cache()  # _xmlid_lookup
         return super().write(values)
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
-        self.env.registry.clear_cache('xmlid')  # _xmlid_lookup
+        self.env.registry.clear_cache()  # _xmlid_lookup
         return super(IrModelData, self).unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
@@ -2112,7 +2113,7 @@ class IrModelData(models.Model):
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
-                self.env.registry.clear_cache('xmlid')
+                self.env.registry.clear_cache()
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise
