@@ -49,7 +49,7 @@ const tldWhitelist = [
 
 const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
 const httpRegex = `(?:https?:\\/\\/)`;
-const httpCapturedRegex= `(https?:\\/\\/)`;
+const httpCapturedRegex = `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi');
 export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
@@ -556,7 +556,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
  *
  * @param {Element} element should have the focus or a child with the focus
  */
- export function ensureFocus(element) {
+export function ensureFocus(element) {
     const activeElement = element.ownerDocument.activeElement;
     if (activeElement !== element && (!element.contains(activeElement) || !activeElement.isContentEditable)) {
         element.focus();
@@ -974,7 +974,7 @@ const removeFormat = (node, formatSpec) => {
     }
 
     if (formatSpec.isTag && formatSpec.isTag(node)) {
-        const attributesNames = node.getAttributeNames().filter((name)=> {
+        const attributesNames = node.getAttributeNames().filter((name) => {
             return name !== 'data-oe-zws-empty-inline';
         });
         if (attributesNames.length) {
@@ -993,7 +993,7 @@ const removeFormat = (node, formatSpec) => {
     }
 }
 
-export const formatSelection = (editor, formatName, {applyStyle, formatProps} = {}) => {
+export const formatSelection = (editor, formatName, { applyStyle, formatProps } = {}) => {
     const selection = editor.document.getSelection();
     let direction
     let wasCollapsed;
@@ -1278,7 +1278,7 @@ export function isFontSize(node, props) {
  * @param {Element} editable
  * @returns {boolean}
  */
- export function isDirectionSwitched(node, editable) {
+export function isDirectionSwitched(node, editable) {
     const defaultDirection = editable.getAttribute('dir');
     return getComputedStyle(closestElement(node)).direction !== defaultDirection;
 }
@@ -1321,7 +1321,7 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-value') ||
                 node.getAttribute('t-out') ||
                 node.getAttribute('t-raw')) ||
-                node.getAttribute('t-field')) ||
+            node.getAttribute('t-field')) ||
         node.classList.contains('oe_unbreakable')
     );
 }

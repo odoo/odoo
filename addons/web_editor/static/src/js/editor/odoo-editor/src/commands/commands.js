@@ -359,7 +359,7 @@ export const editorCommands = {
     italic: editor => formatSelection(editor, 'italic'),
     underline: editor => formatSelection(editor, 'underline'),
     strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
-    setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
+    setFontSize: (editor, size) => formatSelection(editor, 'fontSize', { applyStyle: true, formatProps: { size } }),
     switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const selection = editor.document.getSelection();
@@ -465,7 +465,7 @@ export const editorCommands = {
         const end = leftLeafFirstPath(...pos1).next().value;
         const li = new Set();
         for (const node of leftLeafFirstPath(...pos2)) {
-            const cli = closestElement(node,'li');
+            const cli = closestElement(node, 'li');
             if (
                 cli &&
                 cli.tagName == 'LI' &&
@@ -567,12 +567,12 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node))
-                    || (node.nodeName === 'BR' && isEmptyBlock(node.parentNode))
-                    || (node.nodeType === Node.ELEMENT_NODE &&
-                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
-                        !isWhitespace(node.textContent) &&
-                        !node.classList.contains('btn') &&
-                        !node.querySelector('font'))) {
+                || (node.nodeName === 'BR' && isEmptyBlock(node.parentNode))
+                || (node.nodeType === Node.ELEMENT_NODE &&
+                    ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                    !isWhitespace(node.textContent) &&
+                    !node.classList.contains('btn') &&
+                    !node.querySelector('font'))) {
                 // Node is a visible text or inline node without font nor a button:
                 // wrap it in a <font>.
                 const previous = node.previousSibling;
@@ -750,7 +750,7 @@ export const editorCommands = {
         setSelection(p, 0);
     },
     // Structure
-    columnize: (editor, numberOfColumns, addParagraphAfter=true) => {
+    columnize: (editor, numberOfColumns, addParagraphAfter = true) => {
         const sel = editor.document.getSelection();
         const anchor = sel.anchorNode;
         const hasColumns = !!closestElement(anchor, '.o_text_columns');

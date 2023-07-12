@@ -23,7 +23,7 @@ import {
 
 const NOT_A_NUMBER = /[^\d]/g;
 
-function hasPseudoElementContent (node, pseudoSelector) {
+function hasPseudoElementContent(node, pseudoSelector) {
     const content = getComputedStyle(node, pseudoSelector).getPropertyValue('content');
     return content && content !== 'none';
 }
@@ -188,7 +188,7 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
                 !node.classList.contains('o_stars') && (
                     !node.parentElement.classList.contains('o_checklist') ||
                     [...node.children].some(child => ['UL', 'OL'].includes(child.nodeName))
-            )) {
+                )) {
                 // Remove unique ids from checklists and stars from elements
                 // that are no longer checklist items or stars, and from
                 // parents of nested lists.

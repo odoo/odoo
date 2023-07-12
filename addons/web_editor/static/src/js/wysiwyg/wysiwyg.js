@@ -241,10 +241,9 @@ export class Wysiwyg extends Component {
                     stripHistoryIds(newValue) !== stripHistoryIds(newProps.editingValue) &&
                     stripHistoryIds(lastValue) !== stripHistoryIds(newValue)
                 ) ||
-                    JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
-                    JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel)
-                )
-            {
+                JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
+                JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel)
+            ) {
                 this.resetEditor(newValue, newProps.options);
                 this.env.onWysiwygReset && this.env.onWysiwygReset();
             }
@@ -254,13 +253,13 @@ export class Wysiwyg extends Component {
     defaultOptions = {
         lang: 'odoo',
         colors: customColors,
-        recordInfo: {context: {}},
+        recordInfo: { context: {} },
         document: document,
         allowCommandVideo: true,
         allowCommandImage: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
-        onHistoryResetFromSteps: () => {},
+        onHistoryResetFromSteps: () => { },
         autostart: true,
     }
     init() {
@@ -341,7 +340,7 @@ export class Wysiwyg extends Component {
                 '/web_editor/video_url/data',
                 { video_url: url },
             );
-            const [savedVideo] = VideoSelector.createElements([{src}]);
+            const [savedVideo] = VideoSelector.createElements([{ src }]);
             savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };
@@ -361,7 +360,7 @@ export class Wysiwyg extends Component {
             getContentEditableAreas: this.options.getContentEditableAreas,
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
-            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
+            defaultLinkAttributes: this.options.userGeneratedContent ? { rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
@@ -536,12 +535,12 @@ export class Wysiwyg extends Component {
             }
 
             if ($target.is(this.customizableLinksSelector)
-                    && $target.is('a')
-                    && $target[0].isContentEditable
-                    && !$target.attr('data-oe-model')
-                    && !$target.find('> [data-oe-model]').length
-                    && !$target[0].closest('.o_extra_menu_items')
-                    && $target[0].isContentEditable) {
+                && $target.is('a')
+                && $target[0].isContentEditable
+                && !$target.attr('data-oe-model')
+                && !$target.find('> [data-oe-model]').length
+                && !$target[0].closest('.o_extra_menu_items')
+                && $target[0].isContentEditable) {
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(ev.target.href, '_blank')
                 }
@@ -618,7 +617,7 @@ export class Wysiwyg extends Component {
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        const collaborationBusListener = ({ detail: notifications}) => {
+        const collaborationBusListener = ({ detail: notifications }) => {
             for (const { payload, type } of notifications) {
                 if (
                     type === 'editor_collaboration' &&
@@ -853,9 +852,9 @@ export class Wysiwyg extends Component {
                 const missingSteps = await this.ptp.requestClient(
                     step.clientId,
                     'get_missing_steps', {
-                        fromStepId: fromStepId,
-                        toStepId: step.id
-                    },
+                    fromStepId: fromStepId,
+                    toStepId: step.id
+                },
                     { transport: 'rtc' }
                 );
                 // If missing steps === -1, it means that either the
@@ -903,7 +902,7 @@ export class Wysiwyg extends Component {
         }
         // If peer to peer is initializing, wait for properly closing it.
         if (this._peerToPeerLoading) {
-            this._peerToPeerLoading.then(()=> {
+            this._peerToPeerLoading.then(() => {
                 this._collaborationStopBus();
                 this.ptp.closeAllConnections();
             });
@@ -1068,8 +1067,9 @@ export class Wysiwyg extends Component {
         } else {
             this.$editable.html(html);
         }
-        return Promise.resolve({isDirty: isDirty, html: html});
+        return Promise.resolve({ isDirty: isDirty, html: html });
     }
+
     /**
      * Reset the history.
      */
@@ -1138,7 +1138,7 @@ export class Wysiwyg extends Component {
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            const { oeModel: resModel, oeId: resId } = editableEl.dataset;
             // When saving a webp, o_b64_image_to_save is turned into
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -1315,7 +1315,7 @@ export class Wysiwyg extends Component {
                     this._observeOdooFieldChanges();
                 });
                 observer.observe(field, observerOptions);
-                this.odooFieldObservers.push({field: field, observer: observer});
+                this.odooFieldObservers.push({ field: field, observer: observer });
             });
         }
     }
@@ -1334,7 +1334,7 @@ export class Wysiwyg extends Component {
         const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
         // Link tool is different if the selection is an image or a text.
         if (targetEl.nodeType === Node.ELEMENT_NODE
-                && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
+            && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
             this.odooEditor.dispatchEvent(new Event('activate_image_link_tool'));
             return;
         }
@@ -1358,7 +1358,7 @@ export class Wysiwyg extends Component {
         }
         if (this.snippetsMenu && !options.forceDialog) {
             if (options.link && options.link.querySelector(mediaSelector) &&
-                    !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
+                !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
                 // If the link contains a media without text, the link is
                 // editable in the media options instead.
                 if (options.shoudFocusUrl) {
@@ -1394,7 +1394,7 @@ export class Wysiwyg extends Component {
                         this.odooEditor.observerActive("hint_classes");
                     };
                     this.linkToolsInfos = {
-                        onDestroy: () => {},
+                        onDestroy: () => { },
                         link,
                         removeHintClasses,
                     };
@@ -1460,7 +1460,7 @@ export class Wysiwyg extends Component {
                     if (!data) {
                         return;
                     }
-                    getDeepRange(this.$editable[0], {range: data.range, select: true});
+                    getDeepRange(this.$editable[0], { range: data.range, select: true });
                     if (this.options.userGeneratedContent) {
                         data.rel = 'ugc';
                     }
@@ -1544,11 +1544,11 @@ export class Wysiwyg extends Component {
             Component: FileViewer,
             props: {
                 files: [{
-                        isImage: true,
-                        isViewable: true,
-                        displayName: url,
-                        defaultSource: url,
-                        downloadUrl: url,
+                    isImage: true,
+                    isViewable: true,
+                    displayName: url,
+                    defaultSource: url,
+                    downloadUrl: url,
                 }],
                 startIndex: 0,
                 close: () => {
@@ -1619,12 +1619,12 @@ export class Wysiwyg extends Component {
         }
 
         this.popover.add(closest, EmojiPicker, {
-                onSelect: (str) => {
-                    restoreSelection();
-                    this.odooEditor.execCommand('insert', str);
-                },
+            onSelect: (str) => {
+                restoreSelection();
+                this.odooEditor.execCommand('insert', str);
             },
-            { position: `bottom-${position}`}
+        },
+            { position: `bottom-${position}` }
         );
     }
     /**
@@ -1711,7 +1711,7 @@ export class Wysiwyg extends Component {
      * @param {Object} [options]
      * @returns {widget}
      */
-    async _createSnippetsMenuInstance(options={}) {
+    async _createSnippetsMenuInstance(options = {}) {
         const snippetsEditor = await requireWysiwygLegacyModule('@web_editor/js/editor/snippets.editor');
         const { SnippetsMenu } = snippetsEditor;
         return new SnippetsMenu(this, Object.assign({
@@ -1791,7 +1791,7 @@ export class Wysiwyg extends Component {
                 return;
             }
             this.showImageFullscreen(this.lastMediaClicked.src);
-    })
+        })
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
@@ -1857,7 +1857,7 @@ export class Wysiwyg extends Component {
                 $image.removeData('transfo-destroy');
                 return;
             }
-            $image.transfo({document: this.odooEditor.document});
+            $image.transfo({ document: this.odooEditor.document });
             const mouseup = () => {
                 $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
             };
@@ -2060,7 +2060,7 @@ export class Wysiwyg extends Component {
             '#image-padding',
             '#image-edit',
             '#media-replace',
-            ].join(','))) {
+        ].join(','))) {
             el.classList.toggle('d-none', !isInMedia);
         }
         // The image replace button is in the image options when the sidebar
@@ -2074,7 +2074,7 @@ export class Wysiwyg extends Component {
             '#image-transform',
             '#image-crop',
             '#media-description',
-            ].join(','))) {
+        ].join(','))) {
             el.classList.toggle('d-none', !isInMedia || !$target.is('img'));
         }
         this.lastMediaClicked = isInMedia && e.target;
@@ -2089,7 +2089,7 @@ export class Wysiwyg extends Component {
             '#colorInputButtonGroup',
             '#create-link',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
-        ].join(','))){
+        ].join(','))) {
             el.classList.toggle('d-none', isInMedia);
         }
         // Some icons are relevant for icons, that aren't for other media.
@@ -2152,7 +2152,7 @@ export class Wysiwyg extends Component {
                 this.odooEditor.observerUnactive();
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
-                    $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                    $target.tooltip({ title: _t('Double-click to edit'), trigger: 'manual', container: 'body' }).tooltip('show');
                     this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
                 });
                 this.odooEditor.observerActive();
@@ -2222,7 +2222,7 @@ export class Wysiwyg extends Component {
         }
     }
     _getEditorOptions(options) {
-        const finalOptions = {...this.defaultOptions, ...options};
+        const finalOptions = { ...this.defaultOptions, ...options };
         // autohideToolbar is true by default (false by default if navbar present).
         finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
             ? finalOptions.autohideToolbar
@@ -2431,7 +2431,7 @@ export class Wysiwyg extends Component {
                     description: _t('Add a link'),
                     fontawesome: 'fa-link',
                     callback: () => {
-                        this.toggleLinkTools({forceDialog: true});
+                        this.toggleLinkTools({ forceDialog: true });
                     },
                 },
                 {
@@ -2441,7 +2441,7 @@ export class Wysiwyg extends Component {
                     description: _t('Add a button'),
                     fontawesome: 'fa-link',
                     callback: () => {
-                        this.toggleLinkTools({forceDialog: true});
+                        this.toggleLinkTools({ forceDialog: true });
                         // Force the button style after the link modal is open.
                         setTimeout(() => {
                             $(".o_link_dialog .link-style[value=primary]").click();
@@ -2473,7 +2473,7 @@ export class Wysiwyg extends Component {
                 description: _t('Insert a video'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
-                    this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
+                    this.openMediaDialog({ noVideos: false, noImages: true, noIcons: true, noDocuments: true });
                 },
             });
         }
@@ -2483,7 +2483,7 @@ export class Wysiwyg extends Component {
         if (editorOptions.powerboxCommands) {
             commands.push(...editorOptions.powerboxCommands);
         }
-        return {commands, categories};
+        return { commands, categories };
     }
 
     /**
@@ -2547,7 +2547,7 @@ export class Wysiwyg extends Component {
             // Do not group elements which are parts of views, unless we are
             // in translate mode.
             if (!this.options.enableTranslation
-                    && (model === 'ir.ui.view' && field === 'arch')) {
+                && (model === 'ir.ui.view' && field === 'arch')) {
                 return uniqueId("view-part-to-save-");
             }
 
@@ -2568,24 +2568,24 @@ export class Wysiwyg extends Component {
             // TODO: Add a queue with concurrency limit in webclient
             return this.saving_mutex.exec(() => {
                 return this[saveElementFuncName]($els, context || this.options.context)
-                .then(function () {
-                    $els.removeClass('o_dirty');
-                }).guardedCatch(function (response) {
-                    // because ckeditor regenerates all the dom, we can't just
-                    // setup the popover here as everything will be destroyed by
-                    // the DOM regeneration. Add markings instead, and returns a
-                    // new rejection with all relevant info
-                    var id = uniqueId("carlos_danger_");
-                    $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                    $('.o_editable.' + id)
-                        .removeClass(id)
-                        .popover({
-                            trigger: 'hover',
-                            content: response.message.data.message || '',
-                            placement: 'auto',
-                        })
-                        .popover('show');
-                });
+                    .then(function () {
+                        $els.removeClass('o_dirty');
+                    }).guardedCatch(function (response) {
+                        // because ckeditor regenerates all the dom, we can't just
+                        // setup the popover here as everything will be destroyed by
+                        // the DOM regeneration. Add markings instead, and returns a
+                        // new rejection with all relevant info
+                        var id = uniqueId("carlos_danger_");
+                        $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
+                        $('.o_editable.' + id)
+                            .removeClass(id)
+                            .popover({
+                                trigger: 'hover',
+                                content: response.message.data.message || '',
+                                placement: 'auto',
+                            })
+                            .popover('show');
+                    });
             });
         });
         return Promise.all(proms).then(function () {
@@ -2602,7 +2602,7 @@ export class Wysiwyg extends Component {
                 selector: '[data-oe-readonly]',
                 container: 'body',
                 trigger: 'hover',
-                delay: {'show': 1000, 'hide': 100},
+                delay: { 'show': 1000, 'hide': 100 },
                 placement: 'bottom',
                 title: _t("Readonly field")
             })
@@ -2669,7 +2669,7 @@ export class Wysiwyg extends Component {
         } else {
             window.location.reload(true);
         }
-        return new Promise(function () {});
+        return new Promise(function () { });
     }
     _onAttachmentChange(attachment) {
         if (this.options.onAttachmentChange) {
@@ -2812,7 +2812,7 @@ export class Wysiwyg extends Component {
         if (options) {
             this.options = this._getEditorOptions(options);
         }
-        const {collaborationChannel} = this.options;
+        const { collaborationChannel } = this.options;
         this._stopPeerToPeer();
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
@@ -3017,7 +3017,7 @@ export class Wysiwyg extends Component {
             xhr: settings.xhr,
         });
     }
-    _rpc({ route,  params }) {
+    _rpc({ route, params }) {
         return this._serviceRpc(route, params)
     }
     _useService(serviceName) {
