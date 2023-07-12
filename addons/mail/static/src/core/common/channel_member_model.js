@@ -33,4 +33,11 @@ export class ChannelMember {
     get thread() {
         return this._store.threads[createLocalId("discuss.channel", this.threadId)];
     }
+
+    /**
+     * @returns {string}
+     */
+    getLangName() {
+        return this.persona.lang_name;
+    }
 }

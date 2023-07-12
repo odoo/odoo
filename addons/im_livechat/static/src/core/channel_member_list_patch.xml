@@ -4,10 +4,10 @@
         <xpath expr="//*[@t-ref='displayName']" position="replace">
             <div class="d-flex flex-column">
                 <t>$0</t>
-                <div class="ms-2 d-flex">
-                    <span t-if="member.persona?.lang_name" class="me-2">
+                <div t-if="member.thread.type === 'livechat'" class="ms-2 d-flex">
+                    <span t-if="member.getLangName()" class="me-2">
                         <i class="fa fa-comment-o me-1" aria-label="Lang"/>
-                        <t t-esc="member.persona.lang_name"/>
+                        <t t-esc="member.getLangName()"/>
                     </span>
                     <span t-if="member.persona?.country or props.thread.channel?.anonymous_country">
                         <i class="fa fa-globe me-1" aria-label="country"/>
