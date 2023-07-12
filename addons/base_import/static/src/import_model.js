@@ -239,27 +239,9 @@ export class BaseImportModel {
 
             const error = await this._executeImportStep(isTest, importRes);
             if (error) {
-                let message;
                 const errorData = error.data || {};
-                if (errorData.type === "xhrerror") {
-                    const xhr = errorData.objects[0];
-                    switch (xhr.status) {
-                        case 504: // gateway timeout
-                            message = _t(
-                                "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
-                            );
-                            break;
-                        default:
-                            message = _t(
-                                "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-                            );
-                    }
-                } else {
-                    message =
-                        (errorData.arguments &&
-                            (errorData.arguments[1] || errorData.arguments[0])) ||
-                        error.message;
-                }
+                const message = errorData.arguments && (errorData.arguments[1] || errorData.arguments[0])
+                    || _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
 
                 if (error.message) {
                     this._addMessage("danger", [error.message, message]);
