@@ -171,7 +171,7 @@ patch(ThreadService.prototype, "mail/core/web", {
                           id: partner_id,
                       })
                     : false,
-                checked: partner_id ? true : false,
+                checked: true,
             });
         }
         thread.suggestedRecipients = recipients;
