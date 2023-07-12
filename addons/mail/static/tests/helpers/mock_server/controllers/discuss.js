@@ -135,6 +135,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             });
             return this._mockMailMessageMessageFormat([args.message_id])[0];
         }
+        if (route === "/mail/partner/from_email") {
+            return this._mockRouteMailPartnerFromEmail(args.emails);
+        }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
@@ -357,6 +360,30 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         const domain = [["starred_partner_ids", "in", [this.currentPartnerId]]];
         const messages = this._mockMailMessage_MessageFetch(domain, before, after, false, limit);
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
+    },
+    /**
+     * Simulates the `/mail/partner/from_email` route.
+     *
+     * @private
+     * @param {string[]} emails
+     * @returns {Object[]} list of partner data
+     */
+    _mockRouteMailPartnerFromEmail(emails) {
+        const partners = emails.map(
+            (email) => this.pyEnv["res.partner"].search([["email", "=", email]])[0]
+        );
+        for (const index in partners) {
+            if (!partners[index]) {
+                partners[index] = this.pyEnv["res.partner"].create({
+                    email: emails[index],
+                    name: emails[index],
+                });
+            }
+        }
+        return partners.map((partner_id) => {
+            const partner = this.getRecords("res.partner", [["id", "=", partner_id]])[0];
+            return { id: partner_id, name: partner.name, email: partner.email };
+        });
     },
     /**
      * Simulates the `/mail/read_subscription_data` route.

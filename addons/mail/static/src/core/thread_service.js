@@ -898,10 +898,14 @@ export class ThreadService {
             ? this.messageService.getMentionsFromText(rawMentions, body)
             : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id);
+        let recipientEmails = [];
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
                 .filter((recipient) => recipient.persona && recipient.checked)
                 .map((recipient) => recipient.persona.id);
+            recipientEmails = thread.suggestedRecipients
+                .filter((recipient) => recipient.checked && !recipient.persona)
+                .map((recipient) => recipient.email);
             partner_ids?.push(...recipientIds);
         }
         const tmpId = this.messageService.getNextTemporaryId();
@@ -917,6 +921,7 @@ export class ThreadService {
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
+                partner_emails: recipientEmails,
             },
             thread_id: thread.id,
             thread_model: thread.model,

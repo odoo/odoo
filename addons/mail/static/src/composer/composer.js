@@ -91,9 +91,11 @@ export class Composer extends Component {
             );
         }
         this.messageService = useState(useService("mail.message"));
+        this.personaService = useState(useService("mail.persona"));
         this.ui = useState(useService("ui"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        this.rpc = useService("rpc");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.state = useState({
@@ -392,6 +394,26 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
+        if (this.props.type !== "note") {
+            // auto-create partners of checked suggested partners
+            const emailsWithoutPartners = this.props.composer.thread.suggestedRecipients
+                .filter((recipient) => recipient.checked && !recipient.persona)
+                .map((recipient) => recipient.email);
+            if (emailsWithoutPartners.length !== 0) {
+                const partners = await this.rpc("/mail/partner/from_email", {
+                    emails: emailsWithoutPartners,
+                });
+                for (const index in partners) {
+                    const partnerData = partners[index];
+                    const persona = this.personaService.insert({ ...partnerData, type: "partner" });
+                    const email = emailsWithoutPartners[index];
+                    const recipient = this.props.composer.thread.suggestedRecipients.find(
+                        (recipient) => recipient.email === email
+                    );
+                    Object.assign(recipient, { persona });
+                }
+            }
+        }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const context = {
             default_attachment_ids: attachmentIds,
