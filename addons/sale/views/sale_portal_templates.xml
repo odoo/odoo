@@ -3,11 +3,11 @@
 
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'quote' or sale_order and sale_order.state in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
+            <li id="portal_breadcrumbs_sale" t-if="page_name == 'quote' or sale_order and sale_order.state in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
                 <a t-if="sale_order" t-attf-href="/my/quotes?{{ keep_query() }}">Quotations</a>
                 <t t-else="">Quotations</t>
             </li>
-            <li t-if="page_name == 'order' or sale_order and sale_order.state not in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
+            <li t-elif="page_name == 'order' or sale_order and sale_order.state not in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
                 <a t-if="sale_order" t-attf-href="/my/orders?{{ keep_query() }}">Sales Orders</a>
                 <t t-else="">Sales Orders</t>
             </li>
@@ -120,7 +120,7 @@
 
             <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
-                <t t-call="portal.portal_record_sidebar">
+                <t t-call="portal.portal_record_sidebar" id="sale_order_portal_sidebar">
                     <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
 
                     <t t-set="title">
@@ -401,100 +401,119 @@
     </template>
 
     <!--
-    Sales Order content : intro, informations, order lines, remarks, descriptions ....
-    This template should contains all the printable element of the SO. This is the
+    Sales Order content : intro, information, order lines, remarks, descriptions ....
+    This template should contain all the printable element of the SO. This is the
     template rendered in PDF with the report engine.
     -->
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
         <!-- Intro -->
         <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
-          <h2 class="my-0">
-                <t t-out="sale_order.type_name"/>
-                <em t-out="sale_order.name"/>
-            </h2>
+            <div class="row" id="intro_row">
+                <h2 class="my-0 col-12 col-lg flex-grow-1 mb-1 mb-lg-0">
+                    <t t-out="sale_order.type_name"/> -
+                    <em t-out="sale_order.name"/>
+                </h2>
+            </div>
         </div>
 
-        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
-            <!-- Informations -->
-            <div id="informations">
-                <div t-if="sale_order.transaction_ids and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
-                    <t t-if="sale_order.transaction_ids">
-                        <t t-call="payment.transaction_status">
+        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}" id="content">
+            <div id="informations" class="row mt-4">
+                <span id="transaction_info">
+                    <div t-if="sale_order.transaction_ids and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
+                        t-att-data-order-id="sale_order.id">
+                        <t t-if="sale_order.transaction_ids">
+                            <t t-call="payment.transaction_status">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
                     </t>
+                    </div>
+                </span>
+                <!-- Information -->
+                <div id="sale_info" class="col-12 col-lg-5 mb-3 mb-lg-0">
+                    <span id="sale_info_title">
+                        <h5 class="mb-1">Sale Information</h5>
+                        <hr class="my-0"/>
+                    </span>
+                    <table class="table table-borderless table-sm">
+                        <tbody style="white-space:nowrap" id="sale_info_table">
+                            <tr>
+                                <th t-if="sale_order.state in ['sale', 'cancel']" class="text-end pb-0">Order Date:</th>
+                                <th t-else="" class="text-end pb-0">Quotation Date:</th>
+                                <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.date_order" t-options='{"widget": "date"}'/></td>
+                            </tr>
+                            <tr t-if="sale_order.validity_date">
+                                <th class="text-end pb-0">Expiration Date:</th>
+                                <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/></td>
+                            </tr>
+                            <tr t-if="sale_order.client_order_ref">
+                                <th class="text-end pb-0">Your Reference:</th>
+                                <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.client_order_ref"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="row" id="so_date">
-                    <div class="mb-3 col-6">
-                      <t t-if="sale_order.state in ['sale', 'cancel']">
-                        <strong>Order Date:</strong>
-                      </t>
-                      <t t-else="">
-                         <strong>Quotation Date:</strong>
-                      </t>
-                      <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
-                    </div>
-                    <div class="mb-3 col-6" t-if="sale_order.validity_date">
-                        <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
-                    </div>
+\
+                <!-- ======  Customer Information  ====== -->
+                <div id="customer_info" class="col-12 col-lg-5 offset-lg-1">
+                    <h5 class="mb-1">
+                        <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
+                            Invoicing and Shipping Address
+                        </t>
+                        <t t-else="">
+                            Invoicing Address
+                        </t>
+                        <small>
+                            <a t-if="sale_order.partner_id == sale_order.partner_id"
+                                class="small" t-attf-href="/my/account?redirect={{sale_order.get_portal_url()}}">
+                                <i class="fa fa-fw fa-pencil"/>
+                            </a>
+                        </small>
+                    </h5>
+                    <hr class="my-0"/>
+                    <div t-field="sale_order.partner_id" t-options='{ "widget": "contact", "fields": [ "name", "address", "phone", "email"]}'/>
+                    <span t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id"
+                            id="shipping_address"
+                            class="col-lg-6">
+                        <br/>
+                        <h5 class="mb-1">
+                            Shipping Address
+                        </h5>
+                        <hr class="my-0"/>
+                        <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
+                    </span>
                 </div>
-                <div class="row" id="invoicing_shipping_address">
-                    <div class="col-lg-6">
-                        <strong class="d-block mb-1">
-                            <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
-                                Invoicing and Shipping Address:
-                            </t>
-                            <t t-else="">
-                                Invoicing Address:
-                            </t>
-                        </strong>
-                        <address t-field="sale_order.partner_invoice_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
-                    <div t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id"
-                        id="shipping_address"
-                        class="col-lg-6">
-                        <strong class="d-block mb-1">
-                            Shipping Address:
-                        </strong>
-                        <address t-field="sale_order.partner_shipping_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
-                </div>
-                <div class="row" t-if="sale_order.client_order_ref">
-                    <div class="col-lg-6">
-                        <strong class="d-block mb-1">Your Reference:</strong>
-                        <t t-out="sale_order.client_order_ref"/>
-                    </div>
-                </div>
-                <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel'])"/>
-                <div t-if="invoices" class="row">
-                    <div class="col">
-                        <strong class="d-block mb-1">Invoices</strong>
-                        <ul class="list-group mb-4">
-                            <t t-foreach="invoices" t-as="i">
-                                <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
-                                <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
-                                <div class="d-flex flex-wrap align-items-center justify-content-between">
-                                    <div>
-                                        <a t-att-href="report_url">
-                                            <span t-out="i.name"/>
-                                        </a>
-                                        <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
-                                    </div>
-                                    <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-check"/> <b>Paid</b>
-                                    </span>
-                                    <span t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-check"/> <b>Authorized</b>
-                                    </span>
-                                    <span t-else="" class="small badge text-bg-info orders_label_text_align">
-                                        <i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b>
-                                    </span>
-                                </div>
-                            </t>
-                        </ul>
-                    </div>
+
+                <div id="sale_invoices" class="col-12 col-lg-5 mb-3 mb-lg-0">
+                    <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
+                    <t t-if="invoices">
+                        <h5 class="mb-1">Invoices</h5>
+                        <hr class="my-0"/>
+                        <table>
+                            <tbody>
+                                <t t-foreach="invoices" t-as="i">
+                                    <t t-set="report_url" t-value="i.get_portal_url()"/>
+                                    <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
+                                    <tr class="w-100 pb-0">
+                                        <td>
+                                            <a t-att-href="report_url">
+                                                <span t-out="i.name"/>
+                                            </a>
+                                            <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
+                                        </td>
+                                        <td t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
+                                            <i class="fa fa-fw fa-check"/> <b>Paid</b>
+                                        </td>
+                                        <td t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
+                                            <i class="fa fa-fw fa-check"/> <b>Authorized</b>
+                                        </td>
+                                        <td t-else="" class="small badge text-bg-info orders_label_text_align">
+                                            <i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
                 </div>
             </div>
 
@@ -521,7 +540,7 @@
                         </t>
                     </div>
                 </t>
-                <h3 id="details">Pricing</h3>
+                <h3 id="details_title">Order Detail</h3>
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
@@ -530,7 +549,7 @@
                         <thead class="bg-100">
                             <tr>
                                 <th class="text-start" id="product_name_header">Products</th>
-                                <th class="text-end">Quantity</th>
+                                <th class="text-end" id="product_qty_header">Quantity</th>
                                 <th t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                     Unit Price
                                 </th>
@@ -563,7 +582,7 @@
                                         <td id="product_name">
                                             <span t-field="line.name"/>
                                         </td>
-                                        <td class="text-end">
+                                        <td class="text-end" id="quote_qty_td">
                                             <div id="quote_qty">
                                                 <span t-field="line.product_uom_qty"/>
                                                 <span t-field="line.product_uom"/>
