@@ -392,6 +392,8 @@ class WebsiteForum(WebsiteProfile):
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
+        if request.uid == post.create_uid.id:
+            return {'error': 'own_post'}
         if not request.session.uid:
             return {'error': 'anonymous_user'}
 
