@@ -1638,10 +1638,8 @@ class AccountMoveLine(models.Model):
         remaining_amount = aml_values['amount_residual']
         company_currency = aml.company_currency_id
         currency = aml._get_reconciliation_aml_field_value('currency_id', shadowed_aml_values)
-        account = aml._get_reconciliation_aml_field_value('account_id', shadowed_aml_values)
         has_zero_residual = company_currency.is_zero(remaining_amount)
         has_zero_residual_currency = currency.is_zero(remaining_amount_curr)
-        is_rec_pay_account = account.account_type in ('asset_receivable', 'liability_payable')
 
         available_residual_per_currency = {}
 
@@ -1657,9 +1655,8 @@ class AccountMoveLine(models.Model):
             }
 
         if currency == company_currency \
-            and is_rec_pay_account \
-            and not has_zero_residual \
-            and counterpart_currency != company_currency:
+            and counterpart_currency != company_currency \
+            and not has_zero_residual:
             rate = get_odoo_rate(aml, counterpart_currency)
             available_residual_per_currency[counterpart_currency] = {
                 'residual': counterpart_currency.round(remaining_amount * rate),
