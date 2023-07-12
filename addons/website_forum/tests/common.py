@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.tools import mute_logger
 
 KARMA = {
     'ask': 5, 'ans': 10,
@@ -104,3 +105,14 @@ class TestForumCommon(common.TransactionCase):
         cls.website_2 = cls.env['website'].create({
             'name': 'Second Website on same company',
         })
+
+    @mute_logger("odoo.models.unlink")
+    def _activate_tags_for_counts(self):
+        self.env['forum.tag'].search([]).unlink()
+        self.tags = self.env['forum.tag'].create(
+            [
+                {'forum_id': forum_id.id, 'name': f'Test Tag {tag_idx}'}
+                for forum_id in self.forum | self.base_forum
+                for tag_idx in range(1, 8)
+            ]
+        )
