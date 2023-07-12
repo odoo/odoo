@@ -117,7 +117,8 @@ class ProjectTask(models.Model):
         rand = populate.Random('project.task+children_generator')
         task_ids_per_company = collections.defaultdict(set)
         for task in tasks:
-            task_ids_per_company[task.company_id].add(task.id)
+            if task.project_id:
+                task_ids_per_company[task.company_id].add(task.id)
 
         for task_ids in task_ids_per_company.values():
             parent_ids = set()

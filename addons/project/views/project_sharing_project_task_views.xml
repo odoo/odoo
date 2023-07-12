@@ -182,7 +182,7 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
-                            <field name="child_ids" context="{'default_project_id': project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
@@ -205,7 +205,7 @@
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            attrs="{'invisible': &quot;['|', ('project_id', '=', False), ('project_id', '!=', active_id)]&quot;}"/>
+                                            attrs="{'invisible': &quot;['|', ('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>
@@ -232,7 +232,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No tasks found. Let's create one!
