@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div
-                            class="position-relative d-flex align-items-center"
+                            class="position-relative d-flex"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
@@ -121,7 +121,7 @@
                                     'start-0 ms-3': isAlignedRight,
                                     'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
                                     'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
-                                    'ms-2': !env.inChatWindow and !ui.isSmall,
+                                    'ms-2 mt-1': !env.inChatWindow and !ui.isSmall,
                                     'invisible': !isActive,
                                     'o-expanded': state.expandOptions
                                 }"
