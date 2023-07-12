@@ -19,7 +19,6 @@ from threading import Thread
 import time
 import contextlib
 import requests
-import crypt
 import secrets
 
 from odoo import _, http, service
@@ -27,6 +26,11 @@ from odoo.tools.func import lazy_property
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import crypt
+except ImportError:
+    _logger.warning('Could not import library crypt')
 
 #----------------------------------------------------------
 # Helper

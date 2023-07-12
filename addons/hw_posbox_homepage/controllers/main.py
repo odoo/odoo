@@ -254,7 +254,7 @@ class IoTboxHomepage(Home):
         })
 
     # Get password
-    @http.route('/hw_posbox_homepage/password', type='json', auth='none', method=['POST'])
+    @http.route('/hw_posbox_homepage/password', type='json', auth='none', methods=['POST'])
     def view_password(self):
         return helpers.generate_password()
 
