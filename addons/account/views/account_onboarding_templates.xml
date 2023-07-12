@@ -92,7 +92,6 @@
             <t t-set="text_completed">Congratulations! You are all set.</t>
 
             <t t-call="base.onboarding_company_step" name="company_step" />
-            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" t-if="not env.user.has_group('account.group_account_user')"/>
             <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
             <t t-call="account.onboarding_create_invoice_step" name="create_invoice_step" />
         </t>
