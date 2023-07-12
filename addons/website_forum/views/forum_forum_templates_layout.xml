@@ -153,12 +153,16 @@
                         </t>
                     </div>
                 </div>
-                <!-- 'Search Box' [TODO] tags-->
-                <t t-if="question_count != 0" t-call="website.website_search_box_input">
-                    <t t-if="_page_name == 'Tags'" t-set="search_type" t-valuef="forum_tags_only"/>
-                    <t t-else="" t-set="search_type" t-valuef="forums"/>
-                    <t t-if="_page_name == 'Tags'" t-set="action" t-value="'/forum/%s/tag' % (slug(forum))"/>
-                    <t t-else="" t-set="action" t-value="'/forum/%s%s' % (slug(forum), tag and ('/tag/%s/questions' % slug(tag)) or '')"/>
+                <!-- 'Search Box' -->
+                <t t-if="question_count or tags" t-call="website.website_search_box_input">
+                    <t t-if="_page_name == 'tags'">
+                        <t t-set="search_type" t-value="'forum_tags_only'"/>
+                        <t t-set="action" t-valuef="/forum/#{ slug(forum) }/tag"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="search_type" t-value="'forums'"/>
+                        <t t-set="action" t-value="'/forum/' + slug(forum)"/>
+                    </t>
                     <t t-set="display_description" t-valuef="true"/>
                     <t t-set="display_detail" t-valuef="true"/>
                     <t t-set="_form_classes" t-valuef="flex-grow-1"/>
@@ -274,7 +278,7 @@
 
 <template id="user_sidebar_body">
     <div class="o_wforum_sidebar_section">
-        <t t-set="location" t-value="url_for('/forum') + '/' + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
+        <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
         <!-- All Posts -->
         <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if request.httprequest.path ==  _forum_path and no_filters and not any([my, queue_type, tags]) else 'text-reset'}" t-att-href="location">
             <i t-attf-class="fa fa-list fa-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }"/> Posts
@@ -315,19 +319,18 @@
             <i t-attf-class="fa fa-window-close fa-fw #{queue_type != 'close' and 'opacity-50'}"/> Closed
         </a>
     </div>
-    <div t-if="forum.post_ids.tag_ids" class="o_wforum_sidebar_section pt-3">
+    <div t-if="forum.tag_most_used_ids" class="o_wforum_sidebar_section pt-3">
         <div class="d-flex align-items-center px-3 pb-1 fw-bold">Tags
             <a class="ms-auto px-0 fw-normal" t-att-href="_forum_path + '/tag'">
                 <small>View all</small>
             </a>
         </div>
-        <t t-foreach="forum.post_ids.tag_ids" t-as="tag">
-            <a t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', filters='tag') }"
-               t-attf-class="nav-link my-1 py-1 text-reset">
-                <i class="fa fa-tag fa-fw small opacity-50"/>
-                <t t-out="tag.name"/>
-            </a>
-        </t>
+        <a t-foreach="forum.tag_most_used_ids" t-as="tag"
+            t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', filters='tag') }"
+            t-attf-class="nav-link my-1 py-1 text-reset">
+            <i class="fa fa-tag fa-fw small opacity-50"/>
+            <t t-out="tag.name"/>
+        </a>
     </div>
 </template>
 
@@ -350,33 +353,28 @@
 </template>
 
 <template id="no_results_message">
-    <t t-set="_filters_str">
-        <t t-if="filters == 'unanswered'">&amp;nbsp;unanswered</t>
-        <t t-elif="filters == 'solved'">&amp;nbsp;solved</t>
-        <t t-elif="filters == 'unsolved'">&amp;nbsp;unsolved</t>
-    </t>
-    <t t-set="_my_str">
-        <t t-if="my == 'favourites'">&amp;nbsp;in your favourites</t>
-        <t t-elif="my == 'mine'">&amp;nbsp;in your posts</t>
-    </t>
-    <t t-set="_search_str">&amp;nbsp;<t t-if="search">matching "<em class="fw-bold text-break" t-out="original_search or search"/>"</t></t>
-    <t t-set="_search_and_tag_str" t-value="'&amp;nbsp;and&amp;nbsp;' if search and tag else ''"/>
-    <t t-set="_tag_str"><t t-if="tag">using the <span class="px-2 py-1 rounded bg-300" t-out="tag.name"/> tag</t></t>
-
-   <t t-if="queue_type">
+    <t t-if="queue_type">
         <t t-set="_no_results_title">You've Completely Caught&amp;nbsp;Up!</t>
         <t t-set="result_msg">Go enjoy a cup of coffee.</t>
-   </t>
-   <t t-else="">
-        <t t-set="_no_results_title">Oops!</t>
-        <t t-set="result_msg">Sorry, we could not find any<b>%s</b> results<b>%s</b>%s%s%s.</t>
-        <t t-set="result_msg" t-value="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"></t>
-   </t>
-    <div t-attf-class="#{queue_type and 'o_caught_up_alert'} row g-0 justify-content-center #{'d-none' if start_hidden else ''}">
+        <t t-set="record_name_plural">posts</t>
+        <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/"/>
+    </t>
+    <t t-else="" t-set="_no_results_title">Oops!</t>
+    <div t-attf-class="#{ queue_type and 'o_caught_up_alert' } row g-0 justify-content-center #{ 'd-none' if hide_alert else '' }">
         <div class="p-3 d-flex flex-column align-items-center">
             <img t-attf-src="/website_forum/static/src/img/#{'tasks' if queue_type else 'empty'}.svg" class="img img-fluid mb-3" width="150" alt="Checked boxes"/>
             <h5 t-out="_no_results_title"/>
-            <span t-out="result_msg"/>
+            <span t-if="result_msg" t-out="result_msg"/>
+            <span t-else="">
+                Sorry, we could not find any <b t-if="filters in ['unanswered', 'solved', 'unsolved']" t-out="filters"/> results
+                <b t-if="my == 'favourites'"> in your favourites</b>
+                <b t-elif="my == 'mine'"> in your posts</b>
+                <span t-if="search">matching "<em class="fw-bold text-break" t-out="original_search or search"/>"</span>
+                <span t-out="'and' if search and tag else ''"/>
+                <t t-if="tag">
+                    using the <span class="px-2 py-1 rounded bg-300" t-out="tag.name"/> tag
+                </t>.
+            </span>
             <span t-if="original_search">Showing results for <em class="fw-bold" t-out="search"/> instead.</span>
             <div t-if="question_count == 0 and forum.total_posts != 0" class="mt-3 text-start">
                 <p><i class="fa fa-check fa-fw me-1"/>Check your spelling and try again.</p>
@@ -386,7 +384,7 @@
             <span t-elif="forum.total_posts == 0">Actually, there are no posts in this forum yet.</span>
             <div class="mt-3">
                 <a t-if="uid and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{slug(forum)}/ask">Start by creating a post</a>
-                <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-attf-href="/forum/#{slug(forum)}/">Go back to questions list</a>
+                <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>
             </div>
         </div>
     </div>
