@@ -2,7 +2,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger, float_round
 from odoo import fields
 
@@ -2523,3 +2523,45 @@ class TestStockFlow(TestStockCommon):
         # trigger SQL constraints
         self.PickingObj.flush_model()
         self.assertEqual(self.PickingObj.search_count([('name', '=', picking_2.name)]), 1)
+
+
+@tagged('-at_install', 'post_install')
+class TestStockFlowPostInstall(TestStockCommon):
+
+    def test_last_delivery_partner_field_on_lot(self):
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        partner = self.env['res.partner'].create({'name': 'Super Partner'})
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn = self.env['stock.lot'].create({
+            'name': 'super_sn',
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=sn)
+
+        delivery = self.env['stock.picking'].create({
+            'partner_id': partner.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+        delivery.move_ids.move_line_ids.qty_done = 1
+        delivery.button_validate()
+
+        self.assertEqual(sn.last_delivery_partner_id, partner)
