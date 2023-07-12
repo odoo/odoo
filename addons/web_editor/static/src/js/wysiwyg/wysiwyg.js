@@ -1103,10 +1103,14 @@ const Wysiwyg = Widget.extend({
                     !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
                 // If the link contains a media without text, the link is
                 // editable in the media options instead.
-                this.snippetsMenu._mutex.exec(() => {
+                if (!options.noFocusUrl) {
                     // Wait for the editor panel to be fully updated.
-                    core.bus.trigger('activate_image_link_tool');
-                });
+                    this.snippetsMenu._mutex.exec(() => {
+                        // This is needed to focus the URL input when clicking
+                        // on the "Edit link" of the popover.
+                        core.bus.trigger('activate_image_link_tool');
+                    });
+                }
                 return;
             }
             if (options.forceOpen || !this.linkTools) {
