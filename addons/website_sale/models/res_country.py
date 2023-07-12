@@ -34,7 +34,5 @@ class ResCountry(models.Model):
                     states = res
                     break
                 states |= carrier.state_ids
-            if not states:
-                states = states.search([('country_id', '=', self.id)])
             res = res & states
         return res
