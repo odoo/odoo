@@ -433,7 +433,7 @@ export class Composer extends Component {
             default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
             default_model: this.props.composer.thread.model,
             default_partner_ids: this.props.composer.thread.suggestedRecipients.map(
-                (partner) => partner.id
+                (recipient) => recipient.persona.id
             ),
             default_res_ids: [this.props.composer.thread.id],
             default_subtype_xmlid:
