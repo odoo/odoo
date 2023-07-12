@@ -7,33 +7,21 @@
                 <div class="cash-move d-flex flex-column">
                     <div class="input-amount d-flex mb-2 gap-2">
                         <div class="input-group">
-                            <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary flex-fill py-2 fw-bolder" t-att-class="{ highlight btn-success: state.type === 'in' }">
+                            <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary flex-fill py-2 fw-bolder" t-att-class="{ 'highlight btn-success': state.type === 'in' }">
                                 Cash In
                             </button>
                             <button t-on-click="() => this.onClickButton('out')" class="input-type btn btn-secondary flex-fill py-2 fw-bolder" t-att-class="{ 'red-highlight btn-danger': state.type === 'out' }">
                                 Cash Out
                             </button>
                         </div>
-                        <div class="input-container popup-input" t-on-input="handleInputChange" >
+                        <div class="input-container popup-input align-items-center form-control d-flex">
                             <span class="currency" t-esc="pos.currency.symbol" t-if="pos.currency.position=='before'"/>
-                            <input class="input-field" type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
+                            <input class="input-field border-0 px-2" type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
                             <span class="currency" t-esc="pos.currency.symbol" t-if="pos.currency.position=='after'"/>
-                        </div>
-                        <div class="input-field input-group">
-                            <t t-if="pos.currency.symbol.length > 1">
-                                <span class="left-currency input-group-text" t-esc="pos.currency.symbol" t-if="pos.currency.position=='before'"/>
-                            </t>
-                            <input type="text" class="form-control" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
-                            <t t-if="pos.currency.symbol.length > 1">
-                                <span class="left-currency input-group-text" t-esc="pos.currency.symbol" t-if="pos.currency.position=='after'"/>
-                            </t>
-                            <t t-else="">
-                                <span class="currency input-group-text" t-esc="pos.currency.symbol" />
-                            </t>
                         </div>
                     </div>
                     <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;"></textarea>
+                        <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                         <label for="reason">Reason</label>
                     </div>
                     <span t-if="state.errorMessage" class="error-message alert alert-danger mt-2">
@@ -42,8 +30,8 @@
                 </div>
             </main>
             <footer class="footer cash-move modal-footer">
-                <div class="button confirm disable highlight dynamic-size btn-btn-lg btn-primary" t-on-click="confirm">
-                    Confirm <span t-esc="env.utils.formatCurrency(state.parsedAmount)"/>
+                <div class="button confirm disable highlight dynamic-size btn btn-lg btn-primary" t-on-click="confirm">
+                    Confirm <span t-esc="format(state.amount)"/>
                 </div>
                 <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
                     Discard

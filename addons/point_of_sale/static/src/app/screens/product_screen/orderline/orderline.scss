@@ -1,17 +1,10 @@
-/*  ********* The OrderLineWidget  ********* */
-
 .orderline {
-    box-sizing: border-box;
-    transition: background 250ms ease-in-out;
-
-    &:active {
-        background: rgba(140,143,183,0.05);
-        transition: background 50ms ease-in-out;
+    
+    &:hover {
+        background-color: $o-gray-200;
     }
 
     &.selected {
-        background: rgba($primary, 0.2);
-        transition: background 250ms ease-in-out;
-        cursor: default;
+        background-color: $o-component-active-bg;
     }
 }

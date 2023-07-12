@@ -2,14 +2,16 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.AlertPopup" owl="1">
         <div class="popup">
-            <p class="title">
-                <t t-esc="props.title" />
-            </p>
-            <p class="body">
+            <div class="modal-header">
+                <h4 class="title modal-title">
+                    <t t-esc="props.title" />
+                </h4>
+            </div>
+            <p class="modal-body">
                 <t t-esc="props.body" />
             </p>
-            <div class="footer">
-                <div class="button cancel" t-on-click="confirm">
+            <div class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
                     <t t-esc="props.confirmText" />
                 </div>
             </div>

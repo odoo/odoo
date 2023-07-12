@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines" owl="1">
             <div class="paymentlines d-flex flex-column">
-                <p class="title-category py-1 px-3 m-0 text-bg-300 fw-bolder">Summary</p>
+                <h4 class="title-category pt-3 pb-2 px-3 m-0 bg-view border-bottom border-2">Summary</h4>
                 <t t-foreach="props.paymentLines" t-as="line" t-key="line.cid">
                     <t t-if="line.selected">
                         <div class="paymentline selected d-flex align-items-center bg-200"
@@ -34,7 +34,7 @@
                                     <div class="electronic_status">
                                         Payment request pending
                                     </div>
-                                    <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
+                                    <div class="button send_payment_request highlight text-bg-primary" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
                                         Send
                                     </div>
                                 </t>
@@ -42,7 +42,7 @@
                                     <div class="electronic_status">
                                         Transaction cancelled
                                     </div>
-                                    <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
+                                    <div class="button send_payment_request highlight text-bg-primary" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
                                         Retry
                                     </div>
                                 </t>

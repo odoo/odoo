@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.FloorScreen" owl="1">
-        <div class="floor-screen screen position-relative d-flex flex-column flex-nowrap m-0 text-start overflow-hidden">
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
             <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors" 
                         floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
                         createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
@@ -12,11 +12,11 @@
             />
             <div class="floor-selector d-flex text-center bg-100 fs-3">
                 <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
-                    <button class="button button-floor btn flex-grow-1 py-3 rounded-0" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
+                    <button class="button button-floor btn p-3 rounded-0" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
                         <t t-esc="floor.name" />
                     </button>
                 </t>
-                <button class="button button-add btn btn-secondary p-3 rounded-0" t-ref="add-floor-ref" t-on-click="addFloor">
+                <button class="button button-add btn btn-secondary p-3 ms-auto rounded-0" t-ref="add-floor-ref" t-on-click="addFloor">
                     <i class="fa fa-plus icon-button me-2" role="img" aria-label="Add" title="Add"></i>
                     Add Floor
                 </button>

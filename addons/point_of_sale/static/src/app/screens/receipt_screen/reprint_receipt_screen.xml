@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ReprintReceiptScreen" owl="1">
-        <div class="receipt-screen screen">
+        <div class="receipt-screen screen h-100 bg-100">
             <div class="screen-content d-flex flex-column h-100">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
                     <button class="button back btn btn-lg btn-secondary" t-on-click="confirm">
@@ -11,7 +11,7 @@
                         <span>Back</span>
                     </button>
                 </div>
-                <div class="centered-content d-grid mx-autp mt-3 border-0 overflow-hidden">
+                <div class="centered-content d-grid mx-auto mt-3 border-0 overflow-hidden">
                     <button class="button print btn btn-lg btn-primary" t-on-click="tryReprint">
                         <i class="fa fa-print ms-2"></i> Print Receipt
                     </button>
