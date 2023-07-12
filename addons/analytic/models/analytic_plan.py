@@ -22,7 +22,7 @@ class AccountAnalyticPlan(models.Model):
         string="Parent",
         ondelete='cascade',
         check_company=True,
-        domain="[('id', '!=', id)]",
+        domain="['!', ('id', 'child_of', id)]",
     )
     parent_path = fields.Char(
         index='btree',
