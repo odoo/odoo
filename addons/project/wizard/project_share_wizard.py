@@ -18,7 +18,7 @@ class ProjectShareWizard(models.TransientModel):
         active_id = self._context.get('active_id', False)
         if active_model == 'project.collaborator':
             active_model = 'project.project'
-            active_id = self._context('default_project_id', False)
+            active_id = self._context.get('default_project_id', False)
         result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
         if not result.get('access_mode'):
             result.update(
