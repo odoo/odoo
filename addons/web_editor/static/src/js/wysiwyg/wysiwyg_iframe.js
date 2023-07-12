@@ -48,9 +48,11 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
      **/
     _getEditorOptions() {
         const options = this._super.apply(this, arguments);
-        options.getContextFromParentRect = () => {
-            return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
-        };
+        if (!("getContextFromParentRect" in options)) {
+            options.getContextFromParentRect = () => {
+                return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
+            };
+        }
         return options;
     },
     /**
