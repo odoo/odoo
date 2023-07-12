@@ -3291,7 +3291,7 @@ export class OdooEditor extends EventTarget {
             rangeRects.length > 1 && rangeRects.at(-1).bottom - rangeRects[0].bottom > BASELINE_MARGIN;
 
         // Get left position.
-        let left = correctedSelectionRect.left + OFFSET;
+        let left = correctedSelectionRect.left - OFFSET;
         // Ensure the toolbar doesn't overflow the editor on the left.
         left = Math.max(OFFSET, left);
         // Ensure the toolbar doesn't overflow the editor on the right.
