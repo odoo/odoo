@@ -1,8 +1,7 @@
 /* @odoo-module */
 
 import { start } from "@mail/../tests/helpers/test_utils";
-
-import { str_to_datetime } from "web.time";
+import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 
 QUnit.module("message model test", {});
 
@@ -25,7 +24,7 @@ QUnit.test("Message model properties", async (assert) => {
         ],
         author: { id: 5, displayName: "Demo" },
         body: "<p>Test</p>",
-        date: moment(str_to_datetime("2019-05-05 10:00:00")),
+        date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
         needaction_partner_ids: [3],
         starred_partner_ids: [3],
@@ -37,7 +36,7 @@ QUnit.test("Message model properties", async (assert) => {
     assert.ok(message.isNeedaction);
     assert.strictEqual(message.body, "<p>Test</p>");
     assert.strictEqual(
-        moment(message.date).utc().format("YYYY-MM-DD hh:mm:ss"),
+        serializeDateTime(message.date),
         "2019-05-05 10:00:00"
     );
     assert.strictEqual(message.id, 4000);

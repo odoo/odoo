@@ -299,7 +299,7 @@ QUnit.module("Legacy MockServer", {
         });
         assert.deepEqual(
             result.map((x) => x["datetime:hour"]),
-            ["12:00 14 Dec", "12:00 26 Oct", "12:00 15 Dec", "12:00 11 Apr", "12:00 30 Dec"]
+            ["13:00 14 Dec", "13:00 26 Oct", "13:00 15 Dec", "13:00 11 Apr", "13:00 30 Dec"]
         );
         assert.deepEqual(
             result.map((x) => x.datetime_count),

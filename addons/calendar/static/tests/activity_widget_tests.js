@@ -4,6 +4,9 @@ import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { ListController } from "@web/views/list/list_controller";
+import { serializeDate } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 QUnit.module("activity widget");
 
@@ -14,17 +17,18 @@ QUnit.test("list activity widget: reschedule button in dropdown", async (assert)
         icon: "fa-calendar",
         name: "Meeting",
     });
+    const tomorrow = serializeDate(DateTime.now().plus({days:1}));
     const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: resPartnerId });
     const meetingId = pyEnv["calendar.event"].create({
         res_model: "calendar.event",
         name: "meeting1",
-        start: moment().add(1, "day").format("YYYY-MM-DD"), // tomorrow
+        start: tomorrow, 
         attendee_ids: [attendeeId],
     });
     const activityId_1 = pyEnv["mail.activity"].create({
         name: "OXP",
         activity_type_id: activityTypeId,
-        date_deadline: moment().add(1, "day").format("YYYY-MM-DD"), // tomorrow
+        date_deadline: tomorrow,
         state: "planned",
         can_write: true,
         res_id: resPartnerId,
