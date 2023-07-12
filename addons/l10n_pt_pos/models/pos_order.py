@@ -146,13 +146,14 @@ class PosOrder(models.Model):
         endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         if endpoint == 'demo':
             return self._l10n_pt_pos_sign_records_using_demo_key(previous_hash)  # sign locally with the demo key provided by the government
-        return self._l10n_pt_sign_records_using_iap(previous_hash, endpoint)  # sign the records using Odoo's IAP (or a custom endpoint)
+        return self._l10n_pt_pos_sign_records_using_iap(previous_hash)  # sign the records using Odoo's IAP (or a custom endpoint)
 
-    def _l10n_pt_sign_records_using_iap(self, previous_hash):
+    def _l10n_pt_pos_sign_records_using_iap(self, previous_hash):
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         docs_to_sign = [{
             'id': order.id,
             'date': order.date_order.isoformat(),
+            'sorting_key': order.name,
             'system_entry_date': order.create_date.isoformat(timespec='seconds'),
             'l10n_pt_document_number': order._get_l10n_pt_pos_document_number(),
             'gross_total': float_repr(order.amount_total, 2),
