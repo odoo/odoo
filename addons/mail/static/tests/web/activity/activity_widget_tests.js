@@ -5,6 +5,9 @@ import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
 import { ListController } from "@web/views/list/list_controller";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { serializeDate } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 QUnit.module("activity widget");
 
@@ -148,7 +151,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
         {
             display_name: "Call with Al",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
+            date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
             user_id: pyEnv.currentUserId,
@@ -157,7 +160,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         },
         {
             display_name: "Meet FP",
-            date_deadline: moment().add(1, "day").format("YYYY-MM-DD"), // tomorrow
+            date_deadline: serializeDate(DateTime.now().plus({days:1})), // tomorrow
             can_write: true,
             state: "planned",
             user_id: pyEnv.currentUserId,
@@ -237,7 +240,7 @@ QUnit.test("list activity exception widget with activity", async (assert) => {
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
         {
             display_name: "An activity",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
+            date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
             user_id: pyEnv.currentUserId,
@@ -246,7 +249,7 @@ QUnit.test("list activity exception widget with activity", async (assert) => {
         },
         {
             display_name: "An exception activity",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
+            date_deadline: serializeDate(DateTime.now()), // now
             can_write: true,
             state: "today",
             user_id: pyEnv.currentUserId,

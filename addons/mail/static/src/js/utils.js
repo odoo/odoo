@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
 
 /**
@@ -213,13 +212,6 @@ function getTextToHTML(text) {
         .replace(/[\n\r]/g, "<br/>");
 }
 
-function timeFromNow(date) {
-    if (moment().diff(date, "seconds") < 45) {
-        return _t("now");
-    }
-    return date.fromNow();
-}
-
 export {
     addLink,
     escapeAndCompactTextContent,
@@ -230,5 +222,4 @@ export {
     parseAndTransform,
     parseEmail,
     stripHTML,
-    timeFromNow,
 };

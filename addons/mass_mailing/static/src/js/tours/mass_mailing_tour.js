@@ -5,7 +5,7 @@
     import {_t} from "web.core";
     import "web.legacy_tranlations_loaded";
     import {Markup} from "web.utils";
-    var now = moment();
+    const { DateTime } = luxon;
 
     registry.category("web_tour.tours").add('mass_mailing_tour', {
         url: '/web',
@@ -30,7 +30,7 @@
         trigger: 'input[name="subject"]',
         content: Markup(_t('Pick the <b>email subject</b>.')),
         position: 'bottom',
-        run: 'text ' + now.format("MMMM") + " Newsletter",
+        run: 'text ' + DateTime.now().toFormat("LLLL") + " Newsletter",
     }, {
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
         run: 'click',
