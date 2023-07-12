@@ -57,6 +57,40 @@ export class AttachmentError extends Component {
     }
 }
 
+AttachmentError.components = { Dialog };
+AttachmentError.template = xml `
+<Dialog title="title">
+    <div class="form-text">
+        <p>The image could not be deleted.</p>
+        <t t-if="props.cause.matches.length">
+            <p>It is used in the following pages:</p>
+            <ul t-as="page" t-foreach="props.cause.matches" t-key="page.website_url">
+                <li>
+                    <a t-att-href="page.website_url">
+                        <t t-esc="page.name"/>
+                    </a>
+                </li>
+            </ul>
+        </t>
+        <t t-if="props.cause.accessModels.length">
+            <p>It is used in records to which you do not have access in the following models:</p>
+            <ul t-as="model" t-foreach="props.cause.accessModels" t-key="model.name">
+                <li>
+                    <t t-esc="model.name"/>
+                </li>
+            </ul>
+        </t>
+    </div>
+    <t t-set-slot="footer">
+        <button class="btn btn-primary" t-on-click="() => this.props.deleteAnyway().then(this.props.close())">
+            Delete Anyway
+        </button>
+        <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+            Cancel
+        </button>
+    </t>
+</Dialog>`;
+
 export class Attachment extends Component {
     static template = "";
     static components = {
@@ -78,7 +112,14 @@ export class Attachment extends Component {
                     this.props.onRemoved(this.props.id);
                 } else {
                     this.dialogs.add(AttachmentError, {
-                        views: prevented[this.props.id],
+                        cause: prevented[this.props.id],
+                        deleteAnyway: async () => {
+                            await rpc('/web_editor/attachment/remove', {
+                                ids: [this.props.id],
+                                force: true,
+                            });
+                            this.props.onRemoved(this.props.id);
+                        },
                     });
                 }
             },

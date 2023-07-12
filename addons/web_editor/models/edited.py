@@ -101,3 +101,48 @@ class EditedModel(models.Model):
         sudo_matches = self.env[model_name].sudo().with_context(active_test=False).search(domain, limit=1)
         if sudo_matches:
             return True
+
+    @api.model
+    def _find(self, html_escaped_likes):
+        """ Returns models where the "likes" appear inside HTML fields.
+
+            :param html_escaped_likes: array of string to include as values of
+                domain 'like'. Values must be HTML escaped.
+
+            :return: None if no match or dict with
+                - 'matches': matching records
+                - 'sudo_models': list of non-accessible models containing
+                matching records
+        """
+        all_matches = []
+        sudo_models = []
+        for model_name, field_name, domain in self._get_edited_html_fields():
+            matches = self._find_in_field(html_escaped_likes, model_name, field_name, domain)
+            if matches:
+                if matches is True:
+                    if model_name not in sudo_models:
+                        sudo_models.append(model_name)
+                else:
+                    all_matches.append(matches)
+        return {
+            'matches': all_matches,
+            'sudo_models': sudo_models,
+        } if all_matches or sudo_models else None
+
+    @api.model
+    def _find_url(self, url, is_default_local_url=False):
+        # in-document URLs are html-escaped, a straight search will not
+        # find them
+        url = tools.html_escape(url)
+        likes = [
+            f'"{url}"',
+            f"'{url}'",
+        ]
+        if is_default_local_url:
+            likes.extend([
+                f'"{url}-',
+                f"'{url}-",
+                f'"{url}?',
+                f"'{url}?",
+            ])
+        return self._find(likes)
