@@ -412,6 +412,7 @@ class StockMove(models.Model):
         if self.state in ['cancel', 'draft']:
             return False
 
+        amount, unit_amount = 0, 0
         if self.state != 'done':
             unit_amount = self.product_uom._compute_quantity(
                 self.quantity_done, self.product_id.uom_id)
@@ -428,6 +429,10 @@ class StockMove(models.Model):
         elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
             amount = sum(self.stock_valuation_layer_ids.mapped('value'))
             unit_amount = - sum(self.stock_valuation_layer_ids.mapped('quantity'))
+
+        if self.analytic_account_line_ids and amount == 0 and unit_amount == 0:
+            self.analytic_account_line_ids.unlink()
+            return False
 
         return self.env['account.analytic.account']._perform_analytic_distribution(
             self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
