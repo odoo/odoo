@@ -112,7 +112,10 @@ export class LivechatService {
      */
     updateSession(values) {
         const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
-        Object.assign(session, values);
+        Object.assign(session, {
+            visitor_uid: this.visitorUid,
+            ...values,
+        });
         this.cookie.deleteCookie(this.SESSION_COOKIE);
         this.cookie.deleteCookie(this.OPERATOR_COOKIE);
         this.cookie.setCookie(this.SESSION_COOKIE, JSON.stringify(session), 60 * 60 * 24); // 1 day cookie.
@@ -195,11 +198,22 @@ export class LivechatService {
         return Boolean(this.cookie.current[this.SESSION_COOKIE]);
     }
 
+    get shouldDeleteSession() {
+        return this.sessionCookie && this.sessionCookie.visitor_uid !== session.user_id;
+    }
+
     /**
      * @returns {import("@mail/core/common/thread_model").Thread|undefined}
      */
     get thread() {
         return Object.values(this.store.threads).find(({ type }) => type === "livechat");
+    }
+
+    get visitorUid() {
+        const sessionCookie = this.sessionCookie;
+        return sessionCookie && "visitor_uid" in sessionCookie
+            ? sessionCookie.visitor_uid
+            : session.user_id;
     }
 }
 
@@ -207,6 +221,10 @@ export const livechatService = {
     dependencies: ["cookie", "notification", "rpc", "bus_service", "mail.message", "mail.store"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
+        if (livechat.shouldDeleteSession) {
+            livechat.leaveSession();
+            livechat.state = SESSION_STATE.NONE;
+        }
         if (livechat.available) {
             livechat.initialize();
         }
