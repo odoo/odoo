@@ -196,16 +196,6 @@ class PhoneMixin(models.AbstractModel):
         res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
         return res + self._phone_get_number_fields()
 
-    def _phone_get_number_fields(self):
-        """ This method returns the fields to use to find the number to use to
-        send an SMS on a record. """
-        return []
-
-    def _phone_get_country_field(self):
-        if 'country_id' in self:
-            return 'country_id'
-        return False
-
     def phone_get_sanitized_numbers(self, number_fname='mobile', force_format='E164'):
         res = dict.fromkeys(self.ids, False)
         country_fname = self._phone_get_country_field()
