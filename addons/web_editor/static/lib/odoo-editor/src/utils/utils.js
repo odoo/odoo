@@ -1189,11 +1189,9 @@ export function isFontSize(node, props) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedNodes = getSelectedNodes(editable)
+    const selectedNodes = getTraversedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isFormatted = formatsSpecs[format].isFormatted;
-    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
-    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
     return selectedNodes.every(n => isFormatted(n, editable));
 }
 
