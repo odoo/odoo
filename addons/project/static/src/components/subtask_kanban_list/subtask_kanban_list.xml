@@ -20,7 +20,7 @@
                            t-esc="data.record.data.display_name"
                            t-on-click.prevent="() => this.goToSubtask(data.record.resId)"/>
                         <Field
-                            class="`subtask_user_widget_col justify-content-end align-items-center ${['1_done', '1_canceled'].includes(data.record.data.state) ? 'opacity-50' : ''}`"
+                            class="`subtask_user_widget_col d-inline-flex justify-content-end align-items-center me-1 ${['1_done', '1_canceled'].includes(data.record.data.state) ? 'opacity-50' : ''}`"
                             name="'user_ids'"
                             record="data.record"
                             fieldInfo="data.record.activeFields.user_ids"
