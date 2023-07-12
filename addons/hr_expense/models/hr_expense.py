@@ -91,7 +91,7 @@ class HrExpense(models.Model):
         ('draft', 'To Submit'),
         ('reported', 'Submitted'),
         ('approved', 'Approved'),
-        ('done', 'Paid'),
+        ('done', 'Done'),
         ('refused', 'Refused')
     ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft')
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
@@ -1000,7 +1000,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.expense_number = result.get(sheet.id, 0)
 
-    @api.depends('account_move_id', 'account_move_id.date')
+    @api.depends('account_move_id.date')
     def _compute_accounting_date(self):
         for sheet in self:
             sheet.accounting_date = sheet.account_move_id.date
