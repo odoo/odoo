@@ -55,7 +55,7 @@ class EventLeadRule(models.Model):
 
     If conditions are met, leads are created with pre-filled informations defined
     on the rule (type, user_id, team_id). Contact information coming from the
-    registrations are computed (customer, name, email, phone, mobile, contact_name).
+    registrations are computed (customer, name, email, phone, contact_name).
 
     SPECIFICATIONS: OTHER POINTS
 

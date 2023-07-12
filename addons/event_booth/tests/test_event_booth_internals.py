@@ -40,7 +40,6 @@ class TestEventData(TestEventBoothCommon):
         self.assertEqual(booth.contact_name, customer.name)
         self.assertEqual(booth.contact_email, customer_email)
         self.assertEqual(booth.contact_phone, customer.phone)
-        self.assertFalse(booth.contact_mobile, 'Data has no mobile')
 
         booth.write({
             'contact_email': '"New Emails" <new.email@test.example.com',

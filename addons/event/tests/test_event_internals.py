@@ -710,79 +710,75 @@ class TestEventRegistrationPhone(EventCase):
         """ Test onchange on phone / mobile, should try to format number """
         event = self.test_event.with_user(self.env.user)
 
-        lead_form = Form(self.env['event.registration'])
-        lead_form.event_id = event
-        lead_form.mobile = '7200000011'
-        lead_form.phone = '7200000000'
-        self.assertEqual(lead_form.mobile, '+917200000011')
-        self.assertEqual(lead_form.phone, '+917200000000')
+        reg_form = Form(self.env['event.registration'])
+        reg_form.event_id = event
+        reg_form.phone = '7200000000'
+        self.assertEqual(reg_form.phone, '+917200000000')
 
     @users('user_eventregistrationdesk')
     def test_registration_phone_format(self):
         """ Test phone formatting: based on partner (BE numbers) or event
         (IN numbers) or company (BE numbers). """
+        partner_mobileonly = self.env['res.partner'].sudo().create({
+            'name': 'Constantin Customer 3 Mobile',
+            'email': 'constantin3test.example.com',
+            'country_id': self.env.ref('base.be').id,
+            'phone': False,
+            'mobile': '0456987654',
+            })
         event = self.test_event.with_user(self.env.user)
 
-        # customer_id, mobile, phone -> based on partner or event country
+        # customer_id, phone -> based on partner or event country
         sources = [
-            (self.event_customer.id, None, None),  # BE local on partner
-            (self.event_customer2.id, None, None),  # BE local on partner
-            (self.event_customer2.id, '0456001122', None),  # BE local + on partner
-            (False, '0456778899', '+32456778899'),  # BE local + BE global
-            (False, '7200000000', False),  # IN local
-            (False, False, '7200000011'),  # IN local
-            (False, '7200000000', '7200000011'),  # IN local
-            (False, '+917200000088', '+917200000099'),  # IN global
+            (self.event_customer.id, None),  # BE local on partner
+            (self.event_customer2.id, None),  # BE local on partner
+            (partner_mobileonly.id, None),  # BE local on partner
+            (self.event_customer2.id, '0456001122'),  # BE local + on partner
+            (False, '0456778899'),  # BE local
+            (False, '7200000000'),  # IN local
+            (False, '+917200000088'),  # IN global
         ]
-        # mobile, phone
+        # expected phone
         expected = [
-            (False, '0485112233'),  # partner values, no format
-            ('0456654321', '0456987654'),  # partner values, no format
-            ('+32456001122', '0456987654'),  # BE on partner / partner value, no format
-            ('0456778899', '+32456778899'),  # IN on event -> cannot format BE
-            ('+917200000000', False),  # IN on event
-            (False, '+917200000011'),  # IN on event
-            ('+917200000000', '+917200000011'),  # IN on event
-            ('+917200000088', '+917200000099'),  # already formatted
+            '0485112233',  # partner values, no format (phone only)
+            '0456987654',  # partner values, no format (both: phone wins)
+            '0456987654',  # partner values, no format (mobile only)
+            '+32456001122',  # BE on partner
+            '0456778899',  # IN on event -> cannot format BE
+            '+917200000000',  # IN on event
+            '+917200000088',  # already formatted
         ]
-        for (partner_id, mobile, phone), (exp_mobile, exp_phone) in zip(sources, expected):
-            with self.subTest(partner_id=partner_id, mobile=mobile, phone=phone):
+        for (partner_id, phone), exp_phone in zip(sources, expected):
+            with self.subTest(partner_id=partner_id, phone=phone):
                 create_vals = {
                     'event_id': event.id,
                     'partner_id': partner_id,
                 }
-                if mobile is not None:
-                    create_vals['mobile'] = mobile
                 if phone is not None:
                     create_vals['phone'] = phone
                 reg = self.env['event.registration'].create(create_vals)
-                self.assertEqual(reg.mobile, exp_mobile)
                 self.assertEqual(reg.phone, exp_phone)
 
         # no country on event -> based on partner or event company country
         self.test_event.write({'address_id': False})
         expected = [
-            (False, '0485112233'),  # partner values, no format
-            ('0456654321', '0456987654'),  # partner values, no format
-            ('+32456001122', '0456987654'),  # BE on partner / partner value, no format
-            ('+32456778899', '+32456778899'),  # BE on company
-            ('7200000000', False),  # BE on company -> cannot format IN
-            (False, '7200000011'),  # BE on company -> cannot format IN
-            ('7200000000', '7200000011'),  # BE on company -> cannot format IN
-            ('+917200000088', '+917200000099'),  # already formatted
+            '0485112233',  # partner values, no format (phone only)
+            '0456987654',  # partner values, no format (both: phone wins)
+            '0456987654',  # partner values, no format (mobile only)
+            '+32456001122',  # BE on company
+            '+32456778899',  # BE on company
+            '7200000000',  # BE on company -> cannot format IN
+            '+917200000088',  # already formatted
         ]
-        for (partner_id, mobile, phone), (exp_mobile, exp_phone) in zip(sources, expected):
-            with self.subTest(partner_id=partner_id, mobile=mobile, phone=phone):
+        for (partner_id, phone), exp_phone in zip(sources, expected):
+            with self.subTest(partner_id=partner_id, phone=phone):
                 create_vals = {
                     'event_id': event.id,
                     'partner_id': partner_id,
                 }
-                if mobile is not None:
-                    create_vals['mobile'] = mobile
                 if phone is not None:
                     create_vals['phone'] = phone
                 reg = self.env['event.registration'].create(create_vals)
-                self.assertEqual(reg.mobile, exp_mobile)
                 self.assertEqual(reg.phone, exp_phone)
 
 
