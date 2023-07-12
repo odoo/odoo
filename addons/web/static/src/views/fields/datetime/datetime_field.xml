@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.DateTimeField" owl="1">
-        <t
-            t-set="showSeparator"
-            t-value="state.range and (props.required or (!isEmpty(startDateField) and !isEmpty(endDateField)))"
-        />
+        <t t-set="showSeparator" t-value="shouldShowSeparator()" />
         <div class="d-flex gap-2 align-items-center" t-ref="root">
             <!-- Start date -->
             <t t-if="props.readonly">
