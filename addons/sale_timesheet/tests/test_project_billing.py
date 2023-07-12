@@ -262,9 +262,10 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertEqual(self.project_employee_rate_manager.project_id, timesheet1.project_id, "The timesheet should be linked to the project of the map entry")
 
         # create a subtask
-        subtask = Task.with_context(default_project_id=self.project_subtask.id).create({
+        subtask = Task.create({
             'name': 'first subtask task',
             'parent_id': task.id,
+            'project_id': self.project_subtask.id,
         })
 
         self.assertFalse(subtask.allow_billable, "Subtask in non billable project should be non billable too")

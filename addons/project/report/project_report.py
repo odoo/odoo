@@ -91,7 +91,6 @@ class ReportProjectTaskUser(models.Model):
                 t.working_hours_open,
                 t.working_hours_close,
                 (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24) as delay_endings_days,
-                CASE WHEN t.project_id IS NOT NULL OR t.parent_id IS NOT NULL THEN false ELSE true END as is_private,
                 COUNT(td.task_id) as dependent_ids_count
         """
 

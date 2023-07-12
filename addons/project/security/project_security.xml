@@ -100,7 +100,7 @@
         <field name="name">Project/Task: project manager: see all tasks linked to a project or its own tasks</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
-            '|', ('is_private', '=', False),
+            '|', ('project_id', '!=', False),
                  ('user_ids', 'in', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>

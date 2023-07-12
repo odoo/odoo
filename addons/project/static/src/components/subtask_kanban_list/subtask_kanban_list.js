@@ -68,7 +68,7 @@ export class SubtaskKanbanList extends Component {
                 field: getFieldFromRegistry(this.fields.user_ids.type, "many2many_avatar_user", "kanban"),
             },
             project_id: {
-                field: getFieldFromRegistry(this.fields.project_id.type, "project_private_task", "kanban")
+                field: getFieldFromRegistry(this.fields.project_id.type, "project", "kanban")
             },
         };
     }

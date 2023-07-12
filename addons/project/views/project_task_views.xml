@@ -145,7 +145,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('project_id', '=', active_id)]</field>
+            <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
             <field name="context">{
                 'default_project_id': active_id,
                 'show_project_update': True,
@@ -250,12 +250,11 @@
                     <field name="allow_milestones" invisible="1" />
                     <field name="parent_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="is_private" invisible="1"/>
-                    <field name="project_root_id" invisible="1"/>
+                    <field name="project_id" invisible="1"/>
                     <header>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
-                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('is_private', '=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
+                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
@@ -314,7 +313,7 @@
                         <group>
                             <field name="project_id"
                                    domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
-                                   widget="project_private_task"
+                                   widget="project"
                             />
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
@@ -361,21 +360,23 @@
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add details about this task..."/>
                         </page>
-                        <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('is_private', '=', True)]}">
+                        <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('project_id', '=', False)]}">
                             <field name="child_ids"
-                                   context="{'default_user_ids': user_ids, 'default_parent_id': id,
+                                   context="{'default_project_id': project_id, 'default_display_in_project': False, 'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
                                    widget="subtasks_one2many">
                                 <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="allow_milestones" invisible="1"/>
+                                    <field name="display_in_project" invisible="1" force_save="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="id" optional="hide"/>
+                                    <field name="parent_id" invisible="1"/>
                                     <field name="priority" widget="priority" nolabel="1" options="{'autosave': False}" width="40px"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1, 'autosave':  False}" width="40px"/>
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
-                                    <field name="project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
+                                    <field name="project_id" string="Project" optional="hide" options="{'no_open': 1}" widget="project"/>
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': project_id}"
@@ -489,7 +490,7 @@
                     <group>
                         <field name="display_name" string= "Task Title" placeholder="e.g. Send Invitations" required="1"/>
                         <field name="project_id"
-                               widget="project_private_task"
+                               widget="project"
                                invisible="context.get('default_project_id', False)"
                                placeholder="Private"
                                class="o_project_task_project_field"
@@ -531,7 +532,6 @@
                     <field name="activity_state"/>
                     <field name="rating_count"/>
                     <field name="rating_avg"/>
-                    <field name="is_private"/>
                     <field name="rating_active"/>
                     <field name="has_late_and_unreached_milestone" />
                     <field name="allow_milestones" />
@@ -597,8 +597,8 @@
                                         <a t-if="!record.project_id.raw_value" class="text-muted" style="font-size: 17px; padding-top: 1.5px; margin-left: 1.5px">
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
-                                        <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value">
-                                            <a t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
+                                        <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
+                                            <a t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
                                                t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
                                                class="subtask_list_button text-muted">
                                                 <span class="fa fa-check-square-o me-1"/>
@@ -617,7 +617,7 @@
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
                                     </div>
                                 </div>
-                                <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value">
+                                <t t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value">
                                     <div class="kanban_bottom_subtasks_section"/>
                                 </t>
                             </div>
@@ -636,7 +636,6 @@
             <field name="arch" type="xml">
                 <tree string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
                     <field name="company_id" invisible="1"/>
-                    <field name="is_private" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
                     <field name="allow_milestones" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
@@ -645,7 +644,7 @@
                     <field name="priority" widget="priority" nolabel="1"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
                     <field name="name" string="Title" widget="name_with_subtask_count"/>
-                    <field name="project_id" widget="project_private_task" optional="show" readonly="1" options="{'no_open': 1}" invisible="context.get('default_project_id')"/>
+                    <field name="project_id" widget="project" optional="show" readonly="1" options="{'no_open': 1}" invisible="context.get('default_project_id')"/>
                     <field name="milestone_id" attrs="{'invisible': [('allow_milestones', '=', False)]}" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" attrs="{'invisible': [('project_id', '=', False)]}"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
@@ -713,16 +712,15 @@
                           js_class="project_calendar"
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
-                    <field name="is_private" invisible="1"/>
-                    <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)"/>
+                    <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
                     <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
-                    <field name="stage_id" attrs="{'invisible': ['|', ('is_private', '=', True), ('stage_id', '=', False)]}"/>
+                    <field name="stage_id" attrs="{'invisible': ['|', ('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     <field name="state" widget="project_task_state_selection" readonly="1"/>
-                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('is_private', '=', False), ('personal_stage_id', '=', False)]}"/>
+                    <field name="personal_stage_id" string="Personal Stage" attrs="{'invisible': ['|', ('project_id', '!=', False), ('personal_stage_id', '=', False)]}"/>
                 </calendar>
             </field>
         </record>
@@ -764,7 +762,6 @@
                 <activity string="Project Tasks" js_class="project_activity">
                     <field name="user_ids"/>
                     <field name="project_id"/>
-                    <field name="is_private" />
                     <templates>
                         <div class="w-100" t-name="activity-box" style="display: inline-grid; grid-template-columns: auto max-content;">
                             <div>
@@ -773,7 +770,7 @@
                                 </span>
                                 <span t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
                                     <field t-if="record.project_id.value" name="project_id" muted="1" class="w-100 text-truncate"/>
-                                    <span t-elif="record.is_private.value" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+                                    <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
                             <field name="user_ids" widget="many2many_avatar_user"/>
@@ -788,7 +785,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True)]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -936,7 +933,7 @@
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="domain">['|', ('is_private', '=', True), ('project_id', '!=', False)]</field>
+            <field name="domain">[('display_in_project', '=', True)]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -991,7 +988,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('state', 'not in', ['1_done', '1_canceled']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
+            <field name="domain">[('state', 'not in', ['1_done', '1_canceled']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -1001,7 +998,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('project_id', '=', active_id)]</field>
+            <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
             <field name="context">{'project_id':active_id}</field>
         </record>
 
@@ -1029,7 +1026,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True)]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
         </record>

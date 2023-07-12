@@ -432,8 +432,6 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 task = task_form.save()
                 self.assertEqual(task.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
 
-                # set parent on existing orphan task; the onchange will set the correct company and subtask project
-                self.task_2.write({'project_id': False})
                 # For `parent_id` to  be visible in the view, you need
                 # 1. The debug mode
                 # <field name="parent_id" groups="base.group_no_one"/>
@@ -446,10 +444,11 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                     with Form(self.task_2) as task_form:
                         task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
                         task_form.parent_id = self.task_1
+                        task_form.project_id = self.env['project.project']
                     task = task_form.save()
 
-                self.assertFalse(task.project_id, "The subtask should not have any project set")
-                self.assertEqual(task.company_id, self.task_1.company_id, "The company of the subtask should be the one from its parent when no project is set.")
+                self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
+                self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent when no project is set.")
 
     def test_cross_subtask_project(self):
 
@@ -471,7 +470,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                     task = task_form.save()
 
-                self.assertFalse(task.project_id, "No project should be set on the subtask by default")
+                self.assertEqual(task.project_id, task.parent_id.project_id, "The subtask should have the same project as its parents")
                 self.assertEqual(task.company_id, task.parent_id.company_id, "The company of the subtask should be the one from its parent.")
                 self.assertEqual(self.task_1.child_ids.ids, [task.id])
 
