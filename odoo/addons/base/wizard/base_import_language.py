@@ -58,7 +58,7 @@ class BaseLanguageImport(models.TransientModel):
                 _logger.warning('Could not import the file due to a format mismatch or it being malformed.')
                 raise UserError(
                     _('File %r not imported due to format mismatch or a malformed file.'
-                      ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
+                      ' (Valid formats are .csv, .po)\n\nTechnical Details:\n%s') % \
                     (this.filename, tools.ustr(e))
                 )
         return True
