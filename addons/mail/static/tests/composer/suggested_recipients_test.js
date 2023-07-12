@@ -1,12 +1,6 @@
 /* @odoo-module */
 
-import {
-    click,
-    insertText,
-    start,
-    startServer,
-    waitUntil,
-} from "@mail/../tests/helpers/test_utils";
+import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const views = {
@@ -57,14 +51,21 @@ QUnit.test(
                 assert.step("do-action");
                 assert.strictEqual(action.name, "Compose Email");
                 assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_comment");
-                assert.deepEqual(action.context.default_partner_ids, [partnerId]);
+                assert.strictEqual(action.context.default_partner_ids.length, 2);
+                const johnTestPartnerId = pyEnv["res.partner"].search([
+                    ["email", "=", "john@test.be"],
+                ])[0];
+                assert.deepEqual(action.context.default_partner_ids, [
+                    johnTestPartnerId,
+                    partnerId,
+                ]);
                 return Promise.resolve();
             },
         });
         await click("button:contains(Send message)");
         assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
         assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
-        assert.notOk(
+        assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
         assert.ok(
@@ -101,7 +102,7 @@ QUnit.test(
         await click("button:contains(Send message)");
         assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
         assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
-        assert.notOk(
+        assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
         assert.ok(
@@ -198,21 +199,31 @@ QUnit.test(
     }
 );
 
-QUnit.test("suggest recipient on 'Send message' composer", async (assert) => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        display_name: "John Jane",
-        email: "john@jane.be",
-    });
-    const fakeId = pyEnv["res.fake"].create({
-        email_cc: "john@test.be",
-        partner_ids: [partnerId],
-    });
-    const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.fake", fakeId);
-    await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-SuggestedRecipient input:checked");
-});
+QUnit.test(
+    "suggest recipient on 'Send message' composer (all checked by default)",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            display_name: "John Jane",
+            email: "john@jane.be",
+        });
+        const fakeId = pyEnv["res.fake"].create({
+            email_cc: "john@test.be",
+            partner_ids: [partnerId],
+        });
+        const { openFormView } = await start({ serverData: { views } });
+        await openFormView("res.fake", fakeId);
+        await click("button:contains(Send message)");
+        assert.containsN($, ".o-mail-SuggestedRecipient input:checked", 2);
+        assert.ok(
+            $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
+        );
+        assert.ok(
+            $(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"] input[type=checkbox]`)[0]
+                .checked
+        );
+    }
+);
 
 QUnit.test("display reason for suggested recipient on mouse over", async (assert) => {
     const pyEnv = await startServer();
@@ -228,34 +239,6 @@ QUnit.test("display reason for suggested recipient on mouse over", async (assert
         `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"]`
     )[0].getAttribute("title");
     assert.strictEqual(partnerTitle, "Add as recipient and follower (reason: Email partner)");
-});
-
-QUnit.test("suggested recipient without partner are unchecked by default", async (assert) => {
-    const pyEnv = await startServer();
-    const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
-    const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.fake", fakeId);
-    await click("button:contains(Send message)");
-    const checkboxUnchecked = $(
-        ".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]"
-    )[0];
-    assert.notOk(checkboxUnchecked.checked);
-});
-
-QUnit.test("suggested recipient with partner are checked by default", async (assert) => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        display_name: "John Jane",
-        email: "john@jane.be",
-    });
-    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-    const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.fake", fakeId);
-    await click("button:contains(Send message)");
-    assert.ok(
-        $(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"] input[type=checkbox]`)[0]
-            .checked
-    );
 });
 
 QUnit.test(
@@ -299,34 +282,5 @@ QUnit.test(
         await insertText(".o-mail-Composer-input", "Dummy Message");
         await click(".o-mail-Composer-send");
         assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
-    }
-);
-
-QUnit.test(
-    "suggested recipient without partner are unchecked when closing the dialog without creating partner",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
-        const { openFormView } = await start();
-        await openFormView("res.fake", fakeId);
-        await click("button:contains(Send message)");
-        await click("label:contains(john@test.be (john@test.be))");
-        await waitUntil(".modal-header");
-        await click(".modal-header > button.btn-close");
-        assert.containsNone($, ".form-check-input:checked");
-    }
-);
-
-QUnit.test(
-    "suggested recipient without partner can be clicked from the checkbox",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
-        const { openFormView } = await start();
-        await openFormView("res.fake", fakeId);
-        await click("button:contains(Send message)");
-        await click(".o-mail-SuggestedRecipient input");
-        await waitUntil(".modal-header");
-        assert.containsOnce($, ".modal-header");
     }
 );
