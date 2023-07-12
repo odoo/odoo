@@ -19,9 +19,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'active',
     'priority',
     'project_id',
+    'display_in_project',
     'color',
     'subtask_count',
-    'is_private',
     'email_from',
     'create_date',
     'write_date',
@@ -34,7 +34,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
-    'company_id',
     'date_assign',
     'dependent_ids',
     'message_is_follower',
@@ -155,7 +154,7 @@ class Task(models.Model):
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]", index=True, tracking=True, change_default=True)
-    project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', search='_search_project_root_id', recursive=True)
+    display_in_project = fields.Boolean(default=True, readonly=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     planned_hours = fields.Float("Allocated Time", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
@@ -203,7 +202,6 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
-    is_private = fields.Boolean(compute='_compute_is_private', search='_search_is_private')
     allow_milestones = fields.Boolean(related='project_id.allow_milestones')
     milestone_id = fields.Many2one(
         'project.milestone',
@@ -268,7 +266,8 @@ class Task(models.Model):
     )
 
     _sql_constraints = [
-        ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
+        ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent."),
+        ('private_task_has_no_parent', 'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))', "A private task cannot have a parent."),
     ]
 
     @api.constrains('company_id', 'partner_id')
@@ -290,96 +289,6 @@ class Task(models.Model):
     def _compute_analytic_account_id(self):
         for task in self:
             task.analytic_account_id = task.project_id.analytic_account_id
-
-    @api.depends('project_id', 'parent_id')
-    def _compute_is_private(self):
-        # Modify accordingly, this field is used to display the lock on the task's kanban card
-        for task in self:
-            task.is_private = not task.project_id and not task.parent_id
-
-    @api.depends('project_id', 'parent_id.project_id')
-    def _compute_project_root_id(self):
-        # project of the first ascendant that has one. Let's call it the root task.
-        for task in self:
-            task.project_root_id = task.project_id or task.parent_id.project_root_id
-
-    def _search_project_root_id(self, operator, value):
-        if operator not in ("in", "not in", "any", "not any", "=", "!=", "=?"):
-            raise UserError(_("Unsupported operator for search on project_root_id"))
-
-        where_query_1 = where_query_2 = "TRUE"
-        params = tuple()
-        if operator in ("any", "not any"):
-            query = self.env['project.project']._where_calc(value)
-            subquery_str, params = query.subselect()
-            where_operator = 'in' if operator == 'any' else 'not in'
-            where_query_1 = f"""
-                project_id {where_operator} ({subquery_str})
-            """
-            where_query_2 = f"""
-                project_root_id {'in' if operator == 'any' else 'not in'} ({subquery_str})
-            """
-        elif operator != "=?" or (value is not False and value is not None):
-            where_operator = operator if operator != '=?' else '='
-            where_query_1 = f"project_id {where_operator} %s"
-            where_query_2 = f"project_root_id {where_operator} %s"
-            if isinstance(value, (list, tuple)):
-                params = (tuple(value),)
-            else:
-                params = (value,)
-
-        self.env.cr.execute(
-            f"""
-                SELECT ARRAY_AGG(id)
-                  FROM project_task
-                 WHERE {where_query_1}
-                   AND project_id IS NOT NULL
-            """, params
-        )
-        task_ids = self._cr.fetchone()[0] or []
-
-        self.env.cr.execute(
-            f"""
-                WITH RECURSIVE project_hierarchy AS (
-                       SELECT pt.id,
-                              pt.parent_id,
-                              pt.project_id,
-                              pt.project_id AS project_root_id
-                         FROM project_task pt
-                        WHERE pt.project_id IS NULL
-                          AND pt.parent_id IS NOT NULL
-
-                    UNION ALL
-
-                       SELECT ph.id,
-                              pt.parent_id,
-                              ph.project_id,
-                              COALESCE(ph.project_root_id, pt.project_id) AS project_root_id
-                         FROM project_hierarchy ph
-                         JOIN project_task pt ON ph.parent_id = pt.id
-                )
-                SELECT ARRAY_AGG(id)
-                  FROM project_hierarchy
-                 WHERE {where_query_2}
-            """, params
-        )
-        if not self._cr.rowcount and not task_ids:
-            return expression.FALSE_DOMAIN
-        task_ids += self.env.cr.fetchone()[0] or []
-        if not task_ids:
-            return expression.FALSE_DOMAIN
-        return [('id', 'in', task_ids)]
-
-    def _search_is_private(self, operator, value):
-        if not isinstance(value, bool):
-            raise ValueError(_('Value should be True or False (not %s)'), value)
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('Operation should be = or != (not %s)'), value)
-        domain = expression.normalize_domain([('project_id', '=', False), ('parent_id', '=', False)])
-        if (operator == '=') != value:
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
-        return domain
 
     @api.depends('depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -623,9 +532,10 @@ class Task(models.Model):
     @api.depends('project_id')
     def _compute_stage_id(self):
         for task in self:
-            if task.project_id:
-                if task.project_id not in task.stage_id.project_ids:
-                    task.stage_id = task.stage_find(task.project_id.id, [('fold', '=', False)])
+            project = task.project_id or task.parent_id.project_id
+            if project:
+                if project not in task.stage_id.project_ids:
+                    task.stage_id = task.stage_find(project.id, [('fold', '=', False)])
             else:
                 task.stage_id = False
 
@@ -948,6 +858,28 @@ class Task(models.Model):
             self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
+            project_id = vals.get('project_id')
+            if vals.get('user_ids'):
+                vals['date_assign'] = fields.Datetime.now()
+                if not (vals.get('parent_id') or project_id or self._context.get('default_project_id')):
+                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
+                    if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+            if project_id:
+                # set the project => "I want to display the task in the project"
+                #                 => => set `display_in_project` to True
+                vals['display_in_project'] = vals.get('display_in_project', True)
+            elif vals.get('parent_id'):
+                # unset the project => 2 cases:
+                # 1) the task has no parent => "I want it to be private" => nothing to do
+                # 2) the task has a parent  => "I don't want to display the task in the project"
+                #                           => set `project_id` to the one of its parent and `display_in_project` to False
+                project_id = self.browse(vals['parent_id']).project_id.id
+                vals.update({
+                    'project_id': project_id,
+                    'display_in_project': False,
+                })
+
             if default_personal_stage and 'personal_stage_type_id' not in vals:
                 vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
@@ -955,7 +887,6 @@ class Task(models.Model):
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
-            project_id = vals.get('project_id') or self.env.context.get('default_project_id')
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
@@ -973,12 +904,6 @@ class Task(models.Model):
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
             # user_ids change: update date_assign
-            if vals.get('user_ids'):
-                vals['date_assign'] = fields.Datetime.now()
-                if not project_id:
-                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
-                    if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
-                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
@@ -1032,10 +957,49 @@ class Task(models.Model):
             self.check_access_rule('write')
             portal_can_write = True
 
-        now = fields.Datetime.now()
-        if 'parent_id' in vals and vals['parent_id'] in self.ids:
-            raise UserError(_("Sorry. You can't set a task as its parent task."))
+        if 'project_id' in vals:
+            project_id = vals['project_id']
+            if project_id:
+                # set the project => "I want to display the task in the project"
+                #                 => set `display_in_project` to True
+                if 'display_in_project' not in vals:
+                    vals['display_in_project'] = True
+                    no_display_subtasks = self.child_ids.filtered(lambda t: not t.display_in_project)
+                    if no_display_subtasks:
+                        no_display_subtasks.write({'project_id': project_id})
+            else:
+                # unset the project => 2 cases:
+                # 1) the task has no parent => "I want it to be private" => nothing to do
+                # 2) the task has a parent  => "I don't want to display the task in the project"
+                #                           => set `project_id` back and `display_in_project` to False
+                if 'parent_id' in vals:
+                    if vals['parent_id']:
+                        vals.update({
+                            'project_id': self.browse(vals['parent_id']).project_id.id,
+                            'display_in_project': False,
+                        })
+                else:
+                    task_ids_per_parent_project_id = defaultdict(list)
+                    for task in self:
+                        task_ids_per_parent_project_id[task.parent_id.project_id.id].append(task.id)
+                    self = self.browse(task_ids_per_parent_project_id.pop(False, False))
+                    for parent_project_id, task_ids in task_ids_per_parent_project_id.items():
+                        self.browse(task_ids).write({
+                            **vals,
+                            'project_id': parent_project_id,
+                            'display_in_project': False,
+                        })
+
+        if 'parent_id' in vals:
+            parent_id = vals['parent_id']
+            if parent_id in self.ids:
+                raise UserError(_("Sorry. You can't set a task as its parent task."))
+            elif not parent_id:
+                # unset the parent => "I want to display the task back in the project"
+                #                    => set `display_in_project` to True
+                vals['display_in_project'] = True
         # stage change: update date_last_stage_update
+        now = fields.Datetime.now()
         if 'stage_id' in vals:
             if not 'project_id' in vals and self.filtered(lambda t: not t.project_id):
                 raise UserError(_('You can only set a personal stage on a private task.'))
@@ -1127,14 +1091,14 @@ class Task(models.Model):
     # Subtasks
     # ---------------------------------------------------
 
-    @api.depends('parent_id.partner_id', 'project_id', 'is_private')
+    @api.depends('parent_id.partner_id', 'project_id')
     def _compute_partner_id(self):
         """ Compute the partner_id when the tasks have no partner_id.
 
             Use the project partner_id if any, or else the parent task partner_id.
         """
         for task in self:
-            if task.partner_id and task.is_private:
+            if task.partner_id and not (task.project_id or task.parent_id):
                 task.partner_id = False
                 continue
             if not task.partner_id:
@@ -1143,7 +1107,7 @@ class Task(models.Model):
     @api.depends('project_id')
     def _compute_milestone_id(self):
         for task in self:
-            if task.project_id != task.milestone_id.project_id:
+            if (task.project_id or task.parent_id.project_id) != task.milestone_id.project_id:
                 task.milestone_id = False
 
     def _compute_has_late_and_unreached_milestone(self):
@@ -1614,7 +1578,7 @@ class Task(models.Model):
     # ---------------------------------------------------
     def _get_task_analytic_account_id(self):
         self.ensure_one()
-        return self.analytic_account_id or self.project_root_id.analytic_account_id
+        return self.analytic_account_id or self.project_id.analytic_account_id
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
