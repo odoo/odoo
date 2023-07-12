@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
@@ -7,6 +7,10 @@ from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+
+    @api.model
+    def _l10n_pt_stock_action_check_hash_integrity(self):
+        return self.env.ref('l10n_pt_stock.action_l10n_pt_stock_report_hash_integrity').report_action(self.id)
 
     def _l10n_pt_stock_check_hash_integrity(self):
         if self.country_id.code != 'PT':
@@ -18,13 +22,14 @@ class ResCompany(models.Model):
         picking_types = self.env['stock.picking.type'].search([
             ('company_id', '=', self.env.company.id),
             ('code', '=', 'outgoing'),
+            ('l10n_pt_stock_tax_authority_series_id', '!=', False),
         ])
 
         for picking_type in picking_types:
             pickings = self.env['stock.picking'].sudo().search([
                 ('picking_type_id', '=', picking_type.id),
                 ('l10n_pt_stock_inalterable_hash', '!=', False),
-            ], order='secure_sequence_number')
+            ], order='l10n_pt_secure_sequence_number')
             if not pickings:
                 results.append({
                     'name': picking_type.name,

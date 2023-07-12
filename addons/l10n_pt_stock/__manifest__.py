@@ -19,6 +19,7 @@
         'views/stock_picking_views.xml',
         'views/stock_picking_type_views.xml',
         'views/report_delivery_slip.xml',
+        'report/l10n_pt_stock_hash_integrity_templates.xml',
     ],
     'installable': True,
     'license': 'LGPL-3',
