@@ -1733,7 +1733,8 @@ class SaleOrderLine(models.Model):
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
+            uom=self.product_uom.id,
+            precision_digits=self.env['decimal.precision'].precision_get('Product Price')
         )
 
         vals.update(name=self.with_context(lang=lang).get_sale_order_line_multiline_description_sale(product))
@@ -1780,7 +1781,8 @@ class SaleOrderLine(models.Model):
                 date=self.order_id.date_order,
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id,
-                fiscal_position=self.env.context.get('fiscal_position')
+                fiscal_position=self.env.context.get('fiscal_position'),
+                precision_digits=self.env['decimal.precision'].precision_get('Product Price')
             )
             self.price_unit = product._get_tax_included_unit_price(
                 self.company_id,

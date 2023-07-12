@@ -404,6 +404,10 @@ class AccountTax(models.Model):
         # rounding after the sum of the tax amounts of each line
         prec = currency.rounding
 
+        currency_prec = currency.rounding
+        if 'precision_digits' in self.env.context:
+            currency_prec = math.pow(10, -self.env.context['precision_digits'])
+
         # In some cases, it is necessary to force/prevent the rounding of the tax and the total
         # amounts. For example, in SO/PO line, we don't want to round the price unit at the
         # precision of the currency.
@@ -464,7 +468,7 @@ class AccountTax(models.Model):
         #   Line 2: sum(taxes) = 10920 - 2176 = 8744
         #   amount_tax = 4311 + 8744 = 13055
         #   amount_total = 31865 + 13055 = 37920
-        base = currency.round(price_unit * quantity)
+        base = round(price_unit * quantity, precision_rounding=currency_prec)
 
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
@@ -520,7 +524,7 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
+        total_excluded = round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), precision_rounding=currency_prec)
 
         # 4) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
@@ -618,8 +622,8 @@ class AccountTax(models.Model):
             'base_tags': taxes.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids').ids,
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
-            'total_included': sign * currency.round(total_included),
-            'total_void': sign * currency.round(total_void),
+            'total_included': sign * round(total_included, precision_rounding=currency_prec),
+            'total_void': sign * round(total_void, precision_rounding=currency_prec),
         }
 
     @api.model
