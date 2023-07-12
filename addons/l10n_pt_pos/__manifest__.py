@@ -18,6 +18,7 @@
     'data': [
         'views/pos_config_views.xml',
         'views/pos_order_views.xml',
+        'report/l10n_pt_pos_hash_integrity_templates.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [

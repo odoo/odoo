@@ -47,15 +47,9 @@ class ResCompany(models.Model):
                 })
                 continue
 
-            grouped = groupby(all_moves, key=lambda m: m.sequence_prefix)
+            public_key_string = L10nPtHashingUtils._l10n_pt_get_last_public_key(self.env)
 
-            if self.env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint') == 'demo':
-                public_key_string = self.env['ir.config_parameter'].sudo().get_param('l10n_pt.public_key')
-            else:
-                public_keys = L10nPtHashingUtils._l10n_pt_get_public_keys(self.env)
-                public_key_string = public_keys[max(public_keys, key=int)]
-            if not public_key_string:
-                raise UserError(_("The public key for the local hash verification in Portugal is not set."))
+            grouped = groupby(all_moves, key=lambda m: m.sequence_prefix)
 
             hash_corrupted = False
             for prefix, moves in grouped:

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import UserError
-from odoo.tools.misc import format_date, groupby
+from odoo.tools.misc import format_date
+from odoo.addons.l10n_pt.utils.hashing import L10nPtHashingUtils
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+
+    @api.model
+    def _l10n_pt_pos_action_check_hash_integrity(self):
+        return self.env.ref('l10n_pt_pos.action_l10n_pt_pos_report_hash_integrity').report_action(self.id)
 
     def _l10n_pt_pos_check_hash_integrity(self):
         if self.country_id.code != 'PT':
@@ -22,7 +27,7 @@ class ResCompany(models.Model):
             pos_orders = self.env['pos.order'].sudo().search([
                 ('config_id', '=', pos_config.id),
                 ('l10n_pt_pos_inalterable_hash', '!=', False),
-            ], order='id')
+            ], order='name')
             if not pos_orders:
                 results.append({
                     'name': pos_config.name,
@@ -31,10 +36,12 @@ class ResCompany(models.Model):
                 })
                 continue
 
+            public_key_string = L10nPtHashingUtils._l10n_pt_get_last_public_key(self.env)
+
             hash_corrupted = False
             previous_hash = ""
             for order in pos_orders:
-                if not order._l10n_pt_pos_verify_integrity(previous_hash, public_key_str):
+                if not order._l10n_pt_pos_verify_integrity(previous_hash, public_key_string):
                     results.append({
                         'name': pos_config.name,
                         'status': 'corrupted',

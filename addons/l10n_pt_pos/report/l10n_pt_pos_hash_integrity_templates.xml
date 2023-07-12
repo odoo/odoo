@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_hash_integrity">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="company">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <br/>
+                                    <h2>Hash Integrity Result - <span t-out="data['printing_date']"/></h2>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <t t-foreach="data['results']" t-as="result">
+                                        <h4><span t-out="result['name']"/></h4>
+                                        <t t-if="result['status'] != 'verified'">
+                                            <div><span t-out="result['msg']"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div>
+                                                <span t-out="result['msg']"/> from <span t-out="result['from_name']"/> (<span t-out="result['from_date']"/>) to <span t-out="result['to_name']"/> (<span t-out="result['to_date']"/>)<br/>
+                                                First hash: <span t-out="result['from_hash']"/><br/>
+                                                Last hash: <span t-out="result['to_hash']"/><br/>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

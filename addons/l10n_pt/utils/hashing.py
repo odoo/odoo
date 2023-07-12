@@ -39,6 +39,17 @@ class L10nPtHashingUtils:
         return res
 
     @staticmethod
+    def _l10n_pt_get_last_public_key(env):
+        if env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint') == 'demo':
+            public_key_string = env['ir.config_parameter'].sudo().get_param('l10n_pt.public_key')
+        else:
+            public_keys = L10nPtHashingUtils._l10n_pt_get_public_keys(env)
+            public_key_string = public_keys[max(public_keys, key=int)]
+        if not public_key_string:
+            raise UserError(_("The public key for the local hash verification in Portugal is not set."))
+        return public_key_string
+
+    @staticmethod
     def _l10n_pt_sign_records_using_iap(env, docs_to_sign):
         endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         res = {}
@@ -76,8 +87,8 @@ class L10nPtHashingUtils:
         Technical requirements from the Portuguese tax authority can be found at page 13 of the following document:
         https://info.portaldasfinancas.gov.pt/pt/docs/Portug_tax_system/Documents/Order_No_8632_2014_of_the_3rd_July.pdf
         """
-        current_key_version = env['ir.config_parameter'].sudo().get_param('l10n_pt.current_key_version')
-        private_key_string = env['ir.config_parameter'].sudo().get_param(f'l10n_pt.private_key_v{current_key_version}')
+        current_key_version = env['ir.config_parameter'].sudo().get_param('l10n_pt.key_version')
+        private_key_string = env['ir.config_parameter'].sudo().get_param(f'l10n_pt.private_key')
         if not private_key_string:
             raise UserError(_("The private key for the local hash generation in Portugal is not set."))
         private_key = serialization.load_pem_private_key(str.encode(private_key_string), password=None)
