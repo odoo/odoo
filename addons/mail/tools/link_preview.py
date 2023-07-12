@@ -54,10 +54,12 @@ def get_link_preview_from_html(url, response):
     content = b""
     for chunk in response.iter_content(chunk_size=8192):
         content += chunk
+        pos = content.find(b'</head>', -8196 * 2)
         # Stop reading once all the <head> data is found
-        if b"</head>" in content:
+        if pos != -1:
+            content = content[:pos + 7]
             break
-    content = content.decode()
+
     if not content:
         return False
     tree = html.fromstring(content)
