@@ -108,20 +108,6 @@ registerModel({
             this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
             deleteCookie('im_livechat_session');
         },
-        /**
-         * Called when the visitor leaves the livechat chatter the first time (first click on X button)
-         * this will deactivate the mail_channel, notify operator that visitor has left the channel.
-         */
-        leaveSession() {
-            const cookie = getCookie('im_livechat_session');
-            if (cookie) {
-                const channel = JSON.parse(cookie);
-                if (channel.uuid) {
-                    this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
-                }
-                deleteCookie('im_livechat_session');
-            }
-        },
         openChat() {
             if (this.isOpenChatDebounced) {
                 this.openChatDebounced();
