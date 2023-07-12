@@ -19,7 +19,6 @@ class EventBoothRegistration(models.Model):
     contact_name = fields.Char(string='Contact Name', compute='_compute_contact_name', readonly=False, store=True)
     contact_email = fields.Char(string='Contact Email', compute='_compute_contact_email', readonly=False, store=True)
     contact_phone = fields.Char(string='Contact Phone', compute='_compute_contact_phone', readonly=False, store=True)
-    contact_mobile = fields.Char(string='Contact Mobile', compute='_compute_contact_mobile', readonly=False, store=True)
 
     _sql_constraints = [('unique_registration', 'unique(sale_order_line_id, event_booth_id)',
                          'There can be only one registration for a booth by sale order line')]
@@ -40,17 +39,11 @@ class EventBoothRegistration(models.Model):
     def _compute_contact_phone(self):
         for registration in self:
             if not registration.contact_phone:
-                registration.contact_phone = registration.partner_id.phone or False
-
-    @api.depends('partner_id')
-    def _compute_contact_mobile(self):
-        for registration in self:
-            if not registration.contact_mobile:
-                registration.contact_mobile = registration.partner_id.mobile or False
+                registration.contact_phone = registration.partner_id.phone or registration.partner_id.mobile or False
 
     @api.model
     def _get_fields_for_booth_confirmation(self):
-        return ['sale_order_line_id', 'partner_id', 'contact_name', 'contact_email', 'contact_phone', 'contact_mobile']
+        return ['sale_order_line_id', 'partner_id', 'contact_name', 'contact_email', 'contact_phone']
 
     def action_confirm(self):
         for registration in self:

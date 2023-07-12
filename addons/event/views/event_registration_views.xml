@@ -15,7 +15,6 @@
                 <field name="partner_id" optional="hide"/>
                 <field name="email" optional="show"/>
                 <field name="phone" optional="show"/>
-                <field name="mobile" optional="hide"/>
                 <field name="company_name" optional="hide"/>
                 <field name="event_id" column_invisible="context.get('default_event_id')" readonly="state != 'draft'"/>
                 <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly="state != 'draft'"/>
@@ -64,8 +63,7 @@
                         <group string="Attendee" name="attendee">
                             <field class="o_text_overflow" name="name"/>
                             <field name="email"/>
-                            <field name="phone" class="o_force_ltr" widget="phone" options="{'enable_sms': false}"/>
-                            <field name="mobile" class="o_force_ltr" widget="phone"/>
+                            <field name="phone" class="o_force_ltr" widget="phone" options="{'enable_sms': true}"/>
                             <field name="company_name" placeholder='e.g. "Azure Interior"'/>
                         </group>
                         <group string="Event Information" name="event">

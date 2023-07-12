@@ -58,7 +58,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             default_contact = {
                 'name': request.env.user.partner_id.name,
                 'email': request.env.user.partner_id.email,
-                'phone': request.env.user.partner_id.phone,
+                'phone': request.env.user.partner_id.phone or request.env.user.partner_id.mobile,
                 'mobile': request.env.user.partner_id.mobile,
             }
         else:
@@ -128,16 +128,13 @@ class WebsiteEventBoothController(WebsiteEventController):
                 partner.name = kwargs['contact_name']
             if not partner.phone and kwargs.get('contact_phone'):
                 partner.phone = kwargs['contact_phone']
-            if not partner.mobile and kwargs.get('contact_mobile'):
-                partner.mobile = kwargs['contact_mobile']
         else:
             partner = request.env.user.partner_id
         return {
             'partner_id': partner.id,
             'contact_name': kwargs.get('contact_name') or partner.name,
             'contact_email': kwargs.get('contact_email') or partner.email,
-            'contact_mobile': kwargs.get('contact_mobile') or partner.mobile,
-            'contact_phone': kwargs.get('contact_phone') or partner.phone,
+            'contact_phone': kwargs.get('contact_phone') or partner.phone or partner.mobile,
         }
 
     def _prepare_booth_registration_success_values(self, event_name, booth_values):
@@ -148,7 +145,6 @@ class WebsiteEventBoothController(WebsiteEventController):
                 'name': booth_values.get('contact_name'),
                 'email': booth_values.get('contact_email'),
                 'phone': booth_values.get('contact_phone'),
-                'mobile': booth_values.get('contact_mobile'),
             },
         })
 

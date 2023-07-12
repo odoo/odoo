@@ -250,39 +250,37 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
         ], limit=1)
 
         cls.customer_data = [
-            {'email': 'customer.email.%02d@test.example.com' % x,
-             'name': 'My Customer %02d' % x,
-             'mobile': '04569999%02d' % x,
+            {'email': f'customer.email.{idx:02d}@test.example.com',
+             'name': f'My Customer {idx:02d}',
              'partner_id': False,
-             'phone': '04560000%02d' % x,
-            } for x in range(0, 10)
+             'phone': f'04560000{idx:02d}',
+            } for idx in range(0, 10)
         ]
         cls.website_customer_data = [
-            {'email': 'website.email.%02d@test.example.com' % x,
-             'name': 'My Customer %02d' % x,
-             'mobile': '04569999%02d' % x,
+            {'email': f'website.email.{idx:02d}@test.example.com',
+             'name': f'My Customer {idx:02d}',
              'partner_id': cls.env.ref('base.public_partner').id,
-             'phone': '04560000%02d' % x,
+             'phone': f'04560000{idx:02d}',
              'registration_answer_ids': [
                 (0, 0, {
                     'question_id': cls.test_event.question_ids[0].id,
-                    'value_answer_id': cls.test_event.question_ids[0].answer_ids[(x % 2)].id,
+                    'value_answer_id': cls.test_event.question_ids[0].answer_ids[(idx % 2)].id,
                 }), (0, 0, {
                     'question_id': cls.test_event.question_ids[1].id,
-                    'value_answer_id': cls.test_event.question_ids[1].answer_ids[(x % 2)].id,
+                    'value_answer_id': cls.test_event.question_ids[1].answer_ids[(idx % 2)].id,
                 }), (0, 0, {
                     'question_id': cls.test_event.question_ids[2].id,
-                    'value_text_box': 'CustomerAnswer%s' % x,
+                    'value_text_box': f'CustomerAnswer{idx}',
                 })
              ],
-            } for x in range(0, 10)
+            } for idx in range(0, 10)
         ]
         cls.partners = cls.env['res.partner'].create([
-            {'email': 'partner.email.%02d@test.example.com' % x,
-             'name': 'PartnerCustomer',
-             'mobile': '04569999%02d' % x,
-             'phone': '04560000%02d' % x,
-            } for x in range(0, 10)
+            {'email': f'partner.email.{idx:02d}@test.example.com',
+             'name': f'PartnerCustomer {idx:02d}',
+             'mobile': f'04569999{idx:02d}',
+             'phone': f'04560000{idx:02d}',
+            } for idx in range(0, 10)
         ])
 
     def assertLeadConvertion(self, rule, registrations, partner=None, **expected):
