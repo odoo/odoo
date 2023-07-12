@@ -12780,6 +12780,46 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(serverData.models.turtle.records[0].turtle_int, 5);
     });
 
+    QUnit.test("multi page, command forget for record of second page", async function (assert) {
+        serverData.models.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.onchanges = {
+            int_field: function (obj) {
+                obj.p = [[3, 4]];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="int_field"/>
+                        <field name="p">
+                            <tree limit="2">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector("[name=int_field] input").value, "10");
+        assert.containsN(target, ".o_data_row", 2);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["first record", "second record"]);
+        assert.strictEqual(
+            target.querySelector(".o_x2m_control_panel .o_pager_counter").innerText,
+            "1-2 / 3"
+        );
+
+        // trigger the onchange
+        await editInput(target, "[name=int_field] input", "16");
+        assert.containsN(target, ".o_data_row", 2);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["first record", "second record"]);
+        assert.containsNone(target, ".o_x2m_control_panel .o_pager");
+    });
+
     QUnit.test("active actions are passed to o2m field", async (assert) => {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
 

@@ -541,14 +541,14 @@ export class StaticList extends DataPoint {
                         }
                     }
                     const record = this._cache[command[1]];
-                    this.records.splice(
-                        this.records.findIndex((r) => r.id === record.id),
-                        1
-                    );
-                    if (record.resId) {
-                        const index = this._currentIds.findIndex((id) => id === record.resId);
-                        this._currentIds.splice(index, 1);
+                    if (record) {
+                        const index = this.records.findIndex((r) => r.id === record.id);
+                        if (index >= 0) {
+                            this.records.splice(index, 1);
+                        }
                     }
+                    const index = this._currentIds.findIndex((id) => id === command[1]);
+                    this._currentIds.splice(index, 1);
                     this.count--;
                     break;
                 }
