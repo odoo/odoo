@@ -125,6 +125,18 @@ QUnit.test("respond to notification prompt (granted)", async (assert) => {
     assert.verifySteps(["confirmation_granted_toast"]);
 });
 
+QUnit.test("no 'OdooBot has a request' in mobile app", async (assert) => {
+    patchBrowserNotification("default");
+    // simulate Android Odoo App
+    patchWithCleanup(browser.navigator, {
+        userAgent: "Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)",
+    });
+    await start();
+    assert.containsNone($, ".o-mail-MessagingMenu-counter");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone($, ".o-mail-NotificationItem");
+});
+
 QUnit.test("Is closed after clicking on new message", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
