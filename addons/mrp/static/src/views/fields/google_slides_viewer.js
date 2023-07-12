@@ -22,7 +22,7 @@ export class SlidesViewer extends CharField {
     }
 
     _get_slide_page() {
-        return this.props.record.data[this.props.name+'_page'] ? this.props.record.data[this.props.name+'_page'] : this.page;
+        return this.props.page || this.page;
     }
 
     get url() {
@@ -52,6 +52,10 @@ export class SlidesViewer extends CharField {
 }
 
 SlidesViewer.template = "mrp.SlidesViewer";
+SlidesViewer.props = {
+    ...CharField.props,
+    page: { type: Number, optional: true },
+};
 
 export const slidesViewer = {
     ...charField,

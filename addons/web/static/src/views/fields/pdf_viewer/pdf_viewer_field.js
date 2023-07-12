@@ -18,6 +18,7 @@ export class PdfViewerField extends Component {
         ...standardFieldProps,
         fileNameField: { type: String, optional: true },
         previewImage: { type: String, optional: true },
+        page: { type: Number, optional: true },
     };
 
     setup() {
@@ -43,7 +44,7 @@ export class PdfViewerField extends Component {
         if (!this.state.isValid || !this.props.record.data[this.props.name]) {
             return null;
         }
-        const page = this.props.record.data[`${this.props.name}_page`] || 1;
+        const page = this.props.page || this.props.record.data[`${this.props.name}_page`] || 1;
         const file = encodeURIComponent(
             this.state.objectUrl ||
                 url("/web/content", {
