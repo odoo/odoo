@@ -2653,7 +2653,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async setValue(value, methodName) {
         await this._super(...arguments);
-        if (this.menuTogglerEl.textContent === '/') {
+        if (this.menuTogglerEl.textContent === this.PLACEHOLDER_TEXT.toString()) {
             // The currently selected value is not present in the search, need to read
             // its display name.
             if (value !== '') {
