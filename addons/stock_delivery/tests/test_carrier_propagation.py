@@ -53,7 +53,7 @@ class TestCarrierPropagation(TransactionCase):
             'invoice_policy': 'delivery',
             'route_ids': [(6, 0, mto_route.ids)],
         })
-        cls.rule_pack = cls.env["procurement.group"]._get_rule(
+        cls.rule_pack = cls.env["stock.rule"]._get_rule(
             cls.super_product, cls.output_location, {"warehouse_id": cls.warehouse})
 
     def test_carrier_no_propagation(self):

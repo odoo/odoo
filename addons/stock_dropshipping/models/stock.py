@@ -15,16 +15,12 @@ class StockRule(models.Model):
         """
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
-
-class ProcurementGroup(models.Model):
-    _inherit = "procurement.group"
-
-    @api.model
     def _get_rule_domain(self, location, values):
         if 'sale_line_id' in values and values.get('company_id'):
             return [('location_dest_id', '=', location.id), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
         else:
-            return super(ProcurementGroup, self)._get_rule_domain(location, values)
+            return super()._get_rule_domain(location, values)
+
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
