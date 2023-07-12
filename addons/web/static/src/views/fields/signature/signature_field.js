@@ -166,6 +166,7 @@ export const signatureField = {
             availableTypes: ["binary"],
         },
     ],
+    fieldDependencies: [{ name: "write_date", type: "datetime" }],
     extractProps: ({ attrs, options }) => ({
         defaultFont: options.default_font || "",
         fullName: options.full_name,
