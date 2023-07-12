@@ -21,7 +21,6 @@ class EventBooth(models.Model):
     partner_id = fields.Many2one('res.partner', string='Renter', tracking=True, copy=False)
     contact_name = fields.Char('Renter Name', compute='_compute_contact_name', readonly=False, store=True, copy=False)
     contact_email = fields.Char('Renter Email', compute='_compute_contact_email', readonly=False, store=True, copy=False)
-    contact_mobile = fields.Char('Renter Mobile', compute='_compute_contact_mobile', readonly=False, store=True, copy=False)
     contact_phone = fields.Char('Renter Phone', compute='_compute_contact_phone', readonly=False, store=True, copy=False)
     # state
     state = fields.Selection(
@@ -43,16 +42,10 @@ class EventBooth(models.Model):
                 booth.contact_email = booth.partner_id.email or False
 
     @api.depends('partner_id')
-    def _compute_contact_mobile(self):
-        for booth in self:
-            if not booth.contact_mobile:
-                booth.contact_mobile = booth.partner_id.mobile or False
-
-    @api.depends('partner_id')
     def _compute_contact_phone(self):
         for booth in self:
             if not booth.contact_phone:
-                booth.contact_phone = booth.partner_id.phone or False
+                booth.contact_phone = booth.partner_id.phone or booth.partner_id.mobile or False
 
     @api.depends('state')
     def _compute_is_available(self):

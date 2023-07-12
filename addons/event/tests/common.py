@@ -99,8 +99,8 @@ class EventCase(common.TransactionCase):
         registrations = cls.env['event.registration'].create([{
             'create_date': create_date,
             'event_id': event.id,
-            'name': 'Test Registration %s' % x,
-            'email': '_test_reg_%s@example.com' % x,
-            'phone': '04560000%s%s' % (x, x),
-        } for x in range(0, reg_count)])
+            'name': f'Test Registration {idx}',
+            'email': f'_test_reg_{idx}@example.com',
+            'phone': f'04560000{idx}{idx}',
+        } for idx in range(0, reg_count)])
         return registrations

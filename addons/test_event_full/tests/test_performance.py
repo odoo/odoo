@@ -306,7 +306,6 @@ class TestRegistrationPerformance(EventPerformanceCase):
             with Form(self.env['event.registration']) as reg_form:
                 reg_form.event_id = event
                 reg_form.email = 'email.00@test.example.com'
-                reg_form.mobile = '0456999999'
                 reg_form.name = 'My Customer'
                 reg_form.phone = '0456000000'
             _registration = reg_form.save()

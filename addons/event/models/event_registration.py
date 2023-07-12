@@ -28,12 +28,11 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
     name = fields.Char(
         string='Attendee Name', index='trigram',
-        compute='_compute_name', readonly=False, store=True, tracking=10)
-    email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
-    phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
-    mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
+        compute='_compute_name', readonly=False, store=True, tracking=2)
+    email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=3)
+    phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
-        string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=14)
+        string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -48,7 +47,7 @@ class EventRegistration(models.Model):
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
-        string='Status', default='draft', readonly=True, copy=False, tracking=True)
+        string='Status', default='draft', readonly=True, copy=False, tracking=6)
 
     @api.depends('partner_id')
     def _compute_name(self):
@@ -56,7 +55,7 @@ class EventRegistration(models.Model):
             if not registration.name and registration.partner_id:
                 registration.name = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames=['name']
+                    fnames={'name'},
                 ).get('name') or False
 
     @api.depends('partner_id')
@@ -65,26 +64,18 @@ class EventRegistration(models.Model):
             if not registration.email and registration.partner_id:
                 registration.email = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames=['email']
+                    fnames={'email'},
                 ).get('email') or False
 
     @api.depends('partner_id')
     def _compute_phone(self):
         for registration in self:
             if not registration.phone and registration.partner_id:
-                registration.phone = registration._synchronize_partner_values(
+                partner_values = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames=['phone']
-                ).get('phone') or False
-
-    @api.depends('partner_id')
-    def _compute_mobile(self):
-        for registration in self:
-            if not registration.mobile and registration.partner_id:
-                registration.mobile = registration._synchronize_partner_values(
-                    registration.partner_id,
-                    fnames=['mobile']
-                ).get('mobile') or False
+                    fnames={'phone', 'mobile'},
+                )
+                registration.phone = partner_values.get('phone') or partner_values.get('mobile') or False
 
     @api.depends('partner_id')
     def _compute_company_name(self):
@@ -92,7 +83,7 @@ class EventRegistration(models.Model):
             if not registration.company_name and registration.partner_id:
                 registration.company_name = registration._synchronize_partner_values(
                     registration.partner_id,
-                    fnames=['company_name']
+                    fnames={'company_name'},
                 ).get('company_name') or False
 
     @api.depends('state')
@@ -111,7 +102,7 @@ class EventRegistration(models.Model):
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
-            fnames = ['name', 'email', 'phone', 'mobile']
+            fnames = {'name', 'email', 'phone', 'mobile'}
         if partner:
             contact_id = partner.address_get().get('contact', False)
             if contact_id:
@@ -125,12 +116,6 @@ class EventRegistration(models.Model):
             country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
             self.phone = self._phone_format(fname='phone', country=country) or self.phone
 
-    @api.onchange('mobile', 'event_id', 'partner_id')
-    def _onchange_mobile_validation(self):
-        if self.mobile:
-            country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
-            self.mobile = self._phone_format(fname='mobile', country=country)
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -141,7 +126,7 @@ class EventRegistration(models.Model):
         all_partner_ids = set(values['partner_id'] for values in vals_list if values.get('partner_id'))
         all_event_ids = set(values['event_id'] for values in vals_list if values.get('event_id'))
         for values in vals_list:
-            if not values.get('phone') and not values.get('mobile'):
+            if not values.get('phone'):
                 continue
 
             related_country = self.env['res.country']
@@ -151,10 +136,7 @@ class EventRegistration(models.Model):
                 related_country = self.env['event.event'].with_prefetch(all_event_ids).browse(values['event_id']).country_id
             if not related_country:
                 related_country = self.env.company.country_id
-
-            for fname in {'mobile', 'phone'}:
-                if values.get(fname):
-                    values[fname] = self._phone_format(number=values[fname], country=related_country) or values[fname]
+            values['phone'] = self._phone_format(number=values['phone'], country=related_country) or values['phone']
 
         registrations = super(EventRegistration, self).create(vals_list)
 

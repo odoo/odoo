@@ -17,7 +17,7 @@
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.view_event_registration_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='mobile']" position="after">
+            <xpath expr="//field[@name='phone']" position="after">
                 <field name="visitor_id" groups="base.group_no_one"/>
             </xpath>
             <sheet position="inside">

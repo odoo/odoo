@@ -110,7 +110,7 @@ class TestEventSale(TestEventSaleCommon):
             'sale_order_line_id': ticket1_line.id,
         })
         self.assertEqual(ticket1_reg1.partner_id, self.event_customer)
-        for field in ['name', 'email', 'phone', 'mobile']:
+        for field in ['name', 'email', 'phone']:
             self.assertEqual(ticket1_reg1[field], self.event_customer[field])
 
         # EVENT REGISTRATION EDITOR
@@ -126,7 +126,7 @@ class TestEventSale(TestEventSaleCommon):
 
         # check line linked to existing registration (ticket1_reg1)
         ticket1_editor_reg1 = editor.event_registration_ids.filtered(lambda line: line.registration_id)
-        for field in ['name', 'email', 'phone', 'mobile']:
+        for field in ['name', 'email', 'phone']:
             self.assertEqual(ticket1_editor_reg1[field], ticket1_reg1[field])
 
         # check new lines
@@ -144,7 +144,6 @@ class TestEventSale(TestEventSaleCommon):
         ticket1_editor_other[1].write({
             'name': 'ManualEntry2',
             'email': 'manual.email.2@test.example.com',
-            'mobile': '+32456222222',
         })
 
         self.assertFalse(editor.seats_available_insufficient)
@@ -170,14 +169,9 @@ class TestEventSale(TestEventSaleCommon):
             set(ticket1_new_reg.mapped('phone')),
             set(['+32456111111', self.event_customer._phone_format(fname='phone')])
         )
-        self.assertEqual(
-            set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer._phone_format(fname='mobile')])
-        )
         for field in ['name', 'email']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
-        for field in ['phone', 'mobile']:
-            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(fname=field))
+        self.assertEqual(ticket2_new_reg['phone'], self.event_customer._phone_format(fname='phone'))
 
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------

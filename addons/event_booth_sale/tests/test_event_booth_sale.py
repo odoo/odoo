@@ -107,9 +107,6 @@ class TestEventBoothSale(TestEventBoothSaleWData):
                 booth.contact_name, self.event_customer.name,
                 "Booth contact name should be the same as sale order customer name.")
             self.assertEqual(
-                booth.contact_mobile, self.event_customer.mobile,
-                "Booth contact mobile should be the same as sale order customer mobile.")
-            self.assertEqual(
                 booth.contact_phone, self.event_customer.phone,
                 "Booth contact phone should be the same as sale order customer phone.")
             self.assertEqual(
