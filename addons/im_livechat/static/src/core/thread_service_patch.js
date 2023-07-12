@@ -14,6 +14,13 @@ patch(ThreadService.prototype, "im_livechat", {
             if (data?.channel) {
                 assignDefined(thread, data.channel, ["anonymous_name"]);
             }
+            if (data?.operator_pid) {
+                thread.operator = this.personaService.insert({
+                    type: "partner",
+                    id: data.operator_pid[0],
+                    displayName: data.operator_pid[1],
+                });
+            }
             if (isUnknown) {
                 this.store.discuss.livechat.threads.push(thread.localId);
                 this.sortChannels();

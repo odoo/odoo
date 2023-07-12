@@ -34,6 +34,22 @@ patch(Thread.prototype, "im_livechat", {
         return this._super().filter((correspondent) => !correspondent.is_bot);
     },
 
+    get correspondent() {
+        let correspondent = this._super();
+        if (this.type === "livechat" && !correspondent) {
+            // For livechat threads, the correspondent is the first
+            // channel member that is not the operator.
+            const orderedChannelMembers = [...this.channelMembers].sort((a, b) => a.id - b.id);
+            const isFirstMemberOperator =
+                orderedChannelMembers[0]?.persona.type === "partner" &&
+                orderedChannelMembers[0]?.persona.id === this.operator.id;
+            correspondent = isFirstMemberOperator
+                ? orderedChannelMembers[1]?.persona
+                : orderedChannelMembers[0]?.persona;
+        }
+        return correspondent;
+    },
+
     get displayName() {
         if (this.type !== "livechat" || !this.correspondent) {
             return this._super();
