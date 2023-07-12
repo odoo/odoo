@@ -7,7 +7,7 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <search string="Search history">
-                    <field name="name" string="Attendees"/>
+                    <field name="name" string="Participant"/>
                     <filter name="filter_my_sessions" domain="[('channel_member_ids.partner_id.user_ids.id', 'in', [uid])]" string="My Sessions"/>
                     <separator/>
                     <filter name="filter_session_date" date="create_date" string="Session Date"/>
@@ -31,7 +31,7 @@
                 <tree js_class="im_livechat.discuss_channel_list" string="History" create="false" default_order="create_date desc">
                     <field name="is_member" invisible="1"/>
                     <field name="create_date" string="Session Date"/>
-                    <field name="name" string="Participant"/>
+                    <field name="name" string="Participants"/>
                     <field name="country_id"/>
                     <field name="duration" widget="float_time" options="{'displaySeconds': True}"/>
                     <field name="message_ids" string="# Messages"/>
@@ -52,7 +52,7 @@
                         </div>
                         <div style="width:50%" class="float-start">
                             <group>
-                                <field name="name" string="Attendees"/>
+                                <field name="name" string="Participants"/>
                                 <field name="create_date" readonly="1" string="Session Date"/>
                             </group>
                         </div>
