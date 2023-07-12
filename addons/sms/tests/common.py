@@ -93,7 +93,7 @@ class SMSCase(MockSMS):
 
     def _find_sms_sent(self, partner, number):
         if number is None and partner:
-            number = partner.phone_get_sanitized_number()
+            number = partner._phone_format()
         sent_sms = next((sms for sms in self._sms if sms['number'] == number), None)
         if not sent_sms:
             raise AssertionError('sent sms not found for %s (number: %s)' % (partner, number))
@@ -101,7 +101,7 @@ class SMSCase(MockSMS):
 
     def _find_sms_sms(self, partner, number, status):
         if number is None and partner:
-            number = partner.phone_get_sanitized_number()
+            number = partner._phone_format()
         domain = [('id', 'in', self._new_sms.ids),
                   ('partner_id', '=', partner.id),
                   ('number', '=', number)]
@@ -214,7 +214,7 @@ class SMSCase(MockSMS):
             number = recipient_info.get('number')
             state = recipient_info.get('state', 'sent')
             if number is None and partner:
-                number = partner.phone_get_sanitized_number()
+                number = partner._phone_format()
 
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
