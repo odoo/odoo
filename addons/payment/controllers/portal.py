@@ -4,7 +4,7 @@ import urllib.parse
 import werkzeug
 
 from odoo import _, http
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -266,39 +266,39 @@ class PaymentPortal(portal.CustomerPortal):
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
-        self._update_landing_route(tx_sudo, access_token)  # Add the required parameters to the route
+        self._update_landing_route(tx_sudo, access_token)  # Add the required params to the route.
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
-        self, payment_option_id, payment_method_id, reference_prefix, amount, currency_id,
+        self, provider_id, payment_method_id, token_id, reference_prefix, amount, currency_id,
         partner_id, flow, tokenization_requested, landing_route, is_validation=False,
         custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
 
-        :param int payment_option_id: The payment option handling the transaction, as a
-                                      `payment.provider` id or a `payment.token` id
-        :param int payment_method_id: The payment method, as a `payment.method` id.
-        :param str reference_prefix: The custom prefix to compute the full reference
-        :param float|None amount: The amount to pay in the given currency.
-                                  None if in a payment method validation operation
-        :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
-                                     None if in a payment method validation operation
-        :param int partner_id: The partner making the payment, as a `res.partner` id
-        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'
-        :param bool tokenization_requested: Whether the user requested that a token is created
-        :param str landing_route: The route the user is redirected to after the transaction
-        :param bool is_validation: Whether the operation is a validation
-        :param dict custom_create_values: Additional create values overwriting the default ones
+        :param int provider_id: The provider of the provider payment method or token, as a
+                                `payment.provider` id.
+        :param int|None payment_method_id: The payment method, if any, as a `payment.method` id.
+        :param int|None token_id: The token, if any, as a `payment.token` id.
+        :param str reference_prefix: The custom prefix to compute the full reference.
+        :param float|None amount: The amount to pay, or `None` if in a validation operation.
+        :param int|None currency_id: The currency of the amount, as a `res.currency` id, or `None`
+                                     if in a validation operation.
+        :param int partner_id: The partner making the payment, as a `res.partner` id.
+        :param str flow: The online payment flow of the transaction: 'redirect', 'direct' or 'token'.
+        :param bool tokenization_requested: Whether the user requested that a token is created.
+        :param str landing_route: The route the user is redirected to after the transaction.
+        :param bool is_validation: Whether the operation is a validation.
+        :param dict custom_create_values: Additional create values overwriting the default ones.
         :param dict kwargs: Locally unused data passed to `_is_tokenization_required` and
-                            `_compute_reference`
-        :return: The sudoed transaction that was created
-        :rtype: recordset of `payment.transaction`
-        :raise: UserError if the flow is invalid
+                            `_compute_reference`.
+        :return: The sudoed transaction that was created.
+        :rtype: payment.transaction
+        :raise UserError: If the flow is invalid.
         """
         # Prepare create values
         if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
-            provider_sudo = request.env['payment.provider'].sudo().browse(payment_option_id)
+            provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
             token_id = None
             tokenize = bool(
                 # Don't tokenize if the user tried to force it through the browser's developer tools
@@ -307,7 +307,7 @@ class PaymentPortal(portal.CustomerPortal):
                 and (provider_sudo._is_tokenization_required(**kwargs) or tokenization_requested)
             )
         elif flow == 'token':  # Payment by token
-            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
+            token_sudo = request.env['payment.token'].sudo().browse(token_id)
 
             # Prevent from paying with a token that doesn't belong to the current partner (either
             # the current user's partner if logged in, or the partner on behalf of whom the payment
@@ -317,10 +317,10 @@ class PaymentPortal(portal.CustomerPortal):
                 raise AccessError(_("You do not have access to this payment token."))
 
             provider_sudo = token_sudo.provider_id
-            token_id = payment_option_id
+            payment_method_id = token_sudo.payment_method_id.id  # TODO check if should be the parent method's id
             tokenize = False
         else:
-            raise UserError(
+            raise ValidationError(
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
 

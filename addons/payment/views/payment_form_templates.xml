@@ -60,7 +60,7 @@
                                 aria-expanded="true"
                                 aria-controls="o_payment_tokens_list"
                         >
-                            Registered payment methods
+                            Saved payment methods
                         </button>
                     </h4>
                     <!-- === Accordion body === -->
@@ -159,9 +159,10 @@
                                type="radio"
                                t-att-checked="is_selected"
                                t-att-class="'form-check-input' + (' d-none' if not allow_token_selection else '')"
+                               data-payment-option-type="token"
                                t-att-data-payment-option-id="token_sudo.id"
                                t-att-data-provider-code="token_sudo.provider_code"
-                               data-payment-option-type="token"
+                               t-att-data-provider-id="token_sudo.provider_id.id"
                         />
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <!-- === Token label === -->
@@ -248,10 +249,11 @@
                            type="radio"
                            t-att-checked="is_selected"
                            class="form-check-input position-absolute"
-                           t-att-data-payment-option-id="pm_sudo.id"
-                           t-att-data-provider-code="provider_sudo.code"
-                           t-att-data-payment-method-id="pm_sudo.id"
                            data-payment-option-type="payment_method"
+                           t-att-data-payment-option-id="pm_sudo.id"
+                           t-att-payment-method-code="pm_sudo.code"
+                           t-att-data-provider-code="provider_sudo.code"
+                           t-att-data-provider-id="provider_sudo.id"
                     />
                     <div class="d-flex flex-column flex-md-row align-items-md-center gap-2 flex-grow-1">
                         <!-- === Method label === -->

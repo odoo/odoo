@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 // TODO sort
-import publicWidget from 'web.public.widget';
+import publicWidget from '@web/legacy/js/public/public_widget';
 import Dialog from '@web/legacy/js/core/dialog';
 import { escape, sprintf } from '@web/core/utils/strings';
-import framework from 'web.framework';
-import core from "../../../../web/static/src/legacy/js/services/core";
+import core from '@web/legacy/js/services/core';
+const _t = core._t;  // TODO see if better way to import now
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     selector: '#o_payment_form',
@@ -75,24 +75,32 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
 
-        // Extract contextual values from the radio button.
-        const flow = this._getPaymentFlow(checkedRadio);
-        const paymentOptionId = this._getPaymentOptionId(checkedRadio);
-        const providerCode = this._getProviderCode(checkedRadio);
-        // const paymentMethodId = this._getPaymentMethodIdFromRadio(checkedRadio);
-        // const operation = this._getOperationFromRadio(checkedRadio);
-        const inlineForm = this._getInlineForm(checkedRadio);
-        const tokenizeCheckbox = inlineForm?.querySelector('[name="o_payment_tokenize_checkbox"]');
-
+        // TODO comment
         // this._hideError(); // Don't keep the error displayed if the user is going through 3DS2 TODO problably useless now that we use a dialog
         this._disableButton(true); // Block the entire UI to prevent fiddling with other widgets.
 
-        // TODO
-        if (flow === 'token' && this.txContext['assign_token_route']) { // Token must be assigned.
-            await this._assignToken(paymentOptionId); // TODO
+        // Process the payment flow of the selected payment option.
+        const flow = this.txContext.flow = this._getPaymentFlow(checkedRadio);
+        if (flow === 'token' && this.txContext['assignTokenRoute']) { // Token assignation flow. TODO consider implementing this flow only in subscriptions
+            await this._assignToken(paymentOptionId); // TODO implement
         } else { // Both tokens and payment methods must process a payment operation.
-            this.txContext.tokenizationRequested = tokenizeCheckbox?.checked ?? false;
-            await this._processPaymentFlow(flow, providerCode, paymentOptionId);
+            const providerCode = this.txContext.providerCode = this._getProviderCode(checkedRadio);
+            const paymentOptionId = this.txContext.paymentOptionId = this._getPaymentOptionId(
+                checkedRadio
+            );
+            const paymentMethodCode = this.txContext.paymentMethodCode = this._getPaymentMethodCode(
+                checkedRadio
+            );
+            this.txContext.providerId = this._getProviderId(checkedRadio);
+            if (this._getPaymentOptionType(checkedRadio) === 'token') {
+                this.txContext.tokenId = paymentOptionId;
+            } else { // 'payment_method'
+                this.txContext.paymentMethodId = paymentOptionId;
+            }
+            this.txContext.tokenizationRequested = this._getInlineForm(checkedRadio)?.querySelector(
+                '[name="o_payment_tokenize_checkbox"]'
+            )?.checked ?? false;
+            await this._initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow);
         }
     },
 
@@ -104,15 +112,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * The UI is also unblocked in case it had been blocked.
      *
      * @private
-     * @return {boolean} Whether the button was enabled.
+     * @return {void}
      */
     _enableButton() {
         if (this._canSubmit()) {
             this._getSubmitButton().removeAttribute('disabled');
-            return true;
         }
-        $('body').unblock(); // TODO seems to work only when called from the console...
-        return false;
+        $('body').unblock();
     },
 
     /**
@@ -178,13 +184,12 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         this._hideErrorDialog(); // The error is no longer relevant if hidden with its inline form.
         this._setPaymentFlow(); // Reset the payment flow to let providers overwrite it.
 
-        // Extract contextual values from the radio button.
-        const flow = this._getPaymentFlow(radio);
-        const paymentOptionId = this._getPaymentOptionId(radio);
-        const providerCode = this._getProviderCode(radio);
-
         // Prepare the inline form of the selected payment option.
-        await this._prepareInlineForm(providerCode, paymentOptionId, flow);
+        const providerCode = this._getProviderCode(radio);
+        const paymentOptionId = this._getPaymentOptionId(radio);
+        const paymentMethodCode = this._getPaymentMethodCode(radio);
+        const flow = this._getPaymentFlow(radio);
+        await this._prepareInlineForm(providerCode, paymentOptionId, paymentMethodCode, flow);
 
         // Display the prepared inline form if it is not empty.
         const inlineForm = this._getInlineForm(radio);
@@ -202,10 +207,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @private
      * @param {string} providerCode - The code of the selected payment option's provider.
      * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
      * @param {string} flow - The payment flow of the selected payment option.
      * @return {void}
      */
-    async _prepareInlineForm(providerCode, paymentOptionId, flow) {},
+    async _prepareInlineForm(providerCode, paymentOptionId, paymentMethodCode, flow) {},
 
     /**
      * Collapse all inline forms of the current widget.
@@ -220,48 +226,22 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     },
 
     /**
-     * Display an error dialog in the payment form. TODO rewrite TODO only as dialog
-     *
-     * If no payment option is selected, the error is displayed in a dialog. If exactly one
-     * payment option is selected, the error is displayed in the inline form of that payment
-     * option and the view is focused on the error.
+     * Display an error dialog.
      *
      * @private
-     * @param {string} title - The title of the error
-     * @param {string} description - The description of the error
-     * @param {string} error - The raw error message
-     * @return {(Dialog|void)} A dialog showing the error, only when no payment option is selected.
+     * @param {string} title - The title of the error.
+     * @param {string} description - The description of the error.
+     * @param {string} error - The raw error message.
+     * @return {Dialog} The error dialog.
      */
     _displayErrorDialog(title, description = '', error = '') {
         const checkedRadios = this.$('input[name="o_payment_radio"]:checked');
-        if (checkedRadios.length !== 1) { // Cannot find selected payment option, show dialog
-            return new Dialog(null, {
-                title: sprintf(_t("Error: %s"), title),
-                size: 'medium',
-                $content: `<p>${escape(description) || ''}</p>`,
-                buttons: [{text: _t("Ok"), close: true}]
-            }).open();
-        } else { // Show error in inline form
-            this._hideError(); // Remove any previous error
-
-            // Build the html for the error
-            let errorHtml = `<div class="alert alert-danger mb4" name="o_payment_error_dialog">
-                             <b>${escape(title)}</b>`;
-            if (description !== '') {
-                errorHtml += `</br>${escape(description)}`;
-            }
-            if (error !== '') {
-                errorHtml += `</br>${escape(error)}`;
-            }
-            errorHtml += '</div>';
-
-            // Append error to inline form and center the page on the error
-            const $inlineForm = this._getInlineFormFromRadio(checkedRadios[0]);
-            $inlineForm.removeClass('d-none'); // Show the inline form even if it was empty
-            $inlineForm.append(errorHtml).find('div[name="o_payment_error_dialog"]')[0]
-                .scrollIntoView({behavior: 'smooth', block: 'center'});
-        }
-        this._enableButton(); // Enable button back after it was disabled before processing TODO should be done in the guardedCatch of the processing methods
+        return new Dialog(null, {
+            title: sprintf(_t("Error: %s"), title),
+            size: 'medium',
+            $content: `<p>${escape(description) || ''}</p><p>${escape(error) || ''}</p>`, // TODO format
+            buttons: [{ text: _t("Ok"), close: true }]
+        }).open();
     },
 
     /**
@@ -313,41 +293,118 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     /**
      * Process the payment flow of the selected payment option.
      *
-     * For a provider to do pre-processing work on the transaction processing flow, or to define its
-     * entire own flow that requires re-scheduling the RPC to the transaction route, it must
-     * override this method. If only post-processing work is needed, an override of
-     * `_processRedirectPayment`,`_processDirectPayment` or `_processTokenPayment` might be more
-     * appropriate. TODO
+     * For a provider to do pre-processing work, or to process the payment flow in its own terms
+     * (e.g., re-scheduling the RPC to the transaction route), it must override this method.
+     *
+     * To alter the flow-specific processing, it is advised to override `_processRedirectFlow`,
+     * `_processDirectFlow`, or `_processTokenFlow` instead.
      *
      * @private
-     * @param {string} flow - The payment flow of the selected payment option.
      * @param {string} providerCode - The code of the selected payment option's provider.
      * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {string} flow - The payment flow of the selected payment option.
      * @return {void}
      */
-    _processPaymentFlow(flow, providerCode, paymentOptionId) {
+    async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        // this._rpc({
-        //     route: this.txContext['transactionRoute'],
-        //     params: this._prepareTransactionRouteParams(
-        //         code, paymentOptionId, paymentMethodId, operation
-        //     ),
-        // }).then(processingValues => {
-        //     if (operation === 'online_redirect') {
-        //         this._processRedirectPayment(code, paymentOptionId, processingValues);
-        //     } else if (operation === 'direct') {
-        //         // TODO ANV
-        //     } else if (operation === 'token') {
-        //         // TODO ANV
-        //     }
-        // }).guardedCatch(error => {
-        //     error.event.preventDefault();
-        //     // this._displayError(
-        //     //     _t("Server Error"),
-        //     //     _t("We are not able to process your payment."),
-        //     //     error.message.data.message,
-        //     // ); TODO ANV
-        // });
+        this._rpc({
+            route: this.txContext['transactionRoute'],
+            params: this._prepareTransactionRouteParams(),
+        }).then(processingValues => {
+            if (flow === 'redirect') {
+                this._processRedirectFlow(
+                    providerCode, paymentOptionId, paymentMethodCode, processingValues
+                );
+            } else if (flow === 'direct') {
+                this._processDirectFlow(
+                    providerCode, paymentOptionId, paymentMethodCode, processingValues
+                );
+            } else if (flow === 'token') {
+                this._processTokenFlow(
+                    providerCode, paymentOptionId, paymentMethodCode, processingValues
+                );
+            }
+        }).guardedCatch(error => {
+            error.event.preventDefault();
+            this._displayErrorDialog(
+                _t("Server Error"),
+                _t("We are not able to process your payment."),
+                error.message.data.message,
+            );
+            this._enableButton(); // The button has been disabled before initiating the flow.
+        });
+    },
+
+    /**
+     * Prepare the params for the RPC to the transaction route.
+     *
+     * @private
+     * @return {object} The transaction route params.
+     */
+    _prepareTransactionRouteParams() { // TODO rename
+        return {
+            'provider_id': this.txContext.providerId,
+            'payment_method_id': this.txContext.paymentMethodId ?? null,
+            'token_id': this.txContext.tokenId ?? null,
+            'reference_prefix': this.txContext['referencePrefix']?.toString() ?? null,
+            'amount': this.txContext['amount'] !== undefined
+                ? parseFloat(this.txContext['amount']) : null,
+            'currency_id': this.txContext['currencyId']
+                ? parseInt(this.txContext['currencyId']) : null,
+            'partner_id': parseInt(this.txContext['partnerId']),
+            'flow': this.txContext['flow'],
+            'tokenization_requested': this.txContext['tokenizationRequested'],
+            'landing_route': this.txContext['landingRoute'],
+            'is_validation': this.txContext['isValidation'],
+            'access_token': this.txContext['accessToken'],
+            'csrf_token': core.csrf_token,
+        };
+    },
+
+    /**
+     * Redirect the customer by submitting the redirect form included in the processing values.
+     *
+     * @private
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {object} processingValues - The processing values of the transaction.
+     * @return {void}
+     */
+    _processRedirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) { // TODO check if works
+        const redirectForm = processingValues['redirect_form_html'];
+        redirectForm.setAttribute('id', 'o_payment_redirect_form');
+        redirectForm.setAttribute('target', '_top');  // Ensures redirections when in an iframe.
+        this.el.appendChild(redirectForm);
+        redirectForm.submit();
+    },
+
+   /**
+     * Process the provider-specific implementation of the direct payment flow.
+     *
+     * @private
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {object} processingValues - The processing values of the transaction.
+     * @return {void}
+     */
+    _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {},
+
+    /**
+     * Redirect the customer to the status route.
+     *
+     * @private
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {object} processingValues - The processing values of the transaction.
+     * @return {void}
+     */
+    _processTokenFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
+        // The flow is already completed as payments by tokens are immediately processed.
+        window.location = '/payment/status';
     },
 
     // #=== GETTERS ===#
@@ -390,14 +447,24 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {string} The flow of the selected payment option: 'redirect', 'direct' or 'token'.
      */
     _getPaymentFlow(radio) {
-        const paymentOptionType = radio.dataset['paymentOptionType'];
-        if (paymentOptionType === 'token' || this.txContext.flow === 'token') { // TODO when is the operation overriding the select option?
+        if (this._getPaymentOptionType(radio) === 'token' || this.txContext.flow === 'token') { // TODO when is the operation overriding the select option?
             return 'token';
         } else if (this.txContext.flow === 'redirect') {
             return 'redirect';
         } else {
             return 'direct';
         }
+    },
+
+    /**
+     * Determine and return the code of the selected payment method.
+     *
+     * @private
+     * @param {HTMLElement} radio - The radio button linked to the payment method.
+     * @return {string} The code of the selected payment method.
+     */
+    _getPaymentMethodCode(radio) {
+        return radio.dataset['paymentMethodCode'];
     },
 
     /**
@@ -412,6 +479,17 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     },
 
     /**
+     * Determine and return the type of the selected payment option.
+     *
+     * @private
+     * @param {HTMLElement} radio - The radio button linked to the payment option.
+     * @return {string} The type of the selected payment option: 'token' or 'payment_method'.
+     */
+    _getPaymentOptionType(radio) {
+        return radio.dataset['paymentOptionType'];
+    },
+
+    /**
      * Determine and return the code of the provider of the selected payment option.
      *
      * @private
@@ -420,6 +498,17 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     _getProviderCode(radio) {
         return radio.dataset['providerCode'];
+    },
+
+    /**
+     * Determine and return the id of the provider of the selected payment option.
+     *
+     * @private
+     * @param {HTMLElement} radio - The radio button linked to the payment option.
+     * @return {number} The id of the provider of the selected payment option.
+     */
+    _getProviderId(radio) {
+        return Number(radio.dataset['providerId']);
     },
 
     //
@@ -437,78 +526,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     //     return Number(radio.dataset['paymentMethodId']);
     // },
     //
-    // /**
-    //  * Process the payment.
-    //  *
-    //  * For a provider to do pre-processing work on the transaction processing flow, or to define its
-    //  * entire own flow that requires re-scheduling the RPC to the transaction route, it must
-    //  * override this method. If only post-processing work is needed, an override of
-    //  * `_processRedirectPayment`,`_processDirectPayment` or `_processTokenPayment` might be more
-    //  * appropriate.
-    //  *
-    //  * @private
-    //  * @param {string} code - The code of the payment option's provider.
-    //  * @param {number} paymentOptionId - The id of the payment option handling the transaction.
-    //  * @param {number} paymentMethod - The code of the selected payment method.
-    //  * @param {string} operation - The payment operation of the transaction.
-    //  * @return {void}
-    //  */
-    // _processPayment: function (code, paymentOptionId, paymentMethodId, operation) {
-    //     // Query the server to create a transaction and retrieve the processing values.
-    //     this._rpc({
-    //         route: this.txContext['transactionRoute'],
-    //         params: this._prepareTransactionRouteParams(
-    //             code, paymentOptionId, paymentMethodId, operation
-    //         ),
-    //     }).then(processingValues => {
-    //         if (operation === 'online_redirect') {
-    //             this._processRedirectPayment(code, paymentOptionId, processingValues);
-    //         } else if (operation === 'direct') {
-    //             // TODO ANV
-    //         } else if (operation === 'token') {
-    //             // TODO ANV
-    //         }
-    //     }).guardedCatch(error => {
-    //         error.event.preventDefault();
-    //         // this._displayError(
-    //         //     _t("Server Error"),
-    //         //     _t("We are not able to process your payment."),
-    //         //     error.message.data.message,
-    //         // ); TODO ANV
-    //     });
-    // },
     //
-    // /**
-    //  * Prepare the params to send to the transaction route.
-    //  *
-    //  * For a provider to overwrite generic params or to add provider-specific ones, it must override
-    //  * this method and return the extended transaction route params.
-    //  *
-    //  * @private
-    //  * @param {string} code - The code of the selected payment option provider.
-    //  * @param {number} paymentOptionId - The id of the selected payment option.
-    //  * @param {string} paymentMethodId - The id of the selected payment method.
-    //  * @param {string} operation - The payment operation of the selected payment option.
-    //  * @return {object} The transaction route params.
-    //  */
-    // _prepareTransactionRouteParams: function (code, paymentOptionId, paymentMethodId, operation) {
-    //     return {
-    //         'payment_option_id': paymentOptionId,
-    //         'payment_method_id': paymentMethodId,
-    //         'reference_prefix': this.txContext['referencePrefix']?.toString() ?? null,
-    //         'amount': this.txContext['amount'] !== undefined
-    //             ? parseFloat(this.txContext['amount']) : null,
-    //         'currency_id': this.txContext['currencyId']
-    //             ? parseInt(this.txContext['currencyId']) : null,
-    //         'partner_id': parseInt(this.txContext['partnerId']),
-    //         'flow': 'redirect',
-    //         'tokenization_requested': this.txContext['tokenizationRequested'],
-    //         'landing_route': this.txContext['landingRoute'],
-    //         'is_validation': this.txContext['isValidation'],
-    //         'access_token': this.txContext['accessToken'],
-    //         'csrf_token': core.csrf_token,
-    //     };
-    // },
     //
     // /**
     //  * Redirect the customer by submitting the redirect form included in the processing values.
