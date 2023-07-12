@@ -38,31 +38,7 @@
                             <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.size"/>
                         </t>
                         <t t-set-slot="default">
-                            <t t-if="state.thread.hasWriteAccess">
-                                <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
-                                    Add Followers
-                                </a>
-                                <div t-if="state.thread.followers.size > 0" role="separator" class="dropdown-divider"/>
-                            </t>
-                            <t t-if="state.thread.followers.size > 0">
-                                <div t-foreach="[...state.thread.followers]" t-as="follower" t-key="follower.id" class="dropdown-item o-mail-Follower d-flex justify-content-between p-0">
-                                    <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 text-700 o-min-width-0" t-att-class="{ 'o-inactive fst-italic opacity-25': !follower.isActive }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev, follower)">
-                                        <img class="o-mail-Follower-avatar me-2 rounded" t-att-src="threadService.avatarUrl(follower.partner, state.thread)" alt=""/>
-                                        <span class="flex-shrink text-truncate" t-esc="follower.partner.name"/>
-                                    </a>
-                                    <t t-if="follower.isEditable">
-                                        <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev, follower)">
-                                            <i class="fa fa-pencil"/>
-                                        </button>
-                                        <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev, follower)">
-                                            <i class="fa fa-remove"/>
-                                        </button>
-                                    </t>
-                                </div>
-                            </t>
-                            <div t-elif="!state.thread.hasWriteAccess" class="dropdown-item disabled">
-                                No Followers
-                            </div>
+                            <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread"/>
                         </t>
                     </Dropdown>
                     <button t-if="props.hasFollowers and state.thread.followerOfSelf" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
