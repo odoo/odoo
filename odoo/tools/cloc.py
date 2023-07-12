@@ -18,6 +18,7 @@ DEFAULT_EXCLUDE = [
     "static/tests/**/*",
     "migrations/**/*",
     "upgrades/**/*",
+    "populate/**/*",
 ]
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
