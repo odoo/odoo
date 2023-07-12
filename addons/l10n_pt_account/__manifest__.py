@@ -26,6 +26,7 @@
         'views/account_tax_view.xml',
         'views/report_template.xml',
         'views/report_invoice.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

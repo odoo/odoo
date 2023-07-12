@@ -153,7 +153,7 @@ class StockPicking(models.Model):
             'date': picking.date.isoformat(),
             'system_entry_date': picking.create_date.isoformat(timespec='seconds'),
             'l10n_pt_document_number': picking._get_l10n_pt_stock_document_number(),
-            'gross_total': float_repr(picking.amount_total, 2),
+            'gross_total': '0.00',
             'previous_signature': previous_hash,
         } for picking in self]
         return L10nPtHashingUtils._l10n_pt_sign_records_using_iap(self.env, docs_to_sign)
