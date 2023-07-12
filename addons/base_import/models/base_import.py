@@ -362,7 +362,7 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
-            except ValueError as e:
+            except (ValueError, ImportValidationError) as e:
                 raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
@@ -375,7 +375,7 @@ class Import(models.TransientModel):
             if ext in EXTENSIONS:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
-                except ValueError as e:
+                except (ValueError, ImportValidationError) as e:
                     raise e
                 except Exception:
                     _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
@@ -469,7 +469,10 @@ class Import(models.TransientModel):
                 encoding = options['encoding'] = encoding[:-2]
 
         if encoding != 'utf-8':
-            csv_data = csv_data.decode(encoding).encode('utf-8')
+            try:
+                csv_data = csv_data.decode(encoding).encode('utf-8')
+            except UnicodeDecodeError:
+                raise ImportValidationError(_("Your CSV file is unable to decode in %s encoding. Please try another encoding option.", encoding))
 
         separator = options.get('separator')
         if not separator:
