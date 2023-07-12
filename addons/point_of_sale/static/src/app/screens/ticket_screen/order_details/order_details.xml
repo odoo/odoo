@@ -23,7 +23,7 @@
                         <div class="header-note text-bg-view py-2 px-3 border-bottom" t-att-class="{ 'highlight text-danger': props.highlightHeaderNote }">
                             Select the product(s) to refund and set the quantity
                         </div>
-                        <ul class="orderlines">
+                        <ul class="orderlines flex-grow-1 overflow-auto">
                             <t t-foreach="orderlines" t-as="orderline" t-key="orderline.id">
                                 <OrderlineDetails
                                     onClickOrderline.bind="this.props.onClickOrderline"
@@ -33,14 +33,14 @@
                             </t>
                         </ul>
                         <!-- Not using OrderSummary because we don't need it's overrides in this view. -->
-                        <div class="summary clearfix sticky-top w-100 py-2 px-3 border-top text-end fw-bolder">
+                        <div class="summary clearfix sticky-top w-100 py-2 px-3 bg-200 bg-opacity-50 text-end fw-bolder">
                             <div class="line">
-                                <div class="entry total fs-2">
+                                <div class="entry total fs-2 lh-sm">
                                     Total:
                                     <span class="value">
                                         <t t-esc="total" />
                                     </span>
-                                    <div t-if="tax" class="subentry fs-5 text-muted">
+                                    <div t-if="tax" class="subentry fs-6 text-muted">
                                         Taxes:
                                         <span class="value">
                                             <t t-esc="tax" />

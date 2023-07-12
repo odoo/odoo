@@ -31,7 +31,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             parsedAmount: 0,
         });
         this.amountInput = useAutofocus({ refName: "amountInput" });
-        useValidateCashInput('amountInput');
+        useValidateCashInput("amountInput");
     }
     async confirm() {
         let amount;
@@ -117,13 +117,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.state.errorMessage = "";
         this.amountInput.el.focus();
     }
-    handleInputChange() {
-        if (this.amountInput.el.classList.contains('invalid-cash-input')) {
-            this.amountInput.el.parentElement.classList.add('invalid-cash-input');
-            this.amountInput.el.style.border = 'none';
-            return;
-        }
-        this.amountInput.el.parentElement.classList.remove('invalid-cash-input');
-        this.state.parsedAmount = parseFloat(this.state.amount);
+    format(value) {
+        return this.env.utils.isValidFloat(value) ? this.env.utils.formatCurrency(parseFloat(value)) : "!!!";
     }
 }

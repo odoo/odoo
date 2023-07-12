@@ -2,15 +2,10 @@
     max-width: 800px !important;
     max-height: 800px;
 
-    th:nth-child(1), 
-    td:nth-child(1) {
-        padding-right: 5px;
-    }
-
     th:nth-child(2),
     td:nth-child(2) {
         text-align: right;
-        padding-right: map-get($spacers, 1);
+        padding-right: map-get($spacers, 3);
         white-space: nowrap;
     }
 
@@ -28,10 +23,6 @@
 
 .cash-overview tr td:first-child {
     padding-left: map-get($spacers, 2);
-}
-
-.payment-methods-overview table tr {
-    height: map-get($spacers, 4);
 }
 
 @media screen and (max-width: 768px) {

@@ -1,12 +1,10 @@
-.product-img img {
-    height: 100px;
-    object-fit: contain;
+.product:hover {
+    border: 1px solid $o-gray-100;
 }
 
-@media screen and (max-width: 768px) {
-    .product:active {
-        box-shadow: 0 0 0 3px $primary;
-    }
+.product-img img {
+    height: 100px;
+    object-fit: cover;
 }
 
 .product-name {
@@ -17,6 +15,12 @@
     -webkit-line-clamp: 2;
 
     &.no-image {
-        -webkit-line-clamp: 9;
+        -webkit-line-clamp: 7;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .product:active {
+        box-shadow: 0 0 0 2px $primary;
     }
 }

@@ -2,6 +2,27 @@
     max-width: 500px;
 }
 
+.orders .col {
+    flex: 1;
+
+    &.very-narrow {
+        flex: 0.2;
+    }
+
+    &.narrow {
+        flex: 0.5;
+    }
+
+    &.wide {
+        flex: 1.5;
+    }
+}
+
+.order-row:hover {
+    color: white;
+    background-color:  $primary !important;
+}
+
 @media screen and (max-width: 640px) {
     .screen-full-width {
         flex-direction: column;
@@ -26,27 +47,6 @@
     .pos .orders {
         position: sticky;
     }
-}
-
-.orders .col {
-    flex: 1;
-
-    &.very-narrow {
-        flex: 0.2;
-    }
-
-    &.narrow {
-        flex: 0.5;
-    }
-
-    &.wide {
-        flex: 1.5;
-    }
-}
-
-.order-row:hover {
-    color: white;
-    background-color:  $primary !important;
 }
 
 @media screen and (min-width: 768px) {
@@ -91,141 +91,5 @@
     }
     .ticket-screen .order-row .delete-button .fa-trash {
         margin-right: 5px;
-    }
-}
-
-/* Search bar ticket screen */
-
-
-.ticket-screen .pos-search-bar .search input {
-    width: 0;
-    color: #63717f;
-    padding-left: 40px;
-    border: solid 1px rgb(209, 209, 209);
-    flex: 1;
-}
-
-.ticket-screen .pos-search-bar .radius-right {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.ticket-screen .pos-search-bar .radius-left {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.ticket-screen .pos-search-bar .fa {
-    font-size: medium;
-}
-
-.ticket-screen .pos-search-bar .search input:focus {
-    outline: none;
-}
-
-.ticket-screen .pos-search-bar .search .search-icon {
-    position: absolute;
-    left: 15px;
-    top: 10px;
-    z-index: 1;
-    color: #4f5b66;
-}
-
-.ticket-screen .pos-search-bar .search .fields {
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 2px;
-    left: 2px;
-    box-shadow: 1px 1px 3px grey;
-    overflow: auto;
-}
-.ticket-screen .pos-search-bar .search ul {
-    background: white;
-    font-size: small;
-    display: inline-block;
-    min-width: 100%;
-}
-
-.ticket-screen .pos-search-bar .search li {
-    margin: 0.2em 0;
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
-    padding-left: 35px;
-    text-align: left;
-}
-
-.ticket-screen .pos-search-bar .search li .term {
-    color: $primary;
-}
-
-.ticket-screen .pos-search-bar .search li:hover {
-    background: #DDD;
-}
-
-.ticket-screen .pos-search-bar .search li .field {
-    font-style: italic;
-}
-
-.ticket-screen .pos-search-bar .search li .term {
-    font-weight: bold;
-}
-
-.ticket-screen .pos-search-bar .search li.highlight {
-    background: #DDD;
-}
-
-.ticket-screen .pos-search-bar .filter .down-icon {
-    position: absolute;
-    right: 13px;
-}
-
-.ticket-screen .pos-search-bar .filter {
-    background: white;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 15px;
-    padding-right: 40px;
-    border: solid 1px rgb(209, 209, 209);
-    border-left: none;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.ticket-screen .pos-search-bar .filter:hover {
-    color: #868686;
-}
-
-.ticket-screen .pos-search-bar .filter .options {
-    display: block;
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 0;
-    z-index: 1;
-    box-shadow: 1px 1px 5px grey;
-    padding: 0.5em 0;
-    background: white;
-    color: $gray-700;
-}
-
-.ticket-screen .pos-search-bar .filter ul.options li {
-    padding: 0.2em 1.2em;
-    border-top: none;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-}
-
-.ticket-screen .filter ul.options li.indented {
-    text-indent: 1em;
-}
-
-.ticket-screen .pos-search-bar .filter ul.options li:hover {
-    background-color: #DDD;
-}
-
-@media screen and (max-width: 768px) {
-    .ticket-screen .pos-search-bar .search input {
-        padding-left: 10px;
     }
 }
