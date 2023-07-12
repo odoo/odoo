@@ -25,6 +25,14 @@ class ThreadController(http.Controller):
             messages.set_message_done()
         return messages.message_format()
 
+    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
+    def mail_thread_partner_from_email(self, emails):
+        partners = [
+            {"id": partner.id, "name": partner.name, "email": partner.email}
+            for partner in request.env["res.partner"]._find_or_create_from_emails(emails)
+        ]
+        return partners
+
     @http.route("/mail/read_subscription_data", methods=["POST"], type="json", auth="user")
     def read_subscription_data(self, follower_id):
         """Computes:
@@ -71,6 +79,13 @@ class ThreadController(http.Controller):
         thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
+        new_partners = []
+        if "partner_emails" in post_data:
+            new_partners = [
+                record.id
+                for record in request.env["res.partner"]._find_or_create_from_emails(post_data["partner_emails"])
+            ]
+        post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         message_data = thread.message_post(
             **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
         ).message_format()[0]
