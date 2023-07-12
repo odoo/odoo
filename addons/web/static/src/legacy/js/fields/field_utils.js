@@ -20,6 +20,7 @@ import dom from "web.dom";
 import session from "web.session";
 import time from "web.time";
 import utils from "web.utils";
+const { DateTime } = luxon;
 
 var _t = core._t;
 
@@ -443,7 +444,7 @@ function formatJson(value, field, options) {
  *   "-4y" will return now + 4 years
  *
  * @param {string} value
- * @returns {Moment|false} Moment date object
+ * @returns {DateTime|false} luxon DateTime
  */
 function parseSmartDateInput(value) {
     const units = {
@@ -455,13 +456,13 @@ function parseSmartDateInput(value) {
     const re = new RegExp(`^([+-])(\\d+)([${Object.keys(units).join('')}]?)$`);
     const match = re.exec(value);
     if (match) {
-        let date = moment();
+        let date = DateTime.now()
         const offset = parseInt(match[2], 10);
         const unit = units[match[3] || 'd'];
         if (match[1] === '+') {
-            date.add(offset, unit);
+            date.plus({[unit]: offset});
         } else {
-            date.subtract(offset, unit);
+            date.minus({[unit]: offset});
         }
         return date;
     }

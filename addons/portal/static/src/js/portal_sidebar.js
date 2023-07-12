@@ -2,9 +2,11 @@
 
 import core from "web.core";
 import publicWidget from "web.public.widget";
-import time from "web.time";
 import session from "web.session";
 import { sprintf } from "@web/core/utils/strings";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 var _t = core._t;
 
@@ -30,9 +32,9 @@ var PortalSidebar = publicWidget.Widget.extend({
     _setDelayLabel: function () {
         var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago').toArray();
         $sidebarTimeago.forEach((el) => {
-            var dateTime = moment(time.auto_str_to_date($(el).attr('datetime'))),
-                today = moment().startOf('day'),
-                diff = dateTime.diff(today, 'days', true),
+            var dateTime = deserializeDateTime($(el).attr('datetime')),
+                today = DateTime.now().startOf('day'),
+                diff = dateTime.diff(today).as("days"),
                 displayStr;
 
             session.is_bound.then(function (){

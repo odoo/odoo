@@ -3,6 +3,7 @@
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { serializeDate } from "@web/core/l10n/dates";
 
 import testUtils from "web.test_utils";
 
@@ -16,6 +17,7 @@ import {
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
+const { DateTime } = luxon;
 
 let serverData;
 let pyEnv;
@@ -41,7 +43,7 @@ QUnit.module("test_mail", {}, function () {
             const mailActivityIds = pyEnv["mail.activity"].create([
                 {
                     display_name: "An activity",
-                    date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                    date_deadline: serializeDate(DateTime.now().plus({days:3})),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -50,7 +52,7 @@ QUnit.module("test_mail", {}, function () {
                 },
                 {
                     display_name: "An activity",
-                    date_deadline: moment().format("YYYY-MM-DD"), // now
+                    date_deadline: serializeDate(DateTime.now()),
                     can_write: true,
                     state: "today",
                     activity_type_id: mailActivityTypeIds[0],
@@ -60,7 +62,7 @@ QUnit.module("test_mail", {}, function () {
                 {
                     res_model: "mail.test.activity",
                     display_name: "An activity",
-                    date_deadline: moment().subtract(2, "days").format("YYYY-MM-DD"), // now
+                    date_deadline: serializeDate(DateTime.now().minus({days:2})),
                     can_write: true,
                     state: "overdue",
                     activity_type_id: mailActivityTypeIds[1],
@@ -220,7 +222,7 @@ QUnit.module("test_mail", {}, function () {
             for (let i = 0; i < 81; i++) {
                 activityToCreate.push({
                     display_name: "An activity " + i,
-                    date_deadline: moment().add(3, "days").format("YYYY-MM-DD"),
+                    date_deadline: serializeDate(DateTime.now().plus({days:3})),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -822,7 +824,7 @@ QUnit.module("test_mail", {}, function () {
         pyEnv["mail.activity"].create([
             {
                 display_name: "An activity",
-                date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                date_deadline: serializeDate(DateTime.now().plus({days:3})),
                 can_write: true,
                 state: "planned",
                 activity_type_id: mailActivityTypeIds[2],

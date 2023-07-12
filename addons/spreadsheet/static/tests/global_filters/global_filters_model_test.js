@@ -31,6 +31,8 @@ import {
 } from "@spreadsheet/../tests/utils/date_domain";
 import GlobalFiltersUIPlugin from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+const { DateTime } = luxon;
+
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
@@ -604,7 +606,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `Q1/${moment().year()}`);
+        assert.equal(getCellValue(model, "A10"), `Q1/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
             rangeType: "year",
@@ -613,7 +615,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `${moment().year()}`);
+        assert.equal(getCellValue(model, "A10"), `${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
             rangeType: "year",
@@ -623,7 +625,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             },
         });
         await nextTick();
-        assert.equal(getCellValue(model, "A10"), `01/${moment().year()}`);
+        assert.equal(getCellValue(model, "A10"), `01/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
             rangeType: "year",

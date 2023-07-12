@@ -3,6 +3,9 @@
 import { sortBy } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
+import { serializeDate } from "@web/core/l10n/dates";
+
+const { DateTime} = luxon;
 
 patch(MockServer.prototype, "mail/models/mail_activity", {
     async _performRPC(route, args) {
@@ -144,7 +147,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
             group.date_deadline = minDate;
             resIdToDeadline[group.res_id] = minDate;
             let state;
-            if (group.date_deadline === moment().format("YYYY-MM-DD")) {
+            if (group.date_deadline === serializeDate(DateTime.now())) {
                 state = "today";
             } else if (moment(group.date_deadline) > moment()) {
                 state = "planned";

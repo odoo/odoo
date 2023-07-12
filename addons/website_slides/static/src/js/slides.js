@@ -2,6 +2,7 @@
 
 import publicWidget from 'web.public.widget';
 import time from 'web.time';
+const { DateTime } = luxon;
 
 publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     selector: '#wrapwrap',
@@ -20,9 +21,9 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
             // then return fix formate string else timeago
             var displayStr = '';
             if (datetimeObj && new Date().getTime() - datetimeObj.getTime() > 7 * 24 * 60 * 60 * 1000) {
-                displayStr = moment(datetimeObj).format('ll');
+                displayStr = DateTime.fromJSDate(datetimeObj).toFormat('DD');
             } else {
-                displayStr = moment(datetimeObj).fromNow();
+                displayStr = DateTime.fromJSDate(datetimeObj).toRelative();
             }
             $(el).text(displayStr);
         });

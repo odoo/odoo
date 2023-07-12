@@ -5,6 +5,13 @@ import { pick } from "@web/core/utils/objects";
 import Class from "web.Class";
 import Domain from "web.Domain";
 import pyUtils from "web.py_utils";
+import { 
+    parseDateTime, 
+    serializeDate, 
+    serializeDateTime, 
+    deserializeDate, 
+    deserializeDateTime 
+} from "@web/core/l10n/dates";
 
 var MockServer = Class.extend({
     /**
@@ -61,8 +68,6 @@ var MockServer = Class.extend({
             this.data[modelName].records.forEach(record => this._updateComodelRelationalFields(modelName, record));
         }
         this.debug = options.debug;
-
-        this.currentDate = options.currentDate || moment().format("YYYY-MM-DD");
 
         this.actions = options.actions || [];
         this.archs = options.archs || {};
@@ -1475,30 +1480,32 @@ var MockServer = Class.extend({
             const [fieldName, aggregateFunction = "month"] = groupByField.split(':');
             const { type } = fields[fieldName];
             if (type === "date") {
-                if (aggregateFunction === 'day') {
-                    return moment(val).format('YYYY-MM-DD');
-                } else if (aggregateFunction === 'week') {
-                    return moment(val).format('[W]WW GGGG');
-                } else if (aggregateFunction === 'quarter') {
-                    return moment(val).format('[Q]Q YYYY');
-                } else if (aggregateFunction === 'year') {
-                    return moment(val).format('Y');
+                const date = deserializeDate(val);
+                if (aggregateFunction === "day") {
+                    return date.toFormat("yyyy-MM-dd");
+                } else if (aggregateFunction === "week") {
+                    return `W${date.toFormat("WW kkkk")}`;
+                } else if (aggregateFunction === "quarter") {
+                    return `Q${date.toFormat("q yyyy")}`;
+                } else if (aggregateFunction === "year") {
+                    return date.toFormat("yyyy");
                 } else {
-                    return moment(val).format('MMMM YYYY');
+                    return date.toFormat("MMMM yyyy");
                 }
             } else if (type === "datetime") {
+                const date = deserializeDateTime(val);
                 if (aggregateFunction === 'hour') {
-                    return moment(val).format('HH[:00] DD MMM');
-                } else if (aggregateFunction === 'day') {
-                    return moment(val).format('YYYY-MM-DD');
-                } else if (aggregateFunction === 'week') {
-                    return moment(val).format('[W]WW GGGG');
-                } else if (aggregateFunction === 'quarter') {
-                    return moment(val).format('[Q]Q YYYY');
-                } else if (aggregateFunction === 'year') {
-                    return moment(val).format('Y');
+                    return date.toFormat("HH:00 dd MMM yyyy");
+                } else if (aggregateFunction === "day") {
+                    return date.toFormat("yyyy-MM-dd");
+                } else if (aggregateFunction === "week") {
+                    return `W${date.toFormat("WW kkkk")}`;
+                } else if (aggregateFunction === "quarter") {
+                    return `Q${date.toFormat("q yyyy")}`;
+                } else if (aggregateFunction === "year") {
+                    return date.toFormat("yyyy");
                 } else {
-                    return moment(val).format('MMMM YYYY');
+                    return date.toFormat("MMMM yyyy");
                 }
             } else if (Array.isArray(val)) {
                 if (val.length === 0) {
@@ -1578,43 +1585,43 @@ var MockServer = Class.extend({
                         let startDate, endDate;
                         switch (dateRange) {
                             case "hour": {
-                                startDate = moment(value, "HH[:00] DD MMM");
-                                endDate = startDate.clone().add(1, "hours");
+                                startDate = parseDateTime(value, { format: "HH:00 dd MMM yyyy" });
+                                group[gbField] = startDate.toFormat("HH:00 dd MMM");
+                                endDate = startDate.plus({ hours: 1 });
+                                // Remove the year from the result value of the group. It was needed
+                                // to compute the startDate and endDate.
                                 break;
                             }
                             case "day": {
-                                startDate = moment(value, "YYYY-MM-DD");
-                                endDate = startDate.clone().add(1, "days");
+                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
+                                endDate = startDate.plus({ days: 1 });
                                 break;
                             }
                             case "week": {
-                                startDate = moment(value, "[W]WW GGGG");
-                                endDate = startDate.clone().add(1, "weeks");
+                                startDate = parseDateTime(value, { format: "WW kkkk" });
+                                endDate = startDate.plus({ weeks: 1 });
                                 break;
                             }
                             case "quarter": {
-                                startDate = moment(value, "[Q]Q YYYY");
-                                endDate = startDate.clone().add(1, "quarters");
+                                startDate = parseDateTime(value, { format: "q yyyy" });
+                                endDate = startDate.plus({ quarters: 1 });
                                 break;
                             }
                             case "year": {
-                                startDate = moment(value, "Y");
-                                endDate = startDate.clone().add(1, "years");
+                                startDate = parseDateTime(value, { format: "y" });
+                                endDate = startDate.plus({ years: 1 });
                                 break;
                             }
                             case "month":
                             default: {
-                                startDate = moment(value, "MMMM YYYY");
-                                endDate = startDate.clone().add(1, "months");
+                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
+                                endDate = startDate.plus({ months: 1 });
                                 break;
                             }
                         }
-                        const from = type === "date"
-                            ? startDate.format("YYYY-MM-DD")
-                            : startDate.format("YYYY-MM-DD HH:mm:ss");
-                        const to = type === "date"
-                            ? endDate.format("YYYY-MM-DD")
-                            : endDate.format("YYYY-MM-DD HH:mm:ss");
+                        const serialize = type === "date" ? serializeDate : serializeDateTime;
+                        const from = serialize(startDate);
+                        const to = serialize(endDate);
                         // NOTE THAT the range and the domain computed here are not really accurate
                         // due to a the timezone not really taken into account.
                         // FYI, the non legacy version of the mock server handles this correctly.

@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { sprintf } from "@web/core/utils/strings";
+const { DateTime } = luxon;
 
 export class PaymentAdyen extends PaymentInterface {
     send_payment_request(cid) {
@@ -96,7 +97,7 @@ export class PaymentAdyen extends PaymentInterface {
                     SaleData: {
                         SaleTransactionID: {
                             TransactionID: order.uid,
-                            TimeStamp: moment().format(), // iso format: '2018-01-10T11:30:15+00:00'
+                            TimeStamp: DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm:ssZZ"), // iso format: '2018-01-10T11:30:15+00:00'
                         },
                     },
                     PaymentTransaction: {

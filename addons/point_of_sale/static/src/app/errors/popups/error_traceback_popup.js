@@ -3,6 +3,8 @@
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _lt } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { serializeDateTime } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 // formerly ErrorTracebackPopupWidget
 export class ErrorTracebackPopup extends ErrorPopup {
@@ -27,7 +29,7 @@ export class ErrorTracebackPopup extends ErrorPopup {
         return URL.createObjectURL(blob);
     }
     get tracebackFilename() {
-        return `${this.env._t("error")} ${moment().format("YYYY-MM-DD-HH-mm-ss")}.txt`;
+        return `${this.env._t("error")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.txt`;
     }
     emailTraceback() {
         const address = this.pos.company.email;

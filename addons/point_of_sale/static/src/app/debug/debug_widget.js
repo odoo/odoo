@@ -9,6 +9,8 @@ import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useEffect, useRef, useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { serializeDateTime } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 export class DebugWidget extends Component {
     static components = { Transition };
@@ -130,7 +132,7 @@ export class DebugWidget extends Component {
         }
     }
     get paidOrdersFilename() {
-        return `${this.env._t("paid orders")} ${moment().format("YYYY-MM-DD-HH-mm-ss")}.json`;
+        return `${this.env._t("paid orders")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
     }
     get paidOrdersURL() {
         var URL = window.URL || window.webkitURL;
@@ -146,7 +148,7 @@ export class DebugWidget extends Component {
         }
     }
     get unpaidOrdersFilename() {
-        return `${this.env._t("unpaid orders")} ${moment().format("YYYY-MM-DD-HH-mm-ss")}.json`;
+        return `${this.env._t("unpaid orders")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
     }
     get unpaidOrdersURL() {
         var URL = window.URL || window.webkitURL;

@@ -2,6 +2,7 @@
 
 
 import publicWidget from "web.public.widget";
+const { DateTime } = luxon;
 
 /*
  * Simple implementation of a timer widget that uses a "time to live" configuration
@@ -22,8 +23,8 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
     start: function () {
         return this._super.apply(this, arguments).then(() => {
             let timeToLive = this.$el.data('time-to-live');
-            let deadline = moment().add(timeToLive, 'seconds');
-            let remainingMs = deadline.diff(moment());
+            let deadline = DateTime.now().plus({seconds : timeToLive});
+            let remainingMs = deadline.diff(DateTime.now()).as("milliseconds");
             if (remainingMs > 0) {
                 this._updateTimerDisplay(remainingMs);
                 this.$el.removeClass('d-none');
@@ -57,7 +58,7 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
      * Otherwise, the component will be destroyed.
      */
     _refreshTimer: function () {
-        let remainingMs = this.deadline.diff(moment());
+        let remainingMs = this.deadline.diff(DateTime.now()).as("milliseconds");
         if (remainingMs > 0) {
             this._updateTimerDisplay(remainingMs);
         } else {
