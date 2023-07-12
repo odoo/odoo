@@ -30,4 +30,14 @@ export class Line extends Reactive {
         this.price_subtotal = line.price_subtotal || 0;
         this.selected_attributes = line.selected_attributes || [];
     }
+
+    isChange(lastChange) {
+        for (const key in lastChange) {
+            if (JSON.stringify(lastChange[key]) !== JSON.stringify(this[key])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

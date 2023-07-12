@@ -60,6 +60,8 @@ export class Order extends Reactive {
         this.lastChangesSent = this.lines.reduce((acc, line) => {
             acc[line.uuid] = {
                 qty: line.qty,
+                selected_attributes: line.selected_attributes,
+                customer_note: line.customer_note,
             };
             return acc;
         }, {});
@@ -73,7 +75,7 @@ export class Order extends Reactive {
                 return true;
             }
 
-            return lastSend.qty !== line.qty;
+            return lastSend.qty !== line.qty || line.isChange(lastSend);
         });
     }
 }
