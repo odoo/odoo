@@ -83,7 +83,7 @@ const PublicLivechatWindow = Widget.extend({
         } else {
             this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
         }
-        this.messaging.publicLivechatGlobal.livechatButtonView.leaveSession();
+        this.messaging.publicLivechatGlobal.leaveSession();
     },
     /**
      * States whether the current environment is in mobile or not. This is
