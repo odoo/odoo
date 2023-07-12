@@ -126,7 +126,7 @@ class AdyenController(http.Controller):
             'telephoneNumber': tx_sudo.partner_phone,
             'storePaymentMethod': tx_sudo.tokenize,  # True by default on Adyen side
             'additionalData': {
-                'allow3DS2': True
+                'authenticationData.threeDSRequestData.nativeThreeDS': True
             },
             'channel': 'web',  # Required to support 3DS
             'origin': provider_sudo.get_base_url(),  # Required to support 3DS

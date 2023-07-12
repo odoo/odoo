@@ -71,7 +71,7 @@ class PaymentTransaction(models.Model):
             },
             'reference': self.reference,
             'paymentMethod': {
-                'recurringDetailReference': self.token_id.provider_ref,
+                'storedPaymentMethodId': self.token_id.provider_ref,
             },
             'shopperReference': self.token_id.adyen_shopper_reference,
             'recurringProcessingModel': 'Subscription',
@@ -393,7 +393,7 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif payment_state in RESULT_CODES_MAPPING['done']:
             additional_data = notification_data.get('additionalData', {})
-            has_token_data = 'recurring.recurringDetailReference' in additional_data
+            has_token_data = 'recurring.storedPaymentMethodId' in additional_data
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_notification_data(notification_data)
 
@@ -467,7 +467,7 @@ class PaymentTransaction(models.Model):
             'provider_id': self.provider_id.id,
             'payment_details': additional_data.get('cardSummary'),
             'partner_id': self.partner_id.id,
-            'provider_ref': additional_data['recurring.recurringDetailReference'],
+            'provider_ref': additional_data['recurring.storedPaymentMethodId'],
             'adyen_shopper_reference': additional_data['recurring.shopperReference'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })
