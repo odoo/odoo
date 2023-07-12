@@ -210,6 +210,14 @@ export class DateTimeField extends Component {
         return this.field.type === "date" ? deserializeDate(value) : deserializeDateTime(value);
     }
 
+    shouldShowSeparator() {
+        return (
+            this.state.range &&
+            this.props.required &&
+            (this.isEmpty(this.startDateField) || this.isEmpty(this.endDateField))
+        );
+    }
+
     /**
      * The given props are used to compute the current value and compare it to
      * the state handled by the datetime hook.

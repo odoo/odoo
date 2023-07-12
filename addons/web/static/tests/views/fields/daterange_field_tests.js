@@ -1073,4 +1073,64 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(getInputs()[0].value, "");
         assert.containsNone(target, ".o_add_date");
     });
+
+    QUnit.test("list daterange with start date and empty end date", async (assert) => {
+        serverData.models.partner.fields.date_end = { string: "Some Date", type: "date" };
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["02/03/2017", "->"]);
+    });
+
+    QUnit.test("list daterange with empty start date and end date", async (assert) => {
+        serverData.models.partner.fields.date_end = { string: "Some Date", type: "date" };
+        const [firstRecord] = serverData.models.partner.records;
+        [firstRecord.date, firstRecord.date_end] = [firstRecord.date_end, firstRecord.date];
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["->", "02/03/2017"]);
+    });
 });

@@ -2886,15 +2886,17 @@ QUnit.module("Views", (hooks) => {
                     name: "Partners Action 11",
                     res_model: "foo",
                     type: "ir.actions.act_window",
-                    views: [[3, "list"], [4, "form"]],
+                    views: [
+                        [3, "list"],
+                        [4, "form"],
+                    ],
                     search_view_id: [9, "search"],
-                }
+                },
             };
             serverData.views = {
                 "foo,3,list":
                     '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
-                "foo,4,form":
-                    '<form><field name="display_name"/><field name="foo"/></form>',
+                "foo,4,form": '<form><field name="display_name"/><field name="foo"/></form>',
                 "foo,9,search": `
                     <search>
                         <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
@@ -8252,7 +8254,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        // Need to set the line in edition. 
+        // Need to set the line in edition.
         await click(target, "td[name=foo]");
         assert.strictEqual(window.getSelection().toString(), "bar");
 
@@ -10861,7 +10863,11 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
-                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                if (
+                    args.method === "read" &&
+                    args.args[1].length === 1 &&
+                    args.args[1][0] === "display_name"
+                ) {
                     if (args.model === "bar") {
                         assert.deepEqual(args.args[0], [1, 2, 3]);
                     }
@@ -10946,7 +10952,11 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "write") {
                     assert.deepEqual(args.args, [[1, 2, 3], { bar: true }]);
                 }
-                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                if (
+                    args.method === "read" &&
+                    args.args[1].length === 1 &&
+                    args.args[1][0] === "display_name"
+                ) {
                     if (nameGetCount === 2) {
                         assert.strictEqual(args.model, "bar");
                         assert.deepEqual(args.args[0], [1, 2]);
@@ -11115,6 +11125,66 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".modal");
         }
     );
+
+    QUnit.test("list daterange with start date and empty end date", async (assert) => {
+        serverData.models.foo.fields.date_end = { string: "Some Date", type: "date" };
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["01/25/2017", "->"]);
+    });
+
+    QUnit.test("list daterange with start date and empty end date", async (assert) => {
+        serverData.models.foo.fields.date_end = { string: "Some Date", type: "date" };
+        const [firstRecord] = serverData.models.foo.records;
+        [firstRecord.date, firstRecord.date_end] = [firstRecord.date_end, firstRecord.date];
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /* xml */ `
+                <tree>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                </tree>`,
+        });
+
+        const arrowIcon = target.querySelector(".fa-long-arrow-right");
+        const textSiblings = [...arrowIcon.parentNode.childNodes]
+            .map((node) => {
+                if (node === arrowIcon) {
+                    return "->";
+                } else if (node.nodeType === 3) {
+                    return node.nodeValue.trim();
+                } else {
+                    return false;
+                }
+            })
+            .filter(Boolean);
+
+        assert.deepEqual(textSiblings, ["->", "01/25/2017"]);
+    });
 
     QUnit.test("editable list view: contexts are correctly sent", async function (assert) {
         patchWithCleanup(session.user_context, { someKey: "some value" });
@@ -17906,7 +17976,11 @@ QUnit.module("Views", (hooks) => {
                 </tree>
             `,
             mockRPC(_, args) {
-                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                if (
+                    args.method === "read" &&
+                    args.args[1].length === 1 &&
+                    args.args[1][0] === "display_name"
+                ) {
                     assert.step("readDisplayName");
                     assert.deepEqual(args.args[0], [3]);
                 }
@@ -19087,7 +19161,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, "Value 1");
     });
-    QUnit.test("monetary field display for rtl languages", async function (assert){
+    QUnit.test("monetary field display for rtl languages", async function (assert) {
         patchWithCleanup(localization, {
             direction: "rtl",
         });
@@ -19121,5 +19195,5 @@ QUnit.module("Views", (hooks) => {
             "ltr",
             "Monetary cells should have ltr direction"
         );
-    })
+    });
 });
