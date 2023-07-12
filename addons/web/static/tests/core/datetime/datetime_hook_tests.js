@@ -115,7 +115,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         };
 
         const input = await mountInput(() => {
-            pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps });
+            pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
         });
 
         assert.strictEqual(input.value, "");
@@ -135,7 +135,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         };
 
         const input = await mountInput(() => {
-            pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps });
+            pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
         });
 
         assert.strictEqual(input.value, "");
