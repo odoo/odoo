@@ -338,6 +338,13 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order_line.write(update_values)
 
+    def _is_cart_ready(self):
+        """Whether the cart is valid and can be confirmed (and paid for)
+
+        :rtype: bool
+        """
+        return True
+
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         product_ids = set(self.website_order_line.product_id.ids)
