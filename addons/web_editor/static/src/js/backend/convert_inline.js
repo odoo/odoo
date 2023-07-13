@@ -697,6 +697,7 @@ async function toInline($editable, cssRules, $iframe) {
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
     }
+<<<<<<< HEAD
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
@@ -728,6 +729,18 @@ async function toInline($editable, cssRules, $iframe) {
     formatTables($editable);
     normalizeColors($editable);
     responsiveToStaticForOutlook(editable);
+||||||| parent of c5284be3485 (temp)
+=======
+    // Flag img-fluid images with fixed width/height for later.
+    for (const imgFluid of editable.querySelectorAll('.img-fluid')) {
+        if (!Number.isNaN(+imgFluid.style.width.replace('px', ''))) {
+            imgFluid.classList.add('o_img_fluid_fixed_width');
+        }
+        if (!Number.isNaN(+imgFluid.style.height.replace('px', ''))) {
+            imgFluid.classList.add('o_img_fluid_fixed_height');
+        }
+    }
+>>>>>>> c5284be3485 (temp)
     // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
@@ -749,6 +762,7 @@ async function toInline($editable, cssRules, $iframe) {
             centeredImage.parentElement.style.setProperty('text-align', 'center');
         }
     }
+<<<<<<< HEAD
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
@@ -760,6 +774,68 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.find('style').remove();
 
     editable.querySelectorAll('.o_converted_col').forEach(node => node.classList.remove('o_converted_col'));
+||||||| parent of c5284be3485 (temp)
+    // Ensure preservation of aspect-ratio.
+    for (const loneImage of editable.querySelectorAll('img:only-child:not(.img-fluid,[data-class*=fa-])')) {
+        loneImage.style.setProperty('object-fit', 'cover');
+    }
+    // Fix img-fluid.
+    for (const image of editable.querySelectorAll('img.img-fluid')) {
+        // Outlook requires absolute width/height.
+        const width = _getWidth(image);
+        const clone = image.cloneNode();
+        clone.setAttribute('width', width);
+        clone.style.setProperty('width', width + 'px');
+        clone.style.removeProperty('max-width');
+        image.before(document.createComment(`[if mso]>${clone.outerHTML}<![endif]`));
+        image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
+        image.before(document.createComment('[if !mso]><!'));
+        image.after(document.createComment('<![endif]'));
+        // Account for the absence of responsive stacking (let max-width do the
+        // resizing work outside of Outlook).
+        if (!image.style.width.endsWith('%')) {
+            image.removeAttribute('width');
+            image.style.removeProperty('width');
+        }
+        if (!image.style.height.endsWith('%')) {
+            image.removeAttribute('height');
+            image.style.removeProperty('height');
+        }
+    }
+=======
+    // Ensure preservation of aspect-ratio.
+    for (const loneImage of editable.querySelectorAll('img:only-child:not(.img-fluid,[data-class*=fa-])')) {
+        loneImage.style.setProperty('object-fit', 'cover');
+    }
+    // Fix img-fluid.
+    for (const image of editable.querySelectorAll('img.img-fluid')) {
+        // Outlook requires absolute width/height.
+        const clone = image.cloneNode();
+        const width = _getWidth(image);
+        clone.setAttribute('width', width);
+        clone.style.setProperty('width', width + 'px');
+        clone.style.removeProperty('max-width');
+        const height = _getHeight(image);
+        clone.setAttribute('height', height);
+        clone.style.setProperty('height', height + 'px');
+        clone.style.removeProperty('max-height');
+        image.before(document.createComment(`[if mso]>${clone.outerHTML}<![endif]`));
+        image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
+        image.before(document.createComment('[if !mso]><!'));
+        image.after(document.createComment('<![endif]'));
+        // Account for the absence of responsive stacking (let max-width do the
+        // resizing work outside of Outlook).
+        if (!image.style.width.endsWith('%') && !image.classList.contains('o_img_fluid_fixed_width')) {
+            image.removeAttribute('width');
+            image.style.removeProperty('width');
+        }
+        if (!image.style.height.endsWith('%') && !image.classList.contains('o_img_fluid_fixed_height')) {
+            image.removeAttribute('height');
+            image.style.removeProperty('height');
+        }
+        image.classList.remove('o_img_fluid_fixed_width', 'o_img_fluid_fixed_height');
+    }
+>>>>>>> c5284be3485 (temp)
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
